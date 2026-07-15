@@ -8,13 +8,13 @@ Sistem Informasi Unit Layanan Terpadu (SI-ULT) Politeknik Negeri Bandung merupak
 
 | No | Nama | Tugas |
 |----|------|-------|
-| 1 | (Nama Anda) | Backend 1 (Login, Logout, Registrasi, Role & Permission, Manajemen User) |
-| 2 | ... | Backend 2 |
-| 3 | ... | Backend 3 |
-| 4 | ... | Frontend 1 |
-| 5 | ... | Frontend 2 |
-| 6 | ... | Frontend 3 |
-| 7 | ... | Frontend 4 |
+| 1 | Iqbal | Backend 1 (Login, Logout, Registrasi, Role & Permission, Manajemen User) |
+| 2 | Anggi | Backend 2 |
+| 3 | Febriyan | Backend 3 |
+| 4 | Aditia | Frontend 1 |
+| 5 | Raffi | Frontend 2 |
+| 6 | Alvin | Frontend 3 |
+| 7 | Rizky | Frontend 4 |
 
 ---
 

@@ -44,4 +44,13 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->post('/users/update/(:num)', 'UserController::update/$1');
 
     $routes->get('/users/delete/(:num)', 'UserController::delete/$1');
+    $routes->get('verification', 'VerificationController::index');
+    $routes->get('verification/detail/(:num)', 'VerificationController::detail/$1');
+    $routes->get('verification/verify/(:num)', 'VerificationController::verify/$1');
+    $routes->get('verification/disposition/(:num)', 'VerificationController::disposition/$1');
+    $routes->get('report', 'ReportController::index');
+    $routes->get('statistics', 'StatisticsController::index');
+
+    
+    
 });

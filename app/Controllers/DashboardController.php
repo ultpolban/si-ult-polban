@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\TicketModel;
 
 class DashboardController extends BaseController
 {
@@ -13,10 +14,29 @@ class DashboardController extends BaseController
         switch ($role) {
 
             case 1: // Admin
+
                 $userModel = new UserModel();
+                $ticketModel = new TicketModel();
 
                 $data = [
-                    'totalUser' => $userModel->countAll()
+                    'totalUser'   => $userModel->countAll(),
+                    'totalTicket' => $ticketModel->countAll(),
+
+                    'submitted' => $ticketModel
+                        ->where('status', 'Submitted')
+                        ->countAllResults(),
+
+                    'verified' => $ticketModel
+                        ->where('status', 'Verified')
+                        ->countAllResults(),
+
+                    'completed' => $ticketModel
+                        ->where('status', 'Completed')
+                        ->countAllResults(),
+
+                    'tickets' => $ticketModel
+                        ->orderBy('submitted_at', 'DESC')
+                        ->findAll()
                 ];
 
                 return view('dashboard/admin', $data);

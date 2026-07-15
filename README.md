@@ -9,12 +9,12 @@ Sistem Informasi Unit Layanan Terpadu (SI-ULT) Politeknik Negeri Bandung merupak
 | No | Nama | Tugas |
 |----|------|-------|
 | 1 | Iqbal | Backend 1 (Login, Logout, Registrasi, Role & Permission, Manajemen User) |
-| 2 | Anggi | Backend 2 |
-| 3 | Febriyan | Backend 3 |
-| 4 | Aditia | Frontend 1 |
-| 5 | Raffi | Frontend 2 |
-| 6 | Alvin | Frontend 3 |
-| 7 | Rizky | Frontend 4 |
+| 2 | Anggi | Backend 2 (Manajemen Layanan, Kategori Layanan, Unit Kerja, Pengajuan Tiket, Upload Dokumen) |
+| 3 | Febriyan | Backend 3 (Verifikasi Tiket, Disposisi Tiket, Dashboard Backend, Laporan, Statistik, Notifikasi) |
+| 4 | Aditia | Frontend 1 (Landing Page, Beranda, Daftar Layanan, Detail Layanan, FAQ, Kontak) |
+| 5 | Raffi | Frontend 2 (Dashboard Pemohon, Form Pengajuan Layanan, Tracking Status Tiket, Profil Pengguna) |
+| 6 | Alvin | Frontend 3 (Dashboard Petugas ULT, Dashboard Unit Tujuan, Halaman Verifikasi, Disposisi, Update Status Tiket) |
+| 7 | Rizky | Frontend 4 (Dashboard Admin, Dashboard Pimpinan, Manajemen User, Manajemen Layanan, Grafik Statistik, Halaman Laporan) |
 
 ---
 

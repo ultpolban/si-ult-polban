@@ -1,0 +1,45 @@
+*{
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f8f9fa;
+}
+
+.hero{
+    background:linear-gradient(135deg,#005BAC,#0d6efd);
+    color:white;
+    padding:100px 0;
+}
+
+.hero h1{
+    font-weight:700;
+}
+
+.hero p{
+    font-size:18px;
+}
+
+.card-service{
+
+    border:none;
+    border-radius:15px;
+    transition:.3s;
+
+}
+
+.card-service:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 15px 25px rgba(0,0,0,.15);
+
+}
+
+.section-title{
+
+    color:#005BAC;
+
+    font-weight:700;
+
+}

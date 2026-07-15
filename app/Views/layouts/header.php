@@ -1,18 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
 
-    <meta charset="utf-8">
-
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>SI ULT POLBAN</title>
 
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet"
-        href="<?= base_url('assets/adminlte/plugins/fontawesome-free/css/all.min.css') ?>">
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet"
-        href="<?= base_url('assets/adminlte/dist/css/adminlte.min.css') ?>">
+        href="<?= base_url('assets/css/style.css') ?>">
 
 </head>

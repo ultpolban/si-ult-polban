@@ -1,27 +1,84 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
 
-    <ul class="navbar-nav">
+    <div class="container">
 
-        <li class="nav-item">
+        <a class="navbar-brand fw-bold text-primary"
+            href="<?= base_url('/') ?>">
 
-            <a class="nav-link" data-widget="pushmenu">
+            ULT POLBAN
 
-                <i class="fas fa-bars"></i>
+        </a>
 
-            </a>
+        <button
+            class="navbar-toggler"
+            data-bs-toggle="collapse"
+            data-bs-target="#menu">
 
-        </li>
+            <span class="navbar-toggler-icon"></span>
 
-    </ul>
+        </button>
 
-    <ul class="navbar-nav ml-auto">
+        <div class="collapse navbar-collapse"
+            id="menu">
 
-        <li class="nav-item">
+            <ul class="navbar-nav ms-auto">
 
-            <?= session()->get('name') ?>
+                <li class="nav-item">
 
-        </li>
+                    <a class="nav-link"
+                        href="#beranda">
 
-    </ul>
+                        Beranda
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                        href="#layanan">
+
+                        Layanan
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                        href="#tentang">
+
+                        Tentang
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                        href="#faq">
+
+                        FAQ
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a href="<?= base_url('login') ?>" class="btn btn-primary">
+    Login
+</a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
 
 </nav>

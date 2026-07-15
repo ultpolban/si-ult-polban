@@ -1,8 +1,18 @@
-<script src="<?= base_url('assets/adminlte/plugins/jquery/jquery.min.js') ?>"></script>
+<footer class="bg-primary text-white py-4">
 
-<script src="<?= base_url('assets/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
+<div class="container text-center">
 
-<script src="<?= base_url('assets/adminlte/dist/js/adminlte.min.js') ?>"></script>
+<p class="mb-0">
+
+© 2026 SI ULT POLBAN
+
+</p>
+
+</div>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

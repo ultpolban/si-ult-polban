@@ -1,0 +1,307 @@
+/* =========================
+   SI-ULT POLBAN
+========================== */
+
+body{
+    background:#f4f6f9;
+    font-family:'Segoe UI',sans-serif;
+}
+
+/* Sidebar */
+
+.main-sidebar{
+    background:#003B73 !important;
+}
+
+/* Logo */
+
+.brand-link{
+    background:#005BAC !important;
+    color:white !important;
+    text-align:center;
+    height:75px;
+}
+
+.brand-link img{
+    width:42px;
+    height:42px;
+}
+
+/* Menu */
+
+.nav-sidebar .nav-link{
+    color:#fff;
+    border-radius:8px;
+    margin:5px 10px;
+}
+
+.nav-sidebar .nav-link:hover{
+    background:#005BAC;
+}
+
+.nav-sidebar .nav-link.active{
+    background:#F4B400;
+    color:#000;
+}
+
+/* Card */
+
+.small-box{
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+
+.card{
+    border-radius:15px;
+    box-shadow:0 5px 12px rgba(0,0,0,.08);
+}
+
+/* Table */
+
+.table thead{
+    background:#005BAC;
+    color:white;
+}
+
+/* Button */
+
+.btn{
+    border-radius:8px;
+}
+
+/* Badge */
+
+.badge{
+    padding:8px 12px;
+    font-size:13px;
+}
+
+/* ===========================
+   SIDEBAR
+=========================== */
+
+.brand-link{
+
+    height:80px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-direction:column;
+
+}
+
+.brand-link img{
+
+    width:45px;
+
+    margin-bottom:5px;
+
+}
+
+.brand-text{
+
+    font-size:15px;
+
+    color:white;
+
+}
+
+.user-panel{
+
+    border-bottom:1px solid rgba(255,255,255,.2);
+
+}
+
+.user-panel .info a{
+
+    color:white;
+
+    font-weight:bold;
+
+}
+
+.nav-sidebar .nav-link{
+
+    margin:6px 10px;
+
+    border-radius:10px;
+
+    transition:.3s;
+
+}
+
+.nav-sidebar .nav-link:hover{
+
+    transform:translateX(5px);
+
+}
+
+/* ===============================
+   NAVBAR
+================================ */
+
+.main-header{
+
+    border:none;
+
+    height:65px;
+
+    background:#ffffff;
+
+}
+
+.main-header .navbar-nav .nav-link{
+
+    color:#003B73;
+
+    font-weight:600;
+
+}
+
+.main-header img{
+
+    border-radius:50%;
+
+}
+
+.navbar-badge{
+
+    font-size:11px;
+
+}
+
+.dropdown-menu{
+
+    border-radius:12px;
+
+}
+
+.dropdown-item:hover{
+
+    background:#005BAC;
+
+    color:white;
+
+}
+
+/* =======================
+   DASHBOARD
+======================= */
+
+.small-box{
+
+    transition:.3s;
+
+    cursor:pointer;
+
+}
+
+.small-box:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.small-box .icon{
+
+    font-size:65px;
+
+    opacity:.2;
+
+}
+
+.small-box h3{
+
+    font-size:38px;
+
+    font-weight:bold;
+
+}
+
+.card{
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+.table tbody tr:hover{
+
+    background:#EEF6FF;
+
+}
+
+.table td{
+
+    vertical-align:middle;
+
+}
+
+.table{
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+}
+
+/* ===========================
+   Dashboard
+=========================== */
+
+.small-box{
+
+border-radius:18px;
+
+overflow:hidden;
+
+}
+
+.small-box .inner{
+
+padding:20px;
+
+}
+
+.small-box small{
+
+font-size:13px;
+
+color:white;
+
+}
+
+.card-header{
+
+font-weight:bold;
+
+}
+
+.list-group-item{
+
+border:none;
+
+padding:15px;
+
+}
+
+.list-group-item:hover{
+
+background:#f1f7ff;
+
+}
+
+.table td{
+
+vertical-align:middle;
+
+}

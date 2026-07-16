@@ -1,18 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
 
-    <meta charset="utf-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>SI ULT POLBAN</title>
+    <title>SI-ULT POLBAN</title>
 
     <link rel="stylesheet"
-        href="<?= base_url('assets/adminlte/plugins/fontawesome-free/css/all.min.css') ?>">
+href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
 
-    <link rel="stylesheet"
-        href="<?= base_url('assets/adminlte/dist/css/adminlte.min.css') ?>">
+<link rel="stylesheet"
+href="<?= base_url('assets/css/style.css') ?>">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
+
+<body class="hold-transition sidebar-mini">
+
+<div class="wrapper">

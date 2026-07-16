@@ -27,9 +27,8 @@ class DashboardController extends BaseController
             case 3: // Unit Kerja
                 return view('dashboard/unit');
 
-            case 4: // Pemohon
-                return view('dashboard/pemohon');
-
+           case 4:
+    return view('dashboard/pemohon');
             case 5: // Pimpinan
                 return view('dashboard/pimpinan');
 

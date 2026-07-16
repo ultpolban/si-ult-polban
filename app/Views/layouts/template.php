@@ -1,25 +1,59 @@
-<?= $this->include('layouts/header') ?>
+<!DOCTYPE html>
+<html lang="id">
 
-<body class="hold-transition sidebar-mini">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <div class="wrapper">
+    <title>SI ULT POLBAN</title>
 
-        <?= $this->include('layouts/navbar') ?>
+    <!-- Google Font -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700">
 
-        <?= $this->include('layouts/sidebar') ?>
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="<?= base_url('assets/adminlte/plugins/fontawesome-free/css/all.min.css'); ?>">
 
-        <div class="content-wrapper">
+    <!-- AdminLTE -->
+    <link rel="stylesheet"
+        href="<?= base_url('assets/adminlte/css/adminlte.min.css'); ?>">
 
-            <section class="content">
+    <!-- CSS Tambahan -->
+    <link rel="stylesheet"
+        href="<?= base_url('assets/adminlte/css/style.css'); ?>">
+</head>
 
-                <div class="container-fluid pt-3">
+<body class="hold-transition sidebar-mini layout-fixed">
 
-                    <?= $this->renderSection('content') ?>
+<div class="wrapper">
 
-                </div>
+    <?= $this->include('layouts/navbar'); ?>
 
-            </section>
+    <?= $this->include('layouts/sidebar'); ?>
 
-        </div>
+    <div class="content-wrapper">
 
-        <?= $this->include('layouts/footer') ?>
+        <section class="content pt-3">
+
+            <div class="container-fluid">
+
+                <?= $this->renderSection('content'); ?>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+<script src="<?= base_url('assets/adminlte/plugins/jquery/jquery.min.js'); ?>"></script>
+
+<script src="<?= base_url('assets/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
+
+<script src="<?= base_url('assets/adminlte/js/adminlte.min.js'); ?>"></script>
+
+</body>
+
+</html>

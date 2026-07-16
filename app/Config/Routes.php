@@ -99,3 +99,10 @@ $routes->group('unit', ['filter' => 'auth'], function ($routes) {
     $routes->get('update-status/(:num)', 'UnitController::updateStatus/$1');
 
 });
+
+$routes->get('/', 'LoginController::index');
+
+$routes->get('/login/petugas', 'LoginController::petugas');
+$routes->get('/login/unit', 'LoginController::unit');
+$routes->get('/login/admin', 'LoginController::admin');
+$routes->get('/login/pimpinan', 'LoginController::pimpinan');

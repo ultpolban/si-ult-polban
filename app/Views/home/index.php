@@ -53,6 +53,65 @@ class="img-fluid rounded">
 
 </section>
 
+<section id="tentang" class="py-5 bg-light">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Tentang SI ULT POLBAN</h2>
+            <p class="text-muted">
+                Mengenal Sistem Informasi Unit Layanan Terpadu Politeknik Negeri Bandung
+            </p>
+        </div>
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-10">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body p-5">
+
+                        <p class="text-muted" style="text-align: justify; line-height: 1.9;">
+
+                            Sistem Informasi Unit Layanan Terpadu (SI ULT) POLBAN merupakan
+                            aplikasi berbasis web yang dikembangkan untuk mendukung pelayanan
+                            administrasi di Politeknik Negeri Bandung. Sistem ini menjadi media
+                            bagi mahasiswa untuk mengakses berbagai layanan secara lebih mudah,
+                            cepat, dan terstruktur melalui satu platform.
+
+                        </p>
+
+                        <p class="text-muted" style="text-align: justify; line-height: 1.9;">
+
+                            Pada tahap pengembangan saat ini, SI ULT menyediakan layanan
+                            Akademik dan Keuangan sebagai fitur utama. Ke depannya, sistem ini
+                            dapat dikembangkan dengan menambahkan berbagai jenis layanan sesuai
+                            kebutuhan Unit Layanan Terpadu POLBAN.
+
+                        </p>
+
+                        <p class="text-muted mb-0" style="text-align: justify; line-height: 1.9;">
+
+                            Dengan adanya sistem ini, proses pengajuan layanan diharapkan
+                            menjadi lebih efisien, terdokumentasi dengan baik, serta
+                            mempermudah mahasiswa maupun petugas dalam melakukan proses
+                            pelayanan.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
 <section id="alur" class="py-5 bg-light">
 
     <div class="container">
@@ -242,7 +301,7 @@ Refund
 
 </p>
 
-<a href="<?= base_url('akademik') ?>" class="btn btn-primary w-100">
+<a href="<?= base_url('keuangan') ?>" class="btn btn-primary w-100">
     Lihat Layanan
 </a>
 
@@ -255,6 +314,117 @@ Refund
 </div>
 
 </div>
+
+</section>
+
+<section id="faq" class="py-5 bg-light">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2 class="fw-bold">
+                Frequently Asked Questions
+            </h2>
+
+            <p class="text-muted">
+                Pertanyaan yang sering diajukan mengenai SI ULT POLBAN.
+            </p>
+
+        </div>
+
+        <div class="accordion" id="faqAccordion">
+
+            <div class="accordion-item">
+
+                <h2 class="accordion-header">
+
+                    <button class="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#faq1">
+
+                        Bagaimana cara mengajukan layanan?
+
+                    </button>
+
+                </h2>
+
+                <div id="faq1"
+                    class="accordion-collapse collapse show"
+                    data-bs-parent="#faqAccordion">
+
+                    <div class="accordion-body">
+
+                        Login terlebih dahulu, pilih kategori layanan, kemudian klik <strong>Ajukan Layanan</strong> dan lengkapi persyaratan yang diminta.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="accordion-item">
+
+                <h2 class="accordion-header">
+
+                    <button class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#faq2">
+
+                        Apakah harus login?
+
+                    </button>
+
+                </h2>
+
+                <div id="faq2"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#faqAccordion">
+
+                    <div class="accordion-body">
+
+                        Ya, mahasiswa harus login menggunakan akun yang sudah terdaftar.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="accordion-item">
+
+                <h2 class="accordion-header">
+
+                    <button class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#faq3">
+
+                        Berapa lama proses layanan?
+
+                    </button>
+
+                </h2>
+
+                <div id="faq3"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#faqAccordion">
+
+                    <div class="accordion-body">
+
+                        Estimasi pengerjaan setiap layanan berbeda-beda sesuai jenis layanan yang dipilih.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </section>
 

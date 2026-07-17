@@ -17,9 +17,10 @@ $routes->post('/register', 'AuthController::storeRegister');
 
 $routes->get('/logout', 'AuthController::logout');
 
-$routes->get('/akademik', 'AkademikController::index');
-$routes->get('/keuangan', 'KeuanganController::index');
-
+$routes->get('services', 'ServiceController::index');
+$routes->get('/akademik', 'ServiceController::akademik');
+$routes->get('/keuangan', 'ServiceController::keuangan');
+$routes->get('layanan/(:num)', 'ServiceController::detail/$1');
 // ==============================
 // Routes yang harus login
 // ==============================

@@ -43,3 +43,15 @@ body{
     font-weight:700;
 
 }
+
+#tentang{
+    scroll-margin-top:80px;
+}
+
+#tentang .card{
+    border-radius:15px;
+}
+
+#tentang p{
+    font-size:16px;
+}

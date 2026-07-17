@@ -1,11 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Test</title>
-</head>
+<?= $this->include('layouts/header') ?>
+
 <body>
 
-<?= $this->renderSection('content') ?>
+<?= $this->include('layouts/navbar') ?>
 
-</body>
-</html>
+<div class="container mt-5">
+
+    <?= $this->renderSection('content') ?>
+
+</div>
+
+<?= $this->include('layouts/footer') ?>

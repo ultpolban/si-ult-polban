@@ -58,13 +58,9 @@
 
                 <li class="nav-item">
 
-                    <a class="nav-link"
-                        href="#faq">
-
-                        FAQ
-
-                    </a>
-
+                   <a href="#faq" class="nav-link">
+    FAQ
+</a>
                 </li>
 
                 <li class="nav-item">

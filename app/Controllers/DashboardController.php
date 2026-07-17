@@ -2,40 +2,57 @@
 
 namespace App\Controllers;
 
-use App\Models\UserModel;
-
 class DashboardController extends BaseController
 {
     public function index()
-    {
-        $role = session()->get('role_id');
+{
+    $data = [
 
-        switch ($role) {
+        'title' => 'Dashboard Pemohon',
 
-            case 1: // Admin
-                $userModel = new UserModel();
+        'user' => [
+            'nama'   => 'Alvin',
+            'nim'    => '221511000',
+            'prodi'  => 'D4 Teknik Informatika'
+        ],
 
-                $data = [
-                    'totalUser' => $userModel->countAll()
-                ];
+        'statistik' => [
+            'total'     => 8,
+            'diproses'  => 3,
+            'revisi'    => 1,
+            'selesai'   => 4
+        ],
 
-                return view('dashboard/admin', $data);
+        'tickets' => [
 
-            case 2: // Petugas
-                return view('dashboard/petugas');
+            [
+                'id'       => 1,
+                'nomor'    => 'ULT-20260716-0001',
+                'layanan'  => 'Surat Aktif Kuliah',
+                'tanggal'  => '16 Juli 2026',
+                'status'   => 'Submitted'
+            ],
 
-            case 3: // Unit Kerja
-                return view('dashboard/unit');
+            [
+                'id'       => 2,
+                'nomor'    => 'ULT-20260716-0002',
+                'layanan'  => 'Legalisir Ijazah',
+                'tanggal'  => '17 Juli 2026',
+                'status'   => 'In Progress'
+            ],
 
-            case 4: // Pemohon
-                return view('dashboard/pemohon');
+            [
+                'id'       => 3,
+                'nomor'    => 'ULT-20260716-0003',
+                'layanan'  => 'Verifikasi Alumni',
+                'tanggal'  => '18 Juli 2026',
+                'status'   => 'Completed'
+            ]
 
-            case 5: // Pimpinan
-                return view('dashboard/pimpinan');
+        ]
 
-            default:
-                session()->destroy();
-                return redirect()->to('/login');
-        }
-    }
+    ];
+
+    return view('dashboard/index', $data);
+}
 }

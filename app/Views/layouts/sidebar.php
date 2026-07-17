@@ -1,49 +1,106 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-dark-danger elevation-4">
 
-    <a href="<?= base_url('dashboard') ?>"
+<a href="#" class="brand-link">
 
-        class="brand-link">
+<span class="brand-text font-weight-light">
 
-        <span class="brand-text">
+SI-ULT POLBAN
 
-            SI ULT POLBAN
+</span>
 
-        </span>
+</a>
 
+<div class="sidebar">
+
+<nav class="mt-2">
+
+<ul class="nav nav-pills nav-sidebar flex-column">
+
+<li class="nav-item">
+
+<a href="<?= base_url('dashboard') ?>" class="nav-link active">
+
+<i class="nav-icon fas fa-home"></i>
+
+<p>Dashboard</p>
+
+</a>
+
+</li>
+
+<li class="nav-item">
+
+<a href="<?= base_url('ticket/create') ?>" class="nav-link">
+
+<i class="nav-icon fas fa-plus-circle"></i>
+
+<p>Ajukan Layanan</p>
+
+</a>
+
+</li>
+
+<li class="nav-item">
+
+<a href="<?= base_url('ticket/history') ?>" class="nav-link">
+
+<i class="nav-icon fas fa-ticket-alt"></i>
+
+<p>Tracking Tiket</p>
+
+</a>
+
+</li>
+
+<li class="nav-item">
+
+<a href="<?= base_url('profile') ?>" class="nav-link">
+
+<i class="nav-icon fas fa-user"></i>
+
+<p>Profil</p>
+
+</a>
+
+</li>
+
+<li class="nav-item">
+    <a href="<?= base_url('notification') ?>" class="nav-link">
+        <i class="nav-icon fas fa-bell"></i>
+        <p>Notifikasi</p>
     </a>
+</li>
 
-    <div class="sidebar">
+<li class="nav-item">
+    <a href="<?= base_url('faq') ?>" class="nav-link">
+        <i class="nav-icon fas fa-question-circle"></i>
+        <p>Bantuan / FAQ</p>
+    </a>
+</li>
 
-        <nav>
+<li class="nav-item">
+    <a href="<?= base_url('help') ?>" class="nav-link">
+        <i class="nav-icon fas fa-question-circle"></i>
+        <p>Pusat Bantuan</p>
+    </a>
+</li>
 
-            <ul class="nav nav-pills nav-sidebar flex-column">
+<li class="nav-item">
 
-                <li class="nav-item">
-                    <a href="<?= base_url('dashboard') ?>" class="nav-link">
-                        Dashboard
-                    </a>
-                </li>
+<a href="<?= base_url('logout') ?>" class="nav-link text-danger">
 
-                <?php if (hasRole(1)): ?>
+<i class="nav-icon fas fa-sign-out-alt"></i>
 
-                    <li class="nav-item">
-                        <a href="<?= base_url('users') ?>" class="nav-link">
-                            <p>Manajemen User</p>
-                        </a>
-                    </li>
+<p>Logout</p>
 
-                <?php endif; ?>
+</a>
 
-                <li class="nav-item">
-                    <a href="<?= base_url('logout') ?>" class="nav-link">
-                        Logout
-                    </a>
-                </li>
+</li>
 
-            </ul>
+</ul>
 
-        </nav>
+</nav>
 
-    </div>
+</div>
 
 </aside>

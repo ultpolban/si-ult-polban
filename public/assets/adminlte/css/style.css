@@ -1,0 +1,29 @@
+.content-wrapper{
+    background:#f4f6f9;
+}
+
+.small-box{
+    border-radius:15px;
+}
+
+.card{
+    border-radius:12px;
+}
+
+.brand-link{
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.table td{
+    vertical-align:middle;
+}
+
+.btn{
+    border-radius:8px;
+}
+
+.nav-sidebar .nav-link.active{
+    background:#dc3545;
+}

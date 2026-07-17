@@ -5,43 +5,69 @@ use CodeIgniter\Router\RouteCollection;
 /** @var RouteCollection $routes */
 $routes->get('/', 'Home::index');
 
-$routes->get('/login', 'AuthController::login');
-$routes->post('/login', 'AuthController::authenticate');
+$routes->group('dashboard', function($routes){
 
-$routes->get('/register', 'AuthController::register');
-$routes->post('/register', 'AuthController::storeRegister');
-
-$routes->get('/logout', 'AuthController::logout');
-
-$routes->group('', ['filter' => 'auth'], function ($routes) {
-
-    $routes->get('/dashboard', 'DashboardController::index');
-    $routes->get('users/create', 'UserController::create');
-    $routes->post('users/store', 'UserController::store');
-});
-
-$routes->group('users',['filter'=>'role'],function($routes){
-
-    $routes->get('/', 'UserController::index');
-    $routes->get('create', 'UserController::create');
-    $routes->post('store', 'UserController::store');
-    $routes->get('edit/(:num)', 'UserController::edit/$1');
-    $routes->post('update/(:num)', 'UserController::update/$1');
-    $routes->get('delete/(:num)', 'UserController::delete/$1');
+    $routes->get('/', 'DashboardController::index');
 
 });
 
-$routes->group('', ['filter' => 'auth'], function ($routes) {
+$routes->group('ticket', function($routes){
 
-    $routes->get('/dashboard', 'DashboardController::index');
+    $routes->get('create', 'TicketController::create');
 
-    $routes->get('/users', 'UserController::index');
+    $routes->post('store', 'TicketController::store');
 
-    $routes->get('/users/create', 'UserController::create');
-    $routes->post('/users/store', 'UserController::store');
+    $routes->get('detail/(:num)', 'TicketController::detail/$1');
 
-    $routes->get('/users/edit/(:num)', 'UserController::edit/$1');
-    $routes->post('/users/update/(:num)', 'UserController::update/$1');
+    $routes->get('history', 'TicketController::history');
 
-    $routes->get('/users/delete/(:num)', 'UserController::delete/$1');
 });
+
+$routes->group('profile', function($routes){
+
+    $routes->get('/', 'ProfileController::index');
+
+    $routes->get('edit', 'ProfileController::edit');
+
+});
+
+// Dashboard
+$routes->get('/dashboard', 'DashboardController::index');
+
+// Ticket
+$routes->get('/ticket/create', 'TicketController::create');
+$routes->post('/ticket/store', 'TicketController::store');
+$routes->get('/ticket/history', 'TicketController::history');
+$routes->get('/ticket/detail/(:num)', 'TicketController::detail/$1');
+
+// Profile
+$routes->get('/profile', 'ProfileController::index');
+$routes->get('/profile/edit', 'ProfileController::edit');
+$routes->post('/profile/update', 'ProfileController::update');
+
+$routes->get('/dashboard', 'DashboardController::index');
+
+$routes->get('ticket/create', 'TicketController::create');
+
+$routes->post('ticket/store', 'TicketController::store');
+
+$routes->get('ticket/success', 'TicketController::success');
+
+$routes->get('ticket/history', 'TicketController::history');
+$routes->get('ticket/detail/(:num)', 'TicketController::detail/$1');
+
+$routes->get('profile','ProfileController::index');
+
+$routes->get('profile/edit','ProfileController::edit');
+
+$routes->post('profile/update','ProfileController::update');
+
+$routes->get('dashboard/pemohon', 'DashboardController::pemohon');
+
+$routes->get('profile', 'ProfileController::index');
+
+$routes->get('/notification', 'NotificationController::index');
+
+$routes->get('faq', 'FaqController::index');
+
+$routes->get('help', 'HelpController::index');

@@ -1,27 +1,33 @@
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
 
-    <ul class="navbar-nav">
+<ul class="navbar-nav">
 
-        <li class="nav-item">
+<li class="nav-item">
 
-            <a class="nav-link" data-widget="pushmenu">
+<a class="nav-link" data-widget="pushmenu">
 
-                <i class="fas fa-bars"></i>
+<i class="fas fa-bars"></i>
 
-            </a>
+</a>
 
-        </li>
+</li>
 
-    </ul>
+</ul>
 
-    <ul class="navbar-nav ml-auto">
+<ul class="navbar-nav ms-auto">
 
-        <li class="nav-item">
+<li class="nav-item">
 
-            <?= session()->get('name') ?>
+<span class="nav-link">
 
-        </li>
+<i class="fas fa-user-circle"></i>
 
-    </ul>
+<?= isset($user['nama']) ? $user['nama'] : 'Pemohon'; ?>
+
+</span>
+
+</li>
+
+</ul>
 
 </nav>

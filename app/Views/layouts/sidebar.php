@@ -18,22 +18,18 @@
     <!-- Sidebar -->
     <div class="sidebar">
 
-        <!-- User Panel -->
+        <!-- User -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
             <div class="image">
-
                 <img src="https://ui-avatars.com/api/?name=Petugas&background=005BAC&color=fff"
                      class="img-circle elevation-2">
-
             </div>
 
             <div class="info">
-
                 <a href="#" class="d-block">
                     Petugas ULT
                 </a>
-
             </div>
 
         </div>
@@ -46,51 +42,38 @@
                 role="menu">
 
                 <li class="nav-item">
-
                     <a href="<?= base_url('petugas') ?>" class="nav-link">
-
                         <i class="nav-icon fas fa-home"></i>
-
                         <p>Dashboard</p>
-
                     </a>
-
                 </li>
 
                 <li class="nav-item">
-
                     <a href="<?= base_url('petugas/tiket') ?>" class="nav-link">
-
                         <i class="nav-icon fas fa-ticket-alt"></i>
-
                         <p>Data Tiket</p>
-
                     </a>
-
                 </li>
 
                 <li class="nav-item">
-
-                    <a href="<?= base_url('unit') ?>" class="nav-link">
-
-                        <i class="nav-icon fas fa-building"></i>
-
-                        <p>Unit Tujuan</p>
-
+                    <a href="<?= base_url('petugas/verifikasi/1') ?>" class="nav-link">
+                        <i class="nav-icon fas fa-user-check"></i>
+                        <p>Verifikasi Tiket</p>
                     </a>
-
                 </li>
 
                 <li class="nav-item">
+                    <a href="<?= base_url('petugas/disposisi/1') ?>" class="nav-link">
+                        <i class="nav-icon fas fa-share-square"></i>
+                        <p>Disposisi</p>
+                    </a>
+                </li>
 
-                    <a href="<?= base_url('/') ?>" class="nav-link">
-
+                <li class="nav-item">
+                    <a href="<?= base_url('logout') ?>" class="nav-link">
                         <i class="nav-icon fas fa-sign-out-alt"></i>
-
                         <p>Logout</p>
-
                     </a>
-
                 </li>
 
             </ul>

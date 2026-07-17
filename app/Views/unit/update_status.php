@@ -12,43 +12,13 @@
 
 <div class="col-sm-6">
 
-<h1>Update Status Tiket</h1>
+<h2 class="font-weight-bold text-primary">
+Update Status Tiket
+</h2>
 
 <p class="text-muted">
-
-Perbarui status penyelesaian layanan
-
+Perbarui status penyelesaian layanan mahasiswa.
 </p>
-
-</div>
-
-<div class="col-sm-6">
-
-<ol class="breadcrumb float-sm-right">
-
-<li class="breadcrumb-item">
-
-<a href="/unit">Dashboard</a>
-
-</li>
-
-<li class="breadcrumb-item">
-
-<a href="/unit/tiket">
-
-Data Tiket
-
-</a>
-
-</li>
-
-<li class="breadcrumb-item active">
-
-Update Status
-
-</li>
-
-</ol>
 
 </div>
 
@@ -62,7 +32,7 @@ Update Status
 
 <div class="container-fluid">
 
-<div class="card card-success">
+<div class="card card-primary">
 
 <div class="card-header">
 
@@ -76,21 +46,55 @@ Form Update Status
 
 <div class="card-body">
 
+<form>
+
+<div class="row">
+
+<div class="col-md-6">
+
 <div class="form-group">
 
-<label>Nomor Tiket</label>
+<label>Nama Mahasiswa</label>
 
 <input
 type="text"
 class="form-control"
-value="ULT-20260715-0001"
+value="Rafi Putra"
 readonly>
 
 </div>
 
 <div class="form-group">
 
-<label>Status Baru</label>
+<label>NIM</label>
+
+<input
+type="text"
+class="form-control"
+value="231511001"
+readonly>
+
+</div>
+
+<div class="form-group">
+
+<label>Jenis Layanan</label>
+
+<input
+type="text"
+class="form-control"
+value="Surat Aktif Kuliah"
+readonly>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>Status</label>
 
 <select class="form-control">
 
@@ -98,9 +102,23 @@ readonly>
 
 <option>Selesai</option>
 
-<option>Perlu Revisi</option>
+<option>Ditolak</option>
 
 </select>
+
+</div>
+
+<div class="form-group">
+
+<label>Tanggal Update</label>
+
+<input
+type="date"
+class="form-control">
+
+</div>
+
+</div>
 
 </div>
 
@@ -111,22 +129,25 @@ readonly>
 <textarea
 class="form-control"
 rows="5"
-placeholder="Masukkan catatan penyelesaian layanan..."></textarea>
+placeholder="Masukkan catatan proses layanan..."></textarea>
 
 </div>
+
+<div class="form-group">
+
+<label>Upload Dokumen (Opsional)</label>
+
+<input
+type="file"
+class="form-control">
+
+</div>
+
+</form>
 
 </div>
 
 <div class="card-footer">
-
-<a href="/unit/detail/1"
-class="btn btn-secondary">
-
-<i class="fas fa-arrow-left"></i>
-
-Kembali
-
-</a>
 
 <button class="btn btn-success">
 
@@ -135,6 +156,12 @@ Kembali
 Simpan Status
 
 </button>
+
+<a href="<?= base_url('unit/tiket') ?>" class="btn btn-secondary">
+
+Kembali
+
+</a>
 
 </div>
 

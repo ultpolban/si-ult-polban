@@ -1,95 +1,114 @@
+<!-- Main Sidebar -->
 <aside class="main-sidebar elevation-4">
 
-<a href="<?= base_url('unit') ?>" class="brand-link text-center">
+    <!-- Logo -->
+    <a href="<?= base_url('unit') ?>" class="brand-link text-center">
 
-<img src="<?= base_url('assets/img/logo-polban.png') ?>"
-class="brand-image img-circle elevation-3">
+        <img src="<?= base_url('assets/img/logo-polban.png') ?>"
+             class="brand-image img-circle elevation-3"
+             style="opacity:.9">
 
-<span class="brand-text font-weight-bold">
-SI-ULT POLBAN
-</span>
+        <span class="brand-text font-weight-bold">
+            SI-ULT POLBAN
+        </span>
 
-</a>
+    </a>
 
-<div class="sidebar">
+    <!-- Sidebar -->
+    <div class="sidebar">
 
-<div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <!-- User -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
-<div class="image">
+            <div class="image">
 
-<img src="https://ui-avatars.com/api/?name=Unit&background=005BAC&color=fff"
-class="img-circle elevation-2">
+                <img src="https://ui-avatars.com/api/?name=Unit&background=005BAC&color=fff"
+                     class="img-circle elevation-2">
 
-</div>
+            </div>
 
-<div class="info">
+            <div class="info">
 
-<a href="#" class="d-block">
+                <a href="#" class="d-block">
 
-Unit Tujuan
+                    Unit Tujuan
 
-</a>
+                </a>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<nav>
+        <!-- Menu -->
+        <nav class="mt-2">
 
-<ul class="nav nav-pills nav-sidebar flex-column">
+            <ul class="nav nav-pills nav-sidebar flex-column"
+                data-widget="treeview"
+                role="menu">
 
-<li class="nav-item">
+                <li class="nav-item">
 
-<a href="<?= base_url('unit') ?>" class="nav-link">
+                    <a href="<?= base_url('unit') ?>" class="nav-link">
 
-<i class="fas fa-home nav-icon"></i>
+                        <i class="nav-icon fas fa-home"></i>
 
-<p>Dashboard</p>
+                        <p>Dashboard</p>
 
-</a>
+                    </a>
 
-</li>
+                </li>
 
-<li class="nav-item">
+                <li class="nav-item">
 
-<a href="<?= base_url('unit') ?>" class="nav-link">
+                   <a href="<?= base_url('unit/tiket') ?>" class="nav-link">
+                        <i class="nav-icon fas fa-ticket-alt"></i>
 
-<i class="fas fa-ticket-alt nav-icon"></i>
+                        <p>Data Tiket</p>
 
-<p>Data Tiket</p>
+                    </a>
 
-</a>
+                </li>
 
-</li>
+                <li class="nav-item">
 
-<li class="nav-item">
+                    <a href="<?= base_url('unit/update-status/1') ?>" class="nav-link">
 
-<a href="<?= base_url('unit/laporan') ?>" class="nav-link">
+                        <i class="nav-icon fas fa-sync-alt"></i>
 
-<i class="fas fa-chart-bar nav-icon"></i>
+                        <p>Update Status</p>
 
-<p>Laporan</p>
+                    </a>
 
-</a>
+                </li>
 
-</li>
+                <li class="nav-item">
 
-<li class="nav-item">
+                    <a href="<?= base_url('unit/laporan') ?>" class="nav-link">
 
-<a href="<?= base_url('/') ?>" class="nav-link">
+                        <i class="nav-icon fas fa-chart-bar"></i>
 
-<i class="fas fa-sign-out-alt nav-icon"></i>
+                        <p>Laporan</p>
 
-<p>Logout</p>
+                    </a>
 
-</a>
+                </li>
 
-</li>
+                <li class="nav-item">
 
-</ul>
+                    <a href="<?= base_url('logout') ?>" class="nav-link">
 
-</nav>
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
 
-</div>
+                        <p>Logout</p>
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </div>
 
 </aside>

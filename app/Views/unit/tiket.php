@@ -1,6 +1,6 @@
 <?= view('layouts/header') ?>
 <?= view('layouts/navbar') ?>
-<?= view('layouts/sidebar') ?>
+<?= view('layouts/sidebar_unit') ?>
 
 <div class="content-wrapper">
 
@@ -13,11 +13,15 @@
 <div class="col-sm-6">
 
 <h2 class="font-weight-bold text-primary">
-Data Tiket Masuk
+
+Data Tiket Unit Tujuan
+
 </h2>
 
 <p class="text-muted">
-Daftar pengajuan mahasiswa yang masuk ke Unit Layanan Terpadu
+
+Daftar tiket yang harus diproses oleh Unit Tujuan
+
 </p>
 
 </div>
@@ -111,7 +115,7 @@ placeholder="Cari mahasiswa...">
 
 <span class="badge badge-warning">
 
-Menunggu Verifikasi
+Menunggu
 
 </span>
 
@@ -119,15 +123,11 @@ Menunggu Verifikasi
 
 <td>
 
-<a href="<?= base_url('petugas/detail/1') ?>" class="btn btn-info btn-sm">
+<a href="<?= base_url('unit/update-status/1') ?>" class="btn btn-success btn-sm">
 
-<i class="fas fa-eye"></i>
+<i class="fas fa-edit"></i>
 
-</a>
-
-<a href="<?= base_url('petugas/verifikasi/1') ?>" class="btn btn-success btn-sm">
-
-<i class="fas fa-check"></i>
+Update
 
 </a>
 
@@ -141,7 +141,7 @@ Menunggu Verifikasi
 
 <td>231511002</td>
 
-<td>Siti Nurhaliza</td>
+<td>Budi Santoso</td>
 
 <td>Legalisir Ijazah</td>
 
@@ -149,9 +149,9 @@ Menunggu Verifikasi
 
 <td>
 
-<span class="badge badge-success">
+<span class="badge badge-info">
 
-Terverifikasi
+Diproses
 
 </span>
 
@@ -159,15 +159,11 @@ Terverifikasi
 
 <td>
 
-<a href="<?= base_url('petugas/detail/2') ?>" class="btn btn-info btn-sm">
+<a href="<?= base_url('unit/update-status/2') ?>" class="btn btn-success btn-sm">
 
-<i class="fas fa-eye"></i>
+<i class="fas fa-edit"></i>
 
-</a>
-
-<a href="<?= base_url('petugas/disposisi/2') ?>" class="btn btn-warning btn-sm">
-
-<i class="fas fa-share"></i>
+Update
 
 </a>
 

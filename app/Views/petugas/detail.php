@@ -4,276 +4,189 @@
 
 <div class="content-wrapper">
 
-    <section class="content-header">
-        <div class="container-fluid">
-            <h2>Detail Tiket</h2>
-            <p class="text-muted">
-                Informasi lengkap permohonan layanan
-            </p>
-        </div>
-    </section>
+<section class="content-header">
 
-    <section class="content">
+<div class="container-fluid">
 
-        <div class="container-fluid">
+<div class="row mb-2">
 
-            <div class="row">
+<div class="col-sm-6">
 
-                <!-- Informasi Tiket -->
-                <div class="col-md-8">
+<h2 class="font-weight-bold text-primary">
 
-                    <div class="card card-primary">
+Detail Tiket
 
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                Informasi Tiket
-                            </h3>
-                        </div>
+</h2>
 
-                        <div class="card-body">
+<p class="text-muted">
 
-                            <table class="table table-bordered">
+Informasi lengkap pengajuan mahasiswa
 
-                                <tr>
-                                    <th width="220">Nomor Tiket</th>
-                                    <td>ULT-20260715-0001</td>
-                                </tr>
+</p>
 
-                                <tr>
-                                    <th>Nama Pemohon</th>
-                                    <td>Budi Santoso</td>
-                                </tr>
+</div>
 
-                                <tr>
-                                    <th>NIM</th>
-                                    <td>221511000</td>
-                                </tr>
+<div class="col-sm-6">
 
-                                <tr>
-                                    <th>Layanan</th>
-                                    <td>Surat Keterangan Aktif Kuliah</td>
-                                </tr>
+<ol class="breadcrumb float-sm-right">
 
-                                <tr>
-                                    <th>Status</th>
-                                    <td>
-                                        <span class="badge badge-warning">
-                                            Submitted
-                                        </span>
-                                    </td>
-                                </tr>
+<li class="breadcrumb-item">
+Dashboard
+</li>
 
-                                <tr>
-                                    <th>Prioritas</th>
-                                    <td>
-                                        <span class="badge badge-danger">
-                                            High
-                                        </span>
-                                    </td>
-                                </tr>
+<li class="breadcrumb-item">
+Data Tiket
+</li>
 
-                                <tr>
-                                    <th>Tanggal Pengajuan</th>
-                                    <td>15 Juli 2026</td>
-                                </tr>
+<li class="breadcrumb-item active">
+Detail
+</li>
 
-                            </table>
+</ol>
 
-                        </div>
+</div>
 
-                    </div>
+</div>
 
-                </div>
+</div>
 
-                <!-- Lampiran -->
-                <div class="col-md-4">
+</section>
 
-                    <div class="card">
+<section class="content">
 
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                Lampiran
-                            </h3>
-                        </div>
+<div class="container-fluid">
 
-                        <div class="card-body">
+<div class="card card-primary">
 
-<table class="table table-bordered">
+<div class="card-header">
 
-<tr>
-    <th width="220">Nomor Tiket</th>
-    <td>ULT-20260715-0001</td>
-</tr>
+<h3 class="card-title">
 
-<tr>
-    <th>Nama Pemohon</th>
-    <td>Budi Santoso</td>
-</tr>
+Data Pengajuan
 
-<tr>
-    <th>Email</th>
-    <td>budi@gmail.com</td>
-</tr>
+</h3>
 
-<tr>
-    <th>Jenis Layanan</th>
-    <td>Surat Aktif Kuliah</td>
-</tr>
+</div>
 
-<tr>
-    <th>Status</th>
-    <td>
-        <span class="badge bg-warning">
-            Submitted
-        </span>
-    </td>
-</tr>
+<div class="card-body">
 
-<tr>
-    <th>Prioritas</th>
-    <td>
-        <span class="badge bg-danger">
-            High
-        </span>
-    </td>
-</tr>
+<div class="row">
 
-<tr>
-    <th>Tanggal</th>
-    <td>15 Juli 2026</td>
-</tr>
+<div class="col-md-6">
 
-<tr>
-    <th>Deskripsi</th>
-    <td>
-        Pengajuan Surat Aktif Kuliah untuk kebutuhan beasiswa.
-    </td>
-</tr>
+<div class="form-group">
 
-<tr>
-    <th>Lampiran</th>
-    <td>
-        <a href="#" class="btn btn-info btn-sm">
-            Download KTM.pdf
-        </a>
-    </td>
-</tr>
+<label>Nama Mahasiswa</label>
 
-</table>
+<input type="text" class="form-control" value="Rafi Putra" readonly>
+
+</div>
+
+<div class="form-group">
+
+<label>NIM</label>
+
+<input type="text" class="form-control" value="231511001" readonly>
+
+</div>
+
+<div class="form-group">
+
+<label>Email</label>
+
+<input type="text" class="form-control" value="rafi@student.polban.ac.id" readonly>
+
+</div>
+
+<div class="form-group">
+
+<label>No HP</label>
+
+<input type="text" class="form-control" value="081234567890" readonly>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>Jenis Layanan</label>
+
+<input type="text" class="form-control" value="Surat Aktif Kuliah" readonly>
+
+</div>
+
+<div class="form-group">
+
+<label>Tanggal Pengajuan</label>
+
+<input type="text" class="form-control" value="17 Juli 2026" readonly>
+
+</div>
+
+<div class="form-group">
+
+<label>Status</label>
+
+<input type="text" class="form-control" value="Menunggu Verifikasi" readonly>
+
+</div>
+
+<div class="form-group">
+
+<label>Lampiran</label>
+
+<br>
+
+<a href="#" class="btn btn-info">
+
+<i class="fas fa-file-pdf"></i>
+
+Lihat Lampiran
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="form-group">
+
+<label>Deskripsi Pengajuan</label>
+
+<textarea class="form-control" rows="5" readonly>Saya mengajukan Surat Aktif Kuliah untuk keperluan beasiswa.</textarea>
+
+</div>
 
 </div>
 
 <div class="card-footer">
 
-<a href="<?= base_url('petugas/tiket') ?>"
-class="btn btn-secondary">
+<a href="<?= base_url('petugas/verifikasi/1') ?>" class="btn btn-success">
 
-<i class="fas fa-arrow-left"></i>
+<i class="fas fa-check"></i>
+
+Verifikasi
+
+</a>
+
+<a href="<?= base_url('petugas/tiket') ?>" class="btn btn-secondary">
 
 Kembali
 
 </a>
 
 </div>
-                    </div>
 
-                </div>
+</div>
 
-            </div>
+</div>
 
-            <!-- Riwayat -->
-            <div class="card">
-
-                <div class="card-header">
-                    <h3 class="card-title">
-                        Riwayat Status
-                    </h3>
-                </div>
-
-                <div class="card-body">
-
-                    <table class="table table-striped">
-
-                        <thead>
-
-                        <tr>
-
-                            <th>Tanggal</th>
-                            <th>Status</th>
-                            <th>Keterangan</th>
-
-                        </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                        <tr>
-
-                            <td>15 Juli 2026</td>
-
-                            <td>
-                                <span class="badge badge-primary">
-                                    Submitted
-                                </span>
-                            </td>
-
-                            <td>Permohonan berhasil dibuat.</td>
-
-                        </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-            <!-- Tombol -->
-            <div class="mb-4">
-
-                <a href="/petugas/verifikasi/1"
-                   class="btn btn-success">
-
-                    <i class="fas fa-check"></i>
-
-                    Verifikasi
-
-                </a>
-
-                <a href="/petugas/disposisi/1"
-                   class="btn btn-primary">
-
-                    <i class="fas fa-share"></i>
-
-                    Disposisi
-
-                </a>
-
-                <a href="<?= base_url('petugas/update-status/1') ?>"
-class="btn btn-warning">
-
-<i class="fas fa-edit"></i>
-
-Update Status
-
-</a>
-
-                <a href="/petugas/tiket"
-                   class="btn btn-secondary">
-
-                    <i class="fas fa-arrow-left"></i>
-
-                    Kembali
-
-                </a>
-
-            </div>
-
-        </div>
-
-    </section>
+</section>
 
 </div>
 

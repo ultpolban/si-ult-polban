@@ -5,56 +5,151 @@
 <div class="content-wrapper">
 
 <section class="content-header">
+
 <div class="container-fluid">
 
-<div class="row mb-2">
+<h2 class="font-weight-bold text-primary">
 
-<div class="col-sm-6">
-<h1>Laporan Unit</h1>
+Laporan Unit Tujuan
+
+</h2>
+
 <p class="text-muted">
-Rekap seluruh tiket yang telah diproses
+
+Rekapitulasi penyelesaian layanan mahasiswa.
+
 </p>
-</div>
-
-<div class="col-sm-6">
-<ol class="breadcrumb float-sm-right">
-<li class="breadcrumb-item">
-<a href="<?= base_url('unit') ?>">Dashboard</a>
-</li>
-<li class="breadcrumb-item active">
-Laporan
-</li>
-</ol>
-</div>
 
 </div>
 
-</div>
 </section>
 
 <section class="content">
 
 <div class="container-fluid">
 
+<div class="row">
+
+<div class="col-lg-3">
+
+<div class="small-box bg-info">
+
+<div class="inner">
+
+<h3>30</h3>
+
+<p>Total Tiket</p>
+
+</div>
+
+<div class="icon">
+
+<i class="fas fa-ticket-alt"></i>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3">
+
+<div class="small-box bg-warning">
+
+<div class="inner">
+
+<h3>8</h3>
+
+<p>Diproses</p>
+
+</div>
+
+<div class="icon">
+
+<i class="fas fa-spinner"></i>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3">
+
+<div class="small-box bg-success">
+
+<div class="inner">
+
+<h3>20</h3>
+
+<p>Selesai</p>
+
+</div>
+
+<div class="icon">
+
+<i class="fas fa-check-circle"></i>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3">
+
+<div class="small-box bg-danger">
+
+<div class="inner">
+
+<h3>2</h3>
+
+<p>Ditolak</p>
+
+</div>
+
+<div class="icon">
+
+<i class="fas fa-times-circle"></i>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 <div class="card">
 
 <div class="card-header">
-<h3 class="card-title">Data Laporan</h3>
+
+<h3 class="card-title">
+
+Rekap Data Tiket
+
+</h3>
+
 </div>
 
-<div class="card-body">
+<div class="card-body table-responsive">
 
-<table class="table table-bordered table-striped">
+<table class="table table-bordered table-hover">
 
-<thead>
+<thead class="bg-primary">
 
 <tr>
+
 <th>No</th>
-<th>No Tiket</th>
-<th>Pemohon</th>
+
 <th>Layanan</th>
-<th>Status</th>
-<th>Tanggal Selesai</th>
+
+<th>Total</th>
+
+<th>Selesai</th>
+
+<th>Diproses</th>
+
 </tr>
 
 </thead>
@@ -62,16 +157,31 @@ Laporan
 <tbody>
 
 <tr>
+
 <td>1</td>
-<td>ULT-20260715-0001</td>
-<td>Budi Santoso</td>
+
 <td>Surat Aktif Kuliah</td>
-<td>
-<span class="badge badge-success">
-Selesai
-</span>
-</td>
-<td>15 Juli 2026</td>
+
+<td>10</td>
+
+<td>8</td>
+
+<td>2</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>Legalisir Ijazah</td>
+
+<td>20</td>
+
+<td>12</td>
+
+<td>8</td>
+
 </tr>
 
 </tbody>

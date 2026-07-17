@@ -1,77 +1,155 @@
-<form action="<?= base_url('petugas/disposisi/1') ?>" method="post">
+<?= view('layouts/header') ?>
+<?= view('layouts/navbar') ?>
+<?= view('layouts/sidebar') ?>
 
-    <div class="form-group">
-        <label>Pilih Unit</label>
+<div class="content-wrapper">
 
-        <select class="form-control" name="unit">
-            <option value="">-- Pilih Unit --</option>
-            <option value="Akademik">Akademik</option>
-            <option value="Kemahasiswaan">Kemahasiswaan</option>
-            <option value="Keuangan">Keuangan</option>
-            <option value="Umum">Umum</option>
-        </select>
-    </div>
+<section class="content-header">
 
-    <br>
+<div class="container-fluid">
 
-    <div class="card-body">
+<div class="row mb-2">
+
+<div class="col-sm-6">
+
+<h2 class="font-weight-bold text-primary">
+Disposisi Tiket
+</h2>
+
+<p class="text-muted">
+Teruskan tiket ke Unit Tujuan yang sesuai
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="content">
+
+<div class="container-fluid">
+
+<div class="card card-primary">
+
+<div class="card-header">
+
+<h3 class="card-title">
+
+Form Disposisi
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<form>
+
+<div class="row">
+
+<div class="col-md-6">
 
 <div class="form-group">
 
-<label>Unit Tujuan</label>
+<label>Nama Mahasiswa</label>
+
+<input
+type="text"
+class="form-control"
+value="Rafi Putra"
+readonly>
+
+</div>
+
+<div class="form-group">
+
+<label>NIM</label>
+
+<input
+type="text"
+class="form-control"
+value="231511001"
+readonly>
+
+</div>
+
+<div class="form-group">
+
+<label>Jenis Layanan</label>
+
+<input
+type="text"
+class="form-control"
+value="Surat Aktif Kuliah"
+readonly>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>Pilih Unit Tujuan</label>
 
 <select class="form-control">
 
-<option>Bagian Akademik</option>
+<option>-- Pilih Unit --</option>
 
-<option>Bagian Kemahasiswaan</option>
+<option>Unit Akademik</option>
 
-<option>Bagian Keuangan</option>
+<option>Unit Keuangan</option>
 
-<option>Bagian Umum</option>
+<option>Jurusan</option>
+
+<option>Kemahasiswaan</option>
+
+<option>Perpustakaan</option>
 
 </select>
 
 </div>
 
-<div class="form-group mt-3">
+<div class="form-group">
 
 <label>Prioritas</label>
 
 <select class="form-control">
 
-<option>Low</option>
+<option>Normal</option>
 
-<option>Medium</option>
-
-<option>High</option>
+<option>Tinggi</option>
 
 </select>
 
 </div>
 
-<div class="form-group mt-3">
+</div>
+
+</div>
+
+<div class="form-group">
 
 <label>Catatan Petugas</label>
 
-<textarea class="form-control"
-rows="5"></textarea>
+<textarea
+class="form-control"
+rows="5"
+placeholder="Masukkan catatan..."></textarea>
 
 </div>
+
+</form>
 
 </div>
 
 <div class="card-footer">
 
-<a href="<?= base_url('petugas/tiket') ?>"
-class="btn btn-secondary">
-
-Kembali
-
-</a>
-
-<button
-class="btn btn-primary">
+<button class="btn btn-success">
 
 <i class="fas fa-paper-plane"></i>
 
@@ -79,13 +157,20 @@ Kirim Disposisi
 
 </button>
 
+<a href="<?= base_url('petugas/tiket') ?>" class="btn btn-secondary">
+
+Kembali
+
+</a>
+
 </div>
 
-    <br>
+</div>
 
-    <button type="submit" class="btn btn-primary">
-        <i class="fas fa-paper-plane"></i>
-        Kirim Disposisi
-    </button>
+</div>
 
-</form>
+</section>
+
+</div>
+
+<?= view('layouts/footer') ?>

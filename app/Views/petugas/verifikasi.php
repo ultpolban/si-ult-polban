@@ -4,146 +4,104 @@
 
 <div class="content-wrapper">
 
-    <!-- Header -->
-    <section class="content-header">
-        <div class="container-fluid">
+<section class="content-header">
 
-            <div class="d-flex justify-content-between align-items-center mb-2">
+<div class="container-fluid">
 
-                <div>
-                    <h2>Verifikasi Tiket</h2>
-                    <p class="text-muted mb-0">
-                        Verifikasi data permohonan sebelum diproses
-                    </p>
-                </div>
+<h2 class="font-weight-bold text-primary">
+Verifikasi Tiket
+</h2>
 
-               <nav aria-label="breadcrumb">
-    <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item">
-            <a href="<?= base_url('petugas') ?>">Dashboard</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="<?= base_url('petugas/tiket') ?>">Data Tiket</a>
-        </li>
-        <li class="breadcrumb-item active">
-            Verifikasi
-        </li>
-    </ol>
-</nav>
+<p class="text-muted">
+Verifikasi pengajuan mahasiswa sebelum diteruskan ke Unit Tujuan.
+</p>
 
-            </div>
+</div>
 
-        </div>
-    </section>
+</section>
 
-    <section class="content">
+<section class="content">
 
-        <div class="container-fluid">
+<div class="container-fluid">
 
-            <div class="card card-primary">
+<div class="card">
 
-                <div class="card-header">
-                    <h3 class="card-title">
-                        Form Verifikasi Tiket
-                    </h3>
-                </div>
+<div class="card-header bg-primary">
 
-                <div class="card-body">
+<h3 class="card-title">
 
-                    <div class="row">
+Form Verifikasi Tiket
 
-                        <div class="col-md-6">
+</h3>
 
-                            <div class="form-group">
-                                <label>Nomor Tiket</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    value="ULT-20260715-0001"
-                                    readonly>
-                            </div>
+</div>
 
-                        </div>
+<div class="card-body">
 
-                        <div class="col-md-6">
+<form>
 
-                            <div class="form-group">
-                                <label>Nama Pemohon</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    value="Budi Santoso"
-                                    readonly>
-                            </div>
+<div class="form-group">
 
-                        </div>
+<label>Nama Mahasiswa</label>
 
-                    </div>
+<input
+type="text"
+class="form-control"
+value="Rafi Putra"
+readonly>
 
-                    <div class="form-group">
+</div>
 
-                        <label>Layanan</label>
+<div class="form-group">
 
-                        <input
-                            type="text"
-                            class="form-control"
-                            value="Surat Aktif Kuliah"
-                            readonly>
+<label>NIM</label>
 
-                    </div>
+<input
+type="text"
+class="form-control"
+value="231511001"
+readonly>
 
-                    <div class="form-group">
+</div>
 
-                        <label>Hasil Verifikasi</label>
+<div class="form-group">
 
-                        <select class="form-control">
+<label>Jenis Layanan</label>
 
-                            <option selected disabled>
-                                -- Pilih Hasil Verifikasi --
-                            </option>
+<input
+type="text"
+class="form-control"
+value="Surat Aktif Kuliah"
+readonly>
 
-                            <option>Disetujui</option>
+</div>
 
-                            <option>Perlu Revisi</option>
+<div class="form-group">
 
-                            <option>Ditolak</option>
+<label>Status Verifikasi</label>
 
-                        </select>
+<select class="form-control">
 
-                    </div>
+<option>Disetujui</option>
 
-                    <div class="form-group">
+<option>Ditolak</option>
 
-                        <label>Catatan Petugas</label>
+</select>
 
-                        <textarea
-                            class="form-control"
-                            rows="5"
-                            placeholder="Masukkan catatan verifikasi..."></textarea>
+</div>
 
-                    </div>
+<div class="form-group">
 
-                </div>
+<label>Catatan</label>
 
-                <div class="card-footer">
+<textarea
+class="form-control"
+rows="5"></textarea>
 
-                    <a href="/petugas/tiket"
-                       class="btn btn-secondary">
+</div>
 
-                        <i class="fas fa-arrow-left"></i>
-
-                        Kembali
-
-                    </a>
-
-                   <form>
-
-....
-
-<button type="submit"
-class="btn btn-success">
-
-<i class="fas fa-check-circle"></i>
+<button
+class="btn btn-primary">
 
 Simpan Verifikasi
 
@@ -151,13 +109,13 @@ Simpan Verifikasi
 
 </form>
 
-                </div>
+</div>
 
-            </div>
+</div>
 
-        </div>
+</div>
 
-    </section>
+</section>
 
 </div>
 

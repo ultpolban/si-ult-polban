@@ -10,7 +10,7 @@ use CodeIgniter\Router\RouteCollection;
 // PUBLIC
 // ======================================
 
-$routes->get('/', 'Home::index');
+$routes->get('/', 'AuthController::login');
 
 // ======================================
 // AUTH
@@ -25,7 +25,7 @@ $routes->post('/register', 'AuthController::storeRegister');
 $routes->get('/logout', 'AuthController::logout');
 
 // ======================================
-// USER MANAGEMENT (ROLE)
+// USER MANAGEMENT
 // ======================================
 
 $routes->group('users', ['filter' => 'role'], function ($routes) {
@@ -38,48 +38,39 @@ $routes->group('users', ['filter' => 'role'], function ($routes) {
     $routes->post('update/(:num)', 'UserController::update/$1');
 
     $routes->get('delete/(:num)', 'UserController::delete/$1');
-
 });
 
 // ======================================
-// DASHBOARD (LOGIN)
+// DASHBOARD PEMOHON
 // ======================================
 
-$routes->group('', ['filter' => 'auth'], function ($routes) {
+$routes->group('dashboard', ['filter' => 'auth'], function ($routes) {
 
-    $routes->get('/dashboard', 'Dashboard::index');
+    $routes->get('/', 'Dashboard::index');
 
-    $routes->get('/dashboard/layanan', 'Dashboard::layanan');
-    $routes->get('/dashboard/tiket', 'Dashboard::tiket');
-    $routes->get('/dashboard/detail', 'Dashboard::detail');
-    $routes->get('/dashboard/profile', 'Dashboard::profile');
-
+    $routes->get('layanan', 'Dashboard::layanan');
+    $routes->get('tiket', 'Dashboard::tiket');
+    $routes->get('detail', 'Dashboard::detail');
+    $routes->get('profile', 'Dashboard::profile');
 });
 
 // ======================================
-// PETUGAS ULT
+// PETUGAS
 // ======================================
 
 $routes->group('petugas', ['filter' => 'auth'], function ($routes) {
 
-    // Dashboard
     $routes->get('/', 'PetugasController::dashboard');
 
-    // Data Tiket
     $routes->get('tiket', 'PetugasController::tiket');
 
-    // Detail Tiket
     $routes->get('detail/(:num)', 'PetugasController::detail/$1');
 
-    // Verifikasi Tiket
     $routes->get('verifikasi/(:num)', 'PetugasController::verifikasi/$1');
 
-    // Disposisi Tiket
     $routes->get('disposisi/(:num)', 'PetugasController::disposisi/$1');
 
-    // Update Status
     $routes->get('update-status/(:num)', 'PetugasController::updateStatus/$1');
-
 });
 
 // ======================================
@@ -100,9 +91,8 @@ $routes->group('unit', ['filter' => 'auth'], function ($routes) {
 
 });
 
-$routes->get('/', 'LoginController::index');
+// Admin
+$routes->get('/admin', 'AdminController::index');
 
-$routes->get('/login/petugas', 'LoginController::petugas');
-$routes->get('/login/unit', 'LoginController::unit');
-$routes->get('/login/admin', 'LoginController::admin');
-$routes->get('/login/pimpinan', 'LoginController::pimpinan');
+// Pimpinan
+$routes->get('/pimpinan', 'PimpinanController::index');

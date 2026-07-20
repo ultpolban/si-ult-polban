@@ -1,6 +1,6 @@
 <?= $this->include('layouts/header'); ?>
 <?= $this->include('layouts/navbar'); ?>
-<?= $this->include('layouts/sidebar'); ?>
+<?= $this->include('layouts/sidebar_mahasiswa') ?>
 
 <div class="content-wrapper">
 
@@ -11,7 +11,7 @@
             <div class="row mb-2">
 
                 <div class="col-sm-6">
-                    <h1>Dashboard Pemohon</h1>
+                    <h1>Dashboard Mahasiswa</h1>
                 </div>
 
                 <div class="col-sm-6 text-end">
@@ -37,62 +37,39 @@
         <div class="container-fluid">
 
             <!-- Welcome Card -->
-            <div class="card shadow">
-
-<div class="card-body">
-
-<div class="row align-items-center">
-
-<div class="col-md-9">
-
-<h3 class="mb-2">
-
-Selamat Datang,
-
-<b><?= $user['nama']; ?></b> 👋
-
+<h3>
+Selamat Datang Mahasiswa,
+<?= $user['nama']; ?>
 </h3>
 
-<p class="mb-1">
+<p class="text-muted">
 
-<b>NIM :</b>
-
+NIM :
 <?= $user['nim']; ?>
 
-</p>
+<br>
 
-<p class="mb-1">
-
-<b>Program Studi :</b>
-
+Program Studi :
 <?= $user['prodi']; ?>
 
+<br>
+
+Jurusan :
+<?= $user['jurusan']; ?>
+
+<br>
+
+Semester :
+<?= $user['semester']; ?>
+
+<br>
+
+Status :
+<span class="badge bg-success">
+<?= $user['status']; ?>
+</span>
+
 </p>
-
-<p>
-
-<b>Login Terakhir :</b>
-
-20 Juli 2026
-08.30 WIB
-
-</p>
-
-</div>
-
-<div class="col-md-3 text-center">
-
-<img src="https://ui-avatars.com/api/?name=<?= urlencode($user['nama']) ?>&background=dc3545&color=fff&size=150"
-class="img-circle elevation-3"
-width="120">
-
-</div>
-
-</div>
-
-</div>
-
-</div>
 
             <!-- Statistik -->
             <div class="row">
@@ -108,7 +85,7 @@ width="120">
     <?= $statistik['total']; ?>
 </h2>
 
-                            <p>Total Tiket</p>
+                            <p>Jumlah Pengajuan</p>
 
                         </div>
 

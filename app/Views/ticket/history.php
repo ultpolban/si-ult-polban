@@ -1,6 +1,6 @@
 <?= $this->include('layouts/header') ?>
 <?= $this->include('layouts/navbar') ?>
-<?= $this->include('layouts/sidebar') ?>
+<?= $this->include('layouts/sidebar_mahasiswa') ?>
 
 <div class="content-wrapper">
 
@@ -81,8 +81,6 @@
 
 <td>
 
-<td>
-
 <?php if($row['status']=="Submitted"): ?>
 
 <span class="badge bg-primary">
@@ -111,8 +109,6 @@
 </span>
 
 <?php endif; ?>
-
-</td>
 
 </td>
 

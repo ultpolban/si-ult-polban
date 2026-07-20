@@ -1,6 +1,6 @@
 <?= $this->include('layouts/header') ?>
 <?= $this->include('layouts/navbar') ?>
-<?= $this->include('layouts/sidebar') ?>
+<?= $this->include('layouts/sidebar_mahasiswa') ?>
 
 <div class="content-wrapper">
 
@@ -84,7 +84,7 @@ Informasi Tiket
 
 <i class="fas fa-file-pdf text-danger"></i>
 
-Lihat KTM
+Lihat KTM (Jika Ada)
 
 </a>
 
@@ -107,7 +107,7 @@ Lihat KTM
 
 <i class="fas fa-file-pdf text-danger"></i>
 
-Lihat KRS
+Lihat KRS (Jika Ada)
 
 </a>
 

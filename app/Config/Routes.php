@@ -70,4 +70,8 @@ $routes->get('/notification', 'NotificationController::index');
 
 $routes->get('faq', 'FaqController::index');
 
-$routes->get('help', 'HelpController::index');
+$routes->get('help', 'HelpController::index'); 
+
+$routes->get('dashboard-mahasiswa', 'DashboardController::mahasiswa'); 
+
+$routes->get('/dashboard-mahasiswa', 'MahasiswaController::dashboard');

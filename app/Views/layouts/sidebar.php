@@ -17,20 +17,17 @@ SI-ULT POLBAN
 <ul class="nav nav-pills nav-sidebar flex-column">
 
 <li class="nav-item">
-
-<a href="<?= base_url('dashboard') ?>" class="nav-link active">
-
-<i class="nav-icon fas fa-home"></i>
-
-<p>Dashboard</p>
-
-</a>
-
+    <a href="<?= base_url('dashboard') ?>"
+       class="nav-link <?= uri_string() == 'dashboard' ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-home"></i>
+        <p>Dashboard Pemohon</p>
+    </a>
 </li>
 
 <li class="nav-item">
 
-<a href="<?= base_url('ticket/create') ?>" class="nav-link">
+<a href="<?= base_url('ticket/create') ?>"
+   class="nav-link <?= uri_string() == 'ticket/create' ? 'active' : '' ?>">
 
 <i class="nav-icon fas fa-plus-circle"></i>
 
@@ -42,7 +39,8 @@ SI-ULT POLBAN
 
 <li class="nav-item">
 
-<a href="<?= base_url('ticket/history') ?>" class="nav-link">
+<a href="<?= base_url('ticket/history') ?>"
+   class="nav-link <?= uri_string() == 'ticket/history' ? 'active' : '' ?>">
 
 <i class="nav-icon fas fa-ticket-alt"></i>
 
@@ -54,7 +52,8 @@ SI-ULT POLBAN
 
 <li class="nav-item">
 
-<a href="<?= base_url('profile') ?>" class="nav-link">
+<a href="<?= base_url('profile') ?>"
+   class="nav-link <?= str_contains(uri_string(),'profile') ? 'active' : '' ?>">
 
 <i class="nav-icon fas fa-user"></i>
 
@@ -65,21 +64,18 @@ SI-ULT POLBAN
 </li>
 
 <li class="nav-item">
-    <a href="<?= base_url('notification') ?>" class="nav-link">
+    <a href="<?= base_url('notification') ?>"
+   class="nav-link <?= str_contains(uri_string(),'notification') ? 'active' : '' ?>">
         <i class="nav-icon fas fa-bell"></i>
         <p>Notifikasi</p>
     </a>
 </li>
 
-<li class="nav-item">
-    <a href="<?= base_url('faq') ?>" class="nav-link">
-        <i class="nav-icon fas fa-question-circle"></i>
-        <p>Bantuan / FAQ</p>
-    </a>
-</li>
+
 
 <li class="nav-item">
-    <a href="<?= base_url('help') ?>" class="nav-link">
+    <a href="<?= base_url('help') ?>"
+   class="nav-link <?= str_contains(uri_string(),'help') ? 'active' : '' ?>">
         <i class="nav-icon fas fa-question-circle"></i>
         <p>Pusat Bantuan</p>
     </a>

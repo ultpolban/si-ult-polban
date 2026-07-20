@@ -1,6 +1,6 @@
 <?= $this->include('layouts/header') ?>
 <?= $this->include('layouts/navbar') ?>
-<?= $this->include('layouts/sidebar') ?>
+<?= $this->include('layouts/sidebar_mahasiswa') ?>
 
 <div class="content-wrapper">
 
@@ -95,12 +95,12 @@ class="form-control">
 </div>
 
 <div class="mb-3">
-    <label>Upload KTM (PDF/JPG/PNG)</label>
+    <label>Upload KTM (opsional)</label>
     <input type="file" name="ktm" class="form-control">
 </div>
 
 <div class="mb-3">
-    <label>Upload KRS (PDF/JPG/PNG)</label>
+    <label>Upload KRS (opsional)</label>
     <input type="file" name="krs" class="form-control">
 </div>
 

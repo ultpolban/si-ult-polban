@@ -1,57 +1,20 @@
-*{
-    font-family:'Poppins',sans-serif;
+/* Card Layanan */
+.service-card .card{
+    transition: all 0.3s ease;
+    border-radius: 15px;
 }
 
-body{
-    background:#f8f9fa;
+/* Hover Card */
+.service-card:hover .card{
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
 }
 
-.hero{
-    background:linear-gradient(135deg,#005BAC,#0d6efd);
-    color:white;
-    padding:100px 0;
+/* Hover Tombol */
+.service-card .btn{
+    transition: all 0.3s ease;
 }
 
-.hero h1{
-    font-weight:700;
-}
-
-.hero p{
-    font-size:18px;
-}
-
-.card-service{
-
-    border:none;
-    border-radius:15px;
-    transition:.3s;
-
-}
-
-.card-service:hover{
-
-    transform:translateY(-10px);
-
-    box-shadow:0 15px 25px rgba(0,0,0,.15);
-
-}
-
-.section-title{
-
-    color:#005BAC;
-
-    font-weight:700;
-
-}
-
-#tentang{
-    scroll-margin-top:80px;
-}
-
-#tentang .card{
-    border-radius:15px;
-}
-
-#tentang p{
-    font-size:16px;
+.service-card:hover .btn{
+    transform: scale(1.03);
 }

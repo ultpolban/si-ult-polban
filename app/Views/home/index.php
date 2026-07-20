@@ -317,104 +317,48 @@ Refund
 
 </section>
 
-<section id="faq" class="py-5 bg-light">
+<section id="kontak" class="py-5">
 
     <div class="container">
 
         <div class="text-center mb-5">
 
             <h2 class="fw-bold">
-                Frequently Asked Questions
+                Kontak Kami
             </h2>
 
             <p class="text-muted">
-                Pertanyaan yang sering diajukan mengenai SI ULT POLBAN.
+                Jika memiliki pertanyaan atau membutuhkan bantuan, silakan hubungi Unit Layanan Terpadu POLBAN melalui informasi berikut.
             </p>
 
         </div>
 
-        <div class="accordion" id="faqAccordion">
+        <div class="row justify-content-center">
 
-            <div class="accordion-item">
+            <div class="col-lg-8">
 
-                <h2 class="accordion-header">
+                <div class="card shadow-sm border-0">
 
-                    <button class="accordion-button"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#faq1">
+                    <div class="card-body p-4">
 
-                        Bagaimana cara mengajukan layanan?
+                        <table class="table table-borderless mb-0">
 
-                    </button>
+                            <tr>
+                                <td width="180"><strong>Alamat</strong></td>
+                                <td>Jl. Gegerkalong Hilir, Ciwaruga, Kabupaten Bandung Barat, Jawa Barat</td>
+                            </tr>
 
-                </h2>
+                            <tr>
+                                <td><strong>Email</strong></td>
+                                <td>ult@polban.ac.id</td>
+                            </tr>
 
-                <div id="faq1"
-                    class="accordion-collapse collapse show"
-                    data-bs-parent="#faqAccordion">
+                            <tr>
+                                <td><strong>Telepon</strong></td>
+                                <td>(022) 2013789</td>
+                            </tr>
 
-                    <div class="accordion-body">
-
-                        Login terlebih dahulu, pilih kategori layanan, kemudian klik <strong>Ajukan Layanan</strong> dan lengkapi persyaratan yang diminta.
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="accordion-item">
-
-                <h2 class="accordion-header">
-
-                    <button class="accordion-button collapsed"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#faq2">
-
-                        Apakah harus login?
-
-                    </button>
-
-                </h2>
-
-                <div id="faq2"
-                    class="accordion-collapse collapse"
-                    data-bs-parent="#faqAccordion">
-
-                    <div class="accordion-body">
-
-                        Ya, mahasiswa harus login menggunakan akun yang sudah terdaftar.
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="accordion-item">
-
-                <h2 class="accordion-header">
-
-                    <button class="accordion-button collapsed"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#faq3">
-
-                        Berapa lama proses layanan?
-
-                    </button>
-
-                </h2>
-
-                <div id="faq3"
-                    class="accordion-collapse collapse"
-                    data-bs-parent="#faqAccordion">
-
-                    <div class="accordion-body">
-
-                        Estimasi pengerjaan setiap layanan berbeda-beda sesuai jenis layanan yang dipilih.
+                        </table>
 
                     </div>
 

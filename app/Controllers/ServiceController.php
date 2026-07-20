@@ -41,16 +41,18 @@ class ServiceController extends BaseController
         return view('services/akademik', $data);
     }
 
-    public function detail($id)
+   public function detail($id)
 {
-    $model = new ServiceModel();
+    $model = new \App\Models\ServiceModel();
 
-    $data['service'] = $model->find($id);
+    $service = $model->find($id);
 
-    if (!$data['service']) {
+    if (!$service) {
         throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
     }
 
-    return view('service/detail', $data);
+    return view('services/detail', [
+        'service' => $service
+    ]);
 }
 }

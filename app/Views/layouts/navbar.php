@@ -56,12 +56,10 @@
 
                 </li>
 
-                <li class="nav-item">
 
-                   <a href="#faq" class="nav-link">
-    FAQ
+                <a class="nav-link" href="#kontak">
+    Kontak
 </a>
-                </li>
 
                 <li class="nav-item">
 

@@ -39,9 +39,9 @@
                                 <?= esc($service['sla_hours']); ?> Jam
                             </p>
 
-                            <a href="#" class="btn btn-primary w-100">
-                                Ajukan Layanan
-                            </a>
+                        <a href="<?= base_url('layanan/'.$service['id']) ?>" class="btn btn-primary w-100">
+    Lihat Detail
+</a>
 
                         </div>
 

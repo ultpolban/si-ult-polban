@@ -34,12 +34,10 @@
                             </small>
 
                             <br><br>
-
-                            <a href="#" class="btn btn-success w-100">
-
-                                Ajukan Layanan
-
-                            </a>
+<a href="<?= base_url('layanan/'.$service['id']) ?>"
+class="btn btn-success w-100">
+    Lihat Detail
+</a>
 
                         </div>
 

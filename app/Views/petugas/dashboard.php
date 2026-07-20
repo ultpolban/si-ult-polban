@@ -5,19 +5,23 @@
 <div class="content-wrapper">
 
 <section class="content-header">
+
 <div class="container-fluid">
 
 <div class="row mb-2">
 
 <div class="col-sm-6">
 
-<h2 class="font-weight-bold text-primary">
-Dashboard Petugas
-</h2>
+<h1 class="m-0 font-weight-bold text-primary">
+
+Dashboard Petugas ULT
+
+</h1>
 
 <p class="text-muted">
-Selamat Datang di Sistem Informasi Unit Layanan Terpadu
-Politeknik Negeri Bandung
+
+Kelola tiket layanan mahasiswa Politeknik Negeri Bandung
+
 </p>
 
 </div>
@@ -27,13 +31,19 @@ Politeknik Negeri Bandung
 <ol class="breadcrumb float-sm-right">
 
 <li class="breadcrumb-item">
-<a href="<?= base_url('petugas') ?>">
+
+<a href="<?= base_url('petugas/dashboard') ?>">
+
 Dashboard
+
 </a>
+
 </li>
 
 <li class="breadcrumb-item active">
+
 Home
+
 </li>
 
 </ol>
@@ -43,6 +53,7 @@ Home
 </div>
 
 </div>
+
 </section>
 
 <section class="content">
@@ -51,17 +62,17 @@ Home
 
 <div class="row">
 
-<div class="col-lg-3">
+<div class="col-lg-3 col-md-6">
 
-<div class="small-box bg-primary">
+<div class="small-box elevation-3" style="background:#005BAC;color:white;">
 
 <div class="inner">
 
-<h3>20</h3>
+<h3><span class="badge badge-primary">
+120
+</span></h3>
 
 <p>Tiket Masuk</p>
-
-<small>+4 Hari Ini</small>
 
 </div>
 
@@ -75,23 +86,24 @@ Home
 
 </div>
 
-<div class="col-lg-3">
+<div class="col-lg-3 col-md-6">
 
-<div class="small-box bg-warning">
+<div class="small-box elevation-3"
+     style="background:#0B8F4D;color:white;">
 
 <div class="inner">
 
-<h3>7</h3>
+<h3><span class="badge badge-success">
+95
+</span></h3>
 
-<p>Perlu Verifikasi</p>
-
-<small>Belum Diproses</small>
+<p>Diverifikasi</p>
 
 </div>
 
 <div class="icon">
 
-<i class="fas fa-user-check"></i>
+<i class="fas fa-check-circle"></i>
 
 </div>
 
@@ -99,17 +111,18 @@ Home
 
 </div>
 
-<div class="col-lg-3">
+<div class="col-lg-3 col-md-6">
 
-<div class="small-box bg-success">
+<div class="small-box elevation-3"
+     style="background:#F4B400;color:white;">
 
 <div class="inner">
 
-<h3>14</h3>
+<h3><span class="badge badge-warning">
+20
+</span></h3>
 
-<p>Diproses</p>
-
-<small>Oleh Unit Tujuan</small>
+<p>Diproses Unit</p>
 
 </div>
 
@@ -123,17 +136,18 @@ Home
 
 </div>
 
-<div class="col-lg-3">
+<div class="col-lg-3 col-md-6">
 
-<div class="small-box bg-danger">
+<div class="small-box elevation-3"
+     style="background:#D93025;color:white;">
 
 <div class="inner">
 
-<h3>2</h3>
+<h3><span class="badge badge-danger">
+5
+</span></h3>
 
 <p>Terlambat SLA</p>
-
-<small>Segera Ditindaklanjuti</small>
 
 </div>
 
@@ -149,11 +163,9 @@ Home
 
 </div>
 
-<div class="row mt-3">
+</div>
 
-<div class="col-md-12">
-
-<div class="card">
+<div class="card mt-3">
 
 <div class="card-header bg-primary">
 
@@ -173,35 +185,7 @@ Quick Action
 
 <div class="col-md-3">
 
-<a href="<?= base_url('petugas/verifikasi/1') ?>" class="btn btn-warning btn-lg btn-block">
-
-<i class="fas fa-user-check fa-2x"></i>
-
-<br><br>
-
-Verifikasi
-
-</a>
-
-</div>
-
-<div class="col-md-3">
-
-<a href="<?= base_url('petugas/disposisi/1') ?>" class="btn btn-success btn-lg btn-block">
-
-<i class="fas fa-share fa-2x"></i>
-
-<br><br>
-
-Disposisi
-
-</a>
-
-</div>
-
-<div class="col-md-3">
-
-<a href="<?= base_url('petugas/tiket') ?>" class="btn btn-info btn-lg btn-block">
+<a href="<?= base_url('petugas/tiket') ?>" class="btn btn-primary shadow btn-lg btn-block">
 
 <i class="fas fa-ticket-alt fa-2x"></i>
 
@@ -215,13 +199,41 @@ Data Tiket
 
 <div class="col-md-3">
 
-<a href="#" class="btn btn-danger btn-lg btn-block">
+<a href="<?= base_url('petugas/verifikasi/1') ?>" class="btn btn-success shadow btn-lg btn-block">
 
-<i class="fas fa-search fa-2x"></i>
+<i class="fas fa-user-check fa-2x"></i>
 
 <br><br>
 
-Cari Mahasiswa
+Verifikasi
+
+</a>
+
+</div>
+
+<div class="col-md-3">
+
+<a href="<?= base_url('petugas/disposisi/1') ?>" class="btn btn-warning shadow btn-lg btn-block">
+
+<i class="fas fa-share fa-2x"></i>
+
+<br><br>
+
+Disposisi
+
+</a>
+
+</div>
+
+<div class="col-md-3">
+
+<a href="<?= current_url() ?>" class="btn btn-dark shadow btn-lg btn-block">
+
+<i class="fas fa-sync-alt fa-2x"></i>
+
+<br><br>
+
+Refresh
 
 </a>
 
@@ -233,141 +245,495 @@ Cari Mahasiswa
 
 </div>
 
-</div>
+<div class="card mt-4">
+
+    <div class="card-header bg-info">
+
+        <h3 class="card-title">
+            <i class="fas fa-filter"></i>
+            Filter Tiket
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <form>
+
+            <div class="row">
+
+                <div class="col-md-3 mb-3">
+
+                    <label>Status</label>
+
+                    <select class="form-control">
+
+                        <option>Semua Status</option>
+                        <option>Menunggu Verifikasi</option>
+                        <option>Terverifikasi</option>
+                        <option>Didisposisikan</option>
+                        <option>Diproses Unit</option>
+                        <option>Selesai</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label>Kategori</label>
+
+                    <select class="form-control">
+
+                        <option>Semua Kategori</option>
+                        <option>Akademik</option>
+                        <option>Keuangan</option>
+                        <option>Kemahasiswaan</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label>Prioritas</label>
+
+                    <select class="form-control">
+
+                        <option>Semua Prioritas</option>
+                        <option>High</option>
+                        <option>Medium</option>
+                        <option>Low</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label>Unit Tujuan</label>
+
+                    <select class="form-control">
+
+                        <option>Semua Unit</option>
+                        <option>Direktorat Akademik</option>
+                        <option>Jurusan Teknik Informatika</option>
+                        <option>Bagian Keuangan</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-10">
+
+                    <label>Pencarian</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Cari berdasarkan NIM, Nama, atau Nomor Tiket">
+
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+
+                    <button class="btn btn-primary btn-block">
+
+                        <i class="fas fa-search"></i>
+
+                        Cari
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 
-<div class="row">
+<div class="card mt-4">
 
-<div class="col-md-7">
+    <div class="card-header bg-primary">
 
-<div class="card">
+        <h3 class="card-title">
 
-<div class="card-header bg-info">
+            <i class="fas fa-ticket-alt"></i>
 
-<h3 class="card-title">
+            Antrian Tiket Terbaru
 
-Aktivitas Terbaru
+        </h3>
 
-</h3>
+        <div class="card-tools">
 
-</div>
+           <a href="<?= base_url('petugas/tiket') ?>" class="btn btn-outline-light btn-sm">
+    <i class="fas fa-list"></i> Lihat Semua
+</a>
 
-<div class="card-body">
+        </div>
 
-<ul class="timeline">
+    </div>
 
-<li>
+    <div class="card-body table-responsive p-0">
 
-<b>09:20</b>
+        <table class="table table-hover text-nowrap">
 
-Mahasiswa <b>Rafi Putra</b>
+            <thead class="bg-light">
 
-mengajukan Surat Aktif Kuliah
+                <tr>
 
-</li>
+                    <th>No Tiket</th>
+                    <th>Mahasiswa</th>
+                    <th>Layanan</th>
+                    <th>Prioritas</th>
+                    <th>Status</th>
+                    <th>Tanggal</th>
+                    <th>Aksi</th>
 
-<hr>
+                </tr>
 
-<li>
+            </thead>
 
-<b>09:45</b>
+            <tbody>
 
-Petugas memverifikasi tiket
+                <tr>
 
-<b>#ULT001</b>
+                    <td>ULT-001</td>
 
-</li>
+                    <td>Rafi Putra</td>
 
-<hr>
+                    <td>Surat Aktif Kuliah</td>
 
-<li>
+                    <td>
 
-<b>10:10</b>
+                        <span class="badge badge-danger">
 
-Disposisi dikirim ke
+                            High
 
-<b>Unit Akademik</b>
+                        </span>
 
-</li>
+                    </td>
 
-<hr>
+                    <td>
 
-<li>
+                        <span class="badge badge-warning">
 
-<b>10:45</b>
+                            Menunggu Verifikasi
 
-Unit mengubah status menjadi
+                        </span>
 
-<b>Diproses</b>
+                    </td>
 
-</li>
+                    <td>20 Juli 2026</td>
 
-</ul>
+                    <td>
 
-</div>
+                        <a href="<?= base_url('petugas/detail/1') ?>" class="btn btn-primary shadow btn-sm">
 
-</div>
+                            <i class="fas fa-eye"></i>
 
-</div>
+                        </a>
 
-<div class="col-md-5">
+                        <a href="<?= base_url('petugas/verifikasi/1') ?>" class="btn btn-success shadow btn-sm">
 
-<div class="card">
+                            <i class="fas fa-check"></i>
 
-<div class="card-header bg-danger">
+                        </a>
 
-<h3 class="card-title">
+                    </td>
 
-Notifikasi
+                </tr>
 
-</h3>
+                <tr>
 
-</div>
+                    <td>ULT-002</td>
 
-<div class="card-body">
+                    <td>Siti Nurhaliza</td>
 
-<div class="alert alert-warning">
+                    <td>Legalisir Ijazah</td>
 
-Ada
+                    <td>
 
-<b>3 tiket</b>
+                        <span class="badge badge-warning">
 
-belum diverifikasi
+                            Medium
 
-</div>
+                        </span>
 
-<div class="alert alert-danger">
+                    </td>
 
-Ada
+                    <td>
 
-<b>1 tiket</b>
+                        <span class="badge badge-success">
 
-melewati SLA
+                            Terverifikasi
 
-</div>
+                        </span>
 
-<div class="alert alert-success">
+                    </td>
 
-Hari ini
+                    <td>20 Juli 2026</td>
 
-<b>15 tiket</b>
+                    <td>
 
-berhasil diselesaikan
+                        <a href="<?= base_url('petugas/detail/2') ?>" class="btn btn-primary shadow btn-sm">
 
-</div>
+                            <i class="fas fa-eye"></i>
 
-</div>
+                        </a>
 
-</div>
+                        <a href="<?= base_url('petugas/disposisi/2') ?>" class="btn btn-primary btn-sm">
 
-</div>
+                            <i class="fas fa-share"></i>
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>ULT-003</td>
+
+                    <td>Andi Saputra</td>
+
+                    <td>Surat Keterangan Lulus</td>
+
+                    <td>
+
+                        <span class="badge badge-secondary">
+
+                            Low
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="badge badge-info">
+
+                            Diproses Unit
+
+                        </span>
+
+                    </td>
+
+                    <td>19 Juli 2026</td>
+
+                    <td>
+
+                        <a href="<?= base_url('petugas/detail/3') ?>" class="btn btn-primary shadow btn-sm">
+
+                            <i class="fas fa-eye"></i>
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
 <div class="row mt-4">
 
+    <!-- Aktivitas -->
     <div class="col-lg-8">
+
+        <div class="card">
+
+            <div class="card-header bg-info">
+
+                <h3 class="card-title">
+
+                    <i class="fas fa-history"></i>
+
+                    Aktivitas Terbaru
+
+                </h3>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="timeline">
+
+                    <div class="time-label">
+                        <span class="bg-primary">20 Juli 2026</span>
+                    </div>
+
+                    <div>
+
+                        <i class="fas fa-file-alt bg-primary"></i>
+
+                        <div class="timeline-item">
+
+                            <span class="time">
+                                <i class="fas fa-clock"></i> 08:15
+                            </span>
+
+                            <h3 class="timeline-header">
+
+                                Pengajuan Baru
+
+                            </h3>
+
+                            <div class="timeline-body">
+
+                                <b>Rafi Putra</b> mengajukan
+                                <br>
+                                Surat Aktif Kuliah.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <i class="fas fa-check"
+   style="background:#0B8F4D;color:white;"></i>
+
+                        <div class="timeline-item">
+
+                            <span class="time">
+
+                                <i class="fas fa-clock"></i>
+
+                                09:00
+
+                            </span>
+
+                            <h3 class="timeline-header">
+
+                                Tiket Diverifikasi
+
+                            </h3>
+
+                            <div class="timeline-body">
+
+                                Tiket <b>ULT-001</b>
+                                berhasil diverifikasi.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                       <i class="fas fa-share"
+   style="background:#F4B400;color:white;"></i>
+
+                        <div class="timeline-item">
+
+                            <span class="time">
+
+                                <i class="fas fa-clock"></i>
+
+                                10:20
+
+                            </span>
+
+                            <h3 class="timeline-header">
+
+                                Disposisi
+
+                            </h3>
+
+                            <div class="timeline-body">
+
+                                Tiket dikirim ke
+                                <b>Direktorat Akademik</b>.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Notifikasi -->
+    <div class="col-lg-4">
+
+        <div class="card">
+
+           <div class="card-header"
+     style="background:#D93025;color:white;">
+                <h3 class="card-title">
+
+                    <i class="fas fa-bell"></i>
+
+                    Notifikasi
+
+                </h3>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="alert alert-warning">
+
+                    <i class="fas fa-exclamation-circle"></i>
+
+                    <b>3 Tiket</b>
+                    menunggu verifikasi.
+
+                </div>
+
+                <div class="alert alert-danger">
+
+                    <i class="fas fa-clock"></i>
+
+                    <b>1 Tiket</b>
+                    melewati SLA.
+
+                </div>
+
+                <div class="alert alert-success">
+
+                    <i class="fas fa-check-circle"></i>
+
+                    Hari ini
+                    <b>15 Tiket</b>
+                    berhasil diselesaikan.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row mt-4">
+
+    <div class="col-lg-7">
 
         <div class="card">
 
@@ -375,53 +741,75 @@ berhasil diselesaikan
 
                 <h3 class="card-title">
 
-                    <i class="fas fa-chart-line"></i>
+                    <i class="fas fa-chart-pie"></i>
 
-                    Statistik Tiket Mingguan
+                    Statistik Status Tiket
 
                 </h3>
 
             </div>
 
-            <div class="card-body">
+         <div class="card-body text-center">
 
-                <canvas id="grafikPetugas" height="110"></canvas>
+ <div style="width:170px; margin:auto;">
 
-            </div>
+        <canvas id="grafikStatus"></canvas>
+
+    </div>
+
+</div>
 
         </div>
 
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-lg-5">
 
         <div class="card">
 
-            <div class="card-header bg-success">
+           <div class="card-header"
+     style="background:#0B8F4D;color:white;">
 
                 <h3 class="card-title">
 
-                    Ringkasan Bulan Ini
+                    Ringkasan Bulan Juli
 
                 </h3>
 
             </div>
 
-            <div class="card-body">
+        <div class="card-body">
 
-                <h5>120 Tiket Masuk</h5>
+<table class="table table-sm">
 
-                <hr>
+                <table class="table table-sm">
 
-                <h5>95 Diverifikasi</h5>
+                    <tr>
+                        <td>Total Tiket</td>
+                        <th class="text-right">120</th>
+                    </tr>
 
-                <hr>
+                    <tr>
+                        <td>Diverifikasi</td>
+                        <th class="text-right text-success">95</th>
+                    </tr>
 
-                <h5>20 Menunggu</h5>
+                    <tr>
+                        <td>Diproses Unit</td>
+                        <th class="text-right text-warning">20</th>
+                    </tr>
 
-                <hr>
+                    <tr>
+                        <td>Selesai</td>
+                        <th class="text-right text-primary">78</th>
+                    </tr>
 
-                <h5>5 Ditolak</h5>
+                    <tr>
+                        <td>Ditolak</td>
+                        <th class="text-right text-danger">5</th>
+                    </tr>
+
+                </table>
 
             </div>
 
@@ -431,35 +819,79 @@ berhasil diselesaikan
 
 </div>
 
+</section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const ctx = document.getElementById('grafikPetugas');
+    const ctx = document.getElementById("grafikStatus");
 
-    if(ctx){
+    if (ctx) {
 
-        new Chart(ctx,{
-            type:'bar',
-            data:{
-                labels:['Sen','Sel','Rab','Kam','Jum'],
-                datasets:[
-                {
-                    label:'Tiket Masuk',
-                    data:[12,19,10,15,18],
-                    backgroundColor:'#005BAC'
-                },
-                {
-                    label:'Diverifikasi',
-                    data:[8,15,9,12,16],
-                    backgroundColor:'#28a745'
-                }
-                ]
+        new Chart(ctx, {
+
+            type: "doughnut",
+
+            data: {
+
+                labels: [
+
+                    "Menunggu",
+
+                    "Diproses",
+
+                    "Selesai",
+
+                    "Ditolak"
+
+                ],
+
+                datasets: [{
+
+                    data: [25, 20, 70, 5],
+
+                    backgroundColor: [
+
+                        "#005BAC",
+
+                        "#F4B400",
+
+                        "#34A853",
+
+                        "#EA4335"
+
+                    ],
+
+                    borderWidth: 2
+
+                }]
+
             },
-            options:{
-                responsive:true,
-                maintainAspectRatio:false
-            }
+
+options: {
+
+    responsive: true,
+
+    maintainAspectRatio: true,
+
+    cutout: '78%',
+
+    plugins: {
+
+        legend: {
+
+            position: 'bottom'
+
+        }
+
+    }
+
+}
+
         });
 
     }
@@ -467,5 +899,4 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
-
-<?= view('layouts/footer') ?>
+<?= view('layouts/footer') ?> 

@@ -9,11 +9,6 @@ class UnitController extends BaseController
         return view('unit/dashboard');
     }
 
-    public function tiket()
-    {
-        return view('unit/tiket');
-    }
-
     public function detail($id)
     {
         return view('unit/detail');
@@ -22,10 +17,5 @@ class UnitController extends BaseController
     public function updateStatus($id)
     {
         return view('unit/update_status');
-    }
-
-    public function laporan()
-    {
-        return view('unit/laporan');
     }
 }

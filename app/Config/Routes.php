@@ -54,13 +54,17 @@ $routes->group('dashboard', ['filter' => 'auth'], function ($routes) {
     $routes->get('profile', 'Dashboard::profile');
 });
 
-// ======================================
-// PETUGAS
-// ======================================
+/*
+|--------------------------------------------------------------------------
+| PETUGAS
+|--------------------------------------------------------------------------
+*/
 
-$routes->group('petugas', ['filter' => 'auth'], function ($routes) {
+$routes->group('petugas', function($routes){
 
     $routes->get('/', 'PetugasController::dashboard');
+
+    $routes->get('dashboard', 'PetugasController::dashboard');
 
     $routes->get('tiket', 'PetugasController::tiket');
 
@@ -70,20 +74,20 @@ $routes->group('petugas', ['filter' => 'auth'], function ($routes) {
 
     $routes->get('disposisi/(:num)', 'PetugasController::disposisi/$1');
 
-    $routes->get('update-status/(:num)', 'PetugasController::updateStatus/$1');
 });
 
-// ======================================
-// UNIT TUJUAN
-// ======================================
 
-$routes->group('unit', ['filter' => 'auth'], function ($routes) {
+/*
+|--------------------------------------------------------------------------
+| UNIT TUJUAN
+|--------------------------------------------------------------------------
+*/
+
+$routes->group('unit', function($routes){
 
     $routes->get('/', 'UnitController::dashboard');
 
-    $routes->get('tiket', 'UnitController::tiket');
-
-    $routes->get('laporan', 'UnitController::laporan');
+    $routes->get('dashboard', 'UnitController::dashboard');
 
     $routes->get('detail/(:num)', 'UnitController::detail/$1');
 

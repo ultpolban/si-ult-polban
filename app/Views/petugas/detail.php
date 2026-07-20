@@ -54,7 +54,151 @@ Detail
 
 <section class="content">
 
+<div class="row mb-3">
+
+    <div class="col-md-3">
+
+        <div class="small-box bg-primary">
+
+            <div class="inner">
+                <h4>ULT-001</h4>
+                <p>No Tiket</p>
+            </div>
+
+            <div class="icon">
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="small-box bg-warning">
+
+            <div class="inner">
+                <h4>High</h4>
+                <p>Prioritas</p>
+            </div>
+
+            <div class="icon">
+                <i class="fas fa-exclamation"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="small-box bg-info">
+
+            <div class="inner">
+                <h4>Akademik</h4>
+                <p>Unit Tujuan</p>
+            </div>
+
+            <div class="icon">
+                <i class="fas fa-building"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="small-box bg-success">
+
+            <div class="inner">
+                <h4>Submitted</h4>
+                <p>Status</p>
+            </div>
+
+            <div class="icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 <div class="container-fluid">
+
+<div class="row mb-3">
+
+    <div class="col-md-3">
+
+        <div class="small-box bg-primary">
+
+            <div class="inner">
+                <h4>ULT-001</h4>
+                <p>No Tiket</p>
+            </div>
+
+            <div class="icon">
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="small-box bg-warning">
+
+            <div class="inner">
+                <h4>High</h4>
+                <p>Prioritas</p>
+            </div>
+
+            <div class="icon">
+                <i class="fas fa-exclamation"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="small-box bg-info">
+
+            <div class="inner">
+                <h4>Akademik</h4>
+                <p>Unit Tujuan</p>
+            </div>
+
+            <div class="icon">
+                <i class="fas fa-building"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="small-box bg-success">
+
+            <div class="inner">
+                <h4>Submitted</h4>
+                <p>Status</p>
+            </div>
+
+            <div class="icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 <div class="card card-primary">
 
@@ -164,6 +308,150 @@ Lihat Lampiran
 
 </div>
 
+<hr>
+
+<h5 class="font-weight-bold mb-3">
+
+<i class="fas fa-history"></i>
+
+Riwayat Proses
+
+</h5>
+
+<div class="timeline">
+
+    <div class="time-label">
+
+        <span class="bg-primary">
+
+            20 Juli 2026
+
+        </span>
+
+    </div>
+
+    <div>
+
+        <i class="fas fa-file bg-primary"></i>
+
+        <div class="timeline-item">
+
+            <span class="time">
+
+                <i class="fas fa-clock"></i>
+
+                08.00
+
+            </span>
+
+            <h3 class="timeline-header">
+
+                Pengajuan dibuat mahasiswa
+
+            </h3>
+
+        </div>
+
+    </div>
+
+    <div>
+
+        <i class="fas fa-user-check bg-warning"></i>
+
+        <div class="timeline-item">
+
+            <span class="time">
+
+                <i class="fas fa-clock"></i>
+
+                09.15
+
+            </span>
+
+            <h3 class="timeline-header">
+
+                Menunggu Verifikasi Petugas
+
+            </h3>
+
+        </div>
+
+    </div>
+
+</div>
+
+<hr>
+
+<h5 class="font-weight-bold mb-3">
+
+<i class="fas fa-history"></i>
+
+Riwayat Proses
+
+</h5>
+
+<div class="timeline">
+
+    <div class="time-label">
+
+        <span class="bg-primary">
+
+            20 Juli 2026
+
+        </span>
+
+    </div>
+
+    <div>
+
+        <i class="fas fa-file bg-primary"></i>
+
+        <div class="timeline-item">
+
+            <span class="time">
+
+                <i class="fas fa-clock"></i>
+
+                08.00
+
+            </span>
+
+            <h3 class="timeline-header">
+
+                Pengajuan dibuat mahasiswa
+
+            </h3>
+
+        </div>
+
+    </div>
+
+    <div>
+
+        <i class="fas fa-user-check bg-warning"></i>
+
+        <div class="timeline-item">
+
+            <span class="time">
+
+                <i class="fas fa-clock"></i>
+
+                09.15
+
+            </span>
+
+            <h3 class="timeline-header">
+
+                Menunggu Verifikasi Petugas
+
+            </h3>
+
+        </div>
+
+    </div>
+
+</div>
+
 <div class="card-footer">
 
 <a href="<?= base_url('petugas/verifikasi/1') ?>" class="btn btn-success">
@@ -174,7 +462,17 @@ Verifikasi
 
 </a>
 
+<a href="<?= base_url('petugas/disposisi/1') ?>" class="btn btn-primary">
+
+<i class="fas fa-share"></i>
+
+Disposisi
+
+</a>
+
 <a href="<?= base_url('petugas/tiket') ?>" class="btn btn-secondary">
+
+<i class="fas fa-arrow-left"></i>
 
 Kembali
 

@@ -28,9 +28,4 @@ class PetugasController extends BaseController
     {
         return view('petugas/disposisi');
     }
-
-    public function updateStatus($id)
-    {
-        return view('petugas/update_status');
-    }
 }

@@ -8,39 +8,131 @@
 
 <div class="container-fluid">
 
-<div class="row mb-2">
+<div class="card card-outline card-primary">
 
-<div class="col-sm-6">
+<div class="card-header">
 
-<h2 class="font-weight-bold text-primary">
-Data Tiket Masuk
-</h2>
+<h3 class="card-title">
 
-<p class="text-muted">
-Daftar pengajuan mahasiswa yang masuk ke Unit Layanan Terpadu
-</p>
+<i class="fas fa-filter"></i>
 
-</div>
+Filter Tiket
 
-<div class="col-sm-6">
-
-<ol class="breadcrumb float-sm-right">
-
-<li class="breadcrumb-item">
-Dashboard
-</li>
-
-<li class="breadcrumb-item active">
-Data Tiket
-</li>
-
-</ol>
+</h3>
 
 </div>
 
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-2">
+
+<select class="form-control">
+
+<option>Status</option>
+
+<option>Submitted</option>
+
+<option>Diverifikasi</option>
+
+<option>Diproses</option>
+
+<option>Selesai</option>
+
+</select>
+
+</div>
+
+<div class="col-md-2">
+
+<select class="form-control">
+
+<option>Kategori</option>
+
+<option>Akademik</option>
+
+<option>Keuangan</option>
+
+<option>Kemahasiswaan</option>
+
+</select>
+
+</div>
+
+<div class="col-md-2">
+
+<select class="form-control">
+
+<option>Unit</option>
+
+<option>BAAK</option>
+
+<option>Keuangan</option>
+
+<option>Jurusan</option>
+
+</select>
+
+</div>
+
+<div class="col-md-2">
+
+<select class="form-control">
+
+<option>Prioritas</option>
+
+<option>High</option>
+
+<option>Medium</option>
+
+<option>Low</option>
+
+</select>
+
+</div>
+
+<div class="col-md-2">
+
+<input type="date" class="form-control">
+
+</div>
+
+<div class="col-md-2">
+
+<button class="btn btn-primary btn-block">
+
+<i class="fas fa-search"></i>
+
+Cari
+
+</button>
+
 </div>
 
 </div>
+
+</div>
+
+</div>
+
+<div class="card card-outline card-primary">
+
+<div class="card-header">
+
+<h3 class="card-title">
+
+<i class="fas fa-list"></i>
+
+Daftar Tiket Masuk
+
+</h3>
+
+</div>
+
+<div class="card-body table-responsive">
+
+....
 
 </section>
 
@@ -52,18 +144,83 @@ Data Tiket
 
 <div class="card-header">
 
+<form id="formCari">
+
 <div class="row">
 
-<div class="col-md-4">
+<div class="col-md-3">
 
 <input
+id="searchInput"
 type="text"
 class="form-control"
-placeholder="Cari mahasiswa...">
+placeholder="Cari NIM / Nama / No Tiket">
+
+</div>
+
+<div class="col-md-2">
+
+<select
+id="statusFilter"
+class="form-control">
+
+<option value="">Semua Status</option>
+
+<option>Menunggu Verifikasi</option>
+
+<option>Terverifikasi</option>
+
+<option>Diproses Unit</option>
+
+<option>Selesai</option>
+
+</select>
+
+</div>
+
+<div class="col-md-2">
+
+<select
+class="form-control">
+
+<option>Semua Prioritas</option>
+
+<option>High</option>
+
+<option>Medium</option>
+
+<option>Low</option>
+
+</select>
+
+</div>
+
+<div class="col-md-3">
+
+<button
+type="submit"
+class="btn btn-primary">
+
+<i class="fas fa-search"></i>
+
+Cari
+
+</button>
+
+<button
+type="button"
+id="resetFilter"
+class="btn btn-secondary">
+
+Reset
+
+</button>
 
 </div>
 
 </div>
+
+</form>
 
 </div>
 
@@ -75,60 +232,57 @@ placeholder="Cari mahasiswa...">
 
 <tr>
 
-<th>No</th>
-
-<th>NIM</th>
-
-<th>Nama</th>
-
+<th>No Tiket</th>
+<th>Pemohon</th>
+<th>Kategori</th>
 <th>Layanan</th>
-
-<th>Tanggal</th>
-
+<th>Prioritas</th>
+<th>SLA</th>
 <th>Status</th>
-
 <th>Aksi</th>
 
 </tr>
 
 </thead>
 
-<tbody>
+<tbody id="tableBody">
 
 <tr>
 
-<td>1</td>
-
-<td>231511001</td>
+<td>ULT-20260720-0001</td>
 
 <td>Rafi Putra</td>
 
+<td>Akademik</td>
+
 <td>Surat Aktif Kuliah</td>
 
-<td>17 Juli 2026</td>
+<td>
+<span class="badge badge-danger">
+High
+</span>
+</td>
+
+<td>2 Hari</td>
 
 <td>
-
 <span class="badge badge-warning">
-
-Menunggu Verifikasi
-
+Submitted
 </span>
-
 </td>
 
 <td>
 
 <a href="<?= base_url('petugas/detail/1') ?>" class="btn btn-info btn-sm">
-
 <i class="fas fa-eye"></i>
-
 </a>
 
 <a href="<?= base_url('petugas/verifikasi/1') ?>" class="btn btn-success btn-sm">
-
 <i class="fas fa-check"></i>
+</a>
 
+<a href="<?= base_url('petugas/disposisi/1') ?>" class="btn btn-primary btn-sm">
+<i class="fas fa-share"></i>
 </a>
 
 </td>
@@ -137,40 +291,55 @@ Menunggu Verifikasi
 
 <tr>
 
-<td>2</td>
-
-<td>231511002</td>
+<td>ULT-20260720-0002</td>
 
 <td>Siti Nurhaliza</td>
 
+<td>Kemahasiswaan</td>
+
 <td>Legalisir Ijazah</td>
 
-<td>17 Juli 2026</td>
+<td>
+<span class="badge badge-warning">
+Medium
+</span>
+</td>
+
+<td>1 Hari</td>
 
 <td>
-
 <span class="badge badge-success">
-
-Terverifikasi
-
+Verified
 </span>
-
 </td>
 
 <td>
 
-<a href="<?= base_url('petugas/detail/2') ?>" class="btn btn-info btn-sm">
+<a href="<?= base_url('petugas/detail/1') ?>"
+   class="btn btn-info btn-sm"
+   title="Lihat Detail">
 
-<i class="fas fa-eye"></i>
-
-</a>
-
-<a href="<?= base_url('petugas/disposisi/2') ?>" class="btn btn-warning btn-sm">
-
-<i class="fas fa-share"></i>
+    <i class="fas fa-eye"></i>
 
 </a>
 
+<a href="<?= base_url('petugas/verifikasi/1') ?>"
+   class="btn btn-success btn-sm"
+   title="Verifikasi Tiket">
+
+    <i class="fas fa-check"></i>
+
+</a>
+
+<a href="<?= base_url('petugas/disposisi/1') ?>"
+   class="btn btn-primary btn-sm"
+   title="Disposisikan ke Unit">
+
+    <i class="fas fa-share"></i>
+
+</a>
+
+</td>
 </td>
 
 </tr>
@@ -188,5 +357,59 @@ Terverifikasi
 </section>
 
 </div>
+
+<script>
+
+const input = document.getElementById("searchInput");
+
+const status = document.getElementById("statusFilter");
+
+const rows = document.querySelectorAll("#tableBody tr");
+
+function filterTable(){
+
+const keyword = input.value.toLowerCase();
+
+const st = status.value.toLowerCase();
+
+rows.forEach(function(row){
+
+const text = row.innerText.toLowerCase();
+
+const statusText = row.cells[5].innerText.toLowerCase();
+
+const cocokKeyword = text.includes(keyword);
+
+const cocokStatus = st==="" || statusText.includes(st);
+
+row.style.display = (cocokKeyword && cocokStatus) ? "" : "none";
+
+});
+
+}
+
+input.addEventListener("keyup",filterTable);
+
+status.addEventListener("change",filterTable);
+
+document.getElementById("formCari").addEventListener("submit",function(e){
+
+e.preventDefault();
+
+filterTable();
+
+});
+
+document.getElementById("resetFilter").addEventListener("click",function(){
+
+input.value="";
+
+status.value="";
+
+filterTable();
+
+});
+
+</script>
 
 <?= view('layouts/footer') ?>

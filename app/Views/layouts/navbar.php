@@ -4,7 +4,7 @@
 
         <li class="nav-item">
 
-            <a class="nav-link" data-widget="pushmenu">
+            <a class="nav-link" data-widget="pushmenu" href="#">
 
                 <i class="fas fa-bars"></i>
 
@@ -18,7 +18,11 @@
 
         <li class="nav-item">
 
-            <?= session()->get('name') ?>
+            <span class="nav-link">
+
+                SI-ULT POLBAN
+
+            </span>
 
         </li>
 

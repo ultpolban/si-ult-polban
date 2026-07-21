@@ -1,9 +1,9 @@
-<script src="<?= base_url('assets/adminlte/plugins/jquery/jquery.min.js') ?>"></script>
+<footer class="main-footer">
 
-<script src="<?= base_url('assets/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
+    <strong>
 
-<script src="<?= base_url('assets/adminlte/dist/js/adminlte.min.js') ?>"></script>
+        SI-ULT POLBAN © <?= date('Y') ?>
 
-</body>
+    </strong>
 
-</html>
+</footer>

@@ -8,15 +8,18 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        $data = [
-            'name' => 'Administrator',
-            'email' => 'admin@ultpolban.ac.id',
-            'phone' => '081234567890',
-            'password' => password_hash('admin123', PASSWORD_DEFAULT),
+        $this->db->table('users')->insert([
             'role_id' => 1,
+            'user_type_id' => 7, // Publik (boleh diganti jika ada tipe Admin khusus)
+            'full_name' => 'Administrator',
+            'gender' => 'L',
+            'phone' => '081234567890',
+            'personal_email' => 'admin@polban.ac.id',
+            'institution_email' => 'admin@polban.ac.id',
+            'password' => password_hash('Admin123!', PASSWORD_DEFAULT),
             'is_active' => 1,
-        ];
-
-        $this->db->table('users')->insert($data);
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
     }
 }

@@ -4,35 +4,47 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateRolesTable extends Migration
+class CreateUserTypesTable extends Migration
 {
     public function up()
     {
         $this->forge->addField([
             'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
+                'type'           => 'BIGINT',
+                'constraint'     => 20,
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'role_name' => [
+
+            'type_name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
             ],
+
             'description' => [
                 'type' => 'TEXT',
                 'null' => true,
             ],
-            'created_at DATETIME DEFAULT CURRENT_TIMESTAMP',
-            'updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+
+            'created_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+
+            'updated_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->createTable('roles');
+        $this->forge->addUniqueKey('type_name');
+
+        $this->forge->createTable('user_types');
     }
 
     public function down()
     {
-        $this->forge->dropTable('roles', true);
+        $this->forge->dropTable('user_types');
     }
 }

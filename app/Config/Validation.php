@@ -41,4 +41,30 @@ class Validation extends BaseConfig
     // --------------------------------------------------------------------
     // Rules
     // --------------------------------------------------------------------
+
+    public array $register = [
+
+        'role_id' => 'required',
+
+        'user_type_id' => 'required',
+
+        'full_name' => 'required|min_length[3]|max_length[150]',
+
+        'personal_email' => 'required|valid_email|is_unique[users.personal_email]',
+
+        'phone' => 'required|min_length[10]|max_length[15]',
+
+        'password' => 'required|min_length[8]',
+
+        'confirm_password' => 'required|matches[password]',
+
+    ];
+
+    public array $login = [
+
+        'personal_email' => 'required|valid_email',
+
+        'password' => 'required',
+
+    ];
 }

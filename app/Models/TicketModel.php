@@ -12,22 +12,28 @@ class TicketModel extends Model
 
     protected $returnType = 'array';
 
-    protected $allowedFields = [
-        'ticket_number',
-        'service_id',
-        'applicant_id',
-        'assigned_unit_id',
-        'status',
-        'priority',
-        'description',
-        'submitted_at',
-        'verified_at',
-        'completed_at'
-    ];
+   protected $allowedFields = [
+    'ticket_number',
+    'service_name',
+    'applicant_name',
+    'applicant_type',
+    'nim',
+    'email',
+    'phone',
+    'ticket_title',
+    'ticket_description',
+    'attachment',
+    'status',
+    'priority',
+    'assigned_unit',
+    'verified_by',
+    'verification_note',
+    'submitted_at',
+    'verified_at',
+    'completed_at',
+    'created_at',
+    'updated_at',
+];
 
-    protected $useTimestamps = true;
-
-    protected $createdField = 'created_at';
-
-    protected $updatedField = 'updated_at';
+    protected $useTimestamps = false;
 }

@@ -12,35 +12,44 @@ class ReportController extends BaseController
 
         $builder = $ticketModel;
 
-        // Filter Status
-        if ($this->request->getGet('status')) {
-            $builder = $builder->where(
-                'status',
-                $this->request->getGet('status')
+        // Cari berdasarkan nomor tiket
+        if ($this->request->getGet('ticket_number')) {
+            $builder->like(
+                'ticket_number',
+                $this->request->getGet('ticket_number')
             );
         }
 
-        // Filter Tanggal Awal
-        if ($this->request->getGet('tanggal_awal')) {
-            $builder = $builder->where(
-                'submitted_at >=',
-                $this->request->getGet('tanggal_awal') . ' 00:00:00'
-            );
-        }
-
-        // Filter Tanggal Akhir
-        if ($this->request->getGet('tanggal_akhir')) {
-            $builder = $builder->where(
-                'submitted_at <=',
-                $this->request->getGet('tanggal_akhir') . ' 23:59:59'
-            );
-        }
-
-        $data['tickets'] = $builder
-            ->orderBy('submitted_at', 'DESC')
-            ->findAll();
+        $data = [
+            'tickets' => $builder
+                ->orderBy('submitted_at', 'DESC')
+                ->findAll()
+        ];
 
         return view('report/index', $data);
     }
+
+    public function exportPdf()
+{
+    // ambil data tiket
+    // load view pdf
+    // tampilkan PDF
+}
+
+public function exportExcel()
+{
+    // buat spreadsheet
+    // isi data tiket
+    // download .xlsx
+}
+
+public function print()
+{
+    $ticketModel = new \App\Models\TicketModel();
+
+    $data['tickets'] = $ticketModel->findAll();
+
+    return view('report/print', $data);
+}
 
 }

@@ -1,100 +1,69 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+    <title>Cetak Laporan Tiket</title>
 
-<meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<title>Laporan Tiket SI ULT POLBAN</title>
+    <style>
+        body{
+            margin:30px;
+        }
 
-<style>
+        h3{
+            text-align:center;
+            margin-bottom:20px;
+        }
 
-body{
-    font-family:Arial;
-    font-size:13px;
-}
-
-h2{
-    text-align:center;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
-}
-
-table,th,td{
-    border:1px solid black;
-}
-
-th{
-    background:#eeeeee;
-}
-
-th,td{
-    padding:8px;
-}
-
-</style>
-
+        table{
+            width:100%;
+        }
+    </style>
 </head>
-
 <body>
 
-<h2>LAPORAN TIKET SI ULT POLBAN</h2>
+<h3>LAPORAN TIKET SI-ULT POLBAN</h3>
 
-<table>
+<table class="table table-bordered">
 
-<thead>
+    <thead>
 
-<tr>
+    <tr>
+        <th>No</th>
+        <th>No Tiket</th>
+        <th>Status</th>
+        <th>Prioritas</th>
+        <th>Deskripsi</th>
+        <th>Tanggal</th>
+    </tr>
 
-<th>No</th>
-<th>No Tiket</th>
-<th>Status</th>
-<th>Prioritas</th>
-<th>Isi Tiket</th>
-<th>Tanggal Pengajuan</th>
-<th>Verifikasi</th>
+    </thead>
 
-</tr>
+    <tbody>
 
-</thead>
+    <?php $no=1; ?>
 
-<tbody>
+    <?php foreach($tickets as $ticket): ?>
 
-<?php $no=1; ?>
+    <tr>
 
-<?php foreach($tickets as $ticket): ?>
+        <td><?= $no++ ?></td>
 
-<tr>
+        <td><?= esc($ticket['ticket_number']) ?></td>
 
-<td><?= $no++ ?></td>
+        <td><?= esc($ticket['status']) ?></td>
 
-<td><?= esc($ticket['ticket_number']) ?></td>
+        <td><?= esc($ticket['priority']) ?></td>
 
-<td><?= esc($ticket['status']) ?></td>
+        <td><?= esc($ticket['ticket_description']) ?></td>
 
-<td><?= esc($ticket['priority']) ?></td>
+        <td><?= date('d-m-Y', strtotime($ticket['submitted_at'])) ?></td>
 
-<td><?= esc($ticket['description']) ?></td>
+    </tr>
 
-<td><?= date('d F Y H:i:s',strtotime($ticket['submitted_at'])) ?></td>
+    <?php endforeach; ?>
 
-<td>
-
-<?= !empty($ticket['verified_at'])
-? date('d F Y H:i:s',strtotime($ticket['verified_at']))
-: '-' ?>
-
-</td>
-
-</tr>
-
-<?php endforeach; ?>
-
-</tbody>
+    </tbody>
 
 </table>
 
@@ -103,5 +72,4 @@ window.print();
 </script>
 
 </body>
-
 </html>

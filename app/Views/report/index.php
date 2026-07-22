@@ -11,7 +11,7 @@
 <div class="card">
 
     <div class="card-header">
-        <h3 class="card-title">Filter Laporan</h3>
+        <h3 class="card-title">Cari Laporan Tiket</h3>
     </div>
 
     <div class="card-body">
@@ -20,54 +20,38 @@
 
             <div class="row">
 
-                <div class="col-md-3">
-                    <label>Tanggal Awal</label>
-                    <input type="date"
-                           name="tanggal_awal"
-                           class="form-control"
-                           value="<?= $_GET['tanggal_awal'] ?? '' ?>">
-                </div>
+                <div class="col-md-8">
 
-                <div class="col-md-3">
-                    <label>Tanggal Akhir</label>
-                    <input type="date"
-                           name="tanggal_akhir"
-                           class="form-control"
-                           value="<?= $_GET['tanggal_akhir'] ?? '' ?>">
-                </div>
+                    <label>Nomor Tiket</label>
 
-                <div class="col-md-3">
-                    <label>Status</label>
-
-                    <select name="status" class="form-control">
-
-                        <option value="">Semua Status</option>
-
-                        <option value="Submitted">Submitted</option>
-
-                        <option value="Verified">Verified</option>
-
-                        <option value="Completed">Completed</option>
-
-                        <option value="Diproses Unit">Diproses Unit</option>
-
-                    </select>
+                    <input
+                        type="text"
+                        name="ticket_number"
+                        class="form-control"
+                        placeholder="Masukkan Nomor Tiket"
+                        value="<?= $_GET['ticket_number'] ?? '' ?>">
 
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
 
-    <label>&nbsp;</label>
+                    <label>&nbsp;</label>
 
-    <div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-search"></i> Cari
+                    </button>
 
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-search"></i> Filter
-        </button>
+                </div>
 
-    </div>
+                <div class="col-md-2">
 
-</div>
+                    <label>&nbsp;</label>
+
+                    <a href="<?= base_url('report') ?>" class="btn btn-secondary btn-block">
+                        Reset
+                    </a>
+
+                </div>
 
             </div>
 
@@ -85,41 +69,43 @@
 
     <div class="card-body table-responsive">
 
+        <div class="mb-3">
+            <a href="<?= base_url('report/print') ?>" target="_blank" class="btn btn-primary">
+                <i class="fas fa-print"></i> Print
+            </a>
+        </div>
+
         <table class="table table-bordered table-striped">
 
             <thead class="thead-dark">
 
-            <tr>
-
-                <th>No</th>
-                <th>No Tiket</th>
-                <th>Status</th>
-                <th>Prioritas</th>
-                <th>Isi Tiket</th>
-                <th>Tanggal & Jam Pengajuan</th>
-                <th>Jam Verifikasi</th>
-
-            </tr>
+                <tr>
+                    <th>No</th>
+                    <th>No Tiket</th>
+                    <th>Status</th>
+                    <th>Prioritas</th>
+                    <th>Isi Tiket</th>
+                    <th>Tanggal & Jam Pengajuan</th>
+                    <th>Jam Verifikasi</th>
+                </tr>
 
             </thead>
 
             <tbody>
 
-            <?php if(empty($tickets)): ?>
+            <?php if (empty($tickets)): ?>
 
                 <tr>
-
                     <td colspan="7" class="text-center">
                         Tidak ada data.
                     </td>
-
                 </tr>
 
             <?php else: ?>
 
-                <?php $no=1; ?>
+                <?php $no = 1; ?>
 
-                <?php foreach($tickets as $ticket): ?>
+                <?php foreach ($tickets as $ticket): ?>
 
                     <tr>
 
@@ -128,37 +114,29 @@
                         <td><?= esc($ticket['ticket_number']) ?></td>
 
                         <td>
-
-                            <span class="badge badge-success">
-
-                                <?= esc($ticket['status']) ?>
-
-                            </span>
-
+                            <?php if ($ticket['status'] == 'Verified'): ?>
+                                <span class="badge badge-success">
+                                    <?= esc($ticket['status']) ?>
+                                </span>
+                            <?php else: ?>
+                                <span class="badge badge-secondary">
+                                    <?= esc($ticket['status']) ?>
+                                </span>
+                            <?php endif; ?>
                         </td>
 
                         <td><?= esc($ticket['priority']) ?></td>
 
-                        <td><?= esc($ticket['description']) ?></td>
+                        <td><?= esc($ticket['ticket_description']) ?></td>
 
                         <td>
-
                             <?= date('d F Y H:i:s', strtotime($ticket['submitted_at'])) ?>
-
                         </td>
 
                         <td>
-
-                            <?php if(!empty($ticket['verified_at'])): ?>
-
-                                <?= date('d F Y H:i:s', strtotime($ticket['verified_at'])) ?>
-
-                            <?php else: ?>
-
-                                -
-
-                            <?php endif; ?>
-
+                            <?= !empty($ticket['verified_at'])
+                                ? date('d F Y H:i:s', strtotime($ticket['verified_at']))
+                                : '-'; ?>
                         </td>
 
                     </tr>

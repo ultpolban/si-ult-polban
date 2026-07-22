@@ -38,7 +38,7 @@
                         </a>
                     </li>
 
-                    <!-- Laporan -->
+                    <!-- Laporan Tiket -->
                     <li class="nav-item">
                         <a href="<?= base_url('report') ?>" class="nav-link">
                             <i class="nav-icon fas fa-file-alt"></i>
@@ -46,11 +46,27 @@
                         </a>
                     </li>
 
-                    <!-- Statistik -->
+                    <!-- Statistik Tiket -->
                     <li class="nav-item">
                         <a href="<?= base_url('statistics') ?>" class="nav-link">
                             <i class="nav-icon fas fa-chart-bar"></i>
                             <p>Statistik Tiket</p>
+                        </a>
+                    </li>
+
+                    <!-- Laporan Tamu -->
+                    <li class="nav-item">
+                        <a href="<?= base_url('guest-report') ?>" class="nav-link">
+                            <i class="nav-icon fas fa-clipboard-list"></i>
+                            <p>Laporan Tamu</p>
+                        </a>
+                    </li>
+
+                    <!-- Tracking Tiket -->
+                    <li class="nav-item">
+                        <a href="<?= base_url('tracking') ?>" class="nav-link">
+                            <i class="nav-icon fas fa-search"></i>
+                            <p>Tracking Tiket</p>
                         </a>
                     </li>
 

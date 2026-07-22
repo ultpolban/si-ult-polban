@@ -10,16 +10,36 @@ class StatisticsController extends BaseController
     {
         $ticketModel = new TicketModel();
 
-        $submitted = $ticketModel->where('status', 'Submitted')->countAllResults();
-        $verified = $ticketModel->where('status', 'Verified')->countAllResults();
-        $completed = $ticketModel->where('status', 'Completed')->countAllResults();
-        $diproses = $ticketModel->where('status', 'Diproses Unit')->countAllResults();
+        $data = [
 
-        return view('statistics/index', [
-            'submitted' => $submitted,
-            'verified' => $verified,
-            'completed' => $completed,
-            'diproses' => $diproses
-        ]);
+            'total' => $ticketModel->countAll(),
+
+            'submitted' => $ticketModel
+                ->where('status','Submitted')
+                ->countAllResults(),
+
+            'assigned' => $ticketModel
+                ->where('status','Assigned')
+                ->countAllResults(),
+
+            'progress' => $ticketModel
+                ->where('status','In Progress')
+                ->countAllResults(),
+
+            'completed' => $ticketModel
+                ->where('status','Completed')
+                ->countAllResults(),
+
+            'revision' => $ticketModel
+                ->where('status','Need Revision')
+                ->countAllResults(),
+
+            'rejected' => $ticketModel
+                ->where('status','Rejected')
+                ->countAllResults(),
+
+        ];
+
+        return view('statistics/index',$data);
     }
 }

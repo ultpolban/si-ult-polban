@@ -92,6 +92,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 </style>
 
+<link rel="stylesheet"
+href="<?= base_url('assets/css/petugas.css') ?>">
+
 </head>
 
 <body class="hold-transition sidebar-mini">

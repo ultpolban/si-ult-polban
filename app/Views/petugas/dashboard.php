@@ -549,6 +549,230 @@ Refresh
 
 </div>
 
+<div class="card mt-4">
+
+<div class="card-header bg-danger">
+
+<h3 class="card-title">
+
+<i class="fas fa-exclamation-triangle"></i>
+
+Tiket Prioritas Tinggi
+
+</h3>
+
+</div>
+
+<div class="card-body table-responsive">
+
+<table class="table table-hover">
+
+<thead>
+
+<tr>
+
+<th>No Tiket</th>
+
+<th>Mahasiswa</th>
+
+<th>Layanan</th>
+
+<th>SLA</th>
+
+<th>Status</th>
+
+<th>Aksi</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>ULT-004</td>
+
+<td>Rafi Putra</td>
+
+<td>Surat Aktif Kuliah</td>
+
+<td>
+
+<span class="badge badge-danger">
+
+1 Hari
+
+</span>
+
+</td>
+
+<td>
+
+<span class="badge badge-warning">
+
+Menunggu
+
+</span>
+
+</td>
+
+<td>
+
+<a href="<?= base_url('petugas/detail/1') ?>" class="btn btn-info btn-sm">
+
+<i class="fas fa-eye"></i>
+
+</a>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>ULT-005</td>
+
+<td>Siti Nurhaliza</td>
+
+<td>Legalisir</td>
+
+<td>
+
+<span class="badge badge-danger">
+
+Hari Ini
+
+</span>
+
+</td>
+
+<td>
+
+<span class="badge badge-danger">
+
+Urgent
+
+</span>
+
+</td>
+
+<td>
+
+<a href="<?= base_url('petugas/detail/2') ?>" class="btn btn-info btn-sm">
+
+<i class="fas fa-eye"></i>
+
+</a>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div class="card mt-4">
+
+<div class="card-header bg-warning">
+
+<h3 class="card-title">
+
+<i class="fas fa-clock"></i>
+
+Monitoring SLA
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+
+<th>Status SLA</th>
+
+<th>Jumlah</th>
+
+<th>Keterangan</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+
+<span class="badge badge-success">
+
+Aman
+
+</span>
+
+</td>
+
+<td>96</td>
+
+<td>Masih dalam batas SLA</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<span class="badge badge-warning">
+
+Mendekati Deadline
+
+</span>
+
+</td>
+
+<td>14</td>
+
+<td>< 24 Jam</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<span class="badge badge-danger">
+
+Melewati SLA
+
+</span>
+
+</td>
+
+<td>3</td>
+
+<td>Harus segera diproses</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
 <div class="row mt-4">
 
     <!-- Aktivitas -->
@@ -556,8 +780,9 @@ Refresh
 
         <div class="card">
 
-            <div class="card-header bg-info">
+           <div class="card-header"
 
+style="background:#005BAC;color:white;">
                 <h3 class="card-title">
 
                     <i class="fas fa-history"></i>
@@ -676,146 +901,17 @@ Refresh
 
     </div>
 
-    <!-- Notifikasi -->
-    <div class="col-lg-4">
-
-        <div class="card">
-
-           <div class="card-header"
-     style="background:#D93025;color:white;">
-                <h3 class="card-title">
-
-                    <i class="fas fa-bell"></i>
-
-                    Notifikasi
-
-                </h3>
-
-            </div>
-
-            <div class="card-body">
-
-                <div class="alert alert-warning">
-
-                    <i class="fas fa-exclamation-circle"></i>
-
-                    <b>3 Tiket</b>
-                    menunggu verifikasi.
-
-                </div>
-
-                <div class="alert alert-danger">
-
-                    <i class="fas fa-clock"></i>
-
-                    <b>1 Tiket</b>
-                    melewati SLA.
-
-                </div>
-
-                <div class="alert alert-success">
-
-                    <i class="fas fa-check-circle"></i>
-
-                    Hari ini
-                    <b>15 Tiket</b>
-                    berhasil diselesaikan.
-
-                </div>
-
-            </div>
-
-        </div>
+    
 
     </div>
 
 </div>
 
-<div class="row mt-4">
-
-    <div class="col-lg-7">
-
-        <div class="card">
-
-            <div class="card-header bg-primary">
-
-                <h3 class="card-title">
-
-                    <i class="fas fa-chart-pie"></i>
-
-                    Statistik Status Tiket
-
-                </h3>
-
-            </div>
-
-         <div class="card-body text-center">
-
- <div style="width:170px; margin:auto;">
-
-        <canvas id="grafikStatus"></canvas>
-
-    </div>
-
-</div>
 
         </div>
 
     </div>
 
-    <div class="col-lg-5">
-
-        <div class="card">
-
-           <div class="card-header"
-     style="background:#0B8F4D;color:white;">
-
-                <h3 class="card-title">
-
-                    Ringkasan Bulan Juli
-
-                </h3>
-
-            </div>
-
-        <div class="card-body">
-
-<table class="table table-sm">
-
-                <table class="table table-sm">
-
-                    <tr>
-                        <td>Total Tiket</td>
-                        <th class="text-right">120</th>
-                    </tr>
-
-                    <tr>
-                        <td>Diverifikasi</td>
-                        <th class="text-right text-success">95</th>
-                    </tr>
-
-                    <tr>
-                        <td>Diproses Unit</td>
-                        <th class="text-right text-warning">20</th>
-                    </tr>
-
-                    <tr>
-                        <td>Selesai</td>
-                        <th class="text-right text-primary">78</th>
-                    </tr>
-
-                    <tr>
-                        <td>Ditolak</td>
-                        <th class="text-right text-danger">5</th>
-                    </tr>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
 
 </div>
 

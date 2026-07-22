@@ -1,25 +1,65 @@
-<?= $this->include('layouts/header') ?>
+<!DOCTYPE html>
+<html>
 
-<body class="hold-transition sidebar-mini">
+<head>
 
-    <div class="wrapper">
+    <title><?= $title ?? 'SI ULT'; ?></title>
 
-        <?= $this->include('layouts/navbar') ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <?= $this->include('layouts/sidebar') ?>
 
-        <div class="content-wrapper">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-            <section class="content">
 
-                <div class="container-fluid pt-3">
+    <style>
 
-                    <?= $this->renderSection('content') ?>
+        body {
+            background: #f5f6fa;
+        }
 
-                </div>
 
-            </section>
+        .content {
+            min-height: 90vh;
+        }
 
-        </div>
 
-        <?= $this->include('layouts/footer') ?>
+        .card {
+            border-radius: 12px;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+<body>
+
+
+<?= view('layouts/navbar'); ?>
+
+
+<div class="d-flex">
+
+
+    <?= view('layouts/sidebar'); ?>
+
+
+    <main class="content container-fluid p-4">
+
+        <?= $this->renderSection('content'); ?>
+
+    </main>
+
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap.bundle.min.js"></script>
+
+
+</body>
+
+</html>

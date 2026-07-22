@@ -1,49 +1,39 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<div class="bg-dark text-white p-3" style="width:250px; min-height:100vh;">
 
-    <a href="<?= base_url('dashboard') ?>"
+    <h4 class="text-center mb-4">SI ULT</h4>
 
-        class="brand-link">
+    <ul class="nav flex-column">
 
-        <span class="brand-text">
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white" href="<?= base_url('/') ?>">
+                Dashboard
+            </a>
+        </li>
 
-            SI ULT POLBAN
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white" href="<?= base_url('unit') ?>">
+                Unit Layanan
+            </a>
+        </li>
 
-        </span>
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white" href="<?= base_url('kategori') ?>">
+                Kategori Layanan
+            </a>
+        </li>
 
-    </a>
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white" href="<?= base_url('layanan') ?>">
+                Layanan
+            </a>
+        </li>
 
-    <div class="sidebar">
 
-        <nav>
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white" href="<?= base_url('persyaratan') ?>">
+                Persyaratan Layanan
+            </a>
+        </li>
+    </ul>
 
-            <ul class="nav nav-pills nav-sidebar flex-column">
-
-                <li class="nav-item">
-                    <a href="<?= base_url('dashboard') ?>" class="nav-link">
-                        Dashboard
-                    </a>
-                </li>
-
-                <?php if (hasRole(1)): ?>
-
-                    <li class="nav-item">
-                        <a href="<?= base_url('users') ?>" class="nav-link">
-                            <p>Manajemen User</p>
-                        </a>
-                    </li>
-
-                <?php endif; ?>
-
-                <li class="nav-item">
-                    <a href="<?= base_url('logout') ?>" class="nav-link">
-                        Logout
-                    </a>
-                </li>
-
-            </ul>
-
-        </nav>
-
-    </div>
-
-</aside>
+</div>

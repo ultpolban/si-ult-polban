@@ -2,46 +2,211 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-/** @var RouteCollection $routes */
-$routes->get('/', 'Home::index');
+/**
+ * @var RouteCollection $routes
+ */
 
-$routes->get('/login', 'AuthController::login');
-$routes->post('/login', 'AuthController::authenticate');
 
-$routes->get('/register', 'AuthController::register');
-$routes->post('/register', 'AuthController::storeRegister');
+$routes->setDefaultNamespace('App\Controllers');
+$routes->setDefaultController('DashboardController');
+$routes->setDefaultMethod('index');
+$routes->setTranslateURIDashes(false);
+$routes->set404Override();
+$routes->setAutoRoute(false);
 
-$routes->get('/logout', 'AuthController::logout');
 
-$routes->group('', ['filter' => 'auth'], function ($routes) {
 
-    $routes->get('/dashboard', 'DashboardController::index');
-    $routes->get('users/create', 'UserController::create');
-    $routes->post('users/store', 'UserController::store');
-});
+/*
+|--------------------------------------------------------------------------
+| DASHBOARD
+|--------------------------------------------------------------------------
+*/
 
-$routes->group('users',['filter'=>'role'],function($routes){
+$routes->get('/', 'DashboardController::index');
 
-    $routes->get('/', 'UserController::index');
-    $routes->get('create', 'UserController::create');
-    $routes->post('store', 'UserController::store');
-    $routes->get('edit/(:num)', 'UserController::edit/$1');
-    $routes->post('update/(:num)', 'UserController::update/$1');
-    $routes->get('delete/(:num)', 'UserController::delete/$1');
+$routes->get(
+    'dashboard',
+    'DashboardController::index'
+);
 
-});
 
-$routes->group('', ['filter' => 'auth'], function ($routes) {
 
-    $routes->get('/dashboard', 'DashboardController::index');
 
-    $routes->get('/users', 'UserController::index');
 
-    $routes->get('/users/create', 'UserController::create');
-    $routes->post('/users/store', 'UserController::store');
+/*
+|--------------------------------------------------------------------------
+| UNIT KERJA
+|--------------------------------------------------------------------------
+*/
 
-    $routes->get('/users/edit/(:num)', 'UserController::edit/$1');
-    $routes->post('/users/update/(:num)', 'UserController::update/$1');
+$routes->get(
+    'unit',
+    'UnitController::index'
+);
 
-    $routes->get('/users/delete/(:num)', 'UserController::delete/$1');
-});
+
+$routes->get(
+    'unit/create',
+    'UnitController::create'
+);
+
+
+$routes->post(
+    'unit/store',
+    'UnitController::store'
+);
+
+
+$routes->get(
+    'unit/edit/(:num)',
+    'UnitController::edit/$1'
+);
+
+
+$routes->post(
+    'unit/update/(:num)',
+    'UnitController::update/$1'
+);
+
+
+$routes->get(
+    'unit/delete/(:num)',
+    'UnitController::delete/$1'
+);
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| KATEGORI LAYANAN
+|--------------------------------------------------------------------------
+*/
+
+$routes->get(
+    'kategori',
+    'KategoriController::index'
+);
+
+
+$routes->get(
+    'kategori/create',
+    'KategoriController::create'
+);
+
+
+$routes->post(
+    'kategori/store',
+    'KategoriController::store'
+);
+
+
+$routes->get(
+    'kategori/edit/(:num)',
+    'KategoriController::edit/$1'
+);
+
+
+$routes->post(
+    'kategori/update/(:num)',
+    'KategoriController::update/$1'
+);
+
+
+$routes->get(
+    'kategori/delete/(:num)',
+    'KategoriController::delete/$1'
+);
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| LAYANAN
+|--------------------------------------------------------------------------
+*/
+
+$routes->get(
+    'layanan',
+    'Layanan::index'
+);
+
+
+$routes->get(
+    'layanan/create',
+    'Layanan::create'
+);
+
+
+$routes->post(
+    'layanan/store',
+    'Layanan::store'
+);
+
+
+$routes->get(
+    'layanan/edit/(:num)',
+    'Layanan::edit/$1'
+);
+
+
+$routes->post(
+    'layanan/update/(:num)',
+    'Layanan::update/$1'
+);
+
+
+$routes->get(
+    'layanan/delete/(:num)',
+    'Layanan::delete/$1'
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| PERSYARATAN LAYANAN
+|--------------------------------------------------------------------------
+*/
+
+
+$routes->get(
+    'persyaratan',
+    'Persyaratan::index'
+);
+
+
+$routes->get(
+    'persyaratan/create',
+    'Persyaratan::create'
+);
+
+
+$routes->post(
+    'persyaratan/store',
+    'Persyaratan::store'
+);
+
+
+$routes->get(
+    'persyaratan/edit/(:num)',
+    'Persyaratan::edit/$1'
+);
+
+
+$routes->post(
+    'persyaratan/update/(:num)',
+    'Persyaratan::update/$1'
+);
+
+
+$routes->get(
+    'persyaratan/delete/(:num)',
+    'Persyaratan::delete/$1'
+);

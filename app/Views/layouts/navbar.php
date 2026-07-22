@@ -1,27 +1,11 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 
-    <ul class="navbar-nav">
+    <div class="container-fluid">
 
-        <li class="nav-item">
+        <a class="navbar-brand" href="#">
+            Sistem Informasi ULT
+        </a>
 
-            <a class="nav-link" data-widget="pushmenu">
-
-                <i class="fas fa-bars"></i>
-
-            </a>
-
-        </li>
-
-    </ul>
-
-    <ul class="navbar-nav ml-auto">
-
-        <li class="nav-item">
-
-            <?= session()->get('name') ?>
-
-        </li>
-
-    </ul>
+    </div>
 
 </nav>

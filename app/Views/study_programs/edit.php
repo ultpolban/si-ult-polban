@@ -2,297 +2,163 @@
 
 <?= $this->section('content') ?>
 
-<div class="container-fluid py-4">
+<div class="container-fluid">
 
-    <!-- Header -->
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
-
-            <h2 class="fw-bold mb-1">
-
-                <i class="bi bi-pencil-square text-warning"></i>
-
-                Edit Program Studi
-
-            </h2>
-
-            <p class="text-muted mb-0">
-
-                Perbarui data Program Studi pada sistem SI-ULT POLBAN.
-
-            </p>
-
-        </div>
-
-        <a
-            href="<?= base_url('study-programs') ?>"
-            class="btn btn-outline-secondary">
-
-            <i class="bi bi-arrow-left-circle"></i>
-
-            Kembali
-
-        </a>
-
-    </div>
-
-    <?php if (session()->getFlashdata('errors')) : ?>
-
-        <div class="alert alert-danger alert-dismissible fade show shadow-sm">
-
-            <strong>Terjadi Kesalahan!</strong>
-
-            <hr>
-
-            <ul class="mb-0">
-
-                <?php foreach (session()->getFlashdata('errors') as $error) : ?>
-
-                    <li><?= esc($error) ?></li>
-
-                <?php endforeach; ?>
-
-            </ul>
-
-            <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="alert"></button>
-
-        </div>
-
-    <?php endif; ?>
-
-    <div class="card border-0 shadow">
+    <div class="card shadow">
 
         <div class="card-header bg-warning">
 
-            <h5 class="mb-0">
-
-                <i class="bi bi-pencil-fill"></i>
-
-                Form Edit Program Studi
-
-            </h5>
+            <h4 class="mb-0">
+                Edit Program Studi
+            </h4>
 
         </div>
 
         <div class="card-body">
 
-            <form
-                action="<?= base_url('study-programs/update/' . $program['id']) ?>"
-                method="post">
+            <form action="<?= base_url('study-programs/update/' . $program['id']) ?>" method="post">
 
                 <?= csrf_field() ?>
 
-                <div class="row">
+                <div class="mb-3">
 
-                    <div class="col-lg-8">
+                    <label class="form-label">
+                        Jurusan
+                    </label>
 
-                        <div class="mb-4">
+                    <select
+                        name="department_id"
+                        class="form-select"
+                        required>
 
-                            <label class="form-label fw-semibold">
+                        <?php foreach ($departments as $department): ?>
 
-                                Jurusan
+                            <option
+                                value="<?= $department['id'] ?>"
+                                <?= $program['department_id'] == $department['id'] ? 'selected' : '' ?>>
 
-                                <span class="text-danger">*</span>
+                                <?= esc($department['department_name']) ?>
 
-                            </label>
+                            </option>
 
-                            <select
-                                name="department_id"
-                                class="form-select"
-                                required>
+                        <?php endforeach; ?>
 
-                                <?php foreach ($departments as $department): ?>
-
-                                    <option
-                                        value="<?= $department['id'] ?>"
-                                        <?= old('department_id', $program['department_id']) == $department['id'] ? 'selected' : '' ?>>
-
-                                        <?= esc($department['department_name']) ?>
-
-                                    </option>
-
-                                <?php endforeach; ?>
-
-                            </select>
-
-                        </div>
-
-                        <div class="mb-4">
-
-                            <label class="form-label fw-semibold">
-
-                                Kode Program Studi
-
-                            </label>
-
-                            <input
-                                type="text"
-                                name="program_code"
-                                class="form-control"
-                                value="<?= old('program_code', $program['program_code']) ?>"
-                                required>
-
-                        </div>
-
-                        <div class="mb-4">
-
-                            <label class="form-label fw-semibold">
-
-                                Nama Program Studi
-
-                            </label>
-
-                            <input
-                                type="text"
-                                name="program_name"
-                                class="form-control"
-                                value="<?= old('program_name', $program['program_name']) ?>"
-                                required>
-
-                        </div>
-
-                        <div class="row">
-
-                            <div class="col-md-6 mb-4">
-
-                                <label class="form-label fw-semibold">
-
-                                    Jenjang
-
-                                </label>
-
-                                <select
-                                    name="education_level"
-                                    class="form-select">
-
-                                    <option value="D3" <?= old('education_level', $program['education_level']) == 'D3' ? 'selected' : '' ?>>D3</option>
-
-                                    <option value="D4" <?= old('education_level', $program['education_level']) == 'D4' ? 'selected' : '' ?>>D4</option>
-
-                                    <option value="S2" <?= old('education_level', $program['education_level']) == 'S2' ? 'selected' : '' ?>>S2</option>
-
-                                </select>
-
-                            </div>
-
-                            <div class="col-md-6 mb-4">
-
-                                <label class="form-label fw-semibold">
-
-                                    Status
-
-                                </label>
-
-                                <select
-                                    name="status"
-                                    class="form-select">
-
-                                    <option value="Aktif" <?= old('status', $program['status']) == 'Aktif' ? 'selected' : '' ?>>
-
-                                        Aktif
-
-                                    </option>
-
-                                    <option value="Tidak Aktif" <?= old('status', $program['status']) == 'Tidak Aktif' ? 'selected' : '' ?>>
-
-                                        Tidak Aktif
-
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-lg-4">
-
-                        <div class="card bg-light border-0">
-
-                            <div class="card-body">
-
-                                <h6 class="fw-bold">
-
-                                    <i class="bi bi-info-circle-fill text-warning"></i>
-
-                                    Informasi
-
-                                </h6>
-
-                                <hr>
-
-                                <p>
-
-                                    Perubahan Program Studi akan langsung digunakan pada proses registrasi pengguna dan data akademik.
-
-                                </p>
-
-                                <ul class="mb-0">
-
-                                    <li>Pastikan kode Program Studi tetap unik.</li>
-
-                                    <li>Periksa kembali jurusan yang dipilih.</li>
-
-                                    <li>Sesuaikan jenjang pendidikan.</li>
-
-                                    <li>Status dapat diubah sewaktu-waktu.</li>
-
-                                </ul>
-
-                            </div>
-
-                        </div>
-
-                    </div>
+                    </select>
 
                 </div>
 
-                <hr class="my-4">
+                <div class="mb-3">
 
-                <div class="d-flex justify-content-between">
+                    <label class="form-label">
+                        Kode Program Studi
+                    </label>
 
-                    <a
-                        href="<?= base_url('study-programs') ?>"
-                        class="btn btn-outline-secondary">
-
-                        <i class="bi bi-arrow-left-circle"></i>
-
-                        Kembali
-
-                    </a>
-
-                    <div>
-
-                        <button
-                            type="reset"
-                            class="btn btn-outline-warning me-2">
-
-                            <i class="bi bi-arrow-clockwise"></i>
-
-                            Reset
-
-                        </button>
-
-                        <button
-                            type="submit"
-                            class="btn btn-warning">
-
-                            <i class="bi bi-save-fill"></i>
-
-                            Update Program Studi
-
-                        </button>
-
-                    </div>
+                    <input
+                        type="text"
+                        name="program_code"
+                        class="form-control"
+                        value="<?= esc($program['program_code']) ?>"
+                        required>
 
                 </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Nama Program Studi
+                    </label>
+
+                    <input
+                        type="text"
+                        name="program_name"
+                        class="form-control"
+                        value="<?= esc($program['program_name']) ?>"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Jenjang
+                    </label>
+
+                    <select
+                        name="education_level"
+                        class="form-select">
+
+                        <?php
+
+                        $levels = [
+                            'D1',
+                            'D2',
+                            'D3',
+                            'D4',
+                            'S1',
+                            'S2'
+                        ];
+
+                        foreach ($levels as $level):
+
+                        ?>
+
+                            <option
+                                value="<?= $level ?>"
+                                <?= $program['education_level'] == $level ? 'selected' : '' ?>>
+
+                                <?= $level ?>
+
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Status
+                    </label>
+
+                    <select
+                        name="status"
+                        class="form-select">
+
+                        <option
+                            value="Aktif"
+                            <?= $program['status'] == 'Aktif' ? 'selected' : '' ?>>
+
+                            Aktif
+
+                        </option>
+
+                        <option
+                            value="Tidak Aktif"
+                            <?= $program['status'] == 'Tidak Aktif' ? 'selected' : '' ?>>
+
+                            Tidak Aktif
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <button class="btn btn-primary">
+
+                    Update
+
+                </button>
+
+                <a
+                    href="<?= base_url('study-programs') ?>"
+                    class="btn btn-secondary">
+
+                    Kembali
+
+                </a>
 
             </form>
 

@@ -2,117 +2,74 @@
 
 <?= $this->section('content') ?>
 
-<div class="container-fluid py-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-    <!-- Header -->
+    <div>
 
-    <div class="row mb-4">
+        <h3 class="mb-0">
 
-        <div class="col-lg-8">
+            Management User
 
-            <h2 class="fw-bold mb-1">
+        </h3>
 
-                <i class="bi bi-people-fill text-primary"></i>
+        <small class="text-muted">
 
-                Management User
+            Kelola seluruh pengguna SI ULT POLBAN
 
-            </h2>
-
-            <p class="text-muted mb-0">
-
-                Kelola seluruh data pengguna SI-ULT POLBAN
-
-            </p>
-
-        </div>
-
-        <div class="col-lg-4 text-end">
-
-            <a href="<?= base_url('users/create') ?>"
-                class="btn btn-primary shadow">
-
-                <i class="bi bi-plus-circle-fill me-2"></i>
-
-                Tambah User
-
-            </a>
-
-        </div>
+        </small>
 
     </div>
 
-    <!-- Flash Message -->
+    <div>
 
-    <?php if (session()->getFlashdata('success')) : ?>
+        <a href="<?= base_url('users/create') ?>"
+            class="btn btn-primary">
 
-        <div class="alert alert-success alert-dismissible fade show shadow-sm">
+            <i class="bi bi-plus-circle"></i>
 
-            <i class="bi bi-check-circle-fill me-2"></i>
+            Tambah User
 
-            <?= session()->getFlashdata('success') ?>
+        </a>
 
-            <button
-                class="btn-close"
-                data-bs-dismiss="alert">
-            </button>
+    </div>
 
-        </div>
+</div>
 
-    <?php endif; ?>
+<?php if (session()->getFlashdata('success')) : ?>
 
+    <div class="alert alert-success">
 
-    <?php if (session()->getFlashdata('error')) : ?>
+        <?= session()->getFlashdata('success') ?>
 
-        <div class="alert alert-danger alert-dismissible fade show shadow-sm">
+    </div>
 
-            <i class="bi bi-exclamation-circle-fill me-2"></i>
+<?php endif; ?>
 
-            <?= session()->getFlashdata('error') ?>
+<?php if (session()->getFlashdata('error')) : ?>
 
-            <button
-                class="btn-close"
-                data-bs-dismiss="alert">
-            </button>
+    <div class="alert alert-danger">
 
-        </div>
+        <?= session()->getFlashdata('error') ?>
 
-    <?php endif; ?>
+    </div>
 
+<?php endif; ?>
 
-    <!-- Statistik -->
+<div class="row mb-4">
 
-    <div class="row mb-4">
+    <div class="col-md-3">
 
-        <div class="col-md-4">
+        <div class="card border-primary shadow-sm">
 
-            <div class="card border-0 shadow-sm">
+            <div class="card-body">
 
-                <div class="card-body">
+                <h6>Total User</h6>
 
-                    <div class="d-flex justify-content-between align-items-center">
+                <h2>
 
-                        <div>
+                    <?= $totalUser ?>
 
-                            <small class="text-muted">
-
-                                Total User
-
-                            </small>
-
-                            <h2 class="fw-bold mb-0">
-
-                                <?= $pager->getTotal() ?>
-
-                            </h2>
-
-                        </div>
-
-                        <i class="bi bi-people-fill text-primary"
-                            style="font-size:45px;"></i>
-
-                    </div>
-
-                </div>
+                </h2>
 
             </div>
 
@@ -120,431 +77,435 @@
 
     </div>
 
+    <div class="col-md-3">
 
-    <!-- Card -->
+        <div class="card border-success shadow-sm">
 
-    <div class="card border-0 shadow">
+            <div class="card-body">
 
-        <div class="card-body">
+                <h6>User Aktif</h6>
 
-            <!-- Search -->
+                <h2 class="text-success">
 
-            <form method="GET"
-                action="<?= base_url('users') ?>">
+                    <?= $totalActive ?>
 
-                <div class="row g-2 mb-4">
+                </h2>
 
-                    <div class="col-lg-8">
+            </div>
 
-                        <div class="input-group">
+        </div>
 
-                            <span class="input-group-text bg-white">
+    </div>
 
-                                <i class="bi bi-search"></i>
+    <div class="col-md-3">
 
-                            </span>
+        <div class="card border-danger shadow-sm">
 
-                            <input
-                                type="text"
-                                name="keyword"
-                                class="form-control"
-                                placeholder="Cari nama, email, atau nomor HP..."
-                                value="<?= esc($keyword) ?>">
+            <div class="card-body">
 
-                        </div>
+                <h6>User Nonaktif</h6>
 
-                    </div>
+                <h2 class="text-danger">
 
-                    <div class="col-lg-2">
+                    <?= $totalInactive ?>
 
-                        <button
-                            class="btn btn-primary w-100">
+                </h2>
 
-                            <i class="bi bi-search"></i>
+            </div>
 
-                            Cari
+        </div>
 
-                        </button>
+    </div>
 
-                    </div>
+    <div class="col-md-3">
 
-                    <div class="col-lg-2">
+        <div class="card border-warning shadow-sm">
 
-                        <a href="<?= base_url('users') ?>"
-                            class="btn btn-outline-secondary w-100">
+            <div class="card-body">
 
-                            <i class="bi bi-arrow-clockwise"></i>
+                <h6>Mahasiswa</h6>
 
-                            Reset
+                <h2 class="text-warning">
 
-                        </a>
+                    <?= $totalMahasiswa ?>
 
-                    </div>
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card mb-4">
+
+    <div class="card-body">
+
+        <form method="get">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <input
+                        type="text"
+                        name="keyword"
+                        class="form-control"
+                        placeholder="Cari nama / email / NIM..."
+
+                        value="<?= esc($keyword) ?>">
 
                 </div>
 
-            </form>
+                <div class="col-md-3">
 
-            <div class="table-responsive">
+                    <select
+                        name="role"
+                        class="form-select">
 
-                <table class="table table-hover align-middle">
+                        <option value="">
 
-                    <thead class="table-light">
+                            Semua Role
+
+                        </option>
+
+                        <?php foreach ($roles as $role): ?>
+
+                            <option
+                                value="<?= $role['id'] ?>"
+                                <?= ($selectedRole == $role['id']) ? 'selected' : '' ?>>
+
+                                <?= esc($role['role_name']) ?>
+
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <select
+                        name="type"
+                        class="form-select">
+
+                        <option value="">
+
+                            Semua Jenis
+
+                        </option>
+
+                        <?php foreach ($userTypes as $type): ?>
+
+                            <option
+                                value="<?= $type['id'] ?>"
+                                <?= ($selectedType == $type['id']) ? 'selected' : '' ?>>
+
+                                <?= esc($type['type_name']) ?>
+
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-2 d-grid">
+
+                    <button
+                        class="btn btn-primary">
+
+                        <i class="bi bi-search"></i>
+
+                        Cari
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div class="card shadow-sm">
+
+    <div class="card-header bg-primary text-white">
+
+        <strong>
+
+            Daftar User
+
+        </strong>
+
+    </div>
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover table-bordered align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th width="60">No</th>
+
+                        <th width="80">Foto</th>
+
+                        <th>Nama User</th>
+
+                        <th>Role</th>
+
+                        <th>Jenis Pemohon</th>
+
+                        <th>Email</th>
+
+                        <th>No HP</th>
+
+                        <th>Status</th>
+
+                        <th width="180">Aksi</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <?php if (empty($users)) : ?>
 
                         <tr>
 
-                            <th width="60">No</th>
+                            <td colspan="9" class="text-center py-4">
 
-                            <th>Pengguna</th>
+                                Tidak ada data user.
 
-                            <th>Role</th>
-
-                            <th>Unit Kerja</th>
-
-                            <th>Email</th>
-
-                            <th>No HP</th>
-
-                            <th>Status</th>
-
-                            <th width="220" class="text-center">
-
-                                Aksi
-
-                            </th>
+                            </td>
 
                         </tr>
 
-                    </thead>
+                    <?php endif; ?>
 
-                    <tbody>
+                    <?php
 
-                        <?php if (empty($users)) : ?>
+                    $no = 1 + (($pager->getCurrentPage() - 1) * $pager->getPerPage());
 
-                            <tr>
+                    ?>
 
-                                <td colspan="8" class="text-center py-5">
+                    <?php foreach ($users as $user): ?>
 
-                                    <div class="my-4">
+                        <tr>
 
-                                        <i class="bi bi-database-x text-secondary"
-                                            style="font-size:70px;"></i>
+                            <td>
 
-                                        <h5 class="mt-3 text-secondary">
+                                <?= $no++ ?>
 
-                                            Data User Tidak Ditemukan
+                            </td>
 
-                                        </h5>
+                            <td class="text-center">
 
-                                        <p class="text-muted">
+                                <?php if (!empty($user['photo'])) : ?>
 
-                                            Silakan tambahkan user baru atau ubah kata kunci pencarian.
+                                    <img
 
-                                        </p>
+                                        src="<?= base_url('uploads/users/' . $user['photo']) ?>"
 
-                                    </div>
+                                        style="width:55px;height:55px;object-fit:cover"
 
-                                </td>
+                                        class="rounded-circle border">
 
-                            </tr>
+                                <?php else : ?>
 
-                        <?php else : ?>
+                                    <i class="bi bi-person-circle"
 
-                            <?php
+                                        style="font-size:45px;color:#adb5bd"></i>
 
-                            $no = 1 + (10 * ($pager->getCurrentPage() - 1));
+                                <?php endif; ?>
 
-                            ?>
+                            </td>
 
-                            <?php foreach ($users as $user) : ?>
+                            <td>
 
-                                <tr>
+                                <strong>
 
-                                    <!-- Nomor -->
+                                    <?= esc($user['full_name']) ?>
 
-                                    <td class="fw-bold text-center">
+                                </strong>
 
-                                        <?= $no++ ?>
+                                <br>
 
-                                    </td>
+                                <small class="text-muted">
 
-                                    <!-- User -->
+                                    <?= esc($user['personal_email']) ?>
 
-                                    <td>
+                                </small>
 
-                                        <div class="d-flex align-items-center">
+                            </td>
 
-                                            <!-- Avatar -->
+                            <td>
 
-                                            <?php if (!empty($user['photo'])) : ?>
+                                <?php
 
-                                                <img
-                                                    src="<?= base_url('uploads/users/' . $user['photo']) ?>"
-                                                    class="rounded-circle border shadow-sm me-3"
-                                                    width="50"
-                                                    height="50"
-                                                    style="object-fit:cover;">
+                                switch ($user['role_name']) {
 
-                                            <?php else : ?>
+                                    case 'Administrator':
 
-                                                <div
-                                                    class="rounded-circle bg-primary text-white
-                           d-flex justify-content-center
-                           align-items-center me-3 shadow-sm"
-                                                    style="width:50px;height:50px;">
+                                        $badge = 'danger';
 
-                                                    <i class="bi bi-person-fill fs-4"></i>
+                                        break;
 
-                                                </div>
+                                    case 'Petugas ULT':
 
-                                            <?php endif; ?>
+                                        $badge = 'primary';
 
-                                            <div>
+                                        break;
 
-                                                <div class="fw-semibold">
+                                    case 'Unit Tujuan':
 
-                                                    <?= esc($user['full_name']) ?>
+                                        $badge = 'warning';
 
-                                                </div>
+                                        break;
 
-                                                <small class="text-muted">
+                                    case 'Pimpinan':
 
-                                                    ID :
-                                                    <?= $user['id'] ?>
+                                        $badge = 'dark';
 
-                                                </small>
+                                        break;
 
-                                            </div>
+                                    default:
 
-                                        </div>
+                                        $badge = 'success';
+                                }
 
-                                    </td>
+                                ?>
 
-                                    <!-- Role -->
+                                <span class="badge bg-<?= $badge ?>">
 
-                                    <td>
+                                    <?= esc($user['role_name']) ?>
 
-                                        <?php
+                                </span>
 
-                                        switch ($user['role_name']) {
+                            </td>
 
-                                            case 'Administrator':
+                            <td>
 
-                                                $badge = 'danger';
+                                <?= esc($user['type_name'] ?? '-') ?>
 
-                                                break;
+                            </td>
 
-                                            case 'Petugas ULT':
+                            <td>
 
-                                                $badge = 'primary';
+                                <?= esc($user['personal_email']) ?>
 
-                                                break;
+                            </td>
 
-                                            case 'Unit Tujuan':
+                            <td>
 
-                                                $badge = 'warning';
+                                <?= esc($user['phone']) ?>
 
-                                                break;
+                            </td>
 
-                                            case 'Pimpinan':
+                            <td>
 
-                                                $badge = 'dark';
+                                <?php if ($user['is_active']) : ?>
 
-                                                break;
+                                    <span class="badge bg-success">
 
-                                            default:
+                                        Aktif
 
-                                                $badge = 'success';
+                                    </span>
 
-                                                break;
-                                        }
+                                <?php else : ?>
 
-                                        ?>
+                                    <span class="badge bg-danger">
 
-                                        <span class="badge bg-<?= $badge ?> px-3 py-2">
+                                        Nonaktif
 
-                                            <?= esc($user['role_name']) ?>
+                                    </span>
 
-                                        </span>
+                                <?php endif; ?>
 
-                                    </td>
+                            </td>
 
-                                    <!-- Unit -->
+                            <td>
 
-                                    <td>
+                                <div class="btn-group">
 
-                                        <?= esc($user['unit_name'] ?? '-') ?>
+                                    <a
 
-                                    </td>
+                                        href="<?= base_url('users/show/' . $user['id']) ?>"
 
-                                    <!-- Email -->
+                                        class="btn btn-info btn-sm">
 
-                                    <td>
+                                        <i class="bi bi-eye"></i>
 
-                                        <div class="small">
+                                    </a>
 
-                                            <?= esc($user['personal_email']) ?>
+                                    <a
 
-                                        </div>
+                                        href="<?= base_url('users/edit/' . $user['id']) ?>"
 
-                                    </td>
+                                        class="btn btn-warning btn-sm">
 
-                                    <!-- HP -->
+                                        <i class="bi bi-pencil"></i>
 
-                                    <td>
+                                    </a>
 
-                                        <?= esc($user['phone']) ?>
+                                    <form
 
-                                    </td>
+                                        action="<?= base_url('users/delete/' . $user['id']) ?>"
 
-                                    <!-- Status -->
+                                        method="post"
 
-                                    <td>
+                                        class="d-inline">
 
-                                        <?php if ($user['is_active']) : ?>
+                                        <?= csrf_field() ?>
 
-                                            <span class="badge rounded-pill bg-success px-3 py-2">
+                                        <button
 
-                                                <i class="bi bi-check-circle-fill"></i>
+                                            type="submit"
 
-                                                Aktif
-
-                                            </span>
-
-                                        <?php else : ?>
-
-                                            <span class="badge rounded-pill bg-danger px-3 py-2">
-
-                                                <i class="bi bi-x-circle-fill"></i>
-
-                                                Non Aktif
-
-                                            </span>
-
-                                        <?php endif; ?>
-
-                                    </td>
-
-                                    <!-- Tombol -->
-
-                                    <td class="text-center">
-
-                                        <!-- Detail -->
-
-                                        <a
-                                            href="<?= base_url('users/show/' . $user['id']) ?>"
-                                            class="btn btn-outline-info btn-sm"
-                                            data-bs-toggle="tooltip"
-                                            title="Detail">
-
-                                            <i class="bi bi-eye-fill"></i>
-
-                                        </a>
-
-                                        <!-- Edit -->
-
-                                        <a
-                                            href="<?= base_url('users/edit/' . $user['id']) ?>"
-                                            class="btn btn-outline-warning btn-sm"
-                                            data-bs-toggle="tooltip"
-                                            title="Edit">
-
-                                            <i class="bi bi-pencil-square"></i>
-
-                                        </a>
-
-                                        <!-- Aktif / Nonaktif -->
-
-                                        <?php if ($user['is_active']) : ?>
-
-                                            <a
-                                                href="<?= base_url('users/toggle/' . $user['id']) ?>"
-                                                class="btn btn-outline-secondary btn-sm"
-                                                onclick="return confirm('Nonaktifkan user ini?')"
-                                                data-bs-toggle="tooltip"
-                                                title="Nonaktifkan">
-
-                                                <i class="bi bi-person-x-fill"></i>
-
-                                            </a>
-
-                                        <?php else : ?>
-
-                                            <a
-                                                href="<?= base_url('users/toggle/' . $user['id']) ?>"
-                                                class="btn btn-outline-success btn-sm"
-                                                onclick="return confirm('Aktifkan user ini?')"
-                                                data-bs-toggle="tooltip"
-                                                title="Aktifkan">
-
-                                                <i class="bi bi-person-check-fill"></i>
-
-                                            </a>
-
-                                        <?php endif; ?>
-
-                                        <!-- Hapus -->
-
-                                        <a
-                                            href="<?= base_url('users/delete/' . $user['id']) ?>"
-                                            class="btn btn-outline-danger btn-sm"
                                             onclick="return confirm('Yakin ingin menghapus user ini?')"
-                                            data-bs-toggle="tooltip"
-                                            title="Hapus">
 
-                                            <i class="bi bi-trash-fill"></i>
+                                            class="btn btn-danger btn-sm">
 
-                                        </a>
+                                            <i class="bi bi-trash"></i>
 
-                                    </td>
+                                        </button>
 
-                                </tr>
+                                    </form>
 
-                            <?php endforeach; ?>
+                                </div>
 
-                        <?php endif; ?>
+                            </td>
 
-                    </tbody>
+                        </tr>
 
-                </table>
+                    <?php endforeach; ?>
 
-            </div>
+                </tbody>
 
-            <hr>
-
-            <div class="d-flex justify-content-between align-items-center flex-wrap">
-
-                <div class="text-muted small">
-
-                    Menampilkan
-
-                    <strong><?= count($users) ?></strong>
-
-                    data
-
-                    |
-
-                    Halaman
-
-                    <strong><?= $pager->getCurrentPage() ?></strong>
-
-                    dari
-
-                    <strong><?= $pager->getPageCount() ?></strong>
-
-                </div>
-
-                <div>
-
-                    <?= $pager->links() ?>
-
-                </div>
-
-            </div>
+            </table>
 
         </div>
 
     </div>
+
+</div>
+
+<div class="mt-3">
+
+    <?= $pager->links() ?>
 
 </div>
 

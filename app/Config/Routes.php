@@ -73,14 +73,18 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
             $routes->get('/', 'UserController::index');
 
             $routes->get('create', 'UserController::create');
+
+            $routes->get('study-programs/(:num)', 'UserController::getStudyPrograms/$1');
+
             $routes->post('store', 'UserController::store');
 
             $routes->get('show/(:num)', 'UserController::show/$1');
 
             $routes->get('edit/(:num)', 'UserController::edit/$1');
+
             $routes->post('update/(:num)', 'UserController::update/$1');
 
-            $routes->get('delete/(:num)', 'UserController::delete/$1');
+            $routes->post('delete/(:num)', 'UserController::delete/$1');
 
             $routes->get('toggle/(:num)', 'UserController::toggle/$1');
         });
@@ -171,3 +175,6 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         });
     });
 });
+
+$routes->get('study-programs/by-department/(:num)', 'StudyProgramController::byDepartment/$1');
+$routes->get('users/partial/(:any)', 'UserController::partial/$1');

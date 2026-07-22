@@ -13,17 +13,11 @@ class StudyProgramModel extends Model
     protected $returnType = 'array';
 
     protected $allowedFields = [
-
         'department_id',
-
         'program_code',
-
         'program_name',
-
         'education_level',
-
         'status'
-
     ];
 
     protected $useTimestamps = true;

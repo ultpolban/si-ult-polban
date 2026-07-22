@@ -6,13 +6,127 @@ use CodeIgniter\Model;
 
 class UserModel extends Model
 {
-    protected $table = 'users';
+    protected $table            = 'users';
 
-    protected $primaryKey = 'id';
+    protected $primaryKey       = 'id';
 
-    protected $returnType = 'array';
+    protected $returnType       = 'array';
 
-    protected $useSoftDeletes = true;
+    protected $useAutoIncrement = true;
+
+    protected $protectFields    = true;
+
+    protected $allowedFields = [
+
+        /*
+        |--------------------------------------------------------------------------
+        | Role
+        |--------------------------------------------------------------------------
+        */
+
+        'role_id',
+        'user_type_id',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Account
+        |--------------------------------------------------------------------------
+        */
+
+        'full_name',
+        'personal_email',
+        'institution_email',
+        'password',
+        'is_active',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Personal
+        |--------------------------------------------------------------------------
+        */
+
+        'gender',
+        'birth_place',
+        'birth_date',
+        'phone',
+        'address',
+        'photo',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Mahasiswa
+        |--------------------------------------------------------------------------
+        */
+
+        'nim',
+        'department_id',
+        'study_program_id',
+        'class_id',
+        'angkatan',
+        'semester',
+        'student_status',
+        'entry_year',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Dosen
+        |--------------------------------------------------------------------------
+        */
+
+        'nip',
+        'nidn',
+        'academic_position',
+        'functional_position',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Petugas / Unit / Pimpinan
+        |--------------------------------------------------------------------------
+        */
+
+        'work_unit_id',
+        'position',
+        'employee_status',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Alumni
+        |--------------------------------------------------------------------------
+        */
+
+        'graduation_year',
+        'graduation_number',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Orang Tua
+        |--------------------------------------------------------------------------
+        */
+
+        'student_name',
+        'student_nim',
+        'relationship',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Mitra / Publik
+        |--------------------------------------------------------------------------
+        */
+
+        'institution_name',
+        'institution_type',
+        'job_title',
+        'identity_number'
+
+    ];
+
+    protected bool $allowEmptyInserts = false;
+
+    protected bool $updateOnlyChanged = true;
+
+    protected array $casts = [];
+
+    protected array $castHandlers = [];
 
     protected $useTimestamps = true;
 
@@ -20,79 +134,43 @@ class UserModel extends Model
 
     protected $updatedField = 'updated_at';
 
-    protected $deletedField = 'deleted_at';
+    public function getUsers()
+    {
+        return $this->select('users.*,
+        roles.role_name,
+        user_types.type_name,
+        departments.department_name,
+        study_programs.program_name,
+        study_programs.education_level,
+        work_units.unit_name,
+        classes.class_name')
+            ->join('roles', 'roles.id = users.role_id', 'left')
+            ->join('user_types', 'user_types.id = users.user_type_id', 'left')
+            ->join('departments', 'departments.id = users.department_id', 'left')
+            ->join('study_programs', 'study_programs.id = users.study_program_id', 'left')
+            ->join('work_units', 'work_units.id = users.work_unit_id', 'left')
+            ->join('classes', 'classes.id = users.class_id', 'left');
+    }
 
-    protected $allowedFields = [
-
-        'role_id',
-
-        'user_type_id',
-
-        'department_id',
-
-        'study_program_id',
-
-        'work_unit_id',
-
-        'class_id',
-
-        'nim',
-
-        'nip',
-
-        'nidn',
-
-        'full_name',
-
-        'gender',
-
-        'birth_place',
-
-        'birth_date',
-
-        'phone',
-
-        'institution_email',
-
-        'personal_email',
-
-        'address',
-
-        'photo',
-
-        'password',
-
-        'is_active',
-
-        'email_verified_at',
-
-        'last_login'
-
-    ];
-
-    protected $validationRules = [
-
-        'full_name' => 'required|min_length[3]',
-
-        'personal_email' => 'required|valid_email',
-
-        'phone' => 'permit_empty'
-
-    ];
-
-    protected $validationMessages = [
-
-        'full_name' => [
-
-            'required' => 'Nama lengkap wajib diisi.'
-
-        ],
-
-        'personal_email' => [
-
-            'required' => 'Email wajib diisi.'
-
-        ]
-
-    ];
+    public function getUserById($id)
+    {
+        return $this->select('
+            users.*,
+            roles.role_name,
+            user_types.type_name,
+            departments.department_name,
+            study_programs.program_name,
+            study_programs.education_level,
+            work_units.unit_name,
+            classes.class_name
+        ')
+            ->join('roles', 'roles.id = users.role_id', 'left')
+            ->join('user_types', 'user_types.id = users.user_type_id', 'left')
+            ->join('departments', 'departments.id = users.department_id', 'left')
+            ->join('study_programs', 'study_programs.id = users.study_program_id', 'left')
+            ->join('work_units', 'work_units.id = users.work_unit_id', 'left')
+            ->join('classes', 'classes.id = users.class_id', 'left')
+            ->where('users.id', $id)
+            ->first();
+    }
 }

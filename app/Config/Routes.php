@@ -2,51 +2,24 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-/** @var RouteCollection $routes */
+/**
+ * @var RouteCollection $routes
+ */
+
+// ==================================================
+// HALAMAN UTAMA
+// ==================================================
 $routes->get('/', 'Home::index');
 
-$routes->group('dashboard', function($routes){
 
-    $routes->get('/', 'DashboardController::index');
+// ================================
+// DASHBOARD PEMOHON
+// ================================
+$routes->get('dashboard', 'DashboardController::index');
 
-});
-
-$routes->group('ticket', function($routes){
-
-    $routes->get('create', 'TicketController::create');
-
-    $routes->post('store', 'TicketController::store');
-
-    $routes->get('detail/(:num)', 'TicketController::detail/$1');
-
-    $routes->get('history', 'TicketController::history');
-
-});
-
-$routes->group('profile', function($routes){
-
-    $routes->get('/', 'ProfileController::index');
-
-    $routes->get('edit', 'ProfileController::edit');
-
-});
-
-// Dashboard
-$routes->get('/dashboard', 'DashboardController::index');
-
-// Ticket
-$routes->get('/ticket/create', 'TicketController::create');
-$routes->post('/ticket/store', 'TicketController::store');
-$routes->get('/ticket/history', 'TicketController::history');
-$routes->get('/ticket/detail/(:num)', 'TicketController::detail/$1');
-
-// Profile
-$routes->get('/profile', 'ProfileController::index');
-$routes->get('/profile/edit', 'ProfileController::edit');
-$routes->post('/profile/update', 'ProfileController::update');
-
-$routes->get('/dashboard', 'DashboardController::index');
-
+// ==================================================
+// TICKET / LAYANAN
+// ==================================================
 $routes->get('ticket/create', 'TicketController::create');
 
 $routes->post('ticket/store', 'TicketController::store');
@@ -54,24 +27,80 @@ $routes->post('ticket/store', 'TicketController::store');
 $routes->get('ticket/success', 'TicketController::success');
 
 $routes->get('ticket/history', 'TicketController::history');
+
 $routes->get('ticket/detail/(:num)', 'TicketController::detail/$1');
 
-$routes->get('profile','ProfileController::index');
 
-$routes->get('profile/edit','ProfileController::edit');
-
-$routes->post('profile/update','ProfileController::update');
-
-$routes->get('dashboard/pemohon', 'DashboardController::pemohon');
-
+// ==================================================
+// PROFILE
+// ==================================================
 $routes->get('profile', 'ProfileController::index');
 
-$routes->get('/notification', 'NotificationController::index');
+$routes->get('profile/edit', 'ProfileController::edit');
 
-$routes->get('faq', 'FaqController::index');
+$routes->post('profile/update', 'ProfileController::update');
 
-$routes->get('help', 'HelpController::index'); 
 
-$routes->get('dashboard-mahasiswa', 'DashboardController::mahasiswa'); 
+// ==================================================
+// NOTIFICATION
+// ==================================================
+$routes->get('notification', 'NotificationController::index');
 
-$routes->get('/dashboard-mahasiswa', 'MahasiswaController::dashboard');
+
+// ==================================================
+// HELP
+// ==================================================
+$routes->get('help', 'HelpController::index');
+
+
+// ==================================================
+// LOGOUT
+// ==================================================
+$routes->get('logout', 'AuthController::logout');
+
+
+// =====================================================
+// ROUTE DASHBOARD MAHASISWA
+// =====================================================
+
+$routes->get('dashboard-mahasiswa', 'MahasiswaController::dashboard');
+
+
+// =====================================================
+// ROUTE TIKET MAHASISWA
+// =====================================================
+
+$routes->get('mahasiswa/ticket/create', 'MahasiswaTicketController::create');
+
+$routes->post('mahasiswa/ticket/store', 'MahasiswaTicketController::store');
+
+$routes->get('mahasiswa/ticket/success', 'MahasiswaTicketController::success');
+
+$routes->get('mahasiswa/ticket/history', 'MahasiswaTicketController::history');
+
+$routes->get('mahasiswa/ticket/detail/(:num)', 'MahasiswaTicketController::detail/$1');
+
+
+// =====================================================
+// ROUTE PROFIL MAHASISWA
+// =====================================================
+
+$routes->get('mahasiswa/profile', 'MahasiswaProfileController::index');
+
+$routes->get('mahasiswa/profile/edit', 'MahasiswaProfileController::edit');
+
+$routes->post('mahasiswa/profile/update', 'MahasiswaProfileController::update');
+
+
+// =====================================================
+// ROUTE NOTIFIKASI MAHASISWA
+// =====================================================
+
+$routes->get('mahasiswa/notification', 'MahasiswaNotificationController::index');
+
+
+// =====================================================
+// ROUTE PUSAT BANTUAN MAHASISWA
+// =====================================================
+
+$routes->get('mahasiswa/help', 'MahasiswaHelpController::index');

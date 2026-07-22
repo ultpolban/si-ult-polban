@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 class DashboardController extends BaseController
 {
-    // Dashboard Pemohon
     public function index()
     {
         $data = [
@@ -54,56 +53,6 @@ class DashboardController extends BaseController
 
         ];
 
-        return view('dashboard/index', $data);
-    }
-
-    // Dashboard Mahasiswa
-    public function mahasiswa()
-    {
-        $data = [
-
-            'title' => 'Dashboard Mahasiswa',
-
-            'user' => [
-    'nama'      => 'Alvin',
-    'nim'       => '221511000',
-    'prodi'     => 'D4 Teknik Informatika',
-    'jurusan'   => 'Teknik Komputer dan Informatika',
-    'semester'  => 8,
-    'angkatan'  => 2022
-],
-            'statistik' => [
-                'layanan'   => 8,
-                'selesai'   => 4,
-                'proses'    => 3,
-                'notifikasi'=> 6
-            ],
-
-            'jadwal' => [
-                [
-                    'judul' => 'Batas Pengajuan Beasiswa',
-                    'tanggal' => '25 Juli 2026'
-                ],
-                [
-                    'judul' => 'Pengambilan Surat',
-                    'tanggal' => '28 Juli 2026'
-                ]
-            ],
-
-            'akademik' => [
-
-    'ipk'    => '3.71',
-
-    'sks'    => 98,
-
-    'status' => 'Aktif',
-
-    'dosen'  => 'Dr. Budi Santoso'
-
-]
-
-        ];
-
-        return view('dashboard/mahasiswa', $data);
+        return view('pemohon/dashboard', $data);
     }
 }

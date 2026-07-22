@@ -1,6 +1,6 @@
 <?= $this->include('layouts/header') ?>
 <?= $this->include('layouts/navbar') ?>
-<?= $this->include('layouts/sidebar_mahasiswa') ?>
+<?= $this->include('layouts/sidebar') ?>
 
 <div class="content-wrapper">
 

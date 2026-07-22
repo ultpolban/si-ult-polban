@@ -1,102 +1,142 @@
 <aside class="main-sidebar sidebar-dark-danger elevation-4">
 
-<a href="#" class="brand-link">
+    <!-- Logo / Brand -->
+    <a href="<?= base_url('dashboard') ?>" class="brand-link">
 
-<span class="brand-text font-weight-light">
+        <span class="brand-text font-weight-light">
+            SI-ULT POLBAN
+        </span>
 
-SI-ULT POLBAN
-
-</span>
-
-</a>
-
-<div class="sidebar">
-
-<nav class="mt-2">
-
-<ul class="nav nav-pills nav-sidebar flex-column">
-
-<li class="nav-item">
-    <a href="<?= base_url('dashboard') ?>"
-       class="nav-link <?= uri_string() == 'dashboard' ? 'active' : '' ?>">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Dashboard Pemohon</p>
     </a>
-</li>
 
-<li class="nav-item">
+    <div class="sidebar">
 
-<a href="<?= base_url('ticket/create') ?>"
-   class="nav-link <?= uri_string() == 'ticket/create' ? 'active' : '' ?>">
+        <nav class="mt-2">
 
-<i class="nav-icon fas fa-plus-circle"></i>
+            <ul class="nav nav-pills nav-sidebar flex-column">
 
-<p>Ajukan Layanan</p>
+                <!-- Dashboard Pemohon -->
+                <li class="nav-item">
 
-</a>
+                    <a href="<?= base_url('dashboard') ?>"
+                       class="nav-link <?= uri_string() == 'dashboard' ? 'active' : '' ?>">
 
-</li>
+                        <i class="nav-icon fas fa-home"></i>
 
-<li class="nav-item">
+                        <p>
+                            Dashboard Pemohon
+                        </p>
 
-<a href="<?= base_url('ticket/history') ?>"
-   class="nav-link <?= uri_string() == 'ticket/history' ? 'active' : '' ?>">
+                    </a>
 
-<i class="nav-icon fas fa-ticket-alt"></i>
-
-<p>Tracking Tiket</p>
-
-</a>
-
-</li>
-
-<li class="nav-item">
-
-<a href="<?= base_url('profile') ?>"
-   class="nav-link <?= str_contains(uri_string(),'profile') ? 'active' : '' ?>">
-
-<i class="nav-icon fas fa-user"></i>
-
-<p>Profil</p>
-
-</a>
-
-</li>
-
-<li class="nav-item">
-    <a href="<?= base_url('notification') ?>"
-   class="nav-link <?= str_contains(uri_string(),'notification') ? 'active' : '' ?>">
-        <i class="nav-icon fas fa-bell"></i>
-        <p>Notifikasi</p>
-    </a>
-</li>
+                </li>
 
 
+                <!-- Ajukan Layanan -->
+                <li class="nav-item">
 
-<li class="nav-item">
-    <a href="<?= base_url('help') ?>"
-   class="nav-link <?= str_contains(uri_string(),'help') ? 'active' : '' ?>">
-        <i class="nav-icon fas fa-question-circle"></i>
-        <p>Pusat Bantuan</p>
-    </a>
-</li>
+                    <a href="<?= base_url('ticket/create') ?>"
+                       class="nav-link <?= uri_string() == 'ticket/create' ? 'active' : '' ?>">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-plus-circle"></i>
 
-<a href="<?= base_url('logout') ?>" class="nav-link text-danger">
+                        <p>
+                            Ajukan Layanan
+                        </p>
 
-<i class="nav-icon fas fa-sign-out-alt"></i>
+                    </a>
 
-<p>Logout</p>
+                </li>
 
-</a>
 
-</li>
+                <!-- Tracking Tiket -->
+                <li class="nav-item">
 
-</ul>
+                    <a href="<?= base_url('ticket/history') ?>"
+                       class="nav-link <?= str_contains(uri_string(), 'ticket/history') ? 'active' : '' ?>">
 
-</nav>
+                        <i class="nav-icon fas fa-ticket-alt"></i>
 
-</div>
+                        <p>
+                            Tracking Tiket
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- Profil -->
+                <li class="nav-item">
+
+                    <a href="<?= base_url('profile') ?>"
+                       class="nav-link <?= str_contains(uri_string(), 'profile') ? 'active' : '' ?>">
+
+                        <i class="nav-icon fas fa-user"></i>
+
+                        <p>
+                            Profil
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- Notifikasi -->
+                <li class="nav-item">
+
+                    <a href="<?= base_url('notification') ?>"
+                       class="nav-link <?= str_contains(uri_string(), 'notification') ? 'active' : '' ?>">
+
+                        <i class="nav-icon fas fa-bell"></i>
+
+                        <p>
+                            Notifikasi
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- Pusat Bantuan -->
+                <li class="nav-item">
+
+                    <a href="<?= base_url('help') ?>"
+                       class="nav-link <?= str_contains(uri_string(), 'help') ? 'active' : '' ?>">
+
+                        <i class="nav-icon fas fa-question-circle"></i>
+
+                        <p>
+                            Pusat Bantuan
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- Logout -->
+                <li class="nav-item">
+
+                    <a href="<?= base_url('logout') ?>"
+                       class="nav-link text-danger">
+
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+
+                        <p>
+                            Logout
+                        </p>
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </div>
 
 </aside>

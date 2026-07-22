@@ -15,51 +15,95 @@
             <ul class="nav nav-pills nav-sidebar flex-column">
 
                 <li class="nav-item">
+
     <a href="<?= base_url('dashboard-mahasiswa') ?>"
        class="nav-link <?= uri_string() == 'dashboard-mahasiswa' ? 'active' : '' ?>">
+
         <i class="nav-icon fas fa-home"></i>
-        <p>Dashboard</p>
+
+        <p>Dashboard Mahasiswa</p>
+
     </a>
+
 </li>
 
                 <li class="nav-item">
-                   <a href="<?= base_url('ticket/create') ?>"
-   class="nav-link <?= uri_string() == 'ticket/create' ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-plus-circle"></i>
-                        <p>Ajukan Layanan</p>
-                    </a>
-                </li>
+
+    <a href="<?= base_url('mahasiswa/ticket/create') ?>"
+       class="nav-link <?= str_contains(uri_string(), 'mahasiswa/ticket') ? 'active' : '' ?>">
+
+        <i class="nav-icon fas fa-plus-circle"></i>
+
+        <p>Ajukan Layanan</p>
+
+    </a>
+
+</li>
 
                 <li class="nav-item">
-                   <a href="<?= base_url('ticket/history') ?>"
-   class="nav-link <?= uri_string() == 'ticket/history' ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-ticket-alt"></i>
-                        <p>Tracking Tiket</p>
-                    </a>
-                </li>
+
+    <a href="<?= base_url('mahasiswa/ticket/history') ?>"
+       class="nav-link <?= str_contains(uri_string(), 'mahasiswa/ticket/history') ? 'active' : '' ?>">
+
+        <i class="nav-icon fas fa-ticket-alt"></i>
+
+        <p>Tracking Tiket</p>
+
+    </a>
+
+</li>
 
                 <li class="nav-item">
-                    <a href="<?= base_url('profile') ?>"
-   class="nav-link <?= uri_string() == 'profile' ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-user"></i>
-                        <p>Profil</p>
-                    </a>
-                </li>
+
+    <a href="<?= base_url('mahasiswa/profile') ?>"
+       class="nav-link <?= str_contains(uri_string(), 'mahasiswa/profile') ? 'active' : '' ?>">
+
+        <i class="nav-icon fas fa-user"></i>
+
+        <p>Profil</p>
+
+    </a>
+
+</li>
 
                 <li class="nav-item">
-                    <a href="<?= base_url('notification') ?>"
-   class="nav-link <?= uri_string() == 'notification' ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-bell"></i>
-                        <p>Notifikasi</p>
-                    </a>
-                </li>
+
+    <a href="<?= base_url('mahasiswa/notification') ?>"
+       class="nav-link <?= str_contains(uri_string(), 'mahasiswa/notification') ? 'active' : '' ?>">
+
+        <i class="nav-icon fas fa-bell"></i>
+
+        <p>Notifikasi</p>
+
+    </a>
+
+</li>
+
+<li class="nav-item">
+
+    <a href="<?= base_url('mahasiswa/help') ?>"
+       class="nav-link <?= str_contains(uri_string(), 'mahasiswa/help') ? 'active' : '' ?>">
+
+        <i class="nav-icon fas fa-question-circle"></i>
+
+        <p>Pusat Bantuan</p>
+
+    </a>
+
+</li>
 
                 <li class="nav-item">
-                    <a href="<?= base_url('logout') ?>" class="nav-link text-danger">
-                        <i class="nav-icon fas fa-sign-out-alt"></i>
-                        <p>Logout</p>
-                    </a>
-                </li>
+
+    <a href="<?= base_url('logout') ?>"
+       class="nav-link text-danger">
+
+        <i class="nav-icon fas fa-sign-out-alt"></i>
+
+        <p>Logout</p>
+
+    </a>
+
+</li>
 
             </ul>
 

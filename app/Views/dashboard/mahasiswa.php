@@ -1,6 +1,6 @@
-<?= $this->include('layouts/header') ?>
-<?= $this->include('layouts/navbar') ?>
-<?= $this->include('layouts/sidebar_mahasiswa') ?>
+<?= $this->include('layouts/header'); ?>
+<?= $this->include('layouts/navbar'); ?>
+<?= $this->include('layouts/sidebar_mahasiswa'); ?>
 
 <div class="content-wrapper">
 
@@ -306,23 +306,12 @@ Jadwal Penting
 
 <div class="col-md-3">
 
-<a href="<?= base_url('ticket/create') ?>" class="btn btn-danger btn-block">
+<a href="<?= base_url('mahasiswa/ticket/create') ?>"
+   class="btn btn-danger btn-block">
 
-<i class="fas fa-plus-circle"></i><br>
+    <i class="fas fa-plus-circle"></i>
 
-Ajukan Layanan
-
-</a>
-
-</div>
-
-<div class="col-md-3">
-
-<a href="<?= base_url('ticket/history') ?>" class="btn btn-primary btn-block">
-
-<i class="fas fa-history"></i><br>
-
-Riwayat
+    Ajukan Layanan
 
 </a>
 
@@ -330,11 +319,12 @@ Riwayat
 
 <div class="col-md-3">
 
-<a href="<?= base_url('notification') ?>" class="btn btn-success btn-block">
+<a href="<?= base_url('mahasiswa/ticket/history') ?>"
+   class="btn btn-primary btn-block">
 
-<i class="fas fa-bell"></i><br>
+    <i class="fas fa-history"></i>
 
-Notifikasi
+    Tracking Tiket
 
 </a>
 
@@ -342,11 +332,25 @@ Notifikasi
 
 <div class="col-md-3">
 
-<a href="<?= base_url('profile') ?>" class="btn btn-warning btn-block">
+<a href="<?= base_url('mahasiswa/notification') ?>"
+   class="btn btn-success btn-block">
 
-<i class="fas fa-user"></i><br>
+    <i class="fas fa-bell"></i>
 
-Profil
+    Notifikasi
+
+</a>
+
+</div>
+
+<div class="col-md-3">
+
+<a href="<?= base_url('mahasiswa/profile') ?>"
+   class="btn btn-warning btn-block">
+
+    <i class="fas fa-user"></i>
+
+    Profil
 
 </a>
 

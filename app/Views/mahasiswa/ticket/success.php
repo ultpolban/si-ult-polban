@@ -4,66 +4,97 @@
 
 <div class="content-wrapper">
 
+    <!-- Header -->
     <section class="content-header">
-
         <div class="container-fluid">
 
             <h1>
+                <i class="fas fa-check-circle text-success"></i>
                 Pengajuan Berhasil
             </h1>
 
         </div>
-
     </section>
 
 
+    <!-- Content -->
     <section class="content">
 
         <div class="container-fluid">
 
             <div class="card shadow">
 
-                <div class="card-body text-center">
+                <div class="card-body text-center py-5">
 
-                    <i
-                        class="fas fa-check-circle text-success"
-                        style="font-size: 80px;"
-                    ></i>
+                    <!-- Icon -->
+                    <div class="mb-4">
 
-                    <h2 class="mt-3">
-                        Pengajuan Berhasil Dikirim
+                        <i
+                            class="fas fa-check-circle text-success"
+                            style="font-size: 80px;"
+                        ></i>
+
+                    </div>
+
+
+                    <!-- Judul -->
+                    <h2 class="text-success mb-3">
+                        Pengajuan Berhasil Dikirim!
                     </h2>
 
-                    <p class="text-muted">
 
-                        Pengajuan layanan kamu berhasil dikirim
-                        dan sedang menunggu proses selanjutnya.
+                    <!-- Deskripsi -->
+                    <p class="text-muted mb-4">
+
+                        Pengajuan layanan Anda telah berhasil dikirim
+                        dan akan segera diproses oleh unit terkait.
 
                     </p>
 
 
-                    <a
-                        href="<?= base_url('mahasiswa/ticket/history') ?>"
-                        class="btn btn-primary"
-                    >
+                    <!-- Nomor Tiket -->
+                    <div class="alert alert-info d-inline-block px-5">
 
-                        <i class="fas fa-ticket-alt"></i>
+                        <strong>
+                            Nomor Tiket Anda:
+                        </strong>
 
-                        Lihat Tracking Tiket
+                        <br>
 
-                    </a>
+                        <span class="h4">
+                            ULT-MHS-<?= date('Ymd') ?>-001
+                        </span>
+
+                    </div>
 
 
-                    <a
-                        href="<?= base_url('dashboard-mahasiswa') ?>"
-                        class="btn btn-secondary"
-                    >
+                    <!-- Tombol -->
+                    <div class="mt-4">
 
-                        <i class="fas fa-home"></i>
+                        <a
+                            href="<?= base_url('mahasiswa/ticket/history') ?>"
+                            class="btn btn-primary"
+                        >
 
-                        Kembali ke Dashboard
+                            <i class="fas fa-ticket-alt"></i>
 
-                    </a>
+                            Tracking Tiket
+
+                        </a>
+
+
+                        <a
+                            href="<?= base_url('dashboard-mahasiswa') ?>"
+                            class="btn btn-secondary"
+                        >
+
+                            <i class="fas fa-home"></i>
+
+                            Kembali ke Dashboard
+
+                        </a>
+
+                    </div>
 
                 </div>
 

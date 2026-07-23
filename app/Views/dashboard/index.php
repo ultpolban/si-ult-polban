@@ -1,91 +1,103 @@
-<!DOCTYPE html>
-<html lang="id">
+<?= $this->extend('layouts/template') ?>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard SI-ULT POLBAN</title>
+<?= $this->section('content') ?>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<div class="content-header">
+    <div class="container-fluid">
+        <h1 class="m-0">Dashboard SI ULT POLBAN</h1>
+    </div>
+</div>
 
-<body>
+<section class="content">
 
-<div class="container mt-4">
+<div class="container-fluid">
 
-    <h2>Dashboard SI-ULT POLBAN</h2>
-
-    <p>
-        Selamat datang
-        <strong><?= session()->get('name'); ?></strong>
-    </p>
-
-    <p>
-        Role :
-        <strong><?= session()->get('role_id'); ?></strong>
-    </p>
-
-    <hr>
-
+    <!-- Statistik -->
     <div class="row">
 
-        <div class="col-md-3">
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-primary">
+                <div class="inner">
+                    <h3><?= $total ?></h3>
+                    <p>Total Tiket</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+            </div>
+        </div>
 
-            <div class="card bg-primary text-white">
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3><?= $submitted ?></h3>
+                    <p>Submitted</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3><?= $completed ?></h3>
+                    <p>Completed</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3><?= $rejected ?></h3>
+                    <p>Rejected</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Grafik -->
+    <div class="row">
+
+        <div class="col-md-8">
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Grafik Status Tiket
+                    </h3>
+                </div>
 
                 <div class="card-body">
-
-                    <h5>Total Tiket</h5>
-
-                    <h2><?= $total ?></h2>
-
+                    <canvas id="ticketChart" height="100"></canvas>
                 </div>
 
             </div>
 
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
 
-            <div class="card bg-warning">
+            <div class="card">
 
-                <div class="card-body">
-
-                    <h5>Submitted</h5>
-
-                    <h2><?= $submitted ?></h2>
-
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Persentase Status
+                    </h3>
                 </div>
 
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card bg-success text-white">
-
                 <div class="card-body">
-
-                    <h5>Verified</h5>
-
-                    <h2><?= $verified ?></h2>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card bg-info text-white">
-
-                <div class="card-body">
-
-                    <h5>Completed</h5>
-
-                    <h2><?= $completed ?></h2>
-
+                    <canvas id="pieChart"></canvas>
                 </div>
 
             </div>
@@ -94,61 +106,219 @@
 
     </div>
 
-    <hr>
+    <!-- Tiket Terbaru -->
+    <div class="card">
 
-    <h4>Daftar Tiket</h4>
+        <div class="card-header">
+            <h3 class="card-title">
+                5 Tiket Terbaru
+            </h3>
+        </div>
 
-    <table class="table table-bordered table-striped">
+        <div class="card-body table-responsive">
 
-        <thead class="table-dark">
+            <table class="table table-bordered table-striped">
 
-            <tr>
+                <thead>
 
-                <th>No</th>
-                <th>No Tiket</th>
-                <th>Status</th>
-                <th>Prioritas</th>
-                <th>Tanggal & Jam</th>
+                    <tr>
 
-            </tr>
+                        <th>No Tiket</th>
+                        <th>Pemohon</th>
+                        <th>Layanan</th>
+                        <th>Status</th>
+                        <th>Tanggal</th>
 
-        </thead>
+                    </tr>
 
-        <tbody>
+                </thead>
 
-        <?php $no = 1; ?>
+                <tbody>
 
-        <?php foreach($tickets as $ticket): ?>
+                <?php foreach($tickets as $ticket): ?>
 
-            <tr>
+                    <?php
 
-                <td><?= $no++; ?></td>
+                    $badge = 'secondary';
 
-                <td><?= $ticket['ticket_number']; ?></td>
+                    switch($ticket['status']){
 
-                <td><?= $ticket['status']; ?></td>
+                        case 'Submitted':
+                            $badge='warning';
+                            break;
 
-                <td><?= $ticket['priority']; ?></td>
+                        case 'Assigned':
+                            $badge='info';
+                            break;
 
-                <td><?= date('d-m-Y H:i:s', strtotime($ticket['submitted_at'])); ?></td>
+                        case 'Verified':
+                            $badge='success';
+                            break;
 
-            </tr>
+                        case 'In Progress':
+                            $badge='primary';
+                            break;
 
-        <?php endforeach; ?>
+                        case 'Completed':
+                            $badge='success';
+                            break;
 
-        </tbody>
+                        case 'Need Revision':
+                            $badge='dark';
+                            break;
 
-    </table>
+                        case 'Rejected':
+                            $badge='danger';
+                            break;
 
-    <a href="<?= base_url('verification'); ?>" class="btn btn-primary">
-        Verifikasi Tiket
-    </a>
+                    }
 
-    <a href="<?= base_url('logout'); ?>" class="btn btn-danger">
-        Logout
-    </a>
+                    ?>
+
+                    <tr>
+
+                        <td><?= esc($ticket['ticket_number']) ?></td>
+
+                        <td><?= esc($ticket['applicant_name']) ?></td>
+
+                        <td><?= esc($ticket['service_name']) ?></td>
+
+                        <td>
+
+                            <span class="badge badge-<?= $badge ?>">
+                                <?= esc($ticket['status']) ?>
+                            </span>
+
+                        </td>
+
+                        <td><?= date('d-m-Y H:i',strtotime($ticket['submitted_at'])) ?></td>
+
+                    </tr>
+
+                <?php endforeach; ?>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 
-</body>
-</html>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx=document.getElementById('ticketChart');
+
+new Chart(ctx,{
+
+    type:'bar',
+
+    data:{
+
+        labels:[
+            'Submitted',
+            'Assigned',
+            'Verified',
+            'Progress',
+            'Completed',
+            'Revision',
+            'Rejected'
+        ],
+
+        datasets:[{
+
+            label:'Jumlah Tiket',
+
+            data:[
+
+                <?= $submitted ?>,
+                <?= $assigned ?>,
+                <?= $verified ?>,
+                <?= $progress ?>,
+                <?= $completed ?>,
+                <?= $revision ?>,
+                <?= $rejected ?>
+
+            ]
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        plugins:{
+
+            legend:{
+                display:false
+            }
+
+        }
+
+    }
+
+});
+
+const pie=document.getElementById('pieChart');
+
+new Chart(pie,{
+
+    type:'doughnut',
+
+    data:{
+
+        labels:[
+            'Submitted',
+            'Assigned',
+            'Verified',
+            'Progress',
+            'Completed',
+            'Revision',
+            'Rejected'
+        ],
+
+        datasets:[{
+
+            data:[
+
+                <?= $submitted ?>,
+                <?= $assigned ?>,
+                <?= $verified ?>,
+                <?= $progress ?>,
+                <?= $completed ?>,
+                <?= $revision ?>,
+                <?= $rejected ?>
+
+            ]
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        plugins:{
+
+            legend:{
+                position:'bottom'
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+<?= $this->endSection() ?>

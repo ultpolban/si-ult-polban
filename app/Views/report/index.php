@@ -70,9 +70,55 @@
     <div class="card-body table-responsive">
 
         <div class="mb-3">
-            <a href="<?= base_url('report/print') ?>" target="_blank" class="btn btn-primary">
-                <i class="fas fa-print"></i> Print
-            </a>
+
+            <div class="btn-group">
+
+                <button type="button"
+                        class="btn btn-primary dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+
+                    <i class="fas fa-download"></i>
+                    Export Laporan
+
+                </button>
+
+                <div class="dropdown-menu">
+
+                    <a class="dropdown-item"
+                       href="<?= base_url('report/pdf') ?>"
+                       target="_blank">
+
+                        <i class="fas fa-file-pdf text-danger"></i>
+                        Export PDF
+
+                    </a>
+
+                    <?php if(method_exists('\App\Controllers\ReportController','excel')): ?>
+
+                        <a class="dropdown-item"
+                           href="<?= base_url('report/excel') ?>">
+
+                            <i class="fas fa-file-excel text-success"></i>
+                            Export Excel
+
+                        </a>
+
+                    <?php endif; ?>
+
+                    <a class="dropdown-item"
+                       href="<?= base_url('report/csv') ?>">
+
+                        <i class="fas fa-file-csv text-primary"></i>
+                        Export CSV
+
+                    </a>
+
+                </div>
+
+            </div>
+
         </div>
 
         <table class="table table-bordered table-striped">
@@ -80,32 +126,71 @@
             <thead class="thead-dark">
 
                 <tr>
+
                     <th>No</th>
                     <th>No Tiket</th>
+                    <th>Nama Pemohon</th>
+                    <th>Jenis Pemohon</th>
+                    <th>Layanan</th>
                     <th>Status</th>
                     <th>Prioritas</th>
-                    <th>Isi Tiket</th>
-                    <th>Tanggal & Jam Pengajuan</th>
-                    <th>Jam Verifikasi</th>
+                    <th>Tanggal Pengajuan</th>
+
                 </tr>
 
             </thead>
 
             <tbody>
 
-            <?php if (empty($tickets)): ?>
+            <?php if(empty($tickets)): ?>
 
                 <tr>
-                    <td colspan="7" class="text-center">
+
+                    <td colspan="8" class="text-center">
                         Tidak ada data.
                     </td>
+
                 </tr>
 
             <?php else: ?>
 
                 <?php $no = 1; ?>
 
-                <?php foreach ($tickets as $ticket): ?>
+                <?php foreach($tickets as $ticket): ?>
+
+                    <?php
+
+                    $color = 'secondary';
+
+                    switch($ticket['status']){
+
+                        case 'Submitted':
+                            $color = 'warning';
+                            break;
+
+                        case 'Assigned':
+                            $color = 'info';
+                            break;
+
+                        case 'In Progress':
+                            $color = 'primary';
+                            break;
+
+                        case 'Completed':
+                            $color = 'success';
+                            break;
+
+                        case 'Need Revision':
+                            $color = 'dark';
+                            break;
+
+                        case 'Rejected':
+                            $color = 'danger';
+                            break;
+
+                    }
+
+                    ?>
 
                     <tr>
 
@@ -113,31 +198,21 @@
 
                         <td><?= esc($ticket['ticket_number']) ?></td>
 
+                        <td><?= esc($ticket['applicant_name']) ?></td>
+
+                        <td><?= esc($ticket['applicant_type']) ?></td>
+
+                        <td><?= esc($ticket['service_name']) ?></td>
+
                         <td>
-                            <?php if ($ticket['status'] == 'Verified'): ?>
-                                <span class="badge badge-success">
-                                    <?= esc($ticket['status']) ?>
-                                </span>
-                            <?php else: ?>
-                                <span class="badge badge-secondary">
-                                    <?= esc($ticket['status']) ?>
-                                </span>
-                            <?php endif; ?>
+                            <span class="badge badge-<?= $color ?>">
+                                <?= esc($ticket['status']) ?>
+                            </span>
                         </td>
 
                         <td><?= esc($ticket['priority']) ?></td>
 
-                        <td><?= esc($ticket['ticket_description']) ?></td>
-
-                        <td>
-                            <?= date('d F Y H:i:s', strtotime($ticket['submitted_at'])) ?>
-                        </td>
-
-                        <td>
-                            <?= !empty($ticket['verified_at'])
-                                ? date('d F Y H:i:s', strtotime($ticket['verified_at']))
-                                : '-'; ?>
-                        </td>
+                        <td><?= date('d-m-Y H:i', strtotime($ticket['submitted_at'])) ?></td>
 
                     </tr>
 

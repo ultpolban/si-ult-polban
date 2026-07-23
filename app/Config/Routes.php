@@ -30,7 +30,10 @@ $routes->get('logout', 'AuthController::logout');
 
 $routes->group('', ['filter' => 'auth'], function ($routes) {
 
-    // Dashboard
+    // ==========================
+    // DASHBOARD
+    // ==========================
+
     $routes->get('dashboard', 'DashboardController::index');
 
     // ==========================
@@ -62,11 +65,28 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('unit/complete/(:num)', 'UnitController::complete/$1');
 
     // ==========================
-    // LAPORAN
+    // LAPORAN TIKET
     // ==========================
 
     $routes->get('report', 'ReportController::index');
-    $routes->get('report/print', 'ReportController::print');
+    $routes->get('report/csv', 'ReportController::csv');
+    $routes->get('report/excel', 'ReportController::excel');
+    $routes->get('report/pdf', 'ReportController::pdf');
+
+    // ==========================
+    // LAPORAN TAMU (CRUD)
+    // ==========================
+
+    $routes->get('guest-report', 'GuestReportController::index');
+    $routes->get('guest-report/create', 'GuestReportController::create');
+    $routes->post('guest-report/store', 'GuestReportController::store');
+
+    $routes->get('guest-report/detail/(:num)', 'GuestReportController::detail/$1');
+
+    $routes->get('guest-report/edit/(:num)', 'GuestReportController::edit/$1');
+    $routes->post('guest-report/update/(:num)', 'GuestReportController::update/$1');
+
+    $routes->get('guest-report/delete/(:num)', 'GuestReportController::delete/$1');
 
     // ==========================
     // STATISTIK
@@ -75,14 +95,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('statistics', 'StatisticsController::index');
 
     // ==========================
-    // LAPORAN TAMU
-    // ==========================
-
-    $routes->get('guest-report', 'GuestReportController::index');
-    $routes->post('guest-report/store', 'GuestReportController::store');
-
-    // ==========================
-    // TRACKING TIKET
+    // TRACKING
     // ==========================
 
     $routes->get('tracking', 'TrackingController::index');

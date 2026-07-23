@@ -30,11 +30,32 @@
                         </a>
                     </li>
 
+                    <?php
+                        $ticketModel = new \App\Models\TicketModel();
+
+                        $submitted = $ticketModel
+                            ->where('status', 'Submitted')
+                            ->countAllResults();
+                    ?>
+
                     <!-- Verifikasi Tiket -->
                     <li class="nav-item">
                         <a href="<?= base_url('verification') ?>" class="nav-link">
                             <i class="nav-icon fas fa-check-circle"></i>
-                            <p>Verifikasi Tiket</p>
+
+                            <p>
+                                Verifikasi Tiket
+
+                                <?php if($submitted > 0): ?>
+
+                                    <span class="right badge badge-danger">
+                                        <?= $submitted ?>
+                                    </span>
+
+                                <?php endif; ?>
+
+                            </p>
+
                         </a>
                     </li>
 

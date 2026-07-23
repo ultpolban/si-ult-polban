@@ -17,12 +17,10 @@ class VerificationController extends BaseController
 
         $builder = $ticketModel;
 
-        // Filter Status
         if (!empty($status)) {
             $builder = $builder->where('status', $status);
         }
 
-        // Pencarian
         if (!empty($keyword)) {
             $builder = $builder
                 ->groupStart()
@@ -32,14 +30,19 @@ class VerificationController extends BaseController
                 ->groupEnd();
         }
 
-        $data['tickets'] = $builder
-            ->orderBy('submitted_at', 'DESC')
-            ->findAll();
+        $data = [
+            'tickets' => $builder
+                ->orderBy('submitted_at', 'DESC')
+                ->findAll(),
 
-        $data['submitted'] = $ticketModel->where('status', 'Submitted')->countAllResults();
-        $data['verified']  = $ticketModel->where('status', 'Verified')->countAllResults();
-        $data['revision']  = $ticketModel->where('status', 'Need Revision')->countAllResults();
-        $data['rejected']  = $ticketModel->where('status', 'Rejected')->countAllResults();
+            'submitted' => $ticketModel->where('status', 'Submitted')->countAllResults(),
+            'assigned'  => $ticketModel->where('status', 'Assigned')->countAllResults(),
+            'verified'  => $ticketModel->where('status', 'Verified')->countAllResults(),
+            'progress'  => $ticketModel->where('status', 'In Progress')->countAllResults(),
+            'completed' => $ticketModel->where('status', 'Completed')->countAllResults(),
+            'revision'  => $ticketModel->where('status', 'Need Revision')->countAllResults(),
+            'rejected'  => $ticketModel->where('status', 'Rejected')->countAllResults(),
+        ];
 
         return view('verification/index', $data);
     }
@@ -50,17 +53,19 @@ class VerificationController extends BaseController
         $commentModel = new TicketCommentModel();
         $logModel     = new TicketLogModel();
 
-        $data['ticket'] = $ticketModel->find($id);
+        $data = [
+            'ticket' => $ticketModel->find($id),
 
-        $data['comments'] = $commentModel
-            ->where('ticket_id', $id)
-            ->orderBy('created_at', 'ASC')
-            ->findAll();
+            'comments' => $commentModel
+                ->where('ticket_id', $id)
+                ->orderBy('created_at', 'ASC')
+                ->findAll(),
 
-        $data['logs'] = $logModel
-            ->where('ticket_id', $id)
-            ->orderBy('created_at', 'DESC')
-            ->findAll();
+            'logs' => $logModel
+                ->where('ticket_id', $id)
+                ->orderBy('created_at', 'DESC')
+                ->findAll()
+        ];
 
         return view('verification/detail', $data);
     }
@@ -70,39 +75,42 @@ class VerificationController extends BaseController
         $ticketModel = new TicketModel();
         $logModel    = new TicketLogModel();
 
-        $status       = $this->request->getPost('status');
+        $ticket = $ticketModel->find($id);
+
+        if (!$ticket) {
+            return redirect()->back()->with('error', 'Tiket tidak ditemukan.');
+        }
+
+        $status = $this->request->getPost('status');
         $assignedUnit = $this->request->getPost('assigned_unit');
-        $note         = $this->request->getPost('verification_note');
+        $note = $this->request->getPost('verification_note');
 
-        // Jika sudah diverifikasi dan dipilih unit,
-        // otomatis status menjadi Assigned
-        if ($status == 'Verified' && !empty($assignedUnit)) {
-            $status = 'Assigned';
+        if ($status == "Verified" && !empty($assignedUnit)) {
+            $status = "Assigned";
         }
 
-        $data = [
-            'status'            => $status,
-            'assigned_unit'     => $assignedUnit,
+        $ticketModel->update($id, [
+
+            'status' => $status,
+            'assigned_unit' => $assignedUnit,
             'verification_note' => $note,
-            'verified_by'       => 'Petugas ULT',
-            'verified_at'       => date('Y-m-d H:i:s')
-        ];
+            'verified_by' => session()->get('name') ?? 'Petugas ULT',
+            'verified_at' => date('Y-m-d H:i:s')
 
-        if ($ticketModel->update($id, $data)) {
+        ]);
 
-            // Simpan Audit Log
-            $logModel->insert([
-                'ticket_id'  => $id,
-                'activity'   => 'Status tiket diubah menjadi ' . $status,
-                'user_name'  => 'Petugas ULT',
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
+        $logModel->insert([
 
-            return redirect()->to('/verification')
-                ->with('success', 'Verifikasi berhasil disimpan.');
-        }
+            'ticket_id' => $id,
+            'activity' => "Status diubah menjadi {$status}",
+            'user_name' => session()->get('name') ?? 'Petugas ULT',
+            'created_at' => date('Y-m-d H:i:s')
 
-        dd($ticketModel->errors());
+        ]);
+
+        return redirect()
+            ->to('/verification/detail/'.$id)
+            ->with('success','Verifikasi berhasil disimpan.');
     }
 
     public function comment($id)
@@ -110,13 +118,16 @@ class VerificationController extends BaseController
         $commentModel = new TicketCommentModel();
 
         $commentModel->insert([
-            'ticket_id'  => $id,
-            'sender'     => 'Petugas ULT',
-            'comment'    => $this->request->getPost('comment'),
+
+            'ticket_id' => $id,
+            'sender' => session()->get('name') ?? 'Petugas ULT',
+            'comment' => $this->request->getPost('comment'),
             'created_at' => date('Y-m-d H:i:s')
+
         ]);
 
-        return redirect()->to('/verification/detail/' . $id)
-            ->with('success', 'Komentar berhasil ditambahkan.');
+        return redirect()
+            ->to('/verification/detail/'.$id)
+            ->with('success','Komentar berhasil ditambahkan.');
     }
 }

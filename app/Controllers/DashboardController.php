@@ -2,60 +2,52 @@
 
 namespace App\Controllers;
 
-use App\Models\UserModel;
 use App\Models\TicketModel;
 
 class DashboardController extends BaseController
 {
     public function index()
     {
-        $role = session()->get('role_id');
+        $ticketModel = new TicketModel();
 
-        switch ($role) {
+        $data = [
 
-            case 1: // Admin
+            'total' => $ticketModel->countAll(),
 
-                $userModel = new UserModel();
-                $ticketModel = new TicketModel();
+            'submitted' => $ticketModel
+                ->where('status', 'Submitted')
+                ->countAllResults(),
 
-                $data = [
-                    'totalUser'   => $userModel->countAll(),
-                    'totalTicket' => $ticketModel->countAll(),
+            'assigned' => $ticketModel
+                ->where('status', 'Assigned')
+                ->countAllResults(),
 
-                    'submitted' => $ticketModel
-                        ->where('status', 'Submitted')
-                        ->countAllResults(),
+            'verified' => $ticketModel
+                ->where('status', 'Verified')
+                ->countAllResults(),
 
-                    'verified' => $ticketModel
-                        ->where('status', 'Verified')
-                        ->countAllResults(),
+            'progress' => $ticketModel
+                ->where('status', 'In Progress')
+                ->countAllResults(),
 
-                    'completed' => $ticketModel
-                        ->where('status', 'Completed')
-                        ->countAllResults(),
+            'completed' => $ticketModel
+                ->where('status', 'Completed')
+                ->countAllResults(),
 
-                    'tickets' => $ticketModel
-                        ->orderBy('submitted_at', 'DESC')
-                        ->findAll()
-                ];
+            'revision' => $ticketModel
+                ->where('status', 'Need Revision')
+                ->countAllResults(),
 
-                return view('dashboard/admin', $data);
+            'rejected' => $ticketModel
+                ->where('status', 'Rejected')
+                ->countAllResults(),
 
-            case 2: // Petugas
-                return view('dashboard/petugas');
+            'tickets' => $ticketModel
+                ->orderBy('submitted_at', 'DESC')
+                ->findAll(5)
 
-            case 3: // Unit Kerja
-                return view('dashboard/unit');
+        ];
 
-            case 4: // Pemohon
-                return view('dashboard/pemohon');
-
-            case 5: // Pimpinan
-                return view('dashboard/pimpinan');
-
-            default:
-                session()->destroy();
-                return redirect()->to('/login');
-        }
+        return view('dashboard/index', $data);
     }
 }

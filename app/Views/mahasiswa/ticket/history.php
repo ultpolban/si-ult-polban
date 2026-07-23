@@ -12,41 +12,38 @@
 
         <div class="container-fluid">
 
-            <div class="row mb-2">
+            <div class="row align-items-center">
 
-                <div class="col-sm-6">
+                <div class="col-md-8">
 
-                    <h1>
+                    <h1 class="page-title">
 
-                        <i class="fas fa-ticket-alt text-danger"></i>
+                        <i class="fas fa-ticket-alt"></i>
 
                         Tracking Tiket
 
                     </h1>
 
+                    <p class="text-muted mb-0">
+
+                        Pantau riwayat pengajuan dan status layanan Anda.
+
+                    </p>
+
                 </div>
 
-                <div class="col-sm-6">
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
 
-                    <ol class="breadcrumb float-sm-right">
+                    <a
+                        href="<?= base_url('mahasiswa/ticket/create') ?>"
+                        class="btn btn-primary"
+                    >
 
-                        <li class="breadcrumb-item">
+                        <i class="fas fa-plus-circle"></i>
 
-                            <a href="<?= base_url('dashboard-mahasiswa') ?>">
+                        Ajukan Layanan
 
-                                Dashboard Mahasiswa
-
-                            </a>
-
-                        </li>
-
-                        <li class="breadcrumb-item active">
-
-                            Tracking Tiket
-
-                        </li>
-
-                    </ol>
+                    </a>
 
                 </div>
 
@@ -67,487 +64,584 @@
 
 
             <!-- ============================= -->
-            <!-- INFORMASI -->
+            <!-- INFO CARD -->
             <!-- ============================= -->
 
-            <div class="card shadow-sm">
+            <div class="alert tracking-info">
 
-                <div class="card-body">
+                <i class="fas fa-info-circle"></i>
 
-                    <div class="row align-items-center">
+                <strong>Informasi:</strong>
 
-                        <div class="col-md-8">
-
-                            <h4 class="mb-2">
-
-                                <i class="fas fa-search text-primary mr-2"></i>
-
-                                Riwayat Pengajuan Layanan
-
-                            </h4>
-
-                            <p class="text-muted mb-0">
-
-                                Pantau status pengajuan layanan yang telah
-                                kamu ajukan melalui sistem SI-ULT POLBAN.
-
-                            </p>
-
-                        </div>
-
-                        <div class="col-md-4 text-md-right mt-3 mt-md-0">
-
-                            <a
-                                href="<?= base_url('mahasiswa/ticket/create') ?>"
-                                class="btn btn-danger"
-                            >
-
-                                <i class="fas fa-plus-circle mr-1"></i>
-
-                                Ajukan Layanan Baru
-
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
+                Klik tombol <strong>Detail</strong> untuk melihat informasi lengkap dan perkembangan tiket Anda.
 
             </div>
 
 
             <!-- ============================= -->
-            <!-- TABEL TIKET -->
+            <!-- TICKET LIST -->
             <!-- ============================= -->
 
-            <div class="card shadow-sm">
+            <?php if (!empty($tickets)): ?>
 
-                <div class="card-header bg-danger text-white">
-
-                    <h3 class="card-title mb-0">
-
-                        <i class="fas fa-list mr-2"></i>
-
-                        Daftar Tiket Saya
-
-                    </h3>
-
-                </div>
+                <?php foreach ($tickets as $ticket): ?>
 
 
-                <div class="card-body table-responsive p-0">
+                    <?php
 
-                    <table class="table table-hover table-bordered mb-0">
+                    // Status tiket
+                    $status = $ticket['status'] ?? 'Submitted';
 
-                        <thead class="bg-light">
 
-                            <tr>
+                    // Konfigurasi status
 
-                                <th width="60">
+                    $statusConfig = [
 
-                                    No
+                        'Draft' => [
+                            'color' => 'secondary',
+                            'icon'  => 'fa-file'
+                        ],
 
-                                </th>
+                        'Submitted' => [
+                            'color' => 'primary',
+                            'icon'  => 'fa-paper-plane'
+                        ],
 
-                                <th>
+                        'Verified' => [
+                            'color' => 'info',
+                            'icon'  => 'fa-check'
+                        ],
+
+                        'Assigned' => [
+                            'color' => 'warning',
+                            'icon'  => 'fa-share'
+                        ],
+
+                        'In Progress' => [
+                            'color' => 'warning',
+                            'icon'  => 'fa-spinner'
+                        ],
+
+                        'Revision' => [
+                            'color' => 'danger',
+                            'icon'  => 'fa-exclamation-triangle'
+                        ],
+
+                        'Completed' => [
+                            'color' => 'success',
+                            'icon'  => 'fa-check-circle'
+                        ],
+
+                        'Closed' => [
+                            'color' => 'dark',
+                            'icon'  => 'fa-lock'
+                        ]
+
+                    ];
+
+
+                    $config = $statusConfig[$status]
+                        ?? [
+                            'color' => 'secondary',
+                            'icon'  => 'fa-info-circle'
+                        ];
+
+                    ?>
+
+
+                    <!-- ============================= -->
+                    <!-- TICKET CARD -->
+                    <!-- ============================= -->
+
+                    <div class="card ticket-card shadow-sm">
+
+
+                        <!-- HEADER -->
+
+                        <div class="card-header ticket-card-header">
+
+
+                            <div>
+
+                                <span class="ticket-label">
 
                                     Nomor Tiket
 
-                                </th>
+                                </span>
 
-                                <th>
 
-                                    Jenis Layanan
+                                <h4 class="ticket-number">
 
-                                </th>
+                                    <?= esc($ticket['nomor'] ?? '-') ?>
 
-                                <th>
+                                </h4>
 
-                                    Unit Tujuan
+                            </div>
 
-                                </th>
 
-                                <th>
+                            <span class="badge bg-<?= $config['color'] ?> ticket-status">
 
-                                    Tanggal Pengajuan
+                                <i class="fas <?= $config['icon'] ?>"></i>
 
-                                </th>
-
-                                <th>
-
-                                    Status
-
-                                </th>
-
-                                <th width="100">
-
-                                    Aksi
-
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-
-                        <tbody>
-
-                        <?php if (!empty($tickets)): ?>
-
-                            <?php $no = 1; ?>
-
-                            <?php foreach ($tickets as $ticket): ?>
-
-                                <tr>
-
-                                    <!-- NOMOR -->
-
-                                    <td>
-
-                                        <?= $no++ ?>
-
-                                    </td>
-
-
-                                    <!-- NOMOR TIKET -->
-
-                                    <td>
-
-                                        <strong>
-
-                                            <?= esc(
-                                                $ticket['nomor']
-                                                ?? $ticket['ticket_number']
-                                                ?? '-'
-                                            ) ?>
-
-                                        </strong>
-
-                                    </td>
-
-
-                                    <!-- LAYANAN -->
-
-                                    <td>
-
-                                        <?= esc(
-                                            $ticket['layanan']
-                                            ?? $ticket['service_name']
-                                            ?? '-'
-                                        ) ?>
-
-                                    </td>
-
-
-                                    <!-- UNIT -->
-
-                                    <td>
-
-                                        <?= esc(
-                                            $ticket['unit']
-                                            ?? 'Belum Ditentukan'
-                                        ) ?>
-
-                                    </td>
-
-
-                                    <!-- TANGGAL -->
-
-                                    <td>
-
-                                        <?= esc(
-                                            $ticket['tanggal']
-                                            ?? $ticket['created_at']
-                                            ?? '-'
-                                        ) ?>
-
-                                    </td>
-
-
-                                    <!-- STATUS -->
-
-                                    <td>
-
-                                        <?php
-
-                                        $status = $ticket['status'] ?? 'Submitted';
-
-                                        $badge = 'secondary';
-
-                                        $icon = 'fa-question-circle';
-
-                                        if ($status == 'Submitted') {
-
-                                            $badge = 'primary';
-
-                                            $icon = 'fa-paper-plane';
-
-                                        } elseif ($status == 'Verified') {
-
-                                            $badge = 'success';
-
-                                            $icon = 'fa-check';
-
-                                        } elseif ($status == 'Assigned') {
-
-                                            $badge = 'info';
-
-                                            $icon = 'fa-user-check';
-
-                                        } elseif ($status == 'In Progress') {
-
-                                            $badge = 'warning';
-
-                                            $icon = 'fa-spinner';
-
-                                        } elseif ($status == 'Revision') {
-
-                                            $badge = 'danger';
-
-                                            $icon = 'fa-exclamation-circle';
-
-                                        } elseif ($status == 'Completed') {
-
-                                            $badge = 'success';
-
-                                            $icon = 'fa-check-circle';
-
-                                        }
-
-                                        ?>
-
-                                        <span class="badge bg-<?= $badge ?> p-2">
-
-                                            <i class="fas <?= $icon ?> mr-1"></i>
-
-                                            <?= esc($status) ?>
-
-                                        </span>
-
-                                    </td>
-
-
-                                    <!-- AKSI -->
-
-                                    <td>
-
-                                        <a
-                                            href="<?= base_url(
-                                                'mahasiswa/ticket/detail/' .
-                                                ($ticket['id'] ?? 0)
-                                            ) ?>"
-                                            class="btn btn-info btn-sm"
-                                        >
-
-                                            <i class="fas fa-eye"></i>
-
-                                            Detail
-
-                                        </a>
-
-                                    </td>
-
-                                </tr>
-
-                            <?php endforeach; ?>
-
-
-                        <?php else: ?>
-
-                            <!-- TIDAK ADA TIKET -->
-
-                            <tr>
-
-                                <td
-                                    colspan="7"
-                                    class="text-center py-5"
-                                >
-
-                                    <i
-                                        class="fas fa-folder-open fa-3x text-muted mb-3"
-                                    ></i>
-
-                                    <h5>
-
-                                        Belum Ada Pengajuan
-
-                                    </h5>
-
-                                    <p class="text-muted">
-
-                                        Kamu belum memiliki pengajuan layanan.
-
-                                    </p>
-
-                                    <a
-                                        href="<?= base_url(
-                                            'mahasiswa/ticket/create'
-                                        ) ?>"
-                                        class="btn btn-danger"
-                                    >
-
-                                        <i class="fas fa-plus-circle mr-1"></i>
-
-                                        Ajukan Layanan
-
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-                        <?php endif; ?>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-
-            <!-- ============================= -->
-            <!-- KETERANGAN STATUS -->
-            <!-- ============================= -->
-
-            <div class="card shadow-sm">
-
-                <div class="card-header bg-primary text-white">
-
-                    <h3 class="card-title mb-0">
-
-                        <i class="fas fa-info-circle mr-2"></i>
-
-                        Keterangan Status Tiket
-
-                    </h3>
-
-                </div>
-
-                <div class="card-body">
-
-                    <div class="row">
-
-                        <div class="col-md-4 mb-3">
-
-                            <span class="badge bg-primary p-2">
-
-                                <i class="fas fa-paper-plane mr-1"></i>
-
-                                Submitted
+                                <?= esc($status) ?>
 
                             </span>
 
-                            <p class="text-muted mt-2 mb-0">
-
-                                Pengajuan telah berhasil dikirim.
-
-                            </p>
 
                         </div>
 
 
-                        <div class="col-md-4 mb-3">
+                        <!-- BODY -->
 
-                            <span class="badge bg-success p-2">
+                        <div class="card-body">
 
-                                <i class="fas fa-check mr-1"></i>
 
-                                Verified
+                            <div class="row">
 
-                            </span>
 
-                            <p class="text-muted mt-2 mb-0">
+                                <!-- LAYANAN -->
 
-                                Pengajuan telah diverifikasi.
+                                <div class="col-md-4 mb-3">
 
-                            </p>
+                                    <div class="ticket-info">
+
+                                        <div class="info-icon">
+
+                                            <i class="fas fa-file-alt"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <small>
+
+                                                Jenis Layanan
+
+                                            </small>
+
+                                            <strong>
+
+                                                <?= esc($ticket['layanan'] ?? '-') ?>
+
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- UNIT -->
+
+                                <div class="col-md-4 mb-3">
+
+                                    <div class="ticket-info">
+
+                                        <div class="info-icon">
+
+                                            <i class="fas fa-building"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <small>
+
+                                                Unit Tujuan
+
+                                            </small>
+
+                                            <strong>
+
+                                                <?= esc($ticket['unit'] ?? '-') ?>
+
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- TANGGAL -->
+
+                                <div class="col-md-4 mb-3">
+
+                                    <div class="ticket-info">
+
+                                        <div class="info-icon">
+
+                                            <i class="fas fa-calendar-alt"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <small>
+
+                                                Tanggal Pengajuan
+
+                                            </small>
+
+                                            <strong>
+
+                                                <?= esc($ticket['tanggal'] ?? '-') ?>
+
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+
+                            <!-- ============================= -->
+                            <!-- STATUS TIMELINE -->
+                            <!-- ============================= -->
+
+                            <div class="ticket-progress">
+
+
+                                <div class="progress-title">
+
+                                    <i class="fas fa-history"></i>
+
+                                    Perkembangan Tiket
+
+                                </div>
+
+
+                                <div class="timeline">
+
+
+                                    <!-- SUBMITTED -->
+
+                                    <div class="timeline-item active">
+
+                                        <div class="timeline-icon">
+
+                                            <i class="fas fa-paper-plane"></i>
+
+                                        </div>
+
+                                        <div class="timeline-content">
+
+                                            <strong>
+
+                                                Submitted
+
+                                            </strong>
+
+                                            <small>
+
+                                                Pengajuan telah dikirim oleh pemohon.
+
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- VERIFIED -->
+
+                                    <div class="timeline-item
+                                        <?= in_array($status, [
+                                            'Verified',
+                                            'Assigned',
+                                            'In Progress',
+                                            'Revision',
+                                            'Completed',
+                                            'Closed'
+                                        ]) ? 'active' : '' ?>">
+
+                                        <div class="timeline-icon">
+
+                                            <i class="fas fa-check"></i>
+
+                                        </div>
+
+                                        <div class="timeline-content">
+
+                                            <strong>
+
+                                                Verified
+
+                                            </strong>
+
+                                            <small>
+
+                                                Pengajuan telah diverifikasi petugas.
+
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- ASSIGNED -->
+
+                                    <div class="timeline-item
+                                        <?= in_array($status, [
+                                            'Assigned',
+                                            'In Progress',
+                                            'Revision',
+                                            'Completed',
+                                            'Closed'
+                                        ]) ? 'active' : '' ?>">
+
+                                        <div class="timeline-icon">
+
+                                            <i class="fas fa-share"></i>
+
+                                        </div>
+
+                                        <div class="timeline-content">
+
+                                            <strong>
+
+                                                Assigned
+
+                                            </strong>
+
+                                            <small>
+
+                                                Tiket telah diteruskan ke unit terkait.
+
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- IN PROGRESS -->
+
+                                    <div class="timeline-item
+                                        <?= in_array($status, [
+                                            'In Progress',
+                                            'Revision',
+                                            'Completed',
+                                            'Closed'
+                                        ]) ? 'active' : '' ?>">
+
+                                        <div class="timeline-icon">
+
+                                            <i class="fas fa-spinner"></i>
+
+                                        </div>
+
+                                        <div class="timeline-content">
+
+                                            <strong>
+
+                                                In Progress
+
+                                            </strong>
+
+                                            <small>
+
+                                                Pengajuan sedang diproses oleh unit terkait.
+
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- REVISION -->
+
+                                    <?php if ($status === 'Revision'): ?>
+
+                                        <div class="timeline-item active revision">
+
+                                            <div class="timeline-icon">
+
+                                                <i class="fas fa-exclamation"></i>
+
+                                            </div>
+
+                                            <div class="timeline-content">
+
+                                                <strong>
+
+                                                    Revision
+
+                                                </strong>
+
+                                                <small>
+
+                                                    Pengajuan membutuhkan perbaikan atau dokumen tambahan.
+
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                    <?php endif; ?>
+
+
+                                    <!-- COMPLETED -->
+
+                                    <div class="timeline-item
+                                        <?= in_array($status, [
+                                            'Completed',
+                                            'Closed'
+                                        ]) ? 'active' : '' ?>">
+
+                                        <div class="timeline-icon">
+
+                                            <i class="fas fa-check-circle"></i>
+
+                                        </div>
+
+                                        <div class="timeline-content">
+
+                                            <strong>
+
+                                                Completed
+
+                                            </strong>
+
+                                            <small>
+
+                                                Pengajuan telah selesai diproses.
+
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- CLOSED -->
+
+                                    <div class="timeline-item
+                                        <?= $status === 'Closed' ? 'active' : '' ?>">
+
+                                        <div class="timeline-icon">
+
+                                            <i class="fas fa-lock"></i>
+
+                                        </div>
+
+                                        <div class="timeline-content">
+
+                                            <strong>
+
+                                                Closed
+
+                                            </strong>
+
+                                            <small>
+
+                                                Tiket telah ditutup.
+
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
 
                         </div>
 
 
-                        <div class="col-md-4 mb-3">
+                        <!-- FOOTER -->
 
-                            <span class="badge bg-info p-2">
+                        <div class="card-footer ticket-footer">
 
-                                <i class="fas fa-user-check mr-1"></i>
 
-                                Assigned
+                            <span class="text-muted">
+
+                                <i class="fas fa-info-circle"></i>
+
+                                Klik detail untuk melihat informasi lengkap.
 
                             </span>
 
-                            <p class="text-muted mt-2 mb-0">
 
-                                Pengajuan telah diteruskan ke unit terkait.
+                            <a
+                                href="<?= base_url('mahasiswa/ticket/detail/' . $ticket['id']) ?>"
+                                class="btn btn-primary"
+                            >
 
-                            </p>
+                                <i class="fas fa-eye"></i>
+
+                                Detail Tiket
+
+                            </a>
+
 
                         </div>
 
 
-                        <div class="col-md-4 mb-3">
-
-                            <span class="badge bg-warning p-2">
-
-                                <i class="fas fa-spinner mr-1"></i>
-
-                                In Progress
-
-                            </span>
-
-                            <p class="text-muted mt-2 mb-0">
-
-                                Pengajuan sedang diproses.
-
-                            </p>
-
-                        </div>
+                    </div>
 
 
-                        <div class="col-md-4 mb-3">
+                <?php endforeach; ?>
 
-                            <span class="badge bg-danger p-2">
 
-                                <i class="fas fa-exclamation-circle mr-1"></i>
+            <?php else: ?>
 
-                                Revision
 
-                            </span>
+                <!-- ============================= -->
+                <!-- EMPTY STATE -->
+                <!-- ============================= -->
 
-                            <p class="text-muted mt-2 mb-0">
+                <div class="card empty-ticket-card shadow-sm">
 
-                                Pengajuan membutuhkan perbaikan.
+                    <div class="card-body text-center">
 
-                            </p>
+                        <div class="empty-icon">
+
+                            <i class="fas fa-ticket-alt"></i>
 
                         </div>
 
+                        <h4>
 
-                        <div class="col-md-4 mb-3">
+                            Belum Ada Tiket
 
-                            <span class="badge bg-success p-2">
+                        </h4>
 
-                                <i class="fas fa-check-circle mr-1"></i>
+                        <p class="text-muted">
 
-                                Completed
+                            Anda belum memiliki pengajuan layanan.
 
-                            </span>
+                        </p>
 
-                            <p class="text-muted mt-2 mb-0">
+                        <a
+                            href="<?= base_url('mahasiswa/ticket/create') ?>"
+                            class="btn btn-primary"
+                        >
 
-                                Pengajuan telah selesai diproses.
+                            <i class="fas fa-plus-circle"></i>
 
-                            </p>
+                            Ajukan Layanan Sekarang
 
-                        </div>
+                        </a>
 
                     </div>
 
                 </div>
 
-            </div>
+
+            <?php endif; ?>
 
 
         </div>
@@ -555,5 +649,469 @@
     </section>
 
 </div>
+
+
+<!-- ============================= -->
+<!-- CUSTOM CSS -->
+<!-- ============================= -->
+
+<style>
+
+/* ============================= */
+/* TITLE */
+/* ============================= */
+
+.page-title {
+
+    color: #0d47a1;
+
+    font-weight: 700;
+
+}
+
+
+/* ============================= */
+/* INFO */
+/* ============================= */
+
+.tracking-info {
+
+    background: #eff6ff;
+
+    border-left: 5px solid #0d47a1;
+
+    color: #1e3a8a;
+
+}
+
+
+/* ============================= */
+/* TICKET CARD */
+/* ============================= */
+
+.ticket-card {
+
+    border: none;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    margin-bottom: 25px;
+
+}
+
+
+/* ============================= */
+/* TICKET HEADER */
+/* ============================= */
+
+.ticket-card-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    background: #0d47a1;
+
+    color: white;
+
+    padding: 18px 22px;
+
+    border-bottom: 4px solid #f59e0b;
+
+}
+
+
+.ticket-label {
+
+    display: block;
+
+    font-size: 12px;
+
+    opacity: 0.8;
+
+}
+
+
+.ticket-number {
+
+    margin: 4px 0 0;
+
+    font-weight: 700;
+
+}
+
+
+.ticket-status {
+
+    font-size: 13px;
+
+    padding: 8px 12px;
+
+}
+
+
+/* ============================= */
+/* INFO */
+/* ============================= */
+
+.ticket-info {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.info-icon {
+
+    width: 45px;
+
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #eff6ff;
+
+    color: #0d47a1;
+
+    border-radius: 10px;
+
+    font-size: 18px;
+
+}
+
+
+.ticket-info small {
+
+    display: block;
+
+    color: #64748b;
+
+}
+
+
+.ticket-info strong {
+
+    display: block;
+
+    color: #172554;
+
+    margin-top: 3px;
+
+}
+
+
+/* ============================= */
+/* PROGRESS */
+/* ============================= */
+
+.ticket-progress {
+
+    margin-top: 15px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #e2e8f0;
+
+}
+
+
+.progress-title {
+
+    color: #0d47a1;
+
+    font-weight: 700;
+
+    margin-bottom: 20px;
+
+}
+
+
+/* ============================= */
+/* TIMELINE */
+/* ============================= */
+
+.timeline {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    position: relative;
+
+    padding: 0 10px;
+
+}
+
+
+.timeline::before {
+
+    content: '';
+
+    position: absolute;
+
+    top: 20px;
+
+    left: 5%;
+
+    right: 5%;
+
+    height: 3px;
+
+    background: #e2e8f0;
+
+    z-index: 0;
+
+}
+
+
+.timeline-item {
+
+    position: relative;
+
+    z-index: 1;
+
+    width: 16%;
+
+    text-align: center;
+
+}
+
+
+.timeline-icon {
+
+    width: 40px;
+
+    height: 40px;
+
+    margin: 0 auto 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #e2e8f0;
+
+    color: #94a3b8;
+
+    border-radius: 50%;
+
+    border: 3px solid white;
+
+}
+
+
+.timeline-item.active .timeline-icon {
+
+    background: #0d47a1;
+
+    color: white;
+
+    box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.15);
+
+}
+
+
+.timeline-item.revision .timeline-icon {
+
+    background: #dc3545;
+
+}
+
+
+.timeline-content strong {
+
+    display: block;
+
+    font-size: 13px;
+
+    color: #172554;
+
+}
+
+
+.timeline-content small {
+
+    display: block;
+
+    margin-top: 5px;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+}
+
+
+/* ============================= */
+/* FOOTER */
+/* ============================= */
+
+.ticket-footer {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+
+/* ============================= */
+/* EMPTY */
+/* ============================= */
+
+.empty-ticket-card {
+
+    border: none;
+
+    border-radius: 12px;
+
+}
+
+
+.empty-icon {
+
+    font-size: 60px;
+
+    color: #0d47a1;
+
+    margin-bottom: 15px;
+
+}
+
+
+/* ============================= */
+/* BUTTON */
+/* ============================= */
+
+.btn-primary {
+
+    background: #0d47a1;
+
+    border-color: #0d47a1;
+
+}
+
+
+.btn-primary:hover {
+
+    background: #f59e0b;
+
+    border-color: #f59e0b;
+
+}
+
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+
+    .ticket-card-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 10px;
+
+    }
+
+
+    .timeline {
+
+        flex-direction: column;
+
+        gap: 20px;
+
+    }
+
+
+    .timeline::before {
+
+        top: 20px;
+
+        bottom: 20px;
+
+        left: 29px;
+
+        width: 3px;
+
+        height: auto;
+
+        right: auto;
+
+    }
+
+
+    .timeline-item {
+
+        width: 100%;
+
+        display: flex;
+
+        align-items: center;
+
+        text-align: left;
+
+        gap: 15px;
+
+    }
+
+
+    .timeline-icon {
+
+        flex-shrink: 0;
+
+        margin: 0;
+
+    }
+
+
+    .timeline-content {
+
+        flex: 1;
+
+    }
+
+
+    .ticket-footer {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 10px;
+
+    }
+
+
+    .ticket-footer .btn {
+
+        width: 100%;
+
+    }
+
+}
+
+</style>
+
 
 <?= $this->include('layouts/footer') ?>

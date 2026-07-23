@@ -1,33 +1,41 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand navbar-dark navbar-ult">
 
-<ul class="navbar-nav">
+    <!-- Tombol Sidebar -->
+    <ul class="navbar-nav">
 
-<li class="nav-item">
+        <li class="nav-item">
 
-<a class="nav-link" data-widget="pushmenu">
+            <a
+                class="nav-link"
+                data-widget="pushmenu"
+                href="#"
+                role="button"
+            >
 
-<i class="fas fa-bars"></i>
+                <i class="fas fa-bars"></i>
 
-</a>
+            </a>
 
-</li>
+        </li>
 
-</ul>
+    </ul>
 
-<ul class="navbar-nav ms-auto">
 
-<li class="nav-item">
+    <!-- Bagian Kanan -->
+    <ul class="navbar-nav ms-auto">
 
-<span class="nav-link">
+        <li class="nav-item">
 
-<i class="fas fa-user-circle"></i>
+            <span class="nav-link user-navbar">
 
-<?= isset($user['nama']) ? $user['nama'] : 'Pemohon'; ?>
+                <i class="fas fa-user-circle me-2"></i>
 
-</span>
+                <?= esc($user['nama'] ?? 'Pemohon') ?>
 
-</li>
+            </span>
 
-</ul>
+        </li>
+
+    </ul>
 
 </nav>

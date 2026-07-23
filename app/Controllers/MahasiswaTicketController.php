@@ -25,21 +25,119 @@ class MahasiswaTicketController extends BaseController
     // ==========================================
     // SIMPAN PENGAJUAN
     // ==========================================
-    public function store()
-    {
+   public function store()
+{
+    // Ambil aksi dari tombol
+    $action = $this->request->getPost('action');
+
+    // Ambil data form
+    $layanan = $this->request->getPost('layanan');
+    $keterangan = $this->request->getPost('keterangan');
+
+
+    // ==========================================
+    // SIMPAN DRAFT
+    // ==========================================
+
+    if ($action === 'draft') {
+
         $data = [
+
+            'title' => 'Draft Pengajuan',
+
+            'ticket' => [
+
+                'nomor' => 'DRAFT-' . date('Ymd') . '-' . rand(1000, 9999),
+
+                'layanan' => $layanan ?: 'Belum dipilih',
+
+                'keterangan' => $keterangan ?: '-',
+
+                'status' => 'Draft'
+
+            ]
+
+        ];
+
+
+        return view(
+            'mahasiswa/ticket/success',
+            $data
+        );
+
+    }
+
+
+    // ==========================================
+    // KIRIM PENGAJUAN
+    // ==========================================
+
+    if ($action === 'submit') {
+
+
+        // Validasi field wajib
+
+        if (empty($layanan)) {
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Jenis layanan wajib dipilih.'
+                );
+
+        }
+
+
+        // Data tiket yang dikirim
+
+        $data = [
+
             'title' => 'Pengajuan Berhasil',
 
             'ticket' => [
-                'nomor'    => 'ULT-MHS-' . date('Ymd') . '-' . rand(1000, 9999),
-                'layanan'  => $this->request->getPost('layanan'),
-                'keterangan' => $this->request->getPost('keterangan'),
-                'status'   => 'Submitted'
+
+                'nomor' =>
+                    'ULT-' .
+                    date('Ymd') .
+                    '-' .
+                    rand(1000, 9999),
+
+                'layanan' =>
+                    $layanan,
+
+                'keterangan' =>
+                    $keterangan ?: '-',
+
+                'status' =>
+                    'Submitted'
+
             ]
+
         ];
 
-        return view('mahasiswa/ticket/success', $data);
+
+        return view(
+            'mahasiswa/ticket/success',
+            $data
+        );
+
     }
+
+
+    // ==========================================
+    // AKSI TIDAK DIKENALI
+    // ==========================================
+
+    return redirect()
+        ->back()
+        ->withInput()
+        ->with(
+            'error',
+            'Aksi pengajuan tidak valid.'
+        );
+}
 
 
     // ==========================================

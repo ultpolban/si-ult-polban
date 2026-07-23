@@ -1,26 +1,45 @@
 <footer class="main-footer">
 
-<strong>
+    <div class="float-right d-none d-sm-inline">
+        SI-ULT POLBAN
+    </div>
 
-SI-ULT POLBAN
+    <strong>
+        Copyright &copy; <?= date('Y') ?>
+        SI-ULT POLBAN.
+    </strong>
 
-</strong>
-
-<div class="float-right">
-
-Version 1.0
-
-</div>
+    All rights reserved.
 
 </footer>
 
+
 </div>
+<!-- /.wrapper -->
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery -->
+<script
+    src="https://code.jquery.com/jquery-3.7.1.min.js">
+</script>
 
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+<!-- Bootstrap -->
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<!-- AdminLTE -->
+<script
+    src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js">
+</script>
+
+
+<!-- Custom JS -->
+<script
+    src="<?= base_url('assets/js/script.js') ?>">
+</script>
 
 </body>
 

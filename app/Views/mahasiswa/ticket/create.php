@@ -4,46 +4,28 @@
 
 <div class="content-wrapper">
 
-    <!-- ============================= -->
     <!-- HEADER -->
-    <!-- ============================= -->
-
     <section class="content-header">
 
         <div class="container-fluid">
 
-            <div class="row mb-2">
+            <div class="row align-items-center">
 
-                <div class="col-sm-6">
+                <div class="col-md-8">
 
-                    <h1>
-                        <i class="fas fa-plus-circle text-danger"></i>
+                    <h1 class="page-title">
+
+                        <i class="fas fa-plus-circle"></i>
+
                         Ajukan Layanan
+
                     </h1>
 
-                </div>
+                    <p class="text-muted mb-0">
 
-                <div class="col-sm-6">
+                        Silakan lengkapi formulir pengajuan layanan Anda.
 
-                    <ol class="breadcrumb float-sm-right">
-
-                        <li class="breadcrumb-item">
-
-                            <a href="<?= base_url('dashboard-mahasiswa') ?>">
-
-                                Dashboard Mahasiswa
-
-                            </a>
-
-                        </li>
-
-                        <li class="breadcrumb-item active">
-
-                            Ajukan Layanan
-
-                        </li>
-
-                    </ol>
+                    </p>
 
                 </div>
 
@@ -54,406 +36,312 @@
     </section>
 
 
-    <!-- ============================= -->
     <!-- CONTENT -->
-    <!-- ============================= -->
-
     <section class="content">
 
         <div class="container-fluid">
 
-            <div class="row">
+            <div class="card ticket-form-card shadow-sm">
 
-                <div class="col-lg-8">
 
-                    <div class="card shadow-sm">
+                <!-- CARD HEADER -->
 
-                        <!-- CARD HEADER -->
+                <div class="card-header ticket-form-header">
 
-                        <div class="card-header bg-danger text-white">
+                    <div>
 
-                            <h3 class="card-title mb-0">
+                        <h3 class="card-title">
 
-                                <i class="fas fa-file-alt mr-2"></i>
+                            <i class="fas fa-file-signature"></i>
 
-                                Form Pengajuan Layanan
+                            Form Pengajuan Layanan
 
-                            </h3>
+                        </h3>
+
+                        <p class="mb-0">
+
+                            Pastikan data yang Anda masukkan sudah benar.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FORM -->
+
+                <form
+                    action="<?= base_url('mahasiswa/ticket/store') ?>"
+                    method="post"
+                    enctype="multipart/form-data"
+                >
+
+                    <?= csrf_field() ?>
+
+
+                    <div class="card-body">
+
+
+                        <!-- NAMA -->
+
+                        <div class="form-group mb-4">
+
+                            <label>
+
+                                Nama Lengkap
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="<?= esc($user['nama'] ?? '') ?>"
+                                readonly
+                            >
 
                         </div>
 
 
-                        <!-- FORM -->
+                        <!-- NIM -->
 
-                        <form
-                            action="<?= base_url('mahasiswa/ticket/store') ?>"
-                            method="post"
-                            enctype="multipart/form-data"
+                        <div class="form-group mb-4">
+
+                            <label>
+
+                                NIM
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="<?= esc($user['nim'] ?? '') ?>"
+                                readonly
+                            >
+
+                        </div>
+
+
+                        <!-- JENIS LAYANAN -->
+
+                        <div class="form-group mb-4">
+
+                            <label>
+
+                                Jenis Layanan
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <select
+                                name="layanan"
+                                class="form-control"
+                                required
+                            >
+
+                                <option value="">
+
+                                    -- Pilih Jenis Layanan --
+
+                                </option>
+
+                                <option value="Surat Keterangan Aktif Kuliah">
+
+                                    Surat Keterangan Aktif Kuliah
+
+                                </option>
+
+                                <option value="Legalisir Ijazah/Transkrip">
+
+                                    Legalisir Ijazah/Transkrip
+
+                                </option>
+
+                                <option value="Verifikasi Alumni">
+
+                                    Verifikasi Alumni
+
+                                </option>
+
+                                <option value="Konfirmasi Pembayaran">
+
+                                    Konfirmasi Pembayaran
+
+                                </option>
+
+                                <option value="Permohonan Informasi Publik">
+
+                                    Permohonan Informasi Publik
+
+                                </option>
+
+                                <option value="Pengaduan Layanan">
+
+                                    Pengaduan Layanan
+
+                                </option>
+
+                                <option value="Permohonan Kunjungan">
+
+                                    Permohonan Kunjungan
+
+                                </option>
+
+                                <option value="Bantuan Akses Sistem Informasi">
+
+                                    Bantuan Akses Sistem Informasi
+
+                                </option>
+
+                                <option value="Layanan Kemahasiswaan">
+
+                                    Layanan Kemahasiswaan
+
+                                </option>
+
+                                <option value="Layanan Akademik">
+
+                                    Layanan Akademik
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- KETERANGAN -->
+
+                        <div class="form-group mb-4">
+
+                            <label>
+
+                                Keterangan
+
+                            </label>
+
+                            <textarea
+                                name="keterangan"
+                                class="form-control"
+                                rows="5"
+                                placeholder="Masukkan keterangan pengajuan..."
+                            ></textarea>
+
+                        </div>
+
+
+                        <!-- DOKUMEN -->
+
+                        <div class="form-group mb-4">
+
+                            <label>
+
+                                Upload Dokumen
+
+                                <span class="text-muted">
+
+                                    (Opsional)
+
+                                </span>
+
+                            </label>
+
+                            <input
+                                type="file"
+                                name="dokumen"
+                                class="form-control"
+                                accept=".pdf,.jpg,.jpeg,.png"
+                            >
+
+                            <small class="text-muted">
+
+                                Dokumen bersifat opsional.
+                                Format yang diperbolehkan: PDF, JPG, JPEG, PNG.
+
+                            </small>
+
+                        </div>
+
+
+                        <!-- INFO -->
+
+                        <div class="draft-info">
+
+                            <i class="fas fa-info-circle"></i>
+
+                            Anda dapat menyimpan pengajuan sebagai
+                            <strong>Draft</strong> terlebih dahulu dan
+                            mengirimkannya nanti.
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- FOOTER -->
+
+                    <div class="card-footer ticket-form-footer">
+
+
+                        <a
+                            href="<?= base_url('dashboard-mahasiswa') ?>"
+                            class="btn btn-secondary"
                         >
 
-                            <div class="card-body">
+                            <i class="fas fa-arrow-left"></i>
 
+                            Kembali
 
-                                <!-- NAMA -->
+                        </a>
 
-                                <div class="form-group mb-3">
 
-                                    <label>
+                        <div class="action-buttons">
 
-                                        <i class="fas fa-user text-danger"></i>
 
-                                        Nama Pemohon
+                            <!-- SIMPAN DRAFT -->
 
-                                    </label>
+                            <button
+                                type="submit"
+                                name="action"
+                                value="draft"
+                                class="btn btn-outline-primary"
+                            >
 
-                                    <input
-                                        type="text"
-                                        name="nama"
-                                        class="form-control"
-                                        value="<?= $user['nama'] ?>"
-                                        readonly
-                                    >
+                                <i class="fas fa-save"></i>
 
-                                </div>
+                                Simpan Draft
 
+                            </button>
 
-                                <!-- NIM -->
 
-                                <div class="form-group mb-3">
+                            <!-- SUBMIT -->
 
-                                    <label>
+                            <button
+                                type="submit"
+                                name="action"
+                                value="submit"
+                                class="btn btn-primary"
+                            >
 
-                                        <i class="fas fa-id-card text-danger"></i>
+                                <i class="fas fa-paper-plane"></i>
 
-                                        NIM
+                                Kirim Pengajuan
 
-                                    </label>
+                            </button>
 
-                                    <input
-                                        type="text"
-                                        name="nim"
-                                        class="form-control"
-                                        value="<?= $user['nim'] ?>"
-                                        readonly
-                                    >
-
-                                </div>
-
-
-                                <!-- PROGRAM STUDI -->
-
-                                <div class="form-group mb-3">
-
-                                    <label>
-
-                                        <i class="fas fa-graduation-cap text-danger"></i>
-
-                                        Program Studi
-
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        name="prodi"
-                                        class="form-control"
-                                        value="<?= $user['prodi'] ?? 'D3 Teknik Informatika' ?>"
-                                        readonly
-                                    >
-
-                                </div>
-
-
-                                <!-- JENIS LAYANAN -->
-
-                                <div class="form-group mb-3">
-
-                                    <label>
-
-                                        <i class="fas fa-list text-danger"></i>
-
-                                        Jenis Layanan
-
-                                    </label>
-
-                                    <select
-                                        name="service"
-                                        class="form-control"
-                                        required
-                                    >
-
-                                        <option value="">
-
-                                            -- Pilih Layanan --
-
-                                        </option>
-
-                                        <?php if (isset($services) && !empty($services)): ?>
-
-                                            <?php foreach ($services as $service): ?>
-
-                                                <option
-                                                    value="<?= esc($service['nama']) ?>"
-                                                >
-
-                                                    <?= esc($service['nama']) ?>
-
-                                                </option>
-
-                                            <?php endforeach; ?>
-
-                                        <?php else: ?>
-
-                                            <option value="Surat Aktif Kuliah">
-
-                                                Surat Aktif Kuliah
-
-                                            </option>
-
-                                            <option value="Surat Beasiswa">
-
-                                                Surat Beasiswa
-
-                                            </option>
-
-                                            <option value="Legalisir Transkrip">
-
-                                                Legalisir Transkrip
-
-                                            </option>
-
-                                            <option value="Surat Keterangan">
-
-                                                Surat Keterangan
-
-                                            </option>
-
-                                        <?php endif; ?>
-
-                                    </select>
-
-                                </div>
-
-
-                                <!-- KETERANGAN -->
-
-                                <div class="form-group mb-3">
-
-                                    <label>
-
-                                        <i class="fas fa-comment-alt text-danger"></i>
-
-                                        Keterangan Pengajuan
-
-                                    </label>
-
-                                    <textarea
-                                        name="catatan"
-                                        class="form-control"
-                                        rows="5"
-                                        placeholder="Masukkan keterangan atau tujuan pengajuan layanan..."
-                                        required
-                                    ></textarea>
-
-                                </div>
-
-
-                                <!-- UPLOAD KTM -->
-
-                                <div class="form-group mb-3">
-
-                                    <label>
-
-                                        <i class="fas fa-id-card text-danger"></i>
-
-                                        Upload KTM
-
-                                    </label>
-
-                                    <input
-                                        type="file"
-                                        name="ktm"
-                                        class="form-control"
-                                        accept=".pdf,.jpg,.jpeg,.png"
-                                    >
-
-                                    <small class="text-muted">
-
-                                        Format yang diperbolehkan:
-                                        PDF, JPG, JPEG, PNG.
-
-                                    </small>
-
-                                </div>
-
-
-                                <!-- UPLOAD KRS -->
-
-                                <div class="form-group mb-3">
-
-                                    <label>
-
-                                        <i class="fas fa-file-upload text-danger"></i>
-
-                                        Upload KRS
-
-                                    </label>
-
-                                    <input
-                                        type="file"
-                                        name="krs"
-                                        class="form-control"
-                                        accept=".pdf,.jpg,.jpeg,.png"
-                                    >
-
-                                    <small class="text-muted">
-
-                                        Format yang diperbolehkan:
-                                        PDF, JPG, JPEG, PNG.
-
-                                    </small>
-
-                                </div>
-
-
-                            </div>
-
-
-                            <!-- CARD FOOTER -->
-
-                            <div class="card-footer d-flex justify-content-between">
-
-                                <a
-                                    href="<?= base_url('dashboard-mahasiswa') ?>"
-                                    class="btn btn-secondary"
-                                >
-
-                                    <i class="fas fa-arrow-left mr-1"></i>
-
-                                    Kembali
-
-                                </a>
-
-
-                                <button
-                                    type="submit"
-                                    class="btn btn-danger"
-                                >
-
-                                    <i class="fas fa-paper-plane mr-1"></i>
-
-                                    Kirim Pengajuan
-
-                                </button>
-
-                            </div>
-
-                        </form>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ============================= -->
-                <!-- INFORMASI -->
-                <!-- ============================= -->
-
-                <div class="col-lg-4">
-
-                    <div class="card shadow-sm">
-
-                        <div class="card-header bg-primary text-white">
-
-                            <h3 class="card-title mb-0">
-
-                                <i class="fas fa-info-circle mr-2"></i>
-
-                                Informasi Pengajuan
-
-                            </h3>
-
-                        </div>
-
-                        <div class="card-body">
-
-                            <p>
-
-                                Silakan lengkapi formulir pengajuan layanan
-                                dengan data yang benar.
-
-                            </p>
-
-                            <hr>
-
-                            <p class="mb-2">
-
-                                <i class="fas fa-check-circle text-success mr-2"></i>
-
-                                Pastikan layanan yang dipilih sudah sesuai.
-
-                            </p>
-
-                            <p class="mb-2">
-
-                                <i class="fas fa-check-circle text-success mr-2"></i>
-
-                                Isi keterangan pengajuan dengan jelas.
-
-                            </p>
-
-                            <p class="mb-2">
-
-                                <i class="fas fa-check-circle text-success mr-2"></i>
-
-                                Upload dokumen yang diperlukan.
-
-                            </p>
-
-                            <p class="mb-0">
-
-                                <i class="fas fa-check-circle text-success mr-2"></i>
-
-                                Periksa kembali data sebelum mengirim.
-
-                            </p>
 
                         </div>
 
                     </div>
 
-
-                    <!-- STATUS -->
-
-                    <div class="card shadow-sm">
-
-                        <div class="card-header bg-warning">
-
-                            <h3 class="card-title mb-0">
-
-                                <i class="fas fa-exclamation-circle mr-2"></i>
-
-                                Perhatian
-
-                            </h3>
-
-                        </div>
-
-                        <div class="card-body">
-
-                            <p class="mb-0">
-
-                                Setelah pengajuan dikirim, kamu dapat memantau
-                                status pengajuan melalui menu
-
-                                <b>Tracking Tiket</b>.
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
+                </form>
 
             </div>
 
@@ -462,5 +350,210 @@
     </section>
 
 </div>
+
+
+<style>
+
+/* ============================== */
+/* TITLE */
+/* ============================== */
+
+.page-title {
+
+    color: #0d47a1;
+
+    font-weight: 700;
+
+}
+
+
+/* ============================== */
+/* CARD */
+/* ============================== */
+
+.ticket-form-card {
+
+    border: none;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+}
+
+
+/* ============================== */
+/* HEADER */
+/* ============================== */
+
+.ticket-form-header {
+
+    background: #0d47a1;
+
+    color: white;
+
+    padding: 20px 24px;
+
+    border-bottom: 4px solid #f59e0b;
+
+}
+
+
+.ticket-form-header h3 {
+
+    font-weight: 700;
+
+}
+
+
+.ticket-form-header p {
+
+    opacity: 0.85;
+
+    margin-top: 5px;
+
+}
+
+
+/* ============================== */
+/* LABEL */
+/* ============================== */
+
+.form-group label {
+
+    font-weight: 600;
+
+    color: #172554;
+
+    margin-bottom: 8px;
+
+}
+
+
+/* ============================== */
+/* INPUT */
+/* ============================== */
+
+.form-control {
+
+    border-radius: 8px;
+
+    border: 1px solid #cbd5e1;
+
+    padding: 10px 13px;
+
+}
+
+
+.form-control:focus {
+
+    border-color: #0d47a1;
+
+    box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.12);
+
+}
+
+
+/* ============================== */
+/* INFO */
+/* ============================== */
+
+.draft-info {
+
+    background: #eff6ff;
+
+    border-left: 4px solid #0d47a1;
+
+    padding: 14px 16px;
+
+    border-radius: 6px;
+
+    color: #1e3a8a;
+
+}
+
+
+/* ============================== */
+/* FOOTER */
+/* ============================== */
+
+.ticket-form-footer {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 18px 24px;
+
+}
+
+
+.action-buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+}
+
+
+/* ============================== */
+/* PRIMARY */
+/* ============================== */
+
+.btn-primary {
+
+    background: #0d47a1;
+
+    border-color: #0d47a1;
+
+}
+
+
+.btn-primary:hover {
+
+    background: #f59e0b;
+
+    border-color: #f59e0b;
+
+}
+
+
+/* ============================== */
+/* RESPONSIVE */
+/* ============================== */
+
+@media (max-width: 576px) {
+
+    .ticket-form-footer {
+
+        flex-direction: column;
+
+        gap: 15px;
+
+        align-items: stretch;
+
+    }
+
+
+    .action-buttons {
+
+        flex-direction: column;
+
+    }
+
+
+    .action-buttons button {
+
+        width: 100%;
+
+    }
+
+}
+
+</style>
+
 
 <?= $this->include('layouts/footer') ?>

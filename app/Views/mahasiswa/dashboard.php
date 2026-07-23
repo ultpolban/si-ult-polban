@@ -1,27 +1,32 @@
 <?= $this->include('layouts/header'); ?>
 <?= $this->include('layouts/navbar'); ?>
-<?= $this->include('layouts/sidebar_mahasiswa') ?>
+<?= $this->include('layouts/sidebar_mahasiswa'); ?>
 
 <div class="content-wrapper">
 
-    <!-- Header -->
+    <!-- =========================================
+         HEADER DASHBOARD
+    ========================================== -->
     <section class="content-header">
         <div class="container-fluid">
 
-            <div class="row mb-2">
+            <div class="row align-items-center">
 
                 <div class="col-sm-6">
-                    <h1>Dashboard Mahasiswa</h1>
+                    <h1 class="dashboard-title">
+                        <i class="fas fa-home me-2"></i>
+                        Dashboard Mahasiswa
+                    </h1>
                 </div>
 
-                <div class="col-sm-6 text-end">
+                <div class="col-sm-6 text-sm-end mt-2 mt-sm-0">
 
-                    <a href="<?= base_url('ticket/create') ?>" class="btn btn-danger">
-
-                        <i class="fas fa-plus-circle"></i>
-
+                    <a
+                        href="<?= base_url('mahasiswa/ticket/create') ?>"
+                        class="btn btn-ult-orange"
+                    >
+                        <i class="fas fa-plus-circle me-1"></i>
                         Ajukan Layanan
-
                     </a>
 
                 </div>
@@ -31,86 +36,144 @@
         </div>
     </section>
 
-    <!-- Main -->
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
     <section class="content">
 
         <div class="container-fluid">
 
-            <!-- Welcome Card -->
-<h3>
-Selamat Datang Mahasiswa,
-<?= $user['nama']; ?>
-</h3>
 
-<p class="text-muted">
+            <!-- =========================================
+                 WELCOME CARD
+            ========================================== -->
+            <div class="card welcome-card shadow-sm">
 
-NIM :
-<?= $user['nim']; ?>
+                <div class="card-body">
 
-<br>
+                    <div class="row align-items-center">
 
-Program Studi :
-<?= $user['prodi']; ?>
+                        <div class="col-md-8">
 
-<br>
+                            <h3 class="welcome-title">
+                                Selamat Datang,
+                                <?= esc($user['nama']); ?>! 👋
+                            </h3>
 
-Jurusan :
-<?= $user['jurusan']; ?>
+                            <p class="welcome-text mb-3">
+                                Selamat datang di Sistem Informasi Unit Layanan Terpadu
+                                POLBAN.
+                            </p>
 
-<br>
+                            <div class="student-info">
 
-Semester :
-<?= $user['semester']; ?>
+                                <div>
+                                    <i class="fas fa-id-card"></i>
+                                    <strong>NIM:</strong>
+                                    <?= esc($user['nim']); ?>
+                                </div>
 
-<br>
+                                <div>
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <strong>Program Studi:</strong>
+                                    <?= esc($user['prodi']); ?>
+                                </div>
 
-Status :
-<span class="badge bg-success">
-<?= $user['status']; ?>
-</span>
+                                <div>
+                                    <i class="fas fa-building"></i>
+                                    <strong>Jurusan:</strong>
+                                    <?= esc($user['jurusan']); ?>
+                                </div>
 
-</p>
+                                <div>
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <strong>Semester:</strong>
+                                    <?= esc($user['semester']); ?>
+                                </div>
 
-            <!-- Statistik -->
-            <div class="row">
-
-                <div class="col-lg-3 col-6">
-
-                    <div class="small-box bg-primary elevation-3"
-     style="border-radius:15px;">
-
-                        <div class="inner">
-
-                            <h2 class="fw-bold">
-    <?= $statistik['total']; ?>
-</h2>
-
-                            <p>Jumlah Pengajuan</p>
+                            </div>
 
                         </div>
 
-                        <div class="icon">
-    <i class="fas fa-ticket-alt fa-3x"
-       style="top:18px;"></i>
-</div>
+
+                        <div class="col-md-4 text-center mt-3 mt-md-0">
+
+                            <div class="student-avatar">
+
+                                <i class="fas fa-user-graduate"></i>
+
+                            </div>
+
+                            <div class="mt-2">
+
+                                <span class="status-active">
+                                    <i class="fas fa-circle"></i>
+                                    <?= esc($user['status']); ?>
+                                </span>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
                 </div>
 
-                <div class="col-lg-3 col-6">
+            </div>
 
-                    <div class="small-box bg-warning">
 
-                        <div class="inner">
+            <!-- =========================================
+                 STATISTIK
+            ========================================== -->
+            <div class="row">
 
-                            <h3><?= $statistik['diproses']; ?></h3>
+                <!-- Total -->
+                <div class="col-lg-3 col-md-6 mb-3">
 
-                            <p>Sedang Diproses</p>
+                    <div class="stat-card stat-blue">
+
+                        <div class="stat-content">
+
+                            <h2>
+                                <?= $statistik['total']; ?>
+                            </h2>
+
+                            <p>
+                                Jumlah Pengajuan
+                            </p>
 
                         </div>
 
-                        <div class="icon">
+                        <div class="stat-icon">
+
+                            <i class="fas fa-ticket-alt"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Diproses -->
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <div class="stat-card stat-orange">
+
+                        <div class="stat-content">
+
+                            <h2>
+                                <?= $statistik['diproses']; ?>
+                            </h2>
+
+                            <p>
+                                Sedang Diproses
+                            </p>
+
+                        </div>
+
+                        <div class="stat-icon">
 
                             <i class="fas fa-spinner"></i>
 
@@ -120,21 +183,27 @@ Status :
 
                 </div>
 
-                <div class="col-lg-3 col-6">
 
-                    <div class="small-box bg-danger">
+                <!-- Revisi -->
+                <div class="col-lg-3 col-md-6 mb-3">
 
-                        <div class="inner">
+                    <div class="stat-card stat-warning">
 
-                            <h3><?= $statistik['revisi']; ?></h3>
+                        <div class="stat-content">
 
-                            <p>Perlu Revisi</p>
+                            <h2>
+                                <?= $statistik['revisi']; ?>
+                            </h2>
+
+                            <p>
+                                Perlu Revisi
+                            </p>
 
                         </div>
 
-                        <div class="icon">
+                        <div class="stat-icon">
 
-                            <i class="fas fa-times-circle"></i>
+                            <i class="fas fa-edit"></i>
 
                         </div>
 
@@ -142,19 +211,25 @@ Status :
 
                 </div>
 
-                <div class="col-lg-3 col-6">
 
-                    <div class="small-box bg-success">
+                <!-- Selesai -->
+                <div class="col-lg-3 col-md-6 mb-3">
 
-                        <div class="inner">
+                    <div class="stat-card stat-success">
 
-                            <h3><?= $statistik['selesai']; ?></h3>
+                        <div class="stat-content">
 
-                            <p>Selesai</p>
+                            <h2>
+                                <?= $statistik['selesai']; ?>
+                            </h2>
+
+                            <p>
+                                Selesai
+                            </p>
 
                         </div>
 
-                        <div class="icon">
+                        <div class="stat-icon">
 
                             <i class="fas fa-check-circle"></i>
 
@@ -166,152 +241,207 @@ Status :
 
             </div>
 
-            <div class="row mt-3">
 
-    <div class="col-md-4">
+            <!-- =========================================
+                 QUICK ACTION
+            ========================================== -->
+            <div class="row mb-4">
 
-        <a href="<?= base_url('ticket/create') ?>" class="btn btn-danger btn-block">
+                <div class="col-lg-4 col-md-4 mb-2">
 
-            <i class="fas fa-plus-circle"></i>
+                    <a
+                        href="<?= base_url('mahasiswa/ticket/create') ?>"
+                        class="quick-action action-orange"
+                    >
 
-            Ajukan Layanan Baru
+                        <i class="fas fa-plus-circle"></i>
 
-        </a>
+                        <span>
+                            Ajukan Layanan Baru
+                        </span>
 
-    </div>
+                    </a>
 
-    <div class="col-md-4">
+                </div>
 
-        <a href="<?= base_url('ticket/history') ?>" class="btn btn-primary btn-block">
 
-            <i class="fas fa-history"></i>
+                <div class="col-lg-4 col-md-4 mb-2">
 
-            Riwayat Pengajuan
+                    <a
+                        href="<?= base_url('mahasiswa/ticket/history') ?>"
+                        class="quick-action action-blue"
+                    >
 
-        </a>
+                        <i class="fas fa-history"></i>
 
-    </div>
+                        <span>
+                            Tracking Tiket
+                        </span>
 
-    <div class="col-md-4">
+                    </a>
 
-        <a href="<?= base_url('notification') ?>" class="btn btn-success btn-block">
+                </div>
 
-            <i class="fas fa-bell"></i>
 
-            Notifikasi
+                <div class="col-lg-4 col-md-4 mb-2">
 
-        </a>
+                    <a
+                        href="<?= base_url('mahasiswa/notification') ?>"
+                        class="quick-action action-blue"
+                    >
 
-    </div>
+                        <i class="fas fa-bell"></i>
 
-</div>
+                        <span>
+                            Notifikasi
+                        </span>
 
-<br>
+                    </a>
 
-            <!-- Riwayat -->
-            <div class="card">
+                </div>
 
-                <div class="card-header">
+            </div>
+
+
+            <!-- =========================================
+                 RIWAYAT PENGAJUAN
+            ========================================== -->
+            <div class="card dashboard-card shadow-sm">
+
+                <div class="card-header dashboard-card-header">
 
                     <h3 class="card-title">
+
+                        <i class="fas fa-history me-2"></i>
 
                         Riwayat Pengajuan Layanan
 
                     </h3>
 
+                    <a
+                        href="<?= base_url('mahasiswa/ticket/history') ?>"
+                        class="btn btn-sm btn-ult-orange float-end"
+                    >
+                        Lihat Semua
+                    </a>
+
                 </div>
 
-                <div class="card-body table-responsive">
 
-                    <table class="table table-bordered table-hover">
+                <div class="card-body table-responsive p-0">
 
-                        <thead class="table-dark">
+                    <table class="table table-hover align-middle mb-0">
 
-                        <tr>
-
-                            <th>No</th>
-
-                            <th>Nomor Tiket</th>
-
-                            <th>Layanan</th>
-
-                            <th>Tanggal</th>
-
-                            <th>Status</th>
-
-                            <th>Aksi</th>
-
-                        </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                        <?php $no=1; ?>
-
-                        <?php
-
-$statusColor = [
-
-    'Submitted'   => 'primary',
-    'Verification'=> 'warning',
-    'In Progress' => 'info',
-    'Revision'    => 'danger',
-    'Completed'   => 'success'
-
-];
-
-?>
-
-                        <?php foreach($tickets as $t): ?>
+                        <thead>
 
                             <tr>
 
-                                <td><?= $no++; ?></td>
+                                <th>No</th>
 
-                                <td><?= $t['nomor']; ?></td>
+                                <th>Nomor Tiket</th>
 
-                                <td><?= $t['layanan']; ?></td>
+                                <th>Layanan</th>
 
-                                <td><?= $t['tanggal']; ?></td>
+                                <th>Tanggal</th>
+
+                                <th>Status</th>
+
+                                <th>Aksi</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                        <?php $no = 1; ?>
+
+                        <?php foreach ($tickets as $t): ?>
+
+                            <tr>
+
+                                <td>
+                                    <?= $no++; ?>
+                                </td>
+
+                                <td>
+
+                                    <strong>
+                                        <?= esc($t['nomor']); ?>
+                                    </strong>
+
+                                </td>
+
+                                <td>
+                                    <?= esc($t['layanan']); ?>
+                                </td>
+
+                                <td>
+                                    <?= esc($t['tanggal']); ?>
+                                </td>
 
                                 <td>
 
                                     <?php
 
-                                    if($t['status']=="Submitted"){
+                                    $status = $t['status'];
 
-                                        echo '<span class="badge bg-primary">Submitted</span>';
-
-                                    }
-
-                                    elseif($t['status']=="Completed"){
-
-                                        echo '<span class="badge bg-success">Completed</span>';
-
-                                    }
-
-                                    else{
-
-                                        echo '<span class="badge bg-warning">'.$t['status'].'</span>';
-
-                                    }
+                                    if ($status == 'Submitted'):
 
                                     ?>
 
+                                        <span class="ticket-status status-submitted">
+                                            <i class="fas fa-paper-plane"></i>
+                                            Submitted
+                                        </span>
+
+                                    <?php elseif ($status == 'Completed'): ?>
+
+                                        <span class="ticket-status status-completed">
+                                            <i class="fas fa-check"></i>
+                                            Completed
+                                        </span>
+
+                                    <?php elseif ($status == 'In Progress'): ?>
+
+                                        <span class="ticket-status status-progress">
+                                            <i class="fas fa-spinner"></i>
+                                            In Progress
+                                        </span>
+
+                                    <?php elseif ($status == 'Revision'): ?>
+
+                                        <span class="ticket-status status-revision">
+                                            <i class="fas fa-edit"></i>
+                                            Revision
+                                        </span>
+
+                                    <?php else: ?>
+
+                                        <span class="ticket-status status-submitted">
+                                            <?= esc($status); ?>
+                                        </span>
+
+                                    <?php endif; ?>
+
                                 </td>
+
 
                                 <td>
 
-    <a href="<?= base_url('ticket/detail/'.$t['id']) ?>" class="btn btn-info btn-sm">
+                                    <a
+                                        href="<?= base_url('mahasiswa/ticket/detail/' . $t['id']) ?>"
+                                        class="btn btn-detail"
+                                    >
 
-        <i class="fas fa-eye"></i>
+                                        <i class="fas fa-eye"></i>
 
-        Detail
+                                        Detail
 
-    </a>
+                                    </a>
 
-</td>
+                                </td>
 
                             </tr>
 
@@ -330,5 +460,6 @@ $statusColor = [
     </section>
 
 </div>
+
 
 <?= $this->include('layouts/footer'); ?>

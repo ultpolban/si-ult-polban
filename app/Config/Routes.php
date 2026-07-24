@@ -104,3 +104,65 @@ $routes->get('mahasiswa/notification', 'MahasiswaNotificationController::index')
 // =====================================================
 
 $routes->get('mahasiswa/help', 'MahasiswaHelpController::index');
+
+
+// ================================
+// DASHBOARD DOSEN
+// ================================
+
+$routes->get('dosen/dashboard', 'DosenController::dashboard');
+
+
+// ================================
+// PROFIL DOSEN
+// ================================
+
+$routes->get(
+    'dosen/profile',
+    'DosenProfileController::index'
+);
+
+$routes->get(
+    'dosen/profile/edit',
+    'DosenProfileController::edit'
+);
+
+$routes->post(
+    'dosen/profile/update',
+    'DosenProfileController::update'
+);
+
+
+// ================================
+// TIKET DOSEN
+// ================================
+
+$routes->get(
+    'dosen/ticket/create',
+    'DosenTicketController::create'
+);
+
+$routes->post(
+    'dosen/ticket/store',
+    'DosenTicketController::store'
+);
+
+$routes->get(
+    'dosen/ticket/history',
+    'DosenTicketController::history'
+);
+
+$routes->get(
+    'dosen/ticket/detail/(:num)',
+    'DosenTicketController::detail/$1'
+);
+
+
+// ================================
+// NOTIFIKASI DOSEN
+// ================================
+
+$routes->get(
+    'dosen/notification',
+    'DosenNotificationController::index'
+);

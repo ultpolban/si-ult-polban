@@ -53,117 +53,118 @@ Detail
 
 </section>
 
-<div class="col-sm-6">
-
-<ol class="breadcrumb float-sm-right">
-
-<li class="breadcrumb-item">
-Dashboard
-</li>
-
-<li class="breadcrumb-item">
-Data Tiket
-</li>
-
-<li class="breadcrumb-item active">
-Detail
-</li>
-
-</ol>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
 
 <section class="content">
 
-<div class="row mb-3">
+<div class="row">
 
-    <div class="col-md-3">
+<div class="col-md-3">
 
-        <div class="small-box bg-primary">
+<div class="small-box elevation-2"
+style="background:#005BAC;color:white;border-radius:12px;">
 
-            <div class="inner">
-                <h4>ULT-001</h4>
-                <p>No Tiket</p>
-            </div>
+<div class="inner">
 
-            <div class="icon">
-                <i class="fas fa-ticket-alt"></i>
-            </div>
+<h3>ULT-001</h3>
 
-        </div>
+<p>No Tiket</p>
 
-    </div>
+</div>
 
-    <div class="col-md-3">
+<div class="icon">
 
-        <div class="small-box bg-warning">
+<i class="fas fa-ticket-alt"></i>
 
-            <div class="inner">
-                <h4>High</h4>
-                <p>Prioritas</p>
-            </div>
+</div>
 
-            <div class="icon">
-                <i class="fas fa-exclamation"></i>
-            </div>
+</div>
 
-        </div>
+</div>
 
-    </div>
+<div class="col-md-3">
 
-    <div class="col-md-3">
+<div class="small-box elevation-2"
+style="background:#F4B400;color:white;border-radius:12px;">
 
-        <div class="small-box bg-info">
+<div class="inner">
 
-            <div class="inner">
-                <h4>Akademik</h4>
-                <p>Unit Tujuan</p>
-            </div>
+<h3>High</h3>
 
-            <div class="icon">
-                <i class="fas fa-building"></i>
-            </div>
+<p>Prioritas</p>
 
-        </div>
+</div>
 
-    </div>
+<div class="icon">
 
-    <div class="col-md-3">
+<i class="fas fa-exclamation"></i>
 
-        <div class="small-box bg-success">
+</div>
 
-            <div class="inner">
-                <h4>Submitted</h4>
-                <p>Status</p>
-            </div>
+</div>
 
-            <div class="icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
+</div>
 
-        </div>
+<div class="col-md-3">
 
-    </div>
+<div class="small-box elevation-2"
+style="background:#00ACC1;color:white;border-radius:12px;">
+
+<div class="inner">
+
+<h3>Akademik</h3>
+
+<p>Unit Tujuan</p>
+
+</div>
+
+<div class="icon">
+
+<i class="fas fa-building"></i>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="small-box elevation-2"
+style="background:#28A745;color:white;border-radius:12px;">
+
+<div class="inner">
+
+<h3>Submitted</h3>
+
+<p>Status</p>
+
+</div>
+
+<div class="icon">
+
+<i class="fas fa-check-circle"></i>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
 
 
-<div class="card shadow-sm">
+<div class="card shadow border-0 mt-3">
 
-<div class="card-header bg-primary text-white">
+<div class="card-header bg-primary">
 
-<h3 class="card-title">
+<h5 class="mb-0 text-white">
+
+<i class="fas fa-file-alt"></i>
 
 Data Pengajuan
 
-</h3>
+</h5>
 
 </div>
 
@@ -177,7 +178,7 @@ Data Pengajuan
 
 <label>Nama Mahasiswa</label>
 
-<input type="text" class="form-control" value="Rafi Putra" readonly>
+<input type="text" class="form-control bg-light" value="Rafi Putra" readonly>
 
 </div>
 
@@ -185,7 +186,7 @@ Data Pengajuan
 
 <label>NIM</label>
 
-<input type="text" class="form-control" value="231511001" readonly>
+<input type="text"class="form-control bg-light" value="231511001" readonly>
 
 </div>
 
@@ -193,7 +194,7 @@ Data Pengajuan
 
 <label>Email</label>
 
-<input type="text" class="form-control" value="rafi@student.polban.ac.id" readonly>
+<input type="text" class="form-control bg-light" value="rafi@student.polban.ac.id" readonly>
 
 </div>
 
@@ -201,7 +202,7 @@ Data Pengajuan
 
 <label>No HP</label>
 
-<input type="text" class="form-control" value="081234567890" readonly>
+<input type="text" class="form-control bg-light" value="081234567890" readonly>
 
 </div>
 
@@ -213,7 +214,7 @@ Data Pengajuan
 
 <label>Jenis Layanan</label>
 
-<input type="text" class="form-control" value="Surat Aktif Kuliah" readonly>
+<input type="text" class="form-control bg-light" value="Surat Aktif Kuliah" readonly>
 
 </div>
 
@@ -221,7 +222,7 @@ Data Pengajuan
 
 <label>Tanggal Pengajuan</label>
 
-<input type="text" class="form-control" value="17 Juli 2026" readonly>
+<input type="text" class="form-control bg-light" value="17 Juli 2026" readonly>
 
 </div>
 
@@ -231,7 +232,7 @@ Data Pengajuan
 
 <div class="mt-2">
 
-<span class="badge badge-warning p-2">
+<span class="badge badge-warning px-3 py-2">
 
 <i class="fas fa-clock"></i>
 
@@ -248,7 +249,7 @@ Menunggu Verifikasi
 
 <br>
 
-<a href="#" class="btn btn-info">
+<a href="#" class="btn btn-info btn-sm">
 
 <i class="fas fa-file-pdf"></i>
 
@@ -266,7 +267,7 @@ Lihat Lampiran
 
 <label>Deskripsi Pengajuan</label>
 
-<textarea class="form-control" rows="5" readonly>Saya mengajukan Surat Aktif Kuliah untuk keperluan beasiswa.</textarea>
+<textarea class="form-control bg-light" rows="5" readonly>Saya mengajukan Surat Aktif Kuliah untuk keperluan beasiswa.</textarea>
 
 </div>
 
@@ -283,7 +284,7 @@ Riwayat Proses
 
 </h5>
 
-<div class="timeline">
+<div class="timeline mt-4">
 
     <div class="time-label">
 
@@ -345,7 +346,7 @@ Riwayat Proses
 
 </div>
 
-<div class="card-footer">
+<div class="card-footer bg-white text-right">
 
 <a href="<?= base_url('petugas/verifikasi/1') ?>" class="btn btn-success">
 
@@ -380,5 +381,34 @@ Kembali
 </section>
 
 </div>
+
+<style>
+
+.small-box{
+border-radius:12px;
+transition:.3s;
+}
+
+.small-box:hover{
+transform:translateY(-5px);
+}
+
+.card{
+border-radius:12px;
+}
+
+.form-control{
+border-radius:8px;
+}
+
+.btn{
+border-radius:8px;
+}
+
+.timeline-item{
+border-radius:10px;
+}
+
+</style>
 
 <?= view('layouts/footer') ?>

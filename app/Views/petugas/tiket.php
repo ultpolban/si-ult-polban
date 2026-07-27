@@ -78,73 +78,100 @@ Filter Tiket
 
 <div class="card-body">
 
-<div class="row align-items-end">
+<form id="formCari">
 
+<div class="row">
 
     <div class="col-lg-4">
         <label>Cari Mahasiswa</label>
-        <input type="text"
-               class="form-control"
-               placeholder="NIM / Nama / Nomor Tiket">
+
+        <input
+            id="searchInput"
+            type="text"
+            class="form-control"
+            placeholder="NIM / Nama / Nomor Tiket">
     </div>
 
     <div class="col-lg-2">
         <label>Status</label>
-        <select class="form-control">
-            <option>Semua</option>
-            <option>Submitted</option>
-            <option>Verified</option>
-            <option>Diproses</option>
-            <option>Selesai</option>
+
+        <select
+            id="statusFilter"
+            class="form-control">
+
+            <option value="">Semua</option>
+            <option value="Submitted">Submitted</option>
+            <option value="Verified">Verified</option>
+            <option value="Diproses">Diproses</option>
+            <option value="Selesai">Selesai</option>
+
         </select>
     </div>
 
     <div class="col-lg-2">
+
         <label>Kategori</label>
+
         <select class="form-control">
+
             <option>Semua</option>
             <option>Akademik</option>
             <option>Kemahasiswaan</option>
             <option>Keuangan</option>
+
         </select>
+
     </div>
 
     <div class="col-lg-2">
+
         <label>Unit</label>
+
         <select class="form-control">
+
             <option>Semua</option>
             <option>Direktorat Akademik</option>
             <option>Jurusan TI</option>
             <option>Keuangan</option>
+
         </select>
+
     </div>
 
     <div class="col-lg-2">
+
         <label>Prioritas</label>
+
         <select class="form-control">
+
             <option>Semua</option>
             <option>High</option>
             <option>Medium</option>
             <option>Low</option>
+
         </select>
+
     </div>
 
 </div>
 
-<div class="row mt-3 align-items-end">
+<div class="row mt-3">
 
     <div class="col-lg-3">
 
         <label>Tanggal</label>
 
-        <input type="date"
-               class="form-control">
+        <input
+            type="date"
+            class="form-control">
 
     </div>
 
-    <div class="col-lg-9 text-right">
+    <div class="col-lg-9 text-right align-self-end">
 
-        <button class="btn btn-primary">
+        <button
+            class="btn btn-primary"
+            type="submit">
 
             <i class="fas fa-search"></i>
 
@@ -152,7 +179,10 @@ Filter Tiket
 
         </button>
 
-        <button class="btn btn-secondary">
+        <button
+            id="resetFilter"
+            type="button"
+            class="btn btn-secondary">
 
             <i class="fas fa-sync"></i>
 
@@ -164,13 +194,9 @@ Filter Tiket
 
 </div>
 
-
+</form>
 
 </div>
-
-<br>
-
-
 
 </div>
 
@@ -182,11 +208,12 @@ Filter Tiket
 
 <section class="content">
 
-<div class="row mb-4">
+<div class="row mt-3 mb-4">
 
-    <div class="col-md-3">
+    <div class="col-lg-3 col-md-6 mb-3">
 
-        <div class="small-box bg-primary shadow-sm">
+       <div class="small-box elevation-2"
+style="background:#005BAC;color:white;">
 
             <div class="inner">
 
@@ -206,9 +233,10 @@ Filter Tiket
 
     </div>
 
-    <div class="col-md-3">
+    <div class="col-lg-3 col-md-6 mb-3">
 
-        <div class="small-box bg-warning shadow-sm">
+      <div class="small-box elevation-2"
+style="background:#F4B400;color:white;">
 
             <div class="inner">
 
@@ -228,10 +256,10 @@ Filter Tiket
 
     </div>
 
-    <div class="col-md-3">
+    <div class="col-lg-3 col-md-6 mb-3">
 
-        <div class="small-box bg-success shadow-sm">
-
+      <div class="small-box elevation-2"
+style="background:#0B8F4D;color:white;">
             <div class="inner">
 
                 <h3>12</h3>
@@ -250,9 +278,10 @@ Filter Tiket
 
     </div>
 
-    <div class="col-md-3">
+    <div class="col-lg-3 col-md-6 mb-3">
 
-        <div class="small-box bg-danger shadow-sm">
+      <div class="small-box elevation-2"
+style="background:#D93025;color:white;">
 
             <div class="inner">
 
@@ -278,7 +307,7 @@ Filter Tiket
 
 <div class="card shadow-sm border-0">
 
-    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
 
         <h5 class="mb-0">
             <i class="fas fa-list text-primary"></i>
@@ -291,22 +320,11 @@ Filter Tiket
 
     </div>
 
-<div class="card-body table-responsive p-0">
-
-
-
-
-</div>
-
-</form>
-
-</div>
-
 <div class="card-body table-responsive">
 
-<table class="table table-hover table-striped mb-0">
+<table class="table table-hover align-middle text-center mb-0">
 
-<thead class="bg-primary text-white">
+<thead style="background:#005BAC;color:white;">
 
 <tr>
 
@@ -323,120 +341,117 @@ Filter Tiket
 
 </thead>
 
+
 <tbody id="tableBody">
 
 <tr>
 
-<td>ULT-20260720-0001</td>
+    <td>ULT-20260720-0001</td>
 
-<td>Rafi Putra</td>
+    <td>Rafi Putra</td>
 
-<td>Akademik</td>
+    <td>Akademik</td>
 
-<td>Surat Aktif Kuliah</td>
+    <td>Surat Aktif Kuliah</td>
 
-<td>
-<span class="badge badge-danger px-3 py-2">
+    <td>
+       <span class="badge badge-danger rounded-pill px-3 py-2">
 High
 </span>
-</td>
+    </td>
 
-<td>2 Hari</td>
+    <td>2 Hari</td>
 
-<td>
-<span class="badge badge-warning px-3 py-2">
+    <td>
+        <span class="badge badge-warning rounded-pill px-3 py-2">
 Submitted
 </span>
-</td>
+    </td>
 
-<td>
 
-<a href="<?= base_url('petugas/detail/1') ?>" class="btn btn-info btn-sm">
-<i class="fas fa-eye"></i>
-</a>
+    <td class="text-center">
 
-<a href="<?= base_url('petugas/verifikasi/1') ?>" class="btn btn-success btn-sm">
-<i class="fas fa-check"></i>
-</a>
+        <a href="<?= base_url('petugas/detail/1') ?>"
+           class="btn btn-info btn-sm mx-1">
+            <i class="fas fa-eye"></i>
 
-<a href="<?= base_url('petugas/disposisi/1') ?>" class="btn btn-primary btn-sm">
-<i class="fas fa-share"></i>
-</a>
+        </a>
 
-</td>
+        <a href="<?= base_url('petugas/verifikasi/1') ?>"
+          class="btn btn-success btn-sm mx-1">
+
+            <i class="fas fa-check"></i>
+
+        </a>
+
+        <a href="<?= base_url('petugas/disposisi/1') ?>"
+           class="btn btn-primary btn-sm mx-1">
+
+            <i class="fas fa-share"></i>
+
+        </a>
+
+    </td>
 
 </tr>
 
+
 <tr>
 
-<td>ULT-20260720-0002</td>
+    <td>ULT-20260720-0002</td>
 
-<td>Siti Nurhaliza</td>
+    <td>Siti Nurhaliza</td>
 
-<td>Kemahasiswaan</td>
+    <td>Kemahasiswaan</td>
 
-<td>Legalisir Ijazah</td>
+    <td>Legalisir Ijazah</td>
 
-<td>
-<span class="badge badge-warning px-3 py-2">
-Medium
-</span>
-</td>
+    <td>
 
-<td>1 Hari</td>
+        <span class="badge badge-warning px-3 py-2">
 
-<span class="badge badge-secondary px-3 py-2">
-Low
-</span>
+            Medium
 
-<td>
-    <span class="badge badge-success">
-        Verified
-    </span>
-</td>
+        </span>
 
-<span class="badge badge-info px-3 py-2">
-Diproses
-</span>
+    </td>
 
-<span class="badge badge-primary px-3 py-2">
-Selesai
-</span>
+    <td>1 Hari</td>
 
-<td class="align-middle">
+    <td>
 
-<div class="btn-group">
+        <span class="badge badge-success px-3 py-2">
 
-<a href="<?= base_url('petugas/detail/1') ?>"
-class="btn btn-info btn-sm"
-title="Detail">
+            Verified
 
-<i class="fas fa-eye"></i>
+        </span>
 
-</a>
+    </td>
 
-<a href="<?= base_url('petugas/verifikasi/1') ?>"
-class="btn btn-success btn-sm"
-title="Verifikasi">
+    <td class="text-center">
 
-<i class="fas fa-check"></i>
+        <a href="<?= base_url('petugas/detail/2') ?>"
+          class="btn btn-info btn-sm mr-1">
 
-</a>
+            <i class="fas fa-eye"></i>
 
-<a href="<?= base_url('petugas/disposisi/1') ?>"
-class="btn btn-primary btn-sm"
-title="Disposisi">
+        </a>
 
-<i class="fas fa-share"></i>
+        <a href="<?= base_url('petugas/verifikasi/2') ?>"
+           class="btn btn-success btn-sm mr-1">
 
-</a>
+            <i class="fas fa-check"></i>
 
-</div>
+        </a>
 
+        <a href="<?= base_url('petugas/disposisi/2') ?>"
+            class="btn btn-primary btn-sm">
 
+            <i class="fas fa-share"></i>
 
-</td>
-</td>
+        </a>
+
+    </td>
 
 </tr>
 
@@ -444,67 +459,45 @@ title="Disposisi">
 
 </table>
 
+</div> <!-- card-body -->
+
 <div class="card-footer bg-white">
 
-<nav>
+    <nav>
 
-<ul class="pagination pagination-sm justify-content-end mb-0">
+        <ul class="pagination justify-content-end mb-0">
 
-<li class="page-item disabled">
+            <li class="page-item disabled">
+                <a class="page-link">Previous</a>
+            </li>
 
-<a class="page-link">
+            <li class="page-item active">
+                <a class="page-link">1</a>
+            </li>
 
-Previous
+            <li class="page-item">
+                <a class="page-link">2</a>
+            </li>
 
-</a>
+            <li class="page-item">
+                <a class="page-link">Next</a>
+            </li>
 
-</li>
+        </ul>
 
-<li class="page-item active">
+    </nav>
 
-<a class="page-link">
+</div> <!-- card-footer -->
 
-1
+</div> <!-- card -->
 
-</a>
-
-</li>
-
-<li class="page-item">
-
-<a class="page-link">
-
-2
-
-</a>
-
-</li>
-
-<li class="page-item">
-
-<a class="page-link">
-
-Next
-
-</a>
-
-</li>
-
-</ul>
-
-</nav>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+</div> <!-- container-fluid -->
 
 </section>
 
-</div>
+</div> <!-- content-wrapper -->
+
+
 
 <script>
 
@@ -524,7 +517,7 @@ rows.forEach(function(row){
 
 const text = row.innerText.toLowerCase();
 
-const statusText = row.cells[5].innerText.toLowerCase();
+const statusText = row.cells[6].innerText.toLowerCase();
 
 const cocokKeyword = text.includes(keyword);
 
@@ -559,5 +552,68 @@ filterTable();
 });
 
 </script>
+
+<style>
+
+.small-box{
+transition:.3s;
+border-radius:12px;
+}
+
+.small-box:hover{
+transform:translateY(-5px);
+}
+
+.table tbody tr:hover{
+background:#F8FAFC;
+}
+
+.badge{
+font-size:13px;
+font-weight:600;
+}
+
+.btn-sm{
+border-radius:8px;
+}
+
+.card{
+border-radius:12px;
+}
+
+.table thead th{
+    vertical-align: middle;
+    font-size:15px;
+}
+
+.table td{
+    vertical-align: middle;
+}
+
+.btn-sm{
+    width:36px;
+    height:36px;
+    padding:0;
+    line-height:36px;
+}
+
+.card-header h5{
+    font-weight:600;
+}
+
+.card-header{
+    border-bottom:1px solid #eee;
+}
+
+.pagination .page-link{
+    border-radius:8px;
+    margin:0 2px;
+}
+
+.badge{
+    min-width:85px;
+}
+
+</style>
 
 <?= view('layouts/footer') ?>

@@ -122,59 +122,50 @@ Teruskan tiket ke Unit Tujuan yang sesuai.
 
 <div class="card">
 
-<div class="card-header bg-primary">
+<div class="card shadow-sm">
 
-<h3 class="card-title">
+    <div class="card-header bg-primary">
+        <h3 class="card-title mb-0">
+            <i class="fas fa-info-circle"></i>
+            Informasi Tiket
+        </h3>
+    </div>
 
-Informasi Tiket
+    <div class="card-body">
 
-</h3>
+        <h5 class="font-weight-bold mb-3">
+            Progress Tiket
+        </h5>
 
-</div>
+        <div class="progress mb-2" style="height:28px;border-radius:15px;">
 
-<div class="card">
+            <div class="progress-bar bg-success"
+                 style="width:60%;">
 
-<div class="card-header bg-info">
+                Verified (60%)
 
-<h3 class="card-title">
+            </div>
 
-Progress Tiket
+        </div>
 
-</h3>
+        <small class="text-muted">
 
-</div>
+            Tahap berikutnya adalah mengirim tiket ke Unit Tujuan.
 
-<div class="card-body">
+        </small>
 
-<div class="progress mb-3" style="height:25px;">
+        <hr>
 
-<div class="progress-bar bg-success"
+        <!-- tabel -->
 
-style="width:60%;">
-
-Verified
-
-</div>
-
-</div>
-
-<small class="text-muted">
-
-Tahap berikutnya adalah mengirim tiket ke Unit Tujuan.
-
-</small>
-
-</div>
-
-</div>
 
 <div class="card-body">
 
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
 
 <tr>
 
-<th width="220">Nomor Tiket</th>
+<th width="220" class="bg-light">Nomor Tiket</th>
 
 <td>ULT-20260720-0001</td>
 
@@ -264,12 +255,11 @@ Form Disposisi
 
 <div class="card-body">
 
-<div class="form-group">
+<div class="form-group mb-4">
 
 <label>
-
+<i class="fas fa-building text-primary"></i>
 Unit Tujuan
-
 </label>
 
 <select class="form-control">
@@ -288,12 +278,11 @@ Unit Tujuan
 
 </div>
 
-<div class="form-group">
+<div class="form-group mb-4">
 
 <label>
-
+<i class="fas fa-exclamation-circle text-warning"></i>
 Prioritas
-
 </label>
 
 <select class="form-control">
@@ -311,9 +300,8 @@ Prioritas
 <div class="form-group mt-3">
 
 <label>
-
+<i class="fas fa-calendar-alt text-success"></i>
 Target Penyelesaian (SLA)
-
 </label>
 
 <input
@@ -326,21 +314,33 @@ class="form-control">
 
 <hr>
 
-<h5>
+<h5 class="font-weight-bold mb-3">
+
+<i class="fas fa-history text-primary"></i>
 
 Riwayat Disposisi
 
 </h5>
 
-<table class="table table-bordered table-sm">
+<table class="table table-striped table-hover table-bordered">
+
+<thead class="bg-light">
 
 <tr>
 
-<th>Waktu</th>
+<th width="250">
+<i class="fas fa-clock"></i>
+Waktu
+</th>
 
-<th>Aktivitas</th>
+<th>
+<i class="fas fa-stream"></i>
+Aktivitas
+</th>
 
 </tr>
+
+</thead>
 
 <tr>
 
@@ -360,17 +360,23 @@ Riwayat Disposisi
 
 </table>
 
-<div class="card-footer text-right">
+<div class="card-footer bg-white">
 
-<a href="<?= base_url('petugas/verifikasi/1') ?>" class="btn btn-warning">
+<div class="d-flex justify-content-between align-items-center flex-wrap">
 
-<i class="fas fa-user-check"></i>
+<a href="<?= base_url('petugas/verifikasi/1') ?>"
+class="btn btn-outline-secondary">
 
-Kembali ke Verifikasi
+<i class="fas fa-arrow-left"></i>
+
+Kembali
 
 </a>
 
-<a href="<?= base_url('petugas/dashboard') ?>" class="btn btn-secondary">
+<div>
+
+<a href="<?= base_url('petugas/dashboard') ?>"
+class="btn btn-secondary">
 
 <i class="fas fa-home"></i>
 
@@ -408,15 +414,20 @@ Kirim Disposisi
 
 <div class="modal-content">
 
-<div class="modal-header bg-primary">
+<div class="modal-header bg-primary text-white">
 
 <h5 class="modal-title">
+
+<i class="fas fa-paper-plane"></i>
 
 Konfirmasi Disposisi
 
 </h5>
 
-<button type="button" class="close" data-dismiss="modal">
+<button
+type="button"
+class="close text-white"
+data-dismiss="modal">
 
 <span>&times;</span>
 
@@ -456,5 +467,51 @@ Ya, Kirim
 </div>
 
 </div>
+
+<style>
+
+.small-box{
+    border-radius:15px;
+    transition:.3s;
+}
+
+.small-box:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 20px rgba(0,0,0,.15);
+}
+
+.card{
+    border-radius:15px;
+    overflow:hidden;
+}
+
+.card-header{
+    font-size:18px;
+    font-weight:600;
+}
+
+.table td,
+.table th{
+    vertical-align:middle;
+}
+
+.progress{
+    border-radius:15px;
+}
+
+.progress-bar{
+    font-weight:bold;
+}
+
+.btn{
+    border-radius:10px;
+}
+
+.badge{
+    padding:8px 14px;
+    font-size:13px;
+}
+
+</style>
 
 <?= view('layouts/footer') ?>

@@ -305,3 +305,12 @@ background:#f1f7ff;
 vertical-align:middle;
 
 }
+
+.table td,
+.table th{
+    vertical-align: middle;
+}
+
+.table td{
+    padding:15px;
+}

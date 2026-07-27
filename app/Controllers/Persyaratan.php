@@ -22,17 +22,14 @@ class Persyaratan extends BaseController
 
 
 
-    // =========================
-    // TAMPIL DATA
-    // =========================
     public function index()
     {
 
         $data = [
 
-            'title' => 'Persyaratan Layanan',
+            'title'=>'Persyaratan Layanan',
 
-            'persyaratan' => $this->persyaratan->getPersyaratan()
+            'persyaratan'=>$this->persyaratan->getPersyaratan()
 
         ];
 
@@ -47,17 +44,14 @@ class Persyaratan extends BaseController
 
 
 
-    // =========================
-    // FORM TAMBAH
-    // =========================
     public function create()
     {
 
         $data = [
 
-            'title' => 'Tambah Persyaratan',
+            'title'=>'Tambah Persyaratan',
 
-            'layanan' => $this->layanan->findAll()
+            'layanan'=>$this->layanan->findAll()
 
         ];
 
@@ -72,66 +66,45 @@ class Persyaratan extends BaseController
 
 
 
-    // =========================
-    // SIMPAN DATA
-    // =========================
+
     public function store()
     {
 
         $this->persyaratan->insert([
 
+            'layanan_id'=>$this->request->getPost('layanan_id'),
 
-            'layanan_id' => 
-            $this->request->getPost('layanan_id'),
+            'nama_persyaratan'=>$this->request->getPost('nama_persyaratan'),
 
+            'keterangan'=>$this->request->getPost('keterangan'),
 
-            'nama_persyaratan' =>
-            $this->request->getPost('nama_persyaratan'),
-
-
-            'keterangan' =>
-            $this->request->getPost('keterangan'),
-
-
-            'status' =>
-            $this->request->getPost('status')
-
+            'status'=>$this->request->getPost('status')
 
         ]);
 
 
         return redirect()
-            ->to('/persyaratan')
-            ->with(
-                'success',
-                'Persyaratan berhasil ditambahkan'
-            );
+        ->to('/persyaratan');
 
     }
 
 
 
 
-    // =========================
-    // FORM EDIT
-    // =========================
+
     public function edit($id)
     {
 
 
         $data = [
 
-            'title' => 'Edit Persyaratan',
+            'title'=>'Edit Persyaratan',
 
-            'persyaratan' =>
-            $this->persyaratan->find($id),
+            'persyaratan'=>$this->persyaratan->find($id),
 
-
-            'layanan' =>
-            $this->layanan->findAll()
+            'layanan'=>$this->layanan->findAll()
 
         ];
-
 
 
         return view(
@@ -145,72 +118,48 @@ class Persyaratan extends BaseController
 
 
 
-    // =========================
-    // UPDATE DATA
-    // =========================
     public function update($id)
     {
 
 
         $this->persyaratan->update(
+
             $id,
+
             [
 
+                'layanan_id'=>$this->request->getPost('layanan_id'),
 
-            'layanan_id' =>
-            $this->request->getPost('layanan_id'),
+                'nama_persyaratan'=>$this->request->getPost('nama_persyaratan'),
 
+                'keterangan'=>$this->request->getPost('keterangan'),
 
-            'nama_persyaratan' =>
-            $this->request->getPost('nama_persyaratan'),
-
-
-            'keterangan' =>
-            $this->request->getPost('keterangan'),
-
-
-            'status' =>
-            $this->request->getPost('status')
-
+                'status'=>$this->request->getPost('status')
 
             ]
+
         );
 
 
-
         return redirect()
-            ->to('/persyaratan')
-            ->with(
-                'success',
-                'Persyaratan berhasil diperbarui'
-            );
+        ->to('/persyaratan');
 
     }
 
 
 
 
-    // =========================
-    // HAPUS DATA
-    // =========================
+
     public function delete($id)
     {
-
 
         $this->persyaratan->delete($id);
 
 
-
         return redirect()
-            ->to('/persyaratan')
-            ->with(
-                'success',
-                'Persyaratan berhasil dihapus'
-            );
-
+        ->to('/persyaratan');
 
     }
-
 
 
 }

@@ -3,42 +3,43 @@
 <?= $this->section('content') ?>
 
 
-<div class="container-fluid">
+<div class="container">
 
 
-<h3>Edit Persyaratan Layanan</h3>
+<h3>
+Edit Persyaratan
+</h3>
 
 
-<hr>
 
+<form method="post"
+action="<?=base_url('persyaratan/update/'.$persyaratan['id'])?>">
 
-<form action="<?= base_url('persyaratan/update/'.$persyaratan['id']) ?>" method="post">
-
-
-<?= csrf_field(); ?>
 
 
 <div class="mb-3">
 
-<label>Layanan</label>
+<label>
+Layanan
+</label>
 
-<select name="layanan_id" class="form-control">
+
+<select name="layanan_id"
+class="form-control">
 
 
 <?php foreach($layanan as $l): ?>
 
 
-<option 
-value="<?= $l['id'] ?>"
-<?= $l['id']==$persyaratan['layanan_id'] ? 'selected':'' ?>
->
+<option value="<?= $l['id'] ?>"
+<?= $l['id']==$persyaratan['layanan_id']?'selected':'' ?> >
 
 <?= $l['nama_layanan'] ?>
 
 </option>
 
 
-<?php endforeach; ?>
+<?php endforeach ?>
 
 
 </select>
@@ -56,12 +57,10 @@ Nama Persyaratan
 </label>
 
 
-<input 
-type="text"
+<input type="text"
 name="nama_persyaratan"
 class="form-control"
-value="<?= $persyaratan['nama_persyaratan'] ?>"
->
+value="<?= $persyaratan['nama_persyaratan'] ?>">
 
 
 </div>
@@ -76,10 +75,8 @@ Keterangan
 </label>
 
 
-<textarea 
-name="keterangan"
-class="form-control"
-rows="3"><?= $persyaratan['keterangan'] ?></textarea>
+<textarea name="keterangan"
+class="form-control"><?= $persyaratan['keterangan'] ?></textarea>
 
 
 </div>
@@ -89,10 +86,13 @@ rows="3"><?= $persyaratan['keterangan'] ?></textarea>
 
 <div class="mb-3">
 
-<label>Status</label>
+<label>
+Status
+</label>
 
 
-<select name="status" class="form-control">
+<select name="status"
+class="form-control">
 
 
 <option value="Aktif"
@@ -114,12 +114,15 @@ Tidak Aktif
 
 
 
-<button class="btn btn-primary">
-Update
+
+<button class="btn btn-success">
+
+Simpan
+
 </button>
 
 
-<a href="<?= base_url('persyaratan') ?>"
+<a href="<?=base_url('persyaratan')?>"
 class="btn btn-secondary">
 
 Kembali

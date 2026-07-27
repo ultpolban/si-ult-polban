@@ -3,80 +3,66 @@
 <?= $this->section('content') ?>
 
 
-<div class="container-fluid">
-
-
 <h3>
 Tambah Persyaratan Layanan
 </h3>
 
 
-<hr>
 
-
-
-<form action="<?= base_url('persyaratan/store') ?>"
+<form action="<?=base_url('persyaratan/store')?>"
 method="post">
 
 
-<?= csrf_field(); ?>
-
+<?= csrf_field() ?>
 
 
 <div class="mb-3">
 
-
-<label class="form-label">
+<label>
 Layanan
 </label>
 
 
 <select name="layanan_id"
-class="form-control"
-required>
+class="form-control">
 
 
-<option value="">
--- Pilih Layanan --
+<option>
+-- pilih layanan --
 </option>
 
 
 <?php foreach($layanan as $l): ?>
 
 
-<option value="<?= $l['id'] ?>">
+<option value="<?=$l['id']?>">
 
-<?= $l['nama_layanan']; ?>
+<?=$l['nama_layanan']?>
 
 </option>
 
 
-<?php endforeach; ?>
+<?php endforeach ?>
 
 
 </select>
-
 
 </div>
 
 
 
 
-
 <div class="mb-3">
 
-
-<label class="form-label">
-
+<label>
 Nama Persyaratan
-
 </label>
 
 
 <input type="text"
 name="nama_persyaratan"
 class="form-control"
-required>
+placeholder="Contoh : Scan KTP">
 
 
 </div>
@@ -87,16 +73,16 @@ required>
 
 <div class="mb-3">
 
-
-<label class="form-label">
-
+<label>
 Keterangan
-
 </label>
 
 
-<textarea name="keterangan"
-class="form-control"></textarea>
+<textarea 
+name="keterangan"
+class="form-control">
+
+</textarea>
 
 
 </div>
@@ -104,14 +90,10 @@ class="form-control"></textarea>
 
 
 
-
 <div class="mb-3">
 
-
-<label class="form-label">
-
+<label>
 Status
-
 </label>
 
 
@@ -137,29 +119,14 @@ Tidak Aktif
 
 
 
-
-<button type="submit"
-class="btn btn-primary">
+<button class="btn btn-success">
 
 Simpan
 
 </button>
 
 
-<a href="<?= base_url('persyaratan') ?>"
-class="btn btn-secondary">
-
-Kembali
-
-</a>
-
-
-
 </form>
-
-
-
-</div>
 
 
 <?= $this->endSection() ?>

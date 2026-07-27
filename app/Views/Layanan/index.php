@@ -22,12 +22,12 @@
         <tr>
 
             <th width="60">No</th>
+            <th>Unit Layanan</th>
+            <th>Nama Kategori</th>
 
             <th>Nama Layanan</th>
 
-            <th>Kategori</th>
 
-            <th>Unit Layanan</th>
 
             <th>Deskripsi</th>
 

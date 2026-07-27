@@ -13,8 +13,8 @@
 
         <tr>
             <th width="60">No</th>
-            <th>Nama Kategori</th>
             <th>Unit Layanan</th>
+            <th>Nama Kategori</th>
             <th>Deskripsi</th>
             <th>Status</th>
             <th width="170">Aksi</th>
@@ -42,9 +42,11 @@
 
             <td><?= $no++; ?></td>
 
+            <td><?= esc($k['nama_unit']); ?></td>
+
+
             <td><?= esc($k['nama_kategori']); ?></td>
 
-            <td><?= esc($k['nama_unit']); ?></td>
 
             <td><?= esc($k['deskripsi']); ?></td>
 

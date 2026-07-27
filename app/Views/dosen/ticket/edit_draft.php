@@ -1,6 +1,6 @@
-<?= $this->extend('layouts/template') ?>
-
-<?= $this->section('content') ?>
+<?= $this->include('layouts/header') ?>
+<?= $this->include('layouts/navbar') ?>
+<?= $this->include('layouts/sidebar_dosen') ?>>
 
 <div class="content-wrapper">
 
@@ -354,4 +354,4 @@
 
 </div>
 
-<?= $this->endSection() ?>
+<?= $this->include('layouts/footer') ?>

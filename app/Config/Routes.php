@@ -66,19 +66,54 @@ $routes->get('logout', 'AuthController::logout');
 $routes->get('dashboard-mahasiswa', 'MahasiswaController::dashboard');
 
 
-// =====================================================
-// ROUTE TIKET MAHASISWA
-// =====================================================
+// ==========================================
+// TIKET MAHASISWA
+// ==========================================
 
-$routes->get('mahasiswa/ticket/create', 'MahasiswaTicketController::create');
+$routes->get(
+    'mahasiswa/ticket/create',
+    'MahasiswaTicketController::create'
+);
 
-$routes->post('mahasiswa/ticket/store', 'MahasiswaTicketController::store');
+$routes->post(
+    'mahasiswa/ticket/store',
+    'MahasiswaTicketController::store'
+);
 
-$routes->get('mahasiswa/ticket/success', 'MahasiswaTicketController::success');
+$routes->get(
+    'mahasiswa/ticket/success',
+    'MahasiswaTicketController::success'
+);
 
-$routes->get('mahasiswa/ticket/history', 'MahasiswaTicketController::history');
+$routes->get(
+    'mahasiswa/ticket/draft-success',
+    'MahasiswaTicketController::draftSuccess'
+);
 
-$routes->get('mahasiswa/ticket/detail/(:num)', 'MahasiswaTicketController::detail/$1');
+$routes->get(
+    'mahasiswa/ticket/draft',
+    'MahasiswaTicketController::draft'
+);
+
+$routes->get(
+    'mahasiswa/ticket/draft/edit/(:num)',
+    'MahasiswaTicketController::editDraft/$1'
+);
+
+$routes->post(
+    'mahasiswa/ticket/draft/update/(:num)',
+    'MahasiswaTicketController::updateDraft/$1'
+);
+
+$routes->get(
+    'mahasiswa/ticket/history',
+    'MahasiswaTicketController::history'
+);
+
+$routes->get(
+    'mahasiswa/ticket/detail/(:num)',
+    'MahasiswaTicketController::detail/$1'
+);
 
 
 // =====================================================

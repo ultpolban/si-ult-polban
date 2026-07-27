@@ -18,64 +18,32 @@ class MahasiswaTicketController extends BaseController
             ]
         ];
 
-        return view('mahasiswa/ticket/create', $data);
+        return view(
+            'mahasiswa/ticket/create',
+            $data
+        );
     }
 
 
     // ==========================================
     // SIMPAN PENGAJUAN
     // ==========================================
-   public function store()
-{
-    // Ambil aksi dari tombol
-    $action = $this->request->getPost('action');
-
-    // Ambil data form
-    $layanan = $this->request->getPost('layanan');
-    $keterangan = $this->request->getPost('keterangan');
+    public function store()
+    {
+        // Ambil aksi dari tombol
+        $action = $this->request->getPost('action');
 
 
-    // ==========================================
-    // SIMPAN DRAFT
-    // ==========================================
+        // Ambil data form
+        $layanan = $this->request->getPost('layanan');
 
-    if ($action === 'draft') {
-
-        $data = [
-
-            'title' => 'Draft Pengajuan',
-
-            'ticket' => [
-
-                'nomor' => 'DRAFT-' . date('Ymd') . '-' . rand(1000, 9999),
-
-                'layanan' => $layanan ?: 'Belum dipilih',
-
-                'keterangan' => $keterangan ?: '-',
-
-                'status' => 'Draft'
-
-            ]
-
-        ];
+        $keterangan =
+            $this->request->getPost('keterangan');
 
 
-        return view(
-            'mahasiswa/ticket/success',
-            $data
-        );
-
-    }
-
-
-    // ==========================================
-    // KIRIM PENGAJUAN
-    // ==========================================
-
-    if ($action === 'submit') {
-
-
-        // Validasi field wajib
+        // ==========================================
+        // VALIDASI
+        // ==========================================
 
         if (empty($layanan)) {
 
@@ -90,66 +58,405 @@ class MahasiswaTicketController extends BaseController
         }
 
 
-        // Data tiket yang dikirim
+        // ==========================================
+        // BUAT DATA PENGAJUAN
+        // ==========================================
 
-        $data = [
+        $ticket = [
 
-            'title' => 'Pengajuan Berhasil',
+            'id' =>
+                time(),
 
-            'ticket' => [
+            'nomor' =>
+                'ULT-MHS-' .
+                date('YmdHis'),
 
-                'nomor' =>
-                    'ULT-' .
-                    date('Ymd') .
-                    '-' .
-                    rand(1000, 9999),
+            'layanan' =>
+                $layanan,
 
-                'layanan' =>
-                    $layanan,
+            'keterangan' =>
+                $keterangan ?: '-',
 
-                'keterangan' =>
-                    $keterangan ?: '-',
+            'unit' =>
+                'Akademik',
 
-                'status' =>
-                    'Submitted'
+            'tanggal' =>
+                date('d F Y'),
 
-            ]
+            'status' =>
+                'Submitted'
 
         ];
 
 
-        return view(
-            'mahasiswa/ticket/success',
-            $data
-        );
+        // ==========================================
+        // SIMPAN DRAFT
+        // ==========================================
 
+        if ($action === 'draft') {
+
+            // Ambil draft lama
+            $drafts =
+                session()->get(
+                    'mahasiswa_drafts'
+                ) ?? [];
+
+
+            // Buat nomor draft
+            $ticket['nomor'] =
+                'DRAFT-MHS-' .
+                date('YmdHis');
+
+
+            // Status Draft
+            $ticket['status'] =
+                'Draft';
+
+
+            // Masukkan draft baru
+            $drafts[] =
+                $ticket;
+
+
+            // Simpan ke Session
+            session()->set(
+                'mahasiswa_drafts',
+                $drafts
+            );
+
+
+            // Simpan draft terakhir
+            session()->setFlashdata(
+                'draft',
+                $ticket
+            );
+
+
+            // Redirect ke halaman sukses draft
+            return redirect()
+                ->to(
+                    base_url(
+                        'mahasiswa/ticket/draft-success'
+                    )
+                );
+
+        }
+
+
+        // ==========================================
+        // KIRIM PENGAJUAN LANGSUNG
+        // ==========================================
+
+        if ($action === 'submit') {
+
+            // Ambil tiket lama
+            $tickets =
+                session()->get(
+                    'mahasiswa_tickets'
+                ) ?? [];
+
+
+            // Tambahkan tiket baru
+            $tickets[] =
+                $ticket;
+
+
+            // Simpan tiket
+            session()->set(
+                'mahasiswa_tickets',
+                $tickets
+            );
+
+
+            // Simpan tiket terakhir
+            session()->setFlashdata(
+                'ticket',
+                $ticket
+            );
+
+
+            // Redirect Success
+            return redirect()
+                ->to(
+                    base_url(
+                        'mahasiswa/ticket/success'
+                    )
+                );
+
+        }
+
+
+        // ==========================================
+        // ACTION TIDAK VALID
+        // ==========================================
+
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with(
+                'error',
+                'Aksi pengajuan tidak valid.'
+            );
     }
 
 
     // ==========================================
-    // AKSI TIDAK DIKENALI
-    // ==========================================
-
-    return redirect()
-        ->back()
-        ->withInput()
-        ->with(
-            'error',
-            'Aksi pengajuan tidak valid.'
-        );
-}
-
-
-    // ==========================================
-    // HALAMAN SUKSES
+    // HALAMAN SUCCESS
     // ==========================================
     public function success()
     {
-        $data = [
-            'title' => 'Pengajuan Berhasil'
-        ];
+        $ticket =
+            session()->getFlashdata(
+                'ticket'
+            );
 
-        return view('mahasiswa/ticket/success', $data);
+
+        return view(
+            'mahasiswa/ticket/success',
+            [
+
+                'title' =>
+                    'Pengajuan Berhasil',
+
+                'ticket' =>
+                    $ticket
+
+            ]
+        );
+    }
+
+
+    // ==========================================
+    // HALAMAN DRAFT BERHASIL
+    // ==========================================
+    public function draftSuccess()
+    {
+        $draft =
+            session()->getFlashdata(
+                'draft'
+            );
+
+
+        return view(
+            'mahasiswa/ticket/draft_success',
+            [
+
+                'title' =>
+                    'Draft Berhasil Disimpan',
+
+                'ticket' =>
+                    $draft
+
+            ]
+        );
+    }
+
+
+    // ==========================================
+    // DAFTAR DRAFT
+    // ==========================================
+    public function draft()
+    {
+        $drafts =
+            session()->get(
+                'mahasiswa_drafts'
+            ) ?? [];
+
+
+        return view(
+            'mahasiswa/ticket/draft',
+            [
+
+                'title' =>
+                    'Draft Pengajuan',
+
+                'drafts' =>
+                    $drafts
+
+            ]
+        );
+    }
+
+
+    // ==========================================
+    // EDIT DRAFT
+    // ==========================================
+    public function editDraft($id)
+    {
+        $drafts =
+            session()->get(
+                'mahasiswa_drafts'
+            ) ?? [];
+
+
+        if (!isset(
+            $drafts[$id]
+        )) {
+
+            return redirect()
+                ->to(
+                    base_url(
+                        'mahasiswa/ticket/draft'
+                    )
+                )
+                ->with(
+                    'error',
+                    'Draft tidak ditemukan.'
+                );
+
+        }
+
+
+        return view(
+            'mahasiswa/ticket/edit_draft',
+            [
+
+                'title' =>
+                    'Edit Draft Pengajuan',
+
+                'draft' =>
+                    $drafts[$id],
+
+                'draft_id' =>
+                    $id
+
+            ]
+        );
+    }
+
+
+    // ==========================================
+    // UPDATE DRAFT
+    // ==========================================
+    public function updateDraft($id)
+    {
+        $drafts =
+            session()->get(
+                'mahasiswa_drafts'
+            ) ?? [];
+
+
+        if (!isset(
+            $drafts[$id]
+        )) {
+
+            return redirect()
+                ->to(
+                    base_url(
+                        'mahasiswa/ticket/draft'
+                    )
+                )
+                ->with(
+                    'error',
+                    'Draft tidak ditemukan.'
+                );
+
+        }
+
+
+        $action =
+            $this->request->getPost(
+                'action'
+            );
+
+
+        $drafts[$id]['layanan'] =
+            $this->request->getPost(
+                'layanan'
+            );
+
+
+        $drafts[$id]['keterangan'] =
+            $this->request->getPost(
+                'keterangan'
+            );
+
+
+        // ==========================================
+        // KIRIM DRAFT MENJADI TIKET
+        // ==========================================
+
+        if ($action === 'submit') {
+
+            $drafts[$id]['status'] =
+                'Submitted';
+
+
+            $tickets =
+                session()->get(
+                    'mahasiswa_tickets'
+                ) ?? [];
+
+
+            // Masukkan draft ke tiket
+            $tickets[] =
+                $drafts[$id];
+
+
+            // Simpan tiket
+            session()->set(
+                'mahasiswa_tickets',
+                $tickets
+            );
+
+
+            // Hapus draft
+            unset(
+                $drafts[$id]
+            );
+
+
+            // Rapikan index array
+            $drafts =
+                array_values(
+                    $drafts
+                );
+
+
+            // Simpan draft terbaru
+            session()->set(
+                'mahasiswa_drafts',
+                $drafts
+            );
+
+
+            // Redirect success
+            session()->setFlashdata(
+                'ticket',
+                end($tickets)
+            );
+
+
+            return redirect()
+                ->to(
+                    base_url(
+                        'mahasiswa/ticket/success'
+                    )
+                );
+
+        }
+
+
+        // ==========================================
+        // SIMPAN PERUBAHAN DRAFT
+        // ==========================================
+
+        session()->set(
+            'mahasiswa_drafts',
+            $drafts
+        );
+
+
+        return redirect()
+            ->to(
+                base_url(
+                    'mahasiswa/ticket/draft'
+                )
+            )
+            ->with(
+                'success',
+                'Draft berhasil diperbarui.'
+            );
     }
 
 
@@ -158,44 +465,24 @@ class MahasiswaTicketController extends BaseController
     // ==========================================
     public function history()
     {
-        $data = [
+        $tickets =
+            session()->get(
+                'mahasiswa_tickets'
+            ) ?? [];
 
-            'title' => 'Tracking Tiket Mahasiswa',
 
-            'tickets' => [
+        return view(
+            'mahasiswa/ticket/history',
+            [
 
-                [
-                    'id'       => 1,
-                    'nomor'    => 'ULT-MHS-001',
-                    'layanan'  => 'Surat Aktif Kuliah',
-                    'unit'     => 'Akademik',
-                    'tanggal'  => '20 Juli 2026',
-                    'status'   => 'Completed'
-                ],
+                'title' =>
+                    'Tracking Tiket Mahasiswa',
 
-                [
-                    'id'       => 2,
-                    'nomor'    => 'ULT-MHS-002',
-                    'layanan'  => 'Surat Beasiswa',
-                    'unit'     => 'Kemahasiswaan',
-                    'tanggal'  => '18 Juli 2026',
-                    'status'   => 'In Progress'
-                ],
-
-                [
-                    'id'       => 3,
-                    'nomor'    => 'ULT-MHS-003',
-                    'layanan'  => 'Legalisir Transkrip',
-                    'unit'     => 'Akademik',
-                    'tanggal'  => '15 Juli 2026',
-                    'status'   => 'Submitted'
-                ]
+                'tickets' =>
+                    $tickets
 
             ]
-
-        ];
-
-        return view('mahasiswa/ticket/history', $data);
+        );
     }
 
 
@@ -204,24 +491,41 @@ class MahasiswaTicketController extends BaseController
     // ==========================================
     public function detail($id)
     {
-        $data = [
+        $tickets =
+            session()->get(
+                'mahasiswa_tickets'
+            ) ?? [];
 
-            'title' => 'Detail Tiket Mahasiswa',
 
-            'ticket' => [
+        if (!isset(
+            $tickets[$id]
+        )) {
 
-                'id'         => $id,
-                'nomor'      => 'ULT-MHS-00' . $id,
-                'layanan'    => 'Surat Aktif Kuliah',
-                'unit'       => 'Akademik',
-                'tanggal'    => '20 Juli 2026',
-                'status'     => 'In Progress',
-                'keterangan' => 'Pengajuan layanan sedang diproses oleh unit terkait.'
+            return redirect()
+                ->to(
+                    base_url(
+                        'mahasiswa/ticket/history'
+                    )
+                )
+                ->with(
+                    'error',
+                    'Tiket tidak ditemukan.'
+                );
+
+        }
+
+
+        return view(
+            'mahasiswa/ticket/detail',
+            [
+
+                'title' =>
+                    'Detail Tiket Mahasiswa',
+
+                'ticket' =>
+                    $tickets[$id]
 
             ]
-
-        ];
-
-        return view('mahasiswa/ticket/detail', $data);
+        );
     }
 }

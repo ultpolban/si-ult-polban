@@ -31,186 +31,52 @@ class DosenTicketController extends BaseController
     public function store()
 {
     // ==========================================
-    // AMBIL ACTION
+    // AMBIL DATA FORM
     // ==========================================
 
+    $unitTujuan = $this->request->getPost('unit_tujuan');
+    $jenisLayanan = $this->request->getPost('jenis_layanan');
+    $judul = $this->request->getPost('judul');
+    $keterangan = $this->request->getPost('keterangan');
     $action = $this->request->getPost('action');
 
 
     // ==========================================
-    // AMBIL DATA FORM
+    // DATA USER DOSEN
     // ==========================================
 
-    $unitTujuan   = $this->request->getPost('unit_tujuan');
-    $jenisLayanan = $this->request->getPost('jenis_layanan');
-    $judul        = $this->request->getPost('judul');
-    $keterangan   = $this->request->getPost('keterangan');
+    $user = session()->get('user') ?? [];
 
 
     // ==========================================
     // VALIDASI
     // ==========================================
 
-    if (empty($unitTujuan)) {
-
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with(
-                'error',
-                'Unit tujuan wajib dipilih.'
-            );
-
-    }
-
-
-    if (empty($jenisLayanan)) {
-
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with(
-                'error',
-                'Jenis layanan wajib dipilih.'
-            );
-
-    }
-
-
-    if (empty($judul)) {
-
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with(
-                'error',
-                'Judul / keperluan wajib diisi.'
-            );
-
-    }
-
-
-    if (empty($keterangan)) {
-
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with(
-                'error',
-                'Keterangan wajib diisi.'
-            );
-
-    }
-
-
-    // ==========================================
-    // UPLOAD DOKUMEN OPSIONAL
-    // ==========================================
-
-    $dokumen = $this->request->getFile('dokumen');
-
-    $namaDokumen = null;
-
-
     if (
-        $dokumen &&
-        $dokumen->isValid() &&
-        !$dokumen->hasMoved()
+        empty($unitTujuan) ||
+        empty($jenisLayanan) ||
+        empty($judul) ||
+        empty($keterangan)
     ) {
 
-
-        // Maksimal 2 MB
-
-        if (
-            $dokumen->getSize() >
-            2 * 1024 * 1024
-        ) {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Ukuran dokumen maksimal adalah 2 MB.'
-                );
-
-        }
-
-
-        // Format yang diperbolehkan
-
-        $allowedExtensions = [
-            'pdf',
-            'jpg',
-            'jpeg',
-            'png'
-        ];
-
-
-        $extension = strtolower(
-            $dokumen->getClientExtension()
-        );
-
-
-        if (
-            !in_array(
-                $extension,
-                $allowedExtensions
-            )
-        ) {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Format dokumen harus PDF, JPG, JPEG, atau PNG.'
-                );
-
-        }
-
-
-        // Buat folder upload
-
-        $uploadPath =
-            FCPATH . 'uploads/dokumen';
-
-
-        if (!is_dir($uploadPath)) {
-
-            mkdir(
-                $uploadPath,
-                0777,
-                true
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with(
+                'error',
+                'Mohon lengkapi semua data yang wajib diisi.'
             );
-
-        }
-
-
-        // Nama file random
-
-        $namaDokumen =
-            $dokumen->getRandomName();
-
-
-        // Pindahkan file
-
-        $dokumen->move(
-            $uploadPath,
-            $namaDokumen
-        );
 
     }
 
 
     // ==========================================
-    // NOMOR TIKET SEMENTARA
+    // NOMOR TIKET
     // ==========================================
 
     $nomorTiket =
-        'ULT-' .
-        date('Ymd') .
-        '-0001';
+        'DOS-' .
+        date('YmdHis');
 
 
     // ==========================================
@@ -219,8 +85,19 @@ class DosenTicketController extends BaseController
 
     $ticket = [
 
+        'id' => time(),
+
         'nomor_tiket' =>
             $nomorTiket,
+
+        'nama' =>
+            $user['nama'] ?? '',
+
+        'nip' =>
+            $user['nip'] ?? '',
+
+        'email' =>
+            $user['email'] ?? '',
 
         'unit_tujuan' =>
             $unitTujuan,
@@ -234,13 +111,8 @@ class DosenTicketController extends BaseController
         'keterangan' =>
             $keterangan,
 
-        'dokumen' =>
-            $namaDokumen,
-
         'status' =>
-            $action === 'draft'
-                ? 'Draft'
-                : 'Submitted',
+            'Submitted',
 
         'created_at' =>
             date('Y-m-d H:i:s'),
@@ -254,28 +126,20 @@ class DosenTicketController extends BaseController
 
     if ($action === 'draft') {
 
-        // Ambil draft sebelumnya
-
         $drafts =
             session()->get('dosen_drafts')
             ?? [];
 
 
-        // Tambahkan draft baru
-
         $drafts[] =
             $ticket;
 
-
-        // Simpan ke session
 
         session()->set(
             'dosen_drafts',
             $drafts
         );
 
-
-        // Redirect ke halaman draft
 
         return redirect()
             ->to(
@@ -285,27 +149,64 @@ class DosenTicketController extends BaseController
             )
             ->with(
                 'success',
-                'Draft pengajuan berhasil disimpan.'
+                'Pengajuan berhasil disimpan sebagai draft.'
             );
 
     }
 
 
     // ==========================================
-    // JIKA AJUKAN LAYANAN
+    // JIKA AJUKAN LANGSUNG
     // ==========================================
 
-    session()->setFlashdata(
-        'ticket',
-        $ticket
-    );
+    if ($action === 'submit') {
 
+        // Ambil tiket yang sudah ada
+        $tickets =
+            session()->get('dosen_tickets')
+            ?? [];
+
+
+        // Tambahkan tiket baru
+        $tickets[] =
+            $ticket;
+
+
+        // Simpan ke session tiket Dosen
+        session()->set(
+            'dosen_tickets',
+            $tickets
+        );
+
+
+        // Simpan untuk halaman success
+        session()->setFlashdata(
+            'ticket',
+            $ticket
+        );
+
+
+        // Redirect ke success
+        return redirect()
+            ->to(
+                base_url(
+                    'dosen/ticket/success'
+                )
+            );
+
+    }
+
+
+    // ==========================================
+    // JIKA ACTION TIDAK DIKENALI
+    // ==========================================
 
     return redirect()
-        ->to(
-            base_url(
-                'dosen/ticket/success'
-            )
+        ->back()
+        ->withInput()
+        ->with(
+            'error',
+            'Aksi pengajuan tidak valid.'
         );
 }
 

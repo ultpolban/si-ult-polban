@@ -80,7 +80,6 @@ Filter Tiket
 
 <div class="row align-items-end">
 
-<div class="row align-items-end">
 
     <div class="col-lg-4">
         <label>Cari Mahasiswa</label>
@@ -165,15 +164,7 @@ Filter Tiket
 
 </div>
 
-<div class="col-md-2">
 
-<label>Tanggal</label>
-
-<input
-type="date"
-class="form-control">
-
-</div>
 
 </div>
 
@@ -190,6 +181,98 @@ class="form-control">
 
 
 <section class="content">
+
+<div class="row mb-4">
+
+    <div class="col-md-3">
+
+        <div class="small-box bg-primary shadow-sm">
+
+            <div class="inner">
+
+                <h3>25</h3>
+
+                <p>Total Tiket</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-ticket-alt"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="small-box bg-warning shadow-sm">
+
+            <div class="inner">
+
+                <h3>7</h3>
+
+                <p>Menunggu</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-hourglass-half"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="small-box bg-success shadow-sm">
+
+            <div class="inner">
+
+                <h3>12</h3>
+
+                <p>Selesai</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-check-circle"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="small-box bg-danger shadow-sm">
+
+            <div class="inner">
+
+                <h3>6</h3>
+
+                <p>Prioritas Tinggi</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-exclamation-circle"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 <div class="container-fluid">
 
@@ -208,7 +291,7 @@ class="form-control">
 
     </div>
 
-    <div class="card-body p-0">
+<div class="card-body table-responsive p-0">
 
 
 
@@ -307,9 +390,9 @@ Low
 </span>
 
 <td>
-<span class="badge badge-success px-3 py-2">
-Verified
-</span>
+    <span class="badge badge-success">
+        Verified
+    </span>
 </td>
 
 <span class="badge badge-info px-3 py-2">
@@ -349,6 +432,17 @@ title="Disposisi">
 </a>
 
 </div>
+
+
+
+</td>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
 
 <div class="card-footer bg-white">
 
@@ -401,15 +495,6 @@ Next
 </nav>
 
 </div>
-
-</td>
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
 
 </div>
 

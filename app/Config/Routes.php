@@ -137,21 +137,49 @@ $routes->post(
 // TIKET DOSEN
 // ================================
 
+// Form Ajukan Layanan
 $routes->get(
     'dosen/ticket/create',
     'DosenTicketController::create'
 );
 
+// Proses Ajukan Layanan / Simpan Draft
 $routes->post(
     'dosen/ticket/store',
     'DosenTicketController::store'
 );
 
+// Halaman Success
+$routes->get(
+    'dosen/ticket/success',
+    'DosenTicketController::success'
+);
+
+// Halaman Draft
+$routes->get(
+    'dosen/ticket/draft',
+    'DosenTicketController::draft'
+);
+
+// Edit / Lanjutkan Draft
+$routes->get(
+    'dosen/ticket/draft/edit/(:num)',
+    'DosenTicketController::editDraft/$1'
+);
+
+// Update Draft menjadi Pengajuan
+$routes->post(
+    'dosen/ticket/draft/update/(:num)',
+    'DosenTicketController::updateDraft/$1'
+);
+
+// Tracking / History Tiket
 $routes->get(
     'dosen/ticket/history',
     'DosenTicketController::history'
 );
 
+// Detail Tiket
 $routes->get(
     'dosen/ticket/detail/(:num)',
     'DosenTicketController::detail/$1'

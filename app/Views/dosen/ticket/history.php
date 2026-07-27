@@ -1,416 +1,190 @@
-<?= $this->include('layouts/header') ?>
-<?= $this->include('layouts/navbar') ?>
-<?= $this->include('layouts/sidebar_dosen') ?>
+<?= $this->extend('layouts/template') ?>
 
+<?= $this->section('content') ?>
 
-<style>
+<div class="content-wrapper">
 
-/* =========================================
-   HALAMAN TRACKING TIKET DOSEN
-========================================= */
-
-.tracking-page {
-    background: #f4f7fb;
-    min-height: calc(100vh - 57px);
-    padding-bottom: 40px;
-}
-
-
-/* =========================================
-   JUDUL
-========================================= */
-
-.page-title {
-    color: #0b3d91;
-    font-weight: 700;
-}
-
-.page-subtitle {
-    color: #64748b;
-}
-
-
-/* =========================================
-   CARD
-========================================= */
-
-.tracking-card {
-    border: none;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
-}
-
-.tracking-card .card-header {
-    background: #0b3d91;
-    color: white;
-    padding: 20px 25px;
-    border: none;
-}
-
-.tracking-card .card-header h3 {
-    margin: 0;
-    font-size: 21px;
-    font-weight: 700;
-}
-
-
-/* =========================================
-   SEARCH
-========================================= */
-
-.search-box {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 3px 12px rgba(0,0,0,.05);
-    margin-bottom: 25px;
-}
-
-.search-box label {
-    color: #17365d;
-    font-weight: 700;
-}
-
-.search-box .form-control {
-    min-height: 48px;
-    border-radius: 8px;
-    border: 1px solid #cbd5e1;
-}
-
-.search-box .form-control:focus {
-    border-color: #0b3d91;
-    box-shadow: 0 0 0 .2rem rgba(11,61,145,.12);
-}
-
-.btn-search {
-    background: #0b3d91;
-    color: white;
-    border: none;
-    min-height: 48px;
-    padding: 0 25px;
-    border-radius: 8px;
-    font-weight: 700;
-}
-
-.btn-search:hover {
-    background: #082f70;
-    color: white;
-}
-
-
-/* =========================================
-   TABLE
-========================================= */
-
-.ticket-table {
-    vertical-align: middle;
-}
-
-.ticket-table thead th {
-    background: #0b3d91;
-    color: white;
-    font-weight: 700;
-    padding: 14px;
-    white-space: nowrap;
-}
-
-.ticket-table tbody td {
-    padding: 14px;
-    color: #334155;
-}
-
-.ticket-table tbody tr:hover {
-    background: #f8fafc;
-}
-
-
-/* =========================================
-   NOMOR TIKET
-========================================= */
-
-.ticket-number {
-    color: #0b3d91;
-    font-weight: 700;
-}
-
-
-/* =========================================
-   STATUS
-========================================= */
-
-.status-badge {
-    padding: 7px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 700;
-}
-
-
-/* =========================================
-   BUTTON DETAIL
-========================================= */
-
-.btn-detail {
-    background: #f28c28;
-    color: white;
-    border: none;
-    border-radius: 7px;
-    padding: 7px 14px;
-    font-weight: 600;
-}
-
-.btn-detail:hover {
-    background: #d97617;
-    color: white;
-}
-
-
-/* =========================================
-   EMPTY STATE
-========================================= */
-
-.empty-state {
-    text-align: center;
-    padding: 60px 20px;
-}
-
-.empty-state i {
-    font-size: 60px;
-    color: #94a3b8;
-    margin-bottom: 15px;
-}
-
-.empty-state h4 {
-    color: #475569;
-    font-weight: 700;
-}
-
-.empty-state p {
-    color: #64748b;
-}
-
-
-/* =========================================
-   INFO CARD
-========================================= */
-
-.info-card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,.07);
-    overflow: hidden;
-}
-
-.info-card .card-header {
-    background: #f28c28;
-    color: white;
-    font-weight: 700;
-    padding: 15px 20px;
-}
-
-.info-card .card-body {
-    color: #475569;
-    line-height: 1.7;
-}
-
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 768px) {
-
-    .ticket-table {
-        min-width: 800px;
-    }
-
-}
-
-</style>
-
-
-<div class="content-wrapper tracking-page">
-
-
-    <!-- =====================================
+    <!-- =========================================
          HEADER
-    ====================================== -->
+    ========================================== -->
 
     <section class="content-header">
 
         <div class="container-fluid">
 
-            <h1 class="page-title">
+            <div class="row mb-2">
 
-                <i class="fas fa-ticket-alt"></i>
+                <div class="col-sm-6">
 
-                Tracking Tiket
+                    <h1
+                        class="font-weight-bold"
+                        style="color: #0d47a1;"
+                    >
 
-            </h1>
+                        <i class="fas fa-history mr-2"></i>
 
-            <p class="page-subtitle">
+                        Tracking Tiket
 
-                Pantau status dan perkembangan pengajuan layanan Anda.
+                    </h1>
 
-            </p>
+                </div>
+
+
+                <div class="col-sm-6">
+
+                    <ol class="breadcrumb float-sm-right">
+
+                        <li class="breadcrumb-item">
+
+                            <a
+                                href="<?= base_url('dosen/dashboard') ?>"
+                            >
+
+                                Dashboard
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="breadcrumb-item active">
+
+                            Tracking Tiket
+
+                        </li>
+
+                    </ol>
+
+                </div>
+
+            </div>
 
         </div>
 
     </section>
 
 
-
-    <!-- =====================================
+    <!-- =========================================
          CONTENT
-    ====================================== -->
+    ========================================== -->
 
     <section class="content">
 
         <div class="container-fluid">
 
 
-            <!-- =================================
-                 SEARCH
-            ================================== -->
+            <!-- SUCCESS MESSAGE -->
 
-            <div class="search-box">
+            <?php if (session()->getFlashdata('success')) : ?>
 
-                <form
-                    action="<?= base_url('dosen/ticket/history') ?>"
-                    method="get"
+                <div
+                    class="alert alert-success alert-dismissible fade show"
                 >
 
-                    <div class="row align-items-end">
+                    <i class="fas fa-check-circle mr-2"></i>
 
-                        <div class="col-md-9 mb-3 mb-md-0">
-
-                            <label
-                                for="keyword"
-                                class="mb-2"
-                            >
-
-                                Cari Tiket
-
-                            </label>
-
-                            <input
-                                type="text"
-                                name="keyword"
-                                id="keyword"
-                                class="form-control"
-                                placeholder="Masukkan nomor tiket atau jenis layanan..."
-                                value="<?= esc($keyword ?? '') ?>"
-                            >
-
-                        </div>
+                    <?= esc(
+                        session()->getFlashdata('success')
+                    ) ?>
 
 
-                        <div class="col-md-3">
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                    >
 
-                            <button
-                                type="submit"
-                                class="btn btn-search w-100"
-                            >
+                        &times;
 
-                                <i class="fas fa-search me-2"></i>
+                    </button>
 
-                                Cari Tiket
+                </div>
 
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </form>
-
-            </div>
+            <?php endif; ?>
 
 
+            <!-- CARD -->
 
-            <!-- =================================
-                 TABEL TIKET
-            ================================== -->
-
-            <div class="card tracking-card">
+            <div class="card shadow-sm border-0">
 
 
                 <!-- CARD HEADER -->
 
-                <div class="card-header">
+                <div
+                    class="card-header text-white"
+                    style="
+                        background-color: #0d47a1;
+                        border-bottom: 4px solid #f7941d;
+                    "
+                >
 
-                    <h3>
+                    <h5 class="mb-0">
 
-                        <i class="fas fa-list-check me-2"></i>
+                        <i class="fas fa-ticket-alt mr-2"></i>
 
                         Riwayat Pengajuan Layanan
 
-                    </h3>
+                    </h5>
 
                 </div>
 
 
                 <!-- CARD BODY -->
 
-                <div class="card-body p-0">
+                <div class="card-body">
 
 
-                    <?php if (!empty($tickets)): ?>
+                    <?php if (!empty($tickets)) : ?>
 
 
                         <div class="table-responsive">
 
-
                             <table
-                                class="table table-bordered table-hover mb-0 ticket-table"
+                                class="table table-bordered table-hover"
                             >
 
 
-                                <thead>
+                                <!-- TABLE HEADER -->
+
+                                <thead
+                                    style="
+                                        background-color: #e8f1fb;
+                                        color: #17365d;
+                                    "
+                                >
 
                                     <tr>
 
-                                        <th width="5%">
-
+                                        <th>
                                             No
-
                                         </th>
 
                                         <th>
-
                                             Nomor Tiket
-
                                         </th>
 
                                         <th>
-
                                             Unit Tujuan
-
                                         </th>
 
                                         <th>
-
                                             Jenis Layanan
-
                                         </th>
 
                                         <th>
-
-                                            Tanggal Pengajuan
-
+                                            Judul
                                         </th>
 
                                         <th>
-
                                             Status
-
                                         </th>
 
-                                        <th width="10%">
+                                        <th>
+                                            Tanggal
+                                        </th>
 
+                                        <th>
                                             Aksi
-
                                         </th>
 
                                     </tr>
@@ -418,137 +192,15 @@
                                 </thead>
 
 
+                                <!-- TABLE BODY -->
+
                                 <tbody>
 
 
-                                    <?php $no = 1; ?>
-
-
-                                    <?php foreach ($tickets as $ticket): ?>
-
-
-                                        <?php
-
-                                        /*
-                                        =====================================
-                                        MENENTUKAN WARNA STATUS
-                                        =====================================
-                                        */
-
-                                        $status =
-                                            $ticket['status']
-                                            ?? 'Submitted';
-
-
-                                        $statusLower =
-                                            strtolower(
-                                                $status
-                                            );
-
-
-                                        $statusClass =
-                                            'primary';
-
-
-                                        if (
-                                            in_array(
-                                                $statusLower,
-                                                [
-                                                    'draft'
-                                                ]
-                                            )
-                                        ) {
-
-                                            $statusClass =
-                                                'secondary';
-
-                                        }
-
-
-                                        elseif (
-                                            in_array(
-                                                $statusLower,
-                                                [
-                                                    'submitted',
-                                                    'diajukan'
-                                                ]
-                                            )
-                                        ) {
-
-                                            $statusClass =
-                                                'primary';
-
-                                        }
-
-
-                                        elseif (
-                                            in_array(
-                                                $statusLower,
-                                                [
-                                                    'verification',
-                                                    'verifikasi',
-                                                    'menunggu verifikasi'
-                                                ]
-                                            )
-                                        ) {
-
-                                            $statusClass =
-                                                'warning';
-
-                                        }
-
-
-                                        elseif (
-                                            in_array(
-                                                $statusLower,
-                                                [
-                                                    'in progress',
-                                                    'diproses',
-                                                    'sedang diproses'
-                                                ]
-                                            )
-                                        ) {
-
-                                            $statusClass =
-                                                'info';
-
-                                        }
-
-
-                                        elseif (
-                                            in_array(
-                                                $statusLower,
-                                                [
-                                                    'revision',
-                                                    'revisi',
-                                                    'perlu revisi'
-                                                ]
-                                            )
-                                        ) {
-
-                                            $statusClass =
-                                                'danger';
-
-                                        }
-
-
-                                        elseif (
-                                            in_array(
-                                                $statusLower,
-                                                [
-                                                    'completed',
-                                                    'selesai'
-                                                ]
-                                            )
-                                        ) {
-
-                                            $statusClass =
-                                                'success';
-
-                                        }
-
-
-                                        ?>
+                                    <?php foreach (
+                                        $tickets
+                                        as $index => $ticket
+                                    ) : ?>
 
 
                                         <tr>
@@ -558,27 +210,29 @@
 
                                             <td>
 
-                                                <?= $no++ ?>
+                                                <?= $index + 1 ?>
 
                                             </td>
-
 
 
                                             <!-- NOMOR TIKET -->
 
                                             <td>
 
-                                                <span class="ticket-number">
+                                                <strong
+                                                    style="
+                                                        color: #0d47a1;
+                                                    "
+                                                >
 
                                                     <?= esc(
-                                                        $ticket['nomor']
+                                                        $ticket['nomor_tiket']
                                                         ?? '-'
                                                     ) ?>
 
-                                                </span>
+                                                </strong>
 
                                             </td>
-
 
 
                                             <!-- UNIT TUJUAN -->
@@ -586,15 +240,11 @@
                                             <td>
 
                                                 <?= esc(
-                                                    $ticket['unit']
-                                                    ??
                                                     $ticket['unit_tujuan']
-                                                    ??
-                                                    '-'
+                                                    ?? '-'
                                                 ) ?>
 
                                             </td>
-
 
 
                                             <!-- JENIS LAYANAN -->
@@ -602,15 +252,109 @@
                                             <td>
 
                                                 <?= esc(
-                                                    $ticket['layanan']
-                                                    ??
                                                     $ticket['jenis_layanan']
-                                                    ??
-                                                    '-'
+                                                    ?? '-'
                                                 ) ?>
 
                                             </td>
 
+
+                                            <!-- JUDUL -->
+
+                                            <td>
+
+                                                <?= esc(
+                                                    $ticket['judul']
+                                                    ?? '-'
+                                                ) ?>
+
+                                            </td>
+
+
+                                            <!-- STATUS -->
+
+                                            <td>
+
+
+                                                <?php
+                                                $status =
+                                                    $ticket['status']
+                                                    ?? 'Submitted';
+                                                ?>
+
+
+                                                <?php if (
+                                                    strtolower($status)
+                                                    === 'submitted'
+                                                ) : ?>
+
+                                                    <span
+                                                        class="badge badge-warning"
+                                                    >
+
+                                                        Menunggu Verifikasi
+
+                                                    </span>
+
+
+                                                <?php elseif (
+                                                    strtolower($status)
+                                                    === 'diproses'
+                                                ) : ?>
+
+                                                    <span
+                                                        class="badge badge-info"
+                                                    >
+
+                                                        Diproses
+
+                                                    </span>
+
+
+                                                <?php elseif (
+                                                    strtolower($status)
+                                                    === 'selesai'
+                                                ) : ?>
+
+                                                    <span
+                                                        class="badge badge-success"
+                                                    >
+
+                                                        Selesai
+
+                                                    </span>
+
+
+                                                <?php elseif (
+                                                    strtolower($status)
+                                                    === 'ditolak'
+                                                ) : ?>
+
+                                                    <span
+                                                        class="badge badge-danger"
+                                                    >
+
+                                                        Ditolak
+
+                                                    </span>
+
+
+                                                <?php else : ?>
+
+                                                    <span
+                                                        class="badge badge-secondary"
+                                                    >
+
+                                                        <?= esc(
+                                                            $status
+                                                        ) ?>
+
+                                                    </span>
+
+                                                <?php endif; ?>
+
+
+                                            </td>
 
 
                                             <!-- TANGGAL -->
@@ -618,33 +362,11 @@
                                             <td>
 
                                                 <?= esc(
-                                                    $ticket['tanggal']
-                                                    ??
                                                     $ticket['created_at']
-                                                    ??
-                                                    '-'
+                                                    ?? '-'
                                                 ) ?>
 
                                             </td>
-
-
-
-                                            <!-- STATUS -->
-
-                                            <td>
-
-                                                <span
-                                                    class="badge bg-<?= $statusClass ?> status-badge"
-                                                >
-
-                                                    <?= esc(
-                                                        $status
-                                                    ) ?>
-
-                                                </span>
-
-                                            </td>
-
 
 
                                             <!-- AKSI -->
@@ -654,12 +376,18 @@
                                                 <a
                                                     href="<?= base_url(
                                                         'dosen/ticket/detail/' .
-                                                        ($ticket['id'] ?? 0)
+                                                        $index
                                                     ) ?>"
-                                                    class="btn btn-detail btn-sm"
+                                                    class="btn btn-sm text-white"
+                                                    style="
+                                                        background-color: #0d47a1;
+                                                        border-color: #0d47a1;
+                                                    "
                                                 >
 
-                                                    <i class="fas fa-eye"></i>
+                                                    <i
+                                                        class="fas fa-eye mr-1"
+                                                    ></i>
 
                                                     Detail
 
@@ -679,43 +407,62 @@
 
                             </table>
 
-
                         </div>
 
 
-                    <?php else: ?>
+                    <?php else : ?>
 
 
-                        <!-- =================================
-                             EMPTY STATE
-                        ================================== -->
+                        <!-- EMPTY STATE -->
 
-                        <div class="empty-state">
-
-
-                            <i class="fas fa-ticket-alt"></i>
+                        <div
+                            class="text-center py-5"
+                        >
 
 
-                            <h4>
+                            <i
+                                class="fas fa-ticket-alt"
+                                style="
+                                    font-size: 60px;
+                                    color: #b0bec5;
+                                "
+                            ></i>
 
-                                Belum Ada Pengajuan
 
-                            </h4>
+                            <h5
+                                class="mt-3"
+                                style="
+                                    color: #17365d;
+                                "
+                            >
+
+                                Belum Ada Tiket
+
+                            </h5>
 
 
-                            <p>
+                            <p class="text-muted">
 
-                                Anda belum memiliki riwayat pengajuan layanan.
+                                Anda belum memiliki
+                                riwayat pengajuan layanan.
 
                             </p>
 
 
                             <a
-                                href="<?= base_url('dosen/ticket/create') ?>"
-                                class="btn btn-detail"
+                                href="<?= base_url(
+                                    'dosen/ticket/create'
+                                ) ?>"
+                                class="btn text-white"
+                                style="
+                                    background-color: #f7941d;
+                                    border-color: #f7941d;
+                                "
                             >
 
-                                <i class="fas fa-plus-circle me-1"></i>
+                                <i
+                                    class="fas fa-plus-circle mr-1"
+                                ></i>
 
                                 Ajukan Layanan
 
@@ -730,93 +477,6 @@
 
                 </div>
 
-
-            </div>
-
-
-
-            <!-- =================================
-                 INFORMASI
-            ================================== -->
-
-            <div class="card info-card mt-4">
-
-
-                <div class="card-header">
-
-                    <i class="fas fa-info-circle me-2"></i>
-
-                    Informasi Tracking Tiket
-
-                </div>
-
-
-                <div class="card-body">
-
-
-                    <p>
-
-                        <strong>
-
-                            <i class="fas fa-ticket-alt text-primary"></i>
-
-                            Nomor Tiket
-
-                        </strong>
-
-                        digunakan untuk mengidentifikasi setiap pengajuan layanan.
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-
-                            <i class="fas fa-clock text-warning"></i>
-
-                            Sedang Diproses
-
-                        </strong>
-
-                        berarti pengajuan sedang ditangani oleh unit terkait.
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-
-                            <i class="fas fa-exclamation-circle text-danger"></i>
-
-                            Perlu Revisi
-
-                        </strong>
-
-                        berarti terdapat catatan dari petugas yang perlu ditindaklanjuti.
-
-                    </p>
-
-
-                    <p class="mb-0">
-
-                        <strong>
-
-                            <i class="fas fa-check-circle text-success"></i>
-
-                            Selesai
-
-                        </strong>
-
-                        berarti pengajuan layanan telah selesai diproses.
-
-                    </p>
-
-
-                </div>
-
-
             </div>
 
 
@@ -826,5 +486,4 @@
 
 </div>
 
-
-<?= $this->include('layouts/footer') ?>
+<?= $this->endSection() ?>

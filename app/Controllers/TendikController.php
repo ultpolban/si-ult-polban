@@ -71,4 +71,119 @@ class TendikController extends BaseController
             $data
         );
     }
+
+    public function profile()
+{
+    $user = session()->get('user') ?? [];
+
+    $data = [
+        'title' => 'Profil Tendik',
+        'user'  => $user,
+    ];
+
+    return view(
+        'tendik/profile/index',
+        $data
+    );
+}
+
+public function editProfile()
+{
+    $user = session()->get('user') ?? [];
+
+    $data = [
+        'title' => 'Edit Profil Tendik',
+        'user'  => $user,
+    ];
+
+    return view(
+        'tendik/profile/edit',
+        $data
+    );
+}
+
+public function updateProfile()
+{
+    $user = session()->get('user') ?? [];
+
+
+    // Ambil data dari form
+
+    $nama = $this->request->getPost('nama');
+
+    $nip = $this->request->getPost('nip');
+
+    $email = $this->request->getPost('email');
+
+    $unitKerja =
+        $this->request->getPost('unit_kerja');
+
+    $jabatan =
+        $this->request->getPost('jabatan');
+
+    $noHp =
+        $this->request->getPost('no_hp');
+
+
+    // Validasi sederhana
+
+    if (
+        empty($nama) ||
+        empty($nip) ||
+        empty($email)
+    ) {
+
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with(
+                'error',
+                'Nama, NIP, dan Email wajib diisi.'
+            );
+
+    }
+
+
+    // Update session user
+
+    $user['nama'] =
+        $nama;
+
+    $user['nip'] =
+        $nip;
+
+    $user['email'] =
+        $email;
+
+    $user['unit_kerja'] =
+        $unitKerja;
+
+    $user['jabatan'] =
+        $jabatan;
+
+    $user['no_hp'] =
+        $noHp;
+
+
+    // Simpan kembali ke session
+
+    session()->set(
+        'user',
+        $user
+    );
+
+
+    // Kembali ke profil
+
+    return redirect()
+        ->to(
+            base_url(
+                'tendik/profile'
+            )
+        )
+        ->with(
+            'success',
+            'Profil berhasil diperbarui.'
+        );
+}
 }

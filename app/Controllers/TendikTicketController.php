@@ -1022,6 +1022,58 @@ class TendikTicketController extends BaseController
             );
     }
 
+    public function notification()
+{
+    $notifications = session()->get('tendik_notifications') ?? [
+
+        [
+            'id' => 1,
+
+            'judul' =>
+                'Pengajuan Berhasil Dikirim',
+
+            'pesan' =>
+                'Pengajuan layanan Anda berhasil dikirim dan sedang menunggu proses verifikasi.',
+
+            'tanggal' =>
+                date('d F Y H:i'),
+
+        ],
+
+        [
+            'id' => 2,
+
+            'judul' =>
+                'Informasi Pengajuan',
+
+            'pesan' =>
+                'Anda dapat memantau perkembangan pengajuan melalui menu Tracking Tiket.',
+
+            'tanggal' =>
+                date('d F Y H:i'),
+
+        ],
+
+    ];
+
+
+    $data = [
+
+        'title' =>
+            'Notifikasi',
+
+        'notifications' =>
+            $notifications,
+
+    ];
+
+
+    return view(
+        'tendik/notification',
+        $data
+    );
+}
+
 
     // =========================================================
     // BALASAN TENDIK TERHADAP CATATAN PETUGAS

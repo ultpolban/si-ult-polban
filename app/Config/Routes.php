@@ -315,3 +315,29 @@ $routes->post(
     'tendik/ticket/reply/(:any)',
     'TendikTicketController::reply/$1'
 );
+
+// NOTIFIKASII//===============
+
+$routes->get(
+    'tendik/notification',
+    'TendikTicketController::notification'
+);
+
+// ==========================================
+// PROFIL TENDIK
+// ==========================================
+
+$routes->get(
+    'tendik/profile',
+    'TendikController::profile'
+);
+
+$routes->get(
+    'tendik/profile/edit',
+    'TendikController::editProfile'
+);
+
+$routes->post(
+    'tendik/profile/update',
+    'TendikController::updateProfile'
+);

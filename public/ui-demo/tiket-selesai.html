@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiket Selesai - SI ULT POLBAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div style="width:40px;height:40px;background:#E2E8F0;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                <i class="fa-solid fa-building-columns" style="color:#64748B;"></i>
+            </div>
+            <div>
+                <h2>ULT POLBAN</h2>
+                <p>Sistem Layanan Terpadu</p>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="tiket-total.html" class="active"><i class="fa-solid fa-ticket"></i> Tiket</a></li>
+            <li><a href="#"><i class="fa-solid fa-clipboard-list"></i> Layanan</a></li>
+            <li><a href="#"><i class="fa-solid fa-file-lines"></i> Laporan</a></li>
+            <li><a href="#"><i class="fa-solid fa-chart-line"></i> Statistik</a></li>
+            <li><a href="users.html"><i class="fa-solid fa-users"></i> Users</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div style="width:36px;height:36px;background:#CBD5E1;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                <i class="fa-solid fa-user" style="color:#FFF;"></i>
+            </div>
+            <div class="user-info">
+                <h4>Admin ULT</h4>
+                <p>Administrator</p>
+            </div>
+            <button class="btn-logout" title="Keluar"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="page-title">
+                <h1>Tiket Selesai</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">Dashboard</a>
+                    <span><i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i></span>
+                    <a href="tiket-total.html">Tiket</a>
+                    <span><i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i></span>
+                    <span style="color: var(--text-primary);">Tiket Selesai</span>
+                </div>
+            </div>
+            <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+        </header>
+
+        <div class="dashboard-container">
+            <div class="page-header">
+                <h2>982 Tiket Selesai</h2>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Kode Tiket</th>
+                            <th>Pemohon</th>
+                            <th>Layanan</th>
+                            <th>Tanggal</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>ULT-2024-001</td>
+                            <td>Ahmad Fauzi</td>
+                            <td>Surat Keterangan Aktif Kuliah</td>
+                            <td>01 Mei 2024</td>
+                            <td><button class="btn-action stat-link">Lihat</button></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>ULT-2024-004</td>
+                            <td>Dimas Saputra</td>
+                            <td>Surat Keterangan Aktif Kuliah</td>
+                            <td>04 Mei 2024</td>
+                            <td><button class="btn-action stat-link">Lihat</button></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>ULT-2024-005</td>
+                            <td>Rina Marlina</td>
+                            <td>Legalisir Ijazah/Transkrip</td>
+                            <td>05 Mei 2024</td>
+                            <td><button class="btn-action stat-link">Lihat</button></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>ULT-2024-008</td>
+                            <td>Fajar Nugroho</td>
+                            <td>Surat Keterangan Aktif Kuliah</td>
+                            <td>06 Mei 2024</td>
+                            <td><button class="btn-action stat-link">Lihat</button></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>ULT-2024-009</td>
+                            <td>Lina Aulia</td>
+                            <td>Surat Keterangan Aktif Kuliah</td>
+                            <td>06 Mei 2024</td>
+                            <td><button class="btn-action stat-link">Lihat</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="table-footer">
+                    Menampilkan 1 - 5 dari 982 data
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Example Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detail Tiket</h3>
+                <button class="modal-close" onclick="document.getElementById('detailModal').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Kode Tiket</span>
+                <span class="detail-value">: ULT-2024-001</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Pemohon</span>
+                <span class="detail-value">: Ahmad Fauzi</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Layanan</span>
+                <span class="detail-value">: Surat Keterangan Aktif Kuliah</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Unit</span>
+                <span class="detail-value">: Akademik</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Tanggal Pengajuan</span>
+                <span class="detail-value">: 01 Mei 2024</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Status</span>
+                <span class="detail-value">: Selesai</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Deskripsi</span>
+                <span class="detail-value">: Permohonan surat aktif kuliah untuk keperluan beasiswa.</span>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-outline" onclick="document.getElementById('detailModal').style.display='none'">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.stat-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('detailModal').style.display = 'flex';
+            });
+        });
+    </script>
+</body>
+</html>

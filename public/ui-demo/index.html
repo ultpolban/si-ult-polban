@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SI ULT POLBAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div style="width:40px;height:40px;background:#E2E8F0;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                <i class="fa-solid fa-building-columns" style="color:#64748B;"></i>
+            </div>
+            <div>
+                <h2>ULT POLBAN</h2>
+                <p>Sistem Layanan Terpadu</p>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="index.html" class="active"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="tiket-total.html"><i class="fa-solid fa-ticket"></i> Tiket</a></li>
+            <li><a href="#"><i class="fa-solid fa-clipboard-list"></i> Layanan</a></li>
+            <li><a href="#"><i class="fa-solid fa-file-lines"></i> Laporan</a></li>
+            <li><a href="#"><i class="fa-solid fa-chart-line"></i> Statistik</a></li>
+            <li><a href="users.html"><i class="fa-solid fa-users"></i> Users</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div style="width:36px;height:36px;background:#CBD5E1;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                <i class="fa-solid fa-user" style="color:#FFF;"></i>
+            </div>
+            <div class="user-info">
+                <h4>Admin ULT</h4>
+                <p>Administrator</p>
+            </div>
+            <button class="btn-logout" title="Keluar"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="page-title">
+                <h1>Dashboard Admin</h1>
+                <p>Selamat datang kembali, Admin ULT</p>
+            </div>
+            <div class="date-picker">
+                <i class="fa-regular fa-calendar"></i>
+                <span>07 Mei 2024</span>
+            </div>
+        </header>
+
+        <!-- Dashboard Container -->
+        <div class="dashboard-container">
+            
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-title">Total Tiket</div>
+                    <div class="stat-value">1.248</div>
+                    <a href="tiket-total.html" class="stat-link">Lihat Rincian <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Tiket Selesai</div>
+                    <div class="stat-value">982</div>
+                    <a href="tiket-selesai.html" class="stat-link">Lihat Rincian <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Tiket Dalam Proses</div>
+                    <div class="stat-value">214</div>
+                    <a href="tiket-proses.html" class="stat-link">Lihat Rincian <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Tiket Terlambat</div>
+                    <div class="stat-value">52</div>
+                    <a href="tiket-terlambat.html" class="stat-link">Lihat Rincian <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Two Columns Layout -->
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div class="left-column">
+                    <div class="card">
+                        <div class="card-title">Tiket Masuk 7 Hari Terakhir</div>
+                        <!-- Simple SVG Chart to match the design roughly -->
+                        <div style="height:200px; width:100%; position:relative;">
+                            <svg viewBox="0 0 500 200" preserveAspectRatio="none" style="width:100%; height:100%;">
+                                <polyline fill="none" stroke="#3B82F6" stroke-width="3" points="0,150 70,170 140,110 210,130 280,70 350,90 420,110 500,80" />
+                                <circle cx="0" cy="150" r="4" fill="#3B82F6"/>
+                                <circle cx="70" cy="170" r="4" fill="#3B82F6"/>
+                                <circle cx="140" cy="110" r="4" fill="#3B82F6"/>
+                                <circle cx="210" cy="130" r="4" fill="#3B82F6"/>
+                                <circle cx="280" cy="70" r="4" fill="#3B82F6"/>
+                                <circle cx="350" cy="90" r="4" fill="#3B82F6"/>
+                                <circle cx="420" cy="110" r="4" fill="#3B82F6"/>
+                                <circle cx="500" cy="80" r="4" fill="#3B82F6"/>
+                            </svg>
+                            <!-- Axis labels placeholders -->
+                            <div style="position:absolute; bottom:0; left:0; width:100%; display:flex; justify-content:space-between; font-size:11px; color:#94A3B8; padding: 0 10px;">
+                                <span>01 Mei</span><span>02 Mei</span><span>03 Mei</span><span>04 Mei</span><span>05 Mei</span><span>06 Mei</span><span>07 Mei</span>
+                            </div>
+                            <div style="position:absolute; top:0; left:0; height:100%; display:flex; flex-direction:column; justify-content:space-between; font-size:11px; color:#94A3B8; padding-right:10px; border-right:1px solid #E2E8F0;">
+                                <span>200</span><span>150</span><span>100</span><span>50</span><span>0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Aktivitas Terbaru</div>
+                        <ul class="activity-list">
+                            <li>
+                                <div class="activity-left">
+                                    <div class="activity-dot"></div>
+                                    <p>Tiket #ULT-2024-1050 telah selesai diproses</p>
+                                </div>
+                                <span class="activity-time">7 menit lalu</span>
+                            </li>
+                            <li>
+                                <div class="activity-left">
+                                    <div class="activity-dot"></div>
+                                    <p>Tiket #ULT-2024-1049 dirujuk ke Unit Akademik</p>
+                                </div>
+                                <span class="activity-time">15 menit lalu</span>
+                            </li>
+                            <li>
+                                <div class="activity-left">
+                                    <div class="activity-dot"></div>
+                                    <p>User baru ditambahkan: Budi Santoso</p>
+                                </div>
+                                <span class="activity-time">1 jam lalu</span>
+                            </li>
+                            <li>
+                                <div class="activity-left">
+                                    <div class="activity-dot"></div>
+                                    <p>Layanan baru ditambahkan: Legalisir Transkrip</p>
+                                </div>
+                                <span class="activity-time">2 jam lalu</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column">
+                    <div class="card">
+                        <div class="card-title">Tiket Berdasarkan Status</div>
+                        <ul class="status-list">
+                            <li>
+                                <span>Selesai</span>
+                                <span>982</span>
+                            </li>
+                            <li>
+                                <span>Proses</span>
+                                <span>214</span>
+                            </li>
+                            <li>
+                                <span>Terlambat</span>
+                                <span>52</span>
+                            </li>
+                            <li>
+                                <span>Menunggu</span>
+                                <span>214</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Quick Menu</div>
+                        <div class="quick-menu-grid">
+                            <button class="btn-outline">Tambah User</button>
+                            <button class="btn-outline">Tambah Layanan</button>
+                            <button class="btn-outline">Lihat Laporan</button>
+                            <button class="btn-outline">Grafik Statistik</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Example Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detail Tiket</h3>
+                <button class="modal-close" onclick="document.getElementById('detailModal').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Kode Tiket</span>
+                <span class="detail-value">: ULT-2024-001</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Pemohon</span>
+                <span class="detail-value">: Ahmad Fauzi</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Layanan</span>
+                <span class="detail-value">: Surat Keterangan Aktif Kuliah</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Unit</span>
+                <span class="detail-value">: Akademik</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Tanggal Pengajuan</span>
+                <span class="detail-value">: 01 Mei 2024</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Status</span>
+                <span class="detail-value">: Selesai</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Deskripsi</span>
+                <span class="detail-value">: Permohonan surat aktif kuliah untuk keperluan beasiswa.</span>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-outline" onclick="document.getElementById('detailModal').style.display='none'">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script to demo modal on click -->
+    <script>
+        // Demo: open modal when clicking 'Lihat Rincian' on total tiket
+        document.querySelectorAll('.stat-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Open modal just for demo purposes
+                document.getElementById('detailModal').style.display = 'flex';
+            });
+        });
+    </script>
+</body>
+</html>

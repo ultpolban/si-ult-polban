@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Users - SI ULT POLBAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div style="width:40px;height:40px;background:#E2E8F0;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                <i class="fa-solid fa-building-columns" style="color:#64748B;"></i>
+            </div>
+            <div>
+                <h2>ULT POLBAN</h2>
+                <p>Sistem Layanan Terpadu</p>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="tiket-total.html"><i class="fa-solid fa-ticket"></i> Tiket</a></li>
+            <li><a href="#"><i class="fa-solid fa-clipboard-list"></i> Layanan</a></li>
+            <li><a href="#"><i class="fa-solid fa-file-lines"></i> Laporan</a></li>
+            <li><a href="#"><i class="fa-solid fa-chart-line"></i> Statistik</a></li>
+            <li><a href="users.html" class="active"><i class="fa-solid fa-users"></i> Users</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div style="width:36px;height:36px;background:#CBD5E1;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                <i class="fa-solid fa-user" style="color:#FFF;"></i>
+            </div>
+            <div class="user-info">
+                <h4>Admin ULT</h4>
+                <p>Administrator</p>
+            </div>
+            <button class="btn-logout" title="Keluar"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="page-title">
+                <h1>Manajemen Users</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">Dashboard</a>
+                    <span><i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i></span>
+                    <span style="color: var(--text-primary);">Users</span>
+                </div>
+            </div>
+            <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+        </header>
+
+        <div class="dashboard-container">
+            <div class="page-header">
+                <h2>Daftar Pengguna Sistem</h2>
+                <button class="btn-primary"><i class="fa-solid fa-plus"></i> Tambah User</button>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Lengkap</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Unit/Bagian</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Budi Santoso</td>
+                            <td>budi.santoso@polban.ac.id</td>
+                            <td>Admin</td>
+                            <td>Pusat Komputer</td>
+                            <td><span class="badge badge-success">Aktif</span></td>
+                            <td>
+                                <button class="btn-action"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-action"><i class="fa-solid fa-trash" style="color:#EF4444;"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Siti Aminah</td>
+                            <td>siti.aminah@polban.ac.id</td>
+                            <td>Petugas Unit</td>
+                            <td>Keuangan</td>
+                            <td><span class="badge badge-success">Aktif</span></td>
+                            <td>
+                                <button class="btn-action"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-action"><i class="fa-solid fa-trash" style="color:#EF4444;"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Agus Pratama</td>
+                            <td>agus.pratama@polban.ac.id</td>
+                            <td>Petugas Unit</td>
+                            <td>Akademik</td>
+                            <td><span class="badge badge-success">Aktif</span></td>
+                            <td>
+                                <button class="btn-action"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-action"><i class="fa-solid fa-trash" style="color:#EF4444;"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Rina Susanti</td>
+                            <td>rina.susanti@polban.ac.id</td>
+                            <td>Pimpinan</td>
+                            <td>Direktorat</td>
+                            <td><span class="badge badge-warning">Nonaktif</span></td>
+                            <td>
+                                <button class="btn-action"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-action"><i class="fa-solid fa-trash" style="color:#EF4444;"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="table-footer">
+                    Menampilkan 1 - 4 dari 45 user
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

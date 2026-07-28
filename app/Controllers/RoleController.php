@@ -3,89 +3,352 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\RoleModel;
+use App\Models\UserModel;
 
 class RoleController extends BaseController
 {
-    protected $db;
+    protected RoleModel $roleModel;
+    protected UserModel $userModel;
 
     public function __construct()
     {
-        $this->db = \Config\Database::connect();
+        helper(['form']);
+
+        $this->roleModel = new RoleModel();
+        $this->userModel = new UserModel();
     }
 
-    // Daftar Role
+    /*
+    |--------------------------------------------------------------------------
+    | INDEX
+    |--------------------------------------------------------------------------
+    */
+
     public function index()
     {
-        $data['roles'] = $this->db->table('roles')->orderBy('id', 'ASC')->get()->getResultArray();
+        $keyword = trim($this->request->getGet('keyword'));
+
+        $perPage = 10;
+
+        $roles = $this->roleModel
+
+            ->search($keyword)
+
+            ->paginate($perPage);
+
+        foreach ($roles as &$role) {
+
+            $role['total_user'] = $this->roleModel
+
+                ->countUser($role['id']);
+        }
+
+        $data = [
+
+            'title' => 'Management Role',
+
+            'roles' => $roles,
+
+            'pager' => $this->roleModel->pager,
+
+            'keyword' => $keyword,
+
+            'totalRole' => $this->roleModel->countAll()
+
+        ];
+
         return view('roles/index', $data);
     }
 
-    // Form Tambah Role
+    /*
+    |--------------------------------------------------------------------------
+    | CREATE
+    |--------------------------------------------------------------------------
+    */
+
     public function create()
     {
-        return view('roles/create');
+        return view('roles/create', [
+
+            'title'      => 'Tambah Role',
+
+            'role'       => [],
+
+            'validation' => \Config\Services::validation()
+
+        ]);
     }
 
-    // Simpan Role
+    /*
+    |--------------------------------------------------------------------------
+    | STORE
+    |--------------------------------------------------------------------------
+    */
+
     public function store()
     {
-        $rules = [
-            'role_name'   => 'required|min_length[3]|is_unique[roles.role_name]',
-            'description' => 'permit_empty',
-        ];
+        if (
+            !$this->validate(
+                $this->validationRules(),
+                $this->validationMessages()
+            )
+        ) {
 
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+            return redirect()
+
+                ->back()
+
+                ->withInput()
+
+                ->with(
+                    'errors',
+                    $this->validator->getErrors()
+                );
         }
 
-        $this->db->table('roles')->insert([
-            'role_name'   => $this->request->getPost('role_name'),
-            'description' => $this->request->getPost('description'),
+        $this->roleModel->insert([
+
+            'role_name'   => trim(
+                $this->request->getPost('role_name')
+            ),
+
+            'description' => trim(
+                $this->request->getPost('description')
+            )
+
         ]);
 
-        return redirect()->to('/roles')->with('success', 'Role berhasil ditambahkan.');
+        return redirect()
+
+            ->to(base_url('roles'))
+
+            ->with(
+                'success',
+                'Role berhasil ditambahkan.'
+            );
     }
 
-    // Form Edit Role
+    /*
+    |--------------------------------------------------------------------------
+    | EDIT
+    |--------------------------------------------------------------------------
+    */
+
     public function edit($id)
     {
-        $data['role'] = $this->db->table('roles')->where('id', $id)->get()->getRowArray();
-        if (!$data['role']) {
-            return redirect()->to('/roles')->with('error', 'Role tidak ditemukan.');
+        $role = $this->roleModel->find($id);
+
+        if (!$role) {
+
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
+                'Role tidak ditemukan.'
+            );
         }
-        return view('roles/edit', $data);
+
+        return view('roles/edit', [
+
+            'title'      => 'Edit Role',
+
+            'role'       => $role,
+
+            'validation' => \Config\Services::validation()
+
+        ]);
     }
 
-    // Update Role
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE
+    |--------------------------------------------------------------------------
+    */
+
     public function update($id)
     {
-        $rules = [
-            'role_name'   => 'required|min_length[3]',
-            'description' => 'permit_empty',
-        ];
+        $role = $this->roleModel->find($id);
 
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        if (!$role) {
+
+            return redirect()
+
+                ->to(base_url('roles'))
+
+                ->with(
+                    'error',
+                    'Role tidak ditemukan.'
+                );
         }
 
-        $this->db->table('roles')->where('id', $id)->update([
-            'role_name'   => $this->request->getPost('role_name'),
-            'description' => $this->request->getPost('description'),
+        if (
+            !$this->validate(
+                $this->validationRules((int) $id),
+                $this->validationMessages()
+            )
+        ) {
+
+            return redirect()
+
+                ->back()
+
+                ->withInput()
+
+                ->with(
+                    'errors',
+                    $this->validator->getErrors()
+                );
+        }
+
+        $this->roleModel->update($id, [
+
+            'role_name' => trim(
+                $this->request->getPost('role_name')
+            ),
+
+            'description' => trim(
+                $this->request->getPost('description')
+            )
+
         ]);
 
-        return redirect()->to('/roles')->with('success', 'Role berhasil diperbarui.');
+        return redirect()
+
+            ->to(base_url('roles'))
+
+            ->with(
+                'success',
+                'Role berhasil diperbarui.'
+            );
     }
 
-    // Hapus Role
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE
+    |--------------------------------------------------------------------------
+    */
+
     public function delete($id)
     {
-        // Cek apakah role sedang digunakan oleh user
-        $usersWithRole = $this->db->table('users')->where('role_id', $id)->countAllResults();
-        if ($usersWithRole > 0) {
-            return redirect()->to('/roles')->with('error', 'Role tidak bisa dihapus karena masih digunakan oleh ' . $usersWithRole . ' user.');
+        $role = $this->roleModel->find($id);
+
+        if (!$role) {
+
+            return redirect()
+
+                ->to(base_url('roles'))
+
+                ->with(
+                    'error',
+                    'Role tidak ditemukan.'
+                );
         }
 
-        $this->db->table('roles')->where('id', $id)->delete();
-        return redirect()->to('/roles')->with('success', 'Role berhasil dihapus.');
+        /*
+    |--------------------------------------------------------------------------
+    | Administrator tidak boleh dihapus
+    |--------------------------------------------------------------------------
+    */
+
+        if ($role['id'] == 1) {
+
+            return redirect()
+
+                ->to(base_url('roles'))
+
+                ->with(
+                    'error',
+                    'Role Administrator tidak dapat dihapus.'
+                );
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | Role masih digunakan User
+    |--------------------------------------------------------------------------
+    */
+
+        $totalUser = $this->userModel
+
+            ->where('role_id', $id)
+
+            ->countAllResults();
+
+        if ($totalUser > 0) {
+
+            return redirect()
+
+                ->to(base_url('roles'))
+
+                ->with(
+                    'error',
+                    'Role tidak dapat dihapus karena masih digunakan oleh ' . $totalUser . ' user.'
+                );
+        }
+
+        $this->roleModel->delete($id);
+
+        return redirect()
+
+            ->to(base_url('roles'))
+
+            ->with(
+                'success',
+                'Role berhasil dihapus.'
+            );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDATION RULES
+    |--------------------------------------------------------------------------
+    */
+
+    private function validationRules(?int $id = null): array
+    {
+        $roleRule = 'required|max_length[100]';
+
+        if ($id === null) {
+
+            $roleRule .= '|is_unique[roles.role_name]';
+        } else {
+
+            $roleRule .= '|is_unique[roles.role_name,id,' . $id . ']';
+        }
+
+        return [
+
+            'role_name' => $roleRule,
+
+            'description' => 'permit_empty|max_length[255]'
+
+        ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDATION MESSAGES
+    |--------------------------------------------------------------------------
+    */
+
+    private function validationMessages(): array
+    {
+        return [
+
+            'role_name' => [
+
+                'required'   => 'Nama role wajib diisi.',
+
+                'max_length' => 'Nama role maksimal 100 karakter.',
+
+                'is_unique'  => 'Nama role sudah digunakan.'
+
+            ],
+
+            'description' => [
+
+                'max_length' => 'Deskripsi maksimal 255 karakter.'
+
+            ]
+
+        ];
     }
 }

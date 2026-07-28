@@ -1,81 +1,171 @@
-<!DOCTYPE html>
-<html>
+<?= $this->extend('layouts/main') ?>
 
-<head>
-    <title>Register</title>
-</head>
+<?= $this->section('content') ?>
 
-<body>
+<div class="container-fluid">
 
-    <h2>Registrasi Akun</h2>
+    <div class="row justify-content-center">
 
-    <?php if (session()->getFlashdata('errors')): ?>
+        <div class="col-xl-10">
 
-        <ul style="color:red">
+            <div class="card shadow border-0">
 
-            <?php foreach (session()->getFlashdata('errors') as $error): ?>
+                <div class="card-header bg-primary text-white">
 
-                <li><?= $error ?></li>
+                    <div class="d-flex justify-content-between align-items-center">
 
-            <?php endforeach; ?>
+                        <div>
 
-        </ul>
+                            <h4 class="mb-1">
 
-    <?php endif; ?>
+                                <i class="bi bi-person-plus-fill"></i>
 
-    <form action="<?= base_url('register') ?>" method="post">
+                                Registrasi Pemohon
 
-        <p>Nama</p>
+                            </h4>
 
-        <input
-            type="text"
-            name="name"
-            value="<?= old('name') ?>">
+                            <small>
 
-        <p>Email</p>
+                                Silakan lengkapi seluruh data sesuai jenis pemohon.
 
-        <input
-            type="email"
-            name="email"
-            value="<?= old('email') ?>">
+                            </small>
 
-        <p>No HP</p>
+                        </div>
 
-        <input
-            type="text"
-            name="phone"
-            value="<?= old('phone') ?>">
+                    </div>
 
-        <p>Password</p>
+                </div>
 
-        <input
-            type="password"
-            name="password">
+                <div class="card-body">
 
-        <p>Konfirmasi Password</p>
+                    <?php if (session()->getFlashdata('error')) : ?>
 
-        <input
-            type="password"
-            name="confirm_password">
+                        <div class="alert alert-danger">
 
-        <br><br>
+                            <?= session()->getFlashdata('error') ?>
 
-        <button type="submit">
+                        </div>
 
-            Daftar
+                    <?php endif; ?>
 
-        </button>
+                    <?php if (session()->getFlashdata('errors')) : ?>
 
-    </form>
+                        <div class="alert alert-danger">
 
-    <br>
+                            <ul class="mb-0">
 
-    <a href="<?= base_url('login') ?>">
+                                <?php foreach (session()->getFlashdata('errors') as $error) : ?>
 
-        Sudah punya akun? Login
+                                    <li><?= esc($error) ?></li>
 
-    </a>
+                                <?php endforeach; ?>
 
-</body>
+                            </ul>
 
-</html>
+                        </div>
+
+                    <?php endif; ?>
+
+                    <form
+                        action="<?= base_url('register/store') ?>"
+                        method="post"
+                        enctype="multipart/form-data">
+
+                        <?= csrf_field() ?>
+
+                        <!-- ================================================= -->
+                        <!-- DATA AKUN -->
+                        <!-- ================================================= -->
+
+                        <?= $this->include('auth/partials/account') ?>
+
+                        <!-- ================================================= -->
+                        <!-- DATA PRIBADI -->
+                        <!-- ================================================= -->
+
+                        <?= $this->include('auth/partials/personal') ?>
+
+                        <!-- ================================================= -->
+                        <!-- DATA KHUSUS PEMOHON -->
+                        <!-- ================================================= -->
+
+                        <?= $this->include('auth/partials/mahasiswa') ?>
+
+                        <?= $this->include('auth/partials/dosen') ?>
+
+                        <?= $this->include('auth/partials/tendik') ?>
+
+                        <?= $this->include('auth/partials/alumni') ?>
+
+                        <?= $this->include('auth/partials/orangtua') ?>
+
+                        <?= $this->include('auth/partials/mitra') ?>
+
+                        <?= $this->include('auth/partials/publik') ?>
+
+                        <!-- ================================================= -->
+                        <!-- BUTTON -->
+                        <!-- ================================================= -->
+
+                        <div class="card border-0 bg-light mt-4">
+
+                            <div class="card-body">
+
+                                <div class="d-flex justify-content-end gap-2">
+
+                                    <a
+                                        href="<?= base_url('login') ?>"
+                                        class="btn btn-secondary">
+
+                                        <i class="bi bi-arrow-left"></i>
+
+                                        Kembali
+
+                                    </a>
+
+                                    <button
+                                        type="reset"
+                                        class="btn btn-warning">
+
+                                        <i class="bi bi-arrow-clockwise"></i>
+
+                                        Reset
+
+                                    </button>
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary">
+
+                                        <i class="bi bi-check-circle-fill"></i>
+
+                                        Daftar
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<?= $this->endSection() ?>
+
+
+<?= $this->section('script') ?>
+
+<?= $this->include('auth/partials/script') ?>
+
+<?= $this->endSection() ?>

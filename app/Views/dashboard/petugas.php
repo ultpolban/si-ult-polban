@@ -1,9 +1,17 @@
-<?= $this->extend('layouts/template') ?>
+<?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
 
-<h1>Dashboard Petugas ULT</h1>
+<div class="container mt-5">
 
-<p>Selamat datang <?= session()->get('name') ?></p>
+    <div class="alert alert-success">
+
+        <h3>Dashboard Petugas ULT</h3>
+
+        <p>Halaman ini akan digunakan untuk memproses layanan.</p>
+
+    </div>
+
+</div>
 
 <?= $this->endSection() ?>

@@ -1,48 +1,190 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 
 <head>
-    <title>Login SI-ULT POLBAN</title>
+
+    <?= $this->include('layouts/header') ?>
+
 </head>
 
-<body>
+<body class="auth-page">
 
-    <h2>Login SI-ULT POLBAN</h2>
+    <div class="auth-container">
 
-    <?php if (session()->getFlashdata('error')) : ?>
+        <div class="auth-card">
 
-        <p style="color:red;">
-            <?= session()->getFlashdata('error') ?>
-        </p>
+            <!-- LEFT -->
 
-    <?php endif; ?>
+            <div class="auth-left">
 
-    <form action="<?= base_url('login') ?>" method="post">
+                <div>
 
-        <p>Email</p>
+                    <span class="system-badge">
 
-        <input type="email" name="email">
+                        SI ULT POLBAN
 
-        <p>Password</p>
+                    </span>
 
-        <input type="password" name="password">
+                    <h1>
 
-        <br><br>
+                        Sistem Informasi
+                        <br>
+                        Unit Layanan Terpadu
 
-        <button type="submit">
+                    </h1>
 
-            Login
+                    <p>
 
-        </button>
+                        Politeknik Negeri Bandung
 
-        <p>
-            Belum punya akun?
-            <a href="<?= base_url('register') ?>">
-                Daftar di sini
-            </a>
-        </p>
+                    </p>
 
-    </form>
+                </div>
+
+                <div class="auth-icon">
+
+                    <i class="bi bi-shield-lock-fill"></i>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+
+            <div class="auth-right">
+
+                <h2>
+
+                    Login
+
+                </h2>
+
+                <p class="text-muted mb-4">
+
+                    Silakan login menggunakan akun Anda.
+
+                </p>
+
+                <?php if (session()->getFlashdata('error')): ?>
+
+                    <div class="alert alert-danger">
+
+                        <?= session()->getFlashdata('error') ?>
+
+                    </div>
+
+                <?php endif; ?>
+
+                <form action="<?= base_url('login') ?>" method="post">
+
+                    <?= csrf_field() ?>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Email
+
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="Masukkan Email"
+                            required>
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+
+                            Password
+
+                        </label>
+
+                        <div class="input-group">
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-control"
+                                placeholder="Masukkan Password"
+                                required>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary"
+                                onclick="togglePassword()">
+
+                                <i
+                                    id="eye"
+                                    class="bi bi-eye">
+
+                                </i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="btn btn-primary w-100">
+
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+
+                        Login
+
+                    </button>
+
+                </form>
+
+                <div class="text-center mt-4">
+
+                    Belum mempunyai akun?
+
+                    <a href="<?= base_url('register') ?>">
+
+                        Daftar Sekarang
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function togglePassword() {
+
+            let pass = document.getElementById('password');
+
+            let eye = document.getElementById('eye');
+
+            if (pass.type === "password") {
+
+                pass.type = "text";
+
+                eye.className = "bi bi-eye-slash";
+
+            } else {
+
+                pass.type = "password";
+
+                eye.className = "bi bi-eye";
+
+            }
+
+        }
+    </script>
+
+    <?= $this->include('layouts/footer') ?>
 
 </body>
 

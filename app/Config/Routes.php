@@ -6,98 +6,210 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-// =========================
-// HALAMAN UTAMA
-// =========================
-$routes->get('/', 'Home::index');
+$routes->setDefaultNamespace('App\Controllers');
+$routes->setDefaultController('Web');
+$routes->setDefaultMethod('login');
+$routes->setTranslateURIDashes(false);
+$routes->set404Override();
+$routes->setAutoRoute(false);
 
-// =========================
-// LOGIN & REGISTER
-// =========================
-$routes->get('/login', 'AuthController::login');
-$routes->post('/login', 'AuthController::authenticate');
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
+require APPPATH . 'Config/Routes/Api.php';
 
-$routes->get('/register', 'AuthController::register');
-$routes->post('/register', 'AuthController::storeRegister');
+/*
+|--------------------------------------------------------------------------
+| Authentication
+|--------------------------------------------------------------------------
+*/
 
-$routes->get('/logout', 'AuthController::logout');
+$routes->get('/', 'Web::login');
 
-// =========================
-// DASHBOARD ADMIN (TUGAS ANDA)
-// =========================
-$routes->get('/admin/dashboard', 'Admin::dashboard');
-$routes->get('/admin/layanan', 'Admin::layanan');
-$routes->get('/admin/laporan', 'Admin::laporan');
-$routes->get('/admin/statistik', 'Admin::statistik');
-$routes->get('/admin/tiket', 'Admin::tiket');
-$routes->get('/admin/verifikasi-tiket', 'Admin::verifikasiTiket');
-$routes->get('/admin/tracking', 'Admin::tracking');
-$routes->get('/pimpinan/dashboard', 'Admin::dashboardPimpinan');
+$routes->get('login', 'Web::login');
+$routes->post('login', 'AuthController::authenticate');
 
+$routes->get('logout', 'AuthController::logout');
 
-// =========================
-// SEMUA USER YANG SUDAH LOGIN
-// =========================
+/*
+|--------------------------------------------------------------------------
+| Management Kelas
+|--------------------------------------------------------------------------
+*/
+
+$routes->group('classes', ['filter' => 'auth'], function ($routes) {
+
+    $routes->get('/', 'ClassController::index');
+
+    $routes->get('create', 'ClassController::create');
+    $routes->post('store', 'ClassController::store');
+
+    $routes->get('show/(:num)', 'ClassController::show/$1');
+
+    $routes->get('edit/(:num)', 'ClassController::edit/$1');
+    $routes->post('update/(:num)', 'ClassController::update/$1');
+
+    $routes->post('delete/(:num)', 'ClassController::delete/$1');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Register
+|--------------------------------------------------------------------------
+*/
+
+$routes->get('register', 'AuthController::register');
+
+$routes->post('register/store', 'AuthController::storeRegister');
+
+/*
+|--------------------------------------------------------------------------
+| Ajax
+|--------------------------------------------------------------------------
+*/
+
+$routes->get(
+    'study-programs/(:num)',
+    'AuthController::getStudyPrograms/$1'
+);
+
+/*
+|--------------------------------------------------------------------------
+| Protected Routes
+|--------------------------------------------------------------------------
+*/
+
 $routes->group('', ['filter' => 'auth'], function ($routes) {
 
-    $routes->get('/dashboard', 'DashboardController::index');
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard
+    |--------------------------------------------------------------------------
+    */
 
-    // User CRUD
-    $routes->get('/users', 'UserController::index');
-    $routes->get('/users/create', 'UserController::create');
-    $routes->post('/users/store', 'UserController::store');
-    $routes->get('/users/edit/(:num)', 'UserController::edit/$1');
-    $routes->post('/users/update/(:num)', 'UserController::update/$1');
-    $routes->get('/users/delete/(:num)', 'UserController::delete/$1');
-    $routes->get('/users/toggle/(:num)', 'UserController::toggleStatus/$1');
+    $routes->get('dashboard', 'DashboardController::index');
 
-    // Role CRUD
-    $routes->get('/roles', 'RoleController::index');
-    $routes->get('/roles/create', 'RoleController::create');
-    $routes->post('/roles/store', 'RoleController::store');
-    $routes->get('/roles/edit/(:num)', 'RoleController::edit/$1');
-    $routes->post('/roles/update/(:num)', 'RoleController::update/$1');
-    $routes->get('/roles/delete/(:num)', 'RoleController::delete/$1');
+    /*
+    |--------------------------------------------------------------------------
+    | ADMINISTRATOR SAJA (role_id = 1)
+    |--------------------------------------------------------------------------
+    */
 
-    // Unit CRUD
-    $routes->get('/units', 'UnitController::index');
-    $routes->get('/unit-kerja', 'UnitController::index');
-    $routes->post('/units/store', 'UnitController::store');
-    $routes->get('/units/edit/(:num)', 'UnitController::edit/$1');
-    $routes->post('/units/update/(:num)', 'UnitController::update/$1');
-    $routes->get('/units/delete/(:num)', 'UnitController::delete/$1');
+    $routes->group('', ['filter' => 'role:1'], function ($routes) {
 
-    // Jurusan CRUD
-    $routes->get('/jurusan', 'JurusanController::index');
-    $routes->post('/jurusan/store', 'JurusanController::store');
-    $routes->get('/jurusan/edit/(:num)', 'JurusanController::edit/$1');
-    $routes->post('/jurusan/update/(:num)', 'JurusanController::update/$1');
-    $routes->get('/jurusan/delete/(:num)', 'JurusanController::delete/$1');
+        /*
+        | User Management
+        */
 
-    // Program Studi CRUD
-    $routes->get('/program-studi', 'ProgramStudiController::index');
-    $routes->post('/program-studi/store', 'ProgramStudiController::store');
-    $routes->get('/program-studi/edit/(:num)', 'ProgramStudiController::edit/$1');
-    $routes->post('/program-studi/update/(:num)', 'ProgramStudiController::update/$1');
-    $routes->get('/program-studi/delete/(:num)', 'ProgramStudiController::delete/$1');
+        $routes->group('users', function ($routes) {
 
-    // Debug endpoint (no auth) for quick checks
-    $routes->get('/debug/status', 'DebugController::status');
+            $routes->get('/', 'UserController::index');
+
+            $routes->get('create', 'UserController::create');
+
+            $routes->get('study-programs/(:num)', 'UserController::getStudyPrograms/$1');
+
+            $routes->post('store', 'UserController::store');
+
+            $routes->get('show/(:num)', 'UserController::show/$1');
+
+            $routes->get('edit/(:num)', 'UserController::edit/$1');
+
+            $routes->post('update/(:num)', 'UserController::update/$1');
+
+            $routes->post('delete/(:num)', 'UserController::delete/$1');
+
+            $routes->get('toggle/(:num)', 'UserController::toggle/$1');
+        });
+
+        /*
+        | Role
+        */
+
+        $routes->group('roles', function ($routes) {
+
+            $routes->get('/', 'RoleController::index');
+
+            $routes->get('create', 'RoleController::create');
+            $routes->post('store', 'RoleController::store');
+
+            $routes->get('edit/(:num)', 'RoleController::edit/$1');
+            $routes->post('update/(:num)', 'RoleController::update/$1');
+
+            $routes->get('delete/(:num)', 'RoleController::delete/$1');
+        });
+
+        /*
+        | User Type
+        */
+
+        $routes->group('user-types', function ($routes) {
+
+            $routes->get('/', 'UserTypeController::index');
+
+            $routes->get('create', 'UserTypeController::create');
+            $routes->post('store', 'UserTypeController::store');
+
+            $routes->get('edit/(:num)', 'UserTypeController::edit/$1');
+            $routes->post('update/(:num)', 'UserTypeController::update/$1');
+
+            $routes->get('delete/(:num)', 'UserTypeController::delete/$1');
+        });
+
+        /*
+        | Department
+        */
+
+        $routes->group('departments', function ($routes) {
+
+            $routes->get('/', 'DepartmentController::index');
+
+            $routes->get('create', 'DepartmentController::create');
+            $routes->post('store', 'DepartmentController::store');
+
+            $routes->get('edit/(:num)', 'DepartmentController::edit/$1');
+            $routes->post('update/(:num)', 'DepartmentController::update/$1');
+
+            $routes->get('delete/(:num)', 'DepartmentController::delete/$1');
+        });
+
+        /*
+        | Study Program
+        */
+
+        $routes->group('study-programs', function ($routes) {
+
+            $routes->get('/', 'StudyProgramController::index');
+
+            $routes->get('create', 'StudyProgramController::create');
+            $routes->post('store', 'StudyProgramController::store');
+
+            $routes->get('edit/(:num)', 'StudyProgramController::edit/$1');
+            $routes->post('update/(:num)', 'StudyProgramController::update/$1');
+
+            $routes->get('delete/(:num)', 'StudyProgramController::delete/$1');
+        });
+
+        /*
+        | Work Unit
+        */
+
+        $routes->group('work-units', function ($routes) {
+
+            $routes->get('/', 'WorkUnitController::index');
+
+            $routes->get('create', 'WorkUnitController::create');
+            $routes->post('store', 'WorkUnitController::store');
+
+            $routes->get('edit/(:num)', 'WorkUnitController::edit/$1');
+            $routes->post('update/(:num)', 'WorkUnitController::update/$1');
+
+            $routes->get('delete/(:num)', 'WorkUnitController::delete/$1');
+        });
+    });
 });
 
-// =========================
-// KHUSUS ROLE ADMIN
-// =========================
-$routes->group('users', ['filter' => 'role'], function ($routes) {
-
-    $routes->get('/', 'UserController::index');
-
-    $routes->get('create', 'UserController::create');
-    $routes->post('store', 'UserController::store');
-
-    $routes->get('edit/(:num)', 'UserController::edit/$1');
-    $routes->post('update/(:num)', 'UserController::update/$1');
-
-    $routes->get('delete/(:num)', 'UserController::delete/$1');
-    $routes->get('toggle/(:num)', 'UserController::toggleStatus/$1');
-});
+$routes->get('study-programs/by-department/(:num)', 'StudyProgramController::byDepartment/$1');
+$routes->get('users/partial/(:any)', 'UserController::partial/$1');

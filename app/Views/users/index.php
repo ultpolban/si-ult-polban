@@ -1,250 +1,711 @@
-<?= $this->extend('layouts/template') ?>
+<?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
 
-<div class="container-fluid py-2">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h3 class="fw-bold text-dark mb-1">Manajemen User</h3>
-            <p class="text-muted mb-0">Kelola data pengguna sistem</p>
-        </div>
-        <div>
-            <a href="<?= base_url('users/create') ?>" class="btn btn-filter-submit d-flex align-items-center" style="background: linear-gradient(135deg, #1e2f99 0%, #1e3a60 100%); box-shadow: 0 4px 10px rgba(11, 34, 64, 0.15);">
-                <i class="fas fa-user-plus mr-1"></i> Tambah User
-            </a>
-        </div>
+<!-- ===========================================================
+HEADER
+=========================================================== -->
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+    <div>
+
+        <h2 class="fw-bold mb-1">
+
+            Management User
+
+        </h2>
+
+        <p class="text-muted mb-0">
+
+            Kelola seluruh data pengguna SI-ULT POLBAN.
+
+        </p>
+
     </div>
 
-    <!-- Alert Success -->
-    <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 8px;">
-            <i class="fas fa-check-circle mr-2"></i> <?= session()->getFlashdata('success') ?>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    <?php endif; ?>
+    <a
+        href="<?= base_url('users/create') ?>"
+        class="btn btn-primary">
 
-    <!-- Search Controls -->
-    <div class="card card-premium card-orange-top">
-        <div class="card-body p-3">
-            <form action="" method="get" class="search-filter-container m-0 d-flex gap-2 align-items-center">
-                <div class="search-input-group flex-grow-1 m-0">
-                    <i class="fas fa-search"></i>
-                    <input type="text" name="search" class="form-control" placeholder="Cari nama, email atau nomor HP..." value="<?= esc($search ?? '') ?>">
+        <i class="bi bi-person-plus-fill me-2"></i>
+
+        Tambah User
+
+    </a>
+
+</div>
+
+<!-- ===========================================================
+FLASH MESSAGE
+=========================================================== -->
+
+<?php if (session()->getFlashdata('success')) : ?>
+
+    <div class="alert alert-success alert-dismissible fade show">
+
+        <i class="bi bi-check-circle-fill me-2"></i>
+
+        <?= session()->getFlashdata('success') ?>
+
+        <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"></button>
+
+    </div>
+
+<?php endif; ?>
+
+<?php if (session()->getFlashdata('error')) : ?>
+
+    <div class="alert alert-danger alert-dismissible fade show">
+
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+        <?= session()->getFlashdata('error') ?>
+
+        <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"></button>
+
+    </div>
+
+<?php endif; ?>
+
+<!-- ===========================================================
+STATISTIK USER
+=========================================================== -->
+
+<div class="row g-4 mb-4">
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+
+                    Total User
+
+                </small>
+
+                <h2 class="fw-bold mt-2 mb-0">
+
+                    <?= $totalUser ?>
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+
+                    User Aktif
+
+                </small>
+
+                <h2 class="fw-bold text-success mt-2 mb-0">
+
+                    <?= $totalActive ?>
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+
+                    User Nonaktif
+
+                </small>
+
+                <h2 class="fw-bold text-danger mt-2 mb-0">
+
+                    <?= $totalInactive ?>
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+
+                    Mahasiswa
+
+                </small>
+
+                <h2 class="fw-bold text-primary mt-2 mb-0">
+
+                    <?= $totalMahasiswa ?>
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===========================================================
+FILTER DATA USER
+=========================================================== -->
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-funnel-fill me-2"></i>
+
+            Filter Data User
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <form
+            action="<?= current_url() ?>"
+            method="get">
+
+            <div class="row g-3">
+
+                <!-- Kata Kunci -->
+
+                <div class="col-lg-6">
+
+                    <label class="form-label">
+
+                        Kata Kunci
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="keyword"
+                        class="form-control"
+                        value="<?= esc($keyword) ?>"
+                        placeholder="Cari nama, email, NIM, NIP atau NIDN">
+
                 </div>
-                
-                <button type="submit" class="btn btn-success px-4" style="height: 40px; border-radius: 8px; background: linear-gradient(135deg, #28a745 0%, #218838 100%); border: none; font-weight: 600; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.15);">
-                    Cari
-                </button>
-                <a href="<?= base_url('users') ?>" class="btn btn-secondary px-4 d-flex align-items-center justify-content-center" style="height: 40px; border-radius: 8px; background-color: #6c757d; border: none; font-weight: 600; box-shadow: 0 4px 10px rgba(108, 117, 125, 0.15);">
-                    Reset
-                </a>
-            </form>
-        </div>
-    </div>
 
-    <!-- Users Table Card -->
-    <div class="card card-premium card-orange-top">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-premium">
-                    <thead>
-                        <tr>
-                            <th style="width: 50px;">No</th>
-                            <th>Nama</th>
-                            <th>Role</th>
-                            <th>Unit Kerja</th>
-                            <th>Email</th>
-                            <th>No HP</th>
-                            <th style="width: 90px; text-align: center;">Status</th>
-                            <th style="width: 130px; text-align: center;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                        $no = 1;
-                        foreach ($users as $user): 
-                            // Determine Unit Work based on role
-                            $unit = '-';
-                            if ($user['role_id'] == 2) {
-                                $unit = 'ULT';
-                            } elseif ($user['role_id'] == 3) {
-                                $unit = ($user['id'] % 2 == 0) ? 'Keuangan' : 'Akademik';
-                            } elseif ($user['role_id'] == 4) {
-                                $unit = 'Pemohon';
-                            } elseif ($user['role_id'] == 5) {
-                                $unit = 'Pimpinan';
-                            }
-                        ?>
-                        <tr>
-                            <td><?= $no++ ?></td>
-                            <td class="font-weight-bold" style="color: #1e2f99;"><?= esc($user['name']) ?></td>
-                            <td>
-                                <span class="badge bg-light text-dark font-weight-normal px-2 py-1" style="border: 1px solid #cbd5e1; border-radius: 4px;">
-                                    <?= esc($user['role_name']) ?>
-                                </span>
-                            </td>
-                            <td><?= $unit ?></td>
-                            <td><?= esc($user['email']) ?></td>
-                            <td><?= esc($user['phone'] ?? '-') ?></td>
-                            <td class="text-center">
-                                <span class="status-badge <?= ($user['is_active'] == 1) ? 'badge-aktif' : 'badge-nonaktif' ?>">
-                                    <?= ($user['is_active'] == 1) ? 'Aktif' : 'Nonaktif' ?>
-                                </span>
-                            </td>
-                            <!-- AKSI: compact icon group + dropdown -->
-                            <td class="text-center">
-                                <div class="d-flex align-items-center justify-content-center" style="gap: 4px;">
-                                    <!-- Detail -->
-                                    <button type="button"
-                                        class="btn-icon-action btn-detail"
-                                        title="Detail"
-                                        data-name="<?= esc($user['name']) ?>"
-                                        data-role="<?= esc($user['role_name']) ?>"
-                                        data-unit="<?= $unit ?>"
-                                        data-email="<?= esc($user['email']) ?>"
-                                        data-phone="<?= esc($user['phone'] ?? '-') ?>"
-                                        data-status="<?= ($user['is_active'] == 1) ? 'Aktif' : 'Nonaktif' ?>"
-                                        data-created="<?= esc($user['created_at']) ?>"
-                                        style="background: #0ea5e9; color: #fff;">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <!-- Edit -->
-                                    <a href="<?= base_url('users/edit/' . $user['id']) ?>"
-                                       class="btn-icon-action"
-                                       title="Edit"
-                                       style="background: #f59e0b; color: #fff;">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <!-- More actions (toggle + delete) dropdown -->
-                                    <div class="dropdown">
-                                        <button class="btn-icon-action dropdown-toggle-no-caret"
-                                                data-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false"
-                                                title="Lainnya"
-                                                style="background: #64748b; color: #fff;">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right shadow border-0" style="border-radius: 10px; min-width: 160px; padding: 6px 0;">
-                                            <a class="dropdown-item d-flex align-items-center py-2 px-3"
-                                               href="<?= base_url('users/toggle/' . $user['id']) ?>"
-                                               style="font-size: 0.875rem; color: <?= ($user['is_active'] == 1) ? '#475569' : '#16a34a' ?>;">
-                                                <i class="fas fa-<?= ($user['is_active'] == 1) ? 'ban' : 'check-circle' ?> mr-2" style="width: 16px;"></i>
-                                                <?= ($user['is_active'] == 1) ? 'Nonaktifkan' : 'Aktifkan' ?>
-                                            </a>
-                                            <div class="dropdown-divider my-1"></div>
-                                            <a class="dropdown-item d-flex align-items-center py-2 px-3"
-                                               href="<?= base_url('users/delete/' . $user['id']) ?>"
-                                               style="font-size: 0.875rem; color: #dc2626;"
-                                               onclick="return confirm('Apakah Anda yakin ingin menghapus user <?= esc($user['name']) ?>?')">
-                                                <i class="fas fa-trash-alt mr-2" style="width: 16px;"></i>
-                                                Hapus
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
+                <!-- Role -->
+
+                <div class="col-lg-3">
+
+                    <label class="form-label">
+
+                        Role
+
+                    </label>
+
+                    <select
+                        name="role"
+                        class="form-select">
+
+                        <option value="">
+
+                            Semua Role
+
+                        </option>
+
+                        <?php foreach ($roles as $role): ?>
+
+                            <option
+                                value="<?= $role['id'] ?>"
+                                <?= $selectedRole == $role['id'] ? 'selected' : '' ?>>
+
+                                <?= esc($role['role_name']) ?>
+
+                            </option>
+
                         <?php endforeach; ?>
-                        
-                        <?php if (empty($users)): ?>
-                        <tr>
-                            <td colspan="8" class="text-center py-4 text-muted">
-                                Tidak ada data user ditemukan.
-                            </td>
-                        </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+
+                    </select>
+
+                </div>
+
+                <!-- Jenis Pemohon -->
+
+                <div class="col-lg-3">
+
+                    <label class="form-label">
+
+                        Jenis Pemohon
+
+                    </label>
+
+                    <select
+                        name="type"
+                        class="form-select">
+
+                        <option value="">
+
+                            Semua Jenis
+
+                        </option>
+
+                        <?php foreach ($userTypes as $type): ?>
+
+                            <option
+                                value="<?= $type['id'] ?>"
+                                <?= $selectedType == $type['id'] ? 'selected' : '' ?>>
+
+                                <?= esc($type['type_name']) ?>
+
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
+
+                </div>
+
             </div>
-        </div>
-    </div>
-</div>
 
+            <hr>
 
-<!-- Detail User Modal -->
-<div class="modal fade" id="detailUserModal" tabindex="-1" aria-labelledby="detailUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow" style="border-radius: 12px;">
-            <div class="modal-header border-bottom-0 pt-4 px-4 pb-2">
-                <h5 class="modal-title font-weight-bold" id="detailUserModalLabel" style="color: #1e2f99;">Detail Informasi Pengguna</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+            <div class="d-flex justify-content-end gap-2">
+
+                <a
+                    href="<?= base_url('users') ?>"
+                    class="btn btn-outline-secondary">
+
+                    <i class="bi bi-arrow-clockwise me-2"></i>
+
+                    Reset
+
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    <i class="bi bi-search me-2"></i>
+
+                    Cari Data
+
                 </button>
+
             </div>
-            <div class="modal-body px-4 pb-4 pt-2">
-                <div class="d-flex align-items-center mb-4">
-                    <img id="detail-avatar" src="" alt="Avatar" class="rounded-circle mr-3" style="width: 60px; height: 60px; object-fit: cover; border: 2px solid #e2e8f0;">
-                    <div>
-                        <h4 id="detail-name" class="font-weight-bold mb-1" style="color: #0f172a; font-size: 1.2rem;">-</h4>
-                        <span id="detail-role" class="badge badge-light border text-dark px-2 py-1">-</span>
-                    </div>
-                </div>
-                
-                <div class="row pt-2 border-top">
-                    <div class="col-12 mb-3">
-                        <small class="text-muted d-block">Unit Kerja</small>
-                        <span id="detail-unit" class="font-weight-medium" style="color: #334155;">-</span>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <small class="text-muted d-block">Email</small>
-                        <span id="detail-email" class="font-weight-medium" style="color: #334155;">-</span>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <small class="text-muted d-block">Nomor HP</small>
-                        <span id="detail-phone" class="font-weight-medium" style="color: #334155;">-</span>
-                    </div>
-                    <div class="col-6 mb-2">
-                        <small class="text-muted d-block">Status</small>
-                        <span id="detail-status" class="badge">-</span>
-                    </div>
-                    <div class="col-6 mb-2">
-                        <small class="text-muted d-block">Tanggal Terdaftar</small>
-                        <span id="detail-created" class="font-weight-medium" style="color: #334155;">-</span>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer border-top-0 pt-0 px-4 pb-4">
-                <button type="button" class="btn btn-light w-100" data-dismiss="modal" style="border-radius: 8px; font-weight: 600;">Tutup</button>
-            </div>
-        </div>
+
+        </form>
+
     </div>
+
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const detailButtons = document.querySelectorAll('.btn-detail');
-    detailButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const name = this.getAttribute('data-name');
-            const role = this.getAttribute('data-role');
-            const unit = this.getAttribute('data-unit');
-            const email = this.getAttribute('data-email');
-            const phone = this.getAttribute('data-phone');
-            const status = this.getAttribute('data-status');
-            const created = this.getAttribute('data-created');
+<!-- ===========================================================
+DAFTAR USER
+=========================================================== -->
 
-            document.getElementById('detail-name').innerText = name;
-            document.getElementById('detail-role').innerText = role;
-            document.getElementById('detail-unit').innerText = unit;
-            document.getElementById('detail-email').innerText = email;
-            document.getElementById('detail-phone').innerText = phone;
-            document.getElementById('detail-created').innerText = created;
+<div class="card table-card">
 
-            const statusEl = document.getElementById('detail-status');
-            statusEl.innerText = status;
-            statusEl.className = 'badge px-2.5 py-1 ' + (status === 'Aktif' ? 'bg-success text-white' : 'bg-secondary text-white');
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
 
-            const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0b2240&color=fff`;
-            document.getElementById('detail-avatar').src = avatarUrl;
+        <h5 class="mb-0">
 
-            $('#detailUserModal').modal('show');
-        });
-    });
-});
-</script>
+            <i class="bi bi-people-fill me-2"></i>
+
+            Daftar User
+
+        </h5>
+
+        <span class="badge bg-primary">
+
+            Total <?= $totalUser ?> User
+
+        </span>
+
+    </div>
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead>
+
+                    <tr>
+
+                        <th width="60" class="text-center">No</th>
+
+                        <th width="80" class="text-center">Foto</th>
+
+                        <th>User</th>
+
+                        <th>Role</th>
+
+                        <th>Jenis</th>
+
+                        <th>Email</th>
+
+                        <th>No HP</th>
+
+                        <th>Status</th>
+
+                        <th width="170" class="text-center">
+
+                            Aksi
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <?php if (empty($users)): ?>
+
+                        <tr>
+
+                            <td colspan="9" class="text-center py-5">
+
+                                <i class="bi bi-people display-4 text-secondary"></i>
+
+                                <br><br>
+
+                                Belum ada data user.
+
+                            </td>
+
+                        </tr>
+
+                    <?php endif; ?>
+
+                    <?php
+
+                    $no = 1 + (($pager->getCurrentPage() - 1) * $pager->getPerPage());
+
+                    ?>
+
+                    <?php foreach ($users as $user): ?>
+
+                        <tr>
+
+                            <td class="text-center fw-semibold">
+
+                                <?= $no++ ?>
+
+                            </td>
+
+                            <td class="text-center">
+
+                                <?php if (!empty($user['photo'])): ?>
+
+                                    <img
+
+                                        src="<?= base_url('uploads/users/' . $user['photo']) ?>"
+
+                                        class="rounded-circle border"
+
+                                        width="55"
+
+                                        height="55"
+
+                                        style="object-fit:cover;">
+
+                                <?php else: ?>
+
+                                    <i
+
+                                        class="bi bi-person-circle text-secondary"
+
+                                        style="font-size:50px;"></i>
+
+                                <?php endif; ?>
+
+                            </td>
+
+                            <td>
+
+                                <div class="fw-bold">
+
+                                    <?= esc($user['full_name']) ?>
+
+                                </div>
+
+                                <small class="text-muted">
+
+                                    <?php
+
+                                    if (!empty($user['nim'])) {
+
+                                        echo "NIM : " . $user['nim'];
+                                    } elseif (!empty($user['nip'])) {
+
+                                        echo "NIP : " . $user['nip'];
+                                    } elseif (!empty($user['nidn'])) {
+
+                                        echo "NIDN : " . $user['nidn'];
+                                    } else {
+
+                                        echo "-";
+                                    }
+
+                                    ?>
+
+                                </small>
+
+                            </td>
+
+                            <!-- ==========================================
+                    ROLE
+                    =========================================== -->
+
+                            <td>
+
+                                <?php
+
+                                $badgeRole = match ($user['role_name']) {
+
+                                    'Administrator' => 'danger',
+
+                                    'Petugas ULT' => 'primary',
+
+                                    'Unit Tujuan' => 'warning',
+
+                                    'Pimpinan' => 'dark',
+
+                                    default => 'success'
+                                };
+
+                                ?>
+
+                                <span class="badge bg-<?= $badgeRole ?>">
+
+                                    <?= esc($user['role_name']) ?>
+
+                                </span>
+
+                            </td>
+
+                            <!-- ==========================================
+                            JENIS PEMOHON
+                            =========================================== -->
+
+                            <td>
+
+                                <span class="badge bg-info text-dark">
+
+                                    <?= esc($user['type_name'] ?? '-') ?>
+
+                                </span>
+
+                            </td>
+
+                            <!-- ==========================================
+                            EMAIL
+                            =========================================== -->
+
+                            <td>
+
+                                <small>
+
+                                    <?= esc($user['personal_email']) ?>
+
+                                </small>
+
+                            </td>
+
+                            <!-- ==========================================
+                            NO HP
+                            =========================================== -->
+
+                            <td>
+
+                                <?= esc($user['phone'] ?: '-') ?>
+
+                            </td>
+
+                            <!-- ==========================================
+                            STATUS
+                            =========================================== -->
+
+                            <td class="text-center">
+
+                                <?php if ($user['role_name'] == 'Administrator') : ?>
+
+                                    <span class="badge bg-dark">
+
+                                        Administrator
+
+                                    </span>
+
+                                <?php else : ?>
+
+                                    <a
+                                        href="<?= base_url('users/toggle/' . $user['id']) ?>"
+                                        class="text-decoration-none"
+                                        onclick="return confirm('Apakah Anda yakin ingin mengubah status user ini?')">
+
+                                        <?php if ($user['is_active']) : ?>
+
+                                            <span class="badge bg-success">
+
+                                                <i class="bi bi-check-circle-fill me-1"></i>
+
+                                                Aktif
+
+                                            </span>
+
+                                        <?php else : ?>
+
+                                            <span class="badge bg-danger">
+
+                                                <i class="bi bi-x-circle-fill me-1"></i>
+
+                                                Nonaktif
+
+                                            </span>
+
+                                        <?php endif; ?>
+
+                                    </a>
+
+                                <?php endif; ?>
+
+                            </td>
+
+                            <!-- ==========================================
+                            AKSI
+                            =========================================== -->
+
+                            <td class="text-center">
+
+                                <div class="btn-group" role="group">
+
+                                    <a
+                                        href="<?= base_url('users/show/' . $user['id']) ?>"
+                                        class="btn btn-info btn-sm"
+                                        title="Detail">
+
+                                        <i class="bi bi-eye-fill"></i>
+
+                                    </a>
+
+                                    <a
+                                        href="<?= base_url('users/edit/' . $user['id']) ?>"
+                                        class="btn btn-warning btn-sm"
+                                        title="Edit">
+
+                                        <i class="bi bi-pencil-fill"></i>
+
+                                    </a>
+
+                                    <?php if ($user['role_name'] !== 'Administrator') : ?>
+
+                                        <form
+                                            action="<?= base_url('users/delete/' . $user['id']) ?>"
+                                            method="post"
+                                            class="d-inline">
+
+                                            <?= csrf_field() ?>
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Yakin ingin menghapus user ini?')">
+
+                                                <i class="bi bi-trash-fill"></i>
+
+                                            </button>
+
+                                        </form>
+
+                                    <?php else : ?>
+
+                                        <button
+                                            class="btn btn-secondary btn-sm"
+                                            disabled
+                                            title="Administrator tidak dapat dihapus">
+
+                                            <i class="bi bi-lock-fill"></i>
+
+                                        </button>
+
+                                    <?php endif; ?>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    <?php endforeach; ?>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===========================================================
+PAGINATION
+=========================================================== -->
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-4">
+
+    <div class="text-muted">
+
+        Menampilkan
+
+        <strong><?= count($users) ?></strong>
+
+        data dari
+
+        <strong><?= $totalUser ?></strong>
+
+        user.
+
+    </div>
+
+    <div>
+
+        <?= $pager->links() ?>
+
+    </div>
+
+</div>
 
 <?= $this->endSection() ?>

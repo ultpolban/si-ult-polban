@@ -8,9 +8,9 @@ class RoleSeeder extends Seeder
 {
     public function run()
     {
-        $data = [
+        $roles = [
             [
-                'role_name' => 'Admin',
+                'role_name' => 'Administrator',
                 'description' => 'Administrator Sistem'
             ],
             [
@@ -22,15 +22,15 @@ class RoleSeeder extends Seeder
                 'description' => 'Unit yang memproses layanan'
             ],
             [
-                'role_name' => 'Pemohon',
-                'description' => 'Mahasiswa/Dosen/Publik'
-            ],
-            [
                 'role_name' => 'Pimpinan',
                 'description' => 'Pimpinan POLBAN'
             ],
+            [
+                'role_name' => 'Pemohon',
+                'description' => 'Mahasiswa, Dosen, Tendik, Alumni, Orang Tua, Mitra, Publik'
+            ],
         ];
 
-        $this->db->table('roles')->insertBatch($data);
+        $this->db->table('roles')->insertBatch($roles);
     }
 }

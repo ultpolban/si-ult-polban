@@ -1,31 +1,137 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="topbar">
 
-    <ul class="navbar-nav">
+    <div>
 
-        <li class="nav-item">
+        <h4 class="page-title mb-0">
 
-            <a class="nav-link" data-widget="pushmenu" href="#">
+            <?= esc($title ?? 'Dashboard') ?>
 
-                <i class="fas fa-bars"></i>
+        </h4>
+
+        <small class="text-muted">
+
+            Sistem Informasi Unit Layanan Terpadu POLBAN
+
+        </small>
+
+    </div>
+
+    <div class="topbar-right">
+
+        <div class="today">
+
+            <i class="bi bi-calendar-event me-1"></i>
+
+            <?= date('d F Y') ?>
+
+        </div>
+
+        <button
+            class="notification"
+            data-bs-toggle="tooltip"
+            title="Notifikasi">
+
+            <i class="bi bi-bell-fill"></i>
+
+        </button>
+
+        <div class="dropdown">
+
+            <a
+                href="#"
+                class="text-decoration-none text-dark d-flex align-items-center"
+                data-bs-toggle="dropdown">
+
+                <div class="avatar me-3">
+
+                    <?= strtoupper(substr(session('full_name') ?? 'A', 0, 1)) ?>
+
+                </div>
+
+                <div class="text-start">
+
+                    <div class="fw-semibold">
+
+                        <?= esc(session('full_name') ?? 'Administrator') ?>
+
+                    </div>
+
+                    <span class="role-badge">
+
+                        Administrator
+
+                    </span>
+
+                </div>
+
+                <i class="bi bi-chevron-down ms-3"></i>
 
             </a>
 
-        </li>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
 
-    </ul>
+                <li>
 
-    <ul class="navbar-nav ml-auto">
+                    <h6 class="dropdown-header">
 
-        <li class="nav-item">
+                        Akun
 
-            <span class="nav-link">
+                    </h6>
 
-                SI-ULT POLBAN
+                </li>
 
-            </span>
+                <li>
 
-        </li>
+                    <a
+                        class="dropdown-item"
+                        href="#">
 
-    </ul>
+                        <i class="bi bi-person-circle me-2"></i>
+
+                        Profil Saya
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a
+                        class="dropdown-item"
+                        href="#">
+
+                        <i class="bi bi-gear me-2"></i>
+
+                        Pengaturan
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <hr class="dropdown-divider">
+
+                </li>
+
+                <li>
+
+                    <a
+                        class="dropdown-item text-danger"
+                        href="<?= base_url('logout') ?>">
+
+                        <i class="bi bi-box-arrow-right me-2"></i>
+
+                        Logout
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
 
 </nav>

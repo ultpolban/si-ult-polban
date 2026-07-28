@@ -1,10 +1,15 @@
-<div id="alumniForm" class="dynamic-section" style="display:none;">
+<div
+    id="alumni-section"
+    class="user-type-section"
+    style="display:none;">
 
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm border-0 mb-4">
 
-        <div class="card-header bg-info text-white">
+        <div class="card-header bg-dark text-white">
 
             <h5 class="mb-0">
+
+                <i class="bi bi-award-fill me-2"></i>
 
                 Data Alumni
 
@@ -16,11 +21,13 @@
 
             <div class="row">
 
-                <!-- NIM -->
+                <!-- ==========================================
+                NIM
+                =========================================== -->
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         NIM
 
@@ -34,11 +41,39 @@
 
                 </div>
 
-                <!-- Jurusan -->
+                <!-- ==========================================
+                TAHUN LULUS
+                =========================================== -->
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
+
+                        Tahun Lulus
+
+                    </label>
+
+                    <input
+                        type="number"
+                        name="graduation_year"
+                        class="form-control"
+                        min="2000"
+                        max="<?= date('Y') ?>"
+                        value="<?= old('graduation_year', $user['graduation_year'] ?? '') ?>">
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <!-- ==========================================
+                JURUSAN
+                =========================================== -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-semibold">
 
                         Jurusan
 
@@ -48,7 +83,11 @@
                         name="department_id"
                         class="form-select">
 
-                        <option value="">Pilih Jurusan</option>
+                        <option value="">
+
+                            -- Pilih Jurusan --
+
+                        </option>
 
                         <?php foreach ($departments as $department): ?>
 
@@ -66,11 +105,13 @@
 
                 </div>
 
-                <!-- Program Studi -->
+                <!-- ==========================================
+                PROGRAM STUDI
+                =========================================== -->
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         Program Studi
 
@@ -78,124 +119,33 @@
 
                     <select
                         name="study_program_id"
-                        class="form-select">
+                        id="study_program_id"
+                        class="form-select"
+                        data-selected="<?= old('study_program_id', $user['study_program_id'] ?? '') ?>">
 
-                        <option value="">Pilih Program Studi</option>
+                        <option value="">
 
-                        <?php foreach ($studyPrograms as $program): ?>
+                            -- Pilih Program Studi --
+
+                        </option>
+
+                        <?php foreach ($studyPrograms as $studyProgram): ?>
 
                             <option
-                                value="<?= $program['id'] ?>"
-                                <?= old('study_program_id', $user['study_program_id'] ?? '') == $program['id'] ? 'selected' : '' ?>>
+                                value="<?= $studyProgram['id'] ?>"
+                                <?= old('study_program_id', $user['study_program_id'] ?? '') == $studyProgram['id'] ? 'selected' : '' ?>>
 
-                                <?= esc($program['program_name']) ?>
+                                <?= esc($studyProgram['education_level']) ?>
+
+                                -
+
+                                <?= esc($studyProgram['program_name']) ?>
 
                             </option>
 
                         <?php endforeach; ?>
 
                     </select>
-
-                </div>
-
-            </div>
-
-            <div class="row">
-
-                <!-- Tahun Lulus -->
-
-                <div class="col-md-4 mb-3">
-
-                    <label class="form-label">
-
-                        Tahun Lulus
-
-                    </label>
-
-                    <input
-                        type="number"
-                        name="graduation_year"
-                        min="1980"
-                        max="<?= date('Y') ?>"
-                        class="form-control"
-                        value="<?= old('graduation_year', $user['graduation_year'] ?? '') ?>">
-
-                </div>
-
-                <!-- Nomor Ijazah -->
-
-                <div class="col-md-4 mb-3">
-
-                    <label class="form-label">
-
-                        Nomor Ijazah
-
-                    </label>
-
-                    <input
-                        type="text"
-                        name="graduation_number"
-                        class="form-control"
-                        value="<?= old('graduation_number', $user['graduation_number'] ?? '') ?>">
-
-                </div>
-
-                <!-- Pekerjaan -->
-
-                <div class="col-md-4 mb-3">
-
-                    <label class="form-label">
-
-                        Pekerjaan Saat Ini
-
-                    </label>
-
-                    <input
-                        type="text"
-                        name="job_title"
-                        class="form-control"
-                        value="<?= old('job_title', $user['job_title'] ?? '') ?>">
-
-                </div>
-
-            </div>
-
-            <div class="row">
-
-                <!-- Nama Instansi -->
-
-                <div class="col-md-6 mb-3">
-
-                    <label class="form-label">
-
-                        Nama Instansi / Perusahaan
-
-                    </label>
-
-                    <input
-                        type="text"
-                        name="institution_name"
-                        class="form-control"
-                        value="<?= old('institution_name', $user['institution_name'] ?? '') ?>">
-
-                </div>
-
-                <!-- Jenis Instansi -->
-
-                <div class="col-md-6 mb-3">
-
-                    <label class="form-label">
-
-                        Jenis Instansi
-
-                    </label>
-
-                    <input
-                        type="text"
-                        name="institution_type"
-                        class="form-control"
-                        placeholder="Pemerintah / Swasta / Wirausaha"
-                        value="<?= old('institution_type', $user['institution_type'] ?? '') ?>">
 
                 </div>
 

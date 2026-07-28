@@ -27,17 +27,52 @@ require APPPATH . 'Config/Routes/Api.php';
 */
 
 $routes->get('/', 'Web::login');
+
 $routes->get('login', 'Web::login');
 $routes->post('login', 'AuthController::authenticate');
 
 $routes->get('logout', 'AuthController::logout');
 
-$routes->get('register', 'RegisterController::index');
-$routes->post('register', 'RegisterController::store');
+/*
+|--------------------------------------------------------------------------
+| Management Kelas
+|--------------------------------------------------------------------------
+*/
+
+$routes->group('classes', ['filter' => 'auth'], function ($routes) {
+
+    $routes->get('/', 'ClassController::index');
+
+    $routes->get('create', 'ClassController::create');
+    $routes->post('store', 'ClassController::store');
+
+    $routes->get('show/(:num)', 'ClassController::show/$1');
+
+    $routes->get('edit/(:num)', 'ClassController::edit/$1');
+    $routes->post('update/(:num)', 'ClassController::update/$1');
+
+    $routes->post('delete/(:num)', 'ClassController::delete/$1');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Register
+|--------------------------------------------------------------------------
+*/
+
+$routes->get('register', 'AuthController::register');
+
+$routes->post('register/store', 'AuthController::storeRegister');
+
+/*
+|--------------------------------------------------------------------------
+| Ajax
+|--------------------------------------------------------------------------
+*/
 
 $routes->get(
     'study-programs/(:num)',
-    'RegisterController::getStudyPrograms/$1'
+    'AuthController::getStudyPrograms/$1'
 );
 
 /*

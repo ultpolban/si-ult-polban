@@ -2,230 +2,337 @@
 
 <?= $this->section('content') ?>
 
-<div class="container-fluid py-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-    <!-- Header -->
+    <div>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-white mb-1">
 
-        <div>
+            Management Role
 
-            <h2 class="fw-bold mb-1">
+        </h2>
 
-                <i class="bi bi-shield-lock-fill text-primary"></i>
+        <small class="text-white-50">
 
-                Management Role
+            Kelola seluruh role pengguna SI-ULT POLBAN
 
-            </h2>
-
-            <p class="text-muted mb-0">
-
-                Kelola seluruh role pengguna SI-ULT POLBAN
-
-            </p>
-
-        </div>
-
-        <a
-            href="<?= base_url('roles/create') ?>"
-            class="btn btn-primary">
-
-            <i class="bi bi-plus-circle-fill"></i>
-
-            Tambah Role
-
-        </a>
+        </small>
 
     </div>
 
+    <a
+        href="<?= base_url('roles/create') ?>"
+        class="btn btn-primary">
 
-    <?php if (session()->getFlashdata('success')) : ?>
+        <i class="bi bi-plus-circle me-2"></i>
 
-        <div class="alert alert-success alert-dismissible fade show shadow-sm">
+        Tambah Role
 
-            <i class="bi bi-check-circle-fill"></i>
+    </a>
 
-            <?= session()->getFlashdata('success') ?>
+</div>
 
-            <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="alert"></button>
+<?php if (session()->getFlashdata('success')) : ?>
 
-        </div>
+    <div class="alert alert-success alert-dismissible fade show">
 
-    <?php endif; ?>
+        <?= session()->getFlashdata('success') ?>
 
+        <button
+            class="btn-close"
+            data-bs-dismiss="alert">
+        </button>
 
-    <!-- Card -->
+    </div>
 
-    <div class="card border-0 shadow">
+<?php endif; ?>
 
-        <div class="card-body">
+<?php if (session()->getFlashdata('error')) : ?>
 
+    <div class="alert alert-danger alert-dismissible fade show">
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
+        <?= session()->getFlashdata('error') ?>
 
-                <h5 class="mb-0">
+        <button
+            class="btn-close"
+            data-bs-dismiss="alert">
+        </button>
 
-                    Daftar Role
+    </div>
 
-                </h5>
+<?php endif; ?>
 
-                <span class="badge bg-primary">
+<div class="row mb-4">
 
-                    Total :
-                    <?= count($roles) ?>
+    <div class="col-md-3">
 
-                </span>
+        <div class="card stat-card">
+
+            <div class="card-body">
+
+                <h6 class="text-uppercase text-white-50">
+
+                    Total Role
+
+                </h6>
+
+                <h2 class="fw-bold text-warning">
+
+                    <?= $totalRole ?>
+
+                </h2>
 
             </div>
 
+        </div>
 
-            <div class="table-responsive">
+    </div>
 
-                <table class="table table-hover align-middle">
+</div>
 
-                    <thead class="table-light">
+<div class="card mb-4">
+
+    <div class="card-header">
+
+        <i class="bi bi-search me-2"></i>
+
+        Pencarian Role
+
+    </div>
+
+    <div class="card-body">
+
+        <form
+            method="get"
+            action="<?= current_url() ?>">
+
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-10">
+
+                    <label class="form-label fw-semibold">
+
+                        Kata Kunci
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="keyword"
+                        class="form-control"
+                        placeholder="Cari nama role atau deskripsi..."
+                        value="<?= esc($keyword) ?>">
+
+                </div>
+
+                <div class="col-md-2 d-grid">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        <i class="bi bi-search me-2"></i>
+
+                        Cari
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div class="card">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-shield-lock me-2"></i>
+
+            Daftar Role
+
+        </h5>
+
+        <span class="badge bg-warning text-dark">
+
+            Total : <?= $totalRole ?>
+
+        </span>
+
+    </div>
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover table-bordered align-middle mb-0">
+
+                <thead>
+
+                    <tr>
+
+                        <th width="60">No</th>
+
+                        <th>Nama Role</th>
+
+                        <th>Deskripsi</th>
+
+                        <th width="120" class="text-center">
+
+                            Jumlah User
+
+                        </th>
+
+                        <th width="160" class="text-center">
+
+                            Aksi
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <?php if (empty($roles)) : ?>
 
                         <tr>
 
-                            <th width="70">
+                            <td colspan="5" class="text-center py-5">
 
-                                No
+                                <i class="bi bi-database-fill-x display-5 text-secondary"></i>
 
-                            </th>
+                                <p class="mt-3 mb-0">
 
-                            <th>
+                                    Belum ada data role.
 
-                                Nama Role
+                                </p>
 
-                            </th>
-
-                            <th>
-
-                                Deskripsi
-
-                            </th>
-
-                            <th width="160" class="text-center">
-
-                                Aksi
-
-                            </th>
+                            </td>
 
                         </tr>
 
-                    </thead>
+                    <?php endif; ?>
 
-                    <tbody>
+                    <?php
 
-                        <?php if (empty($roles)) : ?>
+                    $no = 1 + (($pager->getCurrentPage() - 1) * $pager->getPerPage());
 
-                            <tr>
+                    ?>
 
-                                <td colspan="4" class="text-center py-5">
+                    <?php foreach ($roles as $role) : ?>
 
-                                    <i class="bi bi-database-fill-x fs-1 text-secondary"></i>
+                        <tr>
 
-                                    <h5 class="mt-3">
+                            <td>
 
-                                        Belum ada data role
+                                <?= $no++ ?>
 
-                                    </h5>
+                            </td>
 
-                                    <p class="text-muted mb-0">
+                            <td>
 
-                                        Silakan tambahkan role terlebih dahulu.
+                                <strong>
 
-                                    </p>
+                                    <?= esc($role['role_name']) ?>
 
-                                </td>
+                                </strong>
 
-                            </tr>
+                            </td>
 
-                        <?php else : ?>
+                            <td>
 
-                            <?php $no = 1; ?>
+                                <?= esc($role['description']) ?>
 
-                            <?php foreach ($roles as $role) : ?>
+                            </td>
 
-                                <tr>
+                            <td class="text-center">
 
-                                    <td>
+                                <span class="badge bg-info">
 
-                                        <span class="fw-bold">
+                                    <?= $role['total_user'] ?>
 
-                                            <?= $no++ ?>
+                                </span>
 
-                                        </span>
+                            </td>
 
-                                    </td>
+                            <td>
 
-                                    <td>
+                                <div class="d-flex justify-content-center gap-1">
 
-                                        <span class="fw-semibold">
+                                    <a
+                                        href="<?= base_url('roles/edit/' . $role['id']) ?>"
+                                        class="btn btn-warning btn-sm">
 
-                                            <?= esc($role['role_name']) ?>
+                                        <i class="bi bi-pencil-square"></i>
 
-                                        </span>
+                                    </a>
 
-                                    </td>
+                                    <?php if ($role['id'] != 1) : ?>
 
-                                    <td>
+                                        <form
+                                            action="<?= base_url('roles/delete/' . $role['id']) ?>"
+                                            method="post">
 
-                                        <?php if (!empty($role['description'])) : ?>
+                                            <?= csrf_field() ?>
 
-                                            <?= esc($role['description']) ?>
+                                            <button
+                                                type="submit"
+                                                onclick="return confirm('Yakin ingin menghapus role ini?')"
+                                                class="btn btn-danger btn-sm">
 
-                                        <?php else : ?>
+                                                <i class="bi bi-trash"></i>
 
-                                            <span class="text-muted">
+                                            </button>
 
-                                                -
+                                        </form>
 
-                                            </span>
+                                    <?php else : ?>
 
-                                        <?php endif; ?>
+                                        <button
+                                            class="btn btn-secondary btn-sm"
+                                            disabled>
 
-                                    </td>
+                                            <i class="bi bi-lock-fill"></i>
 
-                                    <td class="text-center">
+                                        </button>
 
-                                        <a
-                                            href="<?= base_url('roles/edit/' . $role['id']) ?>"
-                                            class="btn btn-warning btn-sm">
+                                    <?php endif; ?>
 
-                                            <i class="bi bi-pencil-square"></i>
+                                </div>
 
-                                        </a>
+                            </td>
 
-                                        <a
-                                            href="<?= base_url('roles/delete/' . $role['id']) ?>"
-                                            class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Yakin ingin menghapus role ini?')">
+                        </tr>
 
-                                            <i class="bi bi-trash-fill"></i>
+                    <?php endforeach; ?>
 
-                                        </a>
+                </tbody>
 
-                                    </td>
-
-                                </tr>
-
-                            <?php endforeach; ?>
-
-                        <?php endif; ?>
-
-                    </tbody>
-
-                </table>
-
-            </div>
+            </table>
 
         </div>
 
     </div>
+
+</div>
+
+<div class="d-flex justify-content-between align-items-center mt-4">
+
+    <small class="text-white-50">
+
+        Menampilkan <?= count($roles) ?> data
+
+    </small>
+
+    <?= $pager->links() ?>
 
 </div>
 

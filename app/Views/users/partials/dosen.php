@@ -1,10 +1,15 @@
-<div id="dosenForm" class="dynamic-section" style="display:none;">
+<div
+    id="dosen-section"
+    class="user-type-section"
+    style="display:none;">
 
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm border-0 mb-4">
 
         <div class="card-header bg-warning">
 
             <h5 class="mb-0">
+
+                <i class="bi bi-person-workspace me-2"></i>
 
                 Data Dosen
 
@@ -18,9 +23,9 @@
 
                 <!-- NIP -->
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         NIP
 
@@ -36,9 +41,9 @@
 
                 <!-- NIDN -->
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         NIDN
 
@@ -52,11 +57,51 @@
 
                 </div>
 
+            </div>
+
+            <div class="row">
+
+                <!-- Jurusan -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Jurusan
+
+                    </label>
+
+                    <select
+                        name="department_id"
+                        class="form-select">
+
+                        <option value="">
+
+                            -- Pilih Jurusan --
+
+                        </option>
+
+                        <?php foreach ($departments as $department): ?>
+
+                            <option
+                                value="<?= $department['id'] ?>"
+                                <?= old('department_id', $user['department_id'] ?? '') == $department['id'] ? 'selected' : '' ?>>
+
+                                <?= esc($department['department_name']) ?>
+
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
+
+                </div>
+
                 <!-- Unit Kerja -->
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         Unit Kerja
 
@@ -68,7 +113,7 @@
 
                         <option value="">
 
-                            Pilih Unit Kerja
+                            -- Pilih Unit Kerja --
 
                         </option>
 
@@ -76,7 +121,6 @@
 
                             <option
                                 value="<?= $unit['id'] ?>"
-
                                 <?= old('work_unit_id', $user['work_unit_id'] ?? '') == $unit['id'] ? 'selected' : '' ?>>
 
                                 <?= esc($unit['unit_name']) ?>
@@ -93,101 +137,33 @@
 
             <div class="row">
 
-                <!-- Jurusan -->
+                <!-- ==========================================
+                JABATAN AKADEMIK
+                =========================================== -->
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
 
-                    <label class="form-label">
-
-                        Jurusan
-
-                    </label>
-
-                    <select
-                        name="department_id"
-                        class="form-select">
-
-                        <option value="">
-
-                            Pilih Jurusan
-
-                        </option>
-
-                        <?php foreach ($departments as $department): ?>
-
-                            <option
-                                value="<?= $department['id'] ?>"
-
-                                <?= old('department_id', $user['department_id'] ?? '') == $department['id'] ? 'selected' : '' ?>>
-
-                                <?= esc($department['department_name']) ?>
-
-                            </option>
-
-                        <?php endforeach; ?>
-
-                    </select>
-
-                </div>
-
-                <!-- Jabatan Akademik -->
-
-                <div class="col-md-6 mb-3">
-
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         Jabatan Akademik
 
                     </label>
 
-                    <select
+                    <input
+                        type="text"
                         name="academic_position"
-                        class="form-select">
-
-                        <option value="">Pilih Jabatan</option>
-
-                        <?php
-
-                        $academicPositions = [
-
-                            'Asisten Ahli',
-
-                            'Lektor',
-
-                            'Lektor Kepala',
-
-                            'Profesor'
-
-                        ];
-
-                        ?>
-
-                        <?php foreach ($academicPositions as $jabatan): ?>
-
-                            <option
-                                value="<?= $jabatan ?>"
-
-                                <?= old('academic_position', $user['academic_position'] ?? '') == $jabatan ? 'selected' : '' ?>>
-
-                                <?= $jabatan ?>
-
-                            </option>
-
-                        <?php endforeach; ?>
-
-                    </select>
+                        class="form-control"
+                        value="<?= old('academic_position', $user['academic_position'] ?? '') ?>">
 
                 </div>
 
-            </div>
+                <!-- ==========================================
+                JABATAN FUNGSIONAL
+                =========================================== -->
 
-            <div class="row">
+                <div class="col-md-4 mb-3">
 
-                <!-- Jabatan Fungsional -->
-
-                <div class="col-md-6 mb-3">
-
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         Jabatan Fungsional
 
@@ -201,21 +177,54 @@
 
                 </div>
 
-                <!-- Email Institusi -->
+                <!-- ==========================================
+                STATUS PEGAWAI
+                =========================================== -->
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
-                        Email Institusi
+                        Status Pegawai
 
                     </label>
 
-                    <input
-                        type="email"
-                        name="institution_email"
-                        class="form-control"
-                        value="<?= old('institution_email', $user['institution_email'] ?? '') ?>">
+                    <select
+                        name="employee_status"
+                        class="form-select">
+
+                        <option value="">
+
+                            -- Pilih Status --
+
+                        </option>
+
+                        <?php
+
+                        $statusPegawai = [
+
+                            'PNS',
+                            'PPPK',
+                            'Kontrak',
+                            'Honorer'
+
+                        ];
+
+                        foreach ($statusPegawai as $status):
+
+                        ?>
+
+                            <option
+                                value="<?= $status ?>"
+                                <?= old('employee_status', $user['employee_status'] ?? '') == $status ? 'selected' : '' ?>>
+
+                                <?= $status ?>
+
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
 
                 </div>
 

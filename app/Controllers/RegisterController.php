@@ -169,13 +169,13 @@ class RegisterController extends BaseController
                 break;
         }
 
-        if (!$this->validate($rules)) {
+        // if (!$this->validate($rules)) {
 
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('errors', $this->validator->getErrors());
-        }
+        //     return redirect()
+        //         ->back()
+        //         ->withInput()
+        //         ->with('errors', $this->validator->getErrors());
+        // }
 
         /*
 |--------------------------------------------------------------------------
@@ -267,7 +267,6 @@ class RegisterController extends BaseController
             'study_program_id' => $this->request->getPost('study_program_id') ?: null,
             'class_id' => $this->request->getPost('class_id') ?: null,
             'angkatan' => $this->request->getPost('angkatan'),
-            'semester' => $this->request->getPost('semester'),
             'student_status' => $this->request->getPost('student_status'),
             'entry_year' => $this->request->getPost('entry_year'),
 
@@ -284,7 +283,6 @@ class RegisterController extends BaseController
 
             // Alumni
             'graduation_year' => $this->request->getPost('graduation_year'),
-            'graduation_number' => $this->request->getPost('graduation_number'),
 
             // Orang Tua
             'student_name' => $this->request->getPost('student_name'),
@@ -300,6 +298,16 @@ class RegisterController extends BaseController
             'identity_number' => $this->request->getPost('identity_number')
 
         ];
+
+        /*
+|--------------------------------------------------------------------------
+| Bersihkan data kosong
+|--------------------------------------------------------------------------
+*/
+
+        $userData = array_filter($userData, function ($value) {
+            return $value !== '' && $value !== null;
+        });
 
         $userId = $this->userModel->insert($userData, true);
 

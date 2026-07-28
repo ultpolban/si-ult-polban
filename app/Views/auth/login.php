@@ -1,182 +1,156 @@
-<?= $this->include('layouts/header') ?>
+<!DOCTYPE html>
+<html lang="id">
 
-<style>
-    body {
-        background: linear-gradient(135deg, #0d6efd, #4f8dfd);
-        min-height: 100vh;
-    }
+<head>
 
-    .login-card {
-        border: none;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, .15);
-    }
+    <?= $this->include('layouts/header') ?>
 
-    .left-side {
-        background: #0d6efd;
-        color: white;
-        padding: 60px 45px;
-    }
+</head>
 
-    .left-side h1 {
-        font-weight: 700;
-    }
+<body class="auth-page">
 
-    .left-side p {
-        opacity: .9;
-        font-size: 17px;
-        line-height: 28px;
-    }
+    <div class="auth-container">
 
-    .right-side {
-        background: white;
-        padding: 55px;
-    }
+        <div class="auth-card">
 
-    .form-control {
-        height: 50px;
-        border-radius: 12px;
-    }
+            <!-- LEFT -->
 
-    .btn-login {
-        height: 50px;
-        border-radius: 12px;
-        font-weight: 600;
-    }
+            <div class="auth-left">
 
-    @media(max-width:768px) {
+                <div>
 
-        .left-side {
-            display: none;
-        }
+                    <span class="system-badge">
 
-        .right-side {
-            padding: 35px;
-        }
+                        SI ULT POLBAN
 
-    }
-</style>
+                    </span>
 
-<div class="container">
+                    <h1>
 
-    <div class="row justify-content-center align-items-center"
-        style="min-height:100vh;">
+                        Sistem Informasi
+                        <br>
+                        Unit Layanan Terpadu
 
-        <div class="col-lg-10">
+                    </h1>
 
-            <div class="card login-card">
+                    <p>
 
-                <div class="row g-0">
+                        Politeknik Negeri Bandung
 
-                    <div class="col-lg-5 left-side d-flex flex-column justify-content-center">
+                    </p>
 
-                        <h1>SI ULT POLBAN</h1>
+                </div>
 
-                        <hr class="border-light">
+                <div class="auth-icon">
 
-                        <h4>Unit Layanan Terpadu</h4>
+                    <i class="bi bi-shield-lock-fill"></i>
 
-                        <p class="mt-4">
+                </div>
 
-                            Selamat datang di Sistem Informasi
-                            Unit Layanan Terpadu
-                            Politeknik Negeri Bandung.
+            </div>
 
-                        </p>
+            <!-- RIGHT -->
 
-                        <p>
+            <div class="auth-right">
 
-                            Silakan login menggunakan akun yang telah
-                            terdaftar untuk mengakses layanan sistem.
+                <h2>
 
-                        </p>
+                    Login
+
+                </h2>
+
+                <p class="text-muted mb-4">
+
+                    Silakan login menggunakan akun Anda.
+
+                </p>
+
+                <?php if (session()->getFlashdata('error')): ?>
+
+                    <div class="alert alert-danger">
+
+                        <?= session()->getFlashdata('error') ?>
 
                     </div>
 
-                    <div class="col-lg-7 right-side">
+                <?php endif; ?>
 
-                        <h2 class="fw-bold">
+                <form action="<?= base_url('login') ?>" method="post">
 
-                            Login
+                    <?= csrf_field() ?>
 
-                        </h2>
+                    <div class="mb-3">
 
-                        <p class="text-muted mb-4">
+                        <label class="form-label">
 
-                            Masukkan email dan password Anda.
+                            Email
 
-                        </p>
+                        </label>
 
-                        <?php if (session()->getFlashdata('error')) : ?>
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="Masukkan Email"
+                            required>
 
-                            <div class="alert alert-danger">
+                    </div>
 
-                                <?= session()->getFlashdata('error') ?>
+                    <div class="mb-4">
 
-                            </div>
+                        <label class="form-label">
 
-                        <?php endif; ?>
+                            Password
 
-                        <form action="<?= base_url('login') ?>" method="post">
+                        </label>
 
-                            <?= csrf_field() ?>
+                        <div class="input-group">
 
-                            <div class="mb-3">
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-control"
+                                placeholder="Masukkan Password"
+                                required>
 
-                                <label class="form-label">
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary"
+                                onclick="togglePassword()">
 
-                                    Email
+                                <i
+                                    id="eye"
+                                    class="bi bi-eye">
 
-                                </label>
-
-                                <input
-                                    type="email"
-                                    name="email"
-                                    class="form-control"
-                                    placeholder="Masukkan email"
-                                    required>
-
-                            </div>
-
-                            <div class="mb-4">
-
-                                <label class="form-label">
-
-                                    Password
-
-                                </label>
-
-                                <input
-                                    type="password"
-                                    name="password"
-                                    class="form-control"
-                                    placeholder="Masukkan password"
-                                    required>
-
-                            </div>
-
-                            <button class="btn btn-primary btn-login w-100">
-
-                                Login
+                                </i>
 
                             </button>
-
-                        </form>
-
-                        <div class="text-center mt-4">
-
-                            Belum memiliki akun?
-
-                            <a href="<?= base_url('register') ?>">
-
-                                Daftar Sekarang
-
-                            </a>
 
                         </div>
 
                     </div>
+
+                    <button
+                        class="btn btn-primary w-100">
+
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+
+                        Login
+
+                    </button>
+
+                </form>
+
+                <div class="text-center mt-4">
+
+                    Belum mempunyai akun?
+
+                    <a href="<?= base_url('register') ?>">
+
+                        Daftar Sekarang
+
+                    </a>
 
                 </div>
 
@@ -186,6 +160,32 @@
 
     </div>
 
-</div>
+    <script>
+        function togglePassword() {
 
-<?= $this->include('layouts/footer') ?>
+            let pass = document.getElementById('password');
+
+            let eye = document.getElementById('eye');
+
+            if (pass.type === "password") {
+
+                pass.type = "text";
+
+                eye.className = "bi bi-eye-slash";
+
+            } else {
+
+                pass.type = "password";
+
+                eye.className = "bi bi-eye";
+
+            }
+
+        }
+    </script>
+
+    <?= $this->include('layouts/footer') ?>
+
+</body>
+
+</html>

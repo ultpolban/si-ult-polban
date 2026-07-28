@@ -1,10 +1,15 @@
-<div id="mahasiswaForm" class="dynamic-section" style="display:none;">
+<div
+    id="mahasiswa-section"
+    class="user-type-section"
+    style="display:none;">
 
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm border-0 mb-4">
 
         <div class="card-header bg-info text-white">
 
             <h5 class="mb-0">
+
+                <i class="bi bi-mortarboard-fill me-2"></i>
 
                 Data Mahasiswa
 
@@ -16,15 +21,15 @@
 
             <div class="row">
 
-                <!-- NIM -->
+                <!-- ==========================================
+                NIM
+                =========================================== -->
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         NIM
-
-                        <span class="text-danger">*</span>
 
                     </label>
 
@@ -36,11 +41,39 @@
 
                 </div>
 
-                <!-- Jurusan -->
+                <!-- ==========================================
+                ANGKATAN
+                =========================================== -->
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
+
+                        Angkatan
+
+                    </label>
+
+                    <input
+                        type="number"
+                        name="angkatan"
+                        class="form-control"
+                        min="2000"
+                        max="<?= date('Y') ?>"
+                        value="<?= old('angkatan', $user['angkatan'] ?? '') ?>">
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <!-- ==========================================
+                JURUSAN
+                =========================================== -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-semibold">
 
                         Jurusan
 
@@ -51,13 +84,16 @@
                         id="department_id"
                         class="form-select">
 
-                        <option value="">Pilih Jurusan</option>
+                        <option value="">
+
+                            -- Pilih Jurusan --
+
+                        </option>
 
                         <?php foreach ($departments as $department): ?>
 
                             <option
                                 value="<?= $department['id'] ?>"
-
                                 <?= old('department_id', $user['department_id'] ?? '') == $department['id'] ? 'selected' : '' ?>>
 
                                 <?= esc($department['department_name']) ?>
@@ -70,11 +106,13 @@
 
                 </div>
 
-                <!-- Program Studi -->
+                <!-- ==========================================
+                PROGRAM STUDI
+                =========================================== -->
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         Program Studi
 
@@ -83,22 +121,32 @@
                     <select
                         name="study_program_id"
                         id="study_program_id"
-                        class="form-select">
+                        class="form-select"
+                        data-selected="<?= old('study_program_id', $user['study_program_id'] ?? '') ?>">
 
-                        <option value="">Pilih Program Studi</option>
+                        <option value="">
 
-                        <?php foreach ($studyPrograms as $program): ?>
+                            -- Pilih Program Studi --
 
-                            <option
-                                value="<?= $program['id'] ?>"
+                        </option>
 
-                                <?= old('study_program_id', $user['study_program_id'] ?? '') == $program['id'] ? 'selected' : '' ?>>
+                        <?php if (!empty($studyPrograms)) : ?>
 
-                                <?= esc($program['program_name']) ?>
+                            <?php foreach ($studyPrograms as $studyProgram): ?>
 
-                            </option>
+                                <option
+                                    value="<?= $studyProgram['id'] ?>"
+                                    <?= old('study_program_id', $user['study_program_id'] ?? '') == $studyProgram['id'] ? 'selected' : '' ?>>
 
-                        <?php endforeach; ?>
+                                    <?= esc($studyProgram['education_level']) ?>
+                                    -
+                                    <?= esc($studyProgram['program_name']) ?>
+
+                                </option>
+
+                            <?php endforeach; ?>
+
+                        <?php endif; ?>
 
                     </select>
 
@@ -108,11 +156,13 @@
 
             <div class="row">
 
-                <!-- Kelas -->
+                <!-- ==========================================
+                KELAS
+                =========================================== -->
 
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         Kelas
 
@@ -122,13 +172,16 @@
                         name="class_id"
                         class="form-select">
 
-                        <option value="">Pilih Kelas</option>
+                        <option value="">
+
+                            -- Pilih Kelas --
+
+                        </option>
 
                         <?php foreach ($classes as $class): ?>
 
                             <option
                                 value="<?= $class['id'] ?>"
-
                                 <?= old('class_id', $user['class_id'] ?? '') == $class['id'] ? 'selected' : '' ?>>
 
                                 <?= esc($class['class_name']) ?>
@@ -141,64 +194,35 @@
 
                 </div>
 
-                <!-- Angkatan -->
+                <!-- ==========================================
+                TAHUN MASUK
+                =========================================== -->
 
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
-                        Angkatan
+                        Tahun Masuk
 
                     </label>
 
                     <input
                         type="number"
-                        name="angkatan"
+                        name="entry_year"
+                        class="form-control"
                         min="2000"
                         max="<?= date('Y') ?>"
-                        class="form-control"
-                        value="<?= old('angkatan', $user['angkatan'] ?? '') ?>">
+                        value="<?= old('entry_year', $user['entry_year'] ?? '') ?>">
 
                 </div>
 
-                <!-- Semester -->
+                <!-- ==========================================
+                STATUS MAHASISWA
+                =========================================== -->
 
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
 
-                    <label class="form-label">
-
-                        Semester
-
-                    </label>
-
-                    <select
-                        name="semester"
-                        class="form-select">
-
-                        <option value="">Pilih Semester</option>
-
-                        <?php for ($i = 1; $i <= 14; $i++): ?>
-
-                            <option
-                                value="<?= $i ?>"
-
-                                <?= old('semester', $user['semester'] ?? '') == $i ? 'selected' : '' ?>>
-
-                                Semester <?= $i ?>
-
-                            </option>
-
-                        <?php endfor; ?>
-
-                    </select>
-
-                </div>
-
-                <!-- Status -->
-
-                <div class="col-md-3 mb-3">
-
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         Status Mahasiswa
 
@@ -208,29 +232,29 @@
                         name="student_status"
                         class="form-select">
 
-                        <option value="">Pilih Status</option>
+                        <option value="">
+
+                            -- Pilih Status --
+
+                        </option>
 
                         <?php
 
                         $statusMahasiswa = [
 
                             'Aktif',
-
                             'Cuti',
-
                             'Lulus',
-
                             'Drop Out'
 
                         ];
 
-                        ?>
+                        foreach ($statusMahasiswa as $status):
 
-                        <?php foreach ($statusMahasiswa as $status): ?>
+                        ?>
 
                             <option
                                 value="<?= $status ?>"
-
                                 <?= old('student_status', $user['student_status'] ?? '') == $status ? 'selected' : '' ?>>
 
                                 <?= $status ?>
@@ -240,30 +264,6 @@
                         <?php endforeach; ?>
 
                     </select>
-
-                </div>
-
-            </div>
-
-            <div class="row">
-
-                <!-- Tahun Masuk -->
-
-                <div class="col-md-4 mb-3">
-
-                    <label class="form-label">
-
-                        Tahun Masuk
-
-                    </label>
-
-                    <input
-                        type="number"
-                        name="entry_year"
-                        min="2000"
-                        max="<?= date('Y') ?>"
-                        class="form-control"
-                        value="<?= old('entry_year', $user['entry_year'] ?? '') ?>">
 
                 </div>
 

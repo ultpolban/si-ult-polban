@@ -2,83 +2,95 @@
 
 <?= $this->section('content') ?>
 
-<div class="card shadow">
+<div class="container-fluid">
 
-    <div class="card-header bg-warning d-flex justify-content-between align-items-center">
+    <div class="row">
 
-        <h5 class="mb-0">
+        <div class="col-lg-12">
 
-            Edit User
+            <div class="d-flex justify-content-between align-items-center mb-4">
 
-        </h5>
+                <div>
 
-        <a href="<?= base_url('users') ?>" class="btn btn-dark btn-sm">
+                    <h2 class="fw-bold">
 
-            <i class="bi bi-arrow-left"></i>
+                        Edit User
 
-            Kembali
+                    </h2>
 
-        </a>
+                    <p class="text-muted mb-0">
 
-    </div>
+                        Perbarui data pengguna SI-ULT POLBAN.
 
-    <div class="card-body">
+                    </p>
 
-        <?php if (session()->getFlashdata('errors')) : ?>
-
-            <div class="alert alert-danger">
-
-                <ul class="mb-0">
-
-                    <?php foreach (session()->getFlashdata('errors') as $error) : ?>
-
-                        <li><?= esc($error) ?></li>
-
-                    <?php endforeach; ?>
-
-                </ul>
-
-            </div>
-
-        <?php endif; ?>
-
-        <form
-            action="<?= base_url('users/update/' . $user['id']) ?>"
-            method="post"
-            enctype="multipart/form-data">
-
-            <?= csrf_field() ?>
-
-            <?= $this->include('users/form') ?>
-
-            <hr>
-
-            <div class="text-end">
+                </div>
 
                 <a
                     href="<?= base_url('users') ?>"
                     class="btn btn-secondary">
 
-                    Batal
+                    <i class="bi bi-arrow-left me-2"></i>
+
+                    Kembali
 
                 </a>
 
-                <button
-                    type="submit"
-                    class="btn btn-warning">
-
-                    <i class="bi bi-pencil-square"></i>
-
-                    Update
-
-                </button>
-
             </div>
 
-        </form>
+        </div>
+
+    </div>
+
+    <?php if (session()->getFlashdata('errors')) : ?>
+
+        <div class="alert alert-danger">
+
+            <ul class="mb-0">
+
+                <?php foreach (session()->getFlashdata('errors') as $error): ?>
+
+                    <li><?= esc($error) ?></li>
+
+                <?php endforeach; ?>
+
+            </ul>
+
+        </div>
+
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('error')) : ?>
+
+        <div class="alert alert-danger">
+
+            <?= session()->getFlashdata('error') ?>
+
+        </div>
+
+    <?php endif; ?>
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <form
+                action="<?= base_url('users/update/' . $user['id']) ?>"
+                method="post"
+                enctype="multipart/form-data">
+
+                <?= csrf_field() ?>
+
+                <?= $this->include('users/form') ?>
+
+            </form>
+
+        </div>
 
     </div>
 
 </div>
+
+<?= $this->include('users/partials/script') ?>
 
 <?= $this->endSection() ?>

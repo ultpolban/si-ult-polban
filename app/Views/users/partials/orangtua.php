@@ -1,10 +1,15 @@
-<div id="orangtuaForm" class="dynamic-section" style="display:none;">
+<div
+    id="orangtua-section"
+    class="user-type-section"
+    style="display:none;">
 
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm border-0 mb-4">
 
-        <div class="card-header bg-warning">
+        <div class="card-header bg-danger text-white">
 
             <h5 class="mb-0">
+
+                <i class="bi bi-people-fill me-2"></i>
 
                 Data Orang Tua / Wali
 
@@ -16,11 +21,13 @@
 
             <div class="row">
 
-                <!-- Hubungan -->
+                <!-- ==========================================
+                HUBUNGAN
+                =========================================== -->
 
                 <div class="col-md-4 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         Hubungan
 
@@ -30,80 +37,47 @@
                         name="relationship"
                         class="form-select">
 
-                        <option value="">Pilih Hubungan</option>
+                        <option value="">
 
-                        <option value="Ayah"
-                            <?= old('relationship', $user['relationship'] ?? '') == 'Ayah' ? 'selected' : '' ?>>
-                            Ayah
+                            -- Pilih Hubungan --
+
                         </option>
 
-                        <option value="Ibu"
-                            <?= old('relationship', $user['relationship'] ?? '') == 'Ibu' ? 'selected' : '' ?>>
-                            Ibu
-                        </option>
+                        <?php
 
-                        <option value="Wali"
-                            <?= old('relationship', $user['relationship'] ?? '') == 'Wali' ? 'selected' : '' ?>>
-                            Wali
-                        </option>
+                        $relationships = [
+
+                            'Ayah',
+                            'Ibu',
+                            'Wali'
+
+                        ];
+
+                        foreach ($relationships as $relationship):
+
+                        ?>
+
+                            <option
+                                value="<?= $relationship ?>"
+                                <?= old('relationship', $user['relationship'] ?? '') == $relationship ? 'selected' : '' ?>>
+
+                                <?= $relationship ?>
+
+                            </option>
+
+                        <?php endforeach; ?>
 
                     </select>
 
                 </div>
 
-                <!-- NIK -->
+                <!-- ==========================================
+                NAMA MAHASISWA
+                =========================================== -->
 
                 <div class="col-md-4 mb-3">
 
-                    <label class="form-label">
-
-                        NIK
-
-                    </label>
-
-                    <input
-                        type="text"
-                        name="identity_number"
-                        class="form-control"
-                        value="<?= old('identity_number', $user['identity_number'] ?? '') ?>">
-
-                </div>
-
-                <!-- No HP -->
-
-                <div class="col-md-4 mb-3">
-
-                    <label class="form-label">
-
-                        Nomor HP
-
-                    </label>
-
-                    <input
-                        type="text"
-                        name="phone"
-                        class="form-control"
-                        value="<?= old('phone', $user['phone'] ?? '') ?>">
-
-                </div>
-
-            </div>
-
-            <hr>
-
-            <h6 class="mb-3">
-
-                Data Mahasiswa
-
-            </h6>
-
-            <div class="row">
-
-                <!-- Nama Mahasiswa -->
-
-                <div class="col-md-6 mb-3">
-
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         Nama Mahasiswa
 
@@ -117,11 +91,13 @@
 
                 </div>
 
-                <!-- NIM -->
+                <!-- ==========================================
+                NIM MAHASISWA
+                =========================================== -->
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
 
-                    <label class="form-label">
+                    <label class="form-label fw-semibold">
 
                         NIM Mahasiswa
 

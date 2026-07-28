@@ -2,45 +2,87 @@
 
 <?= $this->section('content') ?>
 
-<div class="card shadow">
+<!-- ===========================================================
+HEADER
+=========================================================== -->
 
-    <div class="card-header d-flex justify-content-between align-items-center">
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
 
-        <h4 class="mb-0">
+    <div>
+
+        <h2 class="fw-bold mb-1">
 
             Tambah User
 
-        </h4>
+        </h2>
 
-        <a href="<?= base_url('users') ?>" class="btn btn-secondary">
+        <p class="text-muted mb-0">
 
-            <i class="bi bi-arrow-left"></i>
+            Tambahkan data pengguna baru ke dalam Sistem Informasi ULT POLBAN.
 
-            Kembali
+        </p>
 
-        </a>
+    </div>
+
+    <a
+        href="<?= base_url('users') ?>"
+        class="btn btn-secondary">
+
+        <i class="bi bi-arrow-left me-2"></i>
+
+        Kembali
+
+    </a>
+
+</div>
+
+<!-- ===========================================================
+VALIDATION ERROR
+=========================================================== -->
+
+<?php if (session()->getFlashdata('errors')) : ?>
+
+    <div class="alert alert-danger">
+
+        <h6 class="fw-bold">
+
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+            Terjadi Kesalahan
+
+        </h6>
+
+        <ul class="mb-0">
+
+            <?php foreach (session()->getFlashdata('errors') as $error): ?>
+
+                <li><?= esc($error) ?></li>
+
+            <?php endforeach; ?>
+
+        </ul>
+
+    </div>
+
+<?php endif; ?>
+
+<!-- ===========================================================
+FORM
+=========================================================== -->
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            Form Tambah User
+
+        </h5>
 
     </div>
 
     <div class="card-body">
-
-        <?php if (session()->getFlashdata('errors')): ?>
-
-            <div class="alert alert-danger">
-
-                <ul class="mb-0">
-
-                    <?php foreach (session()->getFlashdata('errors') as $error): ?>
-
-                        <li><?= esc($error) ?></li>
-
-                    <?php endforeach; ?>
-
-                </ul>
-
-            </div>
-
-        <?php endif; ?>
 
         <form
             action="<?= base_url('users/store') ?>"
@@ -49,39 +91,11 @@
 
             <?= csrf_field() ?>
 
-            <!-- ACCOUNT -->
+            <!-- ===========================================================
+            FORM USER
+            =========================================================== -->
 
-            <?= $this->include('users/partials/account') ?>
-
-            <!-- PERSONAL -->
-
-            <?= $this->include('users/partials/personal') ?>
-
-            <!-- ROLE -->
-
-            <?= $this->include('users/partials/petugas') ?>
-
-            <?= $this->include('users/partials/unit_tujuan') ?>
-
-            <?= $this->include('users/partials/pimpinan') ?>
-
-            <!-- PEMOHON -->
-
-            <?= $this->include('users/partials/mahasiswa') ?>
-
-            <?= $this->include('users/partials/dosen') ?>
-
-            <?= $this->include('users/partials/alumni') ?>
-
-            <?= $this->include('users/partials/orangtua') ?>
-
-            <?= $this->include('users/partials/mitra') ?>
-
-            <?= $this->include('users/partials/publik') ?>
-
-            <!-- BUTTON -->
-
-            <?= $this->include('users/partials/button') ?>
+            <?= $this->include('users/form') ?>
 
         </form>
 

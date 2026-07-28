@@ -2,332 +2,700 @@
 
 <?= $this->section('content') ?>
 
-<div class="card shadow">
+<div class="container-fluid">
 
-    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <h4 class="mb-0">
+        <div>
 
-            Detail User
+            <h2 class="fw-bold">
 
-        </h4>
+                Detail User
 
-        <a href="<?= base_url('users') ?>" class="btn btn-light">
+            </h2>
 
-            <i class="bi bi-arrow-left"></i>
+            <p class="text-muted mb-0">
 
-            Kembali
+                Informasi lengkap pengguna SI-ULT POLBAN
 
-        </a>
+            </p>
+
+        </div>
+
+        <div>
+
+            <a
+                href="<?= base_url('users') ?>"
+                class="btn btn-secondary">
+
+                <i class="bi bi-arrow-left me-2"></i>
+
+                Kembali
+
+            </a>
+
+            <a
+                href="<?= base_url('users/edit/' . $user['id']) ?>"
+                class="btn btn-warning">
+
+                <i class="bi bi-pencil-square me-2"></i>
+
+                Edit
+
+            </a>
+
+        </div>
 
     </div>
 
-    <div class="card-body">
+    <div class="card shadow-sm mb-4">
 
-        <div class="row">
+        <div class="card-body">
 
-            <!-- FOTO -->
+            <div class="row align-items-center">
 
-            <div class="col-md-3 text-center">
+                <div class="col-md-3 text-center">
 
-                <?php if (!empty($user['photo'])) : ?>
+                    <?php if (!empty($user['photo'])) : ?>
 
-                    <img
-                        src="<?= base_url('uploads/users/' . $user['photo']) ?>"
-                        class="img-fluid rounded shadow"
-                        style="max-height:250px;">
+                        <img
+                            src="<?= base_url('uploads/users/' . $user['photo']) ?>"
+                            class="img-thumbnail rounded-circle"
+                            width="180"
+                            height="180">
 
-                <?php else : ?>
+                    <?php else : ?>
 
-                    <img
-                        src="<?= base_url('assets/images/default-user.png') ?>"
-                        class="img-fluid rounded shadow"
-                        style="max-height:250px;">
+                        <i
+                            class="bi bi-person-circle text-secondary"
+                            style="font-size:180px;"></i>
 
-                <?php endif; ?>
+                    <?php endif; ?>
 
-            </div>
+                </div>
 
-            <!-- DATA -->
+                <div class="col-md-9">
 
-            <div class="col-md-9">
+                    <h3 class="fw-bold">
 
-                <table class="table table-bordered">
+                        <?= esc($user['full_name']) ?>
 
-                    <tr>
-                        <th width="250">Nama Lengkap</th>
-                        <td><?= esc($user['full_name']) ?></td>
-                    </tr>
+                    </h3>
 
-                    <tr>
-                        <th>Role</th>
-                        <td><?= esc($user['role_name']) ?></td>
-                    </tr>
+                    <p class="mb-2">
 
-                    <tr>
-                        <th>Jenis Pemohon</th>
-                        <td><?= esc($user['type_name'] ?? '-') ?></td>
-                    </tr>
+                        <?= esc($user['role_name']) ?>
 
-                    <tr>
-                        <th>Email Personal</th>
-                        <td><?= esc($user['personal_email']) ?></td>
-                    </tr>
+                        |
 
-                    <tr>
-                        <th>Email Institusi</th>
-                        <td><?= esc($user['institution_email']) ?></td>
-                    </tr>
+                        <?= esc($user['type_name']) ?>
 
-                    <tr>
-                        <th>No HP</th>
-                        <td><?= esc($user['phone']) ?></td>
-                    </tr>
+                    </p>
 
-                    <tr>
-                        <th>Jenis Kelamin</th>
-                        <td><?= esc($user['gender']) ?></td>
-                    </tr>
+                    <?php if ($user['is_active']) : ?>
 
-                    <tr>
-                        <th>Tempat Lahir</th>
-                        <td><?= esc($user['birth_place']) ?></td>
-                    </tr>
+                        <span class="badge bg-success">
 
-                    <tr>
-                        <th>Tanggal Lahir</th>
-                        <td><?= esc($user['birth_date']) ?></td>
-                    </tr>
+                            Aktif
 
-                    <tr>
-                        <th>Alamat</th>
-                        <td><?= esc($user['address']) ?></td>
-                    </tr>
+                        </span>
 
-                    <tr>
-                        <th>Status</th>
+                    <?php else : ?>
 
-                        <td>
+                        <span class="badge bg-danger">
 
-                            <?php if ($user['is_active']) : ?>
+                            Nonaktif
 
-                                <span class="badge bg-success">
+                        </span>
 
-                                    Aktif
+                    <?php endif; ?>
 
-                                </span>
-
-                            <?php else : ?>
-
-                                <span class="badge bg-danger">
-
-                                    Nonaktif
-
-                                </span>
-
-                            <?php endif; ?>
-
-                        </td>
-
-                    </tr>
-
-                </table>
+                </div>
 
             </div>
 
         </div>
 
-        <hr>
+    </div>
 
-        <h5 class="mb-3">
+    <div class="row">
 
-            Informasi Tambahan
+        <!-- =========================
+             DATA AKUN
+        ========================== -->
 
-        </h5>
+        <div class="col-lg-6">
 
-        <table class="table table-bordered">
+            <div class="card shadow-sm mb-4">
 
-            <?php if (!empty($user['nim'])) : ?>
+                <div class="card-header">
 
-                <tr>
+                    <h5 class="mb-0">
 
-                    <th width="250">
+                        <i class="bi bi-person-badge-fill me-2"></i>
 
-                        NIM
+                        Data Akun
 
-                    </th>
+                    </h5>
 
-                    <td>
+                </div>
 
-                        <?= esc($user['nim']) ?>
+                <div class="card-body">
 
-                    </td>
+                    <table class="table table-borderless mb-0">
 
-                </tr>
+                        <tr>
 
-            <?php endif; ?>
+                            <th width="180">
 
-            <?php if (!empty($user['nip'])) : ?>
+                                Role
 
-                <tr>
+                            </th>
 
-                    <th>
+                            <td>
 
-                        NIP
+                                <?= esc($user['role_name']) ?>
 
-                    </th>
+                            </td>
 
-                    <td>
+                        </tr>
 
-                        <?= esc($user['nip']) ?>
+                        <tr>
 
-                    </td>
+                            <th>
 
-                </tr>
+                                Jenis Pemohon
 
-            <?php endif; ?>
+                            </th>
 
-            <?php if (!empty($user['nidn'])) : ?>
+                            <td>
 
-                <tr>
+                                <?= esc($user['type_name']) ?>
 
-                    <th>
+                            </td>
 
-                        NIDN
+                        </tr>
 
-                    </th>
+                        <tr>
 
-                    <td>
+                            <th>
 
-                        <?= esc($user['nidn']) ?>
+                                Email Pribadi
 
-                    </td>
+                            </th>
 
-                </tr>
+                            <td>
 
-            <?php endif; ?>
+                                <?= esc($user['personal_email']) ?>
 
-            <?php if (!empty($user['department_name'])) : ?>
+                            </td>
 
-                <tr>
+                        </tr>
 
-                    <th>
+                        <tr>
 
-                        Jurusan
+                            <th>
 
-                    </th>
+                                Email Institusi
 
-                    <td>
+                            </th>
 
-                        <?= esc($user['department_name']) ?>
+                            <td>
 
-                    </td>
+                                <?= esc($user['institution_email'] ?: '-') ?>
 
-                </tr>
+                            </td>
 
-            <?php endif; ?>
+                        </tr>
 
-            <?php if (!empty($user['program_name'])) : ?>
+                        <tr>
 
-                <tr>
+                            <th>
 
-                    <th>
+                                Status
 
-                        Program Studi
+                            </th>
 
-                    </th>
+                            <td>
 
-                    <td>
+                                <?php if ($user['is_active']) : ?>
 
-                        <?= esc($user['program_name']) ?>
+                                    <span class="badge bg-success">
 
-                    </td>
+                                        Aktif
 
-                </tr>
+                                    </span>
 
-            <?php endif; ?>
+                                <?php else : ?>
 
-            <?php if (!empty($user['class_name'])) : ?>
+                                    <span class="badge bg-danger">
 
-                <tr>
+                                        Nonaktif
 
-                    <th>
+                                    </span>
 
-                        Kelas
+                                <?php endif; ?>
 
-                    </th>
+                            </td>
 
-                    <td>
+                        </tr>
 
-                        <?= esc($user['class_name']) ?>
+                        <tr>
 
-                    </td>
+                            <th>
 
-                </tr>
+                                Login Terakhir
 
-            <?php endif; ?>
+                            </th>
 
-            <?php if (!empty($user['unit_name'])) : ?>
+                            <td>
 
-                <tr>
+                                <?= !empty($user['last_login']) ? date('d M Y H:i', strtotime($user['last_login'])) : '-' ?>
 
-                    <th>
+                            </td>
 
-                        Unit Kerja
+                        </tr>
 
-                    </th>
+                    </table>
 
-                    <td>
+                </div>
 
-                        <?= esc($user['unit_name']) ?>
+            </div>
 
-                    </td>
+        </div>
 
-                </tr>
+        <!-- =========================
+             DATA PRIBADI
+        ========================== -->
 
-            <?php endif; ?>
+        <div class="col-lg-6">
 
-            <?php if (!empty($user['position'])) : ?>
+            <div class="card shadow-sm mb-4">
 
-                <tr>
+                <div class="card-header">
 
-                    <th>
+                    <h5 class="mb-0">
 
-                        Jabatan
+                        <i class="bi bi-person-lines-fill me-2"></i>
 
-                    </th>
+                        Data Pribadi
 
-                    <td>
+                    </h5>
 
-                        <?= esc($user['position']) ?>
+                </div>
 
-                    </td>
+                <div class="card-body">
 
-                </tr>
+                    <table class="table table-borderless mb-0">
 
-            <?php endif; ?>
+                        <tr>
 
-            <?php if (!empty($user['graduation_year'])) : ?>
+                            <th width="180">
 
-                <tr>
+                                Nama Lengkap
 
-                    <th>
+                            </th>
 
-                        Tahun Lulus
+                            <td>
 
-                    </th>
+                                <?= esc($user['full_name']) ?>
 
-                    <td>
+                            </td>
 
-                        <?= esc($user['graduation_year']) ?>
+                        </tr>
 
-                    </td>
+                        <tr>
 
-                </tr>
+                            <th>
 
-            <?php endif; ?>
+                                Jenis Kelamin
 
-        </table>
+                            </th>
+
+                            <td>
+
+                                <?= $user['gender'] == 'L' ? 'Laki-laki' : ($user['gender'] == 'P' ? 'Perempuan' : '-') ?>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Tempat Lahir
+
+                            </th>
+
+                            <td>
+
+                                <?= esc($user['birth_place'] ?: '-') ?>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Tanggal Lahir
+
+                            </th>
+
+                            <td>
+
+                                <?= !empty($user['birth_date']) ? date('d F Y', strtotime($user['birth_date'])) : '-' ?>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Nomor HP
+
+                            </th>
+
+                            <td>
+
+                                <?= esc($user['phone'] ?: '-') ?>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Alamat
+
+                            </th>
+
+                            <td>
+
+                                <?= nl2br(esc($user['address'] ?: '-')) ?>
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-info-circle-fill me-2"></i>
+
+                Data Khusus
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-borderless mb-0">
+
+                <?php switch ($user['user_type_id']):
+
+                        /*
+                |--------------------------------------------------------------------------
+                | MAHASISWA
+                |--------------------------------------------------------------------------
+                */
+                    case 1:
+                ?>
+
+                        <tr>
+                            <th width="220">NIM</th>
+                            <td><?= esc($user['nim']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Jurusan</th>
+                            <td><?= esc($user['department_name']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Program Studi</th>
+                            <td>
+                                <?= esc($user['education_level']) ?>
+                                -
+                                <?= esc($user['program_name']) ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Kelas</th>
+                            <td><?= esc($user['class_name']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Angkatan</th>
+                            <td><?= esc($user['angkatan']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Tahun Masuk</th>
+                            <td><?= esc($user['entry_year']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Status Mahasiswa</th>
+                            <td><?= esc($user['student_status']) ?></td>
+                        </tr>
+
+                        <?php break; ?>
+
+                    <?php
+                        /*
+                |--------------------------------------------------------------------------
+                | DOSEN
+                |--------------------------------------------------------------------------
+                */
+                    case 2:
+                    ?>
+
+                        <tr>
+                            <th width="220">NIP</th>
+                            <td><?= esc($user['nip']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>NIDN</th>
+                            <td><?= esc($user['nidn']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Jurusan</th>
+                            <td><?= esc($user['department_name']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Unit Kerja</th>
+                            <td><?= esc($user['unit_name']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Jabatan Akademik</th>
+                            <td><?= esc($user['academic_position']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Jabatan Fungsional</th>
+                            <td><?= esc($user['functional_position']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Status Pegawai</th>
+                            <td><?= esc($user['employee_status']) ?></td>
+                        </tr>
+
+                        <?php break; ?>
+
+                    <?php
+                        /*
+                |--------------------------------------------------------------------------
+                | TENDIK
+                |--------------------------------------------------------------------------
+                */
+                    case 3:
+                    ?>
+
+                        <tr>
+                            <th width="220">NIP</th>
+                            <td><?= esc($user['nip']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Unit Kerja</th>
+                            <td><?= esc($user['unit_name']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Jabatan</th>
+                            <td><?= esc($user['position']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Status Pegawai</th>
+                            <td><?= esc($user['employee_status']) ?></td>
+                        </tr>
+
+                        <?php break; ?>
+
+                    <?php
+                        /*
+                |--------------------------------------------------------------------------
+                | ALUMNI
+                |--------------------------------------------------------------------------
+                */
+                    case 4:
+                    ?>
+
+                        <tr>
+                            <th width="220">NIM</th>
+                            <td><?= esc($user['nim']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Jurusan</th>
+                            <td><?= esc($user['department_name']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Program Studi</th>
+                            <td>
+                                <?= esc($user['education_level']) ?>
+                                -
+                                <?= esc($user['program_name']) ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Tahun Lulus</th>
+                            <td><?= esc($user['graduation_year']) ?></td>
+                        </tr>
+
+                        <?php break; ?>
+
+                    <?php
+                        /*
+                |--------------------------------------------------------------------------
+                | ORANG TUA / WALI
+                |--------------------------------------------------------------------------
+                */
+                    case 5:
+                    ?>
+
+                        <tr>
+                            <th width="220">Nama Mahasiswa</th>
+                            <td><?= esc($user['student_name']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>NIM Mahasiswa</th>
+                            <td><?= esc($user['student_nim']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Hubungan</th>
+                            <td><?= esc($user['relationship']) ?></td>
+                        </tr>
+
+                        <?php break; ?>
+
+                    <?php
+                        /*
+                |--------------------------------------------------------------------------
+                | MITRA
+                |--------------------------------------------------------------------------
+                */
+                    case 6:
+                    ?>
+
+                        <tr>
+                            <th width="220">Nama Instansi</th>
+                            <td><?= esc($user['institution_name']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Jenis Instansi</th>
+                            <td><?= esc($user['institution_type']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Jabatan</th>
+                            <td><?= esc($user['position']) ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Job Title</th>
+                            <td><?= esc($user['job_title']) ?></td>
+                        </tr>
+
+                        <?php break; ?>
+
+                    <?php
+                        /*
+                |--------------------------------------------------------------------------
+                | PUBLIK
+                |--------------------------------------------------------------------------
+                */
+                    case 7:
+                    ?>
+
+                        <tr>
+                            <th width="220">Nomor Identitas</th>
+                            <td><?= esc($user['identity_number']) ?></td>
+                        </tr>
+
+                        <?php break; ?>
+
+                    <?php
+                        /*
+                |--------------------------------------------------------------------------
+                | DEFAULT
+                |--------------------------------------------------------------------------
+                */
+                    default:
+                    ?>
+
+                        <tr>
+
+                            <td colspan="2" class="text-center text-muted py-4">
+
+                                Tidak ada data khusus.
+
+                            </td>
+
+                        </tr>
+
+                <?php endswitch; ?>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mb-4">
+
+        <a
+            href="<?= base_url('users') ?>"
+            class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left me-2"></i>
+
+            Kembali
+
+        </a>
+
+        <a
+            href="<?= base_url('users/edit/' . $user['id']) ?>"
+            class="btn btn-warning">
+
+            <i class="bi bi-pencil-square me-2"></i>
+
+            Edit User
+
+        </a>
 
     </div>
 

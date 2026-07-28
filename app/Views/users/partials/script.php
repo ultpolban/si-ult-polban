@@ -1,216 +1,297 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        const role = document.getElementById('role_id');
+        /*
+        |--------------------------------------------------------------------------
+        | BASE URL
+        |--------------------------------------------------------------------------
+        */
+
+        const BASE_URL = "<?= base_url() ?>";
+
+        /*
+        |--------------------------------------------------------------------------
+        | USER TYPE
+        |--------------------------------------------------------------------------
+        */
+
         const userType = document.getElementById('user_type_id');
-        const userTypeContainer = document.getElementById('userTypeContainer');
 
-        const department = document.getElementById('department_id');
-        const studyProgram = document.getElementById('study_program_id');
+        /*
+        |--------------------------------------------------------------------------
+        | SECTION
+        |--------------------------------------------------------------------------
+        */
 
-        const forms = {
+        const mahasiswaSection = document.getElementById('mahasiswa-section');
+        const dosenSection = document.getElementById('dosen-section');
+        const tendikSection = document.getElementById('tendik-section');
+        const alumniSection = document.getElementById('alumni-section');
+        const orangtuaSection = document.getElementById('orangtua-section');
+        const mitraSection = document.getElementById('mitra-section');
+        const publikSection = document.getElementById('publik-section');
 
-            petugas: document.getElementById('petugasForm'),
-            unit: document.getElementById('unitTujuanForm'),
-            pimpinan: document.getElementById('pimpinanForm'),
+        /*
+        |--------------------------------------------------------------------------
+        | HIDE ALL SECTION
+        |--------------------------------------------------------------------------
+        */
 
-            mahasiswa: document.getElementById('mahasiswaForm'),
-            dosen: document.getElementById('dosenForm'),
-            alumni: document.getElementById('alumniForm'),
-            orangtua: document.getElementById('orangtuaForm'),
-            mitra: document.getElementById('mitraForm'),
-            publik: document.getElementById('publikForm')
+        function hideAllSection() {
+            document.querySelectorAll('.user-type-section').forEach(function(section) {
 
-        };
-
-        function hideAllForms() {
-
-            Object.values(forms).forEach(function(form) {
-
-                if (form) {
-
-                    form.style.display = 'none';
-
-                }
+                section.style.display = 'none';
 
             });
-
         }
 
-        function showRoleForm() {
+        /*
+        |--------------------------------------------------------------------------
+        | SHOW USER TYPE SECTION
+        |--------------------------------------------------------------------------
+        */
 
-            hideAllForms();
-
-            userTypeContainer.style.display = 'none';
-
-            if (!role) return;
-
-            let roleName = role.options[role.selectedIndex].text.trim();
-
-            switch (roleName) {
-
-                case 'Petugas ULT':
-
-                    forms.petugas.style.display = 'block';
-
-                    break;
-
-                case 'Unit Tujuan':
-
-                    forms.unit.style.display = 'block';
-
-                    break;
-
-                case 'Pimpinan':
-
-                    forms.pimpinan.style.display = 'block';
-
-                    break;
-
-                case 'Pemohon':
-
-                    userTypeContainer.style.display = 'block';
-
-                    showPemohonForm();
-
-                    break;
-
-            }
-
-        }
-
-        function showPemohonForm() {
-
-            hideAllForms();
+        function showSection() {
+            hideAllSection();
 
             if (!userType) return;
 
-            let jenis = userType.options[userType.selectedIndex].text.trim();
+            const sectionMap = {
 
-            switch (jenis) {
+                '1': mahasiswaSection,
+                '2': dosenSection,
+                '3': tendikSection,
+                '4': alumniSection,
+                '5': orangtuaSection,
+                '6': mitraSection,
+                '7': publikSection
 
-                case 'Mahasiswa':
+            };
 
-                    forms.mahasiswa.style.display = 'block';
+            if (sectionMap[userType.value]) {
 
-                    break;
-
-                case 'Dosen':
-
-                    forms.dosen.style.display = 'block';
-
-                    break;
-
-                case 'Alumni':
-
-                    forms.alumni.style.display = 'block';
-
-                    break;
-
-                case 'Orang Tua/Wali':
-
-                    forms.orangtua.style.display = 'block';
-
-                    break;
-
-                case 'Mitra':
-
-                    forms.mitra.style.display = 'block';
-
-                    break;
-
-                case 'Publik':
-
-                    forms.publik.style.display = 'block';
-
-                    break;
+                sectionMap[userType.value].style.display = 'block';
 
             }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | INIT
+        |--------------------------------------------------------------------------
+        */
+
+        showSection();
+
+        if (userType) {
+
+            userType.addEventListener('change', showSection);
 
         }
 
         /*
-===================================================
-LOAD PROGRAM STUDI
-===================================================
-*/
+        |--------------------------------------------------------------------------
+        | DEPARTMENT & STUDY PROGRAM
+        |--------------------------------------------------------------------------
+        */
 
-        if (department && studyProgram) {
+        const department = document.getElementById('department_id');
+
+        const studyProgram = document.getElementById('study_program_id');
+
+        /*
+        |--------------------------------------------------------------------------
+        | LOAD STUDY PROGRAM
+        |--------------------------------------------------------------------------
+        */
+
+        function loadStudyPrograms(departmentId, selected = '') {
+            if (!department || !studyProgram) return;
+
+            if (departmentId === '') {
+
+                studyProgram.innerHTML = `
+                <option value="">
+                    -- Pilih Program Studi --
+                </option>
+            `;
+
+                return;
+            }
+
+            studyProgram.innerHTML = `
+            <option value="">
+                Memuat data...
+            </option>
+        `;
+
+            fetch(BASE_URL + '/users/study-programs/' + departmentId)
+
+                .then(response => response.json())
+
+                .then(data => {
+
+                    let html = `
+                <option value="">
+                    -- Pilih Program Studi --
+                </option>
+            `;
+
+                    data.forEach(function(item) {
+
+                        const isSelected =
+                            item.id == selected ? 'selected' : '';
+
+                        html += `
+                    <option value="${item.id}" ${isSelected}>
+                        ${item.education_level} - ${item.program_name}
+                    </option>
+                `;
+
+                    });
+
+                    studyProgram.innerHTML = html;
+
+                })
+
+                .catch(function() {
+
+                    studyProgram.innerHTML = `
+                <option value="">
+                    Gagal memuat data
+                </option>
+            `;
+
+                });
+
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CHANGE DEPARTMENT
+        |--------------------------------------------------------------------------
+        */
+
+        if (department) {
 
             department.addEventListener('change', function() {
 
-                let departmentId = this.value;
-
-                studyProgram.innerHTML =
-                    '<option value="">Memuat...</option>';
-
-                if (!departmentId) {
-
-                    studyProgram.innerHTML =
-                        '<option value="">Pilih Program Studi</option>';
-
-                    return;
-                }
-
-                fetch("<?= site_url('study-programs/by-department') ?>/" + departmentId)
-
-                    .then(response => response.json())
-
-                    .then(data => {
-
-                        studyProgram.innerHTML =
-                            '<option value="">Pilih Program Studi</option>';
-
-                        if (data.length === 0) {
-
-                            studyProgram.innerHTML =
-                                '<option value="">Tidak ada Program Studi</option>';
-
-                            return;
-                        }
-
-                        data.forEach(function(program) {
-
-                            const option = document.createElement('option');
-
-                            option.value = program.id;
-
-                            // Menampilkan Jenjang + Nama Program Studi
-                            option.text =
-                                program.education_level + " - " + program.program_name;
-
-                            studyProgram.appendChild(option);
-
-                        });
-
-                    })
-
-                    .catch(error => {
-
-                        console.log(error);
-
-                        studyProgram.innerHTML =
-                            '<option value="">Gagal memuat data</option>';
-
-                    });
+                loadStudyPrograms(this.value);
 
             });
 
         }
 
-        if (role) {
+        /*
+        |--------------------------------------------------------------------------
+        | AUTO LOAD (EDIT)
+        |--------------------------------------------------------------------------
+        */
 
-            role.addEventListener('change', showRoleForm);
+        if (department && department.value !== '') {
+
+            const selectedStudyProgram =
+                studyProgram.dataset.selected ?? '';
+
+            loadStudyPrograms(
+                department.value,
+                selectedStudyProgram
+            );
 
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CHANGE USER TYPE
+        |--------------------------------------------------------------------------
+        */
 
         if (userType) {
 
-            userType.addEventListener('change', showPemohonForm);
+            userType.addEventListener('change', function() {
+
+                showSection();
+
+            });
 
         }
 
-        showRoleForm();
+        /*
+        |--------------------------------------------------------------------------
+        | PHOTO PREVIEW
+        |--------------------------------------------------------------------------
+        */
+
+        const photoInput = document.querySelector('input[name="photo"]');
+
+        const photoPreview = document.getElementById('photo-preview');
+
+        if (photoInput && photoPreview) {
+
+            photoInput.addEventListener('change', function() {
+
+                const file = this.files[0];
+
+                if (!file) {
+
+                    return;
+
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+
+                    photoPreview.src = e.target.result;
+
+                    photoPreview.style.display = 'block';
+
+                };
+
+                reader.readAsDataURL(file);
+
+            });
+
+        }
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const role = document.getElementById('role_id');
+        const wrapper = document.getElementById('user-type-wrapper');
+        const userType = document.getElementById('user_type_id');
+
+        function toggleUserType() {
+
+            if (!role || !wrapper) return;
+
+            const roleText = role.options[role.selectedIndex]
+                .text
+                .trim()
+                .toLowerCase();
+
+            if (roleText === 'pemohon') {
+
+                wrapper.style.display = '';
+
+                userType.disabled = false;
+
+            } else {
+
+                wrapper.style.display = 'none';
+
+                userType.value = '';
+
+                userType.disabled = true;
+
+            }
+
+        }
+
+        toggleUserType();
+
+        role.addEventListener('change', toggleUserType);
 
     });
 </script>

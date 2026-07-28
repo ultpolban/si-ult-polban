@@ -1,8 +1,10 @@
-<div class="card shadow-sm mb-4">
+<div class="card shadow-sm border-0 mb-4">
 
     <div class="card-header bg-success text-white">
 
         <h5 class="mb-0">
+
+            <i class="bi bi-person-vcard-fill me-2"></i>
 
             Data Pribadi
 
@@ -14,155 +16,138 @@
 
         <div class="row">
 
-            <!-- FOTO -->
+            <!-- ==========================================
+            JENIS KELAMIN
+            =========================================== -->
 
-            <div class="col-md-3 text-center mb-3">
+            <div class="col-md-4 mb-3">
 
-                <?php
+                <label class="form-label fw-semibold">
 
-                $photo = old('photo', $user['photo'] ?? '');
+                    Jenis Kelamin
 
-                ?>
+                    <span class="text-danger">*</span>
 
-                <img
-                    id="preview-photo"
-                    src="<?= !empty($photo) ? base_url('uploads/users/' . $photo) : 'https://placehold.co/180x220?text=Foto' ?>"
-                    class="img-thumbnail mb-2"
-                    style="width:180px;height:220px;object-fit:cover;">
+                </label>
 
-                <input
-                    type="file"
-                    name="photo"
-                    id="photo"
-                    class="form-control"
-                    accept=".jpg,.jpeg,.png">
+                <select
+                    name="gender"
+                    class="form-select"
+                    required>
 
-                <small class="text-muted">
+                    <option value="">
 
-                    JPG, JPEG, PNG (Maks. 2 MB)
+                        -- Pilih --
 
-                </small>
+                    </option>
+
+                    <option
+                        value="L"
+                        <?= old('gender', $user['gender'] ?? '') == 'L' ? 'selected' : '' ?>>
+
+                        Laki-laki
+
+                    </option>
+
+                    <option
+                        value="P"
+                        <?= old('gender', $user['gender'] ?? '') == 'P' ? 'selected' : '' ?>>
+
+                        Perempuan
+
+                    </option>
+
+                </select>
 
             </div>
 
-            <div class="col-md-9">
+            <!-- ==========================================
+            TEMPAT LAHIR
+            =========================================== -->
 
-                <div class="row">
+            <div class="col-md-4 mb-3">
 
-                    <!-- Jenis Kelamin -->
+                <label class="form-label fw-semibold">
 
-                    <div class="col-md-6 mb-3">
+                    Tempat Lahir
 
-                        <label class="form-label">
+                </label>
 
-                            Jenis Kelamin
+                <input
+                    type="text"
+                    name="birth_place"
+                    class="form-control"
+                    value="<?= old('birth_place', $user['birth_place'] ?? '') ?>">
 
-                        </label>
+            </div>
 
-                        <select
-                            name="gender"
-                            class="form-select">
+            <!-- ==========================================
+            TANGGAL LAHIR
+            =========================================== -->
 
-                            <option value="">Pilih</option>
+            <div class="col-md-4 mb-3">
 
-                            <option
-                                value="L"
-                                <?= old('gender', $user['gender'] ?? '') == 'L' ? 'selected' : '' ?>>
+                <label class="form-label fw-semibold">
 
-                                Laki-laki
+                    Tanggal Lahir
 
-                            </option>
+                </label>
 
-                            <option
-                                value="P"
-                                <?= old('gender', $user['gender'] ?? '') == 'P' ? 'selected' : '' ?>>
-
-                                Perempuan
-
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    <!-- HP -->
-
-                    <div class="col-md-6 mb-3">
-
-                        <label class="form-label">
-
-                            Nomor HP
-
-                        </label>
-
-                        <input
-                            type="text"
-                            name="phone"
-                            class="form-control"
-                            value="<?= old('phone', $user['phone'] ?? '') ?>">
-
-                    </div>
-
-                    <!-- Tempat -->
-
-                    <div class="col-md-6 mb-3">
-
-                        <label class="form-label">
-
-                            Tempat Lahir
-
-                        </label>
-
-                        <input
-                            type="text"
-                            name="birth_place"
-                            class="form-control"
-                            value="<?= old('birth_place', $user['birth_place'] ?? '') ?>">
-
-                    </div>
-
-                    <!-- Tanggal -->
-
-                    <div class="col-md-6 mb-3">
-
-                        <label class="form-label">
-
-                            Tanggal Lahir
-
-                        </label>
-
-                        <input
-                            type="date"
-                            name="birth_date"
-                            class="form-control"
-                            value="<?= old('birth_date', $user['birth_date'] ?? '') ?>">
-
-                    </div>
-
-                </div>
+                <input
+                    type="date"
+                    name="birth_date"
+                    class="form-control"
+                    value="<?= old('birth_date', $user['birth_date'] ?? '') ?>">
 
             </div>
 
         </div>
 
-        <hr>
-
         <div class="row">
 
-            <!-- Alamat -->
+            <!-- ==========================================
+            NO HP
+            =========================================== -->
 
-            <div class="col-md-12 mb-3">
+            <div class="col-md-6 mb-3">
 
-                <label class="form-label">
+                <label class="form-label fw-semibold">
 
-                    Alamat Lengkap
+                    Nomor HP
+
+                    <span class="text-danger">*</span>
+
+                </label>
+
+                <input
+                    type="text"
+                    name="phone"
+                    class="form-control"
+                    value="<?= old('phone', $user['phone'] ?? '') ?>"
+                    placeholder="08xxxxxxxxxx"
+                    required>
+
+            </div>
+
+            <!-- ==========================================
+            ALAMAT
+            =========================================== -->
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label fw-semibold">
+
+                    Alamat
+
+                    <span class="text-danger">*</span>
 
                 </label>
 
                 <textarea
                     name="address"
+                    rows="3"
                     class="form-control"
-                    rows="4"><?= old('address', $user['address'] ?? '') ?></textarea>
+                    required><?= old('address', $user['address'] ?? '') ?></textarea>
 
             </div>
 

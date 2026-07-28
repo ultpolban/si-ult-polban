@@ -1,8 +1,10 @@
-<div class="card shadow-sm mb-4">
+<div class="card shadow-sm border-0 mb-4">
 
     <div class="card-header bg-primary text-white">
 
         <h5 class="mb-0">
+
+            <i class="bi bi-person-badge-fill me-2"></i>
 
             Data Akun
 
@@ -14,11 +16,13 @@
 
         <div class="row">
 
-            <!-- ROLE -->
+            <!-- ==========================================
+            ROLE
+            =========================================== -->
 
             <div class="col-md-6 mb-3">
 
-                <label class="form-label">
+                <label class="form-label fw-semibold">
 
                     Role
 
@@ -27,8 +31,8 @@
                 </label>
 
                 <select
-                    name="role_id"
                     id="role_id"
+                    name="role_id"
                     class="form-select"
                     required>
 
@@ -42,7 +46,6 @@
 
                         <option
                             value="<?= $role['id'] ?>"
-
                             <?= old('role_id', $user['role_id'] ?? '') == $role['id'] ? 'selected' : '' ?>>
 
                             <?= esc($role['role_name']) ?>
@@ -55,23 +58,27 @@
 
             </div>
 
-            <!-- JENIS PEMOHON -->
+            <!-- ==========================================
+            JENIS PEMOHON
+            =========================================== -->
 
             <div
                 class="col-md-6 mb-3"
-                id="userTypeContainer"
-                style="display:none;">
+                id="user-type-wrapper">
 
-                <label class="form-label">
+                <label class="form-label fw-semibold">
 
                     Jenis Pemohon
+
+                    <span class="text-danger">*</span>
 
                 </label>
 
                 <select
                     name="user_type_id"
                     id="user_type_id"
-                    class="form-select">
+                    class="form-select"
+                    required>
 
                     <option value="">
 
@@ -83,7 +90,6 @@
 
                         <option
                             value="<?= $type['id'] ?>"
-
                             <?= old('user_type_id', $user['user_type_id'] ?? '') == $type['id'] ? 'selected' : '' ?>>
 
                             <?= esc($type['type_name']) ?>
@@ -100,11 +106,13 @@
 
         <div class="row">
 
-            <!-- NAMA -->
+            <!-- ==========================================
+            NAMA
+            =========================================== -->
 
             <div class="col-md-6 mb-3">
 
-                <label class="form-label">
+                <label class="form-label fw-semibold">
 
                     Nama Lengkap
 
@@ -121,13 +129,55 @@
 
             </div>
 
-            <!-- EMAIL PERSONAL -->
+            <!-- ==========================================
+            STATUS
+            =========================================== -->
 
             <div class="col-md-6 mb-3">
 
-                <label class="form-label">
+                <label class="form-label fw-semibold">
 
-                    Email Personal
+                    Status Akun
+
+                </label>
+
+                <select
+                    name="is_active"
+                    class="form-select">
+
+                    <option
+                        value="1"
+                        <?= old('is_active', $user['is_active'] ?? 1) == 1 ? 'selected' : '' ?>>
+
+                        Aktif
+
+                    </option>
+
+                    <option
+                        value="0"
+                        <?= old('is_active', $user['is_active'] ?? 1) == 0 ? 'selected' : '' ?>>
+
+                        Nonaktif
+
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <!-- ==========================================
+            EMAIL PRIBADI
+            =========================================== -->
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label fw-semibold">
+
+                    Email Pribadi
 
                     <span class="text-danger">*</span>
 
@@ -142,15 +192,13 @@
 
             </div>
 
-        </div>
-
-        <div class="row">
-
-            <!-- EMAIL INSTITUSI -->
+            <!-- ==========================================
+            EMAIL INSTITUSI
+            =========================================== -->
 
             <div class="col-md-6 mb-3">
 
-                <label class="form-label">
+                <label class="form-label fw-semibold">
 
                     Email Institusi
 
@@ -164,21 +212,23 @@
 
             </div>
 
-            <!-- PASSWORD -->
+        </div>
 
-            <div class="col-md-3 mb-3">
+        <div class="row">
 
-                <label class="form-label">
+            <!-- ==========================================
+            PASSWORD
+            =========================================== -->
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label fw-semibold">
 
                     Password
 
-                    <?php if (isset($user['id'])): ?>
+                    <?php if (empty($user)) : ?>
 
-                        <small class="text-muted">
-
-                            (Kosongkan jika tidak diubah)
-
-                        </small>
+                        <span class="text-danger">*</span>
 
                     <?php endif; ?>
 
@@ -187,43 +237,125 @@
                 <input
                     type="password"
                     name="password"
-                    class="form-control">
+                    class="form-control"
+                    <?= empty($user) ? 'required' : '' ?>>
+
+                <?php if (!empty($user)) : ?>
+
+                    <small class="text-muted">
+
+                        Kosongkan jika password tidak ingin diubah.
+
+                    </small>
+
+                <?php endif; ?>
 
             </div>
 
-            <!-- STATUS -->
+            <!-- ==========================================
+            KONFIRMASI PASSWORD
+            =========================================== -->
 
-            <div class="col-md-3 mb-3">
+            <div class="col-md-6 mb-3">
 
-                <label class="form-label">
+                <label class="form-label fw-semibold">
 
-                    Status
+                    Konfirmasi Password
+
+                    <?php if (empty($user)) : ?>
+
+                        <span class="text-danger">*</span>
+
+                    <?php endif; ?>
 
                 </label>
 
-                <select
-                    name="is_active"
-                    class="form-select">
+                <input
+                    type="password"
+                    name="password_confirmation"
+                    class="form-control"
+                    <?= empty($user) ? 'required' : '' ?>>
 
-                    <option
-                        value="1"
+            </div>
 
-                        <?= old('is_active', $user['is_active'] ?? 1) == 1 ? 'selected' : '' ?>>
+        </div>
 
-                        Aktif
+        <div class="row">
 
-                    </option>
+            <!-- ==========================================
+            FOTO
+            =========================================== -->
 
-                    <option
-                        value="0"
+            <div class="col-md-6 mb-3">
 
-                        <?= old('is_active', $user['is_active'] ?? 1) == 0 ? 'selected' : '' ?>>
+                <label class="form-label fw-semibold">
 
-                        Nonaktif
+                    Foto Profil
 
-                    </option>
+                </label>
 
-                </select>
+                <div class="mb-3">
+
+                    <img
+                        id="photo-preview"
+                        src="<?= !empty($user['photo']) ? base_url('uploads/users/' . $user['photo']) : '' ?>"
+                        class="img-thumbnail"
+                        style="<?= empty($user['photo']) ? 'display:none;' : '' ?>"
+                        width="150">
+
+                </div>
+
+                <input
+                    type="file"
+                    name="photo"
+                    class="form-control"
+                    accept=".jpg,.jpeg,.png">
+
+                <small class="text-muted">
+
+                    Format: JPG, JPEG, PNG. Maksimal 2 MB.
+
+                </small>
+
+            </div>
+
+            <!-- ==========================================
+            PREVIEW FOTO
+            =========================================== -->
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label fw-semibold">
+
+                    Preview Foto
+
+                </label>
+
+                <div>
+
+                    <?php if (!empty($user['photo'])) : ?>
+
+                        <img
+                            src="<?= base_url('uploads/users/' . $user['photo']) ?>"
+                            class="img-thumbnail"
+                            style="width:150px;height:150px;object-fit:cover;"
+                            alt="Foto User">
+
+                    <?php else : ?>
+
+                        <div
+                            class="border rounded d-flex align-items-center justify-content-center bg-light"
+                            style="width:150px;height:150px;">
+
+                            <i
+                                class="bi bi-person-circle text-secondary"
+                                style="font-size:80px;"></i>
+
+                        </div>
+
+                    <?php endif; ?>
+
+                </div>
 
             </div>
 

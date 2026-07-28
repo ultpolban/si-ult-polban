@@ -2,62 +2,72 @@
 
 namespace App\Controllers;
 
+use App\Controllers\BaseController;
 use App\Models\UserModel;
+use App\Models\RoleModel;
 use App\Models\DepartmentModel;
 use App\Models\StudyProgramModel;
 use App\Models\WorkUnitModel;
 
 class DashboardController extends BaseController
 {
-    public function index()
+    protected UserModel $userModel;
+    protected RoleModel $roleModel;
+    protected DepartmentModel $departmentModel;
+    protected StudyProgramModel $studyProgramModel;
+    protected WorkUnitModel $workUnitModel;
+
+    public function __construct()
     {
-        if (!session()->get('logged_in')) {
-            return redirect()->to('/login');
-        }
-
-        $roleId = session()->get('role_id');
-
-        switch ($roleId) {
-
-            // Administrator
-            case 1:
-
-                $userModel = new UserModel();
-                $departmentModel = new DepartmentModel();
-                $studyProgramModel = new StudyProgramModel();
-                $workUnitModel = new WorkUnitModel();
-
-                return view('dashboard/admin', [
-
-                    'totalUsers'       => $userModel->countAll(),
-                    'totalDepartments' => $departmentModel->countAll(),
-                    'totalPrograms'    => $studyProgramModel->countAll(),
-                    'totalUnits'       => $workUnitModel->countAll()
-
-                ]);
-
-                // Petugas ULT
-            case 2:
-                return view('dashboard/petugas');
-
-                // Unit Tujuan
-            case 3:
-                return view('dashboard/unit');
-
-                // Pimpinan
-            case 4:
-                return view('dashboard/pimpinan');
-
-                // Pemohon
-            case 5:
-                return view('dashboard/pemohon');
-
-            default:
-                session()->destroy();
-
-                return redirect()
-                    ->to('/login')
-                    ->with('error', 'Role tidak dikenali.');
-        }
+        $this->userModel = new UserModel();
+        $this->roleModel = new RoleModel();
+        $this->departmentModel = new DepartmentModel();
+        $this->studyProgramModel = new StudyProgramModel();
+        $this->workUnitModel = new WorkUnitModel();
     }
+
+    public function index()
+{
+    $userModel = new \App\Models\UserModel();
+    $roleModel = new \App\Models\RoleModel();
+    $userTypeModel = new \App\Models\UserTypeModel();
+    $departmentModel = new \App\Models\DepartmentModel();
+    $studyProgramModel = new \App\Models\StudyProgramModel();
+    $workUnitModel = new \App\Models\WorkUnitModel();
+
+    $data = [
+
+        'title' => 'Dashboard',
+
+        'totalUsers' => $userModel->countAllResults(),
+
+        'totalRoles' => $roleModel->countAllResults(),
+
+        'totalUserTypes' => $userTypeModel->countAllResults(),
+
+        'totalDepartments' => $departmentModel->countAllResults(),
+
+        'totalStudyPrograms' => $studyProgramModel->countAllResults(),
+
+        'totalWorkUnits' => $workUnitModel->countAllResults(),
+
+        'activeUsers' => $userModel
+            ->where('is_active', 1)
+            ->countAllResults(),
+
+        'inactiveUsers' => $userModel
+            ->where('is_active', 0)
+            ->countAllResults(),
+
+        'recentUsers' => $userModel
+            ->select('users.*, roles.role_name')
+            ->join('roles', 'roles.id = users.role_id')
+            ->orderBy('users.id', 'DESC')
+            ->limit(5)
+            ->find()
+
+    ];
+
+    return view('dashboard/index', $data);
+}
 }

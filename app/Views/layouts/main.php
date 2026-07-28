@@ -3,194 +3,103 @@
 
 <head>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title><?= esc($title ?? 'SI ULT POLBAN') ?></title>
-
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
-
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-        rel="stylesheet">
-
-    <style>
-        body {
-            background: #f4f6f9;
-        }
-
-        .sidebar {
-            width: 250px;
-            min-height: 100vh;
-            background: #0d6efd;
-            position: fixed;
-            left: 0;
-            top: 0;
-            color: white;
-        }
-
-        .brand {
-            font-size: 22px;
-            font-weight: bold;
-            text-align: center;
-            padding: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, .2);
-        }
-
-        .sidebar a {
-            color: white;
-            display: block;
-            text-decoration: none;
-            padding: 14px 20px;
-            transition: .2s;
-        }
-
-        .sidebar a:hover {
-            background: rgba(255, 255, 255, .2);
-        }
-
-        .content {
-            margin-left: 250px;
-            padding: 25px;
-        }
-
-        .navbar-custom {
-            background: white;
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
-        }
-
-        .card {
-            border: none;
-        }
-
-        .card-header {
-            font-weight: 600;
-        }
-
-        .required {
-            color: red;
-        }
-
-        .table td,
-        .table th {
-            vertical-align: middle;
-        }
-
-        #photoPreview {
-            max-width: 180px;
-            margin-top: 10px;
-        }
-    </style>
+    <?= $this->include('layouts/header') ?>
 
 </head>
 
 <body>
 
-    <div class="sidebar">
+    <div class="wrapper">
 
-        <div class="brand">
+        <!-- Sidebar -->
+        <?= $this->include('layouts/sidebar') ?>
 
-            SI ULT POLBAN
+        <!-- Content -->
+        <div class="content">
 
-        </div>
+            <!-- Navbar -->
+            <?= $this->include('layouts/navbar') ?>
 
-        <a href="<?= base_url('dashboard') ?>">
+            <!-- Main Content -->
+            <main class="page fade-up">
 
-            <i class="bi bi-speedometer2"></i>
+                <?php if (session()->getFlashdata('success')) : ?>
 
-            Dashboard
+                    <div class="alert alert-success alert-dismissible fade show mb-4">
 
-        </a>
+                        <i class="bi bi-check-circle-fill me-2"></i>
 
-        <a href="<?= base_url('users') ?>">
+                        <?= session()->getFlashdata('success') ?>
 
-            <i class="bi bi-people-fill"></i>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"></button>
 
-            Management User
+                    </div>
 
-        </a>
+                <?php endif; ?>
 
-        <a href="<?= base_url('roles') ?>">
+                <?php if (session()->getFlashdata('error')) : ?>
 
-            <i class="bi bi-person-badge"></i>
+                    <div class="alert alert-danger alert-dismissible fade show mb-4">
 
-            Role
+                        <i class="bi bi-exclamation-circle-fill me-2"></i>
 
-        </a>
+                        <?= session()->getFlashdata('error') ?>
 
-        <a href="<?= base_url('work-units') ?>">
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"></button>
 
-            <i class="bi bi-building"></i>
+                    </div>
 
-            Unit Kerja
+                <?php endif; ?>
 
-        </a>
+                <?php if (session()->getFlashdata('warning')) : ?>
 
-        <a href="<?= base_url('departments') ?>">
+                    <div class="alert alert-warning alert-dismissible fade show mb-4">
 
-            <i class="bi bi-diagram-3"></i>
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
 
-            Jurusan
+                        <?= session()->getFlashdata('warning') ?>
 
-        </a>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"></button>
 
-        <a href="<?= base_url('study-programs') ?>">
+                    </div>
 
-            <i class="bi bi-book"></i>
+                <?php endif; ?>
 
-            Program Studi
+                <?= $this->renderSection('content') ?>
 
-        </a>
+            </main>
 
-        <hr>
+            <!-- Footer -->
+            <footer class="footer">
 
-        <a href="<?= base_url('logout') ?>">
+                <div class="footer-left">
 
-            <i class="bi bi-box-arrow-right"></i>
+                    © <?= date('Y') ?> SI ULT POLBAN
 
-            Logout
+                </div>
 
-        </a>
+                <div class="footer-right">
 
-    </div>
+                    Backend 1 • Administrator Module v1.0
 
-    <div class="content">
+                </div>
 
-        <div class="navbar-custom d-flex justify-content-between align-items-center">
-
-            <div>
-
-                <h4 class="mb-0">
-
-                    <?= esc($title ?? 'Dashboard') ?>
-
-                </h4>
-
-            </div>
-
-            <div>
-
-                <strong>
-
-                    <?= esc(session()->get('full_name')) ?>
-
-                </strong>
-
-            </div>
+            </footer>
 
         </div>
 
-        <?= $this->renderSection('content') ?>
-
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <?= $this->include('layouts/footer') ?>
 
     <?= $this->renderSection('script') ?>
 

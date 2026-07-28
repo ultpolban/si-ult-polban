@@ -2,23 +2,51 @@
 
 <?= $this->section('content') ?>
 
-<div class="container py-4">
+<div class="container-fluid">
 
     <div class="row justify-content-center">
 
-        <div class="col-lg-10">
+        <div class="col-xl-10">
 
-            <div class="card shadow">
+            <div class="card shadow border-0">
 
                 <div class="card-header bg-primary text-white">
 
-                    <h3 class="mb-0">
-                        Registrasi Pemohon SI-ULT POLBAN
-                    </h3>
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <h4 class="mb-1">
+
+                                <i class="bi bi-person-plus-fill"></i>
+
+                                Registrasi Pemohon
+
+                            </h4>
+
+                            <small>
+
+                                Silakan lengkapi seluruh data sesuai jenis pemohon.
+
+                            </small>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
                 <div class="card-body">
+
+                    <?php if (session()->getFlashdata('error')) : ?>
+
+                        <div class="alert alert-danger">
+
+                            <?= session()->getFlashdata('error') ?>
+
+                        </div>
+
+                    <?php endif; ?>
 
                     <?php if (session()->getFlashdata('errors')) : ?>
 
@@ -26,7 +54,7 @@
 
                             <ul class="mb-0">
 
-                                <?php foreach (session()->getFlashdata('errors') as $error): ?>
+                                <?php foreach (session()->getFlashdata('errors') as $error) : ?>
 
                                     <li><?= esc($error) ?></li>
 
@@ -39,47 +67,85 @@
                     <?php endif; ?>
 
                     <form
-                        action="<?= base_url('register') ?>"
+                        action="<?= base_url('register/store') ?>"
                         method="post"
                         enctype="multipart/form-data">
 
                         <?= csrf_field() ?>
 
-                        <?= $this->include('auth/register/account') ?>
+                        <!-- ================================================= -->
+                        <!-- DATA AKUN -->
+                        <!-- ================================================= -->
 
-                        <?= $this->include('auth/register/personal') ?>
+                        <?= $this->include('auth/partials/account') ?>
 
-                        <?= $this->include('auth/register/mahasiswa') ?>
+                        <!-- ================================================= -->
+                        <!-- DATA PRIBADI -->
+                        <!-- ================================================= -->
 
-                        <?= $this->include('auth/register/dosen') ?>
+                        <?= $this->include('auth/partials/personal') ?>
 
-                        <?= $this->include('auth/register/tendik') ?>
+                        <!-- ================================================= -->
+                        <!-- DATA KHUSUS PEMOHON -->
+                        <!-- ================================================= -->
 
-                        <?= $this->include('auth/register/alumni') ?>
+                        <?= $this->include('auth/partials/mahasiswa') ?>
 
-                        <?= $this->include('auth/register/orangtua') ?>
+                        <?= $this->include('auth/partials/dosen') ?>
 
-                        <?= $this->include('auth/register/mitra') ?>
+                        <?= $this->include('auth/partials/tendik') ?>
 
-                        <?= $this->include('auth/register/publik') ?>
+                        <?= $this->include('auth/partials/alumni') ?>
 
-                        <div class="text-end mt-4">
+                        <?= $this->include('auth/partials/orangtua') ?>
 
-                            <a
-                                href="<?= base_url('login') ?>"
-                                class="btn btn-secondary">
+                        <?= $this->include('auth/partials/mitra') ?>
 
-                                Kembali
+                        <?= $this->include('auth/partials/publik') ?>
 
-                            </a>
+                        <!-- ================================================= -->
+                        <!-- BUTTON -->
+                        <!-- ================================================= -->
 
-                            <button
-                                class="btn btn-primary"
-                                type="submit">
+                        <div class="card border-0 bg-light mt-4">
 
-                                Registrasi
+                            <div class="card-body">
 
-                            </button>
+                                <div class="d-flex justify-content-end gap-2">
+
+                                    <a
+                                        href="<?= base_url('login') ?>"
+                                        class="btn btn-secondary">
+
+                                        <i class="bi bi-arrow-left"></i>
+
+                                        Kembali
+
+                                    </a>
+
+                                    <button
+                                        type="reset"
+                                        class="btn btn-warning">
+
+                                        <i class="bi bi-arrow-clockwise"></i>
+
+                                        Reset
+
+                                    </button>
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary">
+
+                                        <i class="bi bi-check-circle-fill"></i>
+
+                                        Daftar
+
+                                    </button>
+
+                                </div>
+
+                            </div>
 
                         </div>
 
@@ -95,6 +161,11 @@
 
 </div>
 
-<?= $this->include('auth/register/script') ?>
+<?= $this->endSection() ?>
+
+
+<?= $this->section('script') ?>
+
+<?= $this->include('auth/partials/script') ?>
 
 <?= $this->endSection() ?>

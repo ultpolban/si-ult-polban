@@ -5,16 +5,21 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\StudyProgramModel;
 use App\Models\DepartmentModel;
+use App\Models\UserModel;
 
 class StudyProgramController extends BaseController
 {
-    protected $studyProgramModel;
-    protected $departmentModel;
+    protected StudyProgramModel $studyProgramModel;
+    protected DepartmentModel $departmentModel;
+    protected UserModel $userModel;
 
     public function __construct()
     {
+        helper(['form']);
+
         $this->studyProgramModel = new StudyProgramModel();
-        $this->departmentModel   = new DepartmentModel();
+        $this->departmentModel = new DepartmentModel();
+        $this->userModel = new UserModel();
     }
 
     /*
@@ -25,17 +30,37 @@ class StudyProgramController extends BaseController
 
     public function index()
     {
-        $data = [
-            'title' => 'Master Program Studi',
-            'studyPrograms' => $this->studyProgramModel
-                ->select('study_programs.*, departments.department_name')
-                ->join('departments', 'departments.id = study_programs.department_id')
-                ->orderBy('departments.department_name', 'ASC')
-                ->orderBy('study_programs.program_name', 'ASC')
-                ->findAll()
-        ];
+        $keyword = trim($this->request->getGet('keyword'));
 
-        return view('study_programs/index', $data);
+        $perPage = 10;
+
+        $studyPrograms = $this->studyProgramModel
+            ->search($keyword)
+            ->paginate($perPage);
+
+        foreach ($studyPrograms as &$program) {
+
+            $program['total_user'] = $this->studyProgramModel
+                ->countUser($program['id']);
+        }
+
+        return view('study-programs/index', [
+
+            'title' => 'Management Program Studi',
+
+            'studyPrograms' => $studyPrograms,
+
+            'departments' => $this->departmentModel
+                ->orderBy('department_name')
+                ->findAll(),
+
+            'pager' => $this->studyProgramModel->pager,
+
+            'keyword' => $keyword,
+
+            'totalProgram' => $this->studyProgramModel->countAll()
+
+        ]);
     }
 
     /*
@@ -46,103 +71,217 @@ class StudyProgramController extends BaseController
 
     public function create()
     {
-        $data = [
-            'title' => 'Tambah Program Studi',
-            'departments' => $this->departmentModel
-                ->orderBy('department_name', 'ASC')
-                ->findAll()
-        ];
+        return view('study-programs/create', [
 
-        return view('study_programs/create', $data);
+            'title' => 'Tambah Program Studi',
+
+            'studyProgram' => [],
+
+            'departments' => $this->departmentModel
+                ->orderBy('department_name')
+                ->findAll(),
+
+            'validation' => \Config\Services::validation()
+
+        ]);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | STORE
-    |--------------------------------------------------------------------------
-    */
+    private function validationRules(?int $id = null): array
+    {
+        return [
+
+            'department_id' => 'required',
+
+            'education_level' => 'required',
+
+            'program_name' => 'required|max_length[150]'
+
+        ];
+    }
+
+    private function validationMessages(): array
+    {
+        return [
+
+            'department_id' => [
+                'required' => 'Jurusan wajib dipilih.'
+            ],
+
+            'education_level' => [
+                'required' => 'Jenjang wajib dipilih.'
+            ],
+
+            'program_name' => [
+                'required' => 'Nama Program Studi wajib diisi.'
+            ]
+
+        ];
+    }
 
     public function store()
     {
+        if (
+            !$this->validate(
+                $this->validationRules(),
+                $this->validationMessages()
+            )
+        ) {
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors());
+        }
+
         $this->studyProgramModel->insert([
+
             'department_id' => $this->request->getPost('department_id'),
-            'program_code' => $this->request->getPost('program_code'),
-            'program_name' => $this->request->getPost('program_name'),
+
             'education_level' => $this->request->getPost('education_level'),
-            'status' => $this->request->getPost('status')
+
+            'program_name' => $this->request->getPost('program_name')
+
         ]);
 
-        return redirect()->to(base_url('study-programs'))
-            ->with('success', 'Program studi berhasil ditambahkan.');
-    }
+        return redirect()
 
-    /*
-    |--------------------------------------------------------------------------
-    | EDIT
-    |--------------------------------------------------------------------------
-    */
+            ->to(base_url('study-programs'))
+
+            ->with('success', 'Program Studi berhasil ditambahkan.');
+    }
 
     public function edit($id)
     {
-        $data = [
+        $studyProgram = $this->studyProgramModel->find($id);
+
+        if (!$studyProgram) {
+
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
+                'Program Studi tidak ditemukan.'
+            );
+        }
+
+        return view('study-programs/edit', [
+
             'title' => 'Edit Program Studi',
-            'program' => $this->studyProgramModel->find($id),
+
+            'studyProgram' => $studyProgram,
+
             'departments' => $this->departmentModel
                 ->orderBy('department_name', 'ASC')
-                ->findAll()
-        ];
+                ->findAll(),
 
-        return view('study_programs/edit', $data);
+            'validation' => \Config\Services::validation()
+
+        ]);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | UPDATE
-    |--------------------------------------------------------------------------
-    */
 
     public function update($id)
     {
+        $studyProgram = $this->studyProgramModel->find($id);
+
+        if (!$studyProgram) {
+
+            return redirect()
+
+                ->to(base_url('study-programs'))
+
+                ->with('error', 'Program Studi tidak ditemukan.');
+        }
+
+        if (
+            !$this->validate(
+                $this->validationRules($id),
+                $this->validationMessages()
+            )
+        ) {
+
+            return redirect()
+
+                ->back()
+
+                ->withInput()
+
+                ->with('errors', $this->validator->getErrors());
+        }
+
         $this->studyProgramModel->update($id, [
-            'department_id' => $this->request->getPost('department_id'),
-            'program_code' => $this->request->getPost('program_code'),
-            'program_name' => $this->request->getPost('program_name'),
+
+            'department_id'   => $this->request->getPost('department_id'),
+
             'education_level' => $this->request->getPost('education_level'),
-            'status' => $this->request->getPost('status')
+
+            'program_name'    => trim(
+                $this->request->getPost('program_name')
+            )
+
         ]);
 
-        return redirect()->to(base_url('study-programs'))
-            ->with('success', 'Program studi berhasil diperbarui.');
-    }
+        return redirect()
 
-    /*
-    |--------------------------------------------------------------------------
-    | DELETE
-    |--------------------------------------------------------------------------
-    */
+            ->to(base_url('study-programs'))
+
+            ->with(
+                'success',
+                'Program Studi berhasil diperbarui.'
+            );
+    }
 
     public function delete($id)
     {
+        $studyProgram = $this->studyProgramModel->find($id);
+
+        if (!$studyProgram) {
+
+            return redirect()
+
+                ->to(base_url('study-programs'))
+
+                ->with('error', 'Program Studi tidak ditemukan.');
+        }
+
+        $totalUser = $this->userModel
+
+            ->where('study_program_id', $id)
+
+            ->countAllResults();
+
+        if ($totalUser > 0) {
+
+            return redirect()
+
+                ->to(base_url('study-programs'))
+
+                ->with(
+                    'error',
+                    'Program Studi masih digunakan oleh ' . $totalUser . ' user.'
+                );
+        }
+
         $this->studyProgramModel->delete($id);
 
-        return redirect()->to(base_url('study-programs'))
-            ->with('success', 'Program studi berhasil dihapus.');
-    }
+        return redirect()
 
-    /*
-    |--------------------------------------------------------------------------
-    | AJAX
-    |--------------------------------------------------------------------------
-    */
+            ->to(base_url('study-programs'))
+
+            ->with(
+                'success',
+                'Program Studi berhasil dihapus.'
+            );
+    }
 
     public function byDepartment($departmentId)
     {
-        return $this->response->setJSON(
-            $this->studyProgramModel
-                ->where('department_id', $departmentId)
-                ->where('status', 'Aktif')
-                ->orderBy('program_name', 'ASC')
-                ->findAll()
-        );
+        $studyPrograms = $this->studyProgramModel
+
+            ->where('department_id', $departmentId)
+
+            ->orderBy('education_level', 'ASC')
+
+            ->orderBy('program_name', 'ASC')
+
+            ->findAll();
+
+        return $this->response->setJSON($studyPrograms);
     }
 }

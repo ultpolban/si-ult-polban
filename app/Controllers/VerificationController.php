@@ -79,6 +79,13 @@ class VerificationController extends BaseController
 
         if (!$ticket) {
             return redirect()->back()->with('error', 'Tiket tidak ditemukan.');
+
+            $this->ticketModel->update($id, [
+
+    'assigned_unit' => 'Akademik', // atau unit yang dipilih
+    'status'        => 'Assigned'
+
+]);
         }
 
         $status = $this->request->getPost('status');

@@ -141,7 +141,7 @@
 
         <table class="table table-bordered table-striped">
 
-            <thead class="thead-dark">
+           <thead style="background:#293582; color:white;">
                 <tr>
                     <th width="50">No</th>
                     <th>No Tiket</th>

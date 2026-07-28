@@ -1,0 +1,175 @@
+/* ===========================================
+   ULT POLBAN THEME
+   =========================================== */
+
+/* Background */
+body,
+.content-wrapper{
+    background:#e9edf9 !important;
+}
+
+/* Navbar */
+.main-header.navbar{
+    background:#293582 !important;
+    border-bottom:none !important;
+}
+
+.main-header .nav-link{
+    color:#fff !important;
+}
+
+.main-header .nav-link:hover{
+    color:#ff7f00 !important;
+}
+
+/* Sidebar */
+.main-sidebar{
+    background:#293582 !important;
+}
+
+.brand-link{
+    background:#293582 !important;
+    color:#fff !important;
+    border-bottom:1px solid rgba(255,255,255,.15);
+}
+
+.brand-link:hover{
+    color:#ff7f00 !important;
+}
+
+/* Menu Sidebar */
+.nav-sidebar .nav-link{
+    color:#fff !important;
+}
+
+.nav-sidebar .nav-link:hover{
+    background:#ff7f00 !important;
+    color:#fff !important;
+}
+
+.nav-sidebar .nav-link.active{
+    background:#ff7f00 !important;
+    color:#fff !important;
+}
+
+/* Card */
+.card{
+    border-radius:10px;
+}
+
+.card-header{
+    background:#293582 !important;
+    color:#fff !important;
+    font-weight:bold;
+}
+
+/* Tombol */
+.btn-primary{
+    background:#293582 !important;
+    border-color:#293582 !important;
+}
+
+.btn-primary:hover{
+    background:#1d2a6b !important;
+    border-color:#1d2a6b !important;
+}
+
+.btn-warning{
+    background:#ff7f00 !important;
+    border-color:#ff7f00 !important;
+    color:#fff !important;
+}
+
+.btn-warning:hover{
+    background:#e66f00 !important;
+    border-color:#e66f00 !important;
+}
+
+.btn-success{
+    background:#28a745 !important;
+}
+
+.btn-danger{
+    background:#dc3545 !important;
+}
+
+/* Table */
+.table{
+    border-collapse:collapse;
+}
+
+.table thead,
+.table thead tr{
+    background:#293582 !important;
+}
+
+.table thead th{
+    background:#293582 !important;
+    color:#fff !important;
+    border-color:#4455b3 !important;
+    vertical-align:middle;
+}
+
+.table tbody tr:hover{
+    background:#f4f7ff !important;
+}
+
+/* DataTables */
+table.dataTable thead,
+table.dataTable thead tr{
+    background:#293582 !important;
+}
+
+table.dataTable thead th,
+table.dataTable thead td{
+    background:#293582 !important;
+    color:#fff !important;
+    border-color:#4455b3 !important;
+}
+
+/* Badge */
+.badge-primary{
+    background:#293582 !important;
+}
+
+.badge-warning{
+    background:#ff7f00 !important;
+    color:#fff !important;
+}
+
+/* Pagination */
+.page-item.active .page-link{
+    background:#293582 !important;
+    border-color:#293582 !important;
+}
+
+.page-link{
+    color:#293582 !important;
+}
+
+/* Form */
+.form-control:focus{
+    border-color:#293582 !important;
+    box-shadow:0 0 0 .2rem rgba(41,53,130,.2) !important;
+}
+
+/* Progress */
+.progress-bar{
+    background:#293582 !important;
+}
+
+/* Modal */
+.modal-header{
+    background:#293582 !important;
+    color:#fff !important;
+}
+
+/* Small Box Dashboard */
+.small-box.bg-info{
+    background:#293582 !important;
+}
+
+.small-box.bg-warning{
+    background:#ff7f00 !important;
+    color:#fff !important;
+}

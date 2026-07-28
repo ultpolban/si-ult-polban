@@ -1,5 +1,18 @@
 <?= $this->include('layouts/header') ?>
 
+<head>
+    <meta charset="utf-8">
+
+    <title>ULT POLBAN</title>
+
+    <link rel="stylesheet" href="<?= base_url('plugins/fontawesome-free/css/all.min.css') ?>">
+
+    <link rel="stylesheet" href="<?= base_url('dist/css/adminlte.min.css') ?>">
+
+   <link rel="stylesheet" href="<?= base_url('assets/adminlte/css/ult-theme.css') ?>"
+
+</head>
+
 <body class="hold-transition sidebar-mini">
 
     <div class="wrapper">

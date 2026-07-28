@@ -58,62 +58,98 @@ class GuestReportController extends BaseController
     // ===============================
     // SIMPAN
     // ===============================
-    public function store()
-    {
-        helper(['form']);
+    
+public function store()
+{
+    helper(['form']);
 
-        $rules = [
-            'applicant_name'     => 'required',
-            'applicant_type'     => 'required',
-            'service_name'       => 'required',
-            'ticket_title'       => 'required',
-            'ticket_description' => 'required'
-        ];
+    $rules = [
+        'applicant_name'     => 'required',
+        'applicant_type'     => 'required',
+        'service_name'       => 'required',
+        'ticket_title'       => 'required',
+        'ticket_description' => 'required'
+    ];
 
-        if (!$this->validate($rules)) {
+    if (!$this->validate($rules)) {
 
-            return redirect()->back()
-                ->withInput()
-                ->with('errors', $this->validator->getErrors());
-        }
-
-        $ticketNumber = 'ULT-' . date('YmdHis') . rand(100,999);
-
-        $attachment = null;
-
-        $file = $this->request->getFile('attachment');
-
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-
-            $attachment = $file->getRandomName();
-
-            $file->move(FCPATH.'uploads',$attachment);
-
-        }
-
-        $this->ticketModel->insert([
-
-            'ticket_number'      => $ticketNumber,
-            'service_name'       => $this->request->getPost('service_name'),
-            'applicant_name'     => $this->request->getPost('applicant_name'),
-            'applicant_type'     => $this->request->getPost('applicant_type'),
-            'nim'                => $this->request->getPost('nim'),
-            'email'              => $this->request->getPost('email'),
-            'phone'              => $this->request->getPost('phone'),
-            'ticket_title'       => $this->request->getPost('ticket_title'),
-            'ticket_description' => $this->request->getPost('ticket_description'),
-            'attachment'         => $attachment,
-
-            'status'        => 'Submitted',
-            'priority'      => 'Normal',
-            'submitted_at'  => date('Y-m-d H:i:s')
-
-        ]);
-
-        return redirect()->to('/guest-report')
-            ->with('success','Laporan berhasil ditambahkan.');
+        return redirect()->back()
+            ->withInput()
+            ->with('errors', $this->validator->getErrors());
     }
 
+    $ticketNumber = 'ULT-' . date('YmdHis') . rand(100,999);
+
+    $attachment = null;
+
+    $file = $this->request->getFile('attachment');
+
+    if ($file && $file->isValid() && !$file->hasMoved()) {
+
+        $attachment = $file->getRandomName();
+
+        $file->move(FCPATH.'uploads',$attachment);
+
+    }
+
+    $this->ticketModel->insert([
+
+        'ticket_number'      => $ticketNumber,
+        'service_name'       => $this->request->getPost('service_name'),
+        'applicant_name'     => $this->request->getPost('applicant_name'),
+        'applicant_type'     => $this->request->getPost('applicant_type'),
+        'nim'                => $this->request->getPost('nim'),
+        'email'              => $this->request->getPost('email'),
+        'phone'              => $this->request->getPost('phone'),
+
+        // Mahasiswa
+        'program_studi'      => $this->request->getPost('program_studi'),
+        'jurusan'            => $this->request->getPost('jurusan'),
+        'angkatan'           => $this->request->getPost('angkatan'),
+
+        // Dosen
+        'fakultas'           => $this->request->getPost('fakultas'),
+        'jabatan_dosen'      => $this->request->getPost('jabatan_dosen'),
+
+        // Tendik
+        'unit_kerja'         => $this->request->getPost('unit_kerja'),
+        'jabatan_tendik'     => $this->request->getPost('jabatan_tendik'),
+
+        // Orang Tua
+        'nama_mahasiswa'     => $this->request->getPost('nama_mahasiswa'),
+        'nim_mahasiswa'      => $this->request->getPost('nim_mahasiswa'),
+        'hubungan'           => $this->request->getPost('hubungan'),
+
+        // Alumni
+        'prodi_alumni'       => $this->request->getPost('prodi_alumni'),
+        'tahun_lulus'        => $this->request->getPost('tahun_lulus'),
+
+        // Mitra
+        'instansi'           => $this->request->getPost('instansi'),
+        'pic'                => $this->request->getPost('pic'),
+        'jabatan_mitra'      => $this->request->getPost('jabatan_mitra'),
+
+        // Public
+        'instansi_public'    => $this->request->getPost('instansi_public'),
+        'alamat_public'      => $this->request->getPost('alamat_public'),
+
+        // Masyarakat
+        'alamat'             => $this->request->getPost('alamat'),
+        'pekerjaan'          => $this->request->getPost('pekerjaan'),
+
+        'ticket_title'       => $this->request->getPost('ticket_title'),
+        'ticket_description' => $this->request->getPost('ticket_description'),
+        'attachment'         => $attachment,
+
+        'status'             => 'Submitted',
+        'priority'           => 'Normal',
+        'submitted_at'       => date('Y-m-d H:i:s')
+
+    ]);
+
+    return redirect()->to('/guest-report')
+        ->with('success','Laporan berhasil ditambahkan.');
+}
     // ===============================
     // DETAIL
     // ===============================
@@ -142,46 +178,80 @@ class GuestReportController extends BaseController
         return view('guest_report/edit',$data);
     }
 
-    // ===============================
-    // UPDATE
-    // ===============================
-    public function update($id)
-    {
-        $ticket = $this->ticketModel->find($id);
+   // ===============================
+// UPDATE
+// ===============================
+public function update($id)
+{
+    $ticket = $this->ticketModel->find($id);
 
-        $attachment = $ticket['attachment'];
+    $attachment = $ticket['attachment'];
 
-        $file = $this->request->getFile('attachment');
+    $file = $this->request->getFile('attachment');
 
-        if($file && $file->isValid() && !$file->hasMoved()){
+    if ($file && $file->isValid() && !$file->hasMoved()) {
 
-            if(!empty($attachment) && file_exists(FCPATH.'uploads/'.$attachment)){
-                unlink(FCPATH.'uploads/'.$attachment);
-            }
-
-            $attachment = $file->getRandomName();
-
-            $file->move(FCPATH.'uploads',$attachment);
-
+        if (!empty($attachment) && file_exists(FCPATH . 'uploads/' . $attachment)) {
+            unlink(FCPATH . 'uploads/' . $attachment);
         }
 
-        $this->ticketModel->update($id,[
-
-            'service_name'       => $this->request->getPost('service_name'),
-            'applicant_name'     => $this->request->getPost('applicant_name'),
-            'applicant_type'     => $this->request->getPost('applicant_type'),
-            'nim'                => $this->request->getPost('nim'),
-            'email'              => $this->request->getPost('email'),
-            'phone'              => $this->request->getPost('phone'),
-            'ticket_title'       => $this->request->getPost('ticket_title'),
-            'ticket_description' => $this->request->getPost('ticket_description'),
-            'attachment'         => $attachment
-
-        ]);
-
-        return redirect()->to('/guest-report')
-            ->with('success','Data berhasil diubah.');
+        $attachment = $file->getRandomName();
+        $file->move(FCPATH . 'uploads', $attachment);
     }
+
+    $this->ticketModel->update($id, [
+
+        'service_name'       => $this->request->getPost('service_name'),
+        'applicant_name'     => $this->request->getPost('applicant_name'),
+        'applicant_type'     => $this->request->getPost('applicant_type'),
+        'nim'                => $this->request->getPost('nim'),
+        'email'              => $this->request->getPost('email'),
+        'phone'              => $this->request->getPost('phone'),
+
+        // Mahasiswa
+        'program_studi'      => $this->request->getPost('program_studi'),
+        'jurusan'            => $this->request->getPost('jurusan'),
+        'angkatan'           => $this->request->getPost('angkatan'),
+
+        // Dosen
+        'fakultas'           => $this->request->getPost('fakultas'),
+        'jabatan_dosen'      => $this->request->getPost('jabatan_dosen'),
+
+        // Tendik
+        'unit_kerja'         => $this->request->getPost('unit_kerja'),
+        'jabatan_tendik'     => $this->request->getPost('jabatan_tendik'),
+
+        // Orang Tua
+        'nama_mahasiswa'     => $this->request->getPost('nama_mahasiswa'),
+        'nim_mahasiswa'      => $this->request->getPost('nim_mahasiswa'),
+        'hubungan'           => $this->request->getPost('hubungan'),
+
+        // Alumni
+        'prodi_alumni'       => $this->request->getPost('prodi_alumni'),
+        'tahun_lulus'        => $this->request->getPost('tahun_lulus'),
+
+        // Mitra
+        'instansi'           => $this->request->getPost('instansi'),
+        'pic'                => $this->request->getPost('pic'),
+        'jabatan_mitra'      => $this->request->getPost('jabatan_mitra'),
+
+        // Public
+        'instansi_public'    => $this->request->getPost('instansi_public'),
+        'alamat_public'      => $this->request->getPost('alamat_public'),
+
+        // Masyarakat
+        'alamat'             => $this->request->getPost('alamat'),
+        'pekerjaan'          => $this->request->getPost('pekerjaan'),
+
+        'ticket_title'       => $this->request->getPost('ticket_title'),
+        'ticket_description' => $this->request->getPost('ticket_description'),
+        'attachment'         => $attachment
+
+    ]);
+
+    return redirect()->to('/guest-report')
+        ->with('success', 'Data berhasil diubah.');
+}
 
     // ===============================
     // DELETE

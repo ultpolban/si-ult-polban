@@ -110,7 +110,7 @@
 
         <table class="table table-bordered table-striped">
 
-            <thead class="thead-dark">
+         <thead style="background:#293582; color:white;">
 
             <tr>
 
@@ -127,7 +127,25 @@
             </thead>
 
             <tbody>
+<table class="table table-bordered table-striped">
 
+    <thead style="background:#293582 !important; color:#fff;">
+
+        <tr>
+
+            <th>No</th>
+            <th>No Tiket</th>
+            <th>Nama</th>
+            <th>Layanan</th>
+            <th>Status</th>
+            <th>Tanggal</th>
+            <th width="220">Aksi</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
             <?php if(empty($tickets)): ?>
 
                 <tr>

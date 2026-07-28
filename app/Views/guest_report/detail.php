@@ -21,123 +21,231 @@
     </div>
 
     <div class="card-body">
+<table class="table table-bordered">
 
-        <table class="table table-bordered">
+    <tr>
+        <th width="220">Nomor Tiket</th>
+        <td><?= esc($ticket['ticket_number']) ?></td>
+    </tr>
 
-            <tr>
-                <th width="220">Nomor Tiket</th>
-                <td><?= esc($ticket['ticket_number']) ?></td>
-            </tr>
+    <tr>
+        <th>Nama Pemohon</th>
+        <td><?= esc($ticket['applicant_name']) ?></td>
+    </tr>
 
-            <tr>
-                <th>Nama Pemohon</th>
-                <td><?= esc($ticket['applicant_name']) ?></td>
-            </tr>
+    <tr>
+        <th>Jenis Pemohon</th>
+        <td><?= esc($ticket['applicant_type']) ?></td>
+    </tr>
 
-            <tr>
-                <th>Jenis Pemohon</th>
-                <td><?= esc($ticket['applicant_type']) ?></td>
-            </tr>
+    <tr>
+        <th>Email</th>
+        <td><?= esc($ticket['email']) ?></td>
+    </tr>
 
-            <tr>
-                <th>NIM</th>
-                <td><?= esc($ticket['nim']) ?></td>
-            </tr>
+    <tr>
+        <th>No HP</th>
+        <td><?= esc($ticket['phone']) ?></td>
+    </tr>
 
-            <tr>
-                <th>Email</th>
-                <td><?= esc($ticket['email']) ?></td>
-            </tr>
+    <!-- ===================== -->
+    <!-- DATA KHUSUS PEMOHON -->
+    <!-- ===================== -->
 
-            <tr>
-                <th>No HP</th>
-                <td><?= esc($ticket['phone']) ?></td>
-            </tr>
+    <?php if($ticket['applicant_type']=='Mahasiswa'): ?>
 
-            <tr>
-                <th>Layanan</th>
-                <td><?= esc($ticket['service_name']) ?></td>
-            </tr>
+        <tr>
+            <th>NIM</th>
+            <td><?= esc($ticket['nim']) ?></td>
+        </tr>
 
-            <tr>
-                <th>Judul Tiket</th>
-                <td><?= esc($ticket['ticket_title']) ?></td>
-            </tr>
+        <tr>
+            <th>Program Studi</th>
+            <td><?= esc($ticket['program_studi']) ?></td>
+        </tr>
 
-            <tr>
-                <th>Deskripsi</th>
-                <td><?= nl2br(esc($ticket['ticket_description'])) ?></td>
-            </tr>
+        <tr>
+            <th>Jurusan</th>
+            <td><?= esc($ticket['jurusan']) ?></td>
+        </tr>
 
-            <tr>
-                <th>Status</th>
-                <td>
-                    <span class="badge badge-primary">
-                        <?= esc($ticket['status']) ?>
-                    </span>
-                </td>
-            </tr>
+        <tr>
+            <th>Angkatan</th>
+            <td><?= esc($ticket['angkatan']) ?></td>
+        </tr>
 
-            <tr>
-                <th>Prioritas</th>
-                <td><?= esc($ticket['priority']) ?></td>
-            </tr>
+    <?php elseif($ticket['applicant_type']=='Dosen'): ?>
 
-            <tr>
-                <th>Tanggal Pengajuan</th>
-                <td><?= date('d-m-Y H:i:s', strtotime($ticket['submitted_at'])) ?></td>
-            </tr>
+        <tr>
+            <th>NIP</th>
+            <td><?= esc($ticket['nim']) ?></td>
+        </tr>
 
-            <tr>
-                <th>Lampiran</th>
+        <tr>
+            <th>Fakultas</th>
+            <td><?= esc($ticket['fakultas']) ?></td>
+        </tr>
 
-                <td>
+        <tr>
+            <th>Jabatan</th>
+            <td><?= esc($ticket['jabatan_dosen']) ?></td>
+        </tr>
 
-                <?php if(!empty($ticket['attachment'])): ?>
+    <?php elseif($ticket['applicant_type']=='Tendik'): ?>
 
-                    <a href="<?= base_url('uploads/'.$ticket['attachment']) ?>"
-                       target="_blank"
-                       class="btn btn-success btn-sm">
+        <tr>
+            <th>NIP</th>
+            <td><?= esc($ticket['nim']) ?></td>
+        </tr>
 
-                        <i class="fas fa-download"></i>
-                        Lihat Lampiran
+        <tr>
+            <th>Unit Kerja</th>
+            <td><?= esc($ticket['unit_kerja']) ?></td>
+        </tr>
 
-                    </a>
+        <tr>
+            <th>Jabatan</th>
+            <td><?= esc($ticket['jabatan_tendik']) ?></td>
+        </tr>
 
-                <?php else: ?>
+    <?php elseif($ticket['applicant_type']=='Orang Tua'): ?>
 
-                    -
+        <tr>
+            <th>Nama Mahasiswa</th>
+            <td><?= esc($ticket['nama_mahasiswa']) ?></td>
+        </tr>
 
-                <?php endif; ?>
+        <tr>
+            <th>NIM Mahasiswa</th>
+            <td><?= esc($ticket['nim_mahasiswa']) ?></td>
+        </tr>
 
-                </td>
+        <tr>
+            <th>Hubungan</th>
+            <td><?= esc($ticket['hubungan']) ?></td>
+        </tr>
 
-            </tr>
+    <?php elseif($ticket['applicant_type']=='Alumni'): ?>
 
-        </table>
+        <tr>
+            <th>NIM</th>
+            <td><?= esc($ticket['nim']) ?></td>
+        </tr>
 
-    </div>
+        <tr>
+            <th>Program Studi</th>
+            <td><?= esc($ticket['prodi_alumni']) ?></td>
+        </tr>
 
-    <div class="card-footer">
+        <tr>
+            <th>Tahun Lulus</th>
+            <td><?= esc($ticket['tahun_lulus']) ?></td>
+        </tr>
 
-        <a href="<?= base_url('guest-report') ?>" class="btn btn-secondary">
+    <?php elseif($ticket['applicant_type']=='Mitra'): ?>
 
-            <i class="fas fa-arrow-left"></i>
+        <tr>
+            <th>Instansi</th>
+            <td><?= esc($ticket['instansi']) ?></td>
+        </tr>
 
-            Kembali
+        <tr>
+            <th>PIC</th>
+            <td><?= esc($ticket['pic']) ?></td>
+        </tr>
 
-        </a>
+        <tr>
+            <th>Jabatan PIC</th>
+            <td><?= esc($ticket['jabatan_mitra']) ?></td>
+        </tr>
 
-        <a href="<?= base_url('guest-report/edit/'.$ticket['id']) ?>"
-           class="btn btn-warning">
+    <?php elseif($ticket['applicant_type']=='Public'): ?>
 
-            <i class="fas fa-edit"></i>
+        <tr>
+            <th>Instansi</th>
+            <td><?= esc($ticket['instansi_public']) ?></td>
+        </tr>
 
-            Edit
+        <tr>
+            <th>Alamat</th>
+            <td><?= esc($ticket['alamat_public']) ?></td>
+        </tr>
 
-        </a>
+    <?php elseif($ticket['applicant_type']=='Masyarakat'): ?>
 
-    </div>
+        <tr>
+            <th>Alamat</th>
+            <td><?= esc($ticket['alamat']) ?></td>
+        </tr>
+
+        <tr>
+            <th>Pekerjaan</th>
+            <td><?= esc($ticket['pekerjaan']) ?></td>
+        </tr>
+
+    <?php endif; ?>
+
+    <!-- ===================== -->
+
+    <tr>
+        <th>Layanan</th>
+        <td><?= esc($ticket['service_name']) ?></td>
+    </tr>
+
+    <tr>
+        <th>Judul Tiket</th>
+        <td><?= esc($ticket['ticket_title']) ?></td>
+    </tr>
+
+    <tr>
+        <th>Deskripsi</th>
+        <td><?= nl2br(esc($ticket['ticket_description'])) ?></td>
+    </tr>
+
+    <tr>
+        <th>Status</th>
+        <td>
+            <span class="badge badge-primary">
+                <?= esc($ticket['status']) ?>
+            </span>
+        </td>
+    </tr>
+
+    <tr>
+        <th>Prioritas</th>
+        <td><?= esc($ticket['priority']) ?></td>
+    </tr>
+
+    <tr>
+        <th>Tanggal Pengajuan</th>
+        <td><?= date('d-m-Y H:i:s', strtotime($ticket['submitted_at'])) ?></td>
+    </tr>
+
+    <tr>
+        <th>Lampiran</th>
+        <td>
+
+            <?php if(!empty($ticket['attachment'])): ?>
+
+                <a href="<?= base_url('uploads/'.$ticket['attachment']) ?>"
+                   target="_blank"
+                   class="btn btn-success btn-sm">
+
+                    <i class="fas fa-download"></i>
+                    Lihat Lampiran
+
+                </a>
+
+            <?php else: ?>
+
+                -
+
+            <?php endif; ?>
+
+        </td>
+    </tr>
+
+</table>
 
 </div>
 

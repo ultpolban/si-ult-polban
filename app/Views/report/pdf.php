@@ -25,7 +25,7 @@ table{
 
 table th,table td{
 
-    border:1px solid #000;
+    border:1px solid #293582
 
     padding:6px;
 

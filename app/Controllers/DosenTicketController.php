@@ -259,15 +259,68 @@ class DosenTicketController extends BaseController
      * ================================
      */
     public function detail($id)
-    {
-        return view(
-            'dosen/ticket/detail',
-            [
-                'title' => 'Detail Tiket',
-                'id'    => $id
-            ]
-        );
-    }
+{
+    // ==========================================
+    // AMBIL DATA BALASAN DOSEN DARI SESSION
+    // ==========================================
+
+    $replies = session()->get('dosen_replies') ?? [];
+
+    $balasan = $replies[$id]['balasan'] ?? null;
+
+
+    // ==========================================
+    // DATA DETAIL TIKET
+    // ==========================================
+
+    $data = [
+
+        'title' => 'Detail Tiket Dosen',
+
+        'ticket' => [
+
+            'id' => $id,
+
+            'nomor' =>
+                'ULT-DOSEN-00' . $id,
+
+            'layanan' =>
+                'Layanan Dosen',
+
+            'unit' =>
+                'Akademik',
+
+            'tanggal' =>
+                date('d F Y'),
+
+            'status' =>
+                'Submitted',
+
+            'keterangan' =>
+                'Pengajuan layanan dosen.',
+
+            // Catatan dari petugas
+            'catatan_petugas' =>
+                'Mohon lengkapi dokumen pendukung pengajuan Anda.',
+
+            // Balasan dari dosen
+            'balasan' =>
+                $balasan
+
+        ]
+
+    ];
+
+
+    // ==========================================
+    // TAMPILKAN DETAIL TIKET
+    // ==========================================
+
+    return view(
+        'dosen/ticket/detail',
+        $data
+    );
+}
 
 
     public function draft()
@@ -491,6 +544,93 @@ public function updateDraft($index)
             base_url(
                 'dosen/ticket/success'
             )
+        );
+}
+
+// ==========================================
+// HAPUS DRAFT
+// ==========================================
+public function deleteDraft($index)
+{
+    // Ambil semua draft dari session
+    $drafts = session()->get('dosen_drafts') ?? [];
+
+    // Cek apakah draft dengan index tersebut tersedia
+    if (!isset($drafts[$index])) {
+
+        return redirect()
+            ->to(base_url('dosen/ticket/draft'))
+            ->with(
+                'error',
+                'Draft tidak ditemukan.'
+            );
+    }
+
+    // Hapus draft berdasarkan index
+    unset($drafts[$index]);
+
+    // Rapikan kembali index array
+    $drafts = array_values($drafts);
+
+    // Simpan kembali draft yang tersisa ke session
+    session()->set(
+        'dosen_drafts',
+        $drafts
+    );
+
+    // Kembali ke halaman draft
+    return redirect()
+        ->to(base_url('dosen/ticket/draft'))
+        ->with(
+            'success',
+            'Draft pengajuan berhasil dihapus.'
+        );
+}
+
+// ==========================================
+// BALASAN DOSEN TERHADAP CATATAN PETUGAS
+// ==========================================
+public function reply($id)
+{
+    // Ambil isi balasan dari form
+    $balasan = $this->request->getPost('balasan');
+
+    // Validasi balasan
+    if (empty(trim($balasan))) {
+
+        return redirect()
+            ->to(base_url('dosen/ticket/detail/' . $id))
+            ->with(
+                'error',
+                'Balasan tidak boleh kosong.'
+            );
+    }
+
+    // ==========================================
+    // SEMENTARA SIMPAN KE SESSION
+    // ==========================================
+
+    $replies = session()->get('dosen_replies') ?? [];
+
+    $replies[$id] = [
+        'balasan' => $balasan,
+        'tanggal' => date('Y-m-d H:i:s')
+    ];
+
+    session()->set(
+        'dosen_replies',
+        $replies
+    );
+
+    // ==========================================
+    // KEMBALI KE DETAIL TIKET
+    // ==========================================
+
+    return redirect()
+        ->to(base_url('dosen/ticket/detail/' . $id))
+        ->with(
+            'success',
+            'Balasan berhasil dikirim.'
         );
 }
 }

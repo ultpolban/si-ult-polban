@@ -94,6 +94,37 @@
 
 
                             <!-- ==========================================
+                                 SUCCESS MESSAGE
+                            =========================================== -->
+
+                            <?php if (session()->getFlashdata('success')): ?>
+
+                                <div
+                                    class="alert alert-success alert-dismissible fade show"
+                                >
+
+                                    <i
+                                        class="fas fa-check-circle me-2"
+                                    ></i>
+
+                                    <?= esc(
+                                        session()->getFlashdata('success')
+                                    ) ?>
+
+                                    <button
+                                        type="button"
+                                        class="close"
+                                        data-dismiss="alert"
+                                    >
+                                        &times;
+                                    </button>
+
+                                </div>
+
+                            <?php endif; ?>
+
+
+                            <!-- ==========================================
                                  ERROR MESSAGE
                             =========================================== -->
 
@@ -113,9 +144,11 @@
 
                                     <button
                                         type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="alert"
-                                    ></button>
+                                        class="close"
+                                        data-dismiss="alert"
+                                    >
+                                        &times;
+                                    </button>
 
                                 </div>
 
@@ -124,6 +157,8 @@
 
                             <!-- ==========================================
                                  FORM
+                                 PENTING:
+                                 enctype diperlukan untuk upload file
                             =========================================== -->
 
                             <form
@@ -132,9 +167,10 @@
         ($draft_id ?? 0)
     ) ?>"
     method="post"
+    enctype="multipart/form-data"
 >
 
-    <?= csrf_field() ?>
+                                <?= csrf_field() ?>
 
 
                                 <!-- ==========================================
@@ -176,9 +212,7 @@
 
                                         Jenis Layanan
 
-                                        <span
-                                            class="text-danger"
-                                        >
+                                        <span class="text-danger">
                                             *
                                         </span>
 
@@ -188,7 +222,7 @@
                                     <select
                                         name="layanan"
                                         id="layanan"
-                                        class="form-select"
+                                        class="form-control"
                                         required
                                     >
 
@@ -281,9 +315,7 @@
 
                                         Keterangan / Detail Permohonan
 
-                                        <span
-                                            class="text-danger"
-                                        >
+                                        <span class="text-danger">
                                             *
                                         </span>
 
@@ -300,6 +332,128 @@
                                     ><?= esc(
                                         $draft['keterangan'] ?? ''
                                     ) ?></textarea>
+
+                                </div>
+
+
+                                <!-- ==========================================
+     DOKUMEN PENDUKUNG
+=========================================== -->
+
+<div class="mb-4">
+
+    <label
+        for="dokumen"
+        class="form-label fw-bold"
+    >
+
+        Dokumen Pendukung
+
+        <span class="text-muted">
+            (Opsional)
+        </span>
+
+    </label>
+
+    <input
+        type="file"
+        name="dokumen"
+        id="dokumen"
+        class="form-control"
+        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+    >
+
+    <small class="text-muted">
+
+        Maksimal ukuran file 2 MB.
+        Format yang diperbolehkan:
+        PDF, JPG, JPEG, PNG, DOC, DOCX.
+
+    </small>
+
+
+    <?php if (!empty($draft['dokumen'])) : ?>
+
+        <div class="mt-2">
+
+            <i class="fas fa-paperclip"></i>
+
+            Dokumen saat ini:
+
+            <strong>
+                <?= esc(
+                    basename($draft['dokumen'])
+                ) ?>
+            </strong>
+
+        </div>
+
+    <?php endif; ?>
+
+</div>
+
+
+                                    <!-- ======================================
+                                         FILE LAMA
+                                    ======================================= -->
+
+                                    <?php if (
+                                        !empty(
+                                            $draft['dokumen']
+                                            ?? null
+                                        )
+                                    ): ?>
+
+                                        <div
+                                            class="mt-3 p-3"
+                                            style="
+                                                background:#f5f8fc;
+                                                border-left:4px solid #0b3d91;
+                                                border-radius:5px;
+                                            "
+                                        >
+
+                                            <div
+                                                class="font-weight-bold"
+                                                style="
+                                                    color:#0b3d91;
+                                                "
+                                            >
+
+                                                <i
+                                                    class="fas fa-file-alt mr-1"
+                                                ></i>
+
+                                                Dokumen Saat Ini
+
+                                            </div>
+
+
+                                            <div class="mt-2">
+
+                                                <a
+                                                    href="<?= base_url(
+                                                        'uploads/dokumen/' .
+                                                        $draft['dokumen']
+                                                    ) ?>"
+                                                    target="_blank"
+                                                    class="btn btn-sm btn-primary"
+                                                >
+
+                                                    <i
+                                                        class="fas fa-eye mr-1"
+                                                    ></i>
+
+                                                    Lihat Dokumen
+
+                                                </a>
+
+                                            </div>
+
+                                        </div>
+
+                                    <?php endif; ?>
+
 
                                 </div>
 
@@ -322,14 +476,14 @@
                                     <div>
 
                                         <span
-                                            class="badge bg-secondary"
+                                            class="badge badge-secondary"
                                             style="
                                                 font-size:14px;
                                             "
                                         >
 
                                             <i
-                                                class="fas fa-file-alt me-1"
+                                                class="fas fa-file-alt mr-1"
                                             ></i>
 
                                             Draft
@@ -350,7 +504,6 @@
                                         d-flex
                                         justify-content-between
                                         flex-wrap
-                                        gap-2
                                         mt-4
                                     "
                                 >
@@ -366,7 +519,7 @@
                                     >
 
                                         <i
-                                            class="fas fa-arrow-left me-1"
+                                            class="fas fa-arrow-left mr-1"
                                         ></i>
 
                                         Kembali
@@ -377,7 +530,7 @@
                                     <div
                                         class="
                                             d-flex
-                                            gap-2
+                                            flex-wrap
                                         "
                                     >
 
@@ -388,7 +541,7 @@
                                             type="submit"
                                             name="action"
                                             value="draft"
-                                            class="btn"
+                                            class="btn mr-2"
                                             style="
                                                 background:#f28c28;
                                                 color:white;
@@ -397,7 +550,7 @@
                                         >
 
                                             <i
-                                                class="fas fa-save me-1"
+                                                class="fas fa-save mr-1"
                                             ></i>
 
                                             Simpan Perubahan
@@ -415,7 +568,7 @@
                                         >
 
                                             <i
-                                                class="fas fa-paper-plane me-1"
+                                                class="fas fa-paper-plane mr-1"
                                             ></i>
 
                                             Kirim Pengajuan
@@ -424,6 +577,7 @@
 
 
                                     </div>
+
 
                                 </div>
 

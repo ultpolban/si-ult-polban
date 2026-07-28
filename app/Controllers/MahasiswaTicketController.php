@@ -489,43 +489,176 @@ class MahasiswaTicketController extends BaseController
     // ==========================================
     // DETAIL TIKET
     // ==========================================
-    public function detail($id)
-    {
-        $tickets =
-            session()->get(
-                'mahasiswa_tickets'
-            ) ?? [];
+   public function detail($id)
+{
+    // ==========================================
+    // AMBIL BALASAN MAHASISWA DARI SESSION
+    // ==========================================
+
+    $replies = session()->get('mahasiswa_replies') ?? [];
+
+    $balasan = $replies[$id]['balasan'] ?? null;
 
 
-        if (!isset(
-            $tickets[$id]
-        )) {
+    // ==========================================
+    // DATA DETAIL TIKET
+    // ==========================================
 
-            return redirect()
-                ->to(
-                    base_url(
-                        'mahasiswa/ticket/history'
-                    )
-                )
-                ->with(
-                    'error',
-                    'Tiket tidak ditemukan.'
-                );
+    $data = [
 
-        }
+        'title' => 'Detail Tiket Mahasiswa',
+
+        'ticket' => [
+
+            'id' =>
+                $id,
+
+            'nomor' =>
+                'ULT-MHS-00' . $id,
+
+            'layanan' =>
+                'Surat Aktif Kuliah',
+
+            'unit' =>
+                'Akademik',
+
+            'tanggal' =>
+                '20 Juli 2026',
+
+            'status' =>
+                'In Progress',
+
+            'keterangan' =>
+                'Pengajuan layanan sedang diproses oleh unit terkait.',
+
+            'catatan_petugas' =>
+                'Mohon lengkapi dokumen pendukung pengajuan Anda.',
+
+            'balasan' =>
+                $balasan
+
+        ]
+
+    ];
 
 
-        return view(
-            'mahasiswa/ticket/detail',
-            [
+    // ==========================================
+    // TAMPILKAN DETAIL
+    // ==========================================
 
-                'title' =>
-                    'Detail Tiket Mahasiswa',
+    return view(
+        'mahasiswa/ticket/detail',
+        $data
+    );
+}
 
-                'ticket' =>
-                    $tickets[$id]
+    public function deleteDraft($id)
+{
+    $drafts = session()->get('mahasiswa_drafts') ?? [];
 
-            ]
-        );
+    // Cek apakah draft tersedia
+    if (!isset($drafts[$id])) {
+        return redirect()
+            ->to(base_url('mahasiswa/ticket/draft'))
+            ->with(
+                'error',
+                'Draft tidak ditemukan.'
+            );
     }
+
+    // Hapus draft
+    unset($drafts[$id]);
+
+    // Rapikan index array
+    $drafts = array_values($drafts);
+
+    // Simpan kembali ke session
+    session()->set(
+        'mahasiswa_drafts',
+        $drafts
+    );
+
+    return redirect()
+        ->to(base_url('mahasiswa/ticket/draft'))
+        ->with(
+            'success',
+            'Draft berhasil dihapus.'
+        );
+}
+
+// ==========================================
+// BALASAN MAHASISWA
+// ==========================================
+public function reply($id)
+{
+    // Ambil balasan dari form
+    $balasan = $this->request->getPost('balasan');
+
+
+    // ==========================================
+    // VALIDASI
+    // ==========================================
+
+    if (empty(trim($balasan))) {
+
+        return redirect()
+            ->to(
+                base_url(
+                    'mahasiswa/ticket/detail/' . $id
+                )
+            )
+            ->with(
+                'error',
+                'Balasan tidak boleh kosong.'
+            );
+
+    }
+
+
+    // ==========================================
+    // AMBIL DATA BALASAN SEBELUMNYA
+    // ==========================================
+
+    $replies =
+        session()->get(
+            'mahasiswa_replies'
+        ) ?? [];
+
+
+    // ==========================================
+    // SIMPAN BALASAN
+    // ==========================================
+
+    $replies[$id] = [
+
+        'balasan' =>
+            $balasan,
+
+        'tanggal' =>
+            date('Y-m-d H:i:s')
+
+    ];
+
+
+    session()->set(
+        'mahasiswa_replies',
+        $replies
+    );
+
+
+    // ==========================================
+    // KEMBALI KE DETAIL
+    // ==========================================
+
+    return redirect()
+        ->to(
+            base_url(
+                'mahasiswa/ticket/detail/' . $id
+            )
+        )
+        ->with(
+            'success',
+            'Balasan berhasil dikirim.'
+        );
+}
 }

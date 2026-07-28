@@ -96,6 +96,11 @@ $routes->get(
 );
 
 $routes->get(
+    'mahasiswa/ticket/draft/delete/(:num)',
+    'MahasiswaTicketController::deleteDraft/$1'
+);
+
+$routes->get(
     'mahasiswa/ticket/draft/edit/(:num)',
     'MahasiswaTicketController::editDraft/$1'
 );
@@ -113,6 +118,11 @@ $routes->get(
 $routes->get(
     'mahasiswa/ticket/detail/(:num)',
     'MahasiswaTicketController::detail/$1'
+);
+
+$routes->post(
+    'mahasiswa/ticket/reply/(:num)',
+    'MahasiswaTicketController::reply/$1'
 );
 
 
@@ -220,6 +230,16 @@ $routes->get(
     'DosenTicketController::detail/$1'
 );
 
+$routes->post(
+    'dosen/ticket/reply/(:num)',
+    'DosenTicketController::reply/$1'
+);
+
+$routes->get(
+    'dosen/ticket/draft/delete/(:num)',
+    'DosenTicketController::deleteDraft/$1'
+);
+
 
 // ================================
 // NOTIFIKASI DOSEN
@@ -228,4 +248,70 @@ $routes->get(
 $routes->get(
     'dosen/notification',
     'DosenNotificationController::index'
+);
+
+
+// ================================
+// DASHBOARD TENDIK
+// ================================
+
+$routes->get(
+    'dashboard-tendik',
+    'TendikController::dashboard'
+);
+
+// ==========================================
+// TIKET TENDIK
+// ==========================================
+
+$routes->get(
+    'tendik/ticket/create',
+    'TendikTicketController::create'
+);
+
+$routes->post(
+    'tendik/ticket/store',
+    'TendikTicketController::store'
+);
+
+$routes->get(
+    'tendik/ticket/success',
+    'TendikTicketController::success'
+);
+
+$routes->get(
+    'tendik/ticket/history',
+    'TendikTicketController::history'
+);
+
+$routes->get(
+    'tendik/ticket/draft',
+    'TendikTicketController::draft'
+);
+
+// edit dan hapus
+
+$routes->get(
+    'tendik/ticket/draft/edit/(:num)',
+    'TendikTicketController::editDraft/$1'
+);
+
+$routes->post(
+    'tendik/ticket/draft/update/(:num)',
+    'TendikTicketController::updateDraft/$1'
+);
+
+$routes->get(
+    'tendik/ticket/draft/delete/(:num)',
+    'TendikTicketController::deleteDraft/$1'
+);
+
+$routes->get(
+    'tendik/ticket/detail/(:any)',
+    'TendikTicketController::detail/$1'
+);
+
+$routes->post(
+    'tendik/ticket/reply/(:any)',
+    'TendikTicketController::reply/$1'
 );

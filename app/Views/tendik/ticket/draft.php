@@ -2,13 +2,12 @@
 
 <?= $this->include('layouts/navbar') ?>
 
-<?= $this->include('layouts/sidebar_dosen') ?>
+<?= $this->include('layouts/sidebar_tendik') ?>
 
 
 <div class="content-wrapper">
 
     <!-- HEADER -->
-
     <section class="content-header">
 
         <div class="container-fluid">
@@ -19,7 +18,7 @@
 
                     <h1
                         class="font-weight-bold"
-                        style="color: #0d47a1;"
+                        style="color:#0d47a1;"
                     >
 
                         <i class="fas fa-file-alt mr-2"></i>
@@ -38,7 +37,7 @@
                         <li class="breadcrumb-item">
 
                             <a
-                                href="<?= base_url('dosen/dashboard') ?>"
+                                href="<?= base_url('dashboard-tendik') ?>"
                             >
 
                                 Dashboard
@@ -46,7 +45,6 @@
                             </a>
 
                         </li>
-
 
                         <li class="breadcrumb-item active">
 
@@ -66,14 +64,12 @@
 
 
     <!-- CONTENT -->
-
     <section class="content">
 
         <div class="container-fluid">
 
 
-            <!-- SUCCESS MESSAGE -->
-
+            <!-- SUCCESS -->
             <?php if (session()->getFlashdata('success')) : ?>
 
                 <div
@@ -82,7 +78,37 @@
 
                     <i class="fas fa-check-circle mr-2"></i>
 
-                    <?= session()->getFlashdata('success') ?>
+                    <?= esc(
+                        session()->getFlashdata('success')
+                    ) ?>
+
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                    >
+
+                        &times;
+
+                    </button>
+
+                </div>
+
+            <?php endif; ?>
+
+
+            <!-- ERROR -->
+            <?php if (session()->getFlashdata('error')) : ?>
+
+                <div
+                    class="alert alert-danger alert-dismissible fade show"
+                >
+
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+
+                    <?= esc(
+                        session()->getFlashdata('error')
+                    ) ?>
 
                     <button
                         type="button"
@@ -100,15 +126,15 @@
 
 
             <!-- CARD -->
-
             <div class="card shadow-sm border-0">
 
 
+                <!-- HEADER CARD -->
                 <div
                     class="card-header text-white"
                     style="
-                        background-color: #0d47a1;
-                        border-bottom: 4px solid #f7941d;
+                        background-color:#0d47a1;
+                        border-bottom:4px solid #f7941d;
                     "
                 >
 
@@ -123,6 +149,7 @@
                 </div>
 
 
+                <!-- BODY -->
                 <div class="card-body">
 
 
@@ -131,45 +158,32 @@
 
                         <div class="table-responsive">
 
-                            <table class="table table-bordered table-hover">
-
+                            <table
+                                class="table table-bordered table-hover"
+                            >
 
                                 <thead
                                     style="
-                                        background-color: #e8f1fb;
-                                        color: #17365d;
+                                        background-color:#e8f1fb;
+                                        color:#17365d;
                                     "
                                 >
 
                                     <tr>
 
-                                        <th>
-                                            No
-                                        </th>
+                                        <th>No</th>
 
-                                        <th>
-                                            Unit Tujuan
-                                        </th>
+                                        <th>Unit Tujuan</th>
 
-                                        <th>
-                                            Jenis Layanan
-                                        </th>
+                                        <th>Jenis Layanan</th>
 
-                                        <th>
-                                            Judul
-                                        </th>
+                                        <th>Judul</th>
 
-                                        <th>
-                                            Status
-                                        </th>
+                                        <th>Status</th>
 
-                                       <th>
-                                        Tanggal
-                                        </th>
+                                        <th>Tanggal</th>
 
-                                        <th>
-                                        Aksi
-                                        </th>
+                                        <th>Aksi</th>
 
                                     </tr>
 
@@ -177,6 +191,7 @@
 
 
                                 <tbody>
+
 
                                     <?php foreach (
                                         $drafts
@@ -245,48 +260,60 @@
 
                                             </td>
 
-<td>
 
-    <!-- Tombol Lanjutkan -->
-    <a
-        href="<?= base_url(
-            'dosen/ticket/draft/edit/' . $index
-        ) ?>"
-        class="btn btn-sm text-white mb-1"
-        style="
-            background-color: #f7941d;
-            border-color: #f7941d;
-        "
-    >
-
-        <i class="fas fa-edit mr-1"></i>
-
-        Lanjutkan
-
-    </a>
+                                            <td>
 
 
-    <!-- Tombol Hapus -->
-    <a
-        href="<?= base_url(
-            'dosen/ticket/draft/delete/' . $index
-        ) ?>"
-        class="btn btn-sm btn-danger mb-1"
-        onclick="return confirm('Apakah Anda yakin ingin menghapus draft ini?')"
-    >
+                                                <a
+                                                    href="<?= base_url(
+                                                        'tendik/ticket/draft/edit/' .
+                                                        $index
+                                                    ) ?>"
+                                                    class="btn btn-sm text-white"
+                                                    style="
+                                                        background-color:#f7941d;
+                                                        border-color:#f7941d;
+                                                    "
+                                                >
 
-        <i class="fas fa-trash mr-1"></i>
+                                                    <i
+                                                        class="fas fa-edit mr-1"
+                                                    ></i>
 
-        Hapus
+                                                    Lanjutkan
 
-    </a>
+                                                </a>
 
-</td>
+
+                                                <a
+                                                    href="<?= base_url(
+                                                        'tendik/ticket/draft/delete/' .
+                                                        $index
+                                                    ) ?>"
+                                                    class="btn btn-sm btn-danger"
+                                                    onclick="
+                                                        return confirm(
+                                                            'Apakah Anda yakin ingin menghapus draft ini?'
+                                                        );
+                                                    "
+                                                >
+
+                                                    <i
+                                                        class="fas fa-trash mr-1"
+                                                    ></i>
+
+                                                    Hapus
+
+                                                </a>
+
+
+                                            </td>
 
                                         </tr>
 
 
                                     <?php endforeach; ?>
+
 
                                 </tbody>
 
@@ -298,22 +325,20 @@
                     <?php else : ?>
 
 
-                        <div
-                            class="text-center py-5"
-                        >
+                        <div class="text-center py-5">
 
                             <i
                                 class="fas fa-file-alt"
                                 style="
-                                    font-size: 60px;
-                                    color: #b0bec5;
+                                    font-size:60px;
+                                    color:#b0bec5;
                                 "
                             ></i>
 
 
                             <h5
                                 class="mt-3"
-                                style="color: #17365d;"
+                                style="color:#17365d;"
                             >
 
                                 Belum Ada Draft
@@ -331,12 +356,12 @@
 
                             <a
                                 href="<?= base_url(
-                                    'dosen/ticket/create'
+                                    'tendik/ticket/create'
                                 ) ?>"
                                 class="btn text-white"
                                 style="
-                                    background-color: #f7941d;
-                                    border-color: #f7941d;
+                                    background-color:#f7941d;
+                                    border-color:#f7941d;
                                 "
                             >
 

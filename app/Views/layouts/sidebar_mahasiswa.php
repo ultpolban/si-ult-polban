@@ -23,7 +23,7 @@
                     </a>
                 </li>
 
-
+                
                 <!-- AJUKAN LAYANAN -->
                 <li class="nav-item">
                     <a href="<?= base_url('mahasiswa/ticket/create') ?>"
@@ -34,6 +34,22 @@
 
                     </a>
                 </li>
+
+
+<!-- DRAFT PENGAJUAN -->
+<li class="nav-item">
+    <a href="<?= base_url('mahasiswa/ticket/draft') ?>"
+       class="nav-link <?= (
+           uri_string() == 'mahasiswa/ticket/draft' ||
+           str_contains(uri_string(), 'mahasiswa/ticket/draft/edit/') ||
+           str_contains(uri_string(), 'mahasiswa/ticket/draft/update/')
+       ) ? 'active' : '' ?>">
+
+        <i class="nav-icon fas fa-file-alt"></i>
+        <p>Draft Pengajuan</p>
+
+    </a>
+</li>
 
 
                 <!-- TRACKING TIKET -->

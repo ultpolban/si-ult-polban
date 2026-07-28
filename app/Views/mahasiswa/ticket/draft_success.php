@@ -296,7 +296,7 @@
 
                                 <a
                                     href="<?= base_url(
-                                        'mahasiswa/dashboard'
+                                        'dashboard-mahasiswa'
                                     ) ?>"
                                     class="btn btn-secondary"
                                     style="

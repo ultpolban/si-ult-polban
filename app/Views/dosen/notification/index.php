@@ -1,589 +1,396 @@
 <?= $this->include('layouts/header') ?>
+
 <?= $this->include('layouts/navbar') ?>
+
 <?= $this->include('layouts/sidebar_dosen') ?>
 
 
-<style>
+<div class="content-wrapper">
 
-/* =========================================
-   HALAMAN NOTIFIKASI DOSEN
-========================================= */
-
-.notification-page {
-    background: #f4f7fb;
-    min-height: calc(100vh - 57px);
-    padding-bottom: 40px;
-}
-
-
-/* =========================================
-   JUDUL
-========================================= */
-
-.page-title {
-    color: #0b3d91;
-    font-weight: 700;
-}
-
-.page-subtitle {
-    color: #64748b;
-}
-
-
-/* =========================================
-   CARD UTAMA
-========================================= */
-
-.notification-card {
-    border: none;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
-}
-
-.notification-card .card-header {
-    background: #0b3d91;
-    color: white;
-    padding: 20px 25px;
-    border: none;
-}
-
-.notification-card .card-header h3 {
-    margin: 0;
-    font-size: 21px;
-    font-weight: 700;
-}
-
-
-/* =========================================
-   NOTIFIKASI ITEM
-========================================= */
-
-.notification-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 18px;
-
-    padding: 20px;
-
-    border-bottom: 1px solid #e2e8f0;
-
-    transition: .2s;
-
-    background: white;
-}
-
-.notification-item:hover {
-    background: #f8fafc;
-}
-
-.notification-item:last-child {
-    border-bottom: none;
-}
-
-
-/* =========================================
-   ICON
-========================================= */
-
-.notification-icon {
-    min-width: 50px;
-    width: 50px;
-    height: 50px;
-
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 21px;
-}
-
-
-/* WARNA ICON */
-
-.icon-info {
-    background: #e0ecff;
-    color: #0b3d91;
-}
-
-.icon-warning {
-    background: #fff1df;
-    color: #f28c28;
-}
-
-.icon-success {
-    background: #dcfce7;
-    color: #16a34a;
-}
-
-.icon-danger {
-    background: #fee2e2;
-    color: #dc2626;
-}
-
-
-/* =========================================
-   ISI NOTIFIKASI
-========================================= */
-
-.notification-content {
-    flex: 1;
-}
-
-.notification-title {
-    color: #17365d;
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-.notification-message {
-    color: #64748b;
-    font-size: 14px;
-    line-height: 1.6;
-    margin-bottom: 7px;
-}
-
-.notification-time {
-    color: #94a3b8;
-    font-size: 13px;
-}
-
-
-/* =========================================
-   BADGE UNREAD
-========================================= */
-
-.notification-unread {
-    border-left: 5px solid #f28c28;
-    background: #fffaf4;
-}
-
-.unread-badge {
-    background: #f28c28;
-    color: white;
-    padding: 5px 9px;
-    border-radius: 15px;
-    font-size: 11px;
-    font-weight: 700;
-}
-
-
-/* =========================================
-   AKSI
-========================================= */
-
-.notification-action {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn-notification {
-    border-radius: 7px;
-    padding: 6px 12px;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-
-/* =========================================
-   EMPTY STATE
-========================================= */
-
-.empty-state {
-    text-align: center;
-    padding: 70px 20px;
-}
-
-.empty-state i {
-    font-size: 65px;
-    color: #94a3b8;
-    margin-bottom: 20px;
-}
-
-.empty-state h4 {
-    color: #475569;
-    font-weight: 700;
-}
-
-.empty-state p {
-    color: #64748b;
-}
-
-
-/* =========================================
-   INFO CARD
-========================================= */
-
-.info-card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,.07);
-    overflow: hidden;
-}
-
-.info-card .card-header {
-    background: #f28c28;
-    color: white;
-    font-weight: 700;
-    padding: 15px 20px;
-}
-
-.info-card .card-body {
-    color: #475569;
-    line-height: 1.7;
-}
-
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 768px) {
-
-    .notification-item {
-        flex-wrap: wrap;
-    }
-
-    .notification-action {
-        width: 100%;
-        margin-left: 68px;
-    }
-
-}
-
-</style>
-
-
-<div class="content-wrapper notification-page">
-
-
-    <!-- =====================================
-         HEADER
-    ====================================== -->
-
+    <!-- HEADER -->
     <section class="content-header">
 
         <div class="container-fluid">
 
-            <h1 class="page-title">
+            <div class="row align-items-center">
 
-                <i class="fas fa-bell"></i>
+                <div class="col-sm-8">
 
-                Notifikasi
+                    <h1 style="color:#0b3d91;font-weight:700;">
 
-            </h1>
+                        <i class="fas fa-bell"></i>
 
-            <p class="page-subtitle">
+                        Notifikasi
 
-                Informasi terbaru mengenai pengajuan layanan Anda.
+                    </h1>
 
-            </p>
+                    <p class="text-muted mb-0">
+
+                        Lihat informasi terbaru mengenai pengajuan layanan Anda.
+
+                    </p>
+
+                </div>
+
+
+                <div class="col-sm-4 text-right">
+
+                    <a
+                        href="<?= base_url('dosen/dashboard') ?>"
+                        class="btn btn-outline-primary"
+                    >
+
+                        <i class="fas fa-home"></i>
+
+                        Dashboard
+
+                    </a>
+
+                </div>
+
+            </div>
 
         </div>
 
     </section>
 
 
-
-    <!-- =====================================
-         CONTENT
-    ====================================== -->
-
+    <!-- CONTENT -->
     <section class="content">
 
         <div class="container-fluid">
 
 
-            <!-- =================================
-                 NOTIFICATION CARD
-            ================================== -->
+            <!-- STATISTIK -->
 
-            <div class="card notification-card">
+            <div class="row">
 
 
-                <!-- HEADER -->
+                <!-- TOTAL NOTIFIKASI -->
 
-                <div class="card-header">
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
 
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="card shadow-sm border-0">
 
-                        <h3>
+                        <div class="card-body d-flex align-items-center">
 
-                            <i class="fas fa-bell me-2"></i>
-
-                            Notifikasi Anda
-
-                        </h3>
-
-
-                        <?php if (!empty($notifications)): ?>
-
-                            <button
-                                type="button"
-                                class="btn btn-light btn-sm"
-                                onclick="markAllAsRead()"
+                            <div
+                                style="
+                                    width:56px;
+                                    height:56px;
+                                    background:#293b8f;
+                                    border-radius:12px;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    color:white;
+                                    font-size:24px;
+                                "
                             >
 
-                                <i class="fas fa-check-double me-1"></i>
+                                <i class="fas fa-bell"></i>
 
-                                Tandai Semua Dibaca
+                            </div>
 
-                            </button>
 
-                        <?php endif; ?>
+                            <div class="ml-3">
+
+                                <div class="text-muted">
+
+                                    Total Notifikasi
+
+                                </div>
+
+                                <h3
+                                    class="mb-0"
+                                    style="color:#0b3d91;font-weight:700;"
+                                >
+
+                                    <?= $totalNotifikasi ?>
+
+                                </h3>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
                 </div>
 
 
+                <!-- BELUM DIBACA -->
 
-                <!-- BODY -->
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+
+                    <div class="card shadow-sm border-0">
+
+                        <div class="card-body d-flex align-items-center">
+
+                            <div
+                                style="
+                                    width:56px;
+                                    height:56px;
+                                    background:#ff8500;
+                                    border-radius:12px;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    color:white;
+                                    font-size:24px;
+                                "
+                            >
+
+                                <i class="fas fa-envelope"></i>
+
+                            </div>
+
+
+                            <div class="ml-3">
+
+                                <div class="text-muted">
+
+                                    Belum Dibaca
+
+                                </div>
+
+                                <h3
+                                    class="mb-0"
+                                    style="color:#0b3d91;font-weight:700;"
+                                >
+
+                                    <?= $belumDibaca ?>
+
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+
+                    <div class="card shadow-sm border-0">
+
+                        <div class="card-body d-flex align-items-center">
+
+                            <div
+                                style="
+                                    width:56px;
+                                    height:56px;
+                                    background:#198754;
+                                    border-radius:12px;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    color:white;
+                                    font-size:24px;
+                                "
+                            >
+
+                                <i class="fas fa-check-circle"></i>
+
+                            </div>
+
+
+                            <div class="ml-3">
+
+                                <div class="text-muted">
+
+                                    Status
+
+                                </div>
+
+                                <h3
+                                    class="mb-0"
+                                    style="color:#0b3d91;font-weight:700;"
+                                >
+
+                                    Aktif
+
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DAFTAR NOTIFIKASI -->
+
+            <div class="card shadow-sm border-0">
+
+                <div
+                    class="card-header"
+                    style="
+                        background:#293b8f;
+                        color:white;
+                        border-bottom:4px solid #ff8500;
+                    "
+                >
+
+                    <h3 class="card-title mb-0">
+
+                        <i class="fas fa-list"></i>
+
+                        Daftar Notifikasi
+
+                    </h3>
+
+                </div>
+
 
                 <div class="card-body p-0">
 
 
                     <?php if (!empty($notifications)): ?>
 
-
                         <?php foreach ($notifications as $notification): ?>
 
-
-                            <?php
-
-                            /*
-                            =====================================
-                            DATA NOTIFIKASI
-                            =====================================
-                            */
-
-                            $type =
-                                $notification['type']
-                                ?? 'info';
-
-
-                            $isRead =
-                                $notification['is_read']
-                                ?? false;
-
-
-                            $title =
-                                $notification['title']
-                                ?? 'Notifikasi';
-
-
-                            $message =
-                                $notification['message']
-                                ?? '';
-
-
-                            $createdAt =
-                                $notification['created_at']
-                                ?? '-';
-
-
-                            $ticketId =
-                                $notification['ticket_id']
-                                ?? null;
-
-
-
-                            /*
-                            =====================================
-                            ICON
-                            =====================================
-                            */
-
-                            $icon =
-                                'fa-info-circle';
-
-
-                            if (
-                                $type === 'warning'
-                            ) {
-
-                                $icon =
-                                    'fa-exclamation-triangle';
-
-                            }
-
-                            elseif (
-                                $type === 'success'
-                            ) {
-
-                                $icon =
-                                    'fa-check-circle';
-
-                            }
-
-                            elseif (
-                                $type === 'danger'
-                            ) {
-
-                                $icon =
-                                    'fa-times-circle';
-
-                            }
-
-                            ?>
-
-
                             <div
-                                class="
-                                    notification-item
-                                    <?= !$isRead
-                                        ? 'notification-unread'
-                                        : '' ?>
+                                class="notification-item"
+                                style="
+                                    padding:22px;
+                                    border-bottom:1px solid #eee;
+                                    border-left:
+                                    <?= $notification['status'] === 'baru'
+                                        ? '4px solid #ff8500'
+                                        : '4px solid transparent'
+                                    ?>;
+                                    background:
+                                    <?= $notification['status'] === 'baru'
+                                        ? '#fffaf3'
+                                        : '#ffffff'
+                                    ?>;
                                 "
                             >
 
-
-                                <!-- ICON -->
-
-                                <div
-                                    class="
-                                        notification-icon
-                                        icon-<?= esc($type) ?>
-                                    "
-                                >
-
-                                    <i
-                                        class="fas <?= $icon ?>"
-                                    ></i>
-
-                                </div>
+                                <div class="d-flex align-items-start">
 
 
+                                    <!-- ICON -->
 
-                                <!-- CONTENT -->
+                                    <div
+                                        style="
+                                            min-width:52px;
+                                            width:52px;
+                                            height:52px;
+                                            background:#293b8f;
+                                            border-radius:50%;
+                                            display:flex;
+                                            align-items:center;
+                                            justify-content:center;
+                                            color:white;
+                                            font-size:20px;
+                                        "
+                                    >
 
-                                <div class="notification-content">
+                                        <i
+                                            class="fas <?= esc($notification['icon']) ?>"
+                                        ></i>
+
+                                    </div>
 
 
-                                    <div class="d-flex align-items-center gap-2">
+                                    <!-- ISI -->
+
+                                    <div class="ml-3 flex-grow-1">
+
+                                        <div
+                                            class="d-flex justify-content-between align-items-start"
+                                        >
+
+                                            <h5
+                                                class="mb-1"
+                                                style="
+                                                    color:#0b3d91;
+                                                    font-weight:700;
+                                                "
+                                            >
+
+                                                <?= esc($notification['judul']) ?>
+
+                                            </h5>
 
 
-                                        <div class="notification-title">
+                                            <?php if ($notification['status'] === 'baru'): ?>
 
-                                            <?= esc($title) ?>
+                                                <span
+                                                    class="badge"
+                                                    style="
+                                                        background:#ff8500;
+                                                        color:white;
+                                                        padding:8px 12px;
+                                                    "
+                                                >
+
+                                                    Baru
+
+                                                </span>
+
+                                            <?php endif; ?>
 
                                         </div>
 
 
-                                        <?php if (!$isRead): ?>
+                                        <p class="text-muted mb-2">
 
-                                            <span class="unread-badge">
+                                            <?= esc($notification['pesan']) ?>
 
-                                                BARU
-
-                                            </span>
-
-                                        <?php endif; ?>
+                                        </p>
 
 
-                                    </div>
+                                        <small class="text-muted">
 
+                                            <i class="far fa-clock"></i>
 
+                                            <?= esc($notification['tanggal']) ?>,
 
-                                    <div class="notification-message">
+                                            <?= esc($notification['waktu']) ?>
 
-                                        <?= esc($message) ?>
+                                        </small>
 
                                     </div>
-
-
-
-                                    <div class="notification-time">
-
-                                        <i class="far fa-clock me-1"></i>
-
-                                        <?= esc($createdAt) ?>
-
-                                    </div>
-
 
                                 </div>
 
-
-
-                                <!-- ACTION -->
-
-                                <?php if ($ticketId): ?>
-
-
-                                    <div class="notification-action">
-
-
-                                        <a
-                                            href="<?= base_url(
-                                                'dosen/ticket/detail/' .
-                                                $ticketId
-                                            ) ?>"
-                                            class="btn btn-outline-primary btn-notification"
-                                        >
-
-                                            <i class="fas fa-eye me-1"></i>
-
-                                            Lihat Tiket
-
-                                        </a>
-
-
-                                    </div>
-
-
-                                <?php endif; ?>
-
-
                             </div>
 
-
                         <?php endforeach; ?>
-
 
                     <?php else: ?>
 
 
-                        <!-- =================================
-                             EMPTY STATE
-                        ================================== -->
+                        <!-- KALAU TIDAK ADA NOTIFIKASI -->
 
-                        <div class="empty-state">
+                        <div class="text-center py-5">
 
+                            <i
+                                class="fas fa-bell-slash fa-3x text-muted mb-3"
+                            ></i>
 
-                            <i class="far fa-bell-slash"></i>
+                            <h5 class="text-muted">
 
+                                Belum ada notifikasi
 
-                            <h4>
+                            </h5>
 
-                                Belum Ada Notifikasi
+                            <p class="text-muted">
 
-                            </h4>
-
-
-                            <p>
-
-                                Saat ada informasi terbaru mengenai pengajuan layanan Anda,
-                                notifikasi akan muncul di halaman ini.
+                                Notifikasi pengajuan layanan akan muncul di sini.
 
                             </p>
-
-
-                            <a
-                                href="<?= base_url('dosen/dashboard') ?>"
-                                class="btn btn-primary"
-                            >
-
-                                <i class="fas fa-home me-1"></i>
-
-                                Kembali ke Dashboard
-
-                            </a>
-
 
                         </div>
 
@@ -593,69 +400,6 @@
 
                 </div>
 
-
-            </div>
-
-
-
-            <!-- =================================
-                 INFO
-            ================================== -->
-
-            <div class="card info-card mt-4">
-
-
-                <div class="card-header">
-
-                    <i class="fas fa-info-circle me-2"></i>
-
-                    Informasi Notifikasi
-
-                </div>
-
-
-                <div class="card-body">
-
-
-                    <p>
-
-                        <i class="fas fa-paper-plane text-primary me-2"></i>
-
-                        Notifikasi akan muncul ketika pengajuan layanan berhasil dikirim.
-
-                    </p>
-
-
-                    <p>
-
-                        <i class="fas fa-spinner text-info me-2"></i>
-
-                        Anda akan mendapatkan informasi ketika status tiket berubah.
-
-                    </p>
-
-
-                    <p>
-
-                        <i class="fas fa-comment-dots text-warning me-2"></i>
-
-                        Notifikasi juga akan muncul jika petugas memberikan catatan atau meminta revisi.
-
-                    </p>
-
-
-                    <p class="mb-0">
-
-                        <i class="fas fa-check-circle text-success me-2"></i>
-
-                        Anda akan mendapatkan pemberitahuan ketika layanan telah selesai diproses.
-
-                    </p>
-
-
-                </div>
-
-
             </div>
 
 
@@ -664,46 +408,6 @@
     </section>
 
 </div>
-
-
-
-<script>
-
-/* =========================================
-   TANDAI SEMUA NOTIFIKASI DIBACA
-========================================= */
-
-function markAllAsRead() {
-
-    if (
-        !confirm(
-            'Tandai semua notifikasi sebagai sudah dibaca?'
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    /*
-    =========================================
-    BACKEND BELUM AKTIF
-
-    Nanti bisa diarahkan ke:
-
-    /dosen/notification/read-all
-
-    =========================================
-    */
-
-    alert(
-        'Fitur tandai semua dibaca akan aktif setelah backend notifikasi selesai dibuat.'
-    );
-
-}
-
-</script>
 
 
 <?= $this->include('layouts/footer') ?>

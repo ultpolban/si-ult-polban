@@ -1,0 +1,443 @@
+/* =======================================================
+   SI-ULT POLBAN THEME
+======================================================= */
+
+:root{
+
+    --primary:#2E3A8C;
+    --primary-dark:#24306F;
+
+    --orange:#FF8200;
+    --orange-hover:#E46F00;
+
+    --success:#198754;
+
+    --warning:#F4B400;
+
+    --danger:#DC3545;
+
+    --light:#F4F6FB;
+
+    --card:#FFFFFF;
+
+    --border:#E7EAF3;
+
+    --text:#2E3A8C;
+}
+
+body{
+    background:var(--light);
+    color:#444;
+    font-family:'Segoe UI',sans-serif;
+}
+
+/* ===================== NAVBAR ======================= */
+
+.main-header{
+    margin-left:250px !important;
+    width:calc(100% - 250px);
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:1035;
+}
+
+.content-wrapper{
+
+    padding-top:65px;
+
+}
+
+.navbar a{
+    color:white!important;
+}
+
+/* ===================== SIDEBAR ======================= */
+
+/*================ SIDEBAR =================*/
+
+.main-sidebar{
+
+background:#343A40 !important;
+
+}
+
+.brand-link{
+
+background:#2B2E83 !important;
+
+color:#fff !important;
+
+border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.sidebar{
+
+padding-top:10px;
+
+}
+
+.user-panel{
+
+border-bottom:1px solid rgba(255,255,255,.08);
+
+padding-bottom:15px;
+
+}
+
+.user-panel .info a{
+
+color:white !important;
+
+font-weight:600;
+
+}
+
+/* menu */
+
+.nav-sidebar .nav-item{
+
+margin-bottom:5px;
+
+}
+
+.nav-sidebar .nav-link{
+
+color:#CFCFCF !important;
+
+border-radius:8px;
+
+padding:12px 15px;
+
+transition:.25s;
+
+}
+
+.nav-sidebar .nav-link:hover{
+
+background:#4A4F57 !important;
+
+color:#fff !important;
+
+}
+
+.nav-sidebar .nav-link.active{
+
+background:#005BAC !important;
+
+color:#fff !important;
+
+}
+
+.nav-sidebar .nav-icon{
+
+width:22px;
+
+text-align:center;
+
+}
+
+/* ================= CONTENT ================= */
+
+.content-wrapper{
+    margin-left:250px !important;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+.main-footer{
+    margin-left:250px !important;
+}
+
+.content-header h1,
+.content-header h2{
+
+    color:var(--primary);
+
+    font-weight:700;
+}
+
+/* ================= CARD ================= */
+
+.card{
+
+    border:none;
+
+    border-radius:15px;
+
+    overflow:hidden;
+
+    background:#fff;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    margin-bottom:20px;
+}
+
+.card-header{
+
+    padding:15px 20px;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    border:none;
+}
+
+/* ================= BUTTON ================= */
+
+.btn{
+
+    border-radius:10px;
+
+    padding:8px 18px;
+
+    font-weight:600;
+}
+
+.btn-primary:hover{
+
+    background:var(--orange-hover);
+}
+
+.btn-warning{
+
+    background:#F4B400;
+
+    border:none;
+}
+
+.btn-success{
+
+    border:none;
+}
+
+.btn-danger{
+
+    border:none;
+}
+
+/* ================= TABLE ================= */
+
+.table thead{
+
+    background:var(--primary);
+
+    color:white;
+}
+
+.table{
+
+    border-radius:12px;
+
+    overflow:hidden;
+}
+
+.table td,
+.table th{
+
+    vertical-align:middle;
+}
+
+.table-hover tbody tr:hover{
+
+    background:#F7F9FC;
+}
+
+/* ================= SMALL BOX ================= */
+
+.small-box{
+
+    border-radius:15px;
+
+    transition:.3s;
+
+    cursor:pointer;
+}
+
+.small-box.bg-primary{
+
+    background:var(--primary)!important;
+}
+
+.small-box.bg-success{
+
+    background:#1E8E4D!important;
+}
+
+.small-box.bg-warning{
+
+    background:#F4B400!important;
+
+    color:white;
+}
+
+.small-box.bg-danger{
+
+    background:#DC3545!important;
+}
+
+.small-box.bg-info{
+
+    background:var(--orange)!important;
+}
+
+.small-box:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+/* ================= BADGE ================= */
+
+.badge{
+
+    padding:7px 14px;
+
+    border-radius:30px;
+
+    font-size:12px;
+
+    font-weight:600;
+}
+
+.badge-warning{
+
+    background:#F4B400;
+}
+
+.badge-success{
+
+    background:#1E8E4D;
+}
+
+.badge-danger{
+
+    background:#DC3545;
+}
+
+/* ================= FORM ================= */
+
+.form-control{
+
+    border-radius:10px;
+}
+
+.form-select{
+
+    border-radius:10px;
+}
+
+.form-group{
+
+    margin-bottom:20px;
+}
+
+.form-control:focus{
+
+    border-color:#0d6efd;
+
+    box-shadow:0 0 0 .2rem rgba(13,110,253,.15);
+}
+
+/* ================= FOOTER ================= */
+
+.main-footer{
+
+    background:white;
+
+    border-top:1px solid var(--border);
+}
+
+/* ================= progress ================= */
+
+.progress{
+
+    height:25px;
+
+    border-radius:20px;
+
+    overflow:hidden;
+}
+
+.progress-bar{
+
+    font-weight:bold;
+}
+
+/* ================= timeline ================= */
+
+.timeline>.time-label>span{
+
+    border-radius:8px;
+}
+
+.timeline-item{
+
+    border-radius:10px;
+}
+
+/* ================= modal ================= */
+
+.modal-content{
+
+    border:none;
+
+    border-radius:15px;
+}
+
+.modal-header{
+
+    border:none;
+}
+
+/* ================= breadcrumb ================= */
+
+.breadcrumb{
+
+    background:transparent;
+
+    margin-bottom:0;
+}
+
+/* ================= footer card ================= */
+
+.card-footer{
+
+    background:#fff;
+
+    border-top:1px solid #eee;
+}
+
+
+
+.main-header{
+
+    margin-left:250px !important;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:1040;
+}
+
+.main-sidebar::-webkit-scrollbar{
+
+    width:6px;
+}
+
+.main-sidebar::-webkit-scrollbar-thumb{
+
+    background:#FF8200;
+
+    border-radius:10px;
+}
+
+.main-sidebar::-webkit-scrollbar-track{
+
+    background:#313B8F;
+}

@@ -10,38 +10,24 @@ body{
 /* Sidebar */
 
 .main-sidebar{
-    background:#003B73 !important;
+    background:#2F3A8F !important;
 }
-
-/* Logo */
 
 .brand-link{
-    background:#005BAC !important;
-    color:white !important;
-    text-align:center;
-    height:75px;
+    background:#2F3A8F !important;
 }
-
-.brand-link img{
-    width:42px;
-    height:42px;
-}
-
-/* Menu */
 
 .nav-sidebar .nav-link{
-    color:#fff;
-    border-radius:8px;
-    margin:5px 10px;
+    color:#fff !important;
+    margin:6px 10px;
+    border-radius:12px;
+    padding:12px 15px;
 }
 
-.nav-sidebar .nav-link:hover{
-    background:#005BAC;
-}
-
+.nav-sidebar .nav-link:hover,
 .nav-sidebar .nav-link.active{
-    background:#F4B400;
-    color:#000;
+    background:#FF8200 !important;
+    color:#fff !important;
 }
 
 /* Card */
@@ -313,4 +299,50 @@ vertical-align:middle;
 
 .table td{
     padding:15px;
+}
+
+/* ===== SIDEBAR POLBAN ===== */
+.nav-sidebar .nav-link{
+    color:#FFFFFF !important;
+    margin:6px 10px;
+    border-radius:12px;
+    transition:.25s;
+    font-weight:500;
+}
+
+.nav-sidebar .nav-link:hover{
+    background:#FF8A00 !important;
+    color:#FFFFFF !important;
+}
+
+.nav-sidebar .nav-link.active{
+    background:#FF8A00 !important;
+    color:#FFFFFF !important;
+    box-shadow:0 6px 16px rgba(255,138,0,.35);
+}
+
+.user-panel .info a{
+    color:#FFFFFF !important;
+}
+
+.user-panel{
+    border-bottom:1px solid rgba(255,255,255,.15) !important;
+}
+
+.btn-primary{
+    background:#FF8A00 !important;
+    border:none !important;
+}
+
+.btn-primary:hover{
+    background:#E67600 !important;
+}
+
+.table thead{
+    background:#2B2E83 !important;
+    color:white !important;
+}
+
+.table tbody tr:hover{
+    background:#FFF6EA !important;
 }

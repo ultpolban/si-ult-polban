@@ -1,15 +1,18 @@
 <!-- Main Sidebar -->
-<aside class="main-sidebar elevation-4">
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+
 
     <!-- Logo -->
-    <a href="<?= base_url('petugas') ?>" class="brand-link text-center">
+    <a href="<?= base_url('petugas') ?>"
+   class="brand-link text-center"
+   style="background:#2B2E83;border-bottom:1px solid rgba(255,255,255,.15);">
 
         <img src="<?= base_url('assets/img/logo-polban.png') ?>"
              alt="POLBAN"
              class="brand-image img-circle elevation-3"
              style="opacity:.9">
 
-        <span class="brand-text font-weight-bold">
+        <span class="brand-text font-weight-bold text-white">
             SI-ULT POLBAN
         </span>
 

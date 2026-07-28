@@ -90,10 +90,28 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 }
 
+body{
+    background:#F4F6FB;
+}
+
+.content-wrapper{
+    background:#F4F6FB !important;
+}
+
+.content-header h1,
+.content-header h2{
+    color:#2B2E83 !important;
+    font-weight:700;
+}
+
 </style>
 
 <link rel="stylesheet"
 href="<?= base_url('assets/css/petugas.css') ?>">
+
+<link rel="stylesheet" href="<?= base_url('assets/css/theme-polban.css') ?>">
+
+
 
 </head>
 

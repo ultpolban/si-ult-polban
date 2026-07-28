@@ -1,12 +1,13 @@
 <!-- Navbar -->
-<nav class="main-header navbar navbar-expand navbar-white navbar-light shadow-sm">
+<nav class="main-header navbar navbar-expand shadow-sm"
+     style="background:#2B2E83;border:none;">
 
     <!-- Tombol Sidebar -->
     <ul class="navbar-nav">
 
         <li class="nav-item">
 
-            <a class="nav-link" data-widget="pushmenu" href="#">
+            <a class="nav-link text-white" data-widget="pushmenu" href="#">
 
                 <i class="fas fa-bars"></i>
 
@@ -25,7 +26,7 @@
                  width="35"
                  class="mr-2">
 
-            <span class="font-weight-bold text-primary">
+            <span class="font-weight-bold text-white">
 
                 Sistem Informasi Unit Layanan Terpadu
 

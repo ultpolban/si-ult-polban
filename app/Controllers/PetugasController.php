@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Controllers\BaseController;
+
 class PetugasController extends BaseController
 {
     public function dashboard()
@@ -11,21 +13,127 @@ class PetugasController extends BaseController
 
     public function tiket()
     {
-        return view('petugas/tiket');
+        // 1. Ambil input filter dari form/URL GET
+        $search   = $this->request->getGet('search');
+        $status   = $this->request->getGet('status');
+        $kategori = $this->request->getGet('kategori');
+
+        // 2. Data Dummy Tiket (Sesuaikan dengan query Model DB Anda jika sudah ada)
+        $allTiket = [
+            [
+                'id'           => 1,
+                'nomor_tiket'  => 'ULT-20260720-0001',
+                'nama_pemohon' => 'Rafi Putra',
+                'nim'          => '231511001',
+                'layanan'      => 'Surat Aktif Kuliah',
+                'kategori'     => 'Akademik',
+                'prioritas'    => 'High',
+                'status'       => 'Submitted',
+                'tanggal'      => '2026-07-20'
+            ],
+            [
+                'id'           => 2,
+                'nomor_tiket'  => 'ULT-20260721-0002',
+                'nama_pemohon' => 'Siti Nurhaliza',
+                'nim'          => '231511002',
+                'layanan'      => 'Bantuan UKT',
+                'kategori'     => 'Keuangan',
+                'prioritas'    => 'Medium',
+                'status'       => 'Verified',
+                'tanggal'      => '2026-07-21'
+            ],
+            [
+                'id'           => 3,
+                'nomor_tiket'  => 'ULT-20260722-0003',
+                'nama_pemohon' => 'Ahmad Fauzi',
+                'nim'          => '231511003',
+                'layanan'      => 'Beasiswa Prestasi',
+                'kategori'     => 'Kemahasiswaan',
+                'prioritas'    => 'Low',
+                'status'       => 'Disposisi',
+                'tanggal'      => '2026-07-22'
+            ]
+        ];
+
+        // 3. Logika Filter Data
+        $filteredTiket = array_filter($allTiket, function ($item) use ($search, $status, $kategori) {
+            $matchSearch = true;
+            $matchStatus = true;
+            $matchKategori = true;
+
+            if (!empty($search)) {
+                $searchLower = strtolower($search);
+                $matchSearch = (strpos(strtolower($item['nomor_tiket']), $searchLower) !== false) ||
+                               (strpos(strtolower($item['nama_pemohon']), $searchLower) !== false) ||
+                               (strpos(strtolower($item['nim']), $searchLower) !== false) ||
+                               (strpos(strtolower($item['layanan']), $searchLower) !== false);
+            }
+
+            if (!empty($status)) {
+                $matchStatus = (strtolower($item['status']) === strtolower($status));
+            }
+
+            if (!empty($kategori)) {
+                $matchKategori = (strtolower($item['kategori']) === strtolower($kategori));
+            }
+
+            return $matchSearch && $matchStatus && $matchKategori;
+        });
+
+        $data = [
+            'tiket_list' => $filteredTiket,
+            'search'     => $search,
+            'status'     => $status,
+            'kategori'   => $kategori
+        ];
+
+        return view('petugas/tiket', $data);
     }
 
-    public function detail($id)
+    public function detail($id = null)
     {
-        return view('petugas/detail');
+        return view('petugas/detail', ['id' => $id]);
     }
 
-    public function verifikasi($id)
+    public function verifikasi($id = null)
     {
-        return view('petugas/verifikasi');
+        return view('petugas/verifikasi', ['id' => $id]);
     }
 
-    public function disposisi($id)
+    // =======================================================
+    // METHOD UNTUK MENYIMPAN HASIL VERIFIKASI (MEMPERBAIKI ERROR 404)
+    // =======================================================
+    public function simpanVerifikasi($id = null)
     {
-        return view('petugas/disposisi');
+        // Tangkap data dari form verifikasi
+        $statusVerifikasi = $this->request->getPost('status_verifikasi');
+        $catatan          = $this->request->getPost('catatan');
+
+        // TODO: Silakan tambahkan kode update ke database Anda di sini
+        // Contoh: $this->tiketModel->update($id, ['status' => $statusVerifikasi, 'catatan' => $catatan]);
+
+        // Redirect kembali ke halaman data tiket dengan pesan sukses
+        return redirect()->to(base_url('petugas/tiket'))->with('success', 'Verifikasi tiket berhasil disimpan!');
+    }
+
+    public function disposisi($id = null)
+    {
+        return view('petugas/disposisi', ['id' => $id]);
+    }
+
+    // =======================================================
+    // METHOD UNTUK MENGIRIM DISPOSISI (MENCEGAH ERROR SERUPA)
+    // =======================================================
+    public function kirimDisposisi($id = null)
+    {
+        // Tangkap data dari form disposisi
+        $unitTujuan = $this->request->getPost('unit_tujuan');
+        $prioritas  = $this->request->getPost('prioritas');
+        $targetSla  = $this->request->getPost('target_sla');
+
+        // TODO: Silakan tambahkan kode update/insert disposisi ke database Anda di sini
+
+        // Redirect kembali ke halaman data tiket dengan pesan sukses
+        return redirect()->to(base_url('petugas/tiket'))->with('success', 'Disposisi tiket berhasil dikirim!');
     }
 }

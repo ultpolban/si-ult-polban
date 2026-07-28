@@ -19,40 +19,6 @@
     transform: scale(1.03);
 }
 
-.jurusan-card{
-
-    border:none;
-    border-radius:18px;
-    transition:.35s;
-    cursor:pointer;
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
-
-}
-
-.jurusan-card:hover{
-
-    transform:translateY(-10px);
-    box-shadow:0 20px 40px rgba(13,110,253,.18);
-
-}
-
-.jurusan-card i{
-
-    transition:.3s;
-
-}
-
-.jurusan-card:hover i{
-
-    transform:scale(1.15);
-
-}
-.kecil{
-
-    font-size:.85rem;
-
-}
-
 .list-group-item{
 
     border:none;
@@ -123,7 +89,7 @@
 
 .accordion-button:not(.collapsed){
 
-    background:#0d6efd;
+    background : #000080;
 
     color:#fff;
 
@@ -151,4 +117,300 @@
 
     padding-left:25px;
 
+}
+
+.hero-img{
+    transition: transform .4s ease, box-shadow .4s ease;
+    border-radius:20px;
+}
+
+.hero-img:hover{
+    transform: scale(1.015);
+    box-shadow:0 15px 35px rgba(0,0,0,.10);
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+.contact-map{
+    border-radius:20px;
+    transition:.3s;
+}
+
+.contact-map:hover{
+    transform:translateY(-5px);
+    box-shadow:0 20px 40px rgba(13,110,253,.15);
+}
+
+#jam-operasional{
+    background:#f8f9fa;
+}
+
+#jam-operasional i{
+    transition:.3s;
+}
+
+#jam-operasional:hover i{
+    transform:rotate(-10deg) scale(1.1);
+}
+
+.list-group-item{
+
+    padding:20px;
+
+    font-size:17px;
+
+    transition:.3s;
+
+}
+
+.list-group-item:hover{
+
+    background:#000080;
+
+    color:white;
+
+    transform:translateX(8px);
+
+}
+
+/* ===========================
+   Tema POLBAN
+=========================== */
+
+:root{
+    --primary: #000080;
+    --secondary:#ff7f00;
+}
+
+.navbar-polban{
+    background: #000080!important;
+}
+
+.navbar-polban .navbar-brand{
+    color:#fff !important;
+    font-weight:600;
+}
+
+.navbar-polban .nav-link{
+    color:#fff !important;
+    transition:.3s;
+    font-weight:500;
+}
+
+.navbar-polban .nav-link:hover{
+    color:#ff7f00!important;
+}
+
+.btn-login{
+    background:#ff7f00 !important;
+    color:#fff !important;
+    border:none;
+    border-radius:8px;
+    padding:8px 20px;
+}
+
+.btn-login:hover{
+    background : #ff7f00 !important;
+    color:#fff !important;
+}
+
+/* ===========================
+   NAVBAR POLBAN
+=========================== */
+
+.navbar-polban{
+    background:#000080 !important;
+    border-bottom:4px solid #F58220;
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+
+.navbar-brand{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#fff !important;
+    font-size:1.7rem;
+    font-weight:700;
+
+}
+
+.navbar-brand img{
+
+    height:55px;
+    width:auto;
+
+}
+
+.nav-link{
+
+    color:#fff !important;
+    font-weight:600;
+    margin-left:18px;
+    position:relative;
+    transition:.3s;
+
+}
+
+.nav-link:hover{
+
+    color:#F58220 !important;
+
+}
+
+.nav-link::after{
+
+    content:'';
+    position:absolute;
+    left:0;
+    bottom:-8px;
+    width:0;
+    height:3px;
+    background:#F58220;
+    transition:.3s;
+
+}
+
+.nav-link:hover::after{
+
+    width:100%;
+
+}
+.btn-login{
+
+    border-radius:12px;
+    padding:10px 24px;
+    font-weight:600;
+
+}
+
+.btn-hero{
+
+    background : #000080;
+    color:white;
+
+}
+
+.btn-hero:hover{
+
+    background:#000080;
+
+}
+
+.faq-section{
+
+    background:#f8fafc;
+
+}
+
+.faq-badge{
+
+    background:#000080;
+    color:white;
+    padding:8px 20px;
+    border-radius:30px;
+    font-weight:600;
+
+}
+
+.faq-badge i{
+
+    margin-right:5px;
+
+}
+
+.accordion{
+
+    border-radius:15px;
+    overflow:hidden;
+
+}
+
+.accordion-item{
+
+    border:none;
+
+}
+
+.accordion-button{
+    background:#000080;
+    color:#fff;
+    font-weight:600;
+    padding:20px;
+    font-size:18px;
+    border:none;
+}
+
+.accordion-button:not(.collapsed){
+    background:#000080;
+    color:#fff;
+}
+
+.accordion-button:focus{
+    box-shadow:none;
+}
+.accordion-body{
+
+    background:white;
+    line-height:1.8;
+
+}
+
+.btn-ajukan{
+    background: #000080 !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-weight: 600;
+    transition: all .3s ease;
+    box-shadow: 0 4px 10px rgba(0, 59, 143, 0.25);
+}
+
+.btn-ajukan:hover{
+    background: #000080 !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 59, 143, 0.35);
+}
+
+.btn-ajukan:active{
+    transform: scale(.98);
+}
+
+/* ===========================
+   FOOTER POLBAN
+=========================== */
+
+.footer-polban{
+
+    background:#000080;
+    color:#fff;
+    padding:25px 0;
+    border-top:4px solid #F58220;
+    margin-top:80px;
+
+}
+
+.footer-polban p{
+
+    margin:0;
+    font-size:15px;
+    letter-spacing:.5px;
+
+}
+
+.btn-ajukan{
+    background:#000080 !important;
+    color:#fff !important;
+    border:none;
+    border-radius:8px;
+    padding:8px 20px;
+}
+
+.btn-ajukan:hover{
+    background:#000080!important;
+    color:#fff;
 }

@@ -1,14 +1,15 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-polban">
 
     <div class="container">
 
-        <a class="navbar-brand fw-bold text-primary"
-            href="<?= base_url('/') ?>">
+       <a class="navbar-brand d-flex align-items-center" href="<?= base_url('/') ?>">
+    <img src="<?= base_url('img/logo.png') ?>"
+         alt="Logo POLBAN"
+         width="45"
+         class="me-2">
 
-            ULT POLBAN
-
-        </a>
-
+    <span>Politeknik Negeri Bandung</span>
+</a>
         <button
             class="navbar-toggler"
             data-bs-toggle="collapse"
@@ -56,18 +57,21 @@
 
                 </li>
 
+    <li class="nav-item">
+    <a class="nav-link" href="#kontak">
+       Hubungi Kami
+    </a>
+</li>              
 
-                <a class="nav-link" href="#kontak">
-    Kontak
-</a>
+<li class="nav-item">
 
-                <li class="nav-item">
-
-                    <a href="<?= base_url('login') ?>" class="btn btn-primary">
+                    <a href="<?= base_url('login') ?>" class="btn btn-login">
     Login
 </a>
 
                 </li>
+
+                
 
             </ul>
 

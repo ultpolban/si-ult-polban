@@ -34,8 +34,7 @@
                             </small>
 
                             <br><br>
-<a href="<?= base_url('layanan/'.$service['id']) ?>"
-class="btn btn-success w-100">
+<a href="<?= base_url('layanan/' . $service['id']) ?>" class="btn btn-ajukan w-100">
     Lihat Detail
 </a>
 

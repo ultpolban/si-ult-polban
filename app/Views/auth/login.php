@@ -22,7 +22,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #005BAC, #0d6efd);
+            background: linear-gradient(135deg, #082B63, #0d6efd);
             height: 100vh;
         }
 
@@ -34,7 +34,7 @@
         }
 
         .left-side {
-            background: #005BAC;
+            background: #084db4;
             color: white;
             padding: 60px 40px;
         }
@@ -49,12 +49,12 @@
         }
 
         .btn-login {
-            background: #005BAC;
+            background: #082B63;
             color: white;
         }
 
         .btn-login:hover {
-            background: #004a90;
+            background: #082B63
             color: white;
         }
 

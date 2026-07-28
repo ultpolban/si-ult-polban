@@ -16,22 +16,13 @@ Unit Layanan Terpadu
 
 </h1>
 
-<h3>
-
-Politeknik Negeri Bandung
-
-</h3>
-
 <p class="mt-4">
-
-Layanan Akademik dan Keuangan
-secara cepat, mudah, transparan,
-dan terintegrasi.
+Unit Layanan Terpadu (ULT) Politeknik Negeri Bandung menghadirkan layanan yang terintegrasi guna memudahkan mahasiswa, dosen, tenaga kependidikan, alumni, mitra, dan masyarakat dalam mengakses berbagai kebutuhan layanan kampus.
 
 </p>
 
 <a href="#layanan"
-class="btn btn-warning btn-lg">
+class="btn-ajukan">
 
 Ajukan Layanan
 
@@ -41,10 +32,16 @@ Ajukan Layanan
 
 <div class="col-lg-6 text-center">
 
-<img
-src="img/landingpage.jpg"
-class="img-fluid rounded">
+    <div class="hero-image">
 
+        <img src="<?= base_url('img/landingpage.jpg') ?>"
+             class="img-fluid hero-img"
+             alt="POLBAN">
+
+    </div>
+
+</div>
+</div>
 </div>
 
 </div>
@@ -56,7 +53,7 @@ class="img-fluid rounded">
     <div class="container">
 
         <div class="text-center mb-5">
-            <h2 class="fw-bold text-primary">Tentang Politeknik Negeri Bandung</h2>
+            <h2>Tentang Politeknik Negeri Bandung</h2>
             <p class="text-muted">
                 Kenali sejarah, visi, dan misi Politeknik Negeri Bandung sebagai institusi pendidikan vokasi unggulan.
             </p>
@@ -154,715 +151,7 @@ class="img-fluid rounded">
     </div>
 </section>
 
-<!-- ============================= -->
-<!-- SECTION JURUSAN -->
-<!-- ============================= -->
 
-<section id="jurusan" class="py-5">
-
-    <div class="container">
-
-        <div class="text-center mb-5">
-
-            <h2 class="fw-bold">Jurusan POLBAN</h2>
-
-            <p class="text-muted">
-                Klik salah satu jurusan untuk melihat Program Studi
-            </p>
-
-        </div>
-
-        <div class="row g-4">
-
-            <!-- ==================== -->
-            <!-- Teknik Sipil -->
-            <!-- ==================== -->
-
-            <div class="col-lg-3 col-md-6">
-
-                <div class="card jurusan-card h-100 text-center p-4"
-                     data-bs-toggle="modal"
-                     data-bs-target="#modalSipil">
-
-                    <i class="bi bi-building display-4 text-primary"></i>
-
-                    <h5 class="mt-3">
-                        Teknik Sipil
-                    </h5>
-
-                    <small class="text-muted">
-                        Klik untuk melihat Program Studi
-                    </small>
-
-                </div>
-
-            </div>
-
-            <!-- ==================== -->
-            <!-- Teknik Mesin -->
-            <!-- ==================== -->
-
-            <div class="col-lg-3 col-md-6">
-
-                <div class="card jurusan-card h-100 text-center p-4"
-                     data-bs-toggle="modal"
-                     data-bs-target="#modalMesin">
-
-                    <i class="bi bi-gear-wide-connected display-4 text-primary"></i>
-
-                    <h5 class="mt-3">
-                        Teknik Mesin
-                    </h5>
-
-                    <small class="text-muted">
-                        Klik untuk melihat Program Studi
-                    </small>
-
-                </div>
-
-            </div>
-
-            <!-- ==================== -->
-            <!-- Teknik Refrigerasi -->
-            <!-- ==================== -->
-
-            <div class="col-lg-3 col-md-6">
-
-                <div class="card jurusan-card h-100 text-center p-4"
-                     data-bs-toggle="modal"
-                     data-bs-target="#modalRefrigerasi">
-
-                    <i class="bi bi-snow display-4 text-primary"></i>
-
-                    <h5 class="mt-3">
-                        Teknik Refrigerasi
-                    </h5>
-
-                    <small class="text-muted">
-                        Klik untuk melihat Program Studi
-                    </small>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-
-                <div class="card jurusan-card h-100 text-center p-4"
-                     data-bs-toggle="modal"
-                     data-bs-target="#modalKonversi">
-
-                    <i class="bi bi-sun-fill display-4 text-primary"></i>
-
-                    <h5 class="mt-3">
-                        Teknik Konversi Energi
-                    </h5>
-
-                    <small class="text-muted">
-                        Klik untuk melihat Program Studi
-                    </small>
-
-                </div>
-
-            </div>
-
-             <div class="col-lg-3 col-md-6">
-
-                <div class="card jurusan-card h-100 text-center p-4"
-                     data-bs-toggle="modal"
-                     data-bs-target="#modalElektro">
-
-                    <i class="bi bi-lightning-fill display-4 text-primary"></i>
-
-                    <h5 class="mt-3">
-                        Teknik Elektro
-                    </h5>
-
-                    <small class="text-muted">
-                        Klik untuk melihat Program Studi
-                    </small>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-
-                <div class="card jurusan-card h-100 text-center p-4"
-                     data-bs-toggle="modal"
-                     data-bs-target="#modalKimia">
-                 <i class="bi bi-droplet-fill display-4 text-primary"></i>
-
-           
-                    <h5 class="mt-3">
-                        Teknik Kimia
-                    </h5>
-
-                    <small class="text-muted">
-                        Klik untuk melihat Program Studi
-                    </small>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-
-                <div class="card jurusan-card h-100 text-center p-4"
-                     data-bs-toggle="modal"
-                     data-bs-target="#modalKomputer">
-                 <i class="bi bi-pc-display-horizontal display-4 text-primary"></i>
-
-           
-                    <h5 class="mt-3">
-                        Teknik Komputer dan Informatika
-                    </h5>
-
-                    <small class="text-muted">
-                        Klik untuk melihat Program Studi
-                    </small>
-
-                </div>
-
-            </div>
-
-                <div class="col-lg-3 col-md-6">
-
-                <div class="card jurusan-card h-100 text-center p-4"
-                     data-bs-toggle="modal"
-                     data-bs-target="#modalAkuntansi">
-                 <i class="bi bi-receipt-cutoff display-4 text-primary"></i>
-
-           
-                    <h5 class="mt-3">
-                        Akuntansi
-                    </h5>
-
-                    <small class="text-muted">
-                        Klik untuk melihat Program Studi
-                    </small>
-
-                </div>
-
-            </div>
-
-               <div class="col-lg-3 col-md-6">
-
-                <div class="card jurusan-card h-100 text-center p-4"
-                     data-bs-toggle="modal"
-                     data-bs-target="#modalAdministrasi">
-                 <i class="bi bi-person-workspace display-4 text-primary"></i>
-
-           
-                    <h5 class="mt-3">
-                        Administrasi Niaga
-                    </h5>
-
-                    <small class="text-muted">
-                        Klik untuk melihat Program Studi
-                    </small>
-
-                </div>
-
-            </div>
-
-              <div class="col-lg-3 col-md-6">
-
-                <div class="card jurusan-card h-100 text-center p-4"
-                     data-bs-toggle="modal"
-                     data-bs-target="#modalInggris">
-                 <i class="bi bi-translate display-4 text-primary"></i>
-
-           
-                    <h5 class="mt-3">
-                        Bahasa Inggris
-                    </h5>
-
-                    <small class="text-muted">
-                        Klik untuk melihat Program Studi
-                    </small>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-    <div class="modal fade" id="modalSipil" tabindex="-1">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h4> Teknik Sipil</h4>
-
-                <button class="btn-close"
-                        data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <div class="list-group">
-
-                    <div class="list-group-item">
-                        🎓 D3 Teknik Konstruksi Sipil
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D3 Teknik Konstruksi Gedung
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Teknik Perancangan Jalan dan Jembatan
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Teknik Perawatan dan Perbaikan Gedung
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 S2 Rekayasa Infrastruktur
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-    <div class="modal fade" id="modalMesin" tabindex="-1">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h4> Teknik Mesin</h4>
-
-                <button class="btn-close"
-                        data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <div class="list-group">
-
-                    <div class="list-group-item">
-                        🎓 D3 Teknik Mesin
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D3 Teknik Aeronautika
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Teknik Perancangan dan Konstruksi Mesin
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Proses Manufaktur
-</div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-     <div class="modal fade" id="modalRefrigerasi" tabindex="-1">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h4> Teknik Refrigerasi dan Tata Udara</h4>
-
-                <button class="btn-close"
-                        data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <div class="list-group">
-
-                    <div class="list-group-item">
-                        🎓 D3 Teknik Pendingin dan Tata Udara
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Teknik Pendingin dan Tata Udara
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-     <div class="modal fade" id="modalKonversi" tabindex="-1">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h4> Teknik Konversi Energi</h4>
-
-                <button class="btn-close"
-                        data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <div class="list-group">
-
-                    <div class="list-group-item">
-                        🎓 D3 Teknik Konversi Energi
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Teknologi Pembangkit Tenaga Listrik
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Teknik Konversi Energi
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-     <div class="modal fade" id="modalElektro" tabindex="-1">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h4> Teknik Elektro</h4>
-
-                <button class="btn-close"
-                        data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <div class="list-group">
-
-                    <div class="list-group-item">
-                        🎓 D3 Teknik Elektronika
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D3 Teknik Listrik
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D3 Teknik Telekomunikasi
-                    </div>
-
-                     <div class="list-group-item">
-                        🎓 D4 Teknik Elektronika
-                    </div>
-
-                     <div class="list-group-item">
-                        🎓 D4 Teknik Telekomunikasi
-                    </div>
-
-                     <div class="list-group-item">
-                        🎓 D4 Teknik Otomasi Industri
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-     <div class="modal fade" id="modalKimia" tabindex="-1">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h4> Teknik Kimia</h4>
-
-                <button class="btn-close"
-                        data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <div class="list-group">
-
-                    <div class="list-group-item">
-                        🎓 D3 Teknik Kimia
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D3 Analis Kimia
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Teknik Kimis Produksi Bersih
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-    </div>
-     <div class="modal fade" id="modalKomputer" tabindex="-1">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h4> Teknik Komputer dan Informatika</h4>
-
-                <button class="btn-close"
-                        data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <div class="list-group">
-
-                    <div class="list-group-item">
-                        🎓 D3 Teknik Informatika
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Teknik Informatika
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-     <div class="modal fade" id="modalAkuntansi" tabindex="-1">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h4>Akuntansi </h4>
-
-                <button class="btn-close"
-                        data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <div class="list-group">
-
-                    <div class="list-group-item">
-                        🎓 D3 Akuntansi
-                    </div>
-                    <div class="list-group-item">
-                        🎓 D3 Keuangan dan Perbankan
-                    </div>
-                    <div class="list-group-item">
-                        🎓 D4 Akuntansi Manajemen Pemerintahan
-                    </div>
-                    <div class="list-group-item">
-                        🎓 D4 Akuntansi
-                    </div>
-                    <div class="list-group-item">
-                        🎓 D4 Keuangan Syariah
-                    </div>
-                    <div class="list-group-item">
-                        🎓 S2 Keuangan & Perbankan Syariah
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<div class="modal fade" id="modalKomputer" tabindex="-1">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h4> Teknik Komputer dan Informatika</h4>
-
-                <button class="btn-close"
-                        data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <div class="list-group">
-
-                    <div class="list-group-item">
-                        🎓 D3 Teknik Informatika
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Teknik Informatika
-                    </div>
-                </div>
-
-</div>
-        </div>
-
-    </div>
-</div>
-
-<div class="modal fade" id="modalAdministrasi" 
-tabindex="-1" aria-hidden="true">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <!-- Header -->
-            <div class="modal-header">
-
-                <h4 class="modal-title">Administrasi Niaga</h4>
-
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <!-- Body -->
-            <div class="modal-body">
-
-                <div class="list-group">
-
-                    <div class="list-group-item">
-                        🎓 D3 Administrasi Bisnis
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D3 Manajemen Perusahaan
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D3 Usaha Perjalanan Wisata
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Manajemen Aset
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Administrasi Bisnis
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Manajemen Pemasaran
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Destinasi Pariwisata
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 S2 Pemasaran, Inovasi, dan Teknologi
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<div class="modal fade" id="modalInggris" tabindex="-1">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h4>Bahasa Inggris</h4>
-
-                <button class="btn-close"
-                        data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <div class="list-group">
-
-                    <div class="list-group-item">
-                        🎓 D3 Bahasa Inggris
-                    </div>
-
-                    <div class="list-group-item">
-                        🎓 D4 Bahasa Inggris untuk Komunikasi Bisnis dan Profesional
-                    </div>
-                </div>
-
-</div>
-        </div>
-
-    </div>
-</div>
     
 <section id="alur" class="py-5 bg-light">
 
@@ -988,6 +277,8 @@ tabindex="-1" aria-hidden="true">
 
 </section>
 
+
+
 <!-- Kategori -->
 
 <section id="layanan" class="pb-5">
@@ -1022,7 +313,7 @@ Cuti Akademik
 
 </p>
 
-<a href="<?= base_url('akademik') ?>" class="btn btn-primary w-100">
+<a href="<?= base_url('layanan/akademik') ?>" class="btn btn-ajukan w-100">
     Lihat Layanan
 </a>
 
@@ -1053,70 +344,80 @@ Refund
 
 </p>
 
-<a href="<?= base_url('keuangan') ?>" class="btn btn-primary w-100">
+<a href="<?= base_url('layanan/akademik') ?>" class="btn btn-ajukan w-100">
     Lihat Layanan
 </a>
 
 </button>
 
-</div>
+
 
 </div>
 
 </div>
+<div class="row justify-content-center">
+<div class="col-lg-6 mb-4">
 
-</div>
+    <div class="card h-100 shadow-sm">
 
-</section>
+        <div class="card-body">
 
-<section id="kontak" class="py-5">
-
-    <div class="container">
-
-        <div class="text-center mb-5">
-
-            <h2 class="fw-bold">
-                Kontak Kami
+            <h2 class="mb-3">
+                🏢
+                <strong>UPA</strong>
             </h2>
 
-            <p class="text-muted">
-                Jika memiliki pertanyaan atau membutuhkan bantuan, silakan hubungi Unit Layanan Terpadu POLBAN melalui informasi berikut.
-            </p>
+                
+<p>
+
+UPA Bahasa<br>
+
+UPA TIK <br>
+
+UPA Perpustakaan
+
+</p>
+         <a href="<?= base_url('layanan/upa') ?>" class="btn btn-ajukan w-100">
+    Lihat Layanan
+</a>
 
         </div>
 
-        <div class="row justify-content-center">
+    </div>
 
-            <div class="col-lg-8">
+</div>
 
-                <div class="card shadow-sm border-0">
+</div>
 
-                    <div class="card-body p-4">
+</div>
 
-                        <table class="table table-borderless mb-0">
 
-                            <tr>
-                                <td width="180"><strong>Alamat</strong></td>
-                                <td>Jl. Gegerkalong Hilir, Ciwaruga, Kabupaten Bandung Barat, Jawa Barat</td>
-                            </tr>
+</section>
 
-                            <tr>
-                                <td><strong>Email</strong></td>
-                                <td>ult@polban.ac.id</td>
-                            </tr>
+<!-- Jam Operasional -->
+<section id="jam-operasional" class="py-5 bg-light">
 
-                            <tr>
-                                <td><strong>Telepon</strong></td>
-                                <td>(022) 2013789</td>
-                            </tr>
+    <div class="container">
 
-                        </table>
+        <div class="text-center">
 
-                    </div>
+            <i class="bi bi-clock-history display-4 text-primary"></i>
 
-                </div>
+            <h2 class="mt-3 mb-3">
+                Jam Operasional
+            </h2>
 
-            </div>
+            <p class="fs-5 mb-2">
+                <strong>Senin - Jumat</strong>
+            </p>
+
+            <p class="text-muted">
+                08.00 - 16.00 WIB
+            </p>
+
+            <span class="badge bg-danger px-3 py-2">
+                Sabtu, Minggu & Hari Libur Nasional Tutup
+            </span>
 
         </div>
 
@@ -1124,6 +425,183 @@ Refund
 
 </section>
 
+<section class="faq-section py-5">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <span class="faq-badge">
+                <i class="bi bi-question-circle-fill"></i> FAQ
+            </span>
+
+            <h2 class="mt-3 fw-bold">Frequently Asked Questions</h2>
+
+            <p class="text-muted">
+                Temukan jawaban atas pertanyaan yang sering diajukan mengenai
+                layanan Unit Layanan Terpadu (ULT) Politeknik Negeri Bandung.
+            </p>
+        </div>
+
+        <div class="accordion shadow-sm" id="faqAccordion">
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+
+                    <button class="accordion-button"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#faq1">
+
+                        Bagaimana cara mengajukan layanan?
+
+                    </button>
+
+                </h2>
+
+               <div id="faq1"
+     class="accordion-collapse collapse"
+     data-bs-parent="#faqAccordion">
+
+                    <div class="accordion-body">
+
+                        Untuk mengajukan layanan, silakan login terlebih dahulu,
+                        kemudian pilih kategori layanan, pilih layanan yang
+                        dibutuhkan, lengkapi persyaratan, lalu kirim pengajuan.
+                        Status pengajuan dapat dipantau melalui dashboard pengguna.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+             <!-- FAQ 2 -->
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+       <button class="accordion-button collapsed"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#faq2">
+
+               Berapa lama proses penyelesaian layanan?
+
+            </button>
+        </h2>
+
+        <div id="faq2"
+             class="accordion-collapse collapse"
+             data-bs-parent="#faqAccordion">
+
+            <div class="accordion-body">
+                Lama proses penyelesaian setiap layanan berbeda-beda, tergantung jenis layanan yang dipilih. Informasi estimasi waktu dapat dilihat pada detail layanan atau akan diinformasikan oleh Petugas ULT.
+            </div>
+
+        </div>
+    </div>
+
+    <!-- FAQ 3 -->
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#faq3">
+
+                Bagaimana cara mengetahui status pengajuan layanan?
+
+            </button>
+        </h2>
+
+        <div id="faq3"
+             class="accordion-collapse collapse"
+             data-bs-parent="#faqAccordion">
+
+            <div class="accordion-body">
+                Setelah pengajuan berhasil dikirim, Anda dapat melihat status
+                layanan melalui dashboard pengguna pada menu riwayat atau daftar
+                pengajuan. Status akan diperbarui oleh petugas sesuai proses
+                penanganan layanan.
+            </div>
+
+        </div>
+    </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- Hubungi Kami -->
+<section id="kontak" class="py-5 bg-light">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Hubungi Kami</h2>
+            <p class="text-muted">
+                Jika memiliki pertanyaan atau membutuhkan bantuan, silakan hubungi kami melalui informasi berikut.
+            </p>
+        </div>
+
+        <div class="row justify-content-center g-4">
+
+            <!-- Alamat -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm contact-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-geo-alt-fill display-5 text-primary"></i>
+                        <h5 class="mt-3">Alamat</h5>
+                      <a href="https://maps.google.com/?q=Politeknik+Negeri+Bandung"
+   target="_blank"
+   class="text-decoration-none text-dark">
+
+    <i class="bi bi-geo-alt-fill text-danger"></i>
+    Jl. Gegerkalong Hilir, Ciwaruga, Kec. Parongpong,
+    Kabupaten Bandung Barat, Jawa Barat 40559
+    <p class="text-primary fw-semibold">
+    Klik untuk melihat 
+</p>
+</a>
+    
+                    </div>
+                </div>
+            </div>
+
+            <!-- Telepon -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm contact-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-telephone-fill display-5 text-success"></i>
+                        <h5 class="mt-3">Telepon</h5>
+                     <a href="tel:+62222013789" class="text-decoration-none text-dark">
+    <i class="bi bi-telephone-fill text-success"></i>
+    (022) 2013789
+    <p class="text-primary fw-semibold">
+    Klik untuk melihat 
+</p>
+</a>
+                    
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="col-md-3>
+                <div class="card h-100 border-0 shadow-sm contact-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-envelope-fill display-5 text-danger"></i>
+                        <h5 class="mt-3">Email</h5>
+                       <a href="mailto:ult@polban.ac.id" class="text-decoration-none text-dark">
+    <i class="bi bi-envelope-fill text-danger"></i>
+    ult@polban.ac.id
+    <p class="text-primary fw-semibold">
+    Klik untuk melihat 
+</p>
+</a>
+                    </div>
+                </div>
+            </div>
+
+          
+</section>
 <!-- Modal Sejarah -->
 <div class="modal fade" id="sejarahModal" tabindex="-1" aria-labelledby="sejarahModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">

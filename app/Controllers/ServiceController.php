@@ -55,4 +55,8 @@ class ServiceController extends BaseController
         'service' => $service
     ]);
 }
+    public function upa()
+{
+    return view('services/upa');
+}
 }

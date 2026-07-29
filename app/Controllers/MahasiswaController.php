@@ -9,31 +9,118 @@ class MahasiswaController extends BaseController
     // ==========================================
     public function dashboard()
     {
+        $sessionUser = session()->get('user') ?? [];
+
+        $user = [
+            'nama'     => $sessionUser['nama'] ?? 'Mahasiswa',
+            'nim'      => $sessionUser['nim'] ?? '-',
+            'prodi'    => $sessionUser['prodi'] ?? '-',
+            'jurusan'  => $sessionUser['jurusan'] ?? '-',
+            'semester' => $sessionUser['semester'] ?? '-',
+            'angkatan' => $sessionUser['angkatan'] ?? '-',
+            'status'   => $sessionUser['status'] ?? 'Aktif',
+        ];
+
+        // ==========================================
+        // AMBIL DATA TIKET
+        // ==========================================
+
+        $tickets = session()->get('mahasiswa_tickets') ?? [];
+
+        // ==========================================
+        // AMBIL DATA DRAFT
+        // ==========================================
+
+        $drafts = session()->get('mahasiswa_drafts') ?? [];
+
+        // ==========================================
+        // HITUNG STATISTIK
+        // ==========================================
+
+        $total = count($tickets);
+
+        $diproses = 0;
+        $revisi   = 0;
+        $selesai  = 0;
+
+        foreach ($tickets as $ticket) {
+
+            $status = strtolower(
+                $ticket['status'] ?? ''
+            );
+
+            if (
+                in_array(
+                    $status,
+                    [
+                        'in progress',
+                        'diproses',
+                        'processing',
+                        'submitted'
+                    ]
+                )
+            ) {
+                $diproses++;
+            }
+
+            if (
+                in_array(
+                    $status,
+                    [
+                        'revision',
+                        'revisi'
+                    ]
+                )
+            ) {
+                $revisi++;
+            }
+
+            if (
+                in_array(
+                    $status,
+                    [
+                        'completed',
+                        'selesai'
+                    ]
+                )
+            ) {
+                $selesai++;
+            }
+        }
+
+        // ==========================================
+        // STATISTIK
+        // ==========================================
+
+        $statistik = [
+
+            'total'      => $total,
+
+            'diproses'   => $diproses,
+
+            'revisi'     => $revisi,
+
+            'selesai'    => $selesai,
+
+            'notifikasi' => 0
+
+        ];
+
+        // ==========================================
+        // DATA DASHBOARD
+        // ==========================================
+
         $data = [
 
             'title' => 'Dashboard Mahasiswa',
 
-            'user' => [
+            'user' => $user,
 
-                'nama'      => 'Alvin',
-                'nim'       => '221511000',
-                'prodi'     => 'D3 Teknik Informatika',
-                'jurusan'   => 'Teknik Komputer dan Informatika',
-                'semester'  => 6,
-                'angkatan'  => 2022,
-                'status'    => 'Aktif'
+            'statistik' => $statistik,
 
-            ],
+            'tickets' => $tickets,
 
-            'statistik' => [
-
-                'total'      => 8,
-                'diproses'   => 2,
-                'revisi'     => 1,
-                'selesai'    => 5,
-                'notifikasi' => 6
-
-            ],
+            'drafts' => $drafts,
 
             'jadwal' => [
 
@@ -52,45 +139,20 @@ class MahasiswaController extends BaseController
             'akademik' => [
 
                 'ipk'    => '3.71',
+
                 'sks'    => 98,
+
                 'status' => 'Aktif',
+
                 'dosen'  => 'Dr. Budi Santoso'
-
-            ],
-
-            'tickets' => [
-
-                [
-                    'id'       => 1,
-                    'nomor'    => 'ULT-001',
-                    'layanan'  => 'Surat Aktif Kuliah',
-                    'unit'     => 'Akademik',
-                    'tanggal'  => '20 Juli 2026',
-                    'status'   => 'Completed'
-                ],
-
-                [
-                    'id'       => 2,
-                    'nomor'    => 'ULT-002',
-                    'layanan'  => 'Surat Beasiswa',
-                    'unit'     => 'Kemahasiswaan',
-                    'tanggal'  => '18 Juli 2026',
-                    'status'   => 'In Progress'
-                ],
-
-                [
-                    'id'       => 3,
-                    'nomor'    => 'ULT-003',
-                    'layanan'  => 'Legalisir Transkrip',
-                    'unit'     => 'Akademik',
-                    'tanggal'  => '15 Juli 2026',
-                    'status'   => 'Submitted'
-                ]
 
             ]
 
         ];
 
-        return view('mahasiswa/dashboard', $data);
+        return view(
+            'mahasiswa/dashboard',
+            $data
+        );
     }
 }

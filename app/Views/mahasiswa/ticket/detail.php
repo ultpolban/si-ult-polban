@@ -686,18 +686,51 @@
                                     </strong>
 
 
-                                    <p
-                                        class="
-                                            mb-0
-                                            mt-2
-                                        "
-                                    >
+                                    <div class="mt-2">
 
-                                        <?= esc(
-                                            $ticket['balasan']
-                                        ) ?>
+    <?php if (!empty($ticket['balasan'])): ?>
 
-                                    </p>
+        <?php if (is_array($ticket['balasan'])): ?>
+
+            <?php foreach ($ticket['balasan'] as $balasan): ?>
+
+                <div class="alert alert-light border mb-2">
+
+                    <i class="fas fa-reply mr-2 text-primary"></i>
+
+                    <?= esc(
+                        is_array($balasan)
+                            ? ($balasan['pesan'] ?? '')
+                            : $balasan
+                    ) ?>
+
+                </div>
+
+            <?php endforeach; ?>
+
+        <?php else: ?>
+
+            <div class="alert alert-light border mb-2">
+
+                <i class="fas fa-reply mr-2 text-primary"></i>
+
+                <?= esc($ticket['balasan']) ?>
+
+            </div>
+
+        <?php endif; ?>
+
+    <?php else: ?>
+
+        <div class="text-muted">
+
+            Belum ada balasan dari Anda.
+
+        </div>
+
+    <?php endif; ?>
+
+</div>
 
                                 </div>
 
@@ -730,13 +763,13 @@
                                     </label>
 
 
-                                    <textarea
-                                        name="balasan"
-                                        class="form-control"
-                                        rows="4"
-                                        placeholder="Tulis balasan atau tanggapan Anda..."
-                                        required
-                                    ></textarea>
+<textarea
+    name="pesan"
+    class="form-control"
+    rows="5"
+    placeholder="Tulis balasan Anda..."
+    required
+></textarea>
 
                                 </div>
 

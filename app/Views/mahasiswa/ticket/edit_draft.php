@@ -26,11 +26,46 @@
                         "
                     >
 
-                        <i class="fas fa-edit"></i>
+                        <i class="fas fa-edit mr-2"></i>
 
                         Lanjutkan Draft Pengajuan
 
                     </h1>
+
+                </div>
+
+
+                <div class="col-sm-6">
+
+                    <ol class="breadcrumb float-sm-right">
+
+                        <li class="breadcrumb-item">
+
+                            <a href="<?= base_url('dashboard-mahasiswa') ?>">
+
+                                Dashboard
+
+                            </a>
+
+                        </li>
+
+                        <li class="breadcrumb-item">
+
+                            <a href="<?= base_url('mahasiswa/ticket/draft') ?>">
+
+                                Draft Pengajuan
+
+                            </a>
+
+                        </li>
+
+                        <li class="breadcrumb-item active">
+
+                            Edit Draft
+
+                        </li>
+
+                    </ol>
 
                 </div>
 
@@ -39,6 +74,7 @@
         </div>
 
     </section>
+
 
 
     <!-- ==========================================
@@ -67,7 +103,9 @@
                     >
 
 
-                        <!-- CARD HEADER -->
+                        <!-- ==========================================
+                             CARD HEADER
+                        =========================================== -->
 
                         <div
                             class="card-header"
@@ -79,7 +117,7 @@
 
                             <h3 class="card-title">
 
-                                <i class="fas fa-file-alt me-2"></i>
+                                <i class="fas fa-file-alt mr-2"></i>
 
                                 Edit Draft Pengajuan
 
@@ -88,7 +126,10 @@
                         </div>
 
 
-                        <!-- CARD BODY -->
+
+                        <!-- ==========================================
+                             CARD BODY
+                        =========================================== -->
 
                         <div class="card-body">
 
@@ -104,7 +145,7 @@
                                 >
 
                                     <i
-                                        class="fas fa-check-circle me-2"
+                                        class="fas fa-check-circle mr-2"
                                     ></i>
 
                                     <?= esc(
@@ -116,12 +157,15 @@
                                         class="close"
                                         data-dismiss="alert"
                                     >
+
                                         &times;
+
                                     </button>
 
                                 </div>
 
                             <?php endif; ?>
+
 
 
                             <!-- ==========================================
@@ -135,7 +179,7 @@
                                 >
 
                                     <i
-                                        class="fas fa-exclamation-circle me-2"
+                                        class="fas fa-exclamation-circle mr-2"
                                     ></i>
 
                                     <?= esc(
@@ -147,7 +191,9 @@
                                         class="close"
                                         data-dismiss="alert"
                                     >
+
                                         &times;
+
                                     </button>
 
                                 </div>
@@ -155,22 +201,26 @@
                             <?php endif; ?>
 
 
+
                             <!-- ==========================================
                                  FORM
+
                                  PENTING:
-                                 enctype diperlukan untuk upload file
+                                 enctype diperlukan agar upload
+                                 dokumen dapat diproses.
                             =========================================== -->
 
                             <form
-    action="<?= base_url(
-        'mahasiswa/ticket/draft/update/' .
-        ($draft_id ?? 0)
-    ) ?>"
-    method="post"
-    enctype="multipart/form-data"
->
+                                action="<?= base_url(
+                                    'mahasiswa/ticket/draft/update/' .
+                                    ($draft_id ?? 0)
+                                ) ?>"
+                                method="post"
+                                enctype="multipart/form-data"
+                            >
 
                                 <?= csrf_field() ?>
+
 
 
                                 <!-- ==========================================
@@ -180,12 +230,13 @@
                                 <div class="mb-4">
 
                                     <label
-                                        class="form-label fw-bold"
+                                        class="form-label font-weight-bold"
                                     >
 
                                         Nomor Draft
 
                                     </label>
+
 
                                     <input
                                         type="text"
@@ -199,109 +250,210 @@
                                 </div>
 
 
+
+                                <!-- ==========================================
+                                     UNIT LAYANAN
+                                =========================================== -->
+
+                               <div class="form-group">
+
+    <label
+        for="unit_layanan"
+        class="font-weight-bold"
+    >
+
+        Unit Layanan
+
+        <span class="text-danger">
+
+            *
+
+        </span>
+
+    </label>
+
+
+    <select
+        name="unit_layanan"
+        id="unit_layanan"
+        class="form-control"
+        required
+    >
+
+        <option value="">
+
+            -- Pilih Unit Layanan --
+
+        </option>
+
+
+        <?php
+        $unitLayananSaatIni =
+            $draft['unit_layanan']
+            ?? '';
+        ?>
+
+
+        <option
+            value="Akademik"
+            <?= $unitLayananSaatIni === 'Akademik'
+                ? 'selected'
+                : '' ?>
+        >
+
+            Akademik
+
+        </option>
+
+
+        <option
+            value="Kemahasiswaan"
+            <?= $unitLayananSaatIni === 'Kemahasiswaan'
+                ? 'selected'
+                : '' ?>
+        >
+
+            Kemahasiswaan
+
+        </option>
+
+
+        <option
+            value="Keuangan"
+            <?= $unitLayananSaatIni === 'Keuangan'
+                ? 'selected'
+                : '' ?>
+        >
+
+            Keuangan
+
+        </option>
+
+
+        <option
+            value="Direktorat"
+            <?= $unitLayananSaatIni === 'Direktorat'
+                ? 'selected'
+                : '' ?>
+        >
+
+            Direktorat
+
+        </option>
+
+
+        <option
+            value="Humas"
+            <?= $unitLayananSaatIni === 'Humas'
+                ? 'selected'
+                : '' ?>
+        >
+
+            Humas
+
+        </option>
+
+
+        <option
+            value="Perpustakaan"
+            <?= $unitLayananSaatIni === 'Perpustakaan'
+                ? 'selected'
+                : '' ?>
+        >
+
+            Perpustakaan
+
+        </option>
+
+
+        <option
+            value="SPI"
+            <?= $unitLayananSaatIni === 'SPI'
+                ? 'selected'
+                : '' ?>
+        >
+
+            SPI
+
+        </option>
+
+
+        <option
+            value="UPT Bahasa"
+            <?= $unitLayananSaatIni === 'UPT Bahasa'
+                ? 'selected'
+                : '' ?>
+        >
+
+            UPT Bahasa
+
+        </option>
+
+
+        <option
+            value="UPT K3"
+            <?= $unitLayananSaatIni === 'UPT K3'
+                ? 'selected'
+                : '' ?>
+        >
+
+            UPT K3
+
+        </option>
+
+
+        <option
+            value="UPT TIK"
+            <?= $unitLayananSaatIni === 'UPT TIK'
+                ? 'selected'
+                : '' ?>
+        >
+
+            UPT TIK
+
+        </option>
+
+    </select>
+
+</div>
                                 <!-- ==========================================
                                      JENIS LAYANAN
                                 =========================================== -->
 
-                                <div class="mb-4">
+                               <div class="form-group">
 
-                                    <label
-                                        for="layanan"
-                                        class="form-label fw-bold"
-                                    >
+    <label
+        for="layanan"
+        class="font-weight-bold"
+    >
 
-                                        Jenis Layanan
+        Jenis Layanan
 
-                                        <span class="text-danger">
-                                            *
-                                        </span>
+        <span class="text-danger">
 
-                                    </label>
+            *
 
+        </span>
 
-                                    <select
-                                        name="layanan"
-                                        id="layanan"
-                                        class="form-control"
-                                        required
-                                    >
-
-                                        <option value="">
-
-                                            -- Pilih Jenis Layanan --
-
-                                        </option>
+    </label>
 
 
-                                        <option
-                                            value="Surat Aktif Kuliah"
-                                            <?= (
-                                                ($draft['layanan'] ?? '')
-                                                === 'Surat Aktif Kuliah'
-                                            )
-                                                ? 'selected'
-                                                : ''
-                                            ?>
-                                        >
+    <select
+        name="layanan"
+        id="layanan"
+        class="form-control"
+        required
+    >
 
-                                            Surat Aktif Kuliah
+        <option value="">
 
-                                        </option>
+            -- Pilih Jenis Layanan --
 
+        </option>
 
-                                        <option
-                                            value="Surat Beasiswa"
-                                            <?= (
-                                                ($draft['layanan'] ?? '')
-                                                === 'Surat Beasiswa'
-                                            )
-                                                ? 'selected'
-                                                : ''
-                                            ?>
-                                        >
+    </select>
 
-                                            Surat Beasiswa
-
-                                        </option>
-
-
-                                        <option
-                                            value="Legalisir Transkrip"
-                                            <?= (
-                                                ($draft['layanan'] ?? '')
-                                                === 'Legalisir Transkrip'
-                                            )
-                                                ? 'selected'
-                                                : ''
-                                            ?>
-                                        >
-
-                                            Legalisir Transkrip
-
-                                        </option>
-
-
-                                        <option
-                                            value="Surat Keterangan Mahasiswa"
-                                            <?= (
-                                                ($draft['layanan'] ?? '')
-                                                === 'Surat Keterangan Mahasiswa'
-                                            )
-                                                ? 'selected'
-                                                : ''
-                                            ?>
-                                        >
-
-                                            Surat Keterangan Mahasiswa
-
-                                        </option>
-
-
-                                    </select>
-
-                                </div>
-
-
+</div>
                                 <!-- ==========================================
                                      KETERANGAN
                                 =========================================== -->
@@ -310,7 +462,7 @@
 
                                     <label
                                         for="keterangan"
-                                        class="form-label fw-bold"
+                                        class="form-label font-weight-bold"
                                     >
 
                                         Keterangan / Detail Permohonan
@@ -336,61 +488,56 @@
                                 </div>
 
 
+
                                 <!-- ==========================================
-     DOKUMEN PENDUKUNG
-=========================================== -->
+                                     DOKUMEN PENDUKUNG
+                                =========================================== -->
 
-<div class="mb-4">
+                                <div class="mb-4">
 
-    <label
-        for="dokumen"
-        class="form-label fw-bold"
-    >
+                                    <label
+                                        for="dokumen"
+                                        class="form-label font-weight-bold"
+                                    >
 
-        Dokumen Pendukung
+                                        Dokumen Pendukung
 
-        <span class="text-muted">
-            (Opsional)
-        </span>
+                                        <span class="text-muted">
+                                            (Opsional)
+                                        </span>
 
-    </label>
-
-    <input
-        type="file"
-        name="dokumen"
-        id="dokumen"
-        class="form-control"
-        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-    >
-
-    <small class="text-muted">
-
-        Maksimal ukuran file 2 MB.
-        Format yang diperbolehkan:
-        PDF, JPG, JPEG, PNG, DOC, DOCX.
-
-    </small>
+                                    </label>
 
 
-    <?php if (!empty($draft['dokumen'])) : ?>
+                                    <input
+                                        type="file"
+                                        name="dokumen"
+                                        id="dokumen"
+                                        class="form-control"
+                                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                    >
 
-        <div class="mt-2">
 
-            <i class="fas fa-paperclip"></i>
+                                    <small
+                                        class="form-text text-muted"
+                                    >
 
-            Dokumen saat ini:
+                                        <i class="fas fa-info-circle mr-1"></i>
 
-            <strong>
-                <?= esc(
-                    basename($draft['dokumen'])
-                ) ?>
-            </strong>
+                                        Maksimal ukuran file:
 
-        </div>
+                                        <strong>
+                                            2 MB
+                                        </strong>
 
-    <?php endif; ?>
+                                        <br>
 
-</div>
+                                        Format yang diperbolehkan:
+
+                                        PDF, JPG, JPEG, PNG, DOC, DOCX.
+
+                                    </small>
+
 
 
                                     <!-- ======================================
@@ -431,13 +578,26 @@
 
                                             <div class="mt-2">
 
+                                                <span
+                                                    class="text-muted"
+                                                >
+
+                                                    <?= esc(
+                                                        basename(
+                                                            $draft['dokumen']
+                                                        )
+                                                    ) ?>
+
+                                                </span>
+
+
                                                 <a
                                                     href="<?= base_url(
                                                         'uploads/dokumen/' .
                                                         $draft['dokumen']
                                                     ) ?>"
                                                     target="_blank"
-                                                    class="btn btn-sm btn-primary"
+                                                    class="btn btn-sm btn-primary ml-2"
                                                 >
 
                                                     <i
@@ -454,8 +614,8 @@
 
                                     <?php endif; ?>
 
-
                                 </div>
+
 
 
                                 <!-- ==========================================
@@ -465,7 +625,7 @@
                                 <div class="mb-4">
 
                                     <label
-                                        class="form-label fw-bold"
+                                        class="form-label font-weight-bold"
                                     >
 
                                         Status Draft
@@ -493,6 +653,7 @@
                                     </div>
 
                                 </div>
+
 
 
                                 <!-- ==========================================
@@ -527,6 +688,7 @@
                                     </a>
 
 
+
                                     <div
                                         class="
                                             d-flex
@@ -556,6 +718,7 @@
                                             Simpan Perubahan
 
                                         </button>
+
 
 
                                         <!-- KIRIM PENGAJUAN -->
@@ -599,5 +762,309 @@
 
 </div>
 
+<script>
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const unitLayanan =
+            document.getElementById(
+                'unit_layanan'
+            );
+
+        const layanan =
+            document.getElementById(
+                'layanan'
+            );
+
+
+        const layananSaatIni =
+            <?= json_encode(
+                $draft['layanan']
+                ?? ''
+            ) ?>;
+
+
+        const unitLayananSaatIni =
+            <?= json_encode(
+                $draft['unit_layanan']
+                ?? ''
+            ) ?>;
+
+
+        const daftarLayanan = {
+
+            "Akademik": [
+
+                "Surat Aktif Kuliah",
+                "Surat Keterangan Mahasiswa",
+                "Legalisir Ijazah",
+                "Legalisir Transkrip Nilai",
+                "Surat Keterangan Lulus",
+                "Surat Keterangan Cuti Akademik",
+                "Surat Keterangan Pengunduran Diri",
+                "Perubahan Data Akademik",
+                "Informasi KRS/KHS",
+                "Informasi Jadwal Kuliah",
+                "Informasi Nilai"
+
+            ],
+
+
+            "Kemahasiswaan": [
+
+                "Surat Beasiswa",
+                "Pengajuan Beasiswa",
+                "Surat Keterangan Tidak Menerima Beasiswa",
+                "Surat Keterangan Organisasi Mahasiswa",
+                "Surat Keterangan Kegiatan Kemahasiswaan",
+                "Pengajuan Kegiatan Mahasiswa",
+                "Informasi UKM",
+                "Informasi Organisasi Kemahasiswaan",
+                "Konsultasi Kemahasiswaan"
+
+            ],
+
+
+            "Keuangan": [
+
+                "Informasi UKT/SPP",
+                "Informasi Pembayaran Kuliah",
+                "Konfirmasi Pembayaran",
+                "Permohonan Pengembalian Dana",
+                "Informasi Tagihan",
+                "Permohonan Keringanan Biaya Pendidikan",
+                "Informasi Administrasi Keuangan"
+
+            ],
+
+
+            "Direktorat": [
+
+                "Surat Permohonan Resmi",
+                "Surat Pengantar",
+                "Surat Rekomendasi",
+                "Permohonan Tanda Tangan Pimpinan",
+                "Permohonan Pengesahan Dokumen",
+                "Informasi Kebijakan Institusi",
+                "Informasi Administrasi Direktorat"
+
+            ],
+
+
+            "Humas": [
+
+                "Informasi Publikasi",
+                "Permohonan Informasi",
+                "Permohonan Dokumentasi",
+                "Permohonan Publikasi Kegiatan",
+                "Kerja Sama dan Kemitraan",
+                "Permohonan Media/Publikasi",
+                "Informasi Kegiatan Institusi"
+
+            ],
+
+
+            "Perpustakaan": [
+
+                "Peminjaman Buku",
+                "Pengembalian Buku",
+                "Perpanjangan Peminjaman",
+                "Informasi Koleksi Buku",
+                "Akses E-Book",
+                "Akses Jurnal",
+                "Surat Bebas Pustaka",
+                "Denda Keterlambatan",
+                "Keanggotaan Perpustakaan"
+
+            ],
+
+
+            "SPI": [
+
+                "Pengaduan Pelanggaran",
+                "Pengaduan Gratifikasi",
+                "Laporan Dugaan Penyimpangan",
+                "Konsultasi Pengawasan Internal",
+                "Informasi Pengawasan Internal"
+
+            ],
+
+
+            "UPT Bahasa": [
+
+                "Pendaftaran Tes Bahasa",
+                "Informasi Tes Bahasa",
+                "Sertifikat Kemampuan Bahasa",
+                "Kursus Bahasa",
+                "Pelatihan Bahasa",
+                "Konsultasi Bahasa",
+                "Penerjemahan Dokumen"
+
+            ],
+
+
+            "UPT K3": [
+
+                "Pelaporan Kondisi Tidak Aman",
+                "Pelaporan Kecelakaan Kerja",
+                "Konsultasi Keselamatan dan Kesehatan Kerja",
+                "Informasi K3",
+                "Pelaporan Keadaan Darurat",
+                "Pemeriksaan Kesehatan/Keselamatan",
+                "Informasi Prosedur K3"
+
+            ],
+
+
+            "UPT TIK": [
+
+                "Masalah Akun SIAKAD",
+                "Masalah Login Sistem",
+                "Reset Password",
+                "Permasalahan Wi-Fi/Internet",
+                "Permasalahan Email Institusi",
+                "Permasalahan Sistem Informasi",
+                "Permasalahan Akses Aplikasi",
+                "Bantuan Teknologi Informasi"
+
+            ]
+
+        };
+
+
+        function isiJenisLayanan(
+            unit,
+            layananTerpilih = ''
+        ) {
+
+            layanan.innerHTML = '';
+
+
+            if (
+                !unit ||
+                !daftarLayanan[
+                    unit
+                ]
+            ) {
+
+                layanan.disabled =
+                    true;
+
+
+                const option =
+                    document.createElement(
+                        'option'
+                    );
+
+
+                option.value =
+                    '';
+
+
+                option.textContent =
+                    '-- Pilih Unit Layanan Terlebih Dahulu --';
+
+
+                layanan.appendChild(
+                    option
+                );
+
+
+                return;
+
+            }
+
+
+            layanan.disabled =
+                false;
+
+
+            const defaultOption =
+                document.createElement(
+                    'option'
+                );
+
+
+            defaultOption.value =
+                '';
+
+
+            defaultOption.textContent =
+                '-- Pilih Jenis Layanan --';
+
+
+            layanan.appendChild(
+                defaultOption
+            );
+
+
+            daftarLayanan[
+                unit
+            ].forEach(
+                function (namaLayanan) {
+
+                    const option =
+                        document.createElement(
+                            'option'
+                        );
+
+
+                    option.value =
+                        namaLayanan;
+
+
+                    option.textContent =
+                        namaLayanan;
+
+
+                    if (
+                        namaLayanan ===
+                        layananTerpilih
+                    ) {
+
+                        option.selected =
+                            true;
+
+                    }
+
+
+                    layanan.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+        }
+
+
+        unitLayanan.addEventListener(
+            'change',
+            function () {
+
+                isiJenisLayanan(
+                    this.value
+                );
+
+            }
+        );
+
+
+        // =====================================================
+        // SAAT EDIT DRAFT DIBUKA
+        // LANGSUNG TAMPILKAN JENIS LAYANAN LAMA
+        // =====================================================
+
+        isiJenisLayanan(
+            unitLayananSaatIni,
+            layananSaatIni
+        );
+
+    }
+);
+
+</script>
 
 <?= $this->include('layouts/footer') ?>

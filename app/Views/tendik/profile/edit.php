@@ -4,11 +4,9 @@
 
 <?= $this->include('layouts/sidebar_tendik') ?>
 
-
 <div class="content-wrapper">
 
     <!-- HEADER -->
-
     <section class="content-header">
 
         <div class="container-fluid">
@@ -24,14 +22,13 @@
                         "
                     >
 
-                        <i class="fas fa-user-edit"></i>
+                        <i class="fas fa-user-edit mr-2"></i>
 
-                        Edit Profil Tendik
+                        Edit Profil
 
                     </h1>
 
                 </div>
-
 
                 <div class="col-sm-6">
 
@@ -59,7 +56,7 @@
 
                         <li class="breadcrumb-item active">
 
-                            Edit Profil
+                            Edit
 
                         </li>
 
@@ -74,22 +71,16 @@
     </section>
 
 
-
     <!-- CONTENT -->
-
     <section class="content">
 
         <div class="container-fluid">
 
             <div class="row justify-content-center">
 
-                <div class="col-lg-8">
+                <div class="col-md-8">
 
-
-                    <div class="card shadow-sm border-0">
-
-
-                        <!-- HEADER -->
+                    <div class="card shadow-sm">
 
                         <div
                             class="card-header text-white"
@@ -101,23 +92,18 @@
 
                             <h5 class="mb-0">
 
-                                <i class="fas fa-user-edit mr-2"></i>
+                                <i class="fas fa-edit mr-2"></i>
 
-                                Ubah Data Profil
+                                Ubah Informasi Profil
 
                             </h5>
 
                         </div>
 
 
-                        <!-- BODY -->
-
                         <div class="card-body">
 
-
-                            <?php if (
-                                session()->getFlashdata('error')
-                            ) : ?>
+                            <?php if (session()->getFlashdata('error')) : ?>
 
                                 <div class="alert alert-danger">
 
@@ -133,9 +119,7 @@
 
 
                             <form
-                                action="<?= base_url(
-                                    'tendik/profile/update'
-                                ) ?>"
+                                action="<?= base_url('tendik/profile/update') ?>"
                                 method="post"
                             >
 
@@ -143,16 +127,11 @@
 
 
                                 <!-- NAMA -->
-
-                                <div class="form-group mb-3">
+                                <div class="form-group">
 
                                     <label>
 
-                                        <strong>
-
-                                            Nama Lengkap
-
-                                        </strong>
+                                        Nama Lengkap
 
                                     </label>
 
@@ -162,8 +141,7 @@
                                         class="form-control"
                                         value="<?= esc(
                                             $user['nama']
-                                            ??
-                                            ''
+                                            ?? ''
                                         ) ?>"
                                         required
                                     >
@@ -172,16 +150,11 @@
 
 
                                 <!-- NIP -->
-
-                                <div class="form-group mb-3">
+                                <div class="form-group">
 
                                     <label>
 
-                                        <strong>
-
-                                            NIP
-
-                                        </strong>
+                                        NIP
 
                                     </label>
 
@@ -191,8 +164,7 @@
                                         class="form-control"
                                         value="<?= esc(
                                             $user['nip']
-                                            ??
-                                            ''
+                                            ?? ''
                                         ) ?>"
                                         required
                                     >
@@ -201,16 +173,11 @@
 
 
                                 <!-- EMAIL -->
-
-                                <div class="form-group mb-3">
+                                <div class="form-group">
 
                                     <label>
 
-                                        <strong>
-
-                                            Email
-
-                                        </strong>
+                                        Email
 
                                     </label>
 
@@ -220,8 +187,7 @@
                                         class="form-control"
                                         value="<?= esc(
                                             $user['email']
-                                            ??
-                                            ''
+                                            ?? ''
                                         ) ?>"
                                         required
                                     >
@@ -229,47 +195,12 @@
                                 </div>
 
 
-                                <!-- UNIT KERJA -->
-
-                                <div class="form-group mb-3">
-
-                                    <label>
-
-                                        <strong>
-
-                                            Unit Kerja
-
-                                        </strong>
-
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        name="unit_kerja"
-                                        class="form-control"
-                                        value="<?= esc(
-                                            $user['unit_kerja']
-                                            ??
-                                            $user['unit_tujuan']
-                                            ??
-                                            ''
-                                        ) ?>"
-                                    >
-
-                                </div>
-
-
                                 <!-- JABATAN -->
-
-                                <div class="form-group mb-3">
+                                <div class="form-group">
 
                                     <label>
 
-                                        <strong>
-
-                                            Jabatan
-
-                                        </strong>
+                                        Jabatan
 
                                     </label>
 
@@ -279,25 +210,41 @@
                                         class="form-control"
                                         value="<?= esc(
                                             $user['jabatan']
-                                            ??
-                                            'Tenaga Kependidikan'
+                                            ?? 'Tenaga Kependidikan'
                                         ) ?>"
                                     >
 
                                 </div>
 
 
-                                <!-- NOMOR HP -->
-
-                                <div class="form-group mb-4">
+                                <!-- UNIT -->
+                                <div class="form-group">
 
                                     <label>
 
-                                        <strong>
+                                        Unit / Bagian
 
-                                            Nomor HP
+                                    </label>
 
-                                        </strong>
+                                    <input
+                                        type="text"
+                                        name="unit"
+                                        class="form-control"
+                                        value="<?= esc(
+                                            $user['unit']
+                                            ?? ''
+                                        ) ?>"
+                                    >
+
+                                </div>
+
+
+                                <!-- NO HP -->
+                                <div class="form-group">
+
+                                    <label>
+
+                                        Nomor Telepon
 
                                     </label>
 
@@ -307,43 +254,24 @@
                                         class="form-control"
                                         value="<?= esc(
                                             $user['no_hp']
-                                            ??
-                                            $user['telepon']
-                                            ??
-                                            ''
+                                            ?? ''
                                         ) ?>"
                                     >
 
                                 </div>
 
 
-
                                 <!-- BUTTON -->
-
-                                <div
-                                    class="
-                                        d-flex
-                                        justify-content-between
-                                    "
-                                >
-
+                                <div class="d-flex justify-content-between mt-4">
 
                                     <a
-                                        href="<?= base_url(
-                                            'tendik/profile'
-                                        ) ?>"
+                                        href="<?= base_url('tendik/profile') ?>"
                                         class="btn btn-secondary"
                                     >
 
-                                        <i
-                                            class="
-                                                fas
-                                                fa-arrow-left
-                                                mr-1
-                                            "
-                                        ></i>
+                                        <i class="fas fa-arrow-left mr-1"></i>
 
-                                        Batal
+                                        Kembali
 
                                     </a>
 
@@ -353,32 +281,23 @@
                                         class="btn text-white"
                                         style="
                                             background:#f28c28;
+                                            border-color:#f28c28;
                                         "
                                     >
 
-                                        <i
-                                            class="
-                                                fas
-                                                fa-save
-                                                mr-1
-                                            "
-                                        ></i>
+                                        <i class="fas fa-save mr-1"></i>
 
                                         Simpan Perubahan
 
                                     </button>
 
-
                                 </div>
 
-
                             </form>
-
 
                         </div>
 
                     </div>
-
 
                 </div>
 
@@ -389,6 +308,5 @@
     </section>
 
 </div>
-
 
 <?= $this->include('layouts/footer') ?>

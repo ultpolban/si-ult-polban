@@ -125,16 +125,27 @@ $routes->post(
     'MahasiswaTicketController::reply/$1'
 );
 
-
 // =====================================================
-// ROUTE PROFIL MAHASISWA
+// ROUTE PROFILE MAHASISWA
 // =====================================================
 
-$routes->get('mahasiswa/profile', 'MahasiswaProfileController::index');
+// Menampilkan profil mahasiswa
+$routes->get(
+    'mahasiswa/profile',
+    'MahasiswaProfileController::index'
+);
 
-$routes->get('mahasiswa/profile/edit', 'MahasiswaProfileController::edit');
+// Halaman edit profil mahasiswa
+$routes->get(
+    'mahasiswa/profile/edit',
+    'MahasiswaProfileController::edit'
+);
 
-$routes->post('mahasiswa/profile/update', 'MahasiswaProfileController::update');
+// Proses menyimpan perubahan profil mahasiswa
+$routes->post(
+    'mahasiswa/profile/update',
+    'MahasiswaProfileController::update'
+);
 
 
 // =====================================================
@@ -320,24 +331,29 @@ $routes->post(
 
 $routes->get(
     'tendik/notification',
-    'TendikTicketController::notification'
+    'TendikNotificationController::index'
+);
+
+$routes->get(
+    'tendik/notification/read-all',
+    'TendikNotificationController::markAllRead'
 );
 
 // ==========================================
-// PROFIL TENDIK
+// PROFILE TENDIK
 // ==========================================
 
 $routes->get(
     'tendik/profile',
-    'TendikController::profile'
+    'TendikProfileController::index'
 );
 
 $routes->get(
     'tendik/profile/edit',
-    'TendikController::editProfile'
+    'TendikProfileController::edit'
 );
 
 $routes->post(
     'tendik/profile/update',
-    'TendikController::updateProfile'
+    'TendikProfileController::update'
 );

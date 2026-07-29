@@ -1,506 +1,986 @@
-<?= $this->include('layouts/header') ?>
-<?= $this->include('layouts/navbar') ?>
-<?= $this->include('layouts/sidebar_mahasiswa') ?>
+<?= $this->include('layouts/header'); ?>
+<?= $this->include('layouts/navbar'); ?>
+<?= $this->include('layouts/sidebar_mahasiswa'); ?>
+
+<?php
+    // Data profile
+    $profile = $profile ?? [];
+
+    $nama =
+        $profile['nama']
+        ?? 'Mahasiswa';
+
+    $nim =
+        $profile['nim']
+        ?? '-';
+
+    $nik =
+        $profile['nik']
+        ?? '-';
+
+    $email =
+        $profile['email']
+        ?? '-';
+
+    $noHp =
+        $profile['no_hp']
+        ?? '-';
+
+    $jenisKelamin =
+        $profile['jenis_kelamin']
+        ?? '-';
+
+    $alamat =
+        $profile['alamat']
+        ?? '-';
+
+    $prodi =
+        $profile['prodi']
+        ?? '-';
+
+    $jurusan =
+        $profile['jurusan']
+        ?? '-';
+
+    $fakultas =
+        $profile['fakultas']
+        ?? '-';
+
+    $semester =
+        $profile['semester']
+        ?? '-';
+
+    $angkatan =
+        $profile['angkatan']
+        ?? '-';
+
+    $status =
+        $profile['status']
+        ?? 'Aktif';
+
+    $foto =
+        $profile['foto']
+        ?? null;
+?>
 
 <div class="content-wrapper">
 
-    <!-- HEADER -->
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
     <section class="content-header">
+
         <div class="container-fluid">
 
             <div class="row align-items-center">
 
-                <div class="col-md-7">
-                    <h1 class="fw-bold profile-page-title">
-                        <i class="fas fa-user-graduate"></i>
+                <div class="col-sm-6">
+
+                    <h1
+                        style="
+                            color:#0b3d91;
+                            font-weight:700;
+                        "
+                    >
+
+                        <i class="fas fa-user mr-2"></i>
+
                         Profil Mahasiswa
+
                     </h1>
+
                 </div>
 
-                <div class="col-md-5 text-md-end mt-2 mt-md-0">
 
-                    <a href="<?= base_url('dashboard-mahasiswa') ?>"
-                       class="btn btn-outline-primary">
+                <div class="col-sm-6">
 
-                        <i class="fas fa-arrow-left"></i>
-                        Kembali ke Dashboard
+                    <ol class="breadcrumb float-sm-right">
 
-                    </a>
+                        <li class="breadcrumb-item">
+
+                            <a
+                                href="<?= base_url(
+                                    'dashboard-mahasiswa'
+                                ) ?>"
+                            >
+
+                                Dashboard
+
+                            </a>
+
+                        </li>
+
+                        <li class="breadcrumb-item active">
+
+                            Profil
+
+                        </li>
+
+                    </ol>
 
                 </div>
 
             </div>
 
         </div>
+
     </section>
 
 
-    <!-- CONTENT -->
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
     <section class="content">
 
         <div class="container-fluid">
 
-            <div class="row">
 
-                <!-- ========================= -->
-                <!-- CARD PROFIL KIRI -->
-                <!-- ========================= -->
+            <!-- =================================================
+                 ALERT SUCCESS
+            ================================================== -->
 
-                <div class="col-lg-4 mb-4">
+            <?php if (
+                session()->getFlashdata(
+                    'success'
+                )
+            ): ?>
 
-                    <div class="card profile-card shadow-sm">
+                <div
+                    class="alert alert-success alert-dismissible fade show"
+                >
 
-                        <div class="card-header profile-card-header">
+                    <i
+                        class="fas fa-check-circle mr-2"
+                    ></i>
 
-                            <h3 class="card-title">
+                    <?= esc(
+                        session()->getFlashdata(
+                            'success'
+                        )
+                    ) ?>
 
-                                <i class="fas fa-user-circle"></i>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                    >
 
-                                Foto Profil
+                        &times;
 
-                            </h3>
+                    </button>
 
-                        </div>
+                </div>
 
-
-                        <div class="card-body text-center">
-
-                            <!-- INISIAL -->
-                            <div class="profile-avatar">
-
-                                <?php
-                                $nama = $user['nama'] ?? 'Mahasiswa';
-
-                                $initials = '';
-
-                                $namaParts = explode(' ', trim($nama));
-
-                                foreach ($namaParts as $part) {
-                                    if (!empty($part)) {
-                                        $initials .= strtoupper(substr($part, 0, 1));
-                                    }
-                                }
-
-                                echo substr($initials, 0, 2);
-                                ?>
-
-                            </div>
+            <?php endif; ?>
 
 
-                            <!-- NAMA -->
+            <!-- =================================================
+                 ALERT ERROR
+            ================================================== -->
 
-                            <h3 class="fw-bold mt-3 mb-1">
+            <?php if (
+                session()->getFlashdata(
+                    'error'
+                )
+            ): ?>
 
-                                <?= esc($user['nama'] ?? '-') ?>
+                <div
+                    class="alert alert-danger alert-dismissible fade show"
+                >
 
-                            </h3>
+                    <i
+                        class="fas fa-exclamation-circle mr-2"
+                    ></i>
 
+                    <?= esc(
+                        session()->getFlashdata(
+                            'error'
+                        )
+                    ) ?>
 
-                            <!-- NIM -->
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                    >
 
-                            <p class="text-muted mb-1">
+                        &times;
 
-                                <i class="fas fa-id-card"></i>
+                    </button>
 
-                                <?= esc($user['nim'] ?? '-') ?>
+                </div>
 
-                            </p>
-
-
-                            <!-- PRODI -->
-
-                            <p class="text-muted mb-3">
-
-                                <i class="fas fa-graduation-cap"></i>
-
-                                <?= esc($user['prodi'] ?? '-') ?>
-
-                            </p>
-
-
-                            <!-- STATUS -->
-
-                            <span class="badge bg-success px-3 py-2">
-
-                                <i class="fas fa-check-circle"></i>
-
-                                <?= esc($user['status'] ?? 'Aktif') ?>
-
-                            </span>
-
-                        </div>
+            <?php endif; ?>
 
 
-                        <div class="card-footer text-center bg-white">
+            <!-- =================================================
+                 PROFILE CARD
+            ================================================== -->
 
-                            <a href="<?= base_url('mahasiswa/profile/edit') ?>"
-                               class="btn btn-danger btn-edit-profile">
+            <div
+                class="card shadow-sm"
+                style="
+                    border-radius:15px;
+                    border-top:5px solid #0b3d91;
+                "
+            >
 
-                                <i class="fas fa-edit"></i>
 
-                                Edit Profil
+                <!-- =================================================
+                     CARD HEADER
+                ================================================== -->
 
-                            </a>
+                <div
+                    class="card-header"
+                    style="
+                        background:#0b3d91;
+                        color:white;
+                    "
+                >
 
-                        </div>
+                    <div
+                        class="d-flex
+                               justify-content-between
+                               align-items-center"
+                    >
+
+                        <h3
+                            class="card-title"
+                        >
+
+                            <i
+                                class="fas fa-id-card mr-2"
+                            ></i>
+
+                            Informasi Profil Mahasiswa
+
+                        </h3>
+
+
+                        <a
+                            href="<?= base_url(
+                                'mahasiswa/profile/edit'
+                            ) ?>"
+                            class="btn"
+                            style="
+                                background:#f28c28;
+                                color:white;
+                                font-weight:600;
+                            "
+                        >
+
+                            <i
+                                class="fas fa-edit mr-1"
+                            ></i>
+
+                            Edit Profil
+
+                        </a>
 
                     </div>
 
                 </div>
 
 
-                <!-- ========================= -->
-                <!-- INFORMASI MAHASISWA -->
-                <!-- ========================= -->
+                <!-- =================================================
+                     CARD BODY
+                ================================================== -->
 
-                <div class="col-lg-8 mb-4">
-
-                    <div class="card profile-card shadow-sm">
-
-                        <div class="card-header profile-card-header">
-
-                            <h3 class="card-title">
-
-                                <i class="fas fa-address-card"></i>
-
-                                Informasi Mahasiswa
-
-                            </h3>
-
-                        </div>
+                <div class="card-body">
 
 
-                        <div class="card-body">
+                    <!-- =================================================
+                         DATA PRIBADI
+                    ================================================== -->
 
-                            <div class="row">
+                    <div class="row">
 
-                                <!-- NAMA -->
 
-                                <div class="col-md-6 mb-3">
+                        <!-- =================================================
+                             FOTO PROFILE
+                        ================================================== -->
 
-                                    <div class="profile-info-box">
+                        <div
+                            class="
+                                col-lg-4
+                                col-md-5
+                                text-center
+                                mb-4
+                                mb-md-0
+                            "
+                        >
 
-                                        <span class="profile-label">
+                            <div
+                                style="
+                                    padding:20px;
+                                "
+                            >
 
-                                            <i class="fas fa-user"></i>
 
-                                            Nama Lengkap
+                                <!-- FOTO JIKA ADA -->
 
-                                        </span>
+                                <?php if (
+                                    !empty(
+                                        $foto
+                                    )
+                                ): ?>
 
-                                        <strong>
+                                    <img
+                                        src="<?= base_url(
+                                            'uploads/profile/' .
+                                            $foto
+                                        ) ?>"
+                                        alt="Foto Profil"
+                                        style="
+                                            width:170px;
+                                            height:170px;
+                                            object-fit:cover;
+                                            border-radius:50%;
+                                            border:6px solid #0b3d91;
+                                            box-shadow:
+                                                0 5px 15px
+                                                rgba(
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    .15
+                                                );
+                                        "
+                                    >
 
-                                            <?= esc($user['nama'] ?? '-') ?>
+                                <?php else: ?>
 
-                                        </strong>
+
+                                    <!-- ICON DEFAULT -->
+
+                                    <div
+                                        style="
+                                            width:170px;
+                                            height:170px;
+                                            margin:auto;
+                                            border-radius:50%;
+                                            background:#0b3d91;
+                                            display:flex;
+                                            align-items:center;
+                                            justify-content:center;
+                                            color:white;
+                                            font-size:80px;
+                                        "
+                                    >
+
+                                        <i
+                                            class="
+                                                fas
+                                                fa-user-graduate
+                                            "
+                                        ></i>
 
                                     </div>
 
-                                </div>
+                                <?php endif; ?>
+
+
+                                <!-- NAMA -->
+
+                                <h3
+                                    class="mt-3 mb-2"
+                                    style="
+                                        color:#0b3d91;
+                                        font-weight:700;
+                                    "
+                                >
+
+                                    <?= esc(
+                                        $nama
+                                    ) ?>
+
+                                </h3>
 
 
                                 <!-- NIM -->
 
-                                <div class="col-md-6 mb-3">
-
-                                    <div class="profile-info-box">
-
-                                        <span class="profile-label">
-
-                                            <i class="fas fa-id-card"></i>
-
-                                            NIM
-
-                                        </span>
-
-                                        <strong>
-
-                                            <?= esc($user['nim'] ?? '-') ?>
-
-                                        </strong>
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- NIK -->
-
-                                <div class="col-md-6 mb-3">
-
-                                    <div class="profile-info-box">
-
-                                        <span class="profile-label">
-
-                                            <i class="fas fa-id-badge"></i>
-
-                                            NIK
-
-                                        </span>
-
-                                        <strong>
-
-                                            <?= esc($user['nik'] ?? '-') ?>
-
-                                        </strong>
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- TEMPAT TANGGAL LAHIR -->
-
-                                <div class="col-md-6 mb-3">
-
-                                    <div class="profile-info-box">
-
-                                        <span class="profile-label">
-
-                                            <i class="fas fa-calendar-alt"></i>
-
-                                            Tempat, Tanggal Lahir
-
-                                        </span>
-
-                                        <strong>
-
-                                            <?= esc($user['tempat_lahir'] ?? '-') ?>,
-
-                                            <?= esc($user['tanggal_lahir'] ?? '-') ?>
-
-                                        </strong>
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- JENIS KELAMIN -->
-
-                                <div class="col-md-6 mb-3">
-
-                                    <div class="profile-info-box">
-
-                                        <span class="profile-label">
-
-                                            <i class="fas fa-venus-mars"></i>
-
-                                            Jenis Kelamin
-
-                                        </span>
-
-                                        <strong>
-
-                                            <?= esc($user['jenis_kelamin'] ?? '-') ?>
-
-                                        </strong>
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- PROGRAM STUDI -->
-
-                                <div class="col-md-6 mb-3">
-
-                                    <div class="profile-info-box">
-
-                                        <span class="profile-label">
-
-                                            <i class="fas fa-graduation-cap"></i>
-
-                                            Program Studi
-
-                                        </span>
-
-                                        <strong>
-
-                                            <?= esc($user['prodi'] ?? '-') ?>
-
-                                        </strong>
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- FAKULTAS -->
-
-                                <div class="col-md-6 mb-3">
-
-                                    <div class="profile-info-box">
-
-                                        <span class="profile-label">
-
-                                            <i class="fas fa-university"></i>
-
-                                            Fakultas
-
-                                        </span>
-
-                                        <strong>
-
-                                            <?= esc($user['fakultas'] ?? '-') ?>
-
-                                        </strong>
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- TAHUN ANGKATAN -->
-
-                                <div class="col-md-6 mb-3">
-
-                                    <div class="profile-info-box">
-
-                                        <span class="profile-label">
-
-                                            <i class="fas fa-calendar"></i>
-
-                                            Tahun Angkatan
-
-                                        </span>
-
-                                        <strong>
-
-                                            <?= esc($user['angkatan'] ?? '-') ?>
-
-                                        </strong>
-
-                                    </div>
-
-                                </div>
+                                <p
+                                    class="text-muted mb-3"
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-id-card
+                                            mr-1
+                                        "
+                                    ></i>
+
+                                    <?= esc(
+                                        $nim
+                                    ) ?>
+
+                                </p>
 
 
                                 <!-- STATUS -->
 
-                                <div class="col-md-6 mb-3">
+                                <span
+                                    class="badge"
+                                    style="
+                                        background:#28a745;
+                                        color:white;
+                                        padding:8px 18px;
+                                        font-size:14px;
+                                        border-radius:20px;
+                                    "
+                                >
 
-                                    <div class="profile-info-box">
+                                    <i
+                                        class="
+                                            fas
+                                            fa-circle
+                                            mr-1
+                                        "
+                                        style="
+                                            font-size:8px;
+                                        "
+                                    ></i>
 
-                                        <span class="profile-label">
+                                    <?= esc(
+                                        $status
+                                    ) ?>
 
-                                            <i class="fas fa-user-check"></i>
+                                </span>
 
-                                            Status Keaktifan Kuliah
+                            </div>
 
-                                        </span>
-
-                                        <strong class="text-success">
-
-                                            <i class="fas fa-check-circle"></i>
-
-                                            <?= esc($user['status'] ?? '-') ?>
-
-                                        </strong>
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- DOSEN WALI -->
-
-                                <div class="col-md-6 mb-3">
-
-                                    <div class="profile-info-box">
-
-                                        <span class="profile-label">
-
-                                            <i class="fas fa-chalkboard-teacher"></i>
-
-                                            Dosen Wali
-
-                                        </span>
-
-                                        <strong>
-
-                                            <?= esc($user['dosen_wali'] ?? '-') ?>
-
-                                        </strong>
-
-                                    </div>
-
-                                </div>
+                        </div>
 
 
-                                <!-- NOMOR TELEPON -->
+                        <!-- =================================================
+                             INFORMASI PRIBADI
+                        ================================================== -->
 
-                                <div class="col-md-6 mb-3">
+                        <div
+                            class="
+                                col-lg-8
+                                col-md-7
+                            "
+                        >
 
-                                    <div class="profile-info-box">
+                            <h3
+                                style="
+                                    color:#0b3d91;
+                                    font-weight:700;
+                                    margin-bottom:25px;
+                                "
+                            >
 
-                                        <span class="profile-label">
+                                <i
+                                    class="
+                                        fas
+                                        fa-info-circle
+                                        mr-2
+                                    "
+                                ></i>
 
-                                            <i class="fas fa-phone"></i>
+                                Data Pribadi
 
-                                            Nomor Telepon
-
-                                        </span>
-
-                                        <strong>
-
-                                            <?= esc($user['telepon'] ?? '-') ?>
-
-                                        </strong>
-
-                                    </div>
-
-                                </div>
+                            </h3>
 
 
-                                <!-- EMAIL -->
+                            <!-- NAMA -->
 
-                                <div class="col-md-6 mb-3">
+                            <div class="row mb-3">
 
-                                    <div class="profile-info-box">
+                                <div
+                                    class="
+                                        col-sm-4
+                                        font-weight-bold
+                                    "
+                                >
 
-                                        <span class="profile-label">
+                                    <i
+                                        class="
+                                            fas
+                                            fa-user
+                                            text-primary
+                                            mr-2
+                                        "
+                                    ></i>
 
-                                            <i class="fas fa-envelope"></i>
-
-                                            Email
-
-                                        </span>
-
-                                        <strong>
-
-                                            <?= esc($user['email'] ?? '-') ?>
-
-                                        </strong>
-
-                                    </div>
+                                    Nama Lengkap
 
                                 </div>
 
+                                <div class="col-sm-8">
 
-                                <!-- ALAMAT -->
-
-                                <div class="col-12 mb-2">
-
-                                    <div class="profile-info-box">
-
-                                        <span class="profile-label">
-
-                                            <i class="fas fa-map-marker-alt"></i>
-
-                                            Alamat
-
-                                        </span>
-
-                                        <strong>
-
-                                            <?= esc($user['alamat'] ?? '-') ?>
-
-                                        </strong>
-
-                                    </div>
+                                    <?= esc(
+                                        $nama
+                                    ) ?>
 
                                 </div>
+
+                            </div>
+
+
+                            <!-- NIK -->
+
+                            <div class="row mb-3">
+
+                                <div
+                                    class="
+                                        col-sm-4
+                                        font-weight-bold
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-address-card
+                                            text-primary
+                                            mr-2
+                                        "
+                                    ></i>
+
+                                    NIK
+
+                                </div>
+
+                                <div class="col-sm-8">
+
+                                    <?= esc(
+                                        $nik
+                                    ) ?>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- NIM -->
+
+                            <div class="row mb-3">
+
+                                <div
+                                    class="
+                                        col-sm-4
+                                        font-weight-bold
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-id-card
+                                            text-primary
+                                            mr-2
+                                        "
+                                    ></i>
+
+                                    NIM
+
+                                </div>
+
+                                <div class="col-sm-8">
+
+                                    <?= esc(
+                                        $nim
+                                    ) ?>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- EMAIL -->
+
+                            <div class="row mb-3">
+
+                                <div
+                                    class="
+                                        col-sm-4
+                                        font-weight-bold
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-envelope
+                                            text-primary
+                                            mr-2
+                                        "
+                                    ></i>
+
+                                    Email
+
+                                </div>
+
+                                <div class="col-sm-8">
+
+                                    <?= esc(
+                                        $email
+                                    ) ?>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- NOMOR HP -->
+
+                            <div class="row mb-3">
+
+                                <div
+                                    class="
+                                        col-sm-4
+                                        font-weight-bold
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-phone
+                                            text-primary
+                                            mr-2
+                                        "
+                                    ></i>
+
+                                    Nomor HP
+
+                                </div>
+
+                                <div class="col-sm-8">
+
+                                    <?= esc(
+                                        $noHp
+                                    ) ?>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- JENIS KELAMIN -->
+
+                            <div class="row mb-3">
+
+                                <div
+                                    class="
+                                        col-sm-4
+                                        font-weight-bold
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-venus-mars
+                                            text-primary
+                                            mr-2
+                                        "
+                                    ></i>
+
+                                    Jenis Kelamin
+
+                                </div>
+
+                                <div class="col-sm-8">
+
+                                    <?= esc(
+                                        $jenisKelamin
+                                    ) ?>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ALAMAT -->
+
+                            <div class="row mb-3">
+
+                                <div
+                                    class="
+                                        col-sm-4
+                                        font-weight-bold
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-map-marker-alt
+                                            text-primary
+                                            mr-2
+                                        "
+                                    ></i>
+
+                                    Alamat
+
+                                </div>
+
+                                <div class="col-sm-8">
+
+                                    <?= esc(
+                                        $alamat
+                                    ) ?>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <hr class="my-4">
+
+
+                    <!-- =================================================
+                         INFORMASI AKADEMIK
+                    ================================================== -->
+
+                    <h3
+                        style="
+                            color:#0b3d91;
+                            font-weight:700;
+                            margin-bottom:25px;
+                        "
+                    >
+
+                        <i
+                            class="
+                                fas
+                                fa-graduation-cap
+                                mr-2
+                            "
+                        ></i>
+
+                        Informasi Akademik
+
+                    </h3>
+
+
+                    <div class="row">
+
+
+                        <!-- PROGRAM STUDI -->
+
+                        <div
+                            class="
+                                col-lg-6
+                                col-md-6
+                                mb-3
+                            "
+                        >
+
+                            <div
+                                style="
+                                    background:#f5f8fc;
+                                    padding:20px;
+                                    border-left:
+                                        4px solid #0b3d91;
+                                    border-radius:8px;
+                                    height:100%;
+                                "
+                            >
+
+                                <small
+                                    class="text-muted"
+                                >
+
+                                    Program Studi
+
+                                </small>
+
+                                <h5
+                                    class="mb-0 mt-1"
+                                >
+
+                                    <?= esc(
+                                        $prodi
+                                    ) ?>
+
+                                </h5>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- FAKULTAS -->
+
+                        <div
+                            class="
+                                col-lg-6
+                                col-md-6
+                                mb-3
+                            "
+                        >
+
+                            <div
+                                style="
+                                    background:#f5f8fc;
+                                    padding:20px;
+                                    border-left:
+                                        4px solid #0b3d91;
+                                    border-radius:8px;
+                                    height:100%;
+                                "
+                            >
+
+                                <small
+                                    class="text-muted"
+                                >
+
+                                    Fakultas
+
+                                </small>
+
+                                <h5
+                                    class="mb-0 mt-1"
+                                >
+
+                                    <?= esc(
+                                        $fakultas
+                                    ) ?>
+
+                                </h5>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- JURUSAN -->
+
+                        <div
+                            class="
+                                col-lg-6
+                                col-md-6
+                                mb-3
+                            "
+                        >
+
+                            <div
+                                style="
+                                    background:#f5f8fc;
+                                    padding:20px;
+                                    border-left:
+                                        4px solid #0b3d91;
+                                    border-radius:8px;
+                                    height:100%;
+                                "
+                            >
+
+                                <small
+                                    class="text-muted"
+                                >
+
+                                    Jurusan
+
+                                </small>
+
+                                <h5
+                                    class="mb-0 mt-1"
+                                >
+
+                                    <?= esc(
+                                        $jurusan
+                                    ) ?>
+
+                                </h5>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- SEMESTER -->
+
+                        <div
+                            class="
+                                col-lg-3
+                                col-md-6
+                                mb-3
+                            "
+                        >
+
+                            <div
+                                style="
+                                    background:#f5f8fc;
+                                    padding:20px;
+                                    border-left:
+                                        4px solid #f28c28;
+                                    border-radius:8px;
+                                    height:100%;
+                                "
+                            >
+
+                                <small
+                                    class="text-muted"
+                                >
+
+                                    Semester
+
+                                </small>
+
+                                <h5
+                                    class="mb-0 mt-1"
+                                >
+
+                                    <?= esc(
+                                        $semester
+                                    ) ?>
+
+                                </h5>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ANGKATAN -->
+
+                        <div
+                            class="
+                                col-lg-3
+                                col-md-6
+                                mb-3
+                            "
+                        >
+
+                            <div
+                                style="
+                                    background:#f5f8fc;
+                                    padding:20px;
+                                    border-left:
+                                        4px solid #f28c28;
+                                    border-radius:8px;
+                                    height:100%;
+                                "
+                            >
+
+                                <small
+                                    class="text-muted"
+                                >
+
+                                    Angkatan
+
+                                </small>
+
+                                <h5
+                                    class="mb-0 mt-1"
+                                >
+
+                                    <?= esc(
+                                        $angkatan
+                                    ) ?>
+
+                                </h5>
 
                             </div>
 
@@ -519,181 +999,4 @@
 </div>
 
 
-<style>
-
-/* ============================= */
-/* JUDUL HALAMAN */
-/* ============================= */
-
-.profile-page-title {
-    color: #0d47a1;
-}
-
-.profile-page-title i {
-    color: #0d47a1;
-}
-
-
-/* ============================= */
-/* CARD */
-/* ============================= */
-
-.profile-card {
-    border: none;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-
-/* ============================= */
-/* HEADER CARD */
-/* ============================= */
-
-.profile-card-header {
-    background: #0d47a1;
-    color: white;
-    padding: 15px 20px;
-    border-bottom: 4px solid #f59e0b;
-}
-
-.profile-card-header .card-title {
-    font-size: 19px;
-    font-weight: 600;
-}
-
-
-/* ============================= */
-/* FOTO / INISIAL */
-/* ============================= */
-
-.profile-avatar {
-    width: 150px;
-    height: 150px;
-    margin: 10px auto;
-
-    border-radius: 50%;
-
-    background: #0d47a1;
-    color: white;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 60px;
-    font-weight: 500;
-
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.20);
-
-    border: 6px solid #f8fafc;
-}
-
-
-/* ============================= */
-/* INFO BOX */
-/* ============================= */
-
-.profile-info-box {
-    min-height: 82px;
-
-    padding: 14px 16px;
-
-    background: #f8fafc;
-
-    border: 1px solid #e2e8f0;
-
-    border-left: 4px solid #0d47a1;
-
-    border-radius: 8px;
-
-    transition: all 0.2s ease;
-}
-
-
-.profile-info-box:hover {
-    transform: translateY(-2px);
-
-    border-left-color: #f59e0b;
-
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-}
-
-
-.profile-label {
-    display: block;
-
-    color: #64748b;
-
-    font-size: 13px;
-
-    font-weight: 600;
-
-    margin-bottom: 6px;
-}
-
-
-.profile-label i {
-    width: 20px;
-
-    color: #0d47a1;
-}
-
-
-.profile-info-box strong {
-    color: #172554;
-
-    font-size: 16px;
-
-    font-weight: 600;
-}
-
-
-/* ============================= */
-/* BUTTON EDIT */
-/* ============================= */
-
-.btn-edit-profile {
-    background: #0d47a1;
-
-    border-color: #0d47a1;
-
-    padding: 10px 22px;
-
-    font-weight: 600;
-
-    transition: all 0.2s ease;
-}
-
-
-.btn-edit-profile:hover {
-    background: #f59e0b;
-
-    border-color: #f59e0b;
-
-    transform: translateY(-2px);
-}
-
-
-/* ============================= */
-/* BUTTON KEMBALI */
-/* ============================= */
-
-.btn-outline-primary {
-    color: #0d47a1;
-
-    border-color: #0d47a1;
-}
-
-
-.btn-outline-primary:hover {
-    background: #f59e0b;
-
-    border-color: #f59e0b;
-
-    color: white;
-}
-
-</style>
-
-
-<?= $this->include('layouts/footer') ?>
+<?= $this->include('layouts/footer'); ?>

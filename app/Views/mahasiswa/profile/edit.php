@@ -1,177 +1,60 @@
-<?= $this->include('layouts/header') ?>
-<?= $this->include('layouts/navbar') ?>
-<?= $this->include('layouts/sidebar_mahasiswa') ?>
+<?= $this->include('layouts/header'); ?>
+<?= $this->include('layouts/navbar'); ?>
+<?= $this->include('layouts/sidebar_mahasiswa'); ?>
 
-<style>
-    .profile-edit-page {
-        background: #f4f7fb;
-        min-height: calc(100vh - 57px);
-        padding-bottom: 40px;
-    }
+<?php
 
-    .profile-edit-card {
-        border: none;
-        border-radius: 16px;
-        box-shadow: 0 5px 20px rgba(0,0,0,.08);
-        overflow: hidden;
-    }
+$profile =
+    $profile
+    ?? [];
 
-    .profile-edit-card .card-header {
-        background: #0b3d91;
-        color: white;
-        padding: 20px 25px;
-        border: none;
-    }
+?>
 
-    .profile-edit-card .card-header h3 {
-        margin: 0;
-        font-size: 21px;
-        font-weight: 700;
-    }
+<div class="content-wrapper">
 
-    .profile-edit-card .card-body {
-        padding: 30px;
-    }
-
-    /* FOTO PROFIL */
-
-    .photo-section {
-        text-align: center;
-        padding: 10px 20px 30px;
-        border-bottom: 1px solid #e2e8f0;
-        margin-bottom: 30px;
-    }
-
-    .profile-photo-wrapper {
-        position: relative;
-        width: 150px;
-        height: 150px;
-        margin: 0 auto 20px;
-    }
-
-    .profile-photo {
-        width: 150px;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 5px solid #0b3d91;
-        box-shadow: 0 5px 15px rgba(0,0,0,.15);
-        background: #eef3f8;
-    }
-
-    .photo-placeholder {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        border: 5px solid #0b3d91;
-        background: #eef3f8;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: auto;
-        color: #0b3d91;
-        font-size: 65px;
-    }
-
-    .photo-label {
-        display: inline-block;
-        background: #f28c28;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: .2s;
-    }
-
-    .photo-label:hover {
-        background: #d97617;
-    }
-
-    .photo-info {
-        color: #718096;
-        font-size: 14px;
-        margin-top: 10px;
-    }
-
-    /* FORM */
-
-    .section-title {
-        color: #0b3d91;
-        font-size: 20px;
-        font-weight: 700;
-        border-bottom: 2px solid #f28c28;
-        padding-bottom: 10px;
-        margin-bottom: 25px;
-    }
-
-    .form-label {
-        color: #17365d;
-        font-weight: 700;
-        font-size: 16px;
-    }
-
-    .form-control {
-        min-height: 48px;
-        border-radius: 8px;
-        border: 1px solid #cbd5e1;
-    }
-
-    .form-control:focus {
-        border-color: #0b3d91;
-        box-shadow: 0 0 0 .2rem rgba(11,61,145,.12);
-    }
-
-    .readonly-input {
-        background: #eef3f8;
-        color: #64748b;
-    }
-
-    .btn-save {
-        background: #0b3d91;
-        border: none;
-        color: white;
-        padding: 11px 25px;
-        border-radius: 8px;
-        font-weight: 700;
-    }
-
-    .btn-save:hover {
-        background: #082f70;
-        color: white;
-    }
-
-    .btn-cancel {
-        padding: 11px 25px;
-        border-radius: 8px;
-    }
-</style>
-
-
-<div class="content-wrapper profile-edit-page">
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <section class="content-header">
 
         <div class="container-fluid">
 
-            <h1 style="color:#0b3d91;font-weight:700;">
+            <div class="row align-items-center">
 
-                <i class="fas fa-user-edit"></i>
+                <div class="col-sm-6">
 
-                Edit Profil
+                    <h1
+                        style="
+                            color:#0b3d91;
+                            font-weight:700;
+                        "
+                    >
 
-            </h1>
+                        <i
+                            class="
+                                fas
+                                fa-user-edit
+                                mr-2
+                            "
+                        ></i>
 
-            <p class="text-muted">
+                        Edit Profil Mahasiswa
 
-                Perbarui informasi profil dan foto Anda.
+                    </h1>
 
-            </p>
+                </div>
+
+            </div>
 
         </div>
 
     </section>
 
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
 
     <section class="content">
 
@@ -179,148 +62,336 @@
 
             <div class="row justify-content-center">
 
-                <div class="col-lg-9">
+                <div
+                    class="
+                        col-xl-9
+                        col-lg-10
+                    "
+                >
 
-                    <div class="card profile-edit-card">
 
-                        <div class="card-header">
+                    <!-- =================================================
+                         ALERT ERROR
+                    ================================================== -->
 
-                            <h3>
+                    <?php if (
+                        session()->getFlashdata(
+                            'error'
+                        )
+                    ): ?>
 
-                                <i class="fas fa-user-circle me-2"></i>
+                        <div
+                            class="
+                                alert
+                                alert-danger
+                                alert-dismissible
+                                fade
+                                show
+                            "
+                        >
 
-                                Pengaturan Profil
+                            <i
+                                class="
+                                    fas
+                                    fa-exclamation-circle
+                                    mr-2
+                                "
+                            ></i>
 
-                            </h3>
+                            <?= esc(
+                                session()->getFlashdata(
+                                    'error'
+                                )
+                            ) ?>
+
+                            <button
+                                type="button"
+                                class="close"
+                                data-dismiss="alert"
+                            >
+
+                                &times;
+
+                            </button>
 
                         </div>
 
-
-                        <div class="card-body">
-
-
-                            <!-- =========================
-                                 FOTO PROFIL
-                            ========================== -->
-
-                            <div class="photo-section">
-
-                                <div class="profile-photo-wrapper">
-
-                                    <div
-                                        id="photoPlaceholder"
-                                        class="photo-placeholder"
-                                    >
-
-                                        <i class="fas fa-user"></i>
-
-                                    </div>
-
-                                    <img
-                                        id="profilePreview"
-                                        class="profile-photo"
-                                        style="display:none;"
-                                        alt="Foto Profil"
-                                    >
-
-                                </div>
+                    <?php endif; ?>
 
 
-                                <!-- INPUT FOTO -->
+                    <!-- =================================================
+                         FORM
+                    ================================================== -->
 
-                                <label
-                                    for="foto"
-                                    class="photo-label"
+                    <form
+                        action="<?= base_url(
+                            'mahasiswa/profile/update'
+                        ) ?>"
+                        method="post"
+                        enctype="multipart/form-data"
+                    >
+
+                        <?= csrf_field() ?>
+
+
+                        <div
+                            class="
+                                card
+                                shadow-sm
+                            "
+                            style="
+                                border-radius:15px;
+                                border-top:
+                                    5px solid #0b3d91;
+                            "
+                        >
+
+
+                            <!-- CARD HEADER -->
+
+                            <div
+                                class="card-header"
+                                style="
+                                    background:#0b3d91;
+                                    color:white;
+                                "
+                            >
+
+                                <h3
+                                    class="card-title"
                                 >
 
-                                    <i class="fas fa-camera me-2"></i>
+                                    <i
+                                        class="
+                                            fas
+                                            fa-user-edit
+                                            mr-2
+                                        "
+                                    ></i>
 
-                                    Pilih Foto Profil
+                                    Edit Informasi Profil
 
-                                </label>
-
-
-                                <input
-                                    type="file"
-                                    id="foto"
-                                    name="foto"
-                                    accept="image/jpeg,image/png,image/jpg"
-                                    hidden
-                                >
-
-
-                                <div class="photo-info">
-
-                                    Format JPG atau PNG.
-                                    Maksimal ukuran 2 MB.
-
-                                </div>
+                                </h3>
 
                             </div>
 
 
-                            <!-- =========================
-                                 FORM DATA
-                            ========================== -->
+                            <!-- CARD BODY -->
 
-                            <form
-                                action="<?= base_url('mahasiswa/profile/update') ?>"
-                                method="post"
-                                enctype="multipart/form-data"
-                            >
-
-                                <?= csrf_field() ?>
+                            <div class="card-body">
 
 
-                                <!-- DATA PRIBADI -->
+                                <!-- =================================================
+                                     FOTO PROFILE
+                                ================================================== -->
 
-                                <div class="section-title">
+                                <div
+                                    class="
+                                        text-center
+                                        mb-4
+                                    "
+                                >
 
-                                    <i class="fas fa-user me-2"></i>
+                                    <?php if (
+                                        !empty(
+                                            $profile['foto']
+                                            ?? null
+                                        )
+                                    ): ?>
 
-                                    Data Pribadi
+                                        <img
+                                            id="previewFoto"
+                                            src="<?= base_url(
+                                                'uploads/profile/' .
+                                                $profile['foto']
+                                            ) ?>"
+                                            alt="Foto Profil"
+                                            style="
+                                                width:170px;
+                                                height:170px;
+                                                object-fit:cover;
+                                                border-radius:50%;
+                                                border:5px solid #0b3d91;
+                                            "
+                                        >
+
+                                    <?php else: ?>
+
+                                        <div
+                                            id="previewDefault"
+                                            style="
+                                                width:170px;
+                                                height:170px;
+                                                margin:auto;
+                                                border-radius:50%;
+                                                background:#0b3d91;
+                                                display:flex;
+                                                align-items:center;
+                                                justify-content:center;
+                                                color:white;
+                                                font-size:70px;
+                                            "
+                                        >
+
+                                            <i
+                                                class="
+                                                    fas
+                                                    fa-user-graduate
+                                                "
+                                            ></i>
+
+                                        </div>
+
+                                        <img
+                                            id="previewFoto"
+                                            src=""
+                                            alt="Preview Foto"
+                                            style="
+                                                display:none;
+                                                width:170px;
+                                                height:170px;
+                                                object-fit:cover;
+                                                border-radius:50%;
+                                                border:5px solid #0b3d91;
+                                            "
+                                        >
+
+                                    <?php endif; ?>
+
+
+                                    <div
+                                        class="mt-3"
+                                    >
+
+                                        <label
+                                            for="foto"
+                                            class="
+                                                btn
+                                                btn-primary
+                                            "
+                                        >
+
+                                            <i
+                                                class="
+                                                    fas
+                                                    fa-camera
+                                                    mr-1
+                                                "
+                                            ></i>
+
+                                            Pilih Foto Profil
+
+                                        </label>
+
+                                        <input
+                                            type="file"
+                                            name="foto"
+                                            id="foto"
+                                            accept="
+                                                .jpg,
+                                                .jpeg,
+                                                .png,
+                                                .webp
+                                            "
+                                            style="
+                                                display:none;
+                                            "
+                                        >
+
+                                    </div>
+
+
+                                    <small
+                                        class="
+                                            text-muted
+                                            d-block
+                                            mt-2
+                                        "
+                                    >
+
+                                        Format:
+                                        JPG, JPEG, PNG, WEBP.
+
+                                        <br>
+
+                                        Maksimal 2 MB.
+
+                                    </small>
 
                                 </div>
 
 
-                                <div class="row">
+                                <hr>
+
+
+                                <!-- =================================================
+                                     DATA PRIBADI
+                                ================================================== -->
+
+                                <h4
+                                    style="
+                                        color:#0b3d91;
+                                        font-weight:700;
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-user
+                                            mr-2
+                                        "
+                                    ></i>
+
+                                    Data Pribadi
+
+                                </h4>
+
+
+                                <div
+                                    class="
+                                        row
+                                        mt-4
+                                    "
+                                >
 
 
                                     <!-- NAMA -->
 
-                                    <div class="col-md-6 mb-3">
+                                    <div
+                                        class="
+                                            col-md-6
+                                            mb-3
+                                        "
+                                    >
 
-                                        <label class="form-label">
+                                        <label
+                                            for="nama"
+                                            class="font-weight-bold"
+                                        >
 
                                             Nama Lengkap
+
+                                            <span
+                                                class="
+                                                    text-danger
+                                                "
+                                            >
+                                                *
+                                            </span>
 
                                         </label>
 
                                         <input
                                             type="text"
                                             name="nama"
+                                            id="nama"
                                             class="form-control"
-                                            value="<?= esc($user['nama'] ?? '') ?>"
-                                        >
-
-                                    </div>
-
-
-                                    <!-- NIM -->
-
-                                    <div class="col-md-6 mb-3">
-
-                                        <label class="form-label">
-
-                                            NIM
-
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            class="form-control readonly-input"
-                                            value="<?= esc($user['nim'] ?? '') ?>"
-                                            readonly
+                                            value="<?= esc(
+                                                $profile['nama']
+                                                ?? ''
+                                            ) ?>"
+                                            required
                                         >
 
                                     </div>
@@ -328,59 +399,171 @@
 
                                     <!-- NIK -->
 
-                                    <div class="col-md-6 mb-3">
+                                    <div
+                                        class="
+                                            col-md-6
+                                            mb-3
+                                        "
+                                    >
 
-                                        <label class="form-label">
+                                        <label
+                                            for="nik"
+                                            class="font-weight-bold"
+                                        >
 
                                             NIK
+
+                                            <span
+                                                class="
+                                                    text-danger
+                                                "
+                                            >
+                                                *
+                                            </span>
 
                                         </label>
 
                                         <input
                                             type="text"
                                             name="nik"
+                                            id="nik"
                                             class="form-control"
-                                            value="<?= esc($user['nik'] ?? '') ?>"
+                                            value="<?= esc(
+                                                $profile['nik']
+                                                ?? ''
+                                            ) ?>"
+                                            maxlength="16"
+                                            minlength="16"
+                                            pattern="[0-9]{16}"
+                                            placeholder="
+                                                Masukkan 16 digit NIK
+                                            "
+                                            required
+                                        >
+
+                                        <small
+                                            class="
+                                                text-muted
+                                            "
+                                        >
+
+                                            NIK harus terdiri dari
+                                            16 digit angka.
+
+                                        </small>
+
+                                    </div>
+
+
+                                    <!-- NIM -->
+
+                                    <div
+                                        class="
+                                            col-md-6
+                                            mb-3
+                                        "
+                                    >
+
+                                        <label
+                                            class="font-weight-bold"
+                                        >
+
+                                            NIM
+
+                                        </label>
+
+<input
+    type="text"
+    name="nim"
+    id="nim"
+    class="form-control"
+    value="<?= esc(
+        $profile['nim']
+        ?? ''
+    ) ?>"
+    required
+>
+
+                                    </div>
+
+
+                                    <!-- EMAIL -->
+
+                                    <div
+                                        class="
+                                            col-md-6
+                                            mb-3
+                                        "
+                                    >
+
+                                        <label
+                                            for="email"
+                                            class="font-weight-bold"
+                                        >
+
+                                            Email
+
+                                            <span
+                                                class="
+                                                    text-danger
+                                                "
+                                            >
+                                                *
+                                            </span>
+
+                                        </label>
+
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            id="email"
+                                            class="form-control"
+                                            value="<?= esc(
+                                                $profile['email']
+                                                ?? ''
+                                            ) ?>"
+                                            required
                                         >
 
                                     </div>
 
 
-                                    <!-- TEMPAT LAHIR -->
+                                    <!-- NOMOR HP -->
 
-                                    <div class="col-md-6 mb-3">
+                                    <div
+                                        class="
+                                            col-md-6
+                                            mb-3
+                                        "
+                                    >
 
-                                        <label class="form-label">
+                                        <label
+                                            for="no_hp"
+                                            class="font-weight-bold"
+                                        >
 
-                                            Tempat Lahir
+                                            Nomor HP
+
+                                            <span
+                                                class="
+                                                    text-danger
+                                                "
+                                            >
+                                                *
+                                            </span>
 
                                         </label>
 
                                         <input
                                             type="text"
-                                            name="tempat_lahir"
+                                            name="no_hp"
+                                            id="no_hp"
                                             class="form-control"
-                                            value="<?= esc($user['tempat_lahir'] ?? '') ?>"
-                                        >
-
-                                    </div>
-
-
-                                    <!-- TANGGAL LAHIR -->
-
-                                    <div class="col-md-6 mb-3">
-
-                                        <label class="form-label">
-
-                                            Tanggal Lahir
-
-                                        </label>
-
-                                        <input
-                                            type="date"
-                                            name="tanggal_lahir"
-                                            class="form-control"
-                                            value="<?= esc($user['tanggal_lahir'] ?? '') ?>"
+                                            value="<?= esc(
+                                                $profile['no_hp']
+                                                ?? ''
+                                            ) ?>"
+                                            required
                                         >
 
                                     </div>
@@ -388,28 +571,62 @@
 
                                     <!-- JENIS KELAMIN -->
 
-                                    <div class="col-md-6 mb-3">
+                                    <div
+                                        class="
+                                            col-md-6
+                                            mb-3
+                                        "
+                                    >
 
-                                        <label class="form-label">
+                                        <label
+                                            for="jenis_kelamin"
+                                            class="font-weight-bold"
+                                        >
 
                                             Jenis Kelamin
+
+                                            <span
+                                                class="
+                                                    text-danger
+                                                "
+                                            >
+                                                *
+                                            </span>
 
                                         </label>
 
                                         <select
                                             name="jenis_kelamin"
+                                            id="jenis_kelamin"
                                             class="form-control"
+                                            required
                                         >
 
-                                            <option value="">
+                                            <option
+                                                value=""
+                                            >
 
-                                                -- Pilih Jenis Kelamin --
+                                                --
+                                                Pilih Jenis Kelamin
+                                                --
 
                                             </option>
 
                                             <option
                                                 value="Laki-laki"
-                                                <?= ($user['jenis_kelamin'] ?? '') === 'Laki-laki' ? 'selected' : '' ?>
+                                                <?= (
+                                                    (
+                                                        $profile[
+                                                            'jenis_kelamin'
+                                                        ]
+                                                        ?? ''
+                                                    )
+                                                    ===
+                                                    'Laki-laki'
+                                                )
+                                                    ? 'selected'
+                                                    : ''
+                                                ?>
                                             >
 
                                                 Laki-laki
@@ -418,7 +635,19 @@
 
                                             <option
                                                 value="Perempuan"
-                                                <?= ($user['jenis_kelamin'] ?? '') === 'Perempuan' ? 'selected' : '' ?>
+                                                <?= (
+                                                    (
+                                                        $profile[
+                                                            'jenis_kelamin'
+                                                        ]
+                                                        ?? ''
+                                                    )
+                                                    ===
+                                                    'Perempuan'
+                                                )
+                                                    ? 'selected'
+                                                    : ''
+                                                ?>
                                             >
 
                                                 Perempuan
@@ -429,219 +658,314 @@
 
                                     </div>
 
-                                </div>
 
+                                    <!-- ALAMAT -->
 
-                                <!-- AKADEMIK -->
+                                    <div
+                                        class="
+                                            col-md-12
+                                            mb-3
+                                        "
+                                    >
 
-                                <div class="section-title mt-4">
-
-                                    <i class="fas fa-graduation-cap me-2"></i>
-
-                                    Informasi Akademik
-
-                                </div>
-
-
-                                <div class="row">
-
-
-                                    <div class="col-md-6 mb-3">
-
-                                        <label class="form-label">
-
-                                            Program Studi
-
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="prodi"
-                                            class="form-control"
-                                            value="<?= esc($user['prodi'] ?? '') ?>"
+                                        <label
+                                            for="alamat"
+                                            class="font-weight-bold"
                                         >
-
-                                    </div>
-
-
-                                    <div class="col-md-6 mb-3">
-
-                                        <label class="form-label">
-
-                                            Fakultas
-
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="fakultas"
-                                            class="form-control"
-                                            value="<?= esc($user['fakultas'] ?? '') ?>"
-                                        >
-
-                                    </div>
-
-
-                                    <div class="col-md-6 mb-3">
-
-                                        <label class="form-label">
-
-                                            Tahun Angkatan
-
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="tahun_angkatan"
-                                            class="form-control"
-                                            value="<?= esc($user['tahun_angkatan'] ?? '') ?>"
-                                        >
-
-                                    </div>
-
-
-                                    <div class="col-md-6 mb-3">
-
-                                        <label class="form-label">
-
-                                            Status Keaktifan Kuliah
-
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="status"
-                                            class="form-control"
-                                            value="<?= esc($user['status'] ?? '') ?>"
-                                        >
-
-                                    </div>
-
-
-                                    <div class="col-md-6 mb-3">
-
-                                        <label class="form-label">
-
-                                            Dosen Wali
-
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="dosen_wali"
-                                            class="form-control"
-                                            value="<?= esc($user['dosen_wali'] ?? '') ?>"
-                                        >
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- KONTAK -->
-
-                                <div class="section-title mt-4">
-
-                                    <i class="fas fa-address-book me-2"></i>
-
-                                    Informasi Kontak
-
-                                </div>
-
-
-                                <div class="row">
-
-
-                                    <div class="col-md-6 mb-3">
-
-                                        <label class="form-label">
-
-                                            Nomor Telepon
-
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="telepon"
-                                            class="form-control"
-                                            value="<?= esc($user['telepon'] ?? '') ?>"
-                                        >
-
-                                    </div>
-
-
-                                    <div class="col-md-6 mb-3">
-
-                                        <label class="form-label">
-
-                                            Email
-
-                                        </label>
-
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            class="form-control"
-                                            value="<?= esc($user['email'] ?? '') ?>"
-                                        >
-
-                                    </div>
-
-
-                                    <div class="col-12 mb-3">
-
-                                        <label class="form-label">
 
                                             Alamat
+
+                                            <span
+                                                class="
+                                                    text-danger
+                                                "
+                                            >
+                                                *
+                                            </span>
 
                                         </label>
 
                                         <textarea
                                             name="alamat"
-                                            class="form-control"
+                                            id="alamat"
                                             rows="4"
-                                        ><?= esc($user['alamat'] ?? '') ?></textarea>
+                                            class="form-control"
+                                            required
+                                        ><?= esc(
+                                            $profile['alamat']
+                                            ?? ''
+                                        ) ?></textarea>
 
                                     </div>
 
                                 </div>
 
 
-                                <!-- BUTTON -->
+                                <hr
+                                    class="my-4"
+                                >
 
-                                <div class="d-flex justify-content-end gap-2 mt-4">
 
-                                    <a
-                                        href="<?= base_url('mahasiswa/profile') ?>"
-                                        class="btn btn-secondary btn-cancel"
+                                <!-- =================================================
+                                     INFORMASI AKADEMIK
+                                ================================================== -->
+
+                                <h4
+                                    style="
+                                        color:#0b3d91;
+                                        font-weight:700;
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-graduation-cap
+                                            mr-2
+                                        "
+                                    ></i>
+
+                                    Informasi Akademik
+
+                                </h4>
+
+
+                                <div
+                                    class="
+                                        row
+                                        mt-4
+                                    "
+                                >
+
+
+                                    <!-- PROGRAM STUDI -->
+
+                                    <div
+                                        class="
+                                            col-md-6
+                                            mb-3
+                                        "
                                     >
 
-                                        <i class="fas fa-arrow-left me-1"></i>
+                                        <label
+                                            class="font-weight-bold"
+                                        >
 
-                                        Batal
+                                            Program Studi
 
-                                    </a>
+                                        </label>
+
+<input
+    type="text"
+    name="prodi"
+    id="prodi"
+    class="form-control"
+    value="<?= esc(
+        $profile['prodi']
+        ?? ''
+    ) ?>"
+    required
+>
+
+                                    </div>
 
 
-                                    <button
-                                        type="submit"
-                                        class="btn btn-save"
+                                    <!-- FAKULTAS -->
+
+                                    <div
+                                        class="
+                                            col-md-6
+                                            mb-3
+                                        "
                                     >
 
-                                        <i class="fas fa-save me-1"></i>
+                                        <label
+                                            class="font-weight-bold"
+                                        >
 
-                                        Simpan Perubahan
+                                            Fakultas
 
-                                    </button>
+                                        </label>
+
+<input
+    type="text"
+    name="fakultas"
+    id="fakultas"
+    class="form-control"
+    value="<?= esc(
+        $profile['fakultas']
+        ?? ''
+    ) ?>"
+    required
+>
+
+                                    </div>
+
+
+                                    <!-- JURUSAN -->
+
+                                    <div
+                                        class="
+                                            col-md-6
+                                            mb-3
+                                        "
+                                    >
+
+                                        <label
+                                            class="font-weight-bold"
+                                        >
+
+                                            Jurusan
+
+                                        </label>
+
+<input
+    type="text"
+    name="jurusan"
+    id="jurusan"
+    class="form-control"
+    value="<?= esc(
+        $profile['jurusan']
+        ?? ''
+    ) ?>"
+    required
+>
+
+                                    </div>
+
+
+                                    <!-- SEMESTER -->
+
+                                    <div
+                                        class="
+                                            col-md-3
+                                            mb-3
+                                        "
+                                    >
+
+                                        <label
+                                            class="font-weight-bold"
+                                        >
+
+                                            Semester
+
+                                        </label>
+
+<input
+    type="number"
+    name="semester"
+    id="semester"
+    class="form-control"
+    value="<?= esc(
+        $profile['semester']
+        ?? ''
+    ) ?>"
+    min="1"
+    max="14"
+    required
+>
+
+                                    </div>
+
+
+                                    <!-- ANGKATAN -->
+
+                                    <div
+                                        class="
+                                            col-md-3
+                                            mb-3
+                                        "
+                                    >
+
+                                        <label
+                                            class="font-weight-bold"
+                                        >
+
+                                            Angkatan
+
+                                        </label>
+
+<input
+    type="number"
+    name="angkatan"
+    id="angkatan"
+    class="form-control"
+    value="<?= esc(
+        $profile['angkatan']
+        ?? ''
+    ) ?>"
+    min="2000"
+    max="2100"
+    required
+>
+
+                                    </div>
 
                                 </div>
 
+                            </div>
 
-                            </form>
+
+                            <!-- =================================================
+                                 CARD FOOTER
+                            ================================================== -->
+
+                            <div
+                                class="
+                                    card-footer
+                                    d-flex
+                                    justify-content-between
+                                "
+                            >
+
+                                <a
+                                    href="<?= base_url(
+                                        'mahasiswa/profile'
+                                    ) ?>"
+                                    class="
+                                        btn
+                                        btn-secondary
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-arrow-left
+                                            mr-1
+                                        "
+                                    ></i>
+
+                                    Kembali
+
+                                </a>
+
+
+                                <button
+                                    type="submit"
+                                    class="
+                                        btn
+                                        btn-success
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-save
+                                            mr-1
+                                        "
+                                    ></i>
+
+                                    Simpan Perubahan
+
+                                </button>
+
+                            </div>
 
                         </div>
 
-                    </div>
+                    </form>
 
                 </div>
 
@@ -654,78 +978,70 @@
 </div>
 
 
+<!-- =====================================================
+     PREVIEW FOTO
+====================================================== -->
+
 <script>
 
-document.addEventListener('DOMContentLoaded', function () {
+document
+    .getElementById('foto')
+    .addEventListener(
+        'change',
+        function(event) {
 
-    const fotoInput = document.getElementById('foto');
+            const file =
+                event.target.files[0];
 
-    const preview = document.getElementById('profilePreview');
+            if (!file) {
 
-    const placeholder = document.getElementById('photoPlaceholder');
+                return;
 
+            }
 
-    fotoInput.addEventListener('change', function () {
+            const reader =
+                new FileReader();
 
-        const file = this.files[0];
+            reader.onload =
+                function(e) {
 
+                    const preview =
+                        document
+                            .getElementById(
+                                'previewFoto'
+                            );
 
-        if (!file) {
+                    const defaultIcon =
+                        document
+                            .getElementById(
+                                'previewDefault'
+                            );
 
-            return;
+                    preview.src =
+                        e.target.result;
+
+                    preview.style.display =
+                        'block';
+
+                    if (
+                        defaultIcon
+                    ) {
+
+                        defaultIcon.style.display =
+                            'none';
+
+                    }
+
+                };
+
+            reader.readAsDataURL(
+                file
+            );
 
         }
-
-
-        // Cek tipe file
-
-        if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
-
-            alert('Foto harus berformat JPG atau PNG.');
-
-            this.value = '';
-
-            return;
-
-        }
-
-
-        // Cek ukuran maksimal 2 MB
-
-        if (file.size > 2 * 1024 * 1024) {
-
-            alert('Ukuran foto maksimal adalah 2 MB.');
-
-            this.value = '';
-
-            return;
-
-        }
-
-
-        // Preview foto
-
-        const reader = new FileReader();
-
-
-        reader.onload = function (e) {
-
-            preview.src = e.target.result;
-
-            preview.style.display = 'block';
-
-            placeholder.style.display = 'none';
-
-        };
-
-
-        reader.readAsDataURL(file);
-
-    });
-
-});
+    );
 
 </script>
 
 
-<?= $this->include('layouts/footer') ?>
+<?= $this->include('layouts/footer'); ?>

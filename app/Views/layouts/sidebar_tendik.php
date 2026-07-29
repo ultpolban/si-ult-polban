@@ -133,23 +133,23 @@
                 <!-- NOTIFIKASI -->
                 <li class="nav-item">
 
-                    <a
-                        href="<?= base_url('tendik/notification') ?>"
-                        class="nav-link <?= str_contains(
-                            uri_string(),
-                            'tendik/notification'
-                        ) ? 'active' : '' ?>"
-                    >
+    <a
+        href="<?= base_url('tendik/notification') ?>"
+        class="nav-link <?= str_contains(
+            uri_string(),
+            'tendik/notification'
+        ) ? 'active' : '' ?>"
+    >
 
-                        <i class="nav-icon fas fa-bell"></i>
+        <i class="nav-icon fas fa-bell"></i>
 
-                        <p>
-                            Notifikasi
-                        </p>
+        <p>
+            Notifikasi
+        </p>
 
-                    </a>
+    </a>
 
-                </li>
+</li>
 
 
                 <!-- PUSAT BANTUAN -->

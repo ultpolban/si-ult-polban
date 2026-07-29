@@ -72,7 +72,7 @@ class TendikController extends BaseController
         );
     }
 
-    public function profile()
+public function profile()
 {
     $user = session()->get('user') ?? [];
 

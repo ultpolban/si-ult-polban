@@ -23,13 +23,44 @@
                         style="
                             color:#0b3d91;
                             font-weight:700;
-                        ">
+                        "
+                    >
 
-                        <i class="fas fa-history"></i>
+                        <i class="fas fa-ticket-alt mr-2"></i>
 
                         Tracking Tiket
 
                     </h1>
+
+                </div>
+
+
+                <div class="col-sm-6">
+
+                    <ol class="breadcrumb float-sm-right">
+
+                        <li class="breadcrumb-item">
+
+                            <a
+                                href="<?= base_url(
+                                    'dashboard-mahasiswa'
+                                ) ?>"
+                            >
+
+                                Dashboard
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="breadcrumb-item active">
+
+                            Tracking Tiket
+
+                        </li>
+
+                    </ol>
 
                 </div>
 
@@ -40,8 +71,9 @@
     </section>
 
 
+
     <!-- ==========================================
-         MAIN CONTENT
+         CONTENT
     =========================================== -->
 
     <section class="content">
@@ -50,79 +82,141 @@
 
 
             <!-- ==========================================
-                 SUCCESS MESSAGE
+                 ALERT SUCCESS
             =========================================== -->
 
-            <?php if (session()->getFlashdata('success')): ?>
+            <?php if (
+                session()->getFlashdata('success')
+            ) : ?>
 
                 <div
-                    class="alert alert-success alert-dismissible fade show">
+                    class="
+                        alert
+                        alert-success
+                        alert-dismissible
+                        fade
+                        show
+                    "
+                >
 
-                    <i class="fas fa-check-circle me-2"></i>
+                    <i
+                        class="
+                            fas
+                            fa-check-circle
+                            mr-2
+                        "
+                    ></i>
 
                     <?= esc(
                         session()->getFlashdata('success')
                     ) ?>
 
+
                     <button
                         type="button"
-                        class="btn-close"
-                        data-bs-dismiss="alert"></button>
+                        class="close"
+                        data-dismiss="alert"
+                    >
+
+                        &times;
+
+                    </button>
 
                 </div>
 
             <?php endif; ?>
 
 
+
             <!-- ==========================================
-                 ERROR MESSAGE
+                 ALERT ERROR
             =========================================== -->
 
-            <?php if (session()->getFlashdata('error')): ?>
+            <?php if (
+                session()->getFlashdata('error')
+            ) : ?>
 
                 <div
-                    class="alert alert-danger alert-dismissible fade show">
+                    class="
+                        alert
+                        alert-danger
+                        alert-dismissible
+                        fade
+                        show
+                    "
+                >
 
-                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <i
+                        class="
+                            fas
+                            fa-exclamation-circle
+                            mr-2
+                        "
+                    ></i>
 
                     <?= esc(
                         session()->getFlashdata('error')
                     ) ?>
 
+
                     <button
                         type="button"
-                        class="btn-close"
-                        data-bs-dismiss="alert"></button>
+                        class="close"
+                        data-dismiss="alert"
+                    >
+
+                        &times;
+
+                    </button>
 
                 </div>
 
             <?php endif; ?>
 
 
+
             <!-- ==========================================
-                 CARD TRACKING
+                 CARD
             =========================================== -->
 
-            <div class="card shadow-sm">
+            <div
+                class="
+                    card
+                    shadow-sm
+                    border-0
+                "
+            >
+
 
                 <!-- CARD HEADER -->
 
                 <div
-                    class="card-header"
+                    class="
+                        card-header
+                        text-white
+                    "
                     style="
-                        background:#0b3d91;
-                        color:white;
-                    ">
+                        background-color:#0b3d91;
+                        border-bottom:4px solid #f28c28;
+                    "
+                >
 
-                    <h3 class="card-title">
+                    <h5 class="mb-0">
 
-                        <i class="fas fa-ticket-alt me-2"></i>
+                        <i
+                            class="
+                                fas
+                                fa-ticket-alt
+                                mr-2
+                            "
+                        ></i>
 
-                        Riwayat Pengajuan Layanan
+                        Daftar Tiket Pengajuan
 
-                    </h3>
+                    </h5>
 
                 </div>
+
 
 
                 <!-- CARD BODY -->
@@ -130,7 +224,9 @@
                 <div class="card-body">
 
 
-                    <?php if (!empty($tickets)): ?>
+                    <?php if (
+                        !empty($tickets)
+                    ) : ?>
 
 
                         <!-- ==========================================
@@ -144,67 +240,59 @@
                                     table
                                     table-bordered
                                     table-hover
-                                    align-middle
-                                ">
+                                "
+                            >
+
 
                                 <thead
                                     style="
-                                        background:#0b3d91;
-                                        color:white;
-                                    ">
+                                        background-color:#e8f1fb;
+                                        color:#17365d;
+                                    "
+                                >
 
                                     <tr>
 
-                                        <th
-                                            class="text-center"
-                                            style="width:60px;">
-
+                                        <th>
                                             No
-
                                         </th>
 
                                         <th>
-
                                             Nomor Tiket
-
                                         </th>
 
                                         <th>
-
-                                            Layanan
-
+                                            Unit Layanan
                                         </th>
 
                                         <th>
-
-                                            Unit Tujuan
-
+                                            Jenis Layanan
                                         </th>
 
                                         <th>
-
-                                            Tanggal
-
+                                            Keterangan
                                         </th>
 
-                                        <th
-                                            class="text-center">
+                                        <th>
+                                            Dokumen
+                                        </th>
 
+                                        <th>
                                             Status
-
                                         </th>
 
-                                        <th
-                                            class="text-center"
-                                            style="width:120px;">
+                                        <th>
+                                            Tanggal Pengajuan
+                                        </th>
 
+                                        <th>
                                             Aksi
-
                                         </th>
 
                                     </tr>
 
                                 </thead>
+
 
 
                                 <tbody>
@@ -213,7 +301,7 @@
                                     <?php foreach (
                                         $tickets
                                         as $index => $ticket
-                                    ): ?>
+                                    ) : ?>
 
 
                                         <tr>
@@ -221,26 +309,25 @@
 
                                             <!-- NO -->
 
-                                            <td
-                                                class="text-center">
+                                            <td>
 
                                                 <?= $index + 1 ?>
 
                                             </td>
 
 
+
                                             <!-- NOMOR TIKET -->
 
                                             <td>
 
-                                                <strong
-                                                    style="
-                                                        color:#0b3d91;
-                                                    ">
+                                                <strong>
 
                                                     <?= esc(
-                                                        $ticket['nomor']
-                                                            ?? '-'
+                                                        $ticket[
+                                                            'nomor'
+                                                        ]
+                                                        ?? '-'
                                                     ) ?>
 
                                                 </strong>
@@ -248,53 +335,124 @@
                                             </td>
 
 
-                                            <!-- LAYANAN -->
+
+                                            <!-- UNIT LAYANAN -->
 
                                             <td>
 
                                                 <?= esc(
-                                                    $ticket['layanan']
-                                                        ?? '-'
+                                                    $ticket[
+                                                        'unit_layanan'
+                                                    ]
+                                                    ?? '-'
                                                 ) ?>
 
                                             </td>
 
 
-                                            <!-- UNIT -->
+
+                                            <!-- JENIS LAYANAN -->
 
                                             <td>
 
                                                 <?= esc(
-                                                    $ticket['unit']
-                                                        ?? 'Akademik'
+                                                    $ticket[
+                                                        'layanan'
+                                                    ]
+                                                    ?? '-'
                                                 ) ?>
 
                                             </td>
 
 
-                                            <!-- TANGGAL -->
+
+                                            <!-- KETERANGAN -->
 
                                             <td>
 
                                                 <?= esc(
-                                                    $ticket['tanggal']
-                                                        ?? '-'
+                                                    $ticket[
+                                                        'keterangan'
+                                                    ]
+                                                    ?? '-'
                                                 ) ?>
 
                                             </td>
+
+
+
+                                            <!-- DOKUMEN -->
+
+                                            <td>
+
+                                                <?php if (
+                                                    !empty(
+                                                        $ticket[
+                                                            'dokumen'
+                                                        ]
+                                                    )
+                                                ) : ?>
+
+
+                                                    <a
+                                                        href="<?= base_url(
+                                                            'uploads/dokumen/' .
+                                                            $ticket[
+                                                                'dokumen'
+                                                            ]
+                                                        ) ?>"
+                                                        target="_blank"
+                                                        class="
+                                                            btn
+                                                            btn-sm
+                                                            btn-primary
+                                                        "
+                                                    >
+
+                                                        <i
+                                                            class="
+                                                                fas
+                                                                fa-file-alt
+                                                                mr-1
+                                                            "
+                                                        ></i>
+
+                                                        Lihat
+
+                                                    </a>
+
+
+                                                <?php else : ?>
+
+
+                                                    <span
+                                                        class="
+                                                            text-muted
+                                                        "
+                                                    >
+
+                                                        Tidak Ada
+
+                                                    </span>
+
+
+                                                <?php endif; ?>
+
+                                            </td>
+
 
 
                                             <!-- STATUS -->
 
-                                            <td
-                                                class="text-center">
+                                            <td>
+
 
                                                 <?php
-
                                                 $status =
-                                                    $ticket['status']
+                                                    $ticket[
+                                                        'status'
+                                                    ]
                                                     ?? 'Submitted';
-
                                                 ?>
 
 
@@ -302,23 +460,26 @@
                                                     strtolower(
                                                         $status
                                                     )
-                                                    === 'completed'
-                                                ): ?>
+                                                    === 'submitted'
+                                                ) : ?>
 
 
                                                     <span
                                                         class="
                                                             badge
-                                                            bg-success
-                                                        ">
+                                                            badge-warning
+                                                        "
+                                                    >
 
                                                         <i
                                                             class="
                                                                 fas
-                                                                fa-check-circle
-                                                            "></i>
+                                                                fa-clock
+                                                                mr-1
+                                                            "
+                                                        ></i>
 
-                                                        Selesai
+                                                        Submitted
 
                                                     </span>
 
@@ -327,22 +488,29 @@
                                                     strtolower(
                                                         $status
                                                     )
-                                                    === 'in progress'
-                                                ): ?>
+                                                    === 'diproses'
+                                                    ||
+                                                    strtolower(
+                                                        $status
+                                                    )
+                                                    === 'processed'
+                                                ) : ?>
 
 
                                                     <span
                                                         class="
                                                             badge
-                                                            bg-warning
-                                                            text-dark
-                                                        ">
+                                                            badge-info
+                                                        "
+                                                    >
 
                                                         <i
                                                             class="
                                                                 fas
                                                                 fa-spinner
-                                                            "></i>
+                                                                mr-1
+                                                            "
+                                                        ></i>
 
                                                         Diproses
 
@@ -353,41 +521,77 @@
                                                     strtolower(
                                                         $status
                                                     )
-                                                    === 'revisi'
-                                                ): ?>
+                                                    === 'selesai'
+                                                    ||
+                                                    strtolower(
+                                                        $status
+                                                    )
+                                                    === 'completed'
+                                                ) : ?>
 
 
                                                     <span
                                                         class="
                                                             badge
-                                                            bg-danger
-                                                        ">
+                                                            badge-success
+                                                        "
+                                                    >
 
                                                         <i
                                                             class="
                                                                 fas
-                                                                fa-exclamation-circle
-                                                            "></i>
+                                                                fa-check-circle
+                                                                mr-1
+                                                            "
+                                                        ></i>
 
-                                                        Perlu Revisi
+                                                        Selesai
 
                                                     </span>
 
 
-                                                <?php else: ?>
+                                                <?php elseif (
+                                                    strtolower(
+                                                        $status
+                                                    )
+                                                    === 'ditolak'
+                                                    ||
+                                                    strtolower(
+                                                        $status
+                                                    )
+                                                    === 'rejected'
+                                                ) : ?>
 
 
                                                     <span
                                                         class="
                                                             badge
-                                                            bg-primary
-                                                        ">
+                                                            badge-danger
+                                                        "
+                                                    >
 
                                                         <i
                                                             class="
                                                                 fas
-                                                                fa-paper-plane
-                                                            "></i>
+                                                                fa-times-circle
+                                                                mr-1
+                                                            "
+                                                        ></i>
+
+                                                        Ditolak
+
+                                                    </span>
+
+
+                                                <?php else : ?>
+
+
+                                                    <span
+                                                        class="
+                                                            badge
+                                                            badge-secondary
+                                                        "
+                                                    >
 
                                                         <?= esc(
                                                             $status
@@ -402,27 +606,50 @@
                                             </td>
 
 
+
+                                            <!-- TANGGAL -->
+
+                                            <td>
+
+                                                <?= esc(
+                                                    $ticket[
+                                                        'created_at'
+                                                    ]
+                                                    ?? '-'
+                                                ) ?>
+
+                                            </td>
+
+
+
                                             <!-- AKSI -->
 
-                                            <td
-                                                class="text-center">
+                                            <td>
 
                                                 <a
                                                     href="<?= base_url(
-                                                                'mahasiswa/ticket/detail/' .
-                                                                    $index
-                                                            ) ?>"
+                                                        'mahasiswa/ticket/detail/' .
+                                                        (
+                                                            $ticket[
+                                                                'id'
+                                                            ]
+                                                            ?? $index
+                                                        )
+                                                    ) ?>"
                                                     class="
                                                         btn
                                                         btn-sm
-                                                        btn-info
-                                                    ">
+                                                        btn-primary
+                                                    "
+                                                >
 
                                                     <i
                                                         class="
                                                             fas
                                                             fa-eye
-                                                        "></i>
+                                                            mr-1
+                                                        "
+                                                    ></i>
 
                                                     Detail
 
@@ -444,7 +671,7 @@
                         </div>
 
 
-                    <?php else: ?>
+                    <?php else : ?>
 
 
                         <!-- ==========================================
@@ -452,75 +679,67 @@
                         =========================================== -->
 
                         <div
-                            class="text-center py-5">
+                            class="
+                                text-center
+                                py-5
+                            "
+                        >
 
-                            <div
+                            <i
+                                class="
+                                    fas
+                                    fa-ticket-alt
+                                "
                                 style="
-                                    width:90px;
-                                    height:90px;
-                                    background:#eef5ff;
-                                    border-radius:50%;
-                                    display:flex;
-                                    align-items:center;
-                                    justify-content:center;
-                                    margin:0 auto 20px;
-                                ">
-
-                                <i
-                                    class="
-                                        fas
-                                        fa-ticket-alt
-                                    "
-                                    style="
-                                        font-size:40px;
-                                        color:#0b3d91;
-                                    "></i>
-
-                            </div>
+                                    font-size:60px;
+                                    color:#b0bec5;
+                                "
+                            ></i>
 
 
-                            <h4
+                            <h5
+                                class="mt-3"
                                 style="
-                                    color:#0b3d91;
-                                    font-weight:700;
-                                ">
+                                    color:#17365d;
+                                "
+                            >
 
-                                Belum Ada Pengajuan
+                                Belum Ada Tiket
 
-                            </h4>
+                            </h5>
 
 
-                            <p
-                                class="text-muted">
+                            <p class="text-muted">
 
-                                Anda belum memiliki tiket pengajuan layanan.
-
-                                <br>
-
-                                Silakan ajukan layanan untuk melihat
-                                tiket Anda di halaman ini.
+                                Anda belum memiliki
+                                pengajuan layanan.
 
                             </p>
 
 
                             <a
                                 href="<?= base_url(
-                                            'mahasiswa/ticket/create'
-                                        ) ?>"
-                                class="btn"
+                                    'mahasiswa/ticket/create'
+                                ) ?>"
+                                class="
+                                    btn
+                                    text-white
+                                "
                                 style="
-                                    background:#f28c28;
-                                    color:white;
-                                    font-weight:600;
-                                ">
+                                    background-color:#f28c28;
+                                    border-color:#f28c28;
+                                "
+                            >
 
                                 <i
                                     class="
                                         fas
                                         fa-plus-circle
-                                    "></i>
+                                        mr-1
+                                    "
+                                ></i>
 
-                                Ajukan Layanan
+                                Buat Pengajuan
 
                             </a>
 
@@ -531,24 +750,6 @@
 
 
                 </div>
-
-            </div>
-
-
-            <!-- ==========================================
-                 BUTTON KEMBALI
-            =========================================== -->
-
-            <div class="mt-3">
-
-                <a
-    href="<?= base_url('dashboard-mahasiswa') ?>"
-    class="btn btn-secondary"
->
-    <i class="fas fa-arrow-left"></i>
-
-    Kembali ke Dashboard
-</a>
 
             </div>
 

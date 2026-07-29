@@ -7,237 +7,59 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 
-$routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('DashboardController');
-$routes->setDefaultMethod('index');
-$routes->setTranslateURIDashes(false);
-$routes->set404Override();
-$routes->setAutoRoute(false);
-
-
-
-/*
-|--------------------------------------------------------------------------
-| DASHBOARD
-|--------------------------------------------------------------------------
-*/
-
-$routes->get('/', 'DashboardController::index');
+// ===============================
+// UNIT LAYANAN
+// ===============================
 
 $routes->get(
-    'dashboard',
-    'DashboardController::index'
-);
-
-
-
-
-
-/*
-|--------------------------------------------------------------------------
-| UNIT LAYANAN
-|--------------------------------------------------------------------------
-*/
-
-
-$routes->get(
-    'unit',
-    'UnitController::index'
+    'unit-layanan',
+    'UnitLayanan::dashboard'
 );
 
 
 $routes->get(
-    'unit/create',
-    'UnitController::create'
+    'unit-layanan/dashboard',
+    'UnitLayanan::dashboard'
+);
+
+
+$routes->get(
+    'unit-layanan/detail/(:num)',
+    'UnitLayanan::detail/$1'
+);
+
+
+$routes->get(
+    'unit-layanan/proses/(:num)',
+    'UnitLayanan::proses/$1'
 );
 
 
 $routes->post(
-    'unit/store',
-    'UnitController::store'
+    'unit-layanan/updateProses/(:num)',
+    'UnitLayanan::updateProses/$1'
 );
 
 
 $routes->get(
-    'unit/edit/(:num)',
-    'UnitController::edit/$1'
+    'unit-layanan/upload/(:num)',
+    'UnitLayanan::upload/$1'
 );
 
 
 $routes->post(
-    'unit/update/(:num)',
-    'UnitController::update/$1'
+    'unit-layanan/simpanUpload/(:num)',
+    'UnitLayanan::simpanUpload/$1'
 );
 
 
 $routes->get(
-    'unit/delete/(:num)',
-    'UnitController::delete/$1'
-);
-
-
-
-
-
-
-
-
-
-/*
-|--------------------------------------------------------------------------
-| KATEGORI LAYANAN
-|--------------------------------------------------------------------------
-*/
-
-
-$routes->get(
-    'kategori',
-    'KategoriController::index'
+    'unit-layanan/kirim/(:num)',
+    'UnitLayanan::kirim/$1'
 );
 
 
 $routes->get(
-    'kategori/create',
-    'KategoriController::create'
-);
-
-
-$routes->post(
-    'kategori/store',
-    'KategoriController::store'
-);
-
-
-$routes->get(
-    'kategori/edit/(:num)',
-    'KategoriController::edit/$1'
-);
-
-
-$routes->post(
-    'kategori/update/(:num)',
-    'KategoriController::update/$1'
-);
-
-
-$routes->get(
-    'kategori/delete/(:num)',
-    'KategoriController::delete/$1'
-);
-
-
-
-
-
-
-/*
-|--------------------------------------------------------------------------
-| LAYANAN
-|--------------------------------------------------------------------------
-*/
-
-
-$routes->get(
-    'layanan',
-    'Layanan::index'
-);
-
-
-$routes->get(
-    'layanan/create',
-    'Layanan::create'
-);
-
-
-$routes->post(
-    'layanan/store',
-    'Layanan::store'
-);
-
-
-$routes->get(
-    'layanan/edit/(:num)',
-    'Layanan::edit/$1'
-);
-
-
-$routes->post(
-    'layanan/update/(:num)',
-    'Layanan::update/$1'
-);
-
-
-$routes->get(
-    'layanan/delete/(:num)',
-    'Layanan::delete/$1'
-);
-
-
-
-
-
-
-/*
-|--------------------------------------------------------------------------
-| PERSYARATAN LAYANAN
-|--------------------------------------------------------------------------
-*/
-
-
-$routes->get(
-    'persyaratan',
-    'Persyaratan::index'
-);
-
-
-$routes->get(
-    'persyaratan/create',
-    'Persyaratan::create'
-);
-
-
-$routes->post(
-    'persyaratan/store',
-    'Persyaratan::store'
-);
-
-
-$routes->get(
-    'persyaratan/edit/(:num)',
-    'Persyaratan::edit/$1'
-);
-
-
-$routes->post(
-    'persyaratan/update/(:num)',
-    'Persyaratan::update/$1'
-);
-
-
-$routes->get(
-    'persyaratan/delete/(:num)',
-    'Persyaratan::delete/$1'
-);
-/*
-|--------------------------------------------------------------------------
-| PETUGAS UNIT LAYANAN
-|--------------------------------------------------------------------------
-*/
-
-
-$routes->get(
-    'petugas-unit',
-    'PetugasUnit::index'
-);
-
-
-$routes->get(
-    'petugas-unit/proses/(:num)',
-    'PetugasUnit::proses/$1'
-);
-
-
-$routes->post(
-    'petugas-unit/update/(:num)',
-    'PetugasUnit::update/$1'
+    'unit-layanan/riwayat',
+    'UnitLayanan::riwayat'
 );

@@ -3,267 +3,215 @@
 
 <head>
 
-    <title><?= $title ?? 'SI ULT'; ?></title>
+<title><?= $title ?? 'SI ULT'; ?></title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+rel="stylesheet">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
-    rel="stylesheet">
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+rel="stylesheet">
 
 
-    <style>
 
+<style>
 
-        body {
 
-            background:#f5f6fa;
+body{
 
-        }
+background:#f4f6f9;
+font-family:'Segoe UI',sans-serif;
 
+}
 
 
-        .content {
 
-            min-height:90vh;
+.content{
 
-        }
+min-height:100vh;
 
+margin-left:250px;
 
+padding-top:70px;
 
-        .card {
+}
 
-            border-radius:12px;
 
-        }
 
+.card{
 
+border:none;
 
+border-radius:15px;
 
-        /* ======================
-           TABLE HEADER
-           WARNA BIRU
-        ====================== */
+box-shadow:0 5px 15px rgba(0,0,0,.08);
 
+}
 
-        .table th {
 
-            background:#293582 !important;
 
-            color:white !important;
+.navbar-ult{
 
-            border-color:#293582 !important;
+height:70px;
 
-        }
+background:#293582;
 
+box-shadow:0 3px 10px rgba(0,0,0,.15);
 
+position:fixed;
 
-        .table {
+top:0;
 
-            background:white;
+right:0;
 
-        }
+left:250px;
 
+z-index:1000;
 
+}
 
 
-        /* ======================
-           BUTTON PRIMARY
-           TAMBAH DATA
-        ====================== */
 
+.sidebar{
 
-        .btn-primary {
+position:fixed;
 
-            background:#293582 !important;
+top:0;
 
-            border-color:#293582 !important;
+left:0;
 
-            color:white !important;
+width:250px;
 
-        }
+height:100vh;
 
+background:#293582;
 
+z-index:2000;
 
-        .btn-primary:hover {
+}
 
 
-            background:#ff7f00 !important;
 
-            border-color:#ff7f00 !important;
+.sidebar .menu a{
 
+display:flex;
 
-        }
+align-items:center;
 
+gap:12px;
 
+color:white;
 
+padding:12px 20px;
 
-        /* ======================
-           NAVBAR
-        ====================== */
+margin:8px;
 
+border-radius:10px;
 
-        .navbar-ult {
+text-decoration:none;
 
-            background:#293582 !important;
+transition:.3s;
 
-        }
+}
 
 
 
-        .navbar-ult .navbar-brand {
+.sidebar .menu a:hover,
 
-            color:white !important;
+.sidebar .menu a.active{
 
-            font-weight:bold;
+background:#ff7f00;
 
-        }
+}
 
 
 
+.stat-card{
 
-        /* ======================
-           SIDEBAR
-        ====================== */
+border-radius:15px;
 
+color:white;
 
-        .sidebar {
+padding:20px;
 
+height:140px;
 
-            width:250px;
+}
 
 
-            min-height:100vh;
 
+.stat-card i{
 
-            background:#293582;
+font-size:45px;
 
+opacity:.5;
 
-        }
+float:right;
 
+}
 
 
-        .sidebar h4 {
 
+.table thead{
 
-            color:white;
+background:#293582;
 
+color:white;
 
-            font-weight:bold;
+}
 
 
-        }
 
+.btn-primary{
 
+background:#293582;
 
-        .sidebar .nav-link {
+border:none;
 
+}
 
-            color:white !important;
 
 
-            padding:10px 15px;
+.btn-primary:hover{
 
+background:#ff7f00;
 
-            border-radius:8px;
+}
 
 
-            transition:0.3s;
 
+</style>
 
-        }
-
-
-
-
-        /* ======================
-           HOVER MENU SIDEBAR
-           WARNA OREN
-        ====================== */
-
-
-        .sidebar .nav-link:hover {
-
-
-            background:#ff7f00;
-
-
-            color:white !important;
-
-
-        }
-
-
-
-
-        /* ======================
-           MENU AKTIF
-        ====================== */
-
-
-        .sidebar .nav-link.active {
-
-
-            background:#ff7f00;
-
-
-            color:white !important;
-
-
-        }
-
-
-
-    </style>
 
 
 </head>
-
 
 
 <body>
 
 
 
-
 <?= view('layouts/navbar'); ?>
 
 
-
-
-<div class="d-flex">
-
+<?= view('layouts/sidebar'); ?>
 
 
 
-
-    <?= view('layouts/sidebar'); ?>
-
+<main class="content">
 
 
+<?= $this->renderSection('content'); ?>
 
 
-    <main class="content container-fluid p-4">
-
-
-        <?= $this->renderSection('content'); ?>
-
-
-    </main>
+</main>
 
 
 
-
-</div>
-
-
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap.bundle.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
 </body>

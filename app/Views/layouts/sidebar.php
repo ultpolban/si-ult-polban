@@ -1,68 +1,67 @@
-<div class="sidebar text-white p-3">
+<div class="sidebar">
 
 
-    <h4 class="text-center mb-4">
-        SI ULT
-    </h4>
+<div class="text-center text-white py-4">
 
 
-    <ul class="nav flex-column">
+<h4 class="fw-bold">
+
+<i class="fas fa-headset"></i>
+
+SI ULT POLBAN
+
+</h4>
 
 
-        <li class="nav-item mb-2">
-            <a class="nav-link"
-               href="<?= base_url('/') ?>">
-                Dashboard
-            </a>
-        </li>
-
-
-
-        <li class="nav-item mb-2">
-            <a class="nav-link"
-               href="<?= base_url('unit') ?>">
-                Unit Layanan
-            </a>
-        </li>
+</div>
 
 
 
-        <li class="nav-item mb-2">
-            <a class="nav-link"
-               href="<?= base_url('kategori') ?>">
-                Kategori Layanan
-            </a>
-        </li>
+
+<div class="text-center text-white mb-4">
+
+
+<i class="fas fa-user-circle fa-3x"></i>
+
+
+<h6 class="mt-2">
+
+<?= session()->get('name') ?? 'Petugas' ?>
+
+</h6>
+
+
+<small>
+
+Petugas Unit Layanan
+
+</small>
+
+
+</div>
 
 
 
-        <li class="nav-item mb-2">
-            <a class="nav-link"
-               href="<?= base_url('layanan') ?>">
-                Layanan
-            </a>
-        </li>
+
+<div class="menu">
+
+
+<a href="<?= base_url('unit-layanan') ?>"
+class="active">
+
+
+<i class="fas fa-home"></i>
+
+
+Dashboard
+
+
+</a>
 
 
 
-        <li class="nav-item mb-2">
-            <a class="nav-link"
-               href="<?= base_url('persyaratan') ?>">
-                Persyaratan Layanan
-            </a>
-        </li>
+</div>
 
-
-
-        <li class="nav-item mb-2">
-            <a class="nav-link"
-               href="<?= base_url('petugas-unit') ?>">
-                Tiket Unit Layanan
-            </a>
-        </li>
-
-
-    </ul>
 
 
 </div>

@@ -4,33 +4,41 @@
 <?= $this->section('content') ?>
 
 
-<div class="container-fluid">
 
+<h3 class="fw-bold mb-4">
 
-<h3 class="mb-4">
 Dashboard Unit Layanan
+
 </h3>
 
 
 
-<div class="row">
+
+<div class="row g-4">
+
 
 
 <div class="col-md-3">
 
-<div class="small-box bg-primary">
+<div class="stat-card bg-primary">
 
-<div class="inner">
 
-<h3>
+<h2>
+
 <?= $total ?>
-</h3>
+
+</h2>
+
 
 <p>
+
 Total Tiket
+
 </p>
 
-</div>
+
+<i class="fas fa-ticket"></i>
+
 
 </div>
 
@@ -42,24 +50,31 @@ Total Tiket
 
 <div class="col-md-3">
 
-<div class="small-box bg-warning">
 
-<div class="inner">
+<div class="stat-card bg-warning">
 
-<h3>
+
+<h2>
+
 <?= $menunggu ?>
-</h3>
+
+</h2>
+
 
 <p>
+
 Menunggu
+
 </p>
 
-</div>
+
+<i class="fas fa-clock"></i>
+
 
 </div>
 
-</div>
 
+</div>
 
 
 
@@ -68,24 +83,31 @@ Menunggu
 
 <div class="col-md-3">
 
-<div class="small-box bg-info">
 
-<div class="inner">
+<div class="stat-card bg-info">
 
-<h3>
+
+<h2>
+
 <?= $diproses ?>
-</h3>
+
+</h2>
+
 
 <p>
+
 Diproses
+
 </p>
 
-</div>
+
+<i class="fas fa-spinner"></i>
+
 
 </div>
 
-</div>
 
+</div>
 
 
 
@@ -94,47 +116,55 @@ Diproses
 
 <div class="col-md-3">
 
-<div class="small-box bg-success">
 
-<div class="inner">
+<div class="stat-card bg-success">
 
-<h3>
+
+<h2>
+
 <?= $selesai ?>
-</h3>
+
+</h2>
+
 
 <p>
+
 Selesai
+
 </p>
 
-</div>
 
-</div>
-
-</div>
-
+<i class="fas fa-check"></i>
 
 
 </div>
 
 
+</div>
+
+
+
+</div>
 
 
 
 
 
-<div class="card">
+
+<div class="card mt-4">
 
 
+<div class="card-header bg-white">
 
-<div class="card-header">
 
-<h5>
+<h5 class="fw-bold mb-0">
+
 Tiket Terbaru
+
 </h5>
 
+
 </div>
-
-
 
 
 
@@ -142,18 +172,19 @@ Tiket Terbaru
 
 
 
-<table class="table table-bordered">
+<div class="table-responsive">
 
+
+<table class="table table-hover">
 
 
 <thead>
-
 
 <tr>
 
 <th>No Tiket</th>
 
-<th>Judul Pengajuan</th>
+<th>Judul</th>
 
 <th>Status</th>
 
@@ -167,20 +198,15 @@ Tiket Terbaru
 
 
 
-
-
 <tbody>
 
 
 
 <?php foreach($tiket as $t): ?>
 
-
-
 <tr>
 
 
-
 <td>
 
 <?= $t['no_tiket'] ?>
@@ -189,88 +215,62 @@ Tiket Terbaru
 
 
 
-
-
 <td>
 
-
-<?= $t['no_tiket'] ?>
-
- -
- 
-<b>
 <?= $t['judul'] ?>
-</b>
-
 
 </td>
 
 
 
 
-
 <td>
-
 
 
 <?php
 
-$warna = 'secondary';
+
+$badge="secondary";
 
 
-if($t['status']=='Menunggu')
-{
-    $warna='warning';
-}
+if($t['status']=="Menunggu")
+$badge="warning";
 
 
-elseif($t['status']=='Diproses')
-{
-    $warna='primary';
-}
+elseif($t['status']=="Diproses")
+$badge="primary";
 
 
-elseif($t['status']=='Selesai')
-{
-    $warna='success';
-}
+elseif($t['status']=="Selesai")
+$badge="success";
 
 
-elseif($t['status']=='Ditolak')
-{
-    $warna='danger';
-}
+elseif($t['status']=="Ditolak")
+$badge="danger";
 
 
 ?>
 
 
-
-<span class="badge bg-<?= $warna ?>">
-
+<span class="badge bg-<?= $badge ?>">
 
 <?= $t['status'] ?>
 
-
 </span>
-
 
 
 </td>
 
 
 
-
-
-
-
 <td>
-
 
 
 <a href="<?= base_url('unit-layanan/detail/'.$t['id']) ?>"
 class="btn btn-primary btn-sm">
 
+
+<i class="fas fa-eye"></i>
 
 Detail
 
@@ -278,15 +278,11 @@ Detail
 </a>
 
 
-
 </td>
 
 
 
-
-
 </tr>
-
 
 
 <?php endforeach; ?>
@@ -296,21 +292,17 @@ Detail
 </tbody>
 
 
-
 </table>
 
 
+</div>
+
 
 </div>
 
 
-
 </div>
 
-
-
-
-</div>
 
 
 

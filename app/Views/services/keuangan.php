@@ -34,10 +34,10 @@
                             </small>
 
                             <br><br>
-<a href="<?= base_url('layanan/' . $service['id']) ?>" class="btn btn-ajukan w-100">
+<a href="<?= base_url('layanan/detail/'.$service['id']) ?>"
+   class="btn btn-ajukan w-100">
     Lihat Detail
 </a>
-
                         </div>
 
                     </div>

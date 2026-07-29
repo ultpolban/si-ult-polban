@@ -344,7 +344,7 @@ Refund
 
 </p>
 
-<a href="<?= base_url('layanan/akademik') ?>" class="btn btn-ajukan w-100">
+<a href="<?= base_url('layanan/keuangan') ?>" class="btn btn-ajukan w-100">
     Lihat Layanan
 </a>
 
@@ -443,87 +443,38 @@ UPA Perpustakaan
 
         <div class="accordion shadow-sm" id="faqAccordion">
 
-            <div class="accordion-item">
-                <h2 class="accordion-header">
+          <?php foreach($faqs as $faq): ?>
 
-                    <button class="accordion-button"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#faq1">
+<div class="accordion-item">
 
-                        Bagaimana cara mengajukan layanan?
+    <h2 class="accordion-header">
 
-                    </button>
+        <button class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#faq<?= $faq['id']; ?>">
 
-                </h2>
+            <?= esc($faq['question']); ?>
 
-               <div id="faq1"
-     class="accordion-collapse collapse"
-     data-bs-parent="#faqAccordion">
+        </button>
 
-                    <div class="accordion-body">
+    </h2>
 
-                        Untuk mengajukan layanan, silakan login terlebih dahulu,
-                        kemudian pilih kategori layanan, pilih layanan yang
-                        dibutuhkan, lengkapi persyaratan, lalu kirim pengajuan.
-                        Status pengajuan dapat dipantau melalui dashboard pengguna.
+    <div id="faq<?= $faq['id']; ?>"
+         class="accordion-collapse collapse"
+         data-bs-parent="#faqAccordion">
 
-                    </div>
+        <div class="accordion-body">
 
-                </div>
-
-            </div>
-
-             <!-- FAQ 2 -->
-    <div class="accordion-item">
-        <h2 class="accordion-header">
-       <button class="accordion-button collapsed"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#faq2">
-
-               Berapa lama proses penyelesaian layanan?
-
-            </button>
-        </h2>
-
-        <div id="faq2"
-             class="accordion-collapse collapse"
-             data-bs-parent="#faqAccordion">
-
-            <div class="accordion-body">
-                Lama proses penyelesaian setiap layanan berbeda-beda, tergantung jenis layanan yang dipilih. Informasi estimasi waktu dapat dilihat pada detail layanan atau akan diinformasikan oleh Petugas ULT.
-            </div>
+            <?= esc($faq['answer']); ?>
 
         </div>
+
     </div>
 
-    <!-- FAQ 3 -->
-    <div class="accordion-item">
-        <h2 class="accordion-header">
-            <button class="accordion-button collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#faq3">
+</div>
 
-                Bagaimana cara mengetahui status pengajuan layanan?
-
-            </button>
-        </h2>
-
-        <div id="faq3"
-             class="accordion-collapse collapse"
-             data-bs-parent="#faqAccordion">
-
-            <div class="accordion-body">
-                Setelah pengajuan berhasil dikirim, Anda dapat melihat status
-                layanan melalui dashboard pengguna pada menu riwayat atau daftar
-                pengajuan. Status akan diperbarui oleh petugas sesuai proses
-                penanganan layanan.
-            </div>
-
-        </div>
-    </div>
+<?php endforeach; ?>
 
         </div>
 

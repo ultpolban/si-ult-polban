@@ -1,112 +1,75 @@
-<?= $this->extend('layouts/template') ?>
-
-<?= $this->section('content') ?>
+<?= $this->include('layouts/header') ?>
+<?= $this->include('layouts/navbar') ?>
 
 <div class="container py-5">
 
-    <div class="row justify-content-center">
+    <div class="card shadow border-0">
 
-        <div class="col-lg-8">
+        <div class="card-header text-white" style="background:#082B63;">
+            <h3 class="mb-0"><?= esc($service['service_name']) ?></h3>
+        </div>
 
-            <div class="card shadow border-0">
+        <div class="card-body">
 
-                <div class="card-header bg-primary text-white">
+            <h5 class="fw-bold">Deskripsi Layanan</h5>
 
-                    <h3 class="mb-0">
-                        Detail Layanan
-                    </h3>
+            <p class="text-muted">
+                <?= esc($service['description']) ?>
+            </p>
 
-                </div>
+            <hr>
 
-                <div class="card-body">
+            <h5 class="fw-bold">Estimasi Penyelesaian</h5>
 
-                    <h4 class="fw-bold mb-4">
+            <p>
+                <?= esc($service['sla_hours']) ?> Jam
+            </p>
 
-                        <?= esc($service['service_name']) ?>
+            <hr>
 
-                    </h4>
+            <h5 class="fw-bold mb-3">Persyaratan</h5>
 
-                    <table class="table">
+            <?php if(!empty($requirements)): ?>
 
-                        <tr>
+                <ul class="list-group mb-4">
 
-                            <th width="220">
-                                Kategori
-                            </th>
+                    <?php foreach($requirements as $requirement): ?>
 
-                            <td>
+                        <li class="list-group-item">
 
-                                <?= ($service['category_id'] == 1) ? 'Keuangan' : 'Akademik'; ?>
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
 
-                            </td>
+                            <?= esc($requirement['requirement']) ?>
 
-                        </tr>
+                        </li>
 
-                        <tr>
+                    <?php endforeach; ?>
 
-                            <th>Kode Layanan</th>
+                </ul>
 
-                            <td>
+            <?php else: ?>
 
-                                <?= esc($service['service_code']) ?>
+                <div class="alert alert-warning">
 
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <th>Deskripsi</th>
-
-                            <td>
-
-                                <?= esc($service['description']) ?>
-
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <th>Estimasi Layanan</th>
-
-                            <td>
-
-                                <?= esc($service['sla_hours']) ?> Jam
-
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <th>Status Login</th>
-
-                            <td>
-
-                                <?= ($service['is_login_required']) ? 'Wajib Login' : 'Tidak Wajib'; ?>
-
-                            </td>
-
-                        </tr>
-
-                    </table>
-
-                    <div class="mt-4">
-
-                        <a href="javascript:history.back()" class="btn btn-secondary">
-
-                            ← Kembali
-
-                        </a>
-
-                       <a href="<?= base_url('layanan/'.$service['id']) ?>" class="btn btn-primary w-100">
-    Lihat Detail
-</a>
-
-                    </div>
+                    Belum ada persyaratan.
 
                 </div>
+
+            <?php endif; ?>
+
+            <div class="d-flex justify-content-between">
+
+                <a href="<?= previous_url() ?>" class="btn btn-secondary">
+
+                    Kembali
+
+                </a>
+
+                <a href="#" class="btn btn-ajukan">
+
+                    Ajukan Layanan
+
+                </a>
 
             </div>
 
@@ -116,4 +79,4 @@
 
 </div>
 
-<?= $this->endSection() ?>
+<?= $this->include('layouts/footer') ?>

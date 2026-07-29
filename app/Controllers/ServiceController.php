@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\ServiceModel;
+use App\Models\RequirementModel;
 
 class ServiceController extends BaseController
 {
@@ -41,22 +42,37 @@ class ServiceController extends BaseController
         return view('services/akademik', $data);
     }
 
-   public function detail($id)
-{
-    $model = new \App\Models\ServiceModel();
-
-    $service = $model->find($id);
-
-    if (!$service) {
-        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-    }
-
-    return view('services/detail', [
-        'service' => $service
-    ]);
-}
     public function upa()
 {
     return view('services/upa');
 }
+
+    public function detail($id)
+{
+    $serviceModel = new ServiceModel();
+    $requirementModel = new RequirementModel();
+
+    // Ambil data layanan
+    $service = $serviceModel->find($id);
+
+    // Kalau layanan tidak ada
+    if (!$service) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+    }
+
+    // Ambil persyaratan berdasarkan service_id
+    $requirements = $requirementModel
+        ->where('service_id', $id)
+        ->where('is_active', 1)
+        ->findAll();
+
+    $data = [
+        'service'      => $service,
+        'requirements' => $requirements
+    ];
+
+    return view('services/detail', $data);
+}
+
+    
 }

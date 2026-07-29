@@ -89,7 +89,7 @@
 
 .accordion-button:not(.collapsed){
 
-    background : #000080;
+    background : #293582;
 
     color:#fff;
 
@@ -167,7 +167,7 @@ html{
 
 .list-group-item:hover{
 
-    background:#000080;
+    background:#293582;
 
     color:white;
 
@@ -180,12 +180,12 @@ html{
 =========================== */
 
 :root{
-    --primary: #000080;
+    --primary: #293582;
     --secondary:#ff7f00;
 }
 
 .navbar-polban{
-    background: #000080!important;
+    background: #293582!important;
 }
 
 .navbar-polban .navbar-brand{
@@ -221,7 +221,7 @@ html{
 =========================== */
 
 .navbar-polban{
-    background:#000080 !important;
+    background:#293582 !important;
     border-bottom:4px solid #F58220;
     box-shadow:0 4px 12px rgba(0,0,0,.15);
 }
@@ -288,14 +288,14 @@ html{
 
 .btn-hero{
 
-    background : #000080;
+    background : #293582;
     color:white;
 
 }
 
 .btn-hero:hover{
 
-    background:#000080;
+    background:#293582;
 
 }
 
@@ -307,7 +307,7 @@ html{
 
 .faq-badge{
 
-    background:#000080;
+    background:#293582;
     color:white;
     padding:8px 20px;
     border-radius:30px;
@@ -335,7 +335,7 @@ html{
 }
 
 .accordion-button{
-    background:#000080;
+    background:#293582;
     color:#fff;
     font-weight:600;
     padding:20px;
@@ -344,7 +344,7 @@ html{
 }
 
 .accordion-button:not(.collapsed){
-    background:#000080;
+    background:#293582;
     color:#fff;
 }
 
@@ -359,7 +359,7 @@ html{
 }
 
 .btn-ajukan{
-    background: #000080 !important;
+    background: #293582!important;
     color: #fff !important;
     border: none;
     border-radius: 10px;
@@ -370,7 +370,7 @@ html{
 }
 
 .btn-ajukan:hover{
-    background: #000080 !important;
+    background: #293582 !important;
     color: #fff !important;
     transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(0, 59, 143, 0.35);
@@ -386,7 +386,7 @@ html{
 
 .footer-polban{
 
-    background:#000080;
+    background:#293582;
     color:#fff;
     padding:25px 0;
     border-top:4px solid #F58220;
@@ -403,7 +403,7 @@ html{
 }
 
 .btn-ajukan{
-    background:#000080 !important;
+    background:#293582!important;
     color:#fff !important;
     border:none;
     border-radius:8px;
@@ -411,6 +411,6 @@ html{
 }
 
 .btn-ajukan:hover{
-    background:#000080!important;
+    background:#293582!important;
     color:#fff;
 }

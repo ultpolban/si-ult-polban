@@ -3,15 +3,9 @@
 <?= $this->section('content') ?>
 
 <div class="container py-5">
-
-    <div class="text-center mb-5">
-        <h2 class="fw-bold text-primary">
+        <h2 class="mb-4 text-success fw-bold">
             🎓 Layanan Akademik
-        </h2>
-
-        <p class="text-muted">
-            Pilih layanan akademik yang ingin Anda ajukan.
-        </p>
+</h2>
     </div>
 
     <div class="row">
@@ -38,8 +32,8 @@
                                 <strong>Estimasi Layanan:</strong>
                                 <?= esc($service['sla_hours']); ?> Jam
                             </p>
-
-                      <a href="<?= base_url('layanan/' . $service['id']) ?>" class="btn btn-ajukan w-100">
+<a href="<?= base_url('layanan/detail/'.$service['id']) ?>"
+   class="btn btn-ajukan w-100">
     Lihat Detail
 </a>
 

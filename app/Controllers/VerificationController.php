@@ -70,25 +70,59 @@ class VerificationController extends BaseController
         return view('verification/detail', $data);
     }
 
-   public function process($id)
+ public function process($id)
 {
+    $ticketModel = new TicketModel();
+
+    $ticket = $ticketModel->find($id);
+
     $status = $this->request->getPost('status');
 
-   $this->ticketModel->update($id, [
+    // Pengajuan Offline hanya bisa diverifikasi
+    if ($ticket['submission_type'] == 'Offline') {
 
-    'status'            => 'Assigned',
+        $ticketModel->update($id, [
+            'status'        => 'Assigned',
+            'assigned_unit' => $this->request->getPost('assigned_unit'),
+            'verified_by'   => session('name'),
+            'verified_at'   => date('Y-m-d H:i:s')
+        ]);
 
-    'assigned_unit'     => $this->request->getPost('assigned_unit'),
+    } else {
 
-    'verified_by'       => session('name'),
+        // Pengajuan Online
+        if ($status == 'Rejected') {
 
-    'verification_note' => $this->request->getPost('verification_note'),
+            $ticketModel->update($id, [
+                'status' => 'Rejected',
+                'verification_note' => $this->request->getPost('verification_note'),
+                'verified_by' => session('name'),
+                'verified_at' => date('Y-m-d H:i:s')
+            ]);
 
-    'verified_at'       => date('Y-m-d H:i:s')
+        } elseif ($status == 'Need Revision') {
 
-]);
+            $ticketModel->update($id, [
+                'status' => 'Need Revision',
+                'verification_note' => $this->request->getPost('verification_note'),
+                'verified_by' => session('name'),
+                'verified_at' => date('Y-m-d H:i:s')
+            ]);
+
+        } else {
+
+            $ticketModel->update($id, [
+                'status' => 'Assigned',
+                'assigned_unit' => $this->request->getPost('assigned_unit'),
+                'verification_note' => $this->request->getPost('verification_note'),
+                'verified_by' => session('name'),
+                'verified_at' => date('Y-m-d H:i:s')
+            ]);
+
+        }
+    }
 
     return redirect()->to('/verification')
-            ->with('success','Tiket berhasil diverifikasi.');
+        ->with('success', 'Tiket berhasil diproses.');
 }
 }

@@ -123,21 +123,29 @@
 
     <?= csrf_field() ?>
 
-    <div class="form-group">
+ <?php if ($ticket['submission_type'] == 'Online'): ?>
 
-        <label>Keputusan Verifikasi</label>
+<div class="form-group">
+    <label>Keputusan Verifikasi</label>
 
-        <select name="status" class="form-control" required>
+    <select name="status" class="form-control" required>
+        <option value="">-- Pilih Keputusan --</option>
+        <option value="Verified">Verifikasi & Kirim ke Unit</option>
+        <option value="Need Revision">Need Revision</option>
+        <option value="Rejected">Rejected</option>
+    </select>
+</div>
 
-            <option value="">-- Pilih Keputusan --</option>
-            <option value="Assigned">Verifikasi & Kirim ke Unit</option>
-            <option value="Need Revision">Need Revision</option>
-            <option value="Rejected">Rejected</option>
+<?php else: ?>
 
-        </select>
+<input type="hidden" name="status" value="Verified">
 
-    </div>
+<div class="alert alert-info">
+    <b>Pengajuan Offline</b><br>
+    Pengajuan offline hanya dapat langsung diverifikasi.
+</div>
 
+<?php endif; ?>
     <div class="form-group">
 
         <label>Unit Tujuan</label>
@@ -171,13 +179,26 @@
 
     </div>
 
-    <button type="submit" class="btn btn-success">
+    <?php if ($ticket['submission_type'] == 'Online'): ?>
 
-        <i class="fas fa-paper-plane"></i>
+<button type="submit" class="btn btn-success">
+    <i class="fas fa-paper-plane"></i>
+    Verifikasi & Kirim ke Unit
+</button>
 
-        Verifikasi & Kirim ke Unit
+<?php else: ?>
 
-    </button>
+<button type="submit" class="btn btn-success">
+    <i class="fas fa-check"></i>
+    Verifikasi
+</button>
+
+<?php endif; ?>
+
+<a href="<?= base_url('verification') ?>" class="btn btn-secondary">
+    <i class="fas fa-arrow-left"></i>
+    Kembali
+</a>
 
     <a href="<?= base_url('verification') ?>" class="btn btn-secondary">
 

@@ -12,6 +12,7 @@ Dashboard Unit Layanan
 </h3>
 
 
+
 <div class="row">
 
 
@@ -37,6 +38,8 @@ Total Tiket
 
 
 
+
+
 <div class="col-md-3">
 
 <div class="small-box bg-warning">
@@ -56,6 +59,9 @@ Menunggu
 </div>
 
 </div>
+
+
+
 
 
 
@@ -83,6 +89,9 @@ Diproses
 
 
 
+
+
+
 <div class="col-md-3">
 
 <div class="small-box bg-success">
@@ -104,11 +113,17 @@ Selesai
 </div>
 
 
+
 </div>
 
 
 
+
+
+
+
 <div class="card">
+
 
 
 <div class="card-header">
@@ -121,90 +136,182 @@ Tiket Terbaru
 
 
 
+
+
 <div class="card-body">
+
 
 
 <table class="table table-bordered">
 
 
+
 <thead>
+
 
 <tr>
 
 <th>No Tiket</th>
 
-<th>Judul</th>
+<th>Judul Pengajuan</th>
 
 <th>Status</th>
 
 <th>Aksi</th>
 
+
 </tr>
 
+
 </thead>
+
+
+
 
 
 <tbody>
 
 
+
 <?php foreach($tiket as $t): ?>
+
 
 
 <tr>
 
 
+
 <td>
+
 <?= $t['no_tiket'] ?>
+
 </td>
 
 
+
+
+
 <td>
+
+
+<?= $t['no_tiket'] ?>
+
+ -
+ 
+<b>
 <?= $t['judul'] ?>
+</b>
+
+
 </td>
+
+
+
 
 
 <td>
 
-<span class="badge badge-info">
+
+
+<?php
+
+$warna = 'secondary';
+
+
+if($t['status']=='Menunggu')
+{
+    $warna='warning';
+}
+
+
+elseif($t['status']=='Diproses')
+{
+    $warna='primary';
+}
+
+
+elseif($t['status']=='Selesai')
+{
+    $warna='success';
+}
+
+
+elseif($t['status']=='Ditolak')
+{
+    $warna='danger';
+}
+
+
+?>
+
+
+
+<span class="badge bg-<?= $warna ?>">
+
 
 <?= $t['status'] ?>
 
+
 </span>
+
+
 
 </td>
 
 
+
+
+
+
+
 <td>
+
+
 
 <a href="<?= base_url('unit-layanan/detail/'.$t['id']) ?>"
 class="btn btn-primary btn-sm">
 
+
 Detail
+
 
 </a>
 
+
+
 </td>
+
+
+
 
 
 </tr>
 
 
+
 <?php endforeach; ?>
+
 
 
 </tbody>
 
 
+
 </table>
 
 
-</div>
-
 
 </div>
 
 
+
 </div>
+
+
+
+
+</div>
+
 
 
 <?= $this->endSection() ?>

@@ -8,8 +8,30 @@
 
 
 <h3 class="mb-3">
-Detail Tiket Unit Layanan
+    Detail Tiket Unit Layanan
 </h3>
+
+
+
+<?php if(session()->getFlashdata('success')): ?>
+
+<div class="alert alert-success">
+<?= session()->getFlashdata('success') ?>
+</div>
+
+<?php endif; ?>
+
+
+
+<?php if(session()->getFlashdata('error')): ?>
+
+<div class="alert alert-danger">
+<?= session()->getFlashdata('error') ?>
+</div>
+
+<?php endif; ?>
+
+
 
 
 
@@ -18,12 +40,14 @@ Detail Tiket Unit Layanan
 <div class="card-body">
 
 
+
 <h5>
 Data Tiket
 </h5>
 
-
 <hr>
+
+
 
 
 <p>
@@ -32,6 +56,8 @@ Data Tiket
 <?= $tiket['no_tiket'] ?? '-' ?>
 
 </p>
+
+
 
 
 
@@ -44,12 +70,16 @@ Data Tiket
 
 
 
+
+
 <p>
 <b>NIM :</b>
 
 <?= $tiket['nim'] ?? '-' ?>
 
 </p>
+
+
 
 
 
@@ -62,6 +92,8 @@ Data Tiket
 
 
 
+
+
 <p>
 <b>No HP :</b>
 
@@ -71,7 +103,11 @@ Data Tiket
 
 
 
+
+
 <hr>
+
+
 
 
 <h5>
@@ -79,12 +115,31 @@ Data Layanan
 </h5>
 
 
+<hr>
+
+
+
+
+
 <p>
-<b>Kategori :</b>
+<b>Unit Layanan :</b>
+
+<?= $tiket['nama_unit'] ?? '-' ?>
+
+</p>
+
+
+
+
+
+<p>
+<b>Kategori Layanan :</b>
 
 <?= $tiket['nama_kategori'] ?? '-' ?>
 
 </p>
+
+
 
 
 
@@ -97,8 +152,10 @@ Data Layanan
 
 
 
+
+
 <p>
-<b>Judul :</b>
+<b>Judul Pengajuan :</b>
 
 <?= $tiket['judul'] ?? '-' ?>
 
@@ -106,8 +163,10 @@ Data Layanan
 
 
 
+
+
 <p>
-<b>Deskripsi :</b>
+<b>Deskripsi Pengajuan :</b>
 
 <br>
 
@@ -117,12 +176,18 @@ Data Layanan
 
 
 
+
+
+
 <hr>
+
+
 
 
 <h5>
 Dokumen Pemohon
 </h5>
+
 
 
 
@@ -133,9 +198,12 @@ Dokumen Pemohon
 target="_blank"
 class="btn btn-info">
 
+
 Lihat Lampiran
 
+
 </a>
+
 
 
 <?php else: ?>
@@ -146,11 +214,17 @@ Tidak ada lampiran
 </span>
 
 
+
 <?php endif; ?>
 
 
 
+
+
+
+
 <hr>
+
 
 
 
@@ -160,27 +234,78 @@ Proses Unit Layanan
 
 
 
+
+<?php
+
+$warna='secondary';
+
+
+if(($tiket['status'] ?? '')=='Menunggu')
+{
+    $warna='warning';
+}
+
+
+elseif(($tiket['status'] ?? '')=='Diproses')
+{
+    $warna='primary';
+}
+
+
+elseif(($tiket['status'] ?? '')=='Selesai')
+{
+    $warna='success';
+}
+
+
+elseif(($tiket['status'] ?? '')=='Ditolak')
+{
+    $warna='danger';
+}
+
+
+?>
+
+
+
+
+
+
 <p>
+
 <b>Status Unit :</b>
 
-<span class="badge bg-warning">
+
+<span class="badge bg-<?= $warna ?>">
+
 
 <?= $tiket['status'] ?? '-' ?>
 
+
 </span>
 
+
 </p>
+
+
 
 
 
 <p>
+
 <b>Catatan Unit :</b>
+
 
 <br>
 
+
 <?= $tiket['catatan'] ?? '-' ?>
 
+
 </p>
+
+
+
 
 
 
@@ -188,9 +313,14 @@ Proses Unit Layanan
 <hr>
 
 
+
+
+
 <h5>
 Dokumen Hasil
 </h5>
+
+
 
 
 
@@ -201,9 +331,14 @@ Dokumen Hasil
 target="_blank"
 class="btn btn-success">
 
+
 Download Hasil
 
+
 </a>
+
+
+
 
 
 <?php else: ?>
@@ -214,7 +349,15 @@ Belum ada hasil
 </span>
 
 
+
+
+
 <?php endif; ?>
+
+
+
+
+
 
 
 
@@ -222,49 +365,73 @@ Belum ada hasil
 
 
 
+
+
+
+
 <a href="<?= base_url('unit-layanan/proses/'.$tiket['id']) ?>"
 class="btn btn-warning">
 
+
 Proses Tiket
 
-</a>
-
-
-
-<a href="<?= base_url('unit-layanan/upload/'.$tiket['id']) ?>"
-class="btn btn-success">
-
-Upload Hasil
 
 </a>
 
+
+
+
+
+
+
+
+<?php if(($tiket['status'] ?? '')=='Selesai'): ?>
 
 
 <a href="<?= base_url('unit-layanan/kirim/'.$tiket['id']) ?>"
 class="btn btn-primary"
 onclick="return confirm('Kirim hasil ke Petugas ULT?')">
 
+
 Kirim ke Petugas ULT
 
+
 </a>
+
+
+
+<?php endif; ?>
+
+
+
+
+
 
 
 
 <a href="<?= base_url('unit-layanan/dashboard') ?>"
 class="btn btn-secondary">
 
+
 Kembali
+
 
 </a>
 
 
 
-</div>
+
+
+
+
 
 </div>
 
+</div>
+
 
 </div>
+
 
 
 <?= $this->endSection() ?>

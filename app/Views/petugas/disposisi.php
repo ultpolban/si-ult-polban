@@ -75,6 +75,47 @@
             </h5>
         </div>
         <div class="card-body pt-0">
+
+           <div class="row mb-4">
+
+    <div class="col-md-4">
+        <div class="alert alert-light border shadow-sm">
+            <strong><i class="fas fa-calendar-plus text-primary"></i>
+                Tanggal Pengajuan
+            </strong>
+
+            <br>
+
+            <?= esc($tiket['tanggal']) ?>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="alert alert-light border shadow-sm">
+            <strong><i class="fas fa-user-check text-success"></i>
+                Tanggal Verifikasi
+            </strong>
+
+            <br>
+
+            <?= date('d F Y') ?>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="alert alert-light border shadow-sm">
+            <strong><i class="fas fa-flag text-danger"></i>
+                Prioritas
+            </strong>
+
+            <br>
+
+            <?= esc($tiket['prioritas']) ?>
+        </div>
+    </div>
+
+</div>
+
             <div class="mb-4">
                 <label class="font-weight-bold text-dark mb-1">Progress Tiket</label>
                 <div class="progress" style="height: 22px; border-radius: 12px;">
@@ -137,16 +178,56 @@
 
                 <div class="form-group mb-4">
                     <label class="font-weight-bold text-dark"><i class="fas fa-exclamation-triangle text-warning mr-1"></i> Prioritas</label>
-                    <select name="prioritas" class="form-control custom-select">
-                        <option value="High" selected>High</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Low">Low</option>
-                    </select>
+                   <select name="prioritas" class="form-control custom-select">
+
+    <option value="High"
+        <?= ($tiket['prioritas'] == 'High') ? 'selected' : '' ?>>
+        High
+    </option>
+
+    <option value="Medium"
+        <?= ($tiket['prioritas'] == 'Medium') ? 'selected' : '' ?>>
+        Medium
+    </option>
+
+    <option value="Low"
+        <?= ($tiket['prioritas'] == 'Low') ? 'selected' : '' ?>>
+        Low
+    </option>
+
+</select>
                 </div>
 
                 <div class="form-group mb-4">
-                    <label class="font-weight-bold text-dark"><i class="fas fa-calendar-alt text-success mr-1"></i> Target Penyelesaian (SLA)</label>
-                    <input type="date" name="target_sla" class="form-control" required>
+                    <input
+type="date"
+name="target_sla"
+class="form-control"
+value="<?= date('Y-m-d', strtotime('+3 days')) ?>"
+required>
+
+<small class="text-muted">
+
+Hari ini :
+<strong><?= date('d F Y') ?></strong>
+
+<br>
+
+Disarankan target penyelesaian maksimal
+<b>3 hari kerja</b>
+setelah verifikasi.
+
+</small>
+    <small class="text-muted">
+
+Tanggal hari ini :
+<b><?= date('d F Y') ?></b>
+
+<br>
+
+Disarankan maksimal selesai dalam 3 hari kerja.
+
+</small>
                 </div>
 
                 <div class="d-flex justify-content-end">

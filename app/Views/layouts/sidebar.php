@@ -59,18 +59,18 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="<?= base_url('petugas/verifikasi/1') ?>" class="nav-link">
-                        <i class="nav-icon fas fa-user-check"></i>
-                        <p>Verifikasi Tiket</p>
-                    </a>
-                </li>
+    <a href="<?= base_url('petugas/tiket?status=Submitted') ?>" class="nav-link">
+        <i class="nav-icon fas fa-user-check"></i>
+        <p>Verifikasi Tiket</p>
+    </a>
+</li>
 
                 <li class="nav-item">
-                    <a href="<?= base_url('petugas/disposisi/1') ?>" class="nav-link">
-                        <i class="nav-icon fas fa-share-square"></i>
-                        <p>Disposisi</p>
-                    </a>
-                </li>
+    <a href="<?= base_url('petugas/tiket?status=Verified') ?>" class="nav-link">
+        <i class="nav-icon fas fa-share-square"></i>
+        <p>Disposisi</p>
+    </a>
+</li>
 
                 <li class="nav-item">
                     <a href="<?= base_url('logout') ?>" class="nav-link">

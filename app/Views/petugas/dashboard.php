@@ -76,19 +76,29 @@
         <div class="card-body p-3">
             <div class="row">
                 <div class="col-md-3 mb-2 mb-md-0">
-                    <a href="<?= base_url('petugas/tiket') ?>" class="btn btn-block text-white font-weight-bold py-3 shadow-sm d-flex align-items-center justify-content-center" style="background-color: #ff8c00; border-radius: 8px;">
-                        <i class="fas fa-ticket-alt fa-2x mr-3"></i> Data Tiket
-                    </a>
+                   <!-- Data Tiket -->
+<a href="<?= base_url('petugas/tiket') ?>"
+   class="btn btn-block text-white font-weight-bold py-3 shadow-sm d-flex align-items-center justify-content-center"
+   style="background:#ff8c00;border-radius:8px;">
+    <i class="fas fa-ticket-alt fa-2x mr-3"></i>
+    Data Tiket
+</a>
                 </div>
                 <div class="col-md-3 mb-2 mb-md-0">
-                    <a href="<?= base_url('petugas/verifikasi') ?>" class="btn btn-block text-white font-weight-bold py-3 shadow-sm d-flex align-items-center justify-content-center" style="background-color: #107c41; border-radius: 8px;">
-                        <i class="fas fa-user-check fa-2x mr-3"></i> Verifikasi
-                    </a>
+                   <a href="<?= base_url('petugas/tiket?status=Submitted') ?>"
+   class="btn btn-block text-white font-weight-bold py-3 shadow-sm d-flex align-items-center justify-content-center"
+   style="background:#107c41;border-radius:8px;">
+    <i class="fas fa-user-check fa-2x mr-3"></i>
+    Verifikasi
+</a>
                 </div>
                 <div class="col-md-3 mb-2 mb-md-0">
-                    <a href="<?= base_url('petugas/disposisi') ?>" class="btn btn-block text-white font-weight-bold py-3 shadow-sm d-flex align-items-center justify-content-center" style="background-color: #f1c40f; border-radius: 8px;">
-                        <i class="fas fa-share-square fa-2x mr-3"></i> Disposisi
-                    </a>
+                    <a href="<?= base_url('petugas/tiket?status=Verified') ?>"
+   class="btn btn-block text-white font-weight-bold py-3 shadow-sm d-flex align-items-center justify-content-center"
+   style="background:#f1c40f;border-radius:8px;">
+    <i class="fas fa-share-square fa-2x mr-3"></i>
+    Disposisi
+</a>
                 </div>
                 <div class="col-md-3">
                     <a href="javascript:location.reload()" class="btn btn-block text-white font-weight-bold py-3 shadow-sm d-flex align-items-center justify-content-center" style="background-color: #343a40; border-radius: 8px;">

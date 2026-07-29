@@ -83,6 +83,22 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+
+                    <a href="<?= base_url('online') ?>" class="nav-link">
+
+                        <i class="nav-icon fas fa-globe"></i>
+
+                        <p>
+
+                            Pengajuan Online
+
+                        </p>
+
+                    </a>
+
+                </li>
+
                     <!-- Tracking Tiket -->
                     <li class="nav-item">
                         <a href="<?= base_url('tracking') ?>" class="nav-link">

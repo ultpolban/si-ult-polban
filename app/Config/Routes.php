@@ -88,6 +88,24 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
     $routes->get('guest-report/delete/(:num)', 'GuestReportController::delete/$1');
 
+
+        // ==========================
+    // PENGAJUAN ONLINE
+    // ==========================
+
+    $routes->get('online', 'OnlineController::index');
+
+    $routes->get('online/create', 'OnlineController::create');
+    $routes->post('online/store', 'OnlineController::store');
+    $routes->get('online/success/(:any)', 'OnlineController::success/$1');
+    $routes->get('online/history', 'OnlineController::history');
+
+    $routes->get('online/detail/(:num)', 'OnlineController::detail/$1');
+
+    $routes->get('online/edit/(:num)', 'OnlineController::edit/$1');
+    $routes->post('online/update/(:num)', 'OnlineController::update/$1');
+
+    $routes->get('online/delete/(:num)', 'OnlineController::delete/$1');
     // ==========================
     // STATISTIK
     // ==========================

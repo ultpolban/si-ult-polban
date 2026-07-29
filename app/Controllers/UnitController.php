@@ -7,16 +7,16 @@ use App\Models\TicketLogModel;
 
 class UnitController extends BaseController
 {
-    public function index()
-    {
-        $ticketModel = new TicketModel();
+  public function index()
+{
+    $data['tickets']=$this->ticketModel
 
-        $data['tickets'] = $ticketModel
-            ->where('status', 'Assigned')
-            ->findAll();
+        ->where('status','Assigned')
 
-        return view('unit/index', $data);
-    }
+        ->findAll();
+
+    return view('unit/index',$data);
+}
 
     public function process($id)
     {

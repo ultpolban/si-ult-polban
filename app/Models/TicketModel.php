@@ -76,6 +76,8 @@ class TicketModel extends Model
         'completed_at',
         'created_at',
         'updated_at',
+
+        'submission_type',
     ];
 
     protected $useTimestamps = false;

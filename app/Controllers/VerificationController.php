@@ -70,71 +70,25 @@ class VerificationController extends BaseController
         return view('verification/detail', $data);
     }
 
-    public function process($id)
-    {
-        $ticketModel = new TicketModel();
-        $logModel    = new TicketLogModel();
+   public function process($id)
+{
+    $status = $this->request->getPost('status');
 
-        $ticket = $ticketModel->find($id);
+   $this->ticketModel->update($id, [
 
-        if (!$ticket) {
-            return redirect()->back()->with('error', 'Tiket tidak ditemukan.');
+    'status'            => 'Assigned',
 
-            $this->ticketModel->update($id, [
+    'assigned_unit'     => $this->request->getPost('assigned_unit'),
 
-    'assigned_unit' => 'Akademik', // atau unit yang dipilih
-    'status'        => 'Assigned'
+    'verified_by'       => session('name'),
+
+    'verification_note' => $this->request->getPost('verification_note'),
+
+    'verified_at'       => date('Y-m-d H:i:s')
 
 ]);
-        }
 
-        $status = $this->request->getPost('status');
-        $assignedUnit = $this->request->getPost('assigned_unit');
-        $note = $this->request->getPost('verification_note');
-
-        if ($status == "Verified" && !empty($assignedUnit)) {
-            $status = "Assigned";
-        }
-
-        $ticketModel->update($id, [
-
-            'status' => $status,
-            'assigned_unit' => $assignedUnit,
-            'verification_note' => $note,
-            'verified_by' => session()->get('name') ?? 'Petugas ULT',
-            'verified_at' => date('Y-m-d H:i:s')
-
-        ]);
-
-        $logModel->insert([
-
-            'ticket_id' => $id,
-            'activity' => "Status diubah menjadi {$status}",
-            'user_name' => session()->get('name') ?? 'Petugas ULT',
-            'created_at' => date('Y-m-d H:i:s')
-
-        ]);
-
-        return redirect()
-            ->to('/verification/detail/'.$id)
-            ->with('success','Verifikasi berhasil disimpan.');
-    }
-
-    public function comment($id)
-    {
-        $commentModel = new TicketCommentModel();
-
-        $commentModel->insert([
-
-            'ticket_id' => $id,
-            'sender' => session()->get('name') ?? 'Petugas ULT',
-            'comment' => $this->request->getPost('comment'),
-            'created_at' => date('Y-m-d H:i:s')
-
-        ]);
-
-        return redirect()
-            ->to('/verification/detail/'.$id)
-            ->with('success','Komentar berhasil ditambahkan.');
-    }
+    return redirect()->to('/verification')
+            ->with('success','Tiket berhasil diverifikasi.');
+}
 }

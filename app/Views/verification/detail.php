@@ -73,7 +73,7 @@
                     </span>
                 </td>
             </tr>
-
+        
             <tr>
                 <th>Unit Tujuan</th>
                 <td><?= !empty($ticket['assigned_unit']) ? esc($ticket['assigned_unit']) : '-' ?></td>
@@ -101,16 +101,7 @@
                 <td>
 
                     <?php if(!empty($ticket['attachment'])): ?>
-
-                        <a href="<?= base_url('uploads/'.$ticket['attachment']) ?>"
-                           target="_blank"
-                           class="btn btn-info btn-sm">
-
-                            <i class="fas fa-paperclip"></i>
-                            Lihat Lampiran
-
-                        </a>
-
+                        
                     <?php else: ?>
 
                         <span class="text-muted">
@@ -126,66 +117,77 @@
 
         <hr>
 
-        <h5>Form Verifikasi</h5>
+       <h5>Form Verifikasi</h5>
 
-        <form action="<?= base_url('verification/process/'.$ticket['id']) ?>" method="post">
+<form action="<?= base_url('verification/process/'.$ticket['id']) ?>" method="post">
 
-            <?= csrf_field() ?>
+    <?= csrf_field() ?>
 
-            <div class="form-group">
+    <div class="form-group">
 
-                <label>Keputusan Verifikasi</label>
+        <label>Keputusan Verifikasi</label>
 
-                <select name="status" class="form-control" required>
+        <select name="status" class="form-control" required>
 
-                    <option value="">-- Pilih Keputusan --</option>
-                    <option value="Verified">Verified</option>
-                    <option value="Need Revision">Need Revision</option>
-                    <option value="Rejected">Rejected</option>
+            <option value="">-- Pilih Keputusan --</option>
+            <option value="Assigned">Verifikasi & Kirim ke Unit</option>
+            <option value="Need Revision">Need Revision</option>
+            <option value="Rejected">Rejected</option>
 
-                </select>
+        </select>
 
-            </div>
+    </div>
 
-            <div class="form-group">
+    <div class="form-group">
 
-                <label>Unit Tujuan</label>
+        <label>Unit Tujuan</label>
 
-                <select name="assigned_unit" class="form-control">
+        <select name="assigned_unit" class="form-control" required>
 
-                    <option value="">-- Pilih Unit --</option>
-                    <option value="BAAK">BAAK</option>
-                    <option value="Keuangan">Keuangan</option>
-                    <option value="Jurusan">Jurusan</option>
-                    <option value="Kemahasiswaan">Kemahasiswaan</option>
-                    <option value="UPT TIK">UPT TIK</option>
+            <option value="">-- Pilih Unit --</option>
+            <option value="BAAK">BAAK</option>
+            <option value="Keuangan">Keuangan</option>
+            <option value="Jurusan">Jurusan</option>
+            <option value="Kemahasiswaan">Kemahasiswaan</option>
+            <option value="UPT TIK">UPT TIK</option>
+            <option value="Perpustakaan">Perpustakaan</option>
+            <option value="SDM">SDM</option>
+            <option value="Sarana Prasarana">Sarana Prasarana</option>
 
-                </select>
+        </select>
 
-            </div>
+    </div>
 
-            <div class="form-group">
+    <div class="form-group">
 
-                <label>Catatan Petugas</label>
+        <label>Catatan Petugas</label>
 
-                <textarea
-                    name="verification_note"
-                    rows="4"
-                    class="form-control"
-                    required></textarea>
+        <textarea
+            name="verification_note"
+            rows="4"
+            class="form-control"
+            placeholder="Masukkan catatan verifikasi..."
+            required></textarea>
 
-            </div>
+    </div>
 
-            <button class="btn btn-success">
-                <i class="fas fa-save"></i>
-                Simpan Verifikasi
-            </button>
+    <button type="submit" class="btn btn-success">
 
-            <a href="<?= base_url('verification') ?>" class="btn btn-secondary">
-                Kembali
-            </a>
+        <i class="fas fa-paper-plane"></i>
 
-        </form>
+        Verifikasi & Kirim ke Unit
+
+    </button>
+
+    <a href="<?= base_url('verification') ?>" class="btn btn-secondary">
+
+        <i class="fas fa-arrow-left"></i>
+
+        Kembali
+
+    </a>
+
+</form>
 
         <hr>
 

@@ -2,296 +2,174 @@
 
 namespace App\Controllers;
 
+use App\Controllers\BaseController;
+
 class DosenProfileController extends BaseController
 {
-    // =====================================================
+    // =====================================
     // PROFILE DOSEN
-    // =====================================================
-
+    // =====================================
     public function index()
     {
         $user = session()->get('user') ?? [];
 
-        $profile = session()->get('dosen_profile');
-
-        if (!$profile) {
+        // Kalau session profile belum ada, buat default
+        if (!session()->has('dosen_profile')) {
 
             $profile = [
 
-                // ===========================
+                // =========================
                 // DATA PRIBADI
-                // ===========================
+                // =========================
 
-                'nama' => $user['nama'] ?? 'Dr. Andi Saputra',
+                'nama'            => $user['nama'] ?? 'Dr. Andi Saputra',
 
-                'nip' => $user['nip'] ?? '198812312020011001',
+                'nip'             => $user['nip'] ?? '198812312020011001',
 
-                'nidn' => $user['nidn'] ?? '0011223344',
+                'nidn'            => $user['nidn'] ?? '0011223344',
 
-                'nik' => $user['nik'] ?? '',
+                'nik'             => $user['nik'] ?? '',
 
-                'email' => $user['email'] ?? 'andi@polban.ac.id',
+                'email'           => $user['email'] ?? 'andi@polban.ac.id',
 
-                'no_hp' => $user['no_hp'] ?? '',
+                'no_hp'           => $user['no_hp'] ?? '',
 
-                'jenis_kelamin' => $user['jenis_kelamin'] ?? 'Laki-laki',
+                'jenis_kelamin'   => $user['jenis_kelamin'] ?? 'Laki-laki',
 
-                'alamat' => $user['alamat'] ?? '',
+                'alamat'          => $user['alamat'] ?? '',
 
-                'foto' => $user['foto'] ?? null,
+                'foto'            => $user['foto'] ?? null,
 
-                // ===========================
+                // =========================
                 // AKADEMIK
-                // ===========================
+                // =========================
 
-                'prodi' => $user['prodi'] ?? 'D3 Teknik Informatika',
+                'prodi'           => $user['prodi'] ?? 'D3 Teknik Informatika',
 
-                'jurusan' => $user['jurusan'] ?? 'Teknik Komputer dan Informatika',
+                'jurusan'         => $user['jurusan'] ?? 'Teknik Komputer dan Informatika',
 
-                'fakultas' => $user['fakultas'] ?? 'Sekolah Vokasi',
+                'fakultas'        => $user['fakultas'] ?? 'Sekolah Vokasi',
 
-                'jabatan' => $user['jabatan'] ?? 'Dosen Tetap',
+                'jabatan'         => $user['jabatan'] ?? 'Dosen',
 
-                'status' => $user['status'] ?? 'Aktif'
+                'status'          => $user['status'] ?? 'Aktif'
 
             ];
 
-            session()->set(
-                'dosen_profile',
-                $profile
-            );
+            session()->set('dosen_profile', $profile);
+
         }
 
-        return view(
-            'dosen/profile/index',
-            [
+        return view('dosen/profile/index', [
 
-                'title' => 'Profil Dosen',
+            'title'   => 'Profil Dosen',
 
-                'profile' => $profile
+            'profile' => session()->get('dosen_profile')
 
-            ]
-        );
+        ]);
     }
 
-    // =====================================================
-    // EDIT PROFILE
-    // =====================================================
+    // =====================================
+    // FORM EDIT
+    // =====================================
 
     public function edit()
     {
-        $profile = session()->get('dosen_profile');
+        return view('dosen/profile/edit', [
 
-        if (!$profile) {
+            'title'   => 'Edit Profil Dosen',
 
-            return redirect()->to(
-                base_url('dosen/profile')
-            );
+            'profile' => session()->get('dosen_profile')
 
-        }
+        ]);
+    }
 
-        return view(
-            'dosen/profile/edit',
-            [
-
-                'title' => 'Edit Profil Dosen',
-
-                'profile' => $profile
-
-            ]
-        );
-    }        
-    // =====================================================
+    // =====================================
     // UPDATE PROFILE
-    // =====================================================
+    // =====================================
 
     public function update()
     {
-        $profile = session()->get('dosen_profile') ?? [];
+        $profile = [
 
-        if (empty($profile)) {
+            'nama'            => $this->request->getPost('nama'),
 
-            return redirect()
-                ->to(base_url('dosen/profile'))
-                ->with(
-                    'error',
-                    'Data profil tidak ditemukan.'
-                );
-        }
+            'nip'             => $this->request->getPost('nip'),
 
-        // =====================================
-        // DATA PRIBADI
-        // =====================================
+            'nidn'            => $this->request->getPost('nidn'),
 
-        $profile['nama']            = trim($this->request->getPost('nama'));
+            'nik'             => $this->request->getPost('nik'),
 
-        $profile['nip']             = trim($this->request->getPost('nip'));
+            'email'           => $this->request->getPost('email'),
 
-        $profile['nidn']            = trim($this->request->getPost('nidn'));
+            'no_hp'           => $this->request->getPost('no_hp'),
 
-        $profile['nik']             = trim($this->request->getPost('nik'));
+            'jenis_kelamin'   => $this->request->getPost('jenis_kelamin'),
 
-        $profile['email']           = trim($this->request->getPost('email'));
+            'alamat'          => $this->request->getPost('alamat'),
 
-        $profile['no_hp']           = trim($this->request->getPost('no_hp'));
+            'prodi'           => $this->request->getPost('prodi'),
 
-        $profile['jenis_kelamin']   = trim($this->request->getPost('jenis_kelamin'));
+            'jurusan'         => $this->request->getPost('jurusan'),
 
-        $profile['alamat']          = trim($this->request->getPost('alamat'));
+            'fakultas'        => $this->request->getPost('fakultas'),
 
+            'jabatan'         => $this->request->getPost('jabatan'),
 
-        // =====================================
-        // AKADEMIK
-        // =====================================
+            'status'          => $this->request->getPost('status'),
 
-        $profile['prodi']           = trim($this->request->getPost('prodi'));
+            'foto'            => session()->get('dosen_profile')['foto'] ?? null
 
-        $profile['jurusan']         = trim($this->request->getPost('jurusan'));
+        ];
 
-        $profile['fakultas']        = trim($this->request->getPost('fakultas'));
+        // ==========================
+        // Upload Foto
+        // ==========================
 
-        $profile['jabatan']         = trim($this->request->getPost('jabatan'));
+        $file = $this->request->getFile('foto');
 
-        $profile['status']          = trim($this->request->getPost('status'));
+        if ($file && $file->isValid() && !$file->hasMoved()) {
 
+            if (!is_dir(FCPATH . 'uploads/profile')) {
 
-        // =====================================
-        // VALIDASI
-        // =====================================
+                mkdir(FCPATH . 'uploads/profile', 0777, true);
 
-        if (
-            empty($profile['nama']) ||
-            empty($profile['nip']) ||
-            empty($profile['email'])
-        ) {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Nama, NIP dan Email wajib diisi.'
-                );
-        }
-
-
-        // =====================================
-        // UPLOAD FOTO
-        // =====================================
-
-        $foto = $this->request->getFile('foto');
-
-        if (
-            $foto &&
-            $foto->isValid() &&
-            !$foto->hasMoved()
-        ) {
-
-            $allowed = [
-
-                'jpg',
-                'jpeg',
-                'png',
-                'webp'
-
-            ];
-
-            $ext = strtolower(
-                $foto->getExtension()
-            );
-
-            if (!in_array($ext, $allowed)) {
-
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with(
-                        'error',
-                        'Foto harus JPG, JPEG, PNG atau WEBP.'
-                    );
             }
 
-            if ($foto->getSize() > 2 * 1024 * 1024) {
+            $namaFoto = $file->getRandomName();
 
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with(
-                        'error',
-                        'Ukuran foto maksimal 2 MB.'
-                    );
-            }
+            $file->move(
 
-            $folder = FCPATH . 'uploads/profile';
+                FCPATH . 'uploads/profile',
 
-            if (!is_dir($folder)) {
-
-                mkdir(
-                    $folder,
-                    0777,
-                    true
-                );
-            }
-
-            // hapus foto lama
-            if (!empty($profile['foto'])) {
-
-                $old = $folder . '/' . $profile['foto'];
-
-                if (file_exists($old)) {
-
-                    unlink($old);
-
-                }
-            }
-
-            $namaFoto = $foto->getRandomName();
-
-            $foto->move(
-                $folder,
                 $namaFoto
+
             );
 
             $profile['foto'] = $namaFoto;
+
         }
 
+        session()->set('dosen_profile', $profile);
 
-        // =====================================
-        // SIMPAN SESSION
-        // =====================================
-
-        session()->set(
-            'dosen_profile',
-            $profile
-        );
-
-
-        // =====================================
-        // UPDATE USER SESSION
-        // =====================================
+        // Update session user supaya navbar ikut berubah
 
         $user = session()->get('user') ?? [];
 
-        $user = array_merge(
-            $user,
-            $profile
-        );
+        $user = array_merge($user, $profile);
 
-        session()->set(
-            'user',
-            $user
-        );
-
+        session()->set('user', $user);
 
         return redirect()
-            ->to(
-                base_url('dosen/profile')
-            )
+
+            ->to(base_url('dosen/profile'))
+
             ->with(
+
                 'success',
+
                 'Profil berhasil diperbarui.'
+
             );
     }
-
-    }
-    
+}

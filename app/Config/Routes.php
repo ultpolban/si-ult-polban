@@ -11,6 +11,18 @@ use CodeIgniter\Router\RouteCollection;
 // ==================================================
 $routes->get('/', 'Home::index');
 
+// ==========================================
+// AUTH
+// ==========================================
+
+$routes->get('login', 'AuthController::login');
+$routes->post('login', 'AuthController::authenticate');
+
+$routes->get('register', 'AuthController::register');
+$routes->post('register', 'AuthController::storeRegister');
+
+$routes->get('logout', 'AuthController::logout');
+
 
 // ================================
 // DASHBOARD PEMOHON
@@ -51,12 +63,6 @@ $routes->get('notification', 'NotificationController::index');
 // HELP
 // ==================================================
 $routes->get('help', 'HelpController::index');
-
-
-// ==================================================
-// LOGOUT
-// ==================================================
-$routes->get('logout', 'AuthController::logout');
 
 
 // =====================================================

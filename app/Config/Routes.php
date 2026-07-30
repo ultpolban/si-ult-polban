@@ -75,3 +75,8 @@ $routes->get('/admin', 'AdminController::index');
 
 // Pimpinan
 $routes->get('/pimpinan', 'PimpinanController::index');
+
+$routes->get('petugas/laporan-tamu', 'PetugasController::laporanTamu');
+$routes->get('petugas/statistik-tiket', 'PetugasController::statistikTiket');
+$routes->get('petugas/laporan-tiket', 'PetugasController::laporanTiket');
+$routes->get('petugas/tracking-tiket', 'PetugasController::trackingTiket');

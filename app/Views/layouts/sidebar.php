@@ -72,6 +72,38 @@
     </a>
 </li>
 
+                <!-- Laporan Tamu -->
+<li class="nav-item">
+    <a href="<?= base_url('petugas/laporan-tamu') ?>" class="nav-link">
+        <i class="nav-icon fas fa-users"></i>
+        <p>Laporan Tamu</p>
+    </a>
+</li>
+
+<!-- Statistik Tiket -->
+<li class="nav-item">
+    <a href="<?= base_url('petugas/statistik-tiket') ?>" class="nav-link">
+        <i class="nav-icon fas fa-chart-pie"></i>
+        <p>Statistik Tiket</p>
+    </a>
+</li>
+
+<!-- Laporan Tiket -->
+<li class="nav-item">
+    <a href="<?= base_url('petugas/laporan-tiket') ?>" class="nav-link">
+        <i class="nav-icon fas fa-file-alt"></i>
+        <p>Laporan Tiket</p>
+    </a>
+</li>
+
+<!-- Tracking Tiket -->
+<li class="nav-item">
+    <a href="<?= base_url('petugas/tracking-tiket') ?>" class="nav-link">
+        <i class="nav-icon fas fa-route"></i>
+        <p>Tracking Tiket</p>
+    </a>
+</li>
+
                 <li class="nav-item">
                     <a href="<?= base_url('logout') ?>" class="nav-link">
                         <i class="nav-icon fas fa-sign-out-alt"></i>

@@ -339,5 +339,27 @@ class PetugasController extends BaseController
         return redirect()->to(base_url('petugas/tiket'))->with('success', 'Disposisi tiket berhasil dikirim!');
     }
 
+    public function laporanTamu()
+{
+    return view('petugas/laporan_tamu');
+}
+
+public function statistikTiket()
+{
+    return view('petugas/statistik_tiket');
+}
+
+public function laporanTiket()
+{
+    return view('petugas/laporan_tiket');
+}
+
+public function trackingTiket()
+{
+    return view('petugas/tracking_tiket');
+}
+
+
+
 }
 

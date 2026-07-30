@@ -169,25 +169,18 @@ $routes->get('mahasiswa/help', 'MahasiswaHelpController::index');
 $routes->get('dosen/dashboard', 'DosenController::dashboard');
 
 
-// ================================
-// PROFIL DOSEN
-// ================================
+// =============================
+// PROFILE DOSEN
+// =============================
+$routes->group('dosen/profile', function ($routes) {
 
-$routes->get(
-    'dosen/profile',
-    'DosenProfileController::index'
-);
+    $routes->get('/', 'DosenProfileController::index');
 
-$routes->get(
-    'dosen/profile/edit',
-    'DosenProfileController::edit'
-);
+    $routes->get('edit', 'DosenProfileController::edit');
 
-$routes->post(
-    'dosen/profile/update',
-    'DosenProfileController::update'
-);
+    $routes->post('update', 'DosenProfileController::update');
 
+});
 
 // ================================
 // TIKET DOSEN

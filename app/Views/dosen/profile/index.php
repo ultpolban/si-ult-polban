@@ -2,559 +2,429 @@
 <?= $this->include('layouts/navbar') ?>
 <?= $this->include('layouts/sidebar_dosen') ?>
 
+<div class="content-wrapper">
 
-<style>
-    .profile-page {
-        background: #f4f7fb;
-        min-height: calc(100vh - 57px);
-        padding-bottom: 40px;
-    }
-
-    .profile-card {
-        border: none;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 5px 20px rgba(0,0,0,.08);
-    }
-
-    .profile-header {
-        background: #0b3d91;
-        height: 150px;
-        position: relative;
-    }
-
-    .profile-photo-wrapper {
-        position: absolute;
-        left: 50%;
-        bottom: -65px;
-        transform: translateX(-50%);
-    }
-
-    .profile-photo {
-        width: 135px;
-        height: 135px;
-        border-radius: 50%;
-        object-fit: cover;
-        background: #eef3f8;
-        border: 5px solid white;
-        box-shadow: 0 5px 15px rgba(0,0,0,.2);
-    }
-
-    .profile-placeholder {
-        width: 135px;
-        height: 135px;
-        border-radius: 50%;
-        background: #eef3f8;
-        border: 5px solid white;
-        box-shadow: 0 5px 15px rgba(0,0,0,.2);
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        color: #0b3d91;
-        font-size: 60px;
-    }
-
-    .profile-body {
-        padding: 90px 35px 35px;
-    }
-
-    .profile-name {
-        text-align: center;
-        color: #0b3d91;
-        font-size: 25px;
-        font-weight: 700;
-        margin-bottom: 5px;
-    }
-
-    .profile-role {
-        text-align: center;
-        color: #64748b;
-        margin-bottom: 35px;
-    }
-
-    .section-title {
-        color: #0b3d91;
-        font-size: 20px;
-        font-weight: 700;
-        border-bottom: 2px solid #f28c28;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-    }
-
-    .profile-info {
-        margin-bottom: 20px;
-    }
-
-    .profile-info label {
-        display: block;
-        color: #64748b;
-        font-size: 14px;
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
-
-    .profile-info .value {
-        color: #17365d;
-        font-size: 16px;
-        font-weight: 600;
-        background: #f8fafc;
-        padding: 12px 15px;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-        min-height: 45px;
-    }
-
-    .btn-edit-profile {
-        background: #f28c28;
-        color: white;
-        border: none;
-        padding: 11px 25px;
-        border-radius: 8px;
-        font-weight: 700;
-    }
-
-    .btn-edit-profile:hover {
-        background: #d97617;
-        color: white;
-    }
-</style>
-
-
-<div class="content-wrapper profile-page">
-
+    <!-- ========================================= -->
     <!-- HEADER -->
+    <!-- ========================================= -->
 
     <section class="content-header">
 
         <div class="container-fluid">
 
-            <h1 style="color:#0b3d91;font-weight:700;">
+            <div class="row mb-2">
 
-                <i class="fas fa-user-circle"></i>
+                <div class="col-sm-6">
 
-                Profil Dosen
+                    <h1 style="font-weight:700;color:#0b3d91;">
 
-            </h1>
+                        <i class="fas fa-user-circle mr-2"></i>
 
-            <p class="text-muted">
+                        Profil Dosen
 
-                Informasi profil dan identitas dosen.
+                    </h1>
 
-            </p>
+                </div>
+
+                <div class="col-sm-6">
+
+                    <ol class="breadcrumb float-sm-right">
+
+                        <li class="breadcrumb-item">
+
+                            <a href="<?= base_url('dosen/dashboard') ?>">
+
+                                Dashboard
+
+                            </a>
+
+                        </li>
+
+                        <li class="breadcrumb-item active">
+
+                            Profil
+
+                        </li>
+
+                    </ol>
+
+                </div>
+
+            </div>
 
         </div>
 
     </section>
 
 
+    <!-- ========================================= -->
     <!-- CONTENT -->
+    <!-- ========================================= -->
 
     <section class="content">
 
         <div class="container-fluid">
 
-            <div class="row justify-content-center">
+            <?php if(session()->getFlashdata('success')): ?>
 
-                <div class="col-lg-9">
+                <div class="alert alert-success">
 
-                    <div class="card profile-card">
+                    <?= session()->getFlashdata('success') ?>
+
+                </div>
+
+            <?php endif; ?>
 
 
-                        <!-- BLUE HEADER -->
+            <div class="row">
 
-                        <div class="profile-header">
+                <!-- FOTO -->
 
-                            <div class="profile-photo-wrapper">
+                <div class="col-md-4">
 
-                                <?php if (!empty($user['foto'])): ?>
+                    <div class="card shadow-sm">
 
-                                    <img
-                                        src="<?= base_url('uploads/profile/' . $user['foto']) ?>"
-                                        class="profile-photo"
-                                        alt="Foto Profil"
-                                    >
+                        <div class="card-body text-center">
 
-                                <?php else: ?>
+                            <?php if(!empty($profile['foto'])): ?>
 
-                                    <div class="profile-placeholder">
+                                <img
+                                    src="<?= base_url('uploads/profile/'.$profile['foto']) ?>"
+                                    class="img-circle elevation-2"
+                                    style="
+                                        width:180px;
+                                        height:180px;
+                                        object-fit:cover;
+                                    "
+                                >
 
-                                        <i class="fas fa-user"></i>
+                            <?php else: ?>
 
-                                    </div>
+                                <img
+                                    src="<?= base_url('assets/img/default-user.png') ?>"
+                                    class="img-circle elevation-2"
+                                    style="
+                                        width:180px;
+                                        height:180px;
+                                        object-fit:cover;
+                                    "
+                                >
 
-                                <?php endif; ?>
+                            <?php endif; ?>
 
-                            </div>
+
+                            <h3
+                                class="mt-3"
+                                style="
+                                    color:#0b3d91;
+                                    font-weight:700;
+                                "
+                            >
+
+                                <?= esc($profile['nama']) ?>
+
+                            </h3>
+
+                            <span class="badge badge-success">
+
+                                <?= esc($profile['status']) ?>
+
+                            </span>
+
+                            <hr>
+
+                            <a
+                                href="<?= base_url('dosen/profile/edit') ?>"
+                                class="btn btn-warning btn-block"
+                            >
+
+                                <i class="fas fa-edit mr-1"></i>
+
+                                Edit Profil
+
+                            </a>
 
                         </div>
 
+                    </div>
 
-                        <!-- BODY -->
-
-                        <div class="profile-body">
-
-
-                            <!-- NAMA -->
-
-                            <div class="profile-name">
-
-                                <?= esc($user['nama'] ?? 'Nama Dosen') ?>
-
-                            </div>
+                </div>
 
 
-                            <div class="profile-role">
 
-                                <i class="fas fa-chalkboard-teacher"></i>
+                <!-- DATA -->
 
-                                Dosen POLBAN
+                <div class="col-md-8">
 
-                            </div>
+                    <!-- DATA PRIBADI -->
 
+                    <div class="card shadow-sm">
 
-                            <!-- BUTTON -->
+                        <div
+                            class="card-header"
+                            style="
+                                background:#0b3d91;
+                                color:white;
+                            "
+                        >
 
-                            <div class="text-center mb-4">
-
-                                <a
-                                    href="<?= base_url('dosen/profile/edit') ?>"
-                                    class="btn btn-edit-profile"
-                                >
-
-                                    <i class="fas fa-edit me-2"></i>
-
-                                    Edit Profil
-
-                                </a>
-
-                            </div>
-
-
-                            <!-- DATA PRIBADI -->
-
-                            <div class="section-title">
-
-                                <i class="fas fa-user me-2"></i>
+                            <strong>
 
                                 Data Pribadi
 
-                            </div>
+                            </strong>
 
+                        </div>
 
-                            <div class="row">
+                        <div class="card-body">
 
+                            <table class="table table-borderless">
 
-                                <!-- NIP -->
+                                <tr>
 
-                                <div class="col-md-6">
+                                    <th width="180">
 
-                                    <div class="profile-info">
+                                        Nama
 
-                                        <label>
+                                    </th>
 
-                                            NIP / NIDN
+                                    <td>
 
-                                        </label>
+                                        <?= esc($profile['nama']) ?>
 
-                                        <div class="value">
+                                    </td>
 
-                                            <?= esc($user['nip'] ?? '-') ?>
+                                </tr>
 
-                                        </div>
+                                <tr>
 
-                                    </div>
+                                    <th>
 
-                                </div>
+                                        NIP
 
+                                    </th>
 
-                                <!-- NIK -->
+                                    <td>
 
-                                <div class="col-md-6">
+                                        <?= esc($profile['nip']) ?>
 
-                                    <div class="profile-info">
+                                    </td>
 
-                                        <label>
+                                </tr>
 
-                                            NIK
+                                <tr>
 
-                                        </label>
+                                    <th>
 
-                                        <div class="value">
+                                        NIDN
 
-                                            <?= esc($user['nik'] ?? '-') ?>
+                                    </th>
 
-                                        </div>
+                                    <td>
 
-                                    </div>
+                                        <?= esc($profile['nidn']) ?>
 
-                                </div>
+                                    </td>
 
+                                </tr>
 
-                                <!-- TEMPAT LAHIR -->
+                                <tr>
 
-                                <div class="col-md-6">
+                                    <th>
 
-                                    <div class="profile-info">
+                                        NIK
 
-                                        <label>
+                                    </th>
 
-                                            Tempat Lahir
+                                    <td>
 
-                                        </label>
+                                        <?= esc($profile['nik']) ?>
 
-                                        <div class="value">
+                                    </td>
 
-                                            <?= esc($user['tempat_lahir'] ?? '-') ?>
+                                </tr>
 
-                                        </div>
+                                <tr>
 
-                                    </div>
+                                    <th>
 
-                                </div>
+                                        Email
 
+                                    </th>
 
-                                <!-- TANGGAL LAHIR -->
+                                    <td>
 
-                                <div class="col-md-6">
+                                        <?= esc($profile['email']) ?>
 
-                                    <div class="profile-info">
+                                    </td>
 
-                                        <label>
+                                </tr>
 
-                                            Tanggal Lahir
+                                <tr>
 
-                                        </label>
+                                    <th>
 
-                                        <div class="value">
+                                        No HP
 
-                                            <?= esc($user['tanggal_lahir'] ?? '-') ?>
+                                    </th>
 
-                                        </div>
+                                    <td>
 
-                                    </div>
+                                        <?= esc($profile['no_hp']) ?>
 
-                                </div>
+                                    </td>
 
+                                </tr>
 
-                                <!-- JENIS KELAMIN -->
+                                <tr>
 
-                                <div class="col-md-6">
+                                    <th>
 
-                                    <div class="profile-info">
+                                        Jenis Kelamin
 
-                                        <label>
+                                    </th>
 
-                                            Jenis Kelamin
+                                    <td>
 
-                                        </label>
+                                        <?= esc($profile['jenis_kelamin']) ?>
 
-                                        <div class="value">
+                                    </td>
 
-                                            <?= esc($user['jenis_kelamin'] ?? '-') ?>
+                                </tr>
 
-                                        </div>
+                                <tr>
 
-                                    </div>
+                                    <th>
 
-                                </div>
+                                        Alamat
 
-                            </div>
+                                    </th>
 
+                                    <td>
 
-                            <!-- AKADEMIK -->
+                                        <?= esc($profile['alamat']) ?>
 
-                            <div class="section-title mt-4">
+                                    </td>
 
-                                <i class="fas fa-building-columns me-2"></i>
+                                </tr>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- AKADEMIK -->
+
+                    <div class="card shadow-sm mt-3">
+
+                        <div
+                            class="card-header"
+                            style="
+                                background:#f28c28;
+                                color:white;
+                            "
+                        >
+
+                            <strong>
 
                                 Informasi Akademik
 
-                            </div>
+                            </strong>
 
+                        </div>
 
-                            <div class="row">
+                        <div class="card-body">
 
+                            <table class="table table-borderless">
 
-                                <!-- FAKULTAS -->
+                                <tr>
 
-                                <div class="col-md-6">
+                                    <th width="180">
 
-                                    <div class="profile-info">
+                                        Program Studi
 
-                                        <label>
+                                    </th>
 
-                                            Fakultas
+                                    <td>
 
-                                        </label>
+                                        <?= esc($profile['prodi']) ?>
 
-                                        <div class="value">
+                                    </td>
 
-                                            <?= esc($user['fakultas'] ?? '-') ?>
+                                </tr>
 
-                                        </div>
+                                <tr>
 
-                                    </div>
+                                    <th>
 
-                                </div>
+                                        Jurusan
 
+                                    </th>
 
-                                <!-- PRODI -->
+                                    <td>
 
-                                <div class="col-md-6">
+                                        <?= esc($profile['jurusan']) ?>
 
-                                    <div class="profile-info">
+                                    </td>
 
-                                        <label>
+                                </tr>
 
-                                            Program Studi
+                                <tr>
 
-                                        </label>
+                                    <th>
 
-                                        <div class="value">
+                                        Fakultas
 
-                                            <?= esc($user['prodi'] ?? '-') ?>
+                                    </th>
 
-                                        </div>
+                                    <td>
 
-                                    </div>
+                                        <?= esc($profile['fakultas']) ?>
 
-                                </div>
+                                    </td>
 
+                                </tr>
 
-                                <!-- JABATAN -->
+                                <tr>
 
-                                <div class="col-md-6">
+                                    <th>
 
-                                    <div class="profile-info">
+                                        Jabatan
 
-                                        <label>
+                                    </th>
 
-                                            Jabatan
+                                    <td>
 
-                                        </label>
+                                        <?= esc($profile['jabatan']) ?>
 
-                                        <div class="value">
+                                    </td>
 
-                                            <?= esc($user['jabatan'] ?? '-') ?>
+                                </tr>
 
-                                        </div>
+                                <tr>
 
-                                    </div>
+                                    <th>
 
-                                </div>
+                                        Status
 
+                                    </th>
 
-                                <!-- PANGKAT -->
+                                    <td>
 
-                                <div class="col-md-6">
+                                        <span class="badge badge-success">
 
-                                    <div class="profile-info">
+                                            <?= esc($profile['status']) ?>
 
-                                        <label>
+                                        </span>
 
-                                            Pangkat / Golongan
+                                    </td>
 
-                                        </label>
+                                </tr>
 
-                                        <div class="value">
-
-                                            <?= esc($user['pangkat'] ?? '-') ?>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <!-- KONTAK -->
-
-                            <div class="section-title mt-4">
-
-                                <i class="fas fa-address-book me-2"></i>
-
-                                Informasi Kontak
-
-                            </div>
-
-
-                            <div class="row">
-
-
-                                <!-- TELEPON -->
-
-                                <div class="col-md-6">
-
-                                    <div class="profile-info">
-
-                                        <label>
-
-                                            Nomor Telepon
-
-                                        </label>
-
-                                        <div class="value">
-
-                                            <?= esc($user['telepon'] ?? '-') ?>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- EMAIL -->
-
-                                <div class="col-md-6">
-
-                                    <div class="profile-info">
-
-                                        <label>
-
-                                            Email
-
-                                        </label>
-
-                                        <div class="value">
-
-                                            <?= esc($user['email'] ?? '-') ?>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- ALAMAT -->
-
-                                <div class="col-12">
-
-                                    <div class="profile-info">
-
-                                        <label>
-
-                                            Alamat
-
-                                        </label>
-
-                                        <div class="value">
-
-                                            <?= esc($user['alamat'] ?? '-') ?>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
+                            </table>
 
                         </div>
 
@@ -569,6 +439,5 @@
     </section>
 
 </div>
-
 
 <?= $this->include('layouts/footer') ?>

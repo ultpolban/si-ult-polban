@@ -277,6 +277,51 @@ Ajukan Layanan
 
 </section>
 
+<section class="py-5" id="statistik">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-polban">
+                Statistik Layanan
+            </h2>
+
+            <p class="text-muted">
+                Data Layanan Populer
+            </p>
+        </div>
+
+      <div class="row g-4">
+
+    <?php foreach($popular_services as $service): ?>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-fire"></i>
+            </div>
+
+            <h3 class="counter"><?= $service['total_access']; ?></h3>
+
+            <h5><?= esc($service['service_name']); ?></h5>
+
+            <p>Kali Diakses</p>
+
+        </div>
+
+    </div>
+
+    <?php endforeach; ?>
+
+</div>
+
+        </div>
+
+    </div>
+</section>
+
+
 
 
 <!-- Kategori -->

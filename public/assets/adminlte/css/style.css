@@ -414,3 +414,112 @@ html{
     background:#293582!important;
     color:#fff;
 }
+
+.text-polban{
+    color:#293582;
+}
+
+#statistik{
+    background:#e9edf9;
+}
+
+.stat-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:35px 25px;
+
+    text-align:center;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+    height:100%;
+}
+
+.stat-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.stat-icon{
+
+    width:75px;
+
+    height:75px;
+
+    background:#293582;
+
+    color:#fff;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin:auto;
+
+    margin-bottom:20px;
+
+    font-size:30px;
+
+}
+
+.stat-card h3{
+
+    color:#ff7f00;
+
+    font-weight:700;
+
+    font-size:38px;
+
+}
+
+.stat-card h5{
+
+    color:#293582;
+
+    font-weight:600;
+
+    margin-top:10px;
+
+}
+
+.stat-card p{
+
+    color:#666;
+
+    margin-bottom:0;
+
+}
+
+.alur-card{
+    transition: all .3s ease;
+    border-radius: 18px;
+}
+
+.alur-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,.15);
+}
+
+.alur-card h5{
+    transition:.3s;
+}
+
+.alur-card:hover h5{
+    color:#293582;
+}
+
+.alur-card:hover{
+
+    background:#f8f9ff;
+
+}

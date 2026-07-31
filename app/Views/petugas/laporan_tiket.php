@@ -2,151 +2,383 @@
 
 <?= $this->section('content') ?>
 
-<div class="container-fluid">
+<style>
+    /* Styling Card Ringkasan Statistik Berwarna Solid */
+    .stat-mini-card {
+        border-radius: 12px;
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        color: #ffffff;
+    }
+    .stat-mini-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Varian Warna Card sesuai Tema Dashboard */
+    .bg-card-navy {
+        background-color: #1a237e !important;
+    }
+    .bg-card-orange {
+        background-color: #ff8c00 !important;
+    }
+    .bg-card-yellow {
+        background-color: #ffc107 !important;
+        color: #212529 !important; /* Teks agak gelap agar kontras dengan kuning */
+    }
+    .bg-card-green {
+        background-color: #198754 !important;
+    }
+
+    /* Circle Icon Container */
+    .icon-circle-bg {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .icon-circle-bg-dark {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Styling Tombol Filter & Reset */
+    .btn-filter-orange {
+        background-color: #ff8c00;
+        border-color: #ff8c00;
+        color: #ffffff;
+        font-weight: 600;
+        border-radius: 8px;
+        height: 42px;
+        padding: 0 20px;
+        transition: all 0.25s ease-in-out;
+    }
+    .btn-filter-orange:hover {
+        background-color: #e07b00;
+        border-color: #e07b00;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(255, 140, 0, 0.35);
+        transform: translateY(-1px);
+    }
+    
+    .btn-reset-grey {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #ffffff;
+        border-radius: 8px;
+        height: 42px;
+        width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.25s ease-in-out;
+    }
+    .btn-reset-grey:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(108, 117, 125, 0.35);
+        transform: translateY(-1px);
+    }
+
+    /* Tombol Export Laporan Green */
+    .btn-export-green {
+        background-color: #198754;
+        border-color: #198754;
+        color: #ffffff;
+        font-weight: 600;
+        border-radius: 8px;
+        height: 42px;
+        padding: 0 20px;
+        transition: all 0.25s ease-in-out;
+    }
+    .btn-export-green:hover {
+        background-color: #146c43;
+        border-color: #13653f;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.35);
+        transform: translateY(-1px);
+    }
+
+    /* Form Control Styling */
+    .custom-form-control, .custom-select {
+        border-color: #ced4da;
+        font-size: 0.9rem;
+        height: 42px;
+        border-radius: 8px;
+    }
+    .custom-form-control:focus, .custom-select:focus {
+        border-color: #1a237e;
+        box-shadow: 0 0 0 0.2rem rgba(26, 35, 126, 0.15);
+    }
+
+    /* Custom Table Styling */
+    .table-custom-header {
+        background-color: #1a237e !important;
+        color: #ffffff !important;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    .table-custom tbody tr {
+        transition: background-color 0.2s ease;
+    }
+    .table-custom tbody tr:hover {
+        background-color: #f8f9ff !important;
+    }
+</style>
+
+<div class="container-fluid px-4 py-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="font-weight-bold">
-            Laporan Tiket
-        </h2>
+        <div>
+            <h2 class="font-weight-bold mb-1" style="font-size: 1.75rem; color: #1a237e;">Laporan Tiket</h2>
+            <p class="text-muted mb-0" style="font-size: 0.95rem;">Kelola, rekap, dan ekspor seluruh laporan data tiket permohonan layanan secara komprehensif.</p>
+        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent p-0 m-0" style="font-size: 0.9rem;">
+                <li class="breadcrumb-item"><a href="<?= base_url('petugas') ?>" class="text-primary text-decoration-none">Dashboard</a></li>
+                <li class="breadcrumb-item active text-muted" aria-current="page">Laporan Tiket</li>
+            </ol>
+        </nav>
     </div>
 
-</div>
-
-<div class="card shadow-sm mb-4">
-
-    <div class="card-header text-white"
-         style="background:#1a237e;">
-
-        <strong>Cari Laporan Tiket</strong>
-
-    </div>
-
-    <div class="card-body">
-
-        <div class="row">
-
-            <div class="col-md-8">
-
-                <label>Nomor Tiket</label>
-
-                <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Masukkan Nomor Tiket">
-
+    <div class="row g-3 mb-4">
+        
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-mini-card bg-card-navy shadow-sm p-3">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <small class="text-white-50 d-block text-uppercase font-weight-bold" style="font-size: 0.75rem;">Total Laporan</small>
+                        <h3 class="mb-0 font-weight-bold text-white" style="font-size: 1.75rem;"><?= $total_tiket ?? 13 ?></h3>
+                    </div>
+                    <div class="icon-circle-bg">
+                        <i class="fas fa-file-alt fs-5 text-white"></i>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <div class="col-md-4 d-flex align-items-end">
-
-                <button class="btn btn-primary mr-2">
-
-                    <i class="fas fa-search"></i>
-
-                    Cari
-
-                </button>
-
-                <button class="btn btn-secondary">
-
-                    Reset
-
-                </button>
-
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-mini-card bg-card-orange shadow-sm p-3">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <small class="text-white-50 d-block text-uppercase font-weight-bold" style="font-size: 0.75rem;">Waiting Verification</small>
+                        <h3 class="mb-0 font-weight-bold text-white" style="font-size: 1.75rem;"><?= $waiting_verification ?? 5 ?></h3>
+                    </div>
+                    <div class="icon-circle-bg">
+                        <i class="fas fa-clock fs-5 text-white"></i>
+                    </div>
+                </div>
             </div>
+        </div>
 
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-mini-card bg-card-yellow shadow-sm p-3">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <small class="text-dark d-block text-uppercase font-weight-bold" style="font-size: 0.75rem; opacity: 0.75;">Diproses / Assigned</small>
+                        <h3 class="mb-0 font-weight-bold text-dark" style="font-size: 1.75rem;"><?= $diproses ?? 3 ?></h3>
+                    </div>
+                    <div class="icon-circle-bg-dark">
+                        <i class="fas fa-cogs fs-5 text-dark"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-mini-card bg-card-green shadow-sm p-3">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <small class="text-white-50 d-block text-uppercase font-weight-bold" style="font-size: 0.75rem;">Tiket Selesai</small>
+                        <h3 class="mb-0 font-weight-bold text-white" style="font-size: 1.75rem;"><?= $selesai ?? 5 ?></h3>
+                    </div>
+                    <div class="icon-circle-bg">
+                        <i class="fas fa-check-circle fs-5 text-white"></i>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
 
-</div>
-
-<div class="card shadow-sm">
-
-    <div class="card-header text-white"
-         style="background:#1a237e;">
-
-        <strong>Data Laporan Tiket</strong>
-
-    </div>
-
-    <div class="card-body">
-
-        <button class="btn btn-primary mb-3">
-
-            <i class="fas fa-download"></i>
-
-            Export Laporan
-
-        </button>
-
-        <div class="table-responsive">
-
-            <table class="table table-bordered table-hover">
-
-                <thead
-                    class="text-white"
-                    style="background:#1a237e;">
-
-                <tr>
-
-                    <th>No</th>
-
-                    <th>No Tiket</th>
-
-                    <th>Nama Pemohon</th>
-
-                    <th>Jenis Pemohon</th>
-
-                    <th>Layanan</th>
-
-                    <th>Status</th>
-
-                    <th>Prioritas</th>
-
-                    <th>Tanggal Pengajuan</th>
-
-                </tr>
-
-                </thead>
-
-                <tbody>
-
-                    <tr>
-
-                        <td>1</td>
-
-                        <td>ULT-20260730081403481</td>
-
-                        <td>Apin</td>
-
-                        <td>Mahasiswa</td>
-
-                        <td>Kemahasiswaan</td>
-
-                        <td>
-
-                            <span class="badge badge-warning">
-
-                                Waiting Verification
-
+    <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; background: #ffffff;">
+        <div class="card-body p-3">
+            <form action="" method="GET">
+                <div class="row g-2 align-items-center">
+                    
+                    <div class="col-md-4 col-12">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0 text-muted ps-3" style="border-color: #ced4da; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
+                                <i class="fas fa-search"></i>
                             </span>
+                            <input type="text" name="keyword" class="form-control border-start-0 ps-2 custom-form-control" 
+                                   placeholder="Cari No Tiket, Nama, NIM..." 
+                                   value="<?= esc($keyword ?? '') ?>">
+                        </div>
+                    </div>
 
-                        </td>
+                    <div class="col-md-3 col-sm-6">
+                        <select name="status" class="form-select custom-select">
+                            <option value="">-- Semua Status --</option>
+                            <option value="Waiting Verification" <?= (isset($status) && $status == 'Waiting Verification') ? 'selected' : '' ?>>Waiting Verification</option>
+                            <option value="Assigned" <?= (isset($status) && $status == 'Assigned') ? 'selected' : '' ?>>Assigned</option>
+                            <option value="In Progress" <?= (isset($status) && $status == 'In Progress') ? 'selected' : '' ?>>In Progress</option>
+                            <option value="Completed" <?= (isset($status) && $status == 'Completed') ? 'selected' : '' ?>>Completed</option>
+                            <option value="Rejected" <?= (isset($status) && $status == 'Rejected') ? 'selected' : '' ?>>Rejected</option>
+                        </select>
+                    </div>
 
-                        <td>Normal</td>
+                    <div class="col-md-auto col-sm-6 d-flex align-items-center gap-2">
+                        <button type="submit" class="btn btn-filter-orange d-inline-flex align-items-center gap-2">
+                            <i class="fas fa-filter"></i>
+                            <span>Filter</span>
+                        </button>
 
-                        <td>30-07-2026</td>
+                        <a href="<?= current_url() ?>" class="btn btn-reset-grey" title="Reset Filter">
+                            <i class="fas fa-undo" style="font-size: 0.95rem;"></i>
+                        </a>
+                    </div>
 
-                    </tr>
+                    <div class="col-md col-12 text-md-end mt-2 mt-md-0">
+                        <a href="<?= base_url('petugas/laporan/export') ?>" id="btnExport" class="btn btn-export-green d-inline-flex align-items-center gap-2">
+                            <i class="fas fa-download"></i>
+                            <span>Export Laporan</span>
+                        </a>
+                    </div>
 
-                </tbody>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            </table>
-
+    <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; overflow: hidden;">
+        <div class="card-header text-white py-3 px-4 d-flex justify-content-between align-items-center" style="background-color: #1a237e;">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fas fa-list-alt fs-5 me-2"></i>
+                <h5 class="mb-0 font-weight-bold" style="font-size: 1.05rem;">Data Laporan Tiket</h5>
+            </div>
+            <span class="badge bg-light text-dark px-3 py-2 font-weight-bold" style="font-size: 0.8rem; border-radius: 6px;">
+                Total: <?= count($laporan_list ?? [1]) ?> Data
+            </span>
         </div>
 
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-custom align-middle mb-0">
+                    <thead>
+                        <tr class="table-custom-header text-center">
+                            <th style="width: 50px;">No</th>
+                            <th>No Tiket</th>
+                            <th>Nama Pemohon</th>
+                            <th>Jenis Pemohon</th>
+                            <th>Layanan</th>
+                            <th>Status</th>
+                            <th>Prioritas</th>
+                            <th>Tanggal Pengajuan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($laporan_list)): ?>
+                            <?php $no = 1; foreach ($laporan_list as $row): ?>
+                                <tr class="text-center">
+                                    <td class="font-weight-bold text-muted"><?= $no++ ?></td>
+                                    <td>
+                                        <a href="<?= base_url('petugas/tiket/detail/' . $row['no_tiket']) ?>" class="text-primary font-weight-bold text-decoration-none">
+                                            <?= esc($row['no_tiket']) ?>
+                                        </a>
+                                    </td>
+                                    <td class="text-start font-weight-semibold text-dark"><?= esc($row['nama_pemohon']) ?></td>
+                                    <td><span class="badge bg-light text-dark border px-2 py-1"><?= esc($row['jenis_pemohon'] ?? 'Mahasiswa') ?></span></td>
+                                    <td class="text-start"><?= esc($row['layanan']) ?></td>
+                                    <td>
+                                        <?php 
+                                            $st = $row['status'] ?? 'Waiting Verification';
+                                            $badgeClass = 'bg-warning text-dark';
+                                            if ($st == 'Completed' || $st == 'Verified') $badgeClass = 'bg-success text-white';
+                                            else if ($st == 'In Progress' || $st == 'Assigned' || $st == 'Disposisi') $badgeClass = 'bg-info text-dark';
+                                            else if ($st == 'Rejected') $badgeClass = 'bg-danger text-white';
+                                        ?>
+                                        <span class="badge <?= $badgeClass ?> px-3 py-2 font-weight-bold" style="font-size: 0.78rem; border-radius: 6px;">
+                                            <?= esc($st) ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary px-2 py-1"><?= esc($row['prioritas'] ?? 'Normal') ?></span>
+                                    </td>
+                                    <td class="text-muted" style="font-size: 0.88rem;">
+                                        <?= date('d-m-Y', strtotime($row['created_at'] ?? '2026-07-30')) ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr class="text-center">
+                                <td class="font-weight-bold text-muted">1</td>
+                                <td>
+                                    <a href="#" class="text-primary font-weight-bold text-decoration-none">
+                                        ULT-20260730081403481
+                                    </a>
+                                </td>
+                                <td class="text-start font-weight-semibold text-dark">Apin</td>
+                                <td><span class="badge bg-light text-dark border px-2 py-1">Mahasiswa</span></td>
+                                <td class="text-start">Kemahasiswaan</td>
+                                <td>
+                                    <span class="badge bg-warning text-dark px-3 py-2 font-weight-bold" style="font-size: 0.78rem; border-radius: 6px;">
+                                        Waiting Verification
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border px-2 py-1">Normal</span>
+                                </td>
+                                <td class="text-muted" style="font-size: 0.88rem;">
+                                    30-07-2026
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const mainCards = document.querySelectorAll('.card');
+        mainCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(12px)';
+            card.style.transition = `all 0.35s ease-out ${index * 0.08}s`;
+            
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 50);
+        });
+
+        const btnExport = document.getElementById('btnExport');
+        if (btnExport) {
+            btnExport.addEventListener('click', function (e) {
+                const originalHTML = this.innerHTML;
+                this.innerHTML = `<i class="fas fa-spinner fa-spin me-1"></i> <span>Mengekspor...</span>`;
+                this.style.pointerEvents = 'none';
+
+                setTimeout(() => {
+                    this.innerHTML = originalHTML;
+                    this.style.pointerEvents = 'auto';
+                }, 2500);
+            });
+        }
+    });
+</script>
 
 <?= $this->endSection() ?>

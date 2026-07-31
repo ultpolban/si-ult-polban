@@ -308,7 +308,51 @@
 
                                 </div>
 
+                                <!-- =================================================
+     NIK (Readonly)
+================================================== -->
 
+<div class="form-group">
+
+    <label
+        for="nik"
+        class="font-weight-bold"
+    >
+        NIK
+    </label>
+
+    <input
+        type="text"
+        id="nik"
+        class="form-control"
+        value="<?= session()->get('nik') ?? '3273010101040001'; ?>"
+        readonly
+    >
+
+</div>
+
+<!-- =================================================
+     NAMA MAHASISWA (Readonly)
+================================================== -->
+
+<div class="form-group">
+
+    <label
+        for="nama_mahasiswa"
+        class="font-weight-bold"
+    >
+        Nama Mahasiswa
+    </label>
+
+    <input
+        type="text"
+        id="nama_mahasiswa"
+        class="form-control"
+        value="<?= session()->get('nama') ?? 'Muhamad Rafi Putra Zakaria'; ?>"
+        readonly
+    >
+
+</div>
 
                                 <!-- =================================================
                                      JENIS LAYANAN

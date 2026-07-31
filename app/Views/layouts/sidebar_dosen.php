@@ -4,22 +4,34 @@ $currentUrl = uri_string();
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
-    <!-- Logo / Brand -->
-    <a href="<?= base_url('dosen/dashboard') ?>" class="brand-link">
+    <!-- BRAND / LOGO POLBAN -->
+    <a href="<?= base_url('dashboard-tendik') ?>" class="brand-link">
 
         <img
             src="<?= base_url('assets/adminlte/img/logo-polban.png') ?>"
             alt="Logo POLBAN"
-            class="brand-image img-circle elevation-3"
-            style="opacity: .9"
+            class="brand-image"
+            style="
+                width: 38px;
+                height: 38px;
+                object-fit: contain;
+                opacity: 1;
+                margin-left: 8px;
+                margin-right: 8px;
+            "
         >
 
-        <span class="brand-text font-weight-light">
+        <span
+            class="brand-text font-weight-bold"
+            style="
+                color: white;
+                font-size: 17px;
+            "
+        >
             SI-ULT POLBAN
         </span>
 
     </a>
-
 
     <!-- Sidebar -->
     <div class="sidebar">

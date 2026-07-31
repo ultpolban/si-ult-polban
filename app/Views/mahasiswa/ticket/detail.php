@@ -4,7 +4,6 @@
 
 <?= $this->include('layouts/sidebar_mahasiswa') ?>
 
-
 <div class="content-wrapper">
 
     <!-- =========================================
@@ -173,7 +172,6 @@
 
 
                         <div class="card-body">
-
 
                             <!-- LAYANAN -->
 

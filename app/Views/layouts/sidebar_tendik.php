@@ -1,17 +1,33 @@
 <aside class="main-sidebar elevation-4">
 
-    <!-- BRAND -->
-    <a
-        href="<?= base_url('dashboard-tendik') ?>"
-        class="brand-link"
-    >
+    <!-- BRAND / LOGO POLBAN -->
+    <a href="<?= base_url('dashboard-tendik') ?>" class="brand-link">
 
-        <span class="brand-text font-weight-light">
+        <img
+            src="<?= base_url('assets/adminlte/img/logo-polban.png') ?>"
+            alt="Logo POLBAN"
+            class="brand-image"
+            style="
+                width: 38px;
+                height: 38px;
+                object-fit: contain;
+                opacity: 1;
+                margin-left: 8px;
+                margin-right: 8px;
+            "
+        >
+
+        <span
+            class="brand-text font-weight-bold"
+            style="
+                color: white;
+                font-size: 17px;
+            "
+        >
             SI-ULT POLBAN
         </span>
 
     </a>
-
 
     <div class="sidebar">
 

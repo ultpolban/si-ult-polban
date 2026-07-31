@@ -810,51 +810,6 @@
 
                         </div>
 
-
-                        <!-- FAKULTAS -->
-
-                        <div
-                            class="
-                                col-lg-6
-                                col-md-6
-                                mb-3
-                            "
-                        >
-
-                            <div
-                                style="
-                                    background:#f5f8fc;
-                                    padding:20px;
-                                    border-left:
-                                        4px solid #0b3d91;
-                                    border-radius:8px;
-                                    height:100%;
-                                "
-                            >
-
-                                <small
-                                    class="text-muted"
-                                >
-
-                                    Fakultas
-
-                                </small>
-
-                                <h5
-                                    class="mb-0 mt-1"
-                                >
-
-                                    <?= esc(
-                                        $fakultas
-                                    ) ?>
-
-                                </h5>
-
-                            </div>
-
-                        </div>
-
-
                         <!-- JURUSAN -->
 
                         <div

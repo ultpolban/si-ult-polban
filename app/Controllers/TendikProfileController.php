@@ -12,17 +12,16 @@ class TendikProfileController extends BaseController
     public function index()
     {
         // Ambil data user dari session
-        $user = session()->get('user') ?? [];
+       $profile = session()->get('user') ?? [];
 
-        $data = [
-            'title' => 'Profil Tendik',
-            'user'  => $user,
-        ];
-
-        return view(
-            'tendik/profile/index',
-            $data
-        );
+$data = [
+    'title'   => 'Profil Tendik',
+    'profile' => $profile,
+];
+return view(
+    'tendik/profile/index',
+    $data
+);
     }
 
 
@@ -34,17 +33,16 @@ class TendikProfileController extends BaseController
     public function edit()
     {
         // Ambil data user dari session
-        $user = session()->get('user') ?? [];
+        $profile = session()->get('user') ?? [];
 
-        $data = [
-            'title' => 'Edit Profil Tendik',
-            'user'  => $user,
-        ];
-
-        return view(
-            'tendik/profile/edit',
-            $data
-        );
+$data = [
+    'title'   => 'Edit Profil Tendik',
+    'profile' => $profile,
+];
+return view(
+    'tendik/profile/edit',
+    $data
+);
     }
 
 
@@ -54,77 +52,106 @@ class TendikProfileController extends BaseController
      * ==========================================
      */
     public function update()
-    {
-        // Ambil data user dari session
-        $user = session()->get('user') ?? [];
+{
+    $profile = session()->get('user') ?? [];
 
+    // ============================
+    // DATA PRIBADI
+    // ============================
 
-        // ==========================================
-        // AMBIL DATA DARI FORM
-        // ==========================================
+    $profile['nama']            = trim($this->request->getPost('nama'));
 
-        $nama = $this->request->getPost('nama');
-        $nip  = $this->request->getPost('nip');
-        $email = $this->request->getPost('email');
-        $no_hp = $this->request->getPost('no_hp');
+    $profile['nik']             = trim($this->request->getPost('nik'));
 
+    $profile['nip']             = trim($this->request->getPost('nip'));
 
-        // ==========================================
-        // VALIDASI
-        // ==========================================
+    $profile['email']           = trim($this->request->getPost('email'));
 
-        if (
-            empty($nama) ||
-            empty($nip) ||
-            empty($email)
-        ) {
+    $profile['no_hp']           = trim($this->request->getPost('no_hp'));
 
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Nama, NIP, dan Email wajib diisi.'
-                );
-        }
+    $profile['jenis_kelamin']   = trim($this->request->getPost('jenis_kelamin'));
 
+    $profile['alamat']          = trim($this->request->getPost('alamat'));
 
-        // ==========================================
-        // UPDATE DATA SESSION
-        // ==========================================
+    // ============================
+    // KEPEGAWAIAN
+    // ============================
 
-        $user['nama'] = $nama;
+    $profile['unit_kerja']      = trim($this->request->getPost('unit_kerja'));
 
-        $user['nip'] = $nip;
+    $profile['bagian']          = trim($this->request->getPost('bagian'));
 
-        $user['email'] = $email;
+    $profile['jabatan']         = trim($this->request->getPost('jabatan'));
 
-        $user['no_hp'] = $no_hp;
+    $profile['status']          = trim($this->request->getPost('status'));
 
+    // ============================
+    // VALIDASI
+    // ============================
 
-        // ==========================================
-        // SIMPAN KEMBALI KE SESSION
-        // ==========================================
-
-        session()->set(
-            'user',
-            $user
-        );
-
-
-        // ==========================================
-        // REDIRECT KE PROFIL
-        // ==========================================
+    if (
+        empty($profile['nama']) ||
+        empty($profile['nik']) ||
+        empty($profile['nip']) ||
+        empty($profile['email'])
+    ) {
 
         return redirect()
-            ->to(
-                base_url(
-                    'tendik/profile'
-                )
-            )
+            ->back()
+            ->withInput()
             ->with(
-                'success',
-                'Profil berhasil diperbarui.'
+                'error',
+                'Nama, NIK, NIP dan Email wajib diisi.'
             );
     }
+
+    // ============================
+    // UPLOAD FOTO
+    // ============================
+
+    $foto = $this->request->getFile('foto');
+
+    if ($foto && $foto->isValid() && !$foto->hasMoved()) {
+
+        $folder = FCPATH . 'uploads/profile';
+
+        if (!is_dir($folder)) {
+
+            mkdir($folder, 0777, true);
+
+        }
+
+        if (!empty($profile['foto'])) {
+
+            $old = $folder . '/' . $profile['foto'];
+
+            if (file_exists($old)) {
+
+                unlink($old);
+
+            }
+
+        }
+
+        $namaFoto = $foto->getRandomName();
+
+        $foto->move($folder, $namaFoto);
+
+        $profile['foto'] = $namaFoto;
+
+    }
+
+    // ============================
+    // SIMPAN SESSION
+    // ============================
+
+    session()->set('user', $profile);
+
+    return redirect()
+        ->to(base_url('tendik/profile'))
+        ->with(
+            'success',
+            'Profil berhasil diperbarui.'
+        );
+}
 }

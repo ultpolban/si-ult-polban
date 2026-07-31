@@ -6,306 +6,589 @@
 
 <div class="content-wrapper">
 
-    <!-- HEADER -->
-    <section class="content-header">
+<section class="content-header">
 
-        <div class="container-fluid">
+    <div class="container-fluid">
 
-            <div class="row mb-2">
+        <div class="row mb-2">
 
-                <div class="col-sm-6">
+            <div class="col-sm-6">
 
-                    <h1
-                        style="
-                            color:#0b3d91;
-                            font-weight:700;
-                        "
-                    >
+                <h1 style="color:#0b3d91;font-weight:700;">
 
-                        <i class="fas fa-user-edit mr-2"></i>
+                    <i class="fas fa-user-edit mr-2"></i>
+
+                    Edit Profil Tendik
+
+                </h1>
+
+            </div>
+
+            <div class="col-sm-6">
+
+                <ol class="breadcrumb float-sm-right">
+
+                    <li class="breadcrumb-item">
+
+                        <a href="<?= base_url('dashboard-tendik') ?>">
+
+                            Dashboard
+
+                        </a>
+
+                    </li>
+
+                    <li class="breadcrumb-item">
+
+                        <a href="<?= base_url('tendik/profile') ?>">
+
+                            Profil
+
+                        </a>
+
+                    </li>
+
+                    <li class="breadcrumb-item active">
 
                         Edit Profil
 
-                    </h1>
+                    </li>
 
-                </div>
-
-                <div class="col-sm-6">
-
-                    <ol class="breadcrumb float-sm-right">
-
-                        <li class="breadcrumb-item">
-
-                            <a href="<?= base_url('tendik/dashboard') ?>">
-
-                                Dashboard
-
-                            </a>
-
-                        </li>
-
-                        <li class="breadcrumb-item">
-
-                            <a href="<?= base_url('tendik/profile') ?>">
-
-                                Profil
-
-                            </a>
-
-                        </li>
-
-                        <li class="breadcrumb-item active">
-
-                            Edit
-
-                        </li>
-
-                    </ol>
-
-                </div>
+                </ol>
 
             </div>
 
         </div>
 
-    </section>
+    </div>
 
+</section>
 
-    <!-- CONTENT -->
-    <section class="content">
+<section class="content">
 
-        <div class="container-fluid">
+<div class="container-fluid">
 
-            <div class="row justify-content-center">
+<?php if(session()->getFlashdata('error')) : ?>
 
-                <div class="col-md-8">
+<div class="alert alert-danger">
 
-                    <div class="card shadow-sm">
+    <?= session()->getFlashdata('error') ?>
 
-                        <div
-                            class="card-header text-white"
-                            style="
-                                background:#0b3d91;
-                                border-bottom:4px solid #f28c28;
-                            "
-                        >
+</div>
 
-                            <h5 class="mb-0">
+<?php endif; ?>
 
-                                <i class="fas fa-edit mr-2"></i>
 
-                                Ubah Informasi Profil
+<div class="card shadow-sm">
 
-                            </h5>
+<div
 
-                        </div>
+class="card-header"
 
+style="background:#0b3d91;color:white;"
 
-                        <div class="card-body">
+>
 
-                            <?php if (session()->getFlashdata('error')) : ?>
+<h3 class="card-title">
 
-                                <div class="alert alert-danger">
+<i class="fas fa-user-cog"></i>
 
-                                    <i class="fas fa-exclamation-circle mr-2"></i>
+Form Edit Profil
 
-                                    <?= esc(
-                                        session()->getFlashdata('error')
-                                    ) ?>
+</h3>
 
-                                </div>
+</div>
 
-                            <?php endif; ?>
 
+<form
 
-                            <form
-                                action="<?= base_url('tendik/profile/update') ?>"
-                                method="post"
-                            >
+action="<?= base_url('tendik/profile/update') ?>"
 
-                                <?= csrf_field() ?>
+method="post"
 
+enctype="multipart/form-data"
 
-                                <!-- NAMA -->
-                                <div class="form-group">
+>
 
-                                    <label>
+<?= csrf_field() ?>
 
-                                        Nama Lengkap
 
-                                    </label>
+<div class="card-body">
 
-                                    <input
-                                        type="text"
-                                        name="nama"
-                                        class="form-control"
-                                        value="<?= esc(
-                                            $user['nama']
-                                            ?? ''
-                                        ) ?>"
-                                        required
-                                    >
+<div class="row">
 
-                                </div>
 
+<!-- FOTO -->
 
-                                <!-- NIP -->
-                                <div class="form-group">
+<div class="col-md-4 text-center">
 
-                                    <label>
+<?php if(!empty($profile['foto'])) : ?>
 
-                                        NIP
+<img
 
-                                    </label>
+src="<?= base_url('uploads/profile/'.$profile['foto']) ?>"
 
-                                    <input
-                                        type="text"
-                                        name="nip"
-                                        class="form-control"
-                                        value="<?= esc(
-                                            $user['nip']
-                                            ?? ''
-                                        ) ?>"
-                                        required
-                                    >
+class="img-circle elevation-3 mb-3"
 
-                                </div>
+style="
 
+width:190px;
 
-                                <!-- EMAIL -->
-                                <div class="form-group">
+height:190px;
 
-                                    <label>
+object-fit:cover;
 
-                                        Email
+border:5px solid #fff;
 
-                                    </label>
+box-shadow:0 8px 20px rgba(0,0,0,.2);
 
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        class="form-control"
-                                        value="<?= esc(
-                                            $user['email']
-                                            ?? ''
-                                        ) ?>"
-                                        required
-                                    >
+"
 
-                                </div>
+>
 
+<?php else : ?>
 
-                                <!-- JABATAN -->
-                                <div class="form-group">
+<img
 
-                                    <label>
+src="<?= base_url('assets/img/default-user.png') ?>"
 
-                                        Jabatan
+class="img-circle elevation-3 mb-3"
 
-                                    </label>
+style="
 
-                                    <input
-                                        type="text"
-                                        name="jabatan"
-                                        class="form-control"
-                                        value="<?= esc(
-                                            $user['jabatan']
-                                            ?? 'Tenaga Kependidikan'
-                                        ) ?>"
-                                    >
+width:190px;
 
-                                </div>
+height:190px;
 
+object-fit:cover;
 
-                                <!-- UNIT -->
-                                <div class="form-group">
+border:5px solid #fff;
 
-                                    <label>
+box-shadow:0 8px 20px rgba(0,0,0,.2);
 
-                                        Unit / Bagian
+"
 
-                                    </label>
+>
 
-                                    <input
-                                        type="text"
-                                        name="unit"
-                                        class="form-control"
-                                        value="<?= esc(
-                                            $user['unit']
-                                            ?? ''
-                                        ) ?>"
-                                    >
+<?php endif; ?>
 
-                                </div>
 
+<div class="form-group">
 
-                                <!-- NO HP -->
-                                <div class="form-group">
+<label>Ganti Foto</label>
 
-                                    <label>
+<input
 
-                                        Nomor Telepon
+type="file"
 
-                                    </label>
+name="foto"
 
-                                    <input
-                                        type="text"
-                                        name="no_hp"
-                                        class="form-control"
-                                        value="<?= esc(
-                                            $user['no_hp']
-                                            ?? ''
-                                        ) ?>"
-                                    >
+class="form-control"
 
-                                </div>
+accept=".jpg,.jpeg,.png,.webp"
 
+>
 
-                                <!-- BUTTON -->
-                                <div class="d-flex justify-content-between mt-4">
+<small class="text-muted">
 
-                                    <a
-                                        href="<?= base_url('tendik/profile') ?>"
-                                        class="btn btn-secondary"
-                                    >
+JPG, PNG, WEBP (maks 2MB)
 
-                                        <i class="fas fa-arrow-left mr-1"></i>
+</small>
 
-                                        Kembali
+</div>
 
-                                    </a>
+</div>
 
 
-                                    <button
-                                        type="submit"
-                                        class="btn text-white"
-                                        style="
-                                            background:#f28c28;
-                                            border-color:#f28c28;
-                                        "
-                                    >
+<!-- DATA -->
 
-                                        <i class="fas fa-save mr-1"></i>
+<div class="col-md-8">
 
-                                        Simpan Perubahan
+<h4
 
-                                    </button>
+style="
 
-                                </div>
+color:#0b3d91;
 
-                            </form>
+font-weight:700;
 
-                        </div>
+"
 
-                    </div>
+>
 
-                </div>
+<i class="fas fa-user mr-2"></i>
 
-            </div>
+Data Pribadi
 
-        </div>
+</h4>
 
-    </section>
+<hr>
+
+<div class="row">
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>Nama Lengkap</label>
+
+<input
+
+type="text"
+
+name="nama"
+
+class="form-control"
+
+value="<?= old('nama',$profile['nama'] ?? '') ?>"
+
+required
+
+>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>NIK</label>
+
+<input
+
+type="text"
+
+name="nik"
+
+class="form-control"
+
+value="<?= old('nik',$profile['nik'] ?? '') ?>"
+
+required
+
+>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>NIP</label>
+
+<input
+
+type="text"
+
+name="nip"
+
+class="form-control"
+
+value="<?= old('nip',$profile['nip'] ?? '') ?>"
+
+required
+
+>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>Email</label>
+
+<input
+
+type="email"
+
+name="email"
+
+class="form-control"
+
+value="<?= old('email',$profile['email'] ?? '') ?>"
+
+required
+
+>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>Nomor HP</label>
+
+<input
+
+type="text"
+
+name="no_hp"
+
+class="form-control"
+
+value="<?= old('no_hp',$profile['no_hp'] ?? '') ?>"
+
+>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>Jenis Kelamin</label>
+
+<select
+
+name="jenis_kelamin"
+
+class="form-control"
+
+>
+
+<option value="Laki-laki" <?= (($profile['jenis_kelamin'] ?? '')=='Laki-laki')?'selected':''; ?>>
+
+Laki-laki
+
+</option>
+
+<option value="Perempuan" <?= (($profile['jenis_kelamin'] ?? '')=='Perempuan')?'selected':''; ?>>
+
+Perempuan
+
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="col-md-12">
+
+<div class="form-group">
+
+<label>Alamat</label>
+
+<textarea
+
+name="alamat"
+
+rows="3"
+
+class="form-control"
+
+><?= old('alamat',$profile['alamat'] ?? '') ?></textarea>
+
+</div>
+
+</div>
+
+</div>
+
+
+<hr>
+
+<h4
+
+style="
+
+color:#0b3d91;
+
+font-weight:700;
+
+"
+
+>
+
+<i class="fas fa-briefcase mr-2"></i>
+
+Informasi Kepegawaian
+
+</h4>
+
+<hr>
+
+<div class="row">
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>Unit Kerja</label>
+
+<input
+
+type="text"
+
+name="unit_kerja"
+
+class="form-control"
+
+value="<?= old('unit_kerja',$profile['unit_kerja'] ?? '') ?>"
+
+>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>Bagian</label>
+
+<input
+
+type="text"
+
+name="bagian"
+
+class="form-control"
+
+value="<?= old('bagian',$profile['bagian'] ?? '') ?>"
+
+>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>Jabatan</label>
+
+<input
+
+type="text"
+
+name="jabatan"
+
+class="form-control"
+
+value="<?= old('jabatan',$profile['jabatan'] ?? '') ?>"
+
+>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>Status</label>
+
+<select
+
+name="status"
+
+class="form-control"
+
+>
+
+<option value="Aktif" <?= (($profile['status'] ?? '')=='Aktif')?'selected':''; ?>>
+
+Aktif
+
+</option>
+
+<option value="Cuti" <?= (($profile['status'] ?? '')=='Cuti')?'selected':''; ?>>
+
+Cuti
+
+</option>
+
+<option value="Tugas Belajar" <?= (($profile['status'] ?? '')=='Tugas Belajar')?'selected':''; ?>>
+
+Tugas Belajar
+
+</option>
+
+<option value="Pensiun" <?= (($profile['status'] ?? '')=='Pensiun')?'selected':''; ?>>
+
+Pensiun
+
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card-footer text-right">
+
+<a
+
+href="<?= base_url('tendik/profile') ?>"
+
+class="btn btn-secondary"
+
+>
+
+<i class="fas fa-arrow-left"></i>
+
+Batal
+
+</a>
+
+<button
+
+type="submit"
+
+class="btn btn-success"
+
+>
+
+<i class="fas fa-save"></i>
+
+Simpan Perubahan
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</section>
 
 </div>
 

@@ -194,20 +194,7 @@ class MahasiswaProfileController extends BaseController
             );
 
 
-        $nim =
-            trim(
-                $this->request->getPost(
-                    'nim'
-                )
-            );
 
-
-        $nik =
-            trim(
-                $this->request->getPost(
-                    'nik'
-                )
-            );
 
 
         $email =
@@ -254,13 +241,6 @@ class MahasiswaProfileController extends BaseController
             );
 
 
-        $fakultas =
-            trim(
-                $this->request->getPost(
-                    'fakultas'
-                )
-            );
-
 
         $jurusan =
             trim(
@@ -288,14 +268,11 @@ class MahasiswaProfileController extends BaseController
 
         if (
             empty($nama) ||
-            empty($nim) ||
-            empty($nik) ||
             empty($email) ||
             empty($noHp) ||
             empty($jenisKelamin) ||
             empty($alamat) ||
             empty($prodi) ||
-            empty($fakultas) ||
             empty($jurusan) ||
             empty($semester) ||
             empty($angkatan)
@@ -307,48 +284,6 @@ class MahasiswaProfileController extends BaseController
                 ->with(
                     'error',
                     'Mohon lengkapi semua data profile dan informasi akademik.'
-                );
-        }
-
-
-        // =====================================================
-        // VALIDASI NIM
-        // =====================================================
-
-        if (
-            !preg_match(
-                '/^[0-9]+$/',
-                $nim
-            )
-        ) {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'NIM hanya boleh berisi angka.'
-                );
-        }
-
-
-        // =====================================================
-        // VALIDASI NIK
-        // =====================================================
-
-        if (
-            !preg_match(
-                '/^[0-9]{16}$/',
-                $nik
-            )
-        ) {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'NIK harus terdiri dari 16 digit angka.'
                 );
         }
 
@@ -421,11 +356,7 @@ class MahasiswaProfileController extends BaseController
         $profile['nama'] =
             $nama;
 
-        $profile['nim'] =
-            $nim;
-
-        $profile['nik'] =
-            $nik;
+// NIM & NIK tidak diubah
 
         $profile['email'] =
             $email;
@@ -446,9 +377,6 @@ class MahasiswaProfileController extends BaseController
 
         $profile['prodi'] =
             $prodi;
-
-        $profile['fakultas'] =
-            $fakultas;
 
         $profile['jurusan'] =
             $jurusan;

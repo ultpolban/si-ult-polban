@@ -423,23 +423,11 @@ $profile =
 
                                         </label>
 
-                                        <input
-                                            type="text"
-                                            name="nik"
-                                            id="nik"
-                                            class="form-control"
-                                            value="<?= esc(
-                                                $profile['nik']
-                                                ?? ''
-                                            ) ?>"
-                                            maxlength="16"
-                                            minlength="16"
-                                            pattern="[0-9]{16}"
-                                            placeholder="
-                                                Masukkan 16 digit NIK
-                                            "
-                                            required
-                                        >
+<input
+type="text"
+class="form-control bg-light"
+value="<?= esc($profile['nik']) ?>"
+readonly>
 
                                         <small
                                             class="
@@ -473,16 +461,10 @@ $profile =
                                         </label>
 
 <input
-    type="text"
-    name="nim"
-    id="nim"
-    class="form-control"
-    value="<?= esc(
-        $profile['nim']
-        ?? ''
-    ) ?>"
-    required
->
+type="text"
+class="form-control bg-light"
+value="<?= esc($profile['nim']) ?>"
+readonly>
 
                                     </div>
 
@@ -762,38 +744,6 @@ $profile =
     class="form-control"
     value="<?= esc(
         $profile['prodi']
-        ?? ''
-    ) ?>"
-    required
->
-
-                                    </div>
-
-
-                                    <!-- FAKULTAS -->
-
-                                    <div
-                                        class="
-                                            col-md-6
-                                            mb-3
-                                        "
-                                    >
-
-                                        <label
-                                            class="font-weight-bold"
-                                        >
-
-                                            Fakultas
-
-                                        </label>
-
-<input
-    type="text"
-    name="fakultas"
-    id="fakultas"
-    class="form-control"
-    value="<?= esc(
-        $profile['fakultas']
         ?? ''
     ) ?>"
     required

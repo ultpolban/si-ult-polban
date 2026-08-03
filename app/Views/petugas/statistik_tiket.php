@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 
-<script src="https://cdn.jsdelivr.net/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
 <style>
     /* Card Stat Styling */
@@ -20,12 +20,25 @@
     }
     
     /* Warna Solid Kartu Sesuai Referensi SI-ULT POLBAN */
-    .bg-stat-navy { background-color: #1a237e !important; color: #ffffff !important; }
-    .bg-stat-orange { background-color: #ff8c00 !important; color: #ffffff !important; }
-    .bg-stat-yellow { background-color: #ffc107 !important; color: #212529 !important; }
-    .bg-stat-green { background-color: #198754 !important; color: #ffffff !important; }
-    .bg-stat-gray { background-color: #6c757d !important; color: #ffffff !important; }
-    .bg-stat-red { background-color: #dc3545 !important; color: #ffffff !important; }
+  .bg-stat-navy {
+    background-color: #1a237e !important;
+    color: #ffffff !important;
+}
+
+.bg-stat-orange {
+    background-color: #ff8c00 !important;
+    color: #ffffff !important;
+}
+
+.bg-stat-yellow {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.bg-stat-green {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+}
 
     /* Circle Container Ikon */
     .stat-icon-wrapper {
@@ -144,7 +157,7 @@
         </div>
 
         <div class="col-xl-3 col-md-6 col-sm-6">
-            <div class="card stat-card-modern bg-stat-gray shadow-sm p-3">
+            <div class="card stat-card-modern bg-stat-yellow shadow-sm p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <span class="counter-value text-white d-block mb-1" data-target="<?= $assigned ?? 3 ?>">0</span>
@@ -188,7 +201,7 @@
         </div>
 
         <div class="col-xl-4 col-md-4 col-sm-12">
-            <div class="card stat-card-modern bg-stat-gray shadow-sm p-3">
+            <div class="card stat-card-modern bg-stat-orange shadow-sm p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <span class="counter-value text-white d-block mb-1" data-target="<?= $need_revision ?? 2 ?>">0</span>
@@ -202,7 +215,7 @@
         </div>
 
         <div class="col-xl-4 col-md-4 col-sm-12">
-            <div class="card stat-card-modern bg-stat-red shadow-sm p-3">
+            <div class="card stat-card-modern bg-stat-yellow shadow-sm p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <span class="counter-value text-white d-block mb-1" data-target="<?= $rejected ?? 1 ?>">0</span>
@@ -312,77 +325,170 @@
         ];
 
         // 2. Render Bar Chart
-        const elBar = document.getElementById('chartStatistikTiket');
-        if (elBar) {
-            new Chart(elBar.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: ['Submitted', 'Assigned', 'In Progress', 'Completed', 'Need Revision', 'Rejected'],
-                    datasets: [{
-                        label: 'Jumlah Tiket',
-                        data: dataStatus,
-                        backgroundColor: [
-                            '#ffc107', // Yellow/Orange Submitted
-                            '#6c757d', // Gray Assigned
-                            '#198754', // Green In Progress
-                            '#198754', // Green Completed
-                            '#6c757d', // Gray Need Revision
-                            '#dc3545'  // Red Rejected
-                        ],
-                        borderRadius: 6,
-                        borderSkipped: false
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { precision: 0 }
-                        }
-                    }
-                }
-            });
-        }
+       // 2. Render Bar Chart
+const elBar = document.getElementById('chartStatistikTiket');
 
-        // 3. Render Donut Chart
-        const elPie = document.getElementById('chartPiePersentase');
-        if (elPie) {
-            new Chart(elPie.getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Submitted', 'Assigned', 'In Progress', 'Completed', 'Need Revision', 'Rejected'],
-                    datasets: [{
-                        data: dataStatus,
-                        backgroundColor: [
-                            '#ffc107',
-                            '#6c757d',
-                            '#198754',
-                            '#20c997',
-                            '#a0a6ab',
-                            '#dc3545'
-                        ]
-                    }]
+if (elBar) {
+    new Chart(elBar.getContext('2d'), {
+        type: 'bar',
+
+        data: {
+            labels: [
+                'Submitted',
+                'Assigned',
+                'In Progress',
+                'Completed',
+                'Need Revision',
+                'Rejected'
+            ],
+
+            datasets: [{
+                label: 'Jumlah Tiket',
+                data: dataStatus,
+
+                backgroundColor: [
+                    '#ff8c00', // Submitted - Orange
+                    '#ffc107', // Assigned - Yellow
+                    '#198754', // In Progress - Green
+                    '#198754', // Completed - Green
+                    '#ff8c00', // Need Revision - Orange
+                    '#ffc107'  // Rejected - Yellow
+                ],
+
+                borderColor: [
+                    '#ff8c00',
+                    '#ffc107',
+                    '#198754',
+                    '#198754',
+                    '#ff8c00',
+                    '#ffc107'
+                ],
+
+                borderWidth: 1,
+                borderRadius: 6,
+                borderSkipped: false
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: false
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 12,
-                                padding: 12
-                            }
+
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return ' Jumlah Tiket: ' + context.raw;
                         }
                     }
                 }
-            });
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        precision: 0,
+                        stepSize: 1
+                    },
+
+                    grid: {
+                        color: '#e5e7eb'
+                    }
+                },
+
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
         }
+    });
+}
+       // 3. Render Donut Chart
+const elPie = document.getElementById('chartPiePersentase');
+
+if (elPie) {
+    new Chart(elPie.getContext('2d'), {
+        type: 'doughnut',
+
+        data: {
+            labels: [
+                'Submitted',
+                'Assigned',
+                'In Progress',
+                'Completed',
+                'Need Revision',
+                'Rejected'
+            ],
+
+            datasets: [{
+                data: dataStatus,
+
+                backgroundColor: [
+                    '#ff8c00', // Submitted - Orange
+                    '#ffc107', // Assigned - Yellow
+                    '#198754', // In Progress - Green
+                    '#198754', // Completed - Green
+                    '#ff8c00', // Need Revision - Orange
+                    '#ffc107'  // Rejected - Yellow
+                ],
+
+                borderColor: '#ffffff',
+                borderWidth: 2,
+                hoverOffset: 6
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            cutout: '58%',
+
+            plugins: {
+                legend: {
+                    position: 'bottom',
+
+                    labels: {
+                        boxWidth: 12,
+                        boxHeight: 12,
+                        padding: 14,
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+
+                            const value = context.raw;
+
+                            const total = context.dataset.data.reduce(
+                                (sum, item) => sum + item,
+                                0
+                            );
+
+                            const percentage = total > 0
+                                ? ((value / total) * 100).toFixed(1)
+                                : 0;
+
+                            return ' ' + context.label + ': ' + value +
+                                   ' tiket (' + percentage + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
     }
 
     // Eksekusi fungsi saat DOM selesai dirender

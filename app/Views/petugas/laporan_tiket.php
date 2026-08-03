@@ -15,20 +15,28 @@
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
     }
 
-    /* Varian Warna Card sesuai Tema Dashboard */
-    .bg-card-navy {
-        background-color: #1a237e !important;
-    }
-    .bg-card-orange {
-        background-color: #ff8c00 !important;
-    }
-    .bg-card-yellow {
-        background-color: #ffc107 !important;
-        color: #212529 !important; /* Teks agak gelap agar kontras dengan kuning */
-    }
-    .bg-card-green {
-        background-color: #198754 !important;
-    }
+   /* WARNA KARTU SAMA DENGAN DASHBOARD UTAMA */
+
+.bg-card-navy {
+    background-color: #1a237e !important;
+    color: #ffffff !important;
+}
+
+.bg-card-orange {
+    background-color: #ff8c00 !important;
+    color: #ffffff !important;
+}
+
+.bg-card-yellow {
+    background-color: #f4c400 !important;
+    color: #ffffff !important;
+}
+
+.bg-card-green {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+}
+
 
     /* Circle Icon Container */
     .icon-circle-bg {
@@ -133,6 +141,83 @@
     .table-custom tbody tr:hover {
         background-color: #f8f9ff !important;
     }
+
+.filter-action-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Card filter harus berada di atas tabel */
+.filter-card {
+    position: relative;
+    z-index: 9999 !important;
+    overflow: visible !important;
+}
+
+/* Area export */
+.export-action-group {
+    position: relative;
+    z-index: 99999 !important;
+    padding-left: 15px;
+}
+
+/* Dropdown export */
+.export-dropdown {
+    position: relative;
+    display: inline-block;
+    z-index: 999999 !important;
+}
+
+/* Menu Excel / PDF / CSV */
+.export-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    min-width: 210px;
+
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+
+    padding: 6px 0;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+
+    z-index: 9999999 !important;
+}
+
+.export-menu.show {
+    display: block !important;
+}
+
+.export-menu .dropdown-item {
+    display: flex;
+    align-items: center;
+
+    padding: 11px 15px;
+
+    color: #212529;
+    font-size: 0.9rem;
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    transition: background-color 0.2s ease;
+}
+
+.export-menu .dropdown-item:hover {
+    background-color: #f5f7fa;
+}
+
+.export-menu .dropdown-item i {
+    width: 22px;
+    text-align: center;
+}
+
+
+
 </style>
 
 <div class="container-fluid px-4 py-4">
@@ -210,7 +295,8 @@
 
     </div>
 
-    <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; background: #ffffff;">
+    <div class="card filter-card shadow-sm border-0 mb-4"
+     style="border-radius: 12px; background: #ffffff; overflow: visible !important;">
         <div class="card-body p-3">
             <form action="" method="GET">
                 <div class="row g-2 align-items-center">
@@ -237,7 +323,7 @@
                         </select>
                     </div>
 
-                    <div class="col-md-auto col-sm-6 d-flex align-items-center gap-2">
+                    <div class="col-md-auto col-sm-6 filter-action-group">
                         <button type="submit" class="btn btn-filter-orange d-inline-flex align-items-center gap-2">
                             <i class="fas fa-filter"></i>
                             <span>Filter</span>
@@ -248,11 +334,45 @@
                         </a>
                     </div>
 
-                    <div class="col-md col-12 text-md-end mt-2 mt-md-0">
-                        <a href="<?= base_url('petugas/laporan/export') ?>" id="btnExport" class="btn btn-export-green d-inline-flex align-items-center gap-2">
-                            <i class="fas fa-download"></i>
-                            <span>Export Laporan</span>
-                        </a>
+                   <div class="col-md col-12 text-md-end mt-2 mt-md-0 export-action-group">
+                     <div class="export-dropdown">
+
+    <button type="button"
+            class="btn btn-export-green"
+            id="dropdownExport"
+            onclick="toggleExportMenu()">
+
+        <i class="fas fa-download me-2"></i>
+        Export Laporan
+        <i class="fas fa-chevron-down ms-2"></i>
+
+    </button>
+
+    <div class="export-menu" id="exportMenu">
+
+        <a class="dropdown-item"
+           href="<?= base_url('petugas/laporan/export/excel') ?>">
+            <i class="fas fa-file-excel me-2" style="color:#0B8F4D;"></i>
+            Export Excel
+        </a>
+
+        <a class="dropdown-item"
+           href="<?= base_url('petugas/laporan/export/pdf') ?>">
+            <i class="fas fa-file-pdf me-2" style="color:#D93025;"></i>
+            Export PDF
+        </a>
+
+        <a class="dropdown-item"
+           href="<?= base_url('petugas/laporan/export/csv') ?>">
+            <i class="fas fa-file-csv me-2" style="color:#005BAC;"></i>
+            Export CSV
+        </a>
+
+    </div>
+
+</div>
+
+</div>
                     </div>
 
                 </div>
@@ -260,7 +380,7 @@
         </div>
     </div>
 
-    <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; overflow: hidden;">
+    <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; overflow: visible !important;">
         <div class="card-header text-white py-3 px-4 d-flex justify-content-between align-items-center" style="background-color: #1a237e;">
             <div class="d-flex align-items-center gap-2">
                 <i class="fas fa-list-alt fs-5 me-2"></i>
@@ -379,6 +499,31 @@
             });
         }
     });
+</script>
+
+<script>
+function toggleExportMenu() {
+    const menu = document.getElementById('exportMenu');
+
+    if (menu) {
+        menu.classList.toggle('show');
+    }
+}
+
+document.addEventListener('click', function(event) {
+
+    const dropdown = document.querySelector('.export-dropdown');
+    const menu = document.getElementById('exportMenu');
+
+    if (!dropdown || !menu) {
+        return;
+    }
+
+    if (!dropdown.contains(event.target)) {
+        menu.classList.remove('show');
+    }
+
+});
 </script>
 
 <?= $this->endSection() ?>

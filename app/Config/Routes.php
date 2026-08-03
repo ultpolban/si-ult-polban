@@ -80,3 +80,8 @@ $routes->get('petugas/laporan-tamu', 'PetugasController::laporanTamu');
 $routes->get('petugas/statistik-tiket', 'PetugasController::statistikTiket');
 $routes->get('petugas/laporan-tiket', 'PetugasController::laporanTiket');
 $routes->get('petugas/tracking-tiket', 'PetugasController::trackingTiket');
+
+
+$routes->get('petugas/laporan/export/excel', 'PetugasController::exportExcel');
+$routes->get('petugas/laporan/export/pdf', 'PetugasController::exportPdf');
+$routes->get('petugas/laporan/export/csv', 'PetugasController::exportCsv');

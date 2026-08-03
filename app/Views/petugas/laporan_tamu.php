@@ -4,49 +4,55 @@
 
 <style>
     /* Stat Mini Cards Berwarna Solid Konsisten Tema Dashboard */
-    .stat-tamu-card {
-        border-radius: 12px;
-        border: none;
-        color: #ffffff;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-    .stat-tamu-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
-    }
+.stat-tamu-card {
+    border-radius: 12px;
+    border: none;
+    color: #ffffff;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
 
-    /* Warna Cards */
-    .bg-tamu-navy { background-color: #1a237e !important; }
-    .bg-tamu-orange { background-color: #ff8c00 !important; }
-    .bg-tamu-green { background-color: #198754 !important; }
-    .bg-tamu-cyan { background-color: #0dcaf0 !important; color: #000000 !important; }
+.stat-tamu-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+}
 
-    /* Container Ikon Lingkaran */
-    .icon-tamu-circle {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.22);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .icon-tamu-circle-dark {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background-color: rgba(0, 0, 0, 0.12);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
 
-    /* Counter Text */
-    .counter-tamu {
-        font-size: 1.75rem;
-        font-weight: 700;
-        line-height: 1.1;
-    }
+/* Warna Cards - Tema Dashboard Petugas */
+.bg-tamu-navy {
+    background-color: #1a237e !important;
+}
+
+.bg-tamu-orange {
+    background-color: #ff8c00 !important;
+}
+
+.bg-tamu-yellow {
+    background-color: #f4c400 !important;
+}
+
+.bg-tamu-green {
+    background-color: #198754 !important;
+}
+
+
+/* Container Ikon Lingkaran */
+.icon-tamu-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Counter Text */
+.counter-tamu {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
 
     /* Form Controls & Filter Styling */
     .custom-form-control, .custom-select {
@@ -99,16 +105,6 @@
         transform: translateY(-1px);
     }
 
-    .btn-export-green {
-        background-color: #198754;
-        border-color: #198754;
-        color: #ffffff;
-        font-weight: 600;
-        border-radius: 8px;
-        height: 42px;
-        padding: 0 20px;
-        transition: all 0.25s ease-in-out;
-    }
     .btn-export-green:hover {
         background-color: #146c43;
         border-color: #13653f;
@@ -178,32 +174,44 @@
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-tamu-card bg-tamu-green shadow-sm p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <small class="text-white-50 text-uppercase font-weight-bold" style="font-size: 0.75rem;">Minggu Ini</small>
-                        <h3 class="counter-tamu text-white mb-0 mt-1" data-target="<?= $tamu_week ?? 11 ?>">0</h3>
-                    </div>
-                    <div class="icon-tamu-circle text-white">
-                        <i class="fas fa-calendar-week fs-5"></i>
-                    </div>
-                </div>
+    <div class="card stat-tamu-card bg-tamu-yellow shadow-sm p-3">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <small class="text-white-50 text-uppercase font-weight-bold" style="font-size: 0.75rem;">
+                    Minggu Ini
+                </small>
+
+                <h3 class="counter-tamu text-white mb-0 mt-1" data-target="<?= $tamu_week ?? 11 ?>">
+                    0
+                </h3>
+            </div>
+
+            <div class="icon-tamu-circle text-white">
+                <i class="fas fa-calendar-week fs-5"></i>
             </div>
         </div>
+    </div>
+</div>
 
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-tamu-card bg-tamu-cyan shadow-sm p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <small class="text-dark opacity-75 text-uppercase font-weight-bold" style="font-size: 0.75rem;">Bulan Ini</small>
-                        <h3 class="counter-tamu text-dark mb-0 mt-1" data-target="<?= $tamu_month ?? 24 ?>">0</h3>
-                    </div>
-                    <div class="icon-tamu-circle-dark text-dark">
-                        <i class="fas fa-calendar-alt fs-5"></i>
-                    </div>
-                </div>
+    <div class="card stat-tamu-card bg-tamu-green shadow-sm p-3">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <small class="text-white-50 text-uppercase font-weight-bold" style="font-size: 0.75rem;">
+                    Bulan Ini
+                </small>
+
+                <h3 class="counter-tamu text-white mb-0 mt-1" data-target="<?= $tamu_month ?? 24 ?>">
+                    0
+                </h3>
+            </div>
+
+            <div class="icon-tamu-circle text-white">
+                <i class="fas fa-calendar-alt fs-5"></i>
             </div>
         </div>
+    </div>
+</div>
 
     </div>
 
@@ -233,23 +241,17 @@
                                value="<?= esc($tgl_selesai ?? '') ?>" title="Tanggal Selesai">
                     </div>
 
-                    <div class="col-lg-auto col-md-6 d-flex align-items-center gap-2">
-                        <button type="submit" class="btn btn-filter-orange d-inline-flex align-items-center gap-2">
-                            <i class="fas fa-filter"></i>
-                            <span>Filter</span>
-                        </button>
+                    <div class="col-lg-auto col-md-6 d-flex align-items-center">
+    <button type="submit" class="btn btn-filter-orange d-inline-flex align-items-center gap-2 mr-3">
+        <i class="fas fa-filter"></i>
+        <span>Filter</span>
+    </button>
 
-                        <a href="<?= current_url() ?>" class="btn btn-reset-grey" title="Reset Filter">
-                            <i class="fas fa-undo" style="font-size: 0.95rem;"></i>
-                        </a>
-                    </div>
+    <a href="<?= current_url() ?>" class="btn btn-reset-grey" title="Reset Filter">
+        <i class="fas fa-undo" style="font-size: 0.95rem;"></i>
+    </a>
+</div>
 
-                    <div class="col-lg col-md-6 col-12 text-lg-end mt-2 mt-lg-0">
-                        <a href="<?= base_url('petugas/laporan-tamu/export') ?>" id="btnExportTamu" class="btn btn-export-green d-inline-flex align-items-center gap-2">
-                            <i class="fas fa-file-excel"></i>
-                            <span>Export Excel / PDF</span>
-                        </a>
-                    </div>
 
                 </div>
             </form>
@@ -377,21 +379,6 @@
                 card.style.transform = 'translateY(0)';
             }, 50);
         });
-
-        // 3. Feedback Interaktif Tombol Export
-        const btnExport = document.getElementById('btnExportTamu');
-        if (btnExport) {
-            btnExport.addEventListener('click', function () {
-                const originalHTML = this.innerHTML;
-                this.innerHTML = `<i class="fas fa-spinner fa-spin me-1"></i> <span>Mengekspor...</span>`;
-                this.style.pointerEvents = 'none';
-
-                setTimeout(() => {
-                    this.innerHTML = originalHTML;
-                    this.style.pointerEvents = 'auto';
-                }, 2500);
-            });
-        }
     });
 </script>
 

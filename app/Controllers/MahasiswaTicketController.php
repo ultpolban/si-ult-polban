@@ -47,9 +47,7 @@ class MahasiswaTicketController extends BaseController
         // DATA USER LOGIN
         // ==========================================
 
-        $user = session()->get(
-            'user'
-        ) ?? [];
+        $user = session()->get('user') ?? [];
 
 
         // ==========================================
@@ -189,46 +187,31 @@ class MahasiswaTicketController extends BaseController
 
         $ticket = [
 
-            'id' =>
-                time(),
+    'id' => time(),
 
-            'nomor' =>
-                'ULT-MHS-' .
-                date('YmdHis'),
+    'nomor' => 'ULT-MHS-' . date('YmdHis'),
 
-            'nama' =>
-                $user['nama']
-                ?? 'Mahasiswa',
+    'nama' => $user['nama'] ?? 'Mahasiswa',
 
-            'nim' =>
-                $user['nim']
-                ?? '',
+    'nik' => $user['nik'] ?? '',
 
-            'email' =>
-                $user['email']
-                ?? '',
+    'nim' => $user['nim'] ?? '',
 
-            'unit_layanan' =>
-                $unitLayanan,
+    'email' => $user['email'] ?? '',
 
-            'layanan' =>
-                $layanan,
+    'unit_layanan' => $unitLayanan,
 
-            'keterangan' =>
-                $keterangan,
+    'layanan' => $layanan,
 
-            'dokumen' =>
-                $namaDokumen,
+    'keterangan' => $keterangan,
 
-            'status' =>
-                'Submitted',
+    'dokumen' => $namaDokumen,
 
-            'created_at' =>
-                date(
-                    'Y-m-d H:i:s'
-                )
+    'status' => 'Submitted',
 
-        ];
+    'created_at' => date('Y-m-d H:i:s')
+
+];
 
 
         // =====================================================

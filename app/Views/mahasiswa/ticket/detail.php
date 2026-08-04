@@ -173,6 +173,51 @@
 
                         <div class="card-body">
 
+                        <!-- NAMA PENGAJU -->
+                        <div class="row py-3 border-bottom">
+
+    <div class="col-md-5 text-muted">
+
+        <i class="fas fa-user text-primary"></i>
+
+        Nama Pengaju
+
+    </div>
+
+    <div class="col-md-7 text-md-end">
+
+        <strong>
+
+            muhamad rafi putra zakaria
+
+        </strong>
+
+    </div>
+
+</div>
+
+
+<div class="row py-3 border-bottom">
+
+    <div class="col-md-5 text-muted">
+
+        <i class="fas fa-id-card text-primary"></i>
+
+        NIK
+
+    </div>
+
+    <div class="col-md-7 text-md-end">
+
+        <strong>
+
+            3276010101010001
+
+        </strong>
+
+    </div>
+
+</div>
                             <!-- LAYANAN -->
 
                             <div

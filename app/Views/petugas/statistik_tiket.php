@@ -5,498 +5,1388 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
 <style>
-    /* Card Stat Styling */
-    .stat-card-modern {
-        border-radius: 12px;
-        border: none;
-        color: #ffffff;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    .stat-card-modern:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18) !important;
-    }
-    
-    /* Warna Solid Kartu Sesuai Referensi SI-ULT POLBAN */
-  .bg-stat-navy {
-    background-color: #1a237e !important;
-    color: #ffffff !important;
+
+/* =========================================================
+   SI-ULT POLBAN - STATISTIK TIKET
+   Mengikuti tampilan DATA TIKET
+========================================================= */
+
+:root {
+    --polban-navy: #1a237e;
+    --polban-blue: #005bac;
+    --polban-orange: #ff8c00;
+    --polban-yellow: #f4c400;
+    --polban-green: #198754;
+    --soft-bg: #f4f6f9;
+    --text-dark: #263238;
+    --text-muted: #6c757d;
 }
 
-.bg-stat-orange {
-    background-color: #ff8c00 !important;
-    color: #ffffff !important;
+
+/* =========================
+   PAGE
+========================= */
+
+.statistik-page {
+    animation: pageFadeIn 0.45s ease;
 }
 
-.bg-stat-yellow {
-    background-color: #ffc107 !important;
-    color: #212529 !important;
+
+/* =========================
+   HEADER
+========================= */
+
+.statistik-title {
+    color: var(--polban-navy);
+    font-weight: 800;
+    letter-spacing: -0.4px;
 }
 
-.bg-stat-green {
-    background-color: #198754 !important;
-    color: #ffffff !important;
+.statistik-subtitle {
+    color: #718096;
+    font-size: 0.95rem;
 }
 
-    /* Circle Container Ikon */
-    .stat-icon-wrapper {
-        width: 52px;
-        height: 52px;
-        border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.22);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.35rem;
-    }
-    .stat-icon-wrapper-dark {
-        width: 52px;
-        height: 52px;
-        border-radius: 50%;
-        background-color: rgba(0, 0, 0, 0.12);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.35rem;
+.statistik-breadcrumb {
+    font-size: 0.9rem;
+}
+
+.statistik-breadcrumb a {
+    color: var(--polban-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+
+/* =========================
+   STATISTIC CARDS
+========================= */
+
+.statistik-stat-card {
+    position: relative;
+    overflow: hidden;
+    border: 0;
+    border-radius: 14px;
+    min-height: 120px;
+    color: white;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.statistik-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.14) !important;
+}
+
+
+/* Lingkaran dekorasi kanan bawah */
+
+.statistik-stat-card::after {
+    content: "";
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    right: -25px;
+    bottom: -35px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.08);
+}
+
+
+/* =========================
+   WARNA SAMA DENGAN DATA TIKET
+========================= */
+
+.statistik-blue {
+    background: linear-gradient(
+        135deg,
+        #005bac,
+        #006fc9
+    );
+}
+
+.statistik-orange {
+    background: linear-gradient(
+        135deg,
+        #ff8c00,
+        #ff9f1c
+    );
+}
+
+.statistik-yellow {
+    background: linear-gradient(
+        135deg,
+        #f4c400,
+        #f8d323
+    );
+
+    color: #212529;
+}
+
+.statistik-green {
+    background: linear-gradient(
+        135deg,
+        #198754,
+        #159957
+    );
+}
+
+
+/* =========================
+   ICON
+========================= */
+
+.statistik-icon {
+    width: 52px;
+    height: 52px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255,255,255,0.22);
+
+    font-size: 1.25rem;
+}
+
+
+/* =========================
+   NUMBER
+========================= */
+
+.statistik-number {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+.statistik-label {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    opacity: 0.85;
+}
+
+
+/* =========================
+   SECTION CARD
+========================= */
+
+.statistik-section-card {
+    border: 0;
+    border-radius: 14px;
+    background: #ffffff;
+
+    box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+
+    overflow: hidden;
+}
+
+
+/* =========================
+   SECTION HEADER
+   dibuat putih seperti Data Tiket
+========================= */
+
+.statistik-section-header {
+    background: #ffffff;
+
+    padding: 18px 20px;
+
+    border-bottom: 1px solid #edf0f4;
+}
+
+.statistik-section-title {
+    color: var(--text-dark);
+
+    font-size: 1.05rem;
+
+    font-weight: 800;
+}
+
+.statistik-section-title i {
+    color: var(--polban-blue);
+}
+
+
+/* =========================
+   PROGRESS
+========================= */
+
+.statistik-progress {
+    height: 24px;
+
+    border-radius: 12px;
+
+    background-color: #e9ecef;
+
+    overflow: hidden;
+}
+
+.statistik-progress-bar {
+    background: linear-gradient(
+        135deg,
+        #198754,
+        #159957
+    );
+
+    border-radius: 12px;
+
+    font-size: 0.85rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================
+   CHART
+========================= */
+
+.statistik-chart-container {
+    position: relative;
+
+    width: 100%;
+
+    height: 320px;
+}
+
+.statistik-chart-container-pie {
+    position: relative;
+
+    width: 100%;
+
+    height: 320px;
+}
+
+
+/* =========================
+   INFO BADGE
+========================= */
+
+.statistik-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 6px 10px;
+
+    border-radius: 6px;
+
+    background: #f5f7fa;
+
+    border: 1px solid #dee2e6;
+
+    color: #344054;
+
+    font-size: 0.76rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================
+   ANIMATION
+========================= */
+
+.reveal-item {
+    opacity: 0;
+
+    transform: translateY(12px);
+}
+
+.reveal-item.show {
+    opacity: 1;
+
+    transform: translateY(0);
+
+    transition:
+        all 0.4s ease;
+}
+
+
+@keyframes pageFadeIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(8px);
     }
 
-    /* Container Header Card */
-    .section-card {
-        border-radius: 12px;
-        border: none;
-        background: #ffffff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
-    .section-header-navy {
-        background-color: #1a237e !important;
-        color: #ffffff;
-        border-top-left-radius: 12px !important;
-        border-top-right-radius: 12px !important;
-        padding: 14px 20px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 
-    .counter-value {
-        font-size: 2.1rem;
-        font-weight: 700;
-        line-height: 1.1;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 767px) {
+
+    .statistik-page {
+        padding-left: 8px;
+        padding-right: 8px;
     }
 
-    .progress-custom {
-        height: 24px;
-        border-radius: 12px;
-        background-color: #e9ecef;
-        overflow: hidden;
-    }
-    .progress-bar-animated-custom {
-        background-image: linear-gradient(
-            45deg,
-            rgba(255, 255, 255, 0.15) 25%,
-            transparent 25%,
-            transparent 50%,
-            rgba(255, 255, 255, 0.15) 50%,
-            rgba(255, 255, 255, 0.15) 75%,
-            transparent 75%,
-            transparent
-        );
-        background-size: 1rem 1rem;
-        animation: progress-bar-stripes 1s linear infinite;
+    .statistik-title {
+        font-size: 1.45rem;
     }
 
-    /* Menjaga area grafik agar memiliki ukuran fisik pasti di DOM */
-    .chart-container-box {
-        position: relative;
-        width: 100%;
-        min-height: 320px;
+    .statistik-breadcrumb {
+        display: none;
     }
+
+    .statistik-number {
+        font-size: 1.5rem;
+    }
+
+    .statistik-chart-container,
+    .statistik-chart-container-pie {
+        height: 280px;
+    }
+
+}
+
 </style>
 
-<div class="container-fluid px-4 py-4">
+
+<div class="container-fluid px-4 py-4 statistik-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <div class="d-flex justify-content-between align-items-center mb-4">
+
         <div>
-            <h2 class="font-weight-bold mb-1" style="color: #1a237e; font-size: 1.75rem;">Statistik Tiket</h2>
-            <p class="text-muted mb-0" style="font-size: 0.95rem;">Pantau ringkasan dan statistik keseluruhan tiket layanan mahasiswa.</p>
+
+            <h1
+                class="statistik-title mb-1"
+                style="font-size: 1.75rem;"
+            >
+                Statistik Tiket
+            </h1>
+
+            <p class="statistik-subtitle mb-0">
+                Pantau ringkasan dan statistik keseluruhan tiket layanan mahasiswa.
+            </p>
+
         </div>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-transparent p-0 m-0" style="font-size: 0.9rem;">
-                <li class="breadcrumb-item"><a href="<?= base_url('petugas') ?>" class="text-primary text-decoration-none">Dashboard</a></li>
-                <li class="breadcrumb-item active text-muted" aria-current="page">Statistik Tiket</li>
+
+
+        <nav
+            aria-label="breadcrumb"
+            class="statistik-breadcrumb"
+        >
+
+            <ol class="breadcrumb bg-transparent p-0 m-0">
+
+                <li class="breadcrumb-item">
+
+                    <a href="<?= base_url('petugas/dashboard') ?>">
+                        Dashboard
+                    </a>
+
+                </li>
+
+                <li class="breadcrumb-item active text-muted">
+
+                    Statistik Tiket
+
+                </li>
+
             </ol>
+
         </nav>
+
     </div>
 
-    <div class="row g-3 mb-3">
-        <div class="col-xl-3 col-md-6 col-sm-6">
-            <div class="card stat-card-modern bg-stat-navy shadow-sm p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="counter-value text-white d-block mb-1" data-target="<?= $total_tiket ?? 13 ?>">0</span>
-                        <small class="text-white-50 text-uppercase font-weight-bold" style="font-size: 0.78rem;">Total Tiket</small>
-                    </div>
-                    <div class="stat-icon-wrapper text-white">
-                        <i class="fas fa-ticket-alt"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-xl-3 col-md-6 col-sm-6">
-            <div class="card stat-card-modern bg-stat-orange shadow-sm p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="counter-value text-white d-block mb-1" data-target="<?= $submitted ?? 5 ?>">0</span>
-                        <small class="text-white-50 text-uppercase font-weight-bold" style="font-size: 0.78rem;">Submitted</small>
-                    </div>
-                    <div class="stat-icon-wrapper text-white">
-                        <i class="fas fa-paper-plane"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-xl-3 col-md-6 col-sm-6">
-            <div class="card stat-card-modern bg-stat-yellow shadow-sm p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="counter-value text-white d-block mb-1" data-target="<?= $assigned ?? 3 ?>">0</span>
-                        <small class="text-white-50 text-uppercase font-weight-bold" style="font-size: 0.78rem;">Assigned</small>
-                    </div>
-                    <div class="stat-icon-wrapper text-white">
-                        <i class="fas fa-user-check"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 col-sm-6">
-            <div class="card stat-card-modern bg-stat-green shadow-sm p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="counter-value text-white d-block mb-1" data-target="<?= $in_progress ?? 0 ?>">0</span>
-                        <small class="text-white-50 text-uppercase font-weight-bold" style="font-size: 0.78rem;">In Progress</small>
-                    </div>
-                    <div class="stat-icon-wrapper text-white">
-                        <i class="fas fa-sync fa-spin"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- =====================================================
+         STATISTIC CARDS
+    ====================================================== -->
 
     <div class="row g-3 mb-4">
-        <div class="col-xl-4 col-md-4 col-sm-12">
-            <div class="card stat-card-modern bg-stat-green shadow-sm p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="counter-value text-white d-block mb-1" data-target="<?= $completed ?? 0 ?>">0</span>
-                        <small class="text-white-50 text-uppercase font-weight-bold" style="font-size: 0.78rem;">Completed</small>
+
+
+        <!-- TOTAL -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card statistik-stat-card statistik-blue shadow-sm reveal-item">
+
+                <div class="card-body p-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <div class="statistik-label">
+
+                                Total Tiket
+
+                            </div>
+
+                            <div
+                                class="statistik-number mt-2 counter-statistik"
+                                data-target="<?= $total_tiket ?? 13 ?>"
+                            >
+
+                                0
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="statistik-icon">
+
+                            <i class="fas fa-ticket-alt"></i>
+
+                        </div>
+
                     </div>
-                    <div class="stat-icon-wrapper text-white">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
+
                 </div>
+
             </div>
+
         </div>
 
-        <div class="col-xl-4 col-md-4 col-sm-12">
-            <div class="card stat-card-modern bg-stat-orange shadow-sm p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="counter-value text-white d-block mb-1" data-target="<?= $need_revision ?? 2 ?>">0</span>
-                        <small class="text-white-50 text-uppercase font-weight-bold" style="font-size: 0.78rem;">Need Revision</small>
+
+
+        <!-- SUBMITTED -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card statistik-stat-card statistik-orange shadow-sm reveal-item">
+
+                <div class="card-body p-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <div class="statistik-label">
+
+                                Menunggu Verifikasi
+
+                            </div>
+
+                            <div
+                                class="statistik-number mt-2 counter-statistik"
+                                data-target="<?= $submitted ?? 5 ?>"
+                            >
+
+                                0
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="statistik-icon">
+
+                            <i class="fas fa-clock"></i>
+
+                        </div>
+
                     </div>
-                    <div class="stat-icon-wrapper text-white">
-                        <i class="fas fa-edit"></i>
-                    </div>
+
                 </div>
+
             </div>
+
         </div>
 
-        <div class="col-xl-4 col-md-4 col-sm-12">
-            <div class="card stat-card-modern bg-stat-yellow shadow-sm p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="counter-value text-white d-block mb-1" data-target="<?= $rejected ?? 1 ?>">0</span>
-                        <small class="text-white-50 text-uppercase font-weight-bold" style="font-size: 0.78rem;">Rejected</small>
+
+
+        <!-- VERIFIED / ASSIGNED -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card statistik-stat-card statistik-green shadow-sm reveal-item">
+
+                <div class="card-body p-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <div class="statistik-label">
+
+                                Terverifikasi
+
+                            </div>
+
+                            <div
+                                class="statistik-number mt-2 counter-statistik"
+                                data-target="<?= $assigned ?? 3 ?>"
+                            >
+
+                                0
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="statistik-icon">
+
+                            <i class="fas fa-user-check"></i>
+
+                        </div>
+
                     </div>
-                    <div class="stat-icon-wrapper text-white">
-                        <i class="fas fa-times-circle"></i>
-                    </div>
+
                 </div>
+
             </div>
+
         </div>
+
+
+
+        <!-- IN PROGRESS -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card statistik-stat-card statistik-yellow shadow-sm reveal-item">
+
+                <div class="card-body p-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <div class="statistik-label">
+
+                                Sedang Diproses
+
+                            </div>
+
+                            <div
+                                class="statistik-number mt-2 counter-statistik"
+                                data-target="<?= $in_progress ?? 0 ?>"
+                            >
+
+                                0
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="statistik-icon">
+
+                            <i class="fas fa-cogs"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="card section-card mb-4">
-        <div class="section-header-navy d-flex align-items-center justify-content-between">
-            <h5 class="mb-0 font-weight-bold" style="font-size: 1.05rem;">
-                <i class="fas fa-tasks me-2"></i>Progress Penyelesaian Tiket
-            </h5>
-            <span class="badge bg-light text-dark px-3 py-1 font-weight-bold" style="border-radius: 6px;">Tahap Verifikasi</span>
+
+
+    <!-- =====================================================
+         SECOND ROW STATISTICS
+    ====================================================== -->
+
+    <div class="row g-3 mb-4">
+
+
+        <!-- COMPLETED -->
+
+        <div class="col-xl-4 col-md-4">
+
+            <div class="card statistik-stat-card statistik-green shadow-sm reveal-item">
+
+                <div class="card-body p-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <div class="statistik-label">
+
+                                Selesai
+
+                            </div>
+
+                            <div
+                                class="statistik-number mt-2 counter-statistik"
+                                data-target="<?= $completed ?? 0 ?>"
+                            >
+
+                                0
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="statistik-icon">
+
+                            <i class="fas fa-check-circle"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
+
+
+
+        <!-- REVISION -->
+
+        <div class="col-xl-4 col-md-4">
+
+            <div class="card statistik-stat-card statistik-orange shadow-sm reveal-item">
+
+                <div class="card-body p-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <div class="statistik-label">
+
+                                Perlu Perbaikan
+
+                            </div>
+
+                            <div
+                                class="statistik-number mt-2 counter-statistik"
+                                data-target="<?= $need_revision ?? 2 ?>"
+                            >
+
+                                0
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="statistik-icon">
+
+                            <i class="fas fa-edit"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- REJECTED -->
+
+        <div class="col-xl-4 col-md-4">
+
+            <div class="card statistik-stat-card statistik-yellow shadow-sm reveal-item">
+
+                <div class="card-body p-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <div class="statistik-label">
+
+                                Ditolak
+
+                            </div>
+
+                            <div
+                                class="statistik-number mt-2 counter-statistik"
+                                data-target="<?= $rejected ?? 1 ?>"
+                            >
+
+                                0
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="statistik-icon">
+
+                            <i class="fas fa-times-circle"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         PROGRESS
+    ====================================================== -->
+
+    <div class="card statistik-section-card mb-4 reveal-item">
+
+
+        <div class="statistik-section-header d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <div class="statistik-section-title">
+
+                    <i class="fas fa-tasks mr-2"></i>
+
+                    Progress Penyelesaian Tiket
+
+                </div>
+
+                <small class="text-muted">
+
+                    Ringkasan perkembangan proses tiket layanan mahasiswa.
+
+                </small>
+
+            </div>
+
+
+            <span class="statistik-badge">
+
+                <i class="fas fa-chart-line mr-1"></i>
+
+                Statistik
+
+            </span>
+
+        </div>
+
+
         <div class="card-body p-4">
+
+
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="font-weight-bold text-dark" style="font-size: 0.95rem;">Tingkat Tiket Diproses & Selesai</span>
-                <span class="font-weight-bold text-success fs-5">70%</span>
+
+                <span class="font-weight-bold text-dark">
+
+                    Tingkat Tiket Diproses & Selesai
+
+                </span>
+
+
+                <span class="font-weight-bold text-success">
+
+                    70%
+
+                </span>
+
             </div>
-            
-            <div class="progress progress-custom shadow-sm mb-2">
-                <div class="progress-bar bg-success progress-bar-animated-custom font-weight-bold text-white" 
-                     role="progressbar" 
-                     style="width: 70%; font-size: 0.85rem;" 
-                     aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
-                     Verified (70%)
+
+
+            <div class="progress statistik-progress shadow-sm mb-2">
+
+                <div
+                    class="progress-bar statistik-progress-bar"
+                    role="progressbar"
+                    style="width: 70%;"
+                    aria-valuenow="70"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                >
+
+                    Verified (70%)
+
                 </div>
+
             </div>
+
+
             <small class="text-muted d-block mt-2">
-                <i class="fas fa-info-circle me-1 text-primary"></i>
-                Laporan memperlihatkan mayoritas tiket permohonan telah dikirim dan diverifikasi oleh petugas unit layanan.
+
+                <i class="fas fa-info-circle mr-1 text-primary"></i>
+
+                Mayoritas tiket permohonan telah diproses dan diverifikasi oleh petugas unit layanan.
+
             </small>
+
         </div>
+
     </div>
+
+
+
+    <!-- =====================================================
+         CHARTS
+    ====================================================== -->
 
     <div class="row g-4 mb-4">
+
+
+        <!-- BAR CHART -->
+
         <div class="col-lg-8">
-            <div class="card section-card h-100">
-                <div class="section-header-navy">
-                    <h5 class="mb-0 font-weight-bold" style="font-size: 1.05rem;">
-                        <i class="fas fa-chart-bar me-2"></i>Grafik Distribusi Status Tiket
-                    </h5>
-                </div>
-                <div class="card-body p-4">
-                    <div class="chart-container-box">
-                        <canvas id="chartStatistikTiket"></canvas>
+
+            <div class="card statistik-section-card h-100 reveal-item">
+
+
+                <div class="statistik-section-header">
+
+                    <div class="statistik-section-title">
+
+                        <i class="fas fa-chart-bar mr-2"></i>
+
+                        Grafik Distribusi Status Tiket
+
                     </div>
+
+                    <small class="text-muted">
+
+                        Jumlah tiket berdasarkan status proses.
+
+                    </small>
+
                 </div>
+
+
+                <div class="card-body p-4">
+
+                    <div class="statistik-chart-container">
+
+                        <canvas id="chartStatistikTiket"></canvas>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
 
+
+
+        <!-- DONUT -->
+
         <div class="col-lg-4">
-            <div class="card section-card h-100">
-                <div class="section-header-navy">
-                    <h5 class="mb-0 font-weight-bold" style="font-size: 1.05rem;">
-                        <i class="fas fa-chart-pie me-2"></i>Persentase Status Tiket
-                    </h5>
-                </div>
-                <div class="card-body p-4">
-                    <div class="chart-container-box">
-                        <canvas id="chartPiePersentase"></canvas>
+
+            <div class="card statistik-section-card h-100 reveal-item">
+
+
+                <div class="statistik-section-header">
+
+                    <div class="statistik-section-title">
+
+                        <i class="fas fa-chart-pie mr-2"></i>
+
+                        Persentase Status Tiket
+
                     </div>
+
+                    <small class="text-muted">
+
+                        Perbandingan status tiket.
+
+                    </small>
+
                 </div>
+
+
+                <div class="card-body p-4">
+
+                    <div class="statistik-chart-container-pie">
+
+                        <canvas id="chartPiePersentase"></canvas>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
+
     </div>
 
 </div>
 
+
+
 <script>
-    function renderCharts() {
-        // 1. Animasi Angka Counter
-        const counters = document.querySelectorAll('.counter-value');
-        counters.forEach(counter => {
-            const target = +counter.getAttribute('data-target');
-            const duration = 1000;
-            const stepTime = 20;
-            const steps = duration / stepTime;
-            const increment = target / steps;
-            let current = 0;
 
-            const timer = setInterval(() => {
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    /* =====================================================
+       REVEAL ANIMATION
+    ====================================================== */
+
+    const revealItems =
+        document.querySelectorAll('.reveal-item');
+
+
+    revealItems.forEach(function (item, index) {
+
+        setTimeout(function () {
+
+            item.classList.add('show');
+
+        }, index * 80);
+
+    });
+
+
+
+    /* =====================================================
+       COUNTER ANIMATION
+    ====================================================== */
+
+    const counters =
+        document.querySelectorAll('.counter-statistik');
+
+
+    counters.forEach(function (counter) {
+
+        const target =
+            parseInt(counter.getAttribute('data-target')) || 0;
+
+        const duration = 1000;
+
+        const stepTime = 20;
+
+        const steps =
+            duration / stepTime;
+
+        const increment =
+            target / steps;
+
+        let current = 0;
+
+
+        const timer =
+            setInterval(function () {
+
                 current += increment;
+
+
                 if (current >= target) {
+
                     counter.innerText = target;
+
                     clearInterval(timer);
+
                 } else {
-                    counter.innerText = Math.ceil(current);
+
+                    counter.innerText =
+                        Math.ceil(current);
+
                 }
+
             }, stepTime);
-        });
 
-        // Data statistik dari backend / fallback nilai visual
-        const dataStatus = [
-            <?= $submitted ?? 5 ?>, 
-            <?= $assigned ?? 3 ?>, 
-            <?= $in_progress ?? 0 ?>, 
-            <?= $completed ?? 0 ?>, 
-            <?= $need_revision ?? 2 ?>, 
-            <?= $rejected ?? 1 ?>
-        ];
+    });
 
-        // 2. Render Bar Chart
-       // 2. Render Bar Chart
-const elBar = document.getElementById('chartStatistikTiket');
 
-if (elBar) {
-    new Chart(elBar.getContext('2d'), {
-        type: 'bar',
 
-        data: {
-            labels: [
-                'Submitted',
-                'Assigned',
-                'In Progress',
-                'Completed',
-                'Need Revision',
-                'Rejected'
-            ],
+    /* =====================================================
+       DATA CHART
+    ====================================================== */
 
-            datasets: [{
-                label: 'Jumlah Tiket',
-                data: dataStatus,
+    const dataStatus = [
 
-                backgroundColor: [
-                    '#ff8c00', // Submitted - Orange
-                    '#ffc107', // Assigned - Yellow
-                    '#198754', // In Progress - Green
-                    '#198754', // Completed - Green
-                    '#ff8c00', // Need Revision - Orange
-                    '#ffc107'  // Rejected - Yellow
-                ],
+        <?= $submitted ?? 5 ?>,
 
-                borderColor: [
-                    '#ff8c00',
-                    '#ffc107',
-                    '#198754',
-                    '#198754',
-                    '#ff8c00',
-                    '#ffc107'
-                ],
+        <?= $assigned ?? 3 ?>,
 
-                borderWidth: 1,
-                borderRadius: 6,
-                borderSkipped: false
-            }]
-        },
+        <?= $in_progress ?? 0 ?>,
 
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
+        <?= $completed ?? 0 ?>,
 
-            plugins: {
-                legend: {
-                    display: false
+        <?= $need_revision ?? 2 ?>,
+
+        <?= $rejected ?? 1 ?>
+
+    ];
+
+
+
+    /* =====================================================
+       BAR CHART
+    ====================================================== */
+
+    const barCanvas =
+        document.getElementById('chartStatistikTiket');
+
+
+    if (barCanvas) {
+
+        new Chart(
+            barCanvas.getContext('2d'),
+            {
+
+                type: 'bar',
+
+
+                data: {
+
+                    labels: [
+
+                        'Submitted',
+
+                        'Assigned',
+
+                        'In Progress',
+
+                        'Completed',
+
+                        'Need Revision',
+
+                        'Rejected'
+
+                    ],
+
+
+                    datasets: [
+
+                        {
+
+                            label: 'Jumlah Tiket',
+
+                            data: dataStatus,
+
+
+                            backgroundColor: [
+
+                                '#ff8c00',
+
+                                '#f4c400',
+
+                                '#198754',
+
+                                '#198754',
+
+                                '#ff8c00',
+
+                                '#f4c400'
+
+                            ],
+
+
+                            borderColor: [
+
+                                '#ff8c00',
+
+                                '#f4c400',
+
+                                '#198754',
+
+                                '#198754',
+
+                                '#ff8c00',
+
+                                '#f4c400'
+
+                            ],
+
+
+                            borderWidth: 1,
+
+                            borderRadius: 7,
+
+                            borderSkipped: false
+
+                        }
+
+                    ]
+
                 },
 
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return ' Jumlah Tiket: ' + context.raw;
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+
+                    plugins: {
+
+                        legend: {
+
+                            display: false
+
+                        },
+
+
+                        tooltip: {
+
+                            callbacks: {
+
+                                label: function (context) {
+
+                                    return (
+                                        ' Jumlah Tiket: '
+                                        + context.raw
+                                    );
+
+                                }
+
+                            }
+
                         }
-                    }
-                }
-            },
 
-            scales: {
-                y: {
-                    beginAtZero: true,
-
-                    ticks: {
-                        precision: 0,
-                        stepSize: 1
                     },
 
-                    grid: {
-                        color: '#e5e7eb'
-                    }
-                },
 
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
-            }
-        }
-    });
-}
-       // 3. Render Donut Chart
-const elPie = document.getElementById('chartPiePersentase');
+                    scales: {
 
-if (elPie) {
-    new Chart(elPie.getContext('2d'), {
-        type: 'doughnut',
+                        y: {
 
-        data: {
-            labels: [
-                'Submitted',
-                'Assigned',
-                'In Progress',
-                'Completed',
-                'Need Revision',
-                'Rejected'
-            ],
+                            beginAtZero: true,
 
-            datasets: [{
-                data: dataStatus,
+                            ticks: {
 
-                backgroundColor: [
-                    '#ff8c00', // Submitted - Orange
-                    '#ffc107', // Assigned - Yellow
-                    '#198754', // In Progress - Green
-                    '#198754', // Completed - Green
-                    '#ff8c00', // Need Revision - Orange
-                    '#ffc107'  // Rejected - Yellow
-                ],
+                                precision: 0,
 
-                borderColor: '#ffffff',
-                borderWidth: 2,
-                hoverOffset: 6
-            }]
-        },
+                                stepSize: 1
 
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
+                            },
 
-            cutout: '58%',
+                            grid: {
 
-            plugins: {
-                legend: {
-                    position: 'bottom',
+                                color: '#edf0f4'
 
-                    labels: {
-                        boxWidth: 12,
-                        boxHeight: 12,
-                        padding: 14,
-                        usePointStyle: true,
-                        pointStyle: 'circle'
-                    }
-                },
+                            }
 
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
+                        },
 
-                            const value = context.raw;
 
-                            const total = context.dataset.data.reduce(
-                                (sum, item) => sum + item,
-                                0
-                            );
+                        x: {
 
-                            const percentage = total > 0
-                                ? ((value / total) * 100).toFixed(1)
-                                : 0;
+                            grid: {
 
-                            return ' ' + context.label + ': ' + value +
-                                   ' tiket (' + percentage + '%)';
+                                display: false
+
+                            }
+
                         }
+
                     }
+
                 }
+
             }
-        }
-    });
-}
+
+        );
+
     }
 
-    // Eksekusi fungsi saat DOM selesai dirender
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', renderCharts);
-    } else {
-        renderCharts();
+
+
+    /* =====================================================
+       DONUT CHART
+    ====================================================== */
+
+    const pieCanvas =
+        document.getElementById('chartPiePersentase');
+
+
+    if (pieCanvas) {
+
+        new Chart(
+            pieCanvas.getContext('2d'),
+            {
+
+                type: 'doughnut',
+
+
+                data: {
+
+                    labels: [
+
+                        'Submitted',
+
+                        'Assigned',
+
+                        'In Progress',
+
+                        'Completed',
+
+                        'Need Revision',
+
+                        'Rejected'
+
+                    ],
+
+
+                    datasets: [
+
+                        {
+
+                            data: dataStatus,
+
+
+                            backgroundColor: [
+
+                                '#ff8c00',
+
+                                '#f4c400',
+
+                                '#198754',
+
+                                '#198754',
+
+                                '#ff8c00',
+
+                                '#f4c400'
+
+                            ],
+
+
+                            borderColor: '#ffffff',
+
+                            borderWidth: 3,
+
+                            hoverOffset: 6
+
+                        }
+
+                    ]
+
+                },
+
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    cutout: '60%',
+
+
+                    plugins: {
+
+                        legend: {
+
+                            position: 'bottom',
+
+
+                            labels: {
+
+                                boxWidth: 12,
+
+                                boxHeight: 12,
+
+                                padding: 14,
+
+                                usePointStyle: true,
+
+                                pointStyle: 'circle'
+
+                            }
+
+                        },
+
+
+                        tooltip: {
+
+                            callbacks: {
+
+                                label: function (context) {
+
+
+                                    const value =
+                                        context.raw;
+
+
+                                    const total =
+                                        context.dataset.data.reduce(
+                                            function (
+                                                sum,
+                                                item
+                                            ) {
+
+                                                return sum + item;
+
+                                            },
+                                            0
+                                        );
+
+
+                                    const percentage =
+                                        total > 0
+                                            ? (
+                                                value /
+                                                total *
+                                                100
+                                            ).toFixed(1)
+                                            : 0;
+
+
+                                    return (
+                                        ' '
+                                        + context.label
+                                        + ': '
+                                        + value
+                                        + ' tiket ('
+                                        + percentage
+                                        + '%)'
+                                    );
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
     }
+
+});
+
 </script>
+
 
 <?= $this->endSection() ?>

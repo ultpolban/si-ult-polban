@@ -285,9 +285,37 @@
     color: #263238;
 }
 
-.ticket-nim {
+.ticket-nik {
     color: #59636e;
     font-size: 0.87rem;
+    font-weight: 500;
+}
+
+.ticket-document {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+.document-available {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.document-none {
+    background: #f8d7da;
+    color: #842029;
+}
+
+.ticket-date {
+    color: #59636e;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    white-space: nowrap;
 }
 
 /* =========================
@@ -760,7 +788,7 @@
                                 name="search"
                                 id="ticketSearch"
                                 class="form-control ticket-input"
-                                placeholder="Cari No Tiket, Nama, NIM, Layanan..."
+                               placeholder="Cari No Tiket, Nama, NIK, Layanan..."
                                 value="<?= esc($search ?? '') ?>"
                             >
 
@@ -946,47 +974,59 @@
             <table class="table ticket-table">
 
                 <thead>
+    <tr>
 
-                    <tr>
+        <th class="text-center" style="width: 50px;">
+            No
+        </th>
 
-                        <th class="pl-4">
-                            No. Tiket
-                        </th>
+        <th>
+            No. Tiket
+        </th>
 
-                        <th>
-                            Nama Pemohon
-                        </th>
+        <th>
+            Nama Pemohon
+        </th>
 
-                        <th>
-                            NIM
-                        </th>
+        <th>
+            NIK
+        </th>
 
-                        <th>
-                            Layanan
-                        </th>
+        <th>
+            Layanan
+        </th>
 
-                        <th>
-                            Kategori
-                        </th>
+        <th>
+            Kategori
+        </th>
 
-                        <th>
-                            Status
-                        </th>
+        <th>
+            Dokumen
+        </th>
 
-                        <th class="text-center">
-                            Aksi
-                        </th>
+        <th>
+            Status
+        </th>
 
-                    </tr>
+        <th>
+            Tgl Pengajuan
+        </th>
 
-                </thead>
+        <th class="text-center">
+            Aksi
+        </th>
+
+    </tr>
+</thead>
 
 
                 <tbody>
 
                 <?php if (!empty($tiket_list)): ?>
 
-                    <?php foreach ($tiket_list as $row): ?>
+                    <?php $no = 1; ?>
+
+<?php foreach ($tiket_list as $row): ?>
 
                         <?php
 
@@ -1029,6 +1069,10 @@
 
                         <tr>
 
+                        <td class="text-center font-weight-bold text-muted">
+    <?= $no++ ?>
+</td>
+
                             <!-- NOMOR TIKET -->
 
                             <td class="pl-4">
@@ -1062,13 +1106,13 @@
 
                             <td>
 
-                                <span class="ticket-nim">
+    <span class="ticket-nik">
 
-                                    <?= esc($row['nim']) ?>
+        <?= esc($row['nik'] ?? '-') ?>
 
-                                </span>
+    </span>
 
-                            </td>
+</td>
 
 
                             <!-- LAYANAN -->
@@ -1092,6 +1136,34 @@
 
                             </td>
 
+                            <!-- DOKUMEN -->
+
+<td>
+
+    <?php if (!empty($row['dokumen'])): ?>
+
+        <span class="ticket-document document-available">
+
+            <i class="fas fa-check-circle"></i>
+
+            Ada
+
+        </span>
+
+    <?php else: ?>
+
+        <span class="ticket-document document-none">
+
+            <i class="fas fa-times-circle"></i>
+
+            Tidak Ada
+
+        </span>
+
+    <?php endif; ?>
+
+</td>
+
 
                             <!-- STATUS -->
 
@@ -1106,6 +1178,34 @@
                                 </span>
 
                             </td>
+
+                            <!-- TANGGAL PENGAJUAN -->
+
+<td>
+
+    <?php if (!empty($row['created_at'])): ?>
+
+        <div class="ticket-date">
+
+            <div>
+                <?= date('d-m-Y', strtotime($row['created_at'])) ?>
+            </div>
+
+            <div>
+                <?= date('H:i:s', strtotime($row['created_at'])) ?>
+            </div>
+
+        </div>
+
+    <?php else: ?>
+
+        <span class="text-muted">
+            -
+        </span>
+
+    <?php endif; ?>
+
+</td>
 
 
                             <!-- ACTION -->
@@ -1168,9 +1268,9 @@
                     <tr>
 
                         <td
-                            colspan="7"
-                            class="text-center ticket-empty"
-                        >
+    colspan="10"
+    class="text-center ticket-empty"
+>
 
                             <div class="ticket-empty-icon">
 

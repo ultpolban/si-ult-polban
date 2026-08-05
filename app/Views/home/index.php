@@ -281,12 +281,12 @@ Ajukan Layanan
     <div class="container">
 
         <div class="text-center mb-5">
-            <h2 class="fw-bold text-polban">
-                Statistik Layanan
+            <h2 >
+               Layanan dengan Jumlah Pengajuan Terbanyak
             </h2>
 
             <p class="text-muted">
-                Data Layanan Populer
+               Data berikut merupakan statistik jumlah pengajuan setiap layanan yang tersimpan di sistem.
             </p>
         </div>
 
@@ -302,11 +302,17 @@ Ajukan Layanan
                 <i class="bi bi-fire"></i>
             </div>
 
-            <h3 class="counter"><?= $service['total_access']; ?></h3>
+           <h3 class="counter">
+    <?= $service['total_submission']; ?>
+</h3>
 
-            <h5><?= esc($service['service_name']); ?></h5>
+<h5>
+    <?= $service['service_name']; ?>
+</h5>
 
-            <p>Kali Diakses</p>
+<p>
+    Jumlah Pengajuan Tahun <?= date('Y'); ?>
+</p>
 
         </div>
 
@@ -399,32 +405,57 @@ Refund
 
 </div>
 
-</div>
-<div class="row justify-content-center">
-<div class="col-lg-6 mb-4">
+    </div>
+    <!-- UPA -->
+    <div class="col-lg-6 mb-4">
 
-    <div class="card h-100 shadow-sm">
+        <div class="card h-100 shadow-sm">
 
-        <div class="card-body">
+            <div class="card-body">
 
-            <h2 class="mb-3">
-                🏢
-                <strong>UPA</strong>
-            </h2>
+                <h2 class="mb-3">
+                    🏢 <strong>UPA</strong>
+                </h2>
 
-                
-<p>
+                <p>
+                    UPA Bahasa <br>
+                    UPA TIK <br>
+                    UPA Perpustakaan
+                </p>
 
-UPA Bahasa<br>
+                <a href="<?= base_url('layanan/upa') ?>" class="btn btn-ajukan w-100">
+                    Lihat Layanan
+                </a>
 
-UPA TIK <br>
+            </div>
 
-UPA Perpustakaan
+        </div>
 
-</p>
-         <a href="<?= base_url('layanan/upa') ?>" class="btn btn-ajukan w-100">
-    Lihat Layanan
-</a>
+    </div>
+
+    <!-- Kemahasiswaan -->
+    <div class="col-lg-6 mb-4">
+
+        <div class="card h-100 shadow-sm">
+
+            <div class="card-body">
+
+                <h2 class="mb-3">
+                    <i class="bi bi-mortarboard-fill"></i>
+                    <strong>Kemahasiswaan</strong>
+                </h2>
+
+                <p>
+                    Pengajuan Beasiswa <br>
+                    Informasi Beasiswa <br>
+                    Pengajuan Kegiatan Mahasiswa
+                </p>
+
+                <a href="<?= base_url('layanan/kemahasiswaan') ?>" class="btn btn-ajukan w-100">
+                    Lihat Layanan
+                </a>
+
+            </div>
 
         </div>
 
@@ -432,9 +463,6 @@ UPA Perpustakaan
 
 </div>
 
-</div>
-
-</div>
 
 
 </section>
@@ -712,5 +740,10 @@ UPA Perpustakaan
         </div>
     </div>
 </div>
+
+<!-- Scroll To Top -->
+<button id="scrollTopBtn" title="Kembali ke Atas">
+    <i class="bi bi-arrow-up"></i>
+</button>
 
 <?= $this->endSection() ?>

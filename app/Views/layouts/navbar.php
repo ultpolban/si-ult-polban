@@ -2,7 +2,7 @@
 
     <div class="container">
 
-       <a class="navbar-brand d-flex align-items-center" href="<?= base_url('/') ?>">
+      <a class="navbar-brand" href="<?= base_url() ?>">
     <img src="<?= base_url('img/logo.png') ?>"
          alt="Logo POLBAN"
          width="45"
@@ -24,16 +24,9 @@
 
             <ul class="navbar-nav ms-auto">
 
-                <li class="nav-item">
-
-                    <a class="nav-link"
-                        href="#beranda">
-
-                        Beranda
-
-                    </a>
-
-                </li>
+               <li class="nav-item">
+    <a class="nav-link" href="<?= base_url() ?>#beranda">Beranda</a>
+</li>
 
                 <li class="nav-item">
 
@@ -46,23 +39,13 @@
 
                 </li>
 
-                <li class="nav-item">
+             <li class="nav-item">
+    <a class="nav-link" href="<?= base_url() ?>#tentang">Tentang</a>
+</li>
 
-                    <a class="nav-link"
-                        href="#tentang">
-
-                        Tentang
-
-                    </a>
-
-                </li>
-
-    <li class="nav-item">
-    <a class="nav-link" href="#kontak">
-       Hubungi Kami
-    </a>
-</li>              
-
+<li class="nav-item">
+    <a class="nav-link" href="<?= base_url() ?>#kontak">Hubungi Kami</a>
+</li>
 <li class="nav-item">
 
                     <a href="<?= base_url('login') ?>" class="btn btn-login">

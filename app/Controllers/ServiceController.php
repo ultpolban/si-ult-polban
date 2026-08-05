@@ -74,5 +74,21 @@ class ServiceController extends BaseController
     return view('services/detail', $data);
 }
 
+public function kemahasiswaan()
+{
+    $serviceModel = new \App\Models\ServiceModel();
+
+    $data['title'] = 'Layanan Kemahasiswaan';
+
+    $data['services'] = $serviceModel
+        ->where('category_id', 3)
+        ->where('is_active', 1)
+        ->findAll();
+
+    return view('services/kemahasiswaan', $data);
+}
+
+
+
     
 }

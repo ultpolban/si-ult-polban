@@ -23,6 +23,7 @@ $routes->get('layanan/keuangan', 'ServiceController::keuangan');
 $routes->get('layanan/upa', 'ServiceController::upa');
 $routes->get('layanan/(:num)', 'ServiceController::detail/$1');
 $routes->get('layanan/detail/(:num)', 'ServiceController::detail/$1');
+$routes->get('layanan/kemahasiswaan', 'ServiceController::kemahasiswaan');
 // ==============================
 // Routes yang harus login
 // ==============================

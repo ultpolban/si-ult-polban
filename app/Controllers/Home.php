@@ -41,14 +41,20 @@ public function index()
                             ->where('is_active', 1)
                             ->countAllResults();
 
-    $statisticModel = new StatisticModel();
+$statisticModel = new StatisticModel();
 
 $data['popular_services'] = $statisticModel
-    ->select('service_statistics.total_access, services.service_name')
+    ->select('services.service_name, service_statistics.total_submission')
     ->join('services', 'services.id = service_statistics.service_id')
-    ->orderBy('total_access', 'DESC')
-    ->findAll(4);
+    ->where('service_statistics.year', date('Y'))
+    ->orderBy('service_statistics.total_submission', 'DESC')
+    ->findAll();
 
-    return view('home/index', $data);
+return view('home/index', $data);
+}
+
+public function kemahasiswaan()
+{
+    return view('layanan/kemahasiswaan');
 }
 }

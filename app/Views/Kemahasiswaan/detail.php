@@ -406,39 +406,31 @@ Belum ada dokumen
 
 <div class="mt-4">
 
+    <a href="<?= base_url('kemahasiswaan/proses/'.$tiket['id']) ?>"
+       class="btn btn-primary">
+        Proses Tiket
+    </a>
 
-<a href="<?= base_url('unit-layanan/proses/'.$tiket['id']) ?>"
-class="btn btn-primary">
+    <?php if(($tiket['status'] ?? '') === 'Selesai'): ?>
 
+    <a href="<?= base_url('kemahasiswaan/kirim/'.$tiket['id']) ?>"
+       class="btn btn-warning ms-2"
+       onclick="return confirm('Kirim tiket ini ke Petugas ULT?')">
 
-Proses Tiket
+        Kirim ke Petugas ULT
 
+    </a>
 
-</a>
+    <?php endif; ?>
 
+    <a href="<?= base_url('kemahasiswaan') ?>"
+       class="btn btn-secondary ms-2">
 
-<?php if(($tiket['status'] ?? '') === 'Selesai'): ?>
+        Kembali
 
-<a href="<?= base_url('unit-layanan/kirim/'.$tiket['id']) ?>"
-class="btn btn-warning ms-2"
-onclick="return confirm('Kirim tiket ini ke Petugas ULT?')">
-
-Kirim ke Petugas ULT
-
-</a>
-
-<?php endif; ?>
-
-
-<a href="<?= base_url('unit-layanan/dashboard') ?>"
-class="btn btn-secondary ms-2">
-    Kembali
-</a>
-
+    </a>
 
 </div>
-
-
 
 
 

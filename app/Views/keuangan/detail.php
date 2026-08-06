@@ -407,12 +407,10 @@ Belum ada dokumen
 <div class="mt-4">
 
 
-<a href="<?= base_url('unit-layanan/proses/'.$tiket['id']) ?>"
+<a href="<?= base_url('keuangan/proses/'.$tiket['id']) ?>"
 class="btn btn-primary">
 
-
 Proses Tiket
-
 
 </a>
 
@@ -429,17 +427,13 @@ Kirim ke Petugas ULT
 
 <?php endif; ?>
 
-
-<a href="<?= base_url('unit-layanan/dashboard') ?>"
+<a href="<?= base_url('keuangan') ?>" 
 class="btn btn-secondary ms-2">
     Kembali
 </a>
 
 
 </div>
-
-
-
 
 
 </div>

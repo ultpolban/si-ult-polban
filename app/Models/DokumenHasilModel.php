@@ -4,14 +4,14 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class UnitModel extends Model
+class DokumenHasilModel extends Model
 {
-    protected $table = 'unit_layanan';
+    protected $table = 'dokumen_hasil';
+
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-        'nama_unit',
-        'deskripsi',
-        'status'
+        'penanganan_id',
+        'nama_file'
     ];
 }

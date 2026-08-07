@@ -24,46 +24,41 @@ $routes->post('register', 'AuthController::storeRegister');
 $routes->get('logout', 'AuthController::logout');
 
 
-// ================================
-// DASHBOARD PEMOHON
-// ================================
-$routes->get('dashboard', 'DashboardController::index');
+/*
+|--------------------------------------------------------------------------
+| DASHBOARD ORANG TUA
+|--------------------------------------------------------------------------
+*/
 
-// ==================================================
-// TICKET / LAYANAN
-// ==================================================
-$routes->get('ticket/create', 'TicketController::create');
+$routes->get(
+    'dashboard-orangtua',
+    'OrangTuaDashboardController::index'
+);
 
-$routes->post('ticket/store', 'TicketController::store');
+$routes->get(
+    'orangtua/ticket/create',
+    'OrangTuaTicketController::create'
+);
 
-$routes->get('ticket/success', 'TicketController::success');
+$routes->post(
+    'orangtua/ticket/store',
+    'OrangTuaTicketController::store'
+);
 
-$routes->get('ticket/history', 'TicketController::history');
+$routes->get(
+    'orangtua/ticket/history',
+    'OrangTuaTicketController::history'
+);
 
-$routes->get('ticket/detail/(:num)', 'TicketController::detail/$1');
+$routes->get(
+    'orangtua/ticket/success',
+    'OrangTuaTicketController::success'
+);
 
-
-// ==================================================
-// PROFILE
-// ==================================================
-$routes->get('profile', 'ProfileController::index');
-
-$routes->get('profile/edit', 'ProfileController::edit');
-
-$routes->post('profile/update', 'ProfileController::update');
-
-
-// ==================================================
-// NOTIFICATION
-// ==================================================
-$routes->get('notification', 'NotificationController::index');
-
-
-// ==================================================
-// HELP
-// ==================================================
-$routes->get('help', 'HelpController::index');
-
+$routes->get(
+    'orangtua/ticket/detail/(:any)',
+    'OrangTuaTicketController::detail/$1'
+);
 
 // =====================================================
 // ROUTE DASHBOARD MAHASISWA

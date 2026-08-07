@@ -13,16 +13,13 @@
                 object-fit: contain;
                 opacity: 1;
                 margin-left: 8px;
-                margin-right: 8px;
-            "
+                margin-right: 8px;"
         >
-
         <span
             class="brand-text font-weight-bold"
             style="
                 color: white;
-                font-size: 17px;
-            "
+                font-size: 17px;"
         >
             SI-ULT POLBAN
         </span>

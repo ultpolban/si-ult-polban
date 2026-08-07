@@ -2,12 +2,12 @@
 
 namespace App\Controllers;
 
-class HelpController extends BaseController
+use App\Controllers\BaseController;
+
+class OrangTuaHelpController extends BaseController
 {
     public function index()
     {
-        return view('help/index',[
-            'title'=>'Pusat Bantuan'
-        ]);
+        return view('orangtua/help/index');
     }
 }

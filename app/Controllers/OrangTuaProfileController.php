@@ -2,76 +2,23 @@
 
 namespace App\Controllers;
 
-class ProfileController extends BaseController
+use App\Controllers\BaseController;
+
+class OrangTuaProfileController extends BaseController
 {
     public function index()
     {
-
-        $data = [
-
-            'title' => 'Profil Saya',
-
-            'user' => [
-
-                'nama' => 'Alvin',
-
-                'nim' => '221511000',
-
-                'email' => 'alvin@student.polban.ac.id',
-
-                'telepon' => '081234567890',
-
-                'prodi' => 'D3 Teknik Informatika',
-
-                'jurusan' => 'Teknik Komputer dan Informatika',
-
-                'angkatan' => '2022',
-
-                'foto' => 'avatar.png'
-
-            ]
-
-        ];
-
-        return view('profile/index', $data);
+        return view('orangtua/profile/index');
     }
 
     public function edit()
     {
-
-        $data = [
-
-            'title' => 'Edit Profil',
-
-            'user' => [
-
-                'nama' => 'Alvin',
-
-                'nim' => '221511000',
-
-                'email' => 'alvin@student.polban.ac.id',
-
-                'telepon' => '081234567890',
-
-                'prodi' => 'D3 Teknik Informatika',
-
-                'jurusan' => 'Teknik Komputer dan Informatika',
-
-                'angkatan' => '2022',
-
-                'foto' => 'avatar.png'
-            ]
-
-        ];
-
-        return view('profile/edit', $data);
+        return view('orangtua/profile/edit');
     }
 
     public function update()
     {
-
-        session()->setFlashdata('success', 'Profil berhasil diperbarui.');
-
-        return redirect()->to('/profile');
+        return redirect()->to('orangtua/profile')
+            ->with('success', 'Profil berhasil diperbarui.');
     }
 }

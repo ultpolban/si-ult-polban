@@ -60,6 +60,46 @@ $routes->get(
     'OrangTuaTicketController::detail/$1'
 );
 
+// =========================
+// PROFILE ORANG TUA
+// =========================
+
+$routes->get(
+    'orangtua/profile',
+    'OrangTuaProfileController::index'
+);
+
+$routes->get(
+    'orangtua/profile/edit',
+    'OrangTuaProfileController::edit'
+);
+
+$routes->post(
+    'orangtua/profile/update',
+    'OrangTuaProfileController::update'
+);
+
+$routes->get('orangtua/draft', 'OrangTuaDraftController::index');
+$routes->get('orangtua/draft/edit/(:num)', 'OrangTuaDraftController::edit/$1');
+$routes->get('orangtua/draft/delete/(:num)', 'OrangTuaDraftController::delete/$1');
+// =====================================
+// NOTIFIKASI ORANG TUA
+// =====================================
+
+$routes->get(
+    'orangtua/notification',
+    'OrangTuaNotificationController::index'
+);
+
+// =====================================
+// PUSAT BANTUAN ORANG TUA
+// =====================================
+
+$routes->get(
+    'orangtua/help',
+    'OrangTuaHelpController::index'
+);
+
 // =====================================================
 // ROUTE DASHBOARD MAHASISWA
 // =====================================================

@@ -2,39 +2,48 @@
 
 namespace App\Controllers;
 
-class NotificationController extends BaseController
+use App\Controllers\BaseController;
+
+class OrangTuaNotificationController extends BaseController
 {
     public function index()
     {
-        $data = [
-            'title' => 'Notifikasi',
+        $data['notifications'] = [
 
-            'notifications' => [
+            [
+                'icon' => 'fas fa-paper-plane',
+                'color' => 'primary',
+                'judul' => 'Pengajuan berhasil dikirim',
+                'pesan' => 'ULT-ORT-20260807102531 berhasil dikirim.',
+                'waktu' => '5 menit yang lalu'
+            ],
 
-                [
-                    'judul' => 'Pengajuan berhasil dikirim',
-                    'isi' => 'Pengajuan Surat Keterangan Aktif Kuliah berhasil dikirim.',
-                    'tanggal' => '17 Juli 2026',
-                    'icon' => 'success'
-                ],
+            [
+                'icon' => 'fas fa-check-circle',
+                'color' => 'success',
+                'judul' => 'Tiket telah diverifikasi',
+                'pesan' => 'Pengajuan Surat Aktif Kuliah telah diverifikasi petugas.',
+                'waktu' => '30 menit yang lalu'
+            ],
 
-                [
-                    'judul' => 'Pengajuan sedang diproses',
-                    'isi' => 'Petugas sedang memverifikasi dokumen Anda.',
-                    'tanggal' => '17 Juli 2026',
-                    'icon' => 'warning'
-                ],
+            [
+                'icon' => 'fas fa-share',
+                'color' => 'warning',
+                'judul' => 'Diteruskan ke Unit Akademik',
+                'pesan' => 'Tiket sedang diproses Unit Akademik.',
+                'waktu' => '1 jam yang lalu'
+            ],
 
-                [
-                    'judul' => 'Pengajuan selesai',
-                    'isi' => 'Silakan datang ke ULT untuk mengambil dokumen.',
-                    'tanggal' => '18 Juli 2026',
-                    'icon' => 'primary'
-                ]
-
+            [
+                'icon' => 'fas fa-check',
+                'color' => 'success',
+                'judul' => 'Pengajuan selesai',
+                'pesan' => 'Silakan unduh surat yang telah diterbitkan.',
+                'waktu' => 'Kemarin'
             ]
+
         ];
 
-        return view('notification/index', $data);
+        return view('orangtua/notification/index', $data);
     }
 }

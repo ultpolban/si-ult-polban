@@ -359,7 +359,38 @@ public function trackingTiket()
     return view('petugas/tracking_tiket');
 }
 
+// --- Tambahkan method ini di dalam PetugasController.php ---
 
+public function detail_tamu($id)
+{
+    // Logika mengambil data detail berdasarkan ID
+    return view('petugas/detail_tamu', ['id' => $id]);
+}
+
+public function verifikasi_tamu($id)
+{
+    // Logika halaman verifikasi
+    return view('petugas/verifikasi_tamu', ['id' => $id]);
+}
+
+public function disposisi_tamu($id)
+{
+    // Logika halaman disposisi
+    return view('petugas/disposisi_tamu', ['id' => $id]);
+}
+
+public function edit_tamu($id)
+{
+    // Logika halaman edit
+    return view('petugas/edit_tamu', ['id' => $id]);
+}
+
+public function delete_tamu($id)
+{
+    // Logika hapus data dari database
+    // $this->tamuModel->delete($id);
+    return redirect()->back()->with('success', 'Data tiket/tamu berhasil dihapus.');
+}
 
 }
 

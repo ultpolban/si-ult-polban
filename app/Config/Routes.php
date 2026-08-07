@@ -85,3 +85,16 @@ $routes->get('petugas/tracking-tiket', 'PetugasController::trackingTiket');
 $routes->get('petugas/laporan/export/excel', 'PetugasController::exportExcel');
 $routes->get('petugas/laporan/export/pdf', 'PetugasController::exportPdf');
 $routes->get('petugas/laporan/export/csv', 'PetugasController::exportCsv');
+
+$routes->group('guest-report', function($routes) {
+    $routes->get('/', 'GuestReportController::index');$routes->get('create', 'GuestReportController::create');
+    $routes->post('store', 'GuestReportController::store');    
+    // 5 Rute Aksi Tiket$routes->get('detail/(:segment)', 'GuestReportController::detail/$1');$routes->get('verify/(:segment)', 'GuestReportController::verify/$1');$routes->post('update-status/(:segment)', 'GuestReportController::updateStatus/$1');$routes->get('disposition/(:segment)', 'GuestReportController::disposition/$1');$routes->post('save-disposition/(:segment)', 'GuestReportController::saveDisposition/$1');$routes->get('edit/(:segment)', 'GuestReportController::edit/$1');$routes->post('update/(:segment)', 'GuestReportController::update/$1');$routes->get('delete/(:segment)', 'GuestReportController::delete/$1');
+    $routes->group('petugas', function($routes) {
+    $routes->get('detail-tamu/(:num)', 'PetugasController::detail_tamu/$1');
+    $routes->get('verifikasi-tamu/(:num)', 'PetugasController::verifikasi_tamu/$1');
+    $routes->get('disposisi-tamu/(:num)', 'PetugasController::disposisi_tamu/$1');
+    $routes->get('edit-tamu/(:num)', 'PetugasController::edit_tamu/$1');
+    $routes->get('delete-tamu/(:num)', 'PetugasController::delete_tamu/$1');
+});
+});

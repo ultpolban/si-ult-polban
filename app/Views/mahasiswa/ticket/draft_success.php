@@ -1,345 +1,77 @@
 <?= $this->include('layouts/header') ?>
-
 <?= $this->include('layouts/navbar') ?>
-
 <?= $this->include('layouts/sidebar_mahasiswa') ?>
-
 
 <div class="content-wrapper">
 
-    <!-- ==========================================
-         HEADER
-    =========================================== -->
-
-    <section class="content-header">
-
-        <div class="container-fluid">
-
-            <div class="row mb-2">
-
-                <div class="col-sm-6">
-
-                    <h1
-                        style="
-                            color:#0b3d91;
-                            font-weight:700;
-                        "
-                    >
-
-                        <i class="fas fa-file-alt"></i>
-
-                        Draft Pengajuan
-
-                    </h1>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ==========================================
-         MAIN CONTENT
-    =========================================== -->
-
     <section class="content">
 
-        <div class="container-fluid">
+        <div class="container-fluid pt-4">
 
-            <div
-                class="row justify-content-center"
-            >
+            <div class="row justify-content-center">
 
-                <div
-                    class="col-lg-8 col-md-10"
-                >
+                <div class="col-md-8">
 
-                    <div
-                        class="card shadow-sm"
-                        style="
-                            border-top:5px solid #0b3d91;
-                            border-radius:15px;
-                        "
-                    >
+                    <div class="card shadow">
 
-                        <div
-                            class="card-body text-center p-5"
-                        >
+                        <div class="card-header text-center"
+                             style="background:#174a96;color:white;">
 
+                            <h4 class="mb-0">
+                                <i class="fas fa-save"></i>
+                                Draft Berhasil Disimpan
+                            </h4>
 
-                            <!-- ICON -->
+                        </div>
 
-                            <div
-                                style="
-                                    width:95px;
-                                    height:95px;
-                                    background:#eef5ff;
-                                    border-radius:50%;
-                                    display:flex;
-                                    align-items:center;
-                                    justify-content:center;
-                                    margin:0 auto 25px;
-                                "
-                            >
+                        <div class="card-body text-center p-5">
 
-                                <i
-                                    class="fas fa-save"
-                                    style="
-                                        font-size:45px;
-                                        color:#0b3d91;
-                                    "
-                                ></i>
+                            <div class="mb-4">
+
+                                <i class="fas fa-file-alt"
+                                   style="font-size:80px;color:#174a96;">
+                                </i>
 
                             </div>
 
+                            <h3>
+                                Draft Berhasil Disimpan!
+                            </h3>
 
-                            <!-- TITLE -->
-
-                            <h2
-                                style="
-                                    color:#0b3d91;
-                                    font-weight:700;
-                                "
-                            >
-
-                                Draft Berhasil Disimpan
-
-                            </h2>
-
-
-                            <!-- DESCRIPTION -->
-
-                            <p
-                                class="text-muted mt-3"
-                                style="
-                                    font-size:17px;
-                                "
-                            >
-
-                                Pengajuan Anda telah berhasil disimpan sebagai
-                                <strong>Draft</strong>.
-
-                                <br>
-
-                                Anda dapat melanjutkan pengisian dan
-                                mengirimkannya nanti.
-
+                            <p class="text-muted">
+                                Pengajuan Anda telah disimpan sebagai draft
+                                dan dapat dilanjutkan kembali nanti.
                             </p>
 
+                            <div class="alert alert-info mt-4">
 
-                            <!-- ==========================================
-                                 DATA DRAFT
-                            =========================================== -->
+                                <strong>Nomor Draft</strong>
 
-                            <?php if (!empty($ticket)): ?>
+                                <h3 class="font-weight-bold mt-2">
+                                    <?= esc($draft['nomor_draft']) ?>
+                                </h3>
 
+                            </div>
 
-                                <div
-                                    class="mt-4 p-4"
-                                    style="
-                                        background:#f8fafc;
-                                        border:1px solid #dbe4ef;
-                                        border-radius:12px;
-                                    "
-                                >
+                            <div class="mt-4">
 
+                                <a href="<?= base_url('mahasiswa/ticket/draft') ?>"
+                                   class="btn btn-primary mr-2">
 
-                                    <!-- NOMOR DRAFT -->
+                                    <i class="fas fa-file-alt"></i>
+                                    Lihat Draft
 
-                                    <div class="mb-3">
+                                </a>
 
-                                        <small
-                                            class="text-muted"
-                                        >
+                                <a href="<?= base_url('mahasiswa/dashboard') ?>"
+                                   class="btn btn-secondary">
 
-                                            Nomor Draft
-
-                                        </small>
-
-                                        <h4
-                                            style="
-                                                color:#0b3d91;
-                                                font-weight:700;
-                                            "
-                                        >
-
-                                            <?= esc(
-                                                $ticket['nomor']
-                                                ?? '-'
-                                            ) ?>
-
-                                        </h4>
-
-                                    </div>
-
-
-                                    <hr>
-
-
-                                    <!-- JENIS LAYANAN -->
-
-                                    <div
-                                        class="row text-start mb-3"
-                                    >
-
-                                        <div
-                                            class="col-md-6"
-                                        >
-
-                                            <span
-                                                class="text-muted"
-                                            >
-
-                                                <i
-                                                    class="fas fa-file-alt me-1"
-                                                ></i>
-
-                                                Jenis Layanan
-
-                                            </span>
-
-                                        </div>
-
-
-                                        <div
-                                            class="col-md-6 text-md-end"
-                                        >
-
-                                            <strong>
-
-                                                <?= esc(
-                                                    $ticket['layanan']
-                                                    ?? '-'
-                                                ) ?>
-
-                                            </strong>
-
-                                        </div>
-
-                                    </div>
-
-
-                                    <!-- STATUS -->
-
-                                    <div
-                                        class="row text-start"
-                                    >
-
-                                        <div
-                                            class="col-md-6"
-                                        >
-
-                                            <span
-                                                class="text-muted"
-                                            >
-
-                                                <i
-                                                    class="fas fa-info-circle me-1"
-                                                ></i>
-
-                                                Status
-
-                                            </span>
-
-                                        </div>
-
-
-                                        <div
-                                            class="col-md-6 text-md-end"
-                                        >
-
-                                            <span
-                                                class="badge bg-secondary"
-                                            >
-
-                                                <i
-                                                    class="fas fa-file-alt me-1"
-                                                ></i>
-
-                                                <?= esc(
-                                                    $ticket['status']
-                                                    ?? 'Draft'
-                                                ) ?>
-
-                                            </span>
-
-                                        </div>
-
-                                    </div>
-
-
-                                </div>
-
-
-                            <?php endif; ?>
-
-
-                            <!-- ==========================================
-                                 BUTTON
-                            =========================================== -->
-
-                            <div
-                                class="
-                                    d-flex
-                                    justify-content-center
-                                    flex-wrap
-                                    gap-2
-                                    mt-4
-                                "
-                            >
-
-
-                                <!-- DASHBOARD -->
-
-                                <a
-                                    href="<?= base_url(
-                                        'dashboard-mahasiswa'
-                                    ) ?>"
-                                    class="btn btn-secondary"
-                                    style="
-                                        font-weight:600;
-                                        padding:10px 20px;
-                                    "
-                                >
-
-                                    <i
-                                        class="fas fa-home me-1"
-                                    ></i>
-
+                                    <i class="fas fa-home"></i>
                                     Dashboard
 
                                 </a>
 
-
-                                <!-- LIHAT DRAFT -->
-
-                                <a
-                                    href="<?= base_url(
-                                        'mahasiswa/ticket/draft'
-                                    ) ?>"
-                                    class="btn"
-                                    style="
-                                        background:#0b3d91;
-                                        color:white;
-                                        font-weight:600;
-                                        padding:10px 20px;
-                                    "
-                                >
-
-                                    <i
-                                        class="fas fa-history me-1"
-                                    ></i>
-
-                                    Lihat Draft Pengajuan
-
-                                </a>
-
-
                             </div>
-
 
                         </div>
 
@@ -354,6 +86,5 @@
     </section>
 
 </div>
-
 
 <?= $this->include('layouts/footer') ?>

@@ -79,4 +79,33 @@ public function success()
 {
     return view('orangtua/ticket/success');
 }
+
+public function draft()
+{
+    $data['draft'] = [
+
+        [
+            'id' => 1,
+            'unit' => 'Akademik',
+            'layanan' => 'Surat Aktif Kuliah',
+            'keterangan' => 'Mohon dibuatkan surat aktif kuliah.',
+            'dokumen' => 'Tidak ada',
+            'status' => 'Draft',
+            'tanggal' => '2026-08-07 10:30:00'
+        ],
+
+        [
+            'id' => 2,
+            'unit' => 'Kemahasiswaan',
+            'layanan' => 'Beasiswa',
+            'keterangan' => 'Pengajuan beasiswa mahasiswa.',
+            'dokumen' => 'kip.pdf',
+            'status' => 'Draft',
+            'tanggal' => '2026-08-07 11:00:00'
+        ]
+
+    ];
+
+    return view('orangtua/ticket/draft', $data);
+}
 }

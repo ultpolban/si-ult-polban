@@ -60,6 +60,10 @@ $routes->get(
     'OrangTuaTicketController::detail/$1'
 );
 
+$routes->get(
+    'orangtua/ticket/draft',
+    'OrangTuaTicketController::draft'
+);
 // =========================
 // PROFILE ORANG TUA
 // =========================
@@ -79,9 +83,25 @@ $routes->post(
     'OrangTuaProfileController::update'
 );
 
-$routes->get('orangtua/draft', 'OrangTuaDraftController::index');
-$routes->get('orangtua/draft/edit/(:num)', 'OrangTuaDraftController::edit/$1');
-$routes->get('orangtua/draft/delete/(:num)', 'OrangTuaDraftController::delete/$1');
+
+// =========================
+// DRAFT ORANG TUA
+// =========================
+
+$routes->get(
+    'orangtua/draft',
+    'OrangTuaDraftController::index'
+);
+
+$routes->get(
+    'orangtua/draft/edit/(:num)',
+    'OrangTuaDraftController::edit/$1'
+);
+
+$routes->get(
+    'orangtua/draft/delete/(:num)',
+    'OrangTuaDraftController::delete/$1'
+);
 // =====================================
 // NOTIFIKASI ORANG TUA
 // =====================================
@@ -166,6 +186,16 @@ $routes->post(
     'MahasiswaTicketController::reply/$1'
 );
 
+$routes->get(
+    'mahasiswa/ticket/tracking',
+    'MahasiswaTicketController::tracking'
+);
+
+$routes->get(
+    'mahasiswa/ticket/tracking/(:segment)',
+    'MahasiswaTicketController::tracking/$1'
+);
+
 // =====================================================
 // ROUTE PROFILE MAHASISWA
 // =====================================================
@@ -220,7 +250,6 @@ $routes->group('dosen/profile', function ($routes) {
     $routes->get('edit', 'DosenProfileController::edit');
 
     $routes->post('update', 'DosenProfileController::update');
-
 });
 
 // ================================

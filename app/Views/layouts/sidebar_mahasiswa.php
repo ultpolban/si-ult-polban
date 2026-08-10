@@ -1,4 +1,4 @@
-<aside class="main-sidebar elevation-4">
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
 
     <!-- BRAND / LOGO POLBAN -->
     <a href="<?= base_url('dashboard-mahasiswa') ?>" class="brand-link">

@@ -2,938 +2,735 @@
 
 namespace App\Controllers;
 
+use App\Controllers\BaseController;
+
 class MahasiswaTicketController extends BaseController
 {
-    // =====================================================
-    // FORM AJUKAN LAYANAN
-    // =====================================================
-
-    public function create()
+    /**
+     * =========================================================
+     * DATA DUMMY LAYANAN
+     * =========================================================
+     *
+     * Sementara menggunakan data dummy karena database layanan
+     * belum selesai.
+     *
+     * Struktur:
+     * Unit Layanan
+     *   -> Jenis Layanan
+     *       -> Persyaratan
+     */
+    private function getDataLayanan()
     {
-        return view(
-            'mahasiswa/ticket/create'
-        );
+        return [
+
+            // =================================================
+            // AKADEMIK
+            // =================================================
+            'Akademik' => [
+
+                [
+                    'nama' => 'Surat Keterangan Aktif Kuliah',
+
+                    'persyaratan' => [
+                        'Mengisi formulir permohonan.',
+                        'Fotokopi KTM yang masih berlaku.',
+                        'Fotokopi KTP / Kartu Identitas.',
+                        'Bukti registrasi semester berjalan.',
+                        'Tidak memiliki tunggakan administrasi akademik.',
+                        'Mencantumkan tujuan penggunaan surat.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Surat Keterangan Mahasiswa',
+
+                    'persyaratan' => [
+                        'Mengisi formulir permohonan.',
+                        'Fotokopi KTM.',
+                        'Fotokopi KTP.',
+                        'Mencantumkan NIM.',
+                        'Bukti registrasi mahasiswa aktif.',
+                        'Menjelaskan keperluan surat.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Legalisasi Dokumen Akademik',
+
+                    'persyaratan' => [
+                        'Mengisi formulir legalisasi.',
+                        'Membawa dokumen asli yang akan dilegalisasi.',
+                        'Menyerahkan fotokopi dokumen.',
+                        'Fotokopi KTM.',
+                        'Bukti pembayaran legalisasi (jika ada).'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Permohonan Transkrip Nilai',
+
+                    'persyaratan' => [
+                        'Mengisi formulir permohonan.',
+                        'Fotokopi KTM.',
+                        'Fotokopi KTP.',
+                        'Mencantumkan NIM.',
+                        'Tidak memiliki tunggakan akademik.',
+                        'Bukti pembayaran administrasi (jika ada).'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Cetak Kartu Hasil Studi (KHS)',
+
+                    'persyaratan' => [
+                        'Mengisi formulir permohonan.',
+                        'Fotokopi KTM.',
+                        'Mencantumkan NIM.',
+                        'Menentukan semester yang akan dicetak.',
+                        'Mahasiswa masih aktif.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Perubahan Kartu Rencana Studi (KRS)',
+
+                    'persyaratan' => [
+                        'Mengisi formulir perubahan KRS.',
+                        'Melampirkan KRS sebelumnya.',
+                        'Persetujuan Dosen Wali.',
+                        'Fotokopi KTM.',
+                        'Dilakukan sesuai jadwal perubahan KRS.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Pengajuan Cuti Akademik',
+
+                    'persyaratan' => [
+                        'Surat permohonan cuti.',
+                        'Fotokopi KTM.',
+                        'Fotokopi KTP.',
+                        'Persetujuan Dosen Wali.',
+                        'Persetujuan Ketua Program Studi.',
+                        'Bukti pembayaran semester sebelumnya.',
+                        'Alasan pengajuan cuti.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Aktif Kembali Setelah Cuti',
+
+                    'persyaratan' => [
+                        'Surat permohonan aktif kembali.',
+                        'Fotokopi KTM.',
+                        'Fotokopi KTP.',
+                        'Surat keputusan cuti akademik sebelumnya.',
+                        'Bukti pembayaran UKT semester berjalan.',
+                        'Persetujuan Ketua Program Studi.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Pengajuan Yudisium',
+
+                    'persyaratan' => [
+                        'Mengisi formulir pendaftaran yudisium.',
+                        'Transkrip nilai lengkap.',
+                        'Bukti lulus Tugas Akhir / Skripsi.',
+                        'Surat bebas perpustakaan.',
+                        'Surat bebas laboratorium.',
+                        'Surat bebas administrasi keuangan.',
+                        'Pas foto sesuai ketentuan.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Pengajuan Wisuda',
+
+                    'persyaratan' => [
+                        'Mengisi formulir pendaftaran wisuda.',
+                        'Bukti lulus yudisium.',
+                        'Bukti pembayaran biaya wisuda.',
+                        'Pas foto sesuai ketentuan.',
+                        'Surat bebas perpustakaan.',
+                        'Surat bebas laboratorium.',
+                        'Surat bebas administrasi keuangan.'
+                    ]
+                ],
+
+            ],
+
+
+            // =================================================
+            // KEMAHASISWAAN
+            // =================================================
+            'Kemahasiswaan' => [
+
+                [
+                    'nama' => 'Pengajuan Beasiswa',
+
+                    'persyaratan' => [
+                        'Mengisi formulir pengajuan beasiswa.',
+                        'Fotokopi KTM yang masih berlaku.',
+                        'Fotokopi KTP mahasiswa.',
+                        'Fotokopi Kartu Keluarga.',
+                        'Melampirkan transkrip nilai terbaru.',
+                        'Melampirkan dokumen pendukung sesuai persyaratan beasiswa.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Informasi Beasiswa',
+
+                    'persyaratan' => [
+                        'Fotokopi KTM.',
+                        'Mencantumkan NIM mahasiswa.',
+                        'Menjelaskan informasi beasiswa yang dibutuhkan.',
+                        'Data mahasiswa aktif sesuai sistem akademik.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Pengajuan Kegiatan Mahasiswa',
+
+                    'persyaratan' => [
+                        'Mengisi formulir pengajuan kegiatan.',
+                        'Melampirkan proposal kegiatan.',
+                        'Surat pengajuan kegiatan mahasiswa.',
+                        'Rencana Anggaran Biaya (RAB) kegiatan.',
+                        'Susunan kepanitiaan kegiatan.',
+                        'Jadwal pelaksanaan kegiatan.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Surat Izin Kegiatan Mahasiswa',
+
+                    'persyaratan' => [
+                        'Surat permohonan izin kegiatan.',
+                        'Proposal kegiatan mahasiswa.',
+                        'Struktur kepanitiaan kegiatan.',
+                        'Jadwal pelaksanaan kegiatan.',
+                        'Persetujuan pihak terkait.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Peminjaman Fasilitas Kampus',
+
+                    'persyaratan' => [
+                        'Surat permohonan peminjaman fasilitas.',
+                        'Proposal kegiatan.',
+                        'Jadwal penggunaan fasilitas.',
+                        'Penanggung jawab kegiatan.',
+                        'Persetujuan pihak terkait.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Pengajuan Organisasi Mahasiswa',
+
+                    'persyaratan' => [
+                        'Proposal pembentukan organisasi.',
+                        'Struktur kepengurusan organisasi.',
+                        'Surat pengajuan organisasi mahasiswa.',
+                        'Program kerja organisasi.',
+                        'Data anggota organisasi.'
+                    ]
+                ],
+
+            ],
+
+
+            // =================================================
+            // KEUANGAN
+            // =================================================
+            'Keuangan' => [
+
+                [
+                    'nama' => 'Informasi Tagihan Kuliah',
+
+                    'persyaratan' => [
+                        'Fotokopi KTM yang masih berlaku.',
+                        'Mencantumkan NIM mahasiswa.',
+                        'Data mahasiswa aktif sesuai sistem akademik.',
+                        'Menjelaskan informasi tagihan yang dibutuhkan.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Konfirmasi Pembayaran Kuliah',
+
+                    'persyaratan' => [
+                        'Fotokopi KTM yang masih berlaku.',
+                        'Mencantumkan NIM mahasiswa.',
+                        'Melampirkan bukti pembayaran kuliah.',
+                        'Bukti transaksi pembayaran.',
+                        'Menjelaskan periode pembayaran yang dikonfirmasi.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Permohonan Cicilan Pembayaran',
+
+                    'persyaratan' => [
+                        'Mengisi formulir permohonan cicilan pembayaran.',
+                        'Fotokopi KTM yang masih berlaku.',
+                        'Fotokopi KTP mahasiswa.',
+                        'Mencantumkan NIM mahasiswa.',
+                        'Melampirkan surat permohonan cicilan pembayaran.',
+                        'Melampirkan dokumen pendukung.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Surat Keterangan Bebas Keuangan',
+
+                    'persyaratan' => [
+                        'Mengisi formulir permohonan surat.',
+                        'Fotokopi KTM yang masih berlaku.',
+                        'Mencantumkan NIM mahasiswa.',
+                        'Data pembayaran mahasiswa.',
+                        'Status pembayaran telah lunas sesuai sistem keuangan.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Koreksi Kesalahan Pembayaran',
+
+                    'persyaratan' => [
+                        'Mengisi formulir pengajuan koreksi pembayaran.',
+                        'Fotokopi KTM yang masih berlaku.',
+                        'Mencantumkan NIM mahasiswa.',
+                        'Melampirkan bukti pembayaran.',
+                        'Menjelaskan kesalahan pembayaran.',
+                        'Melampirkan bukti transaksi pembayaran.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Pengajuan Pengembalian Dana',
+
+                    'persyaratan' => [
+                        'Mengisi formulir pengajuan pengembalian dana.',
+                        'Fotokopi KTM yang masih berlaku.',
+                        'Fotokopi KTP mahasiswa.',
+                        'Mencantumkan NIM mahasiswa.',
+                        'Melampirkan surat permohonan pengembalian dana.',
+                        'Melampirkan bukti pembayaran.',
+                        'Melampirkan nomor rekening penerima dana.'
+                    ]
+                ],
+
+                [
+                    'nama' => 'Permintaan Bukti Pembayaran',
+
+                    'persyaratan' => [
+                        'Fotokopi KTM yang masih berlaku.',
+                        'Mencantumkan NIM mahasiswa.',
+                        'Menjelaskan periode pembayaran yang diminta.',
+                        'Data transaksi pembayaran sesuai sistem keuangan.',
+                        'Menjelaskan tujuan penggunaan bukti pembayaran.'
+                    ]
+                ],
+
+            ],
+        ];
     }
 
 
-    // =====================================================
-    // SIMPAN TIKET / DRAFT
-    // =====================================================
+ public function create()
+{
+    $data = [
 
+        'title' => 'Ajukan Layanan',
+
+        // Data pemohon dummy sementara
+        'user' => [
+
+            'nama' => 'Muhamad Rafi Putra Zakaria',
+            'nik' => '3273010101040001',
+            'nim' => '45678',
+            'email' => 'mochrafiputrazakaria@gmail.com',
+            'telepon' => '083123456788',
+
+        ],
+
+        // Data layanan dummy
+        'layanan' => $this->getDataLayanan(),
+
+    ];
+
+    return view('mahasiswa/ticket/create', $data);
+}
+
+
+    /**
+     * =========================================================
+     * STORE / PROSES PENGAJUAN
+     * =========================================================
+     *
+     * Untuk sementara belum menyimpan ke database.
+     *
+     * Nanti setelah database selesai, bagian ini tinggal
+     * diganti dengan proses insert ke tabel ticket/pengajuan.
+     */
     public function store()
-    {
-        // ==========================================
-        // DATA FORM
-        // ==========================================
-
-        $unitLayanan = $this->request->getPost(
-            'unit_layanan'
-        );
-
-        $layanan = $this->request->getPost(
-            'layanan'
-        );
-
-        $keterangan = $this->request->getPost(
-            'keterangan'
-        );
-
-        $action = $this->request->getPost(
-            'action'
-        );
-
-
-        // ==========================================
-        // DATA USER LOGIN
-        // ==========================================
-
-        $user = session()->get('user') ?? [];
-
-
-        // ==========================================
-        // VALIDASI
-        // ==========================================
-
-        if (
-            empty($unitLayanan) ||
-            empty($layanan) ||
-            empty($keterangan)
-        ) {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Mohon lengkapi semua data pengajuan.'
-                );
-        }
-
-
-        // ==========================================
-        // UPLOAD DOKUMEN
-        // MAKSIMAL 2 MB
-        // ==========================================
-
-        $dokumen = $this->request->getFile(
-            'dokumen'
-        );
-
-        $namaDokumen = null;
-
-
-        if (
-            $dokumen &&
-            $dokumen->isValid() &&
-            !$dokumen->hasMoved()
-        ) {
-
-            // Validasi ukuran
-            if (
-                $dokumen->getSize()
-                > 2 * 1024 * 1024
-            ) {
-
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with(
-                        'error',
-                        'Ukuran dokumen maksimal 2 MB.'
-                    );
-            }
-
-
-            // Validasi ekstensi
-            $allowedExtensions = [
-
-                'pdf',
-                'jpg',
-                'jpeg',
-                'png',
-                'doc',
-                'docx'
-
-            ];
-
-
-            $extension = strtolower(
-                $dokumen->getExtension()
-            );
-
-
-            if (
-                !in_array(
-                    $extension,
-                    $allowedExtensions
-                )
-            ) {
-
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with(
-                        'error',
-                        'Format dokumen tidak didukung.'
-                    );
-            }
-
-
-            // ==========================================
-            // FOLDER UPLOAD
-            // ==========================================
-
-            $uploadPath =
-                FCPATH .
-                'uploads/dokumen';
-
-
-            if (
-                !is_dir(
-                    $uploadPath
-                )
-            ) {
-
-                mkdir(
-                    $uploadPath,
-                    0777,
-                    true
-                );
-            }
-
-
-            // ==========================================
-            // NAMA FILE RANDOM
-            // ==========================================
-
-            $namaDokumen =
-                $dokumen->getRandomName();
-
-
-            // ==========================================
-            // PINDAHKAN FILE
-            // ==========================================
-
-            $dokumen->move(
-                $uploadPath,
-                $namaDokumen
-            );
-        }
-
-
-        // ==========================================
-        // DATA TIKET
-        // ==========================================
-
-        $ticket = [
-
-    'id' => time(),
-
-    'nomor' => 'ULT-MHS-' . date('YmdHis'),
-
-    'nama' => $user['nama'] ?? 'Mahasiswa',
-
-    'nik' => $user['nik'] ?? '',
-
-    'nim' => $user['nim'] ?? '',
-
-    'email' => $user['email'] ?? '',
-
-    'unit_layanan' => $unitLayanan,
-
-    'layanan' => $layanan,
-
-    'keterangan' => $keterangan,
-
-    'dokumen' => $namaDokumen,
-
-    'status' => 'Submitted',
-
-    'created_at' => date('Y-m-d H:i:s')
-
-];
-
-
-        // =====================================================
-        // SIMPAN SEBAGAI DRAFT
-        // =====================================================
-
-        if (
-            $action === 'draft'
-        ) {
-
-            $ticket['status'] =
-                'Draft';
-
-
-            $drafts =
-                session()->get(
-                    'mahasiswa_drafts'
-                )
-                ?? [];
-
-
-            $drafts[] =
-                $ticket;
-
-
-            session()->set(
-                'mahasiswa_drafts',
-                $drafts
-            );
-
-
-            return redirect()
-                ->to(
-                    base_url(
-                        'mahasiswa/ticket/draft'
-                    )
-                )
-                ->with(
-                    'success',
-                    'Pengajuan berhasil disimpan sebagai draft.'
-                );
-        }
-
-
-        // =====================================================
-        // KIRIM PENGAJUAN
-        // =====================================================
-
-        if (
-            $action === 'submit'
-        ) {
-
-            $tickets =
-                session()->get(
-                    'mahasiswa_tickets'
-                )
-                ?? [];
-
-
-            $tickets[] =
-                $ticket;
-
-
-            session()->set(
-                'mahasiswa_tickets',
-                $tickets
-            );
-
-
-            session()->setFlashdata(
-                'ticket',
-                $ticket
-            );
-
-
-            return redirect()
-                ->to(
-                    base_url(
-                        'mahasiswa/ticket/success'
-                    )
-                );
-        }
-
-
-        // =====================================================
-        // ACTION TIDAK VALID
-        // =====================================================
-
-        return redirect()
-            ->back()
+{
+    $action = $this->request->getPost('action');
+
+    $namaPemohon = $this->request->getPost('nama_pemohon');
+    $nik         = $this->request->getPost('nik');
+    $unit        = $this->request->getPost('unit_layanan');
+    $jenis       = $this->request->getPost('jenis_layanan');
+    $keterangan  = $this->request->getPost('keterangan');
+
+    // ==========================================
+    // VALIDASI
+    // ==========================================
+
+    if (empty($namaPemohon)) {
+        return redirect()->back()
             ->withInput()
-            ->with(
-                'error',
-                'Aksi pengajuan tidak valid.'
-            );
+            ->with('error', 'Nama pemohon tidak boleh kosong.');
     }
 
+    if (empty($nik)) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'NIK tidak boleh kosong.');
+    }
 
-    // =====================================================
-    // HALAMAN DRAFT
-    // =====================================================
+    if (empty($unit)) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Silakan pilih Unit Layanan.');
+    }
 
-    public function draft()
-    {
-        $drafts =
-            session()->get(
-                'mahasiswa_drafts'
-            )
-            ?? [];
+    if (empty($jenis)) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Silakan pilih Jenis Layanan.');
+    }
 
+    // ==========================================
+    // DOKUMEN
+    // ==========================================
 
-        return view(
-            'mahasiswa/ticket/draft',
-            [
-                'drafts' => $drafts
-            ]
+    $files = $this->request->getFileMultiple('dokumen');
+
+    $jumlahDokumen = 0;
+
+    if ($files) {
+        foreach ($files as $file) {
+            if ($file && $file->isValid()) {
+                $jumlahDokumen++;
+            }
+        }
+    }
+
+    // ==========================================
+    // SIMPAN SEBAGAI DRAFT
+    // ==========================================
+
+    if ($action === 'draft') {
+
+        $draftNumber = 'DRF-' . date('Ymd') . '-' . strtoupper(
+            substr(bin2hex(random_bytes(3)), 0, 5)
+        );
+
+        $draft = [
+            'nomor_draft'     => $draftNumber,
+            'nama_pemohon'    => $namaPemohon,
+            'nik'             => $nik,
+            'unit_layanan'    => $unit,
+            'jenis_layanan'   => $jenis,
+            'keterangan'      => $keterangan,
+            'jumlah_dokumen'  => $jumlahDokumen,
+            'created_at'      => date('Y-m-d H:i:s'),
+        ];
+
+        // Ambil draft yang sudah ada
+        $drafts = session()->get('mahasiswa_drafts') ?? [];
+
+        // Tambahkan draft baru
+        $drafts[] = $draft;
+
+        // Simpan ke session
+        session()->set('mahasiswa_drafts', $drafts);
+
+        // Simpan draft sementara untuk halaman sukses
+        session()->set('draft_success', $draft);
+
+        return redirect()->to(
+            base_url('mahasiswa/ticket/draft-success')
         );
     }
 
+    // ==========================================
+    // BUAT NOMOR TIKET
+    // ==========================================
 
-    // =====================================================
-    // EDIT DRAFT
-    // =====================================================
+    $ticketNumber = 'ULT-' . date('Ymd') . '-' . strtoupper(
+        substr(bin2hex(random_bytes(3)), 0, 5)
+    );
 
-    public function editDraft($index)
+    // ==========================================
+    // DATA TIKET DUMMY
+    // ==========================================
+
+    $ticket = [
+        'nomor_tiket'    => $ticketNumber,
+        'nama_pemohon'   => $namaPemohon,
+        'nik'            => $nik,
+        'unit_layanan'   => $unit,
+        'jenis_layanan'  => $jenis,
+        'keterangan'     => $keterangan,
+        'jumlah_dokumen' => $jumlahDokumen,
+        'status'         => 'Menunggu Verifikasi',
+        'created_at'     => date('Y-m-d H:i:s'),
+    ];
+
+    // ==========================================
+    // SIMPAN TIKET KE SESSION
+    // ==========================================
+
+    $tickets = session()->get('mahasiswa_tickets') ?? [];
+
+    $tickets[] = $ticket;
+
+    session()->set('mahasiswa_tickets', $tickets);
+
+    // Tiket terakhir
+    session()->set('last_ticket', $ticket);
+
+    // ==========================================
+    // REDIRECT SUCCESS
+    // ==========================================
+
+    return redirect()->to(
+        base_url('mahasiswa/ticket/success')
+    );
+}
+
+
+    /**
+     * =========================================================
+     * DATA LAYANAN UNTUK TEST / DEBUG
+     * =========================================================
+     */
+    public function layanan()
     {
-        $drafts =
-            session()->get(
-                'mahasiswa_drafts'
-            )
-            ?? [];
-
-
-        if (
-            !isset(
-                $drafts[$index]
-            )
-        ) {
-
-            return redirect()
-                ->to(
-                    base_url(
-                        'mahasiswa/ticket/draft'
-                    )
-                )
-                ->with(
-                    'error',
-                    'Draft tidak ditemukan.'
-                );
-        }
-
-
-        return view(
-            'mahasiswa/ticket/edit_draft',
-            [
-
-                'draft' =>
-                    $drafts[$index],
-
-                'draft_id' =>
-                    $index
-
-            ]
+        return $this->response->setJSON(
+            $this->getDataLayanan()
         );
     }
 
+    /**
+ * =========================================================
+ * HALAMAN DRAFT PENGAJUAN
+ * =========================================================
+ */
+public function draft()
+{
+    $data = [
+        'title' => 'Draft Pengajuan',
 
-    // =====================================================
-    // UPDATE DRAFT
-    // =====================================================
+        // Dummy sementara
+        'drafts' => []
+    ];
 
-    public function updateDraft($index)
-    {
-        $drafts =
-            session()->get(
-                'mahasiswa_drafts'
-            )
-            ?? [];
-
-
-        if (
-            !isset(
-                $drafts[$index]
-            )
-        ) {
-
-            return redirect()
-                ->to(
-                    base_url(
-                        'mahasiswa/ticket/draft'
-                    )
-                )
-                ->with(
-                    'error',
-                    'Draft tidak ditemukan.'
-                );
-        }
+    return view('mahasiswa/ticket/draft', $data);
+}
 
 
-        $unitLayanan =
-            $this->request->getPost(
-                'unit_layanan'
-            );
+/**
+ * =========================================================
+ * HAPUS DRAFT
+ * =========================================================
+ */
+public function deleteDraft($id)
+{
+    session()->setFlashdata(
+        'success',
+        'Draft berhasil dihapus.'
+    );
 
-        $layanan =
-            $this->request->getPost(
-                'layanan'
-            );
-
-        $keterangan =
-            $this->request->getPost(
-                'keterangan'
-            );
-
-        $action =
-            $this->request->getPost(
-                'action'
-            );
+    return redirect()->to(
+        base_url('mahasiswa/ticket/draft')
+    );
+}
 
 
-        if (
-            empty($unitLayanan) ||
-            empty($layanan) ||
-            empty($keterangan)
-        ) {
+/**
+ * =========================================================
+ * EDIT DRAFT
+ * =========================================================
+ */
+public function editDraft($id)
+{
+    $data = [
+        'title' => 'Edit Draft Pengajuan',
 
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Mohon lengkapi semua data.'
-                );
-        }
+        'draft' => [
+            'id' => $id,
+            'nama_pemohon' => 'Muhamad Rafi Putra Zakaria',
+            'nik' => '3273010101040001',
+            'unit_layanan' => '',
+            'jenis_layanan' => '',
+            'keterangan' => '',
+        ],
 
+        'layanan' => $this->getDataLayanan(),
+    ];
 
-        $draft =
-            $drafts[$index];
-
-
-        $draft['unit_layanan'] =
-            $unitLayanan;
-
-        $draft['layanan'] =
-            $layanan;
-
-        $draft['keterangan'] =
-            $keterangan;
-
-
-        // ==========================================
-        // UPLOAD DOKUMEN BARU
-        // ==========================================
-
-        $dokumen =
-            $this->request->getFile(
-                'dokumen'
-            );
+    return view(
+        'mahasiswa/ticket/edit_draft',
+        $data
+    );
+}
 
 
-        if (
-            $dokumen &&
-            $dokumen->isValid() &&
-            !$dokumen->hasMoved()
-        ) {
+/**
+ * =========================================================
+ * UPDATE DRAFT
+ * =========================================================
+ */
+public function updateDraft($id)
+{
+    session()->setFlashdata(
+        'success',
+        'Draft berhasil diperbarui.'
+    );
 
-            if (
-                $dokumen->getSize()
-                > 2 * 1024 * 1024
-            ) {
+    return redirect()->to(
+        base_url('mahasiswa/ticket/draft')
+    );
+}
 
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with(
-                        'error',
-                        'Ukuran dokumen maksimal 2 MB.'
-                    );
+
+public function success()
+{
+    $ticket = session()->get('last_ticket');
+
+    if (!$ticket) {
+        return redirect()->to(
+            base_url('mahasiswa/ticket/create')
+        );
+    }
+
+    return view('mahasiswa/ticket/success', [
+        'title'  => 'Pengajuan Berhasil',
+        'ticket' => $ticket
+    ]);
+}
+
+
+/**
+ * =========================================================
+ * DRAFT SUCCESS
+ * =========================================================
+ */
+public function draftSuccess()
+{
+    $draft = session()->get('draft_success');
+
+    if (!$draft) {
+        return redirect()->to(
+            base_url('mahasiswa/ticket/draft')
+        );
+    }
+
+    return view('mahasiswa/ticket/draft_success', [
+        'title' => 'Draft Berhasil Disimpan',
+        'draft' => $draft
+    ]);
+}
+
+public function tracking($nomorTiket = null)
+{
+    // Ambil semua tiket dummy dari session
+    $tickets = session()->get('mahasiswa_tickets') ?? [];
+
+    // Kalau nomor tiket dikirim lewat URL
+    if ($nomorTiket) {
+
+        foreach ($tickets as $ticket) {
+
+            if ($ticket['nomor_tiket'] === $nomorTiket) {
+
+                return view('mahasiswa/ticket/tracking', [
+                    'title'  => 'Tracking Tiket',
+                    'ticket' => $ticket
+                ]);
             }
-
-
-            $allowedExtensions = [
-
-                'pdf',
-                'jpg',
-                'jpeg',
-                'png',
-                'doc',
-                'docx'
-
-            ];
-
-
-            $extension =
-                strtolower(
-                    $dokumen->getExtension()
-                );
-
-
-            if (
-                !in_array(
-                    $extension,
-                    $allowedExtensions
-                )
-            ) {
-
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with(
-                        'error',
-                        'Format dokumen tidak didukung.'
-                    );
-            }
-
-
-            $uploadPath =
-                FCPATH .
-                'uploads/dokumen';
-
-
-            if (
-                !is_dir(
-                    $uploadPath
-                )
-            ) {
-
-                mkdir(
-                    $uploadPath,
-                    0777,
-                    true
-                );
-            }
-
-
-            $namaDokumen =
-                $dokumen->getRandomName();
-
-
-            $dokumen->move(
-                $uploadPath,
-                $namaDokumen
-            );
-
-
-            $draft['dokumen'] =
-                $namaDokumen;
         }
 
-
-        // ==========================================
-        // SIMPAN KEMBALI SEBAGAI DRAFT
-        // ==========================================
-
-        if (
-            $action === 'draft'
-        ) {
-
-            $draft['status'] =
-                'Draft';
-
-
-            $drafts[$index] =
-                $draft;
-
-
-            session()->set(
-                'mahasiswa_drafts',
-                $drafts
-            );
-
-
-            return redirect()
-                ->to(
-                    base_url(
-                        'mahasiswa/ticket/draft'
-                    )
-                )
-                ->with(
-                    'success',
-                    'Draft berhasil diperbarui.'
-                );
-        }
-
-
-        // ==========================================
-        // KIRIM DRAFT MENJADI TIKET
-        // ==========================================
-
-        if (
-            $action === 'submit'
-        ) {
-
-            $draft['status'] =
-                'Submitted';
-
-
-            $draft['updated_at'] =
-                date(
-                    'Y-m-d H:i:s'
-                );
-
-
-            $tickets =
-                session()->get(
-                    'mahasiswa_tickets'
-                )
-                ?? [];
-
-
-            $tickets[] =
-                $draft;
-
-
-            session()->set(
-                'mahasiswa_tickets',
-                $tickets
-            );
-
-
-            // Hapus draft
-            unset(
-                $drafts[$index]
-            );
-
-
-            $drafts =
-                array_values(
-                    $drafts
-                );
-
-
-            session()->set(
-                'mahasiswa_drafts',
-                $drafts
-            );
-
-
-            session()->setFlashdata(
-                'ticket',
-                $draft
-            );
-
-
-            return redirect()
-                ->to(
-                    base_url(
-                        'mahasiswa/ticket/success'
-                    )
-                );
-        }
-
-
+        // Tiket tidak ditemukan
         return redirect()
-            ->back()
-            ->with(
-                'error',
-                'Aksi tidak valid.'
-            );
+            ->to(base_url('mahasiswa/ticket/tracking'))
+            ->with('error', 'Nomor tiket tidak ditemukan.');
     }
 
-
-    // =====================================================
-    // TRACKING TIKET / HISTORY
-    // =====================================================
-
-    public function history()
-    {
-        $tickets =
-            session()->get(
-                'mahasiswa_tickets'
-            )
-            ?? [];
+    // Kalau belum memilih nomor tiket,
+    // tampilkan semua tiket mahasiswa
+    return view('mahasiswa/ticket/tracking', [
+        'title'   => 'Tracking Tiket',
+        'tickets' => $tickets
+    ]);
+}
 
 
-        return view(
-            'mahasiswa/ticket/history',
-            [
+/**
+ * =========================================================
+ * HISTORY / TRACKING TIKET
+ * =========================================================
+ */
+public function history()
+{
+    $data = [
+        'title' => 'Tracking Tiket',
 
-                'tickets' =>
-                    $tickets
+        // Dummy sementara
+        'tickets' => []
+    ];
 
-            ]
-        );
-    }
-
-
-    // =====================================================
-    // DETAIL TIKET
-    // =====================================================
-
-    public function detail($id)
-    {
-        $tickets =
-            session()->get(
-                'mahasiswa_tickets'
-            )
-            ?? [];
+    return view('mahasiswa/ticket/history', $data);
+}
 
 
-        $ticketFound = null;
+/**
+ * =========================================================
+ * DETAIL TIKET
+ * =========================================================
+ */
+public function detail($id)
+{
+    $data = [
+        'title' => 'Detail Tiket',
+        'ticket' => [
+            'id' => $id
+        ]
+    ];
+
+    return view('mahasiswa/ticket/detail', $data);
+}
 
 
-        foreach (
-            $tickets
-            as $ticket
-        ) {
-
-            if (
-                (string)($ticket['id'] ?? '')
-                === (string)$id
-            ) {
-
-                $ticketFound =
-                    $ticket;
-
-                break;
-            }
-        }
-
-
-        if (
-            $ticketFound === null
-        ) {
-
-            return redirect()
-                ->to(
-                    base_url(
-                        'mahasiswa/ticket/history'
-                    )
-                )
-                ->with(
-                    'error',
-                    'Tiket tidak ditemukan.'
-                );
-        }
-
-
-        return view(
-            'mahasiswa/ticket/detail',
-            [
-
-                'ticket' =>
-                    $ticketFound
-
-            ]
-        );
-    }
-
-
-    // =====================================================
-    // HALAMAN SUCCESS
-    // =====================================================
-
-    public function success()
-    {
-        $ticket =
-            session()->getFlashdata(
-                'ticket'
-            );
-
-
-        return view(
-            'mahasiswa/ticket/success',
-            [
-
-                'ticket' =>
-                    $ticket
-
-            ]
-        );
-    }
-
-    // =====================================================
-// BALAS CATATAN / PESAN DARI PETUGAS
-// =====================================================
+/**
+ * =========================================================
+ * REPLY TIKET
+ * =========================================================
+ */
 public function reply($id)
 {
-    // Ambil pesan dari form
-    $pesan = trim(
-        $this->request->getPost('pesan')
+    session()->setFlashdata(
+        'success',
+        'Balasan berhasil dikirim.'
     );
 
-    // Validasi pesan
-    if (empty($pesan)) {
-
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with(
-                'error',
-                'Pesan balasan tidak boleh kosong.'
-            );
-    }
-
-
-    // =====================================================
-    // AMBIL DATA TIKET MAHASISWA
-    // =====================================================
-
-    $tickets = session()->get(
-        'mahasiswa_tickets'
-    ) ?? [];
-
-
-    // =====================================================
-    // CARI TIKET BERDASARKAN ID
-    // =====================================================
-
-    $ticketFound = false;
-
-
-    foreach ($tickets as $key => $ticket) {
-
-        if (
-            isset($ticket['id']) &&
-            (string) $ticket['id'] === (string) $id
-        ) {
-
-            $ticketFound = true;
-
-
-            // =================================================
-            // JIKA BELUM ADA ARRAY BALASAN
-            // =================================================
-
-            if (
-                !isset(
-                    $tickets[$key]['balasan']
-                )
-                ||
-                !is_array(
-                    $tickets[$key]['balasan']
-                )
-            ) {
-
-                $tickets[$key]['balasan'] = [];
-            }
-
-
-            // =================================================
-            // DATA USER YANG SEDANG LOGIN
-            // =================================================
-
-            $user =
-                session()->get(
-                    'user'
-                )
-                ?? [];
-
-
-            // =================================================
-            // TAMBAHKAN BALASAN
-            // =================================================
-
-            $tickets[$key]['balasan'][] = [
-
-                'id' =>
-                    time(),
-
-                'pengirim' =>
-                    $user['nama']
-                    ?? 'Mahasiswa',
-
-                'role' =>
-                    'Mahasiswa',
-
-                'pesan' =>
-                    $pesan,
-
-                'created_at' =>
-                    date(
-                        'Y-m-d H:i:s'
-                    )
-
-            ];
-
-
-            break;
-        }
-    }
-
-
-    // =====================================================
-    // JIKA TIKET TIDAK DITEMUKAN
-    // =====================================================
-
-    if (!$ticketFound) {
-
-        return redirect()
-            ->back()
-            ->with(
-                'error',
-                'Tiket tidak ditemukan.'
-            );
-    }
-
-
-    // =====================================================
-    // SIMPAN KEMBALI KE SESSION
-    // =====================================================
-
-    session()->set(
-        'mahasiswa_tickets',
-        $tickets
+    return redirect()->to(
+        base_url('mahasiswa/ticket/detail/' . $id)
     );
-
-
-    // =====================================================
-    // KEMBALI KE DETAIL TIKET
-    // =====================================================
-
-    return redirect()
-        ->to(
-            base_url(
-                'mahasiswa/ticket/detail/' .
-                $id
-            )
-        )
-        ->with(
-            'success',
-            'Balasan berhasil dikirim.'
-        );
 }
 }

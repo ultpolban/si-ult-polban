@@ -1,7 +1,5 @@
 <?= $this->include('layouts/header') ?>
-
 <?= $this->include('layouts/navbar') ?>
-
 <?= $this->include('layouts/sidebar_mahasiswa') ?>
 
 <div class="content-wrapper">

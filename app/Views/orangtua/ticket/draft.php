@@ -41,7 +41,7 @@
 
                             <a
                                 href="<?= base_url(
-                                    'dashboard-mahasiswa'
+                                    'dashboard-orangtua'
                                 ) ?>"
                             >
 
@@ -439,7 +439,7 @@
 
                                                     <a
                                                         href="<?= base_url(
-                                                            'mahasiswa/ticket/draft/edit/' .
+                                                            'orangtua/ticket/draft/edit/' .
                                                             $index
                                                         ) ?>"
                                                         class="
@@ -473,7 +473,7 @@
 
                                                     <form
                                                         action="<?= base_url(
-                                                            'mahasiswa/ticket/draft/delete/' .
+                                                            'orangtua/ticket/draft/delete/' .
                                                             $index
                                                         ) ?>"
                                                         method="post"
@@ -579,7 +579,7 @@
 
                             <a
                                 href="<?= base_url(
-                                    'mahasiswa/ticket/create'
+                                    'orangtua/ticket/create'
                                 ) ?>"
                                 class="btn text-white"
                                 style="

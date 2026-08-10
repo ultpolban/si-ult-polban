@@ -81,75 +81,149 @@
     </div>
 
     <div class="card-body">
+<form method="get" action="<?= base_url('verification') ?>">
 
-        <form method="get" action="<?= base_url('verification') ?>" class="row mb-3">
+    <div class="row mb-3">
 
-            <div class="col-md-4">
+        <!-- SEARCH -->
+        <div class="col-md-5">
+            <div class="input-group">
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </span>
+                </div>
+
                 <input
                     type="text"
                     name="keyword"
                     class="form-control"
-                    placeholder="Cari No Tiket / Nama / NIM"
-                    value="<?= esc($_GET['keyword'] ?? '') ?>">
+                    placeholder="Cari No Tiket, Nama, NIM, Layanan..."
+                    value="<?= esc($keyword ?? '') ?>"
+                >
+
             </div>
+        </div>
 
-            <div class="col-md-3">
-                <select name="status" class="form-control">
 
-                    <option value="">Semua Status</option>
+        <!-- STATUS -->
+        <div class="col-md-3">
 
-                    <option value="Submitted" <?= (($_GET['status'] ?? '')=='Submitted')?'selected':'' ?>>
-                        Submitted
-                    </option>
+            <select name="status" class="form-control">
 
-                    <option value="Verified" <?= (($_GET['status'] ?? '')=='Verified')?'selected':'' ?>>
-                        Verified
-                    </option>
+                <option value="">
+                    -- Semua Status --
+                </option>
 
-                    <option value="Need Revision" <?= (($_GET['status'] ?? '')=='Need Revision')?'selected':'' ?>>
-                        Need Revision
-                    </option>
+                <option value="Submitted"
+                    <?= ($status ?? '') == 'Submitted' ? 'selected' : '' ?>>
+                    Submitted
+                </option>
 
-                    <option value="Rejected" <?= (($_GET['status'] ?? '')=='Rejected')?'selected':'' ?>>
-                        Rejected
-                    </option>
+                <option value="Verified"
+                    <?= ($status ?? '') == 'Verified' ? 'selected' : '' ?>>
+                    Verified
+                </option>
 
-                    <option value="Assigned" <?= (($_GET['status'] ?? '')=='Assigned')?'selected':'' ?>>
-                        Assigned
-                    </option>
+                <option value="Need Revision"
+                    <?= ($status ?? '') == 'Need Revision' ? 'selected' : '' ?>>
+                    Need Revision
+                </option>
 
-                    <option value="Completed" <?= (($_GET['status'] ?? '')=='Completed')?'selected':'' ?>>
-                        Completed
-                    </option>
+                <option value="Rejected"
+                    <?= ($status ?? '') == 'Rejected' ? 'selected' : '' ?>>
+                    Rejected
+                </option>
 
-                </select>
-            </div>
+                <option value="Assigned"
+                    <?= ($status ?? '') == 'Assigned' ? 'selected' : '' ?>>
+                    Assigned
+                </option>
 
-            <div class="col-md-2">
-                <button class="btn btn-primary btn-block">
-                    <i class="fas fa-search"></i> Cari
-                </button>
-            </div>
+                <option value="In Progress"
+                    <?= ($status ?? '') == 'In Progress' ? 'selected' : '' ?>>
+                    In Progress
+                </option>
 
-            <div class="col-md-2">
-                <a href="<?= base_url('verification') ?>" class="btn btn-secondary btn-block">
-                    Reset
-                </a>
-            </div>
+                <option value="Completed"
+                    <?= ($status ?? '') == 'Completed' ? 'selected' : '' ?>>
+                    Completed
+                </option>
 
-        </form>
+            </select>
+
+        </div>
+
+
+        <!-- SUMBER -->
+        <div class="col-md-2">
+
+            <select name="submission_type" class="form-control">
+
+                <option value="">
+                    -- Semua Sumber --
+                </option>
+
+                <option value="Online"
+                    <?= ($submission_type ?? '') == 'Online' ? 'selected' : '' ?>>
+                    Online
+                </option>
+
+                <option value="Walk In"
+                    <?= ($submission_type ?? '') == 'Walk In' ? 'selected' : '' ?>>
+                    Walk In
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- FILTER -->
+        <div class="col-md-1">
+
+            <button
+                type="submit"
+                class="btn btn-warning btn-block"
+                title="Filter">
+
+                <i class="fas fa-filter"></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- RESET -->
+        <div class="col-md-1">
+
+            <a
+                href="<?= base_url('verification') ?>"
+                class="btn btn-secondary btn-block"
+                title="Reset">
+
+                <i class="fas fa-redo"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</form>
 
         <table class="table table-bordered table-striped">
 
-           <thead style="background:#293582; color:white;">
+            <thead style="background:#293582; color:white;">
                 <tr>
-                    <th width="50">No</th>
-                    <th>No Tiket</th>
+                    <th>No. Tiket</th>
                     <th>Nama Pemohon</th>
+                    <th>NIM</th>
                     <th>Layanan</th>
                     <th>Sumber</th>
                     <th>Status</th>
-                    <th width="130">Aksi</th>
+                    <th width="170">Aksi</th>
                 </tr>
             </thead>
 
@@ -165,7 +239,7 @@
 
             <?php else: ?>
 
-                <?php $no = 1; ?>
+               
 
                 <?php foreach($tickets as $ticket): ?>
 
@@ -173,69 +247,95 @@
                     $badge = 'secondary';
 
                     switch($ticket['status']){
-
                         case 'Submitted':
-                            $badge='warning';
+                            $badge = 'warning';
                             break;
-
                         case 'Verified':
-                            $badge='success';
-                            break;
-
+                            $badge = 'success';
+                           break;
                         case 'Need Revision':
-                            $badge='primary';
+                            $badge = 'primary';
                             break;
-
                         case 'Rejected':
-                            $badge='danger';
+                            $badge = 'danger';
                             break;
-
                         case 'Assigned':
-                            $badge='info';
+                            $badge = 'info';
                             break;
-
                         case 'Completed':
-                            $badge='dark';
+                            $badge = 'dark';
                             break;
                     }
                 ?>
 
                 <tr>
 
-                    <td><?= $no++ ?></td>
+                   
 
                     <td><?= esc($ticket['ticket_number']) ?></td>
 
                     <td><?= esc($ticket['applicant_name']) ?></td>
 
+                    <td><?= esc($ticket['nim']) ?></td>
+
                     <td><?= esc($ticket['service_name']) ?></td>
 
-                    <td>
-                        <?php if(($ticket['source'] ?? 'Online') == 'Walk-in'): ?>
-                            <span class="badge bg-info">
-                                Walk-in
-                            </span>
-                        <?php else: ?>
-                            <span class="badge bg-secondary">
-                                Online
-                            </span>
-                        <?php endif; ?>
-                    </td>
+                 <td>
+    <?php if(($ticket['submission_type'] ?? '') == 'Walk In'): ?>
+
+    <span class="badge badge-info">
+        Walk In
+    </span>
+
+<?php else: ?>
+
+    <span class="badge badge-secondary">
+        Online
+    </span>
+
+<?php endif; ?>
+</td>
 
                     <td>
-                        <span class="badge bg-<?= $badge ?>">
+                        <span class="badge badge-<?= $badge ?>">
                             <?= esc($ticket['status']) ?>
                         </span>
                     </td>
 
-                    <td>
-                        <a href="<?= base_url('verification/detail/'.$ticket['id']) ?>"
-                           class="btn btn-primary btn-sm">
-                            <i class="fas fa-eye"></i> Detail
-                        </a>
-                    </td>
+                 <td class="text-center">
 
-                </tr>
+    <!-- DETAIL -->
+    <a href="<?= base_url('verification/detail/' . $ticket['id']) ?>"
+       class="btn btn-info btn-sm"
+       title="Detail">
+
+        <i class="fas fa-eye"></i>
+
+    </a>
+
+
+    <!-- VERIFIKASI -->
+    <a href="<?= base_url('verification/verify/' . $ticket['id']) ?>"
+       class="btn btn-success btn-sm"
+       title="Verifikasi">
+
+        <i class="fas fa-check"></i>
+
+    </a>
+
+
+    <!-- DISPOSISI -->
+    <a href="<?= base_url('disposition/create/' . $ticket['id']) ?>"
+       class="btn btn-primary btn-sm"
+       title="Disposisi">
+
+        <i class="fas fa-share"></i>
+
+    </a>
+
+</td>
+
+                                </tr>
 
                 <?php endforeach; ?>
 

@@ -66,13 +66,11 @@ class GuestReportController extends BaseController
 {
     helper(['form']);
 
-    $rules = [
-        'applicant_name'     => 'required',
-        'applicant_type'     => 'required',
-        'service_name'       => 'required',
-        'ticket_title'       => 'required',
-        'ticket_description' => 'required',
-    ];
+ $rules = [
+    'applicant_name' => 'required',
+    'applicant_type' => 'required',
+    'service_name'   => 'required',
+];
 
     if (!$this->validate($rules)) {
         return redirect()->back()

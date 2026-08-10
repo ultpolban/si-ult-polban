@@ -9,8 +9,7 @@
 
     <link rel="stylesheet" href="<?= base_url('dist/css/adminlte.min.css') ?>">
 
-   <link rel="stylesheet" href="<?= base_url('assets/adminlte/css/ult-theme.css') ?>"
-
+  <link rel="stylesheet" href="<?= base_url('assets/adminlte/css/ult-theme.css') ?>">
 </head>
 
 <body class="hold-transition sidebar-mini">

@@ -2,930 +2,1138 @@
 
 <?= $this->section('content') ?>
 
+<?php
+$isDetail = isset($ticket) && !empty($ticket);
+?>
+
 <style>
+    .tracking-stepper {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin: 35px 20px 50px;
+    }
 
-.stepper{
-    display:flex;
-    justify-content:space-between;
-    margin:30px 0;
-    position:relative;
-}
+    .tracking-stepper::before {
+        content: '';
+        position: absolute;
+        top: 22px;
+        left: 5%;
+        right: 5%;
+        height: 4px;
+        background: #dee2e6;
+        z-index: 0;
+    }
 
-.stepper::before{
-    content:'';
-    position:absolute;
-    top:20px;
-    left:10%;
-    width:80%;
-    height:5px;
-    background:#dee2e6;
-    z-index:0;
-}
+    .tracking-step {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        flex: 1;
+    }
 
-.step{
-    width:20%;
-    text-align:center;
-    position:relative;
-    z-index:2;
-}
+    .tracking-circle {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: #dee2e6;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+        font-weight: bold;
+        border: 3px solid #fff;
+        box-shadow: 0 0 0 1px #dee2e6;
+    }
 
-.circle{
-    width:45px;
-    height:45px;
-    border-radius:50%;
-    background:#adb5bd;
-    color:#fff;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    margin:auto;
-    font-weight:bold;
-    font-size:18px;
-}
+    .tracking-step.active .tracking-circle {
+        background: #28a745;
+        color: white;
+        box-shadow: 0 0 0 1px #28a745;
+    }
 
-.circle.active{
-    background:#28a745;
-}
+    .tracking-step.active .step-title {
+        color: #28a745;
+        font-weight: bold;
+    }
 
-.timeline{
-    position:relative;
-    margin-left:20px;
-}
+    .tracking-step.current .tracking-circle {
+        background: #007bff;
+        color: white;
+        box-shadow: 0 0 0 2px #007bff;
+    }
 
-.timeline::before{
-    content:'';
-    position:absolute;
-    left:15px;
-    top:0;
-    bottom:0;
-    width:3px;
-    background:#007bff;
-}
+    .tracking-step.current .step-title {
+        color: #007bff;
+        font-weight: bold;
+    }
 
-.time-item{
-    position:relative;
-    margin-bottom:25px;
-    padding-left:45px;
-}
+    .step-title {
+        font-size: 13px;
+        color: #6c757d;
+    }
 
-.time-icon{
-    position:absolute;
-    left:0;
-    width:30px;
-    height:30px;
-    border-radius:50%;
-    background:#28a745;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
+    .step-date {
+        font-size: 11px;
+        color: #999;
+        margin-top: 3px;
+    }
 
-.time-content{
-    background:#f8f9fa;
-    border-left:4px solid #007bff;
-    padding:15px;
-    border-radius:8px;
-}
+    .info-label {
+        font-weight: 600;
+        color: #6c757d;
+    }
 
+    .info-value {
+        color: #212529;
+    }
+
+    .timeline {
+        position: relative;
+        margin: 20px 0;
+        padding-left: 30px;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 8px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #dee2e6;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding: 0 0 25px 20px;
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -28px;
+        top: 3px;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: #007bff;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px #007bff;
+    }
+
+    .timeline-title {
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+
+    .timeline-date {
+        font-size: 12px;
+        color: #888;
+    }
+
+    .timeline-description {
+        margin-top: 5px;
+        color: #555;
+    }
+
+    .ticket-number {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .tracking-search {
+        max-width: 700px;
+        margin: auto;
+    }
+
+    .action-column {
+        white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+
+        .tracking-stepper {
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        .step-title {
+            font-size: 10px;
+        }
+
+        .step-date {
+            display: none;
+        }
+
+        .tracking-circle {
+            width: 35px;
+            height: 35px;
+            font-size: 12px;
+        }
+
+        .tracking-stepper::before {
+            top: 17px;
+        }
+
+        .table {
+            font-size: 12px;
+        }
+    }
 </style>
 
-<div class="card card-primary">
 
-<div class="card-header">
+<!-- ========================================================= -->
+<!-- HALAMAN DETAIL TRACKING -->
+<!-- ========================================================= -->
 
-<h3 class="card-title">
+<?php if ($isDetail): ?>
 
-Tracking Status Tiket
+    <div class="container-fluid">
 
-</h3>
+        <!-- HEADER -->
+        <div class="card shadow-sm mb-4">
 
-</div>
-
-<div class="card-body">
-
-<form action="<?= base_url('tracking/search') ?>" method="post">
-
-<?= csrf_field() ?>
-
-<div class="form-group">
-
-<label>Nomor Tiket</label>
-
-<input
-type="text"
-name="ticket_number"
-class="form-control"
-placeholder="Contoh : ULT-202607270001"
-required>
-
-</div>
-
-<button class="btn btn-primary">
-
-<i class="fas fa-search"></i>
-
-Cari Tiket
-
-</button>
-
-</form>
-
-<?php if(isset($error)): ?>
-
-<div class="alert alert-danger mt-3">
-
-<?= $error ?>
-
-</div>
-
-<?php endif; ?>
-
-<?php if(isset($ticket) && $ticket): ?>
-
-<?php
-
-$dibuat = strtotime($ticket['submitted_at']);
-$sekarang = time();
-
-if($ticket['status'] == 'Completed' && !empty($ticket['completed_at'])){
-    $akhir = strtotime($ticket['completed_at']);
-}else{
-    $akhir = $sekarang;
-}
-
-$lama = floor(($akhir - $dibuat) / 86400);
-
-$estimasi = 3;
-
-$sisa = max($estimasi - $lama, 0);
-
-?>
-
-<hr>
-
-<?php
-
-$steps = [
-    'Submitted',
-    'Verified',
-    'Assigned',
-    'In Progress',
-    'Completed'
-];
-
-$current = array_search($ticket['status'], $steps);
-
-if($current === false){
-    $current = 0;
-}
-
-?>
-
-<div class="stepper">
-
-<?php foreach($steps as $i=>$step): ?>
-
-<div class="step">
-
-<div class="circle <?= $i <= $current ? 'active' : '' ?>">
-
-<?= $i < $current ? '✓' : $i+1 ?>
-
-</div>
-
-<p class="mt-2">
-
-<?= $step ?>
-
-</p>
-
-</div>
-
-<?php endforeach; ?>
-
-</div>
-
-<?php
-
-$progress=20;
-$progressColor="bg-warning";
-$info="";
-
-switch($ticket['status']){
-
-case 'Submitted':
-$progress=20;
-$progressColor='bg-warning';
-$info='Menunggu verifikasi oleh Petugas ULT.';
-break;
-
-case 'Verified':
-$progress=40;
-$progressColor='bg-success';
-$info='Permohonan telah diverifikasi.';
-break;
-
-case 'Assigned':
-$progress=60;
-$progressColor='bg-info';
-$info='Permohonan diteruskan ke unit tujuan.';
-break;
-
-case 'In Progress':
-$progress=80;
-$progressColor='bg-primary';
-$info='Permohonan sedang diproses.';
-break;
-
-case 'Completed':
-$progress=100;
-$progressColor='bg-success';
-$info='Permohonan selesai.';
-break;
-
-case 'Need Revision':
-$progress=30;
-$progressColor='bg-dark';
-$info='Menunggu revisi dari pemohon.';
-break;
-
-case 'Rejected':
-$progress=0;
-$progressColor='bg-danger';
-$info='Permohonan ditolak.';
-break;
-
-}
-
-$dibuat=strtotime($ticket['submitted_at']);
-$sekarang=time();
-
-if($ticket['status']=='Completed' && !empty($ticket['completed_at'])){
-    $akhir=strtotime($ticket['completed_at']);
-}else{
-    $akhir=$sekarang;
-}
-
-$lama = floor(($akhir - $dibuat) / 86400);
-
-$estimasi = 3;
-
-$sisa = max($estimasi - $lama, 0);
-
-?>
-<div class="row mb-4">
-
-    <div class="col-md-4">
-
-        <div class="small-box bg-info">
-
-            <div class="inner">
-
-                <h4><?= date('l, d F Y', $dibuat) ?></h4>
-
-                <p>Tanggal Pengajuan</p>
-
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-route mr-2"></i>
+                    Tracking Status Tiket
+                </h5>
             </div>
 
-            <div class="icon">
+            <div class="card-body">
 
-                <i class="fas fa-calendar-plus"></i>
+                <div class="text-center mb-4">
 
-            </div>
+                    <div class="text-muted">
+                        Nomor Tiket
+                    </div>
 
-        </div>
+                    <div class="ticket-number">
+                        <?= esc($ticket['ticket_number'] ?? '-') ?>
+                    </div>
 
-    </div>
+                    <div class="mt-2">
 
-    <div class="col-md-4">
+                        <?php
+                        $status = $ticket['status'] ?? 'Submitted';
 
-        <div class="small-box bg-warning">
+                        $badgeClass = 'badge-secondary';
 
-            <div class="inner">
+                        switch ($status) {
+                            case 'Submitted':
+                                $badgeClass = 'badge-warning';
+                                break;
 
-                <h2><?= $lama ?></h2>
+                            case 'Verified':
+                                $badgeClass = 'badge-info';
+                                break;
 
-                <p>Hari Diproses</p>
+                            case 'Assigned':
+                                $badgeClass = 'badge-primary';
+                                break;
 
-            </div>
+                            case 'In Progress':
+                                $badgeClass = 'badge-warning';
+                                break;
 
-            <div class="icon">
+                            case 'Completed':
+                                $badgeClass = 'badge-success';
+                                break;
 
-                <i class="fas fa-hourglass-half"></i>
+                            case 'Need Revision':
+                                $badgeClass = 'badge-warning';
+                                break;
 
-            </div>
+                            case 'Rejected':
+                                $badgeClass = 'badge-danger';
+                                break;
+                        }
+                        ?>
 
-        </div>
+                        <span class="badge <?= $badgeClass ?> px-3 py-2">
+                            <?= esc($status) ?>
+                        </span>
 
-    </div>
+                    </div>
 
-    <div class="col-md-4">
+                </div>
 
-        <div class="small-box bg-success">
 
-            <div class="inner">
+                <!-- ================================================= -->
+                <!-- STEPPER STATUS -->
+                <!-- ================================================= -->
 
-                <h2><?= $estimasi ?></h2>
+                <?php
 
-                <p>Estimasi Hari</p>
+                $statusOrder = [
+                    'Submitted'   => 1,
+                    'Verified'    => 2,
+                    'Assigned'    => 3,
+                    'In Progress' => 4,
+                    'Completed'   => 5
+                ];
 
-            </div>
+                $currentStep = $statusOrder[$status] ?? 1;
 
-            <div class="icon">
+                ?>
 
-                <i class="fas fa-clock"></i>
+                <div class="tracking-stepper">
 
-            </div>
+                    <!-- SUBMITTED -->
+                    <div class="tracking-step <?= $currentStep >= 1 ? 'active' : '' ?>">
 
-        </div>
+                        <div class="tracking-circle">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
 
-    </div>
+                        <div class="step-title">
+                            Diajukan
+                        </div>
 
-</div>
+                        <?php if (!empty($ticket['submitted_at'])): ?>
+                            <div class="step-date">
+                                <?= date(
+                                    'd-m-Y H:i',
+                                    strtotime($ticket['submitted_at'])
+                                ) ?>
+                            </div>
+                        <?php endif; ?>
 
-<div class="card mb-4">
+                    </div>
 
-    <div class="card-header bg-light">
 
-        <strong>Progress Penyelesaian Tiket</strong>
+                    <!-- VERIFIED -->
+                    <div class="tracking-step
+                        <?= $currentStep > 2 ? 'active' : ($currentStep == 2 ? 'current' : '') ?>">
 
-    </div>
-
-    <div class="card-body">
-
-        <div class="progress" style="height:30px;">
-
-            <div
-                class="progress-bar <?= $progressColor ?>"
-                role="progressbar"
-                style="width:<?= $progress ?>%">
-
-                <?= $progress ?>%
-
-            </div>
-
-        </div>
-
-        <div class="alert alert-info mt-3 mb-0">
-
-            <i class="fas fa-info-circle"></i>
-
-            <?= $info ?>
-
-            <hr>
-
-            <?php if($ticket['status']=="Completed"): ?>
-
-                <strong>
-
-                    Tiket selesai dalam
-
-                    <?= $lama ?> hari.
-
-                </strong>
-
-            <?php else: ?>
-
-                <strong>
-
-                    Sudah diproses selama
-
-                    <?= $lama ?> hari.
-
-                </strong>
-
-                <br>
-
-                Estimasi selesai sekitar
-
-                <strong><?= $sisa ?> hari lagi.</strong>
-
-            <?php endif; ?>
-
-        </div>
-
-    </div>
-
-</div>
-
-<?php
-
-$badge="secondary";
-
-switch($ticket['status']){
-
-    case 'Submitted':
-        $badge='warning';
-        break;
-
-    case 'Verified':
-        $badge='success';
-        break;
-
-    case 'Assigned':
-        $badge='info';
-        break;
-
-    case 'In Progress':
-        $badge='primary';
-        break;
-
-    case 'Completed':
-        $badge='success';
-        break;
-
-    case 'Need Revision':
-        $badge='dark';
-        break;
-
-    case 'Rejected':
-        $badge='danger';
-        break;
-
-}
-
-?>
-
-<table class="table table-bordered">
-
-<tr>
-
-<th width="240">Nomor Tiket</th>
-
-<td><?= esc($ticket['ticket_number']) ?></td>
-
-</tr>
-
-<tr>
-
-<th>Nama Pemohon</th>
-
-<td><?= esc($ticket['applicant_name']) ?></td>
-
-</tr>
-
-<tr>
-
-<th>Jenis Layanan</th>
-
-<td><?= esc($ticket['service_name']) ?></td>
-
-</tr>
-
-<tr>
-
-<th>Judul Tiket</th>
-
-<td><?= esc($ticket['ticket_title']) ?></td>
-
-</tr>
-
-<tr>
-
-<th>Prioritas</th>
-
-<td><?= esc($ticket['priority']) ?></td>
-
-</tr>
-
-<tr>
-
-<th>Tanggal Pengajuan</th>
-
-<td><?= date('l, d F Y H:i',strtotime($ticket['submitted_at'])) ?></td>
-
-</tr>
-
-<tr>
-
-<th>Status</th>
-
-<td>
-
-<button
-class="btn btn-<?= $badge ?>"
-data-toggle="modal"
-data-target="#statusModal">
-
-<?= esc($ticket['status']) ?>
-
-</button>
-
-</td>
-
-</tr>
-
-<tr>
-
-<th>Petugas Verifikasi</th>
-
-<td><?= $ticket['verified_by'] ?: '-' ?></td>
-
-</tr>
-
-<tr>
-
-<th>Unit Tujuan</th>
-
-<td><?= $ticket['assigned_unit'] ?: '-' ?></td>
-
-</tr>
-
-<tr>
-
-<th>Catatan Petugas</th>
-
-<td><?= $ticket['verification_note'] ?: '-' ?></td>
-
-</tr>
-
-<tr>
-
-<th>Terakhir Diperbarui</th>
-
-<td>
-
-<?= !empty($ticket['updated_at'])
-? date('l, d F Y H:i:s',strtotime($ticket['updated_at']))
-: '-' ?>
-
-</td>
-
-</tr>
-
-</table>
-
-<div class="card mt-4">
-
-    <div class="card-header bg-info">
-
-        <h5 class="mb-0">
-
-            <i class="fas fa-history"></i>
-
-            Timeline Proses Tiket
-
-        </h5>
-
-    </div>
-
-    <div class="card-body">
-
-        <?php if(empty($logs)): ?>
-
-            <div class="text-center text-muted">
-
-                <i class="fas fa-info-circle"></i>
-
-                Belum ada riwayat proses tiket.
-
-            </div>
-
-        <?php else: ?>
-
-            <div class="timeline">
-
-                <?php foreach($logs as $log): ?>
-
-                    <div class="time-item">
-
-                        <div class="time-icon">
-
+                        <div class="tracking-circle">
                             <i class="fas fa-check"></i>
+                        </div>
+
+                        <div class="step-title">
+                            Diverifikasi
+                        </div>
+
+                        <?php if (!empty($ticket['verified_at'])): ?>
+                            <div class="step-date">
+                                <?= date(
+                                    'd-m-Y H:i',
+                                    strtotime($ticket['verified_at'])
+                                ) ?>
+                            </div>
+                        <?php endif; ?>
+
+                    </div>
+
+
+                    <!-- ASSIGNED -->
+                    <div class="tracking-step
+                        <?= $currentStep > 3 ? 'active' : ($currentStep == 3 ? 'current' : '') ?>">
+
+                        <div class="tracking-circle">
+                            <i class="fas fa-share"></i>
+                        </div>
+
+                        <div class="step-title">
+                            Didisposisikan
+                        </div>
+
+                    </div>
+
+
+                    <!-- IN PROGRESS -->
+                    <div class="tracking-step
+                        <?= $currentStep > 4 ? 'active' : ($currentStep == 4 ? 'current' : '') ?>">
+
+                        <div class="tracking-circle">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+
+                        <div class="step-title">
+                            Diproses Unit
+                        </div>
+
+                    </div>
+
+
+                    <!-- COMPLETED -->
+                    <div class="tracking-step
+                        <?= $currentStep >= 5 ? 'active' : '' ?>">
+
+                        <div class="tracking-circle">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+
+                        <div class="step-title">
+                            Selesai
+                        </div>
+
+                        <?php if (!empty($ticket['completed_at'])): ?>
+                            <div class="step-date">
+                                <?= date(
+                                    'd-m-Y H:i',
+                                    strtotime($ticket['completed_at'])
+                                ) ?>
+                            </div>
+                        <?php endif; ?>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- INFORMASI TIKET -->
+                <!-- ================================================= -->
+
+                <div class="card border mb-4">
+
+                    <div class="card-header bg-light">
+
+                        <strong>
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Informasi Tiket
+                        </strong>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <div class="info-label">
+                                    Nomor Tiket
+                                </div>
+
+                                <div class="info-value">
+                                    <?= esc($ticket['ticket_number'] ?? '-') ?>
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <div class="info-label">
+                                    Nama Pemohon
+                                </div>
+
+                                <div class="info-value">
+                                    <?= esc($ticket['applicant_name'] ?? '-') ?>
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <div class="info-label">
+                                    NIM
+                                </div>
+
+                                <div class="info-value">
+                                    <?= esc($ticket['nim'] ?? '-') ?>
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <div class="info-label">
+                                    Email
+                                </div>
+
+                                <div class="info-value">
+                                    <?= esc($ticket['email'] ?? '-') ?>
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <div class="info-label">
+                                    Nomor HP
+                                </div>
+
+                                <div class="info-value">
+                                    <?= esc($ticket['phone'] ?? '-') ?>
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <div class="info-label">
+                                    Layanan
+                                </div>
+
+                                <div class="info-value">
+                                    <?= esc($ticket['service_name'] ?? '-') ?>
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <div class="info-label">
+                                    Judul Tiket
+                                </div>
+
+                                <div class="info-value">
+                                    <?= esc($ticket['ticket_title'] ?? '-') ?>
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <div class="info-label">
+                                    Unit Tujuan
+                                </div>
+
+                                <div class="info-value">
+
+                                    <?php if (!empty($ticket['assigned_unit'])): ?>
+
+                                        <span class="badge badge-primary">
+                                            <i class="fas fa-building mr-1"></i>
+                                            <?= esc($ticket['assigned_unit']) ?>
+                                        </span>
+
+                                    <?php else: ?>
+
+                                        <span class="text-muted">
+                                            Belum didisposisikan
+                                        </span>
+
+                                    <?php endif; ?>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <div class="info-label">
+                                    Prioritas
+                                </div>
+
+                                <div class="info-value">
+                                    <?= esc($ticket['priority'] ?? '-') ?>
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <div class="info-label">
+                                    Lama Proses
+                                </div>
+
+                                <div class="info-value">
+
+                                    <span class="badge badge-info">
+                                        <?= esc($ticket['lama_proses'] ?? '-') ?>
+                                    </span>
+
+                                </div>
+
+                            </div>
 
                         </div>
 
-                        <div class="time-content">
 
-                            <strong>
+                        <hr>
 
-                                <?= esc($log['activity']) ?>
 
-                            </strong>
+                        <div class="mb-2 info-label">
+                            Deskripsi
+                        </div>
 
-                            <br>
+                        <div class="border rounded p-3 bg-light">
 
-                            <small class="text-muted">
-
-                                <?= date('l, d F Y H:i:s',strtotime($log['created_at'])) ?>
-
-                            </small>
+                            <?= nl2br(
+                                esc($ticket['ticket_description'] ?? '-')
+                            ) ?>
 
                         </div>
 
                     </div>
 
-                <?php endforeach; ?>
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- PROGRESS UNIT -->
+                <!-- ================================================= -->
+
+                <div class="card border mb-4">
+
+                    <div class="card-header bg-light">
+
+                        <strong>
+                            <i class="fas fa-tasks mr-2"></i>
+                            Progress Tiket
+                        </strong>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <?php
+
+                        if ($status === 'Assigned') {
+                            $progress = 50;
+                            $progressText = 'Tiket sudah didisposisikan ke unit dan menunggu proses.';
+                        } elseif ($status === 'In Progress') {
+                            $progress = 75;
+                            $progressText = 'Tiket sedang diproses oleh unit tujuan.';
+                        } elseif ($status === 'Completed') {
+                            $progress = 100;
+                            $progressText = 'Tiket telah selesai diproses oleh unit.';
+                        } elseif ($status === 'Verified') {
+                            $progress = 25;
+                            $progressText = 'Tiket telah diverifikasi dan menunggu disposisi.';
+                        } else {
+                            $progress = 10;
+                            $progressText = 'Tiket telah diajukan dan sedang menunggu proses berikutnya.';
+                        }
+
+                        ?>
+
+                        <div class="d-flex justify-content-between mb-2">
+
+                            <strong>
+                                Status Proses
+                            </strong>
+
+                            <strong>
+                                <?= $progress ?>%
+                            </strong>
+
+                        </div>
+
+                        <div class="progress"
+                             style="height: 25px;">
+
+                            <div
+                                class="progress-bar progress-bar-striped progress-bar-animated"
+                                role="progressbar"
+                                style="width: <?= $progress ?>%;">
+
+                                <?= $progress ?>%
+
+                            </div>
+
+                        </div>
+
+                        <div class="mt-3 text-muted">
+
+                            <i class="fas fa-info-circle mr-1"></i>
+
+                            <?= esc($progressText) ?>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- RIWAYAT AKTIVITAS -->
+                <!-- ================================================= -->
+
+                <div class="card border mb-4">
+
+                    <div class="card-header bg-light">
+
+                        <strong>
+                            <i class="fas fa-history mr-2"></i>
+                            Riwayat Aktivitas Tiket
+                        </strong>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <?php if (!empty($logs)): ?>
+
+                            <div class="timeline">
+
+                                <?php foreach ($logs as $log): ?>
+
+                                    <div class="timeline-item">
+
+                                        <div class="timeline-title">
+
+                                            <?php
+                                            $logStatus =
+                                                $log['status']
+                                                ?? $log['action']
+                                                ?? 'Aktivitas Tiket';
+                                            ?>
+
+                                            <?= esc($logStatus) ?>
+
+                                        </div>
+
+
+                                        <?php if (!empty($log['created_at'])): ?>
+
+                                            <div class="timeline-date">
+
+                                                <i class="far fa-clock mr-1"></i>
+
+                                                <?= date(
+                                                    'd F Y, H:i',
+                                                    strtotime($log['created_at'])
+                                                ) ?>
+
+                                            </div>
+
+                                        <?php endif; ?>
+
+
+                                        <?php
+                                        $logDescription =
+                                            $log['description']
+                                            ?? $log['note']
+                                            ?? $log['message']
+                                            ?? '';
+                                        ?>
+
+                                        <?php if (!empty($logDescription)): ?>
+
+                                            <div class="timeline-description">
+
+                                                <?= nl2br(
+                                                    esc($logDescription)
+                                                ) ?>
+
+                                            </div>
+
+                                        <?php endif; ?>
+
+                                    </div>
+
+                                <?php endforeach; ?>
+
+                            </div>
+
+                        <?php else: ?>
+
+                            <div class="text-center text-muted py-4">
+
+                                <i class="fas fa-history fa-2x mb-3"></i>
+
+                                <div>
+                                    Belum ada riwayat aktivitas tiket.
+                                </div>
+
+                            </div>
+
+                        <?php endif; ?>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- TOMBOL KEMBALI -->
+                <!-- ================================================= -->
+
+                <div class="mb-4">
+
+                    <a href="<?= base_url('tracking') ?>"
+                       class="btn btn-secondary">
+
+                        <i class="fas fa-arrow-left mr-1"></i>
+
+                        Kembali ke Tracking
+
+                    </a>
+
+                </div>
 
             </div>
 
-        <?php endif; ?>
+        </div>
 
     </div>
 
-</div>
 
-<!-- Modal Detail Status -->
-
-<div class="modal fade" id="statusModal">
-
-    ...
-
-</div>
-
-<?php endif; ?>
-
-</div>
-</div>
-
-<?php if(isset($ticket) && $ticket): ?>
-
-<div class="modal fade" id="statusModal">
-
-<div class="modal-dialog">
-
-<div class="modal-content">
-
-<div class="modal-header bg-primary">
-
-<h5 class="modal-title">
-
-Detail Status Tiket
-
-</h5>
-
-<button class="close" data-dismiss="modal">
-
-<span>&times;</span>
-
-</button>
-
-</div>
-
-<div class="modal-body">
-
-<?php
-
-$badge = "secondary";
-
-switch($ticket['status'] ?? ''){
-
-    case 'Submitted':
-        $badge = "warning";
-        break;
-
-    case 'Verified':
-        $badge = "success";
-        break;
-
-    case 'Assigned':
-        $badge = "info";
-        break;
-
-    case 'In Progress':
-        $badge = "primary";
-        break;
-
-    case 'Completed':
-        $badge = "success";
-        break;
-
-    case 'Need Revision':
-        $badge = "dark";
-        break;
-
-    case 'Rejected':
-        $badge = "danger";
-        break;
-
-}
-?>
-
-
-
-<?php
-
-$pesan='';
-
-switch($ticket['status'] ?? ''){
-
-case 'Submitted':
-    $pesan='Permohonan berhasil dibuat dan sedang menunggu verifikasi oleh Petugas ULT. Estimasi proses 1 hari kerja.';
-    break;
-
-case 'Verified':
-    $pesan='Permohonan telah diverifikasi. Selanjutnya tiket akan diteruskan ke unit terkait untuk diproses.';
-    break;
-
-case 'Assigned':
-    $pesan='Tiket telah didisposisikan ke unit tujuan. Unit terkait akan mulai menangani permohonan.';
-    break;
-
-case 'In Progress':
-    $pesan='Permohonan sedang dikerjakan oleh unit. Mohon menunggu hingga proses selesai.';
-    break;
-
-case 'Completed':
-    $pesan='Permohonan telah selesai diproses.';
-    break;
-
-case 'Need Revision':
-    $pesan='Data atau dokumen belum lengkap. Silakan lakukan revisi sesuai catatan petugas.';
-    break;
-
-case 'Rejected':
-    $pesan='Permohonan ditolak karena tidak memenuhi persyaratan.';
-    break;
-}
-
-?>
-
-<?php
-
-$pesan='';
-
-switch($ticket['status'] ?? ''){
-
-case 'Submitted':
-
-$pesan='Permohonan berhasil dibuat dan sedang menunggu verifikasi oleh Petugas ULT. Estimasi proses 1 hari kerja.';
-
-break;
-
-case 'Verified':
-
-$pesan='Permohonan telah diverifikasi. Selanjutnya tiket akan diteruskan ke unit terkait untuk diproses.';
-
-break;
-
-case 'Assigned':
-
-$pesan='Tiket telah didisposisikan ke unit tujuan. Unit terkait akan mulai menangani permohonan.';
-
-break;
-
-case 'In Progress':
-
-$pesan='Permohonan sedang dikerjakan oleh unit. Mohon menunggu hingga proses selesai.';
-
-break;
-
-case 'Completed':
-
-$pesan='Permohonan telah selesai diproses. Silakan melihat hasil atau menghubungi Petugas ULT apabila masih ada kendala.';
-
-break;
-
-case 'Need Revision':
-
-$pesan='Data atau dokumen belum lengkap. Silakan lakukan revisi sesuai catatan petugas.';
-
-break;
-
-case 'Rejected':
-
-$pesan='Permohonan ditolak karena tidak memenuhi persyaratan yang ditentukan.';
-
-break;
-
-}
-
-?>
-
-<div class="text-center">
-
-<h3>
-
-<span class="badge badge-<?= $badge ?>">
-
-<?= esc($ticket['status']) ?>
-
-</span>
-
-</h3>
-
-</div>
-
-<hr>
-
-<p>
-
-<?= $pesan ?>
-
-</p>
-
-<table class="table table-bordered">
-
-<tr>
-
-<th width="170">
-
-Nomor Tiket
-
-</th>
-
-<td>
-
-<?= esc($ticket['ticket_number']) ?>
-
-</td>
-
-</tr>
-
-<tr>
-
-<th>
-
-Tanggal Dibuat
-
-</th>
-
-<td>
-
-<?= date('l, d F Y H:i',strtotime($ticket['submitted_at'])) ?>
-
-</td>
-
-</tr>
-
-<tr>
-
-<th>
-
-Lama Diproses
-
-</th>
-
-<td>
-
-<?= $lama ?> Hari
-
-</td>
-
-</tr>
-
-<tr>
-
-<th>
-
-Estimasi
-
-</th>
-
-<td>
-
-<?php if($ticket['status']=="Completed"): ?>
-
-Selesai
+<!-- ========================================================= -->
+<!-- HALAMAN UTAMA TRACKING -->
+<!-- ================================================= -->
 
 <?php else: ?>
 
-<?= $sisa ?> Hari Lagi
+    <div class="container-fluid">
 
-<?php endif; ?>
+        <!-- HEADER -->
 
-</td>
+        <div class="card shadow-sm mb-4">
 
-</tr>
+            <div class="card-header bg-primary text-white">
 
-<tr>
+                <h5 class="mb-0">
 
-<th>
+                    <i class="fas fa-route mr-2"></i>
 
-Progress
+                    Tracking Tiket
 
-</th>
+                </h5>
 
-<td>
+            </div>
 
-<?= $progress ?>%
 
-</td>
+            <div class="card-body">
 
-</tr>
+                <!-- PESAN ERROR -->
 
-</table>
+                <?php if (session()->getFlashdata('error')): ?>
 
-</div>
+                    <div class="alert alert-danger alert-dismissible fade show">
 
-<div class="modal-footer">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
 
-<button
-class="btn btn-secondary"
-data-dismiss="modal">
+                        <?= session()->getFlashdata('error') ?>
 
-Tutup
+                        <button type="button"
+                                class="close"
+                                data-dismiss="alert">
 
-</button>
+                            <span>&times;</span>
 
-</div>
+                        </button>
 
-</div>
+                    </div>
 
-</div>
+                <?php endif; ?>
 
-</div>
+
+                <?php if (!empty($error)): ?>
+
+                    <div class="alert alert-danger alert-dismissible fade show">
+
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+
+                        <?= esc($error) ?>
+
+                        <button type="button"
+                                class="close"
+                                data-dismiss="alert">
+
+                            <span>&times;</span>
+
+                        </button>
+
+                    </div>
+
+                <?php endif; ?>
+
+
+                <!-- ================================================= -->
+                <!-- CARI TIKET -->
+                <!-- ================================================= -->
+
+                <div class="tracking-search">
+
+                    <div class="text-center mb-3">
+
+                        <h5>
+                            Cari Tiket
+                        </h5>
+
+                        <p class="text-muted">
+
+                            Masukkan nomor tiket untuk melihat
+                            status dan progres tiket.
+
+                        </p>
+
+                    </div>
+
+
+                    <form action="<?= base_url('tracking/search') ?>"
+                          method="post">
+
+                        <?= csrf_field() ?>
+
+                        <div class="input-group">
+
+                            <input
+                                type="text"
+                                name="ticket_number"
+                                class="form-control"
+                                placeholder="Contoh: ULT-20260716-0001"
+                                required
+                                autocomplete="off"
+                            >
+
+                            <div class="input-group-append">
+
+                                <button type="submit"
+                                        class="btn btn-primary">
+
+                                    <i class="fas fa-search mr-1"></i>
+
+                                    Cari Tiket
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- TABEL TIKET YANG SUDAH DIDISPOSISIKAN -->
+        <!-- ================================================= -->
+
+        <div class="card shadow-sm">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+
+                    <i class="fas fa-list mr-2"></i>
+
+                    Tiket yang Sudah Didisposisikan ke Unit
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <?php if (empty($tickets)): ?>
+
+                    <div class="text-center text-muted py-5">
+
+                        <i class="fas fa-inbox fa-3x mb-3"></i>
+
+                        <p class="mb-0">
+
+                            Tidak ada tiket yang sudah didisposisikan
+                            ke unit.
+
+                        </p>
+
+                    </div>
+
+                <?php else: ?>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered table-hover">
+
+                            <thead class="thead-light">
+
+                                <tr>
+
+                                    <th width="50">
+                                        No
+                                    </th>
+
+                                    <th>
+                                        No Tiket
+                                    </th>
+
+                                    <th>
+                                        Pemohon
+                                    </th>
+
+                                    <th>
+                                        Layanan
+                                    </th>
+
+                                    <th>
+                                        Unit Tujuan
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th width="130">
+                                        Aksi
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <?php $no = 1; ?>
+
+                                <?php foreach ($tickets as $item): ?>
+
+                                    <tr>
+
+                                        <td>
+                                            <?= $no++ ?>
+                                        </td>
+
+
+                                        <td>
+
+                                            <strong>
+                                                <?= esc(
+                                                    $item['ticket_number']
+                                                    ?? '-'
+                                                ) ?>
+                                            </strong>
+
+                                        </td>
+
+
+                                        <td>
+                                            <?= esc(
+                                                $item['applicant_name']
+                                                ?? '-'
+                                            ) ?>
+                                        </td>
+
+
+                                        <td>
+                                            <?= esc(
+                                                $item['service_name']
+                                                ?? '-'
+                                            ) ?>
+                                        </td>
+
+
+                                        <td>
+
+                                            <?php if (!empty($item['assigned_unit'])): ?>
+
+                                                <span class="badge badge-primary">
+
+                                                    <i class="fas fa-building mr-1"></i>
+
+                                                    <?= esc(
+                                                        $item['assigned_unit']
+                                                    ) ?>
+
+                                                </span>
+
+                                            <?php else: ?>
+
+                                                -
+
+                                            <?php endif; ?>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <?php
+                                            $itemStatus =
+                                                $item['status']
+                                                ?? '-';
+
+                                            $itemBadge =
+                                                'badge-secondary';
+
+                                            if ($itemStatus === 'Assigned') {
+                                                $itemBadge =
+                                                    'badge-primary';
+                                            } elseif ($itemStatus === 'In Progress') {
+                                                $itemBadge =
+                                                    'badge-warning';
+                                            } elseif ($itemStatus === 'Completed') {
+                                                $itemBadge =
+                                                    'badge-success';
+                                            }
+                                            ?>
+
+                                            <span class="badge <?= $itemBadge ?>">
+
+                                                <?= esc($itemStatus) ?>
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <td class="action-column">
+
+                                            <form
+                                                action="<?= base_url('tracking/search') ?>"
+                                                method="post"
+                                                class="d-inline"
+                                            >
+
+                                                <?= csrf_field() ?>
+
+                                                <input
+                                                    type="hidden"
+                                                    name="ticket_number"
+                                                    value="<?= esc(
+                                                        $item['ticket_number']
+                                                    ) ?>"
+                                                >
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-info btn-sm"
+                                                    title="Lihat Progres"
+                                                >
+
+                                                    <i class="fas fa-eye mr-1"></i>
+
+                                                    Lihat Progres
+
+                                                </button>
+
+                                            </form>
+
+                                        </td>
+
+                                    </tr>
+
+                                <?php endforeach; ?>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                <?php endif; ?>
+
+            </div>
+
+        </div>
+
+    </div>
+
 <?php endif; ?>
 
 <?= $this->endSection() ?>

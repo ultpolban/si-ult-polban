@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\TicketModel;
 use App\Models\TicketLogModel;
 use App\Models\TicketCommentModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 
 class VerificationController extends BaseController
 {
@@ -12,49 +13,104 @@ class VerificationController extends BaseController
     {
         $ticketModel = new TicketModel();
 
-        $status  = $this->request->getGet('status');
-        $keyword = $this->request->getGet('keyword');
+        // Ambil filter
+        $keyword = trim($this->request->getGet('keyword') ?? '');
+        $status = trim($this->request->getGet('status') ?? '');
+        $submission_type = trim($this->request->getGet('submission_type') ?? '');
 
+        // =========================
+        // FILTER TIKET
+        // =========================
         $builder = $ticketModel;
 
-        if (!empty($status)) {
-            $builder = $builder->where('status', $status);
+        // Filter status
+        if ($status !== '') {
+            $builder->where('status', $status);
         }
 
-        if (!empty($keyword)) {
-            $builder = $builder
-                ->groupStart()
+        // Filter pencarian
+        if ($keyword !== '') {
+            $builder->groupStart()
                 ->like('ticket_number', $keyword)
                 ->orLike('applicant_name', $keyword)
                 ->orLike('nim', $keyword)
+                ->orLike('service_name', $keyword)
                 ->groupEnd();
         }
 
-        $data = [
-            'tickets' => $builder
-                ->orderBy('submitted_at', 'DESC')
-                ->findAll(),
+        // Filter sumber
+        if ($submission_type !== '') {
+            $builder->where('submission_type', $submission_type);
+        }
 
-            'submitted' => $ticketModel->where('status', 'Submitted')->countAllResults(),
-            'assigned'  => $ticketModel->where('status', 'Assigned')->countAllResults(),
-            'verified'  => $ticketModel->where('status', 'Verified')->countAllResults(),
-            'progress'  => $ticketModel->where('status', 'In Progress')->countAllResults(),
-            'completed' => $ticketModel->where('status', 'Completed')->countAllResults(),
-            'revision'  => $ticketModel->where('status', 'Need Revision')->countAllResults(),
-            'rejected'  => $ticketModel->where('status', 'Rejected')->countAllResults(),
+        // Ambil tiket
+        $tickets = $builder
+            ->orderBy('submitted_at', 'DESC')
+            ->findAll();
+
+        // =========================
+        // DATA UNTUK VIEW
+        // =========================
+        $data = [
+            'keyword' => $keyword,
+            'status' => $status,
+            'submission_type' => $submission_type,
+            'tickets' => $tickets,
+
+            // Statistik
+            'submitted' => (new TicketModel())
+                ->where('status', 'Submitted')
+                ->countAllResults(),
+
+            'assigned' => (new TicketModel())
+                ->where('status', 'Assigned')
+                ->countAllResults(),
+
+            'verified' => (new TicketModel())
+                ->where('status', 'Verified')
+                ->countAllResults(),
+
+            'progress' => (new TicketModel())
+                ->where('status', 'In Progress')
+                ->countAllResults(),
+
+            'completed' => (new TicketModel())
+                ->where('status', 'Completed')
+                ->countAllResults(),
+
+            'revision' => (new TicketModel())
+                ->where('status', 'Need Revision')
+                ->countAllResults(),
+
+            'rejected' => (new TicketModel())
+                ->where('status', 'Rejected')
+                ->countAllResults(),
         ];
 
         return view('verification/index', $data);
     }
 
-    public function detail($id)
+
+    public function detail($id = null)
     {
-        $ticketModel  = new TicketModel();
+        if (!$id) {
+            return redirect()->to(base_url('verification'));
+        }
+
+        $ticketModel = new TicketModel();
         $commentModel = new TicketCommentModel();
-        $logModel     = new TicketLogModel();
+        $logModel = new TicketLogModel();
+
+        $ticket = $ticketModel->find($id);
+
+        if (!$ticket) {
+            throw PageNotFoundException::forPageNotFound(
+                "Tiket tidak ditemukan."
+            );
+        }
 
         $data = [
-            'ticket' => $ticketModel->find($id),
+            'ticket' => $ticket,
 
             'comments' => $commentModel
                 ->where('ticket_id', $id)
@@ -70,59 +126,136 @@ class VerificationController extends BaseController
         return view('verification/detail', $data);
     }
 
- public function process($id)
-{
-    $ticketModel = new TicketModel();
 
-    $ticket = $ticketModel->find($id);
+    public function verify($id)
+    {
+        $ticket = (new TicketModel())->find($id);
 
-    $status = $this->request->getPost('status');
-
-    // Pengajuan Offline hanya bisa diverifikasi
-    if ($ticket['submission_type'] == 'Offline') {
-
-        $ticketModel->update($id, [
-            'status'        => 'Assigned',
-            'assigned_unit' => $this->request->getPost('assigned_unit'),
-            'verified_by'   => session('name'),
-            'verified_at'   => date('Y-m-d H:i:s')
-        ]);
-
-    } else {
-
-        // Pengajuan Online
-        if ($status == 'Rejected') {
-
-            $ticketModel->update($id, [
-                'status' => 'Rejected',
-                'verification_note' => $this->request->getPost('verification_note'),
-                'verified_by' => session('name'),
-                'verified_at' => date('Y-m-d H:i:s')
-            ]);
-
-        } elseif ($status == 'Need Revision') {
-
-            $ticketModel->update($id, [
-                'status' => 'Need Revision',
-                'verification_note' => $this->request->getPost('verification_note'),
-                'verified_by' => session('name'),
-                'verified_at' => date('Y-m-d H:i:s')
-            ]);
-
-        } else {
-
-            $ticketModel->update($id, [
-                'status' => 'Assigned',
-                'assigned_unit' => $this->request->getPost('assigned_unit'),
-                'verification_note' => $this->request->getPost('verification_note'),
-                'verified_by' => session('name'),
-                'verified_at' => date('Y-m-d H:i:s')
-            ]);
-
+        if (!$ticket) {
+            throw PageNotFoundException::forPageNotFound();
         }
+
+        return view('verification/verify', [
+            'ticket' => $ticket,
+
+            'logs' => (new TicketLogModel())
+                ->where('ticket_id', $id)
+                ->orderBy('created_at', 'DESC')
+                ->findAll()
+        ]);
     }
 
-    return redirect()->to('/verification')
-        ->with('success', 'Tiket berhasil diproses.');
-}
+
+    public function revision($id)
+    {
+        $ticketModel = new TicketModel();
+
+        $ticketModel->update($id, [
+            'status' => 'Need Revision'
+        ]);
+
+        return redirect()
+            ->to(base_url('verification'))
+            ->with(
+                'success',
+                'Tiket berhasil dikembalikan untuk revisi.'
+            );
+    }
+
+
+    public function reject($id)
+    {
+        $ticketModel = new TicketModel();
+
+        $ticketModel->update($id, [
+            'status' => 'Rejected'
+        ]);
+
+        return redirect()
+            ->to(base_url('verification'))
+            ->with(
+                'success',
+                'Tiket berhasil ditolak.'
+            );
+    }
+
+
+    public function process($id = null)
+    {
+        if (!$id) {
+            return redirect()->to(base_url('verification'));
+        }
+
+        $ticketModel = new TicketModel();
+        $logModel = new TicketLogModel();
+        $commentModel = new TicketCommentModel();
+
+        $status = $this->request->getPost('status');
+        $priority = $this->request->getPost('priority');
+        $assignedUnit = $this->request->getPost('assigned_unit');
+        $note = $this->request->getPost('verification_note');
+        $comment = $this->request->getPost('comment');
+
+        $petugas = session('name') ?? 'Petugas ULT';
+
+        $ticketModel->update($id, [
+            'status' => $status,
+            'priority' => $priority,
+            'assigned_unit' => $assignedUnit,
+            'verification_note' => $note,
+            'verified_by' => $petugas,
+            'verified_at' => date('Y-m-d H:i:s')
+        ]);
+
+        $logModel->insert([
+            'ticket_id' => $id,
+            'activity' => 'Status tiket diubah menjadi ' . $status,
+            'user_name' => $petugas,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+
+        if (!empty($comment)) {
+            $commentModel->insert([
+                'ticket_id' => $id,
+                'comment' => $comment,
+                'sender' => $petugas,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+        }
+
+        return redirect()
+            ->to(base_url('verification/detail/' . $id))
+            ->with(
+                'success',
+                'Verifikasi tiket berhasil disimpan.'
+            );
+    }
+
+
+    public function comment($id = null)
+    {
+        if (!$id) {
+            return redirect()->to(base_url('verification'));
+        }
+
+        $commentModel = new TicketCommentModel();
+
+        $comment = $this->request->getPost('comment');
+
+        if (!empty($comment)) {
+            $commentModel->insert([
+                'ticket_id' => $id,
+                'comment' => $comment,
+                'sender' => session('name') ?? 'Petugas',
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+        }
+
+        return redirect()
+            ->to(base_url('verification/detail/' . $id))
+            ->with(
+                'success',
+                'Komentar berhasil ditambahkan.'
+            );
+    }
 }

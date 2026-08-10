@@ -21,23 +21,13 @@
                 </li>
 
                 <?php if (hasRole(1)): ?>
-
-                    <!-- Manajemen User -->
-                    <li class="nav-item">
-                        <a href="<?= base_url('users') ?>" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>Manajemen User</p>
-                        </a>
-                    </li>
-
-                    <?php
-                        $ticketModel = new \App\Models\TicketModel();
-
-                        $submitted = $ticketModel
-                            ->where('status', 'Submitted')
-                            ->countAllResults();
-                    ?>
-
+                    <!-- Data Tiket -->
+<li class="nav-item">
+   <a href="<?= base_url('datatiket') ?>" class="nav-link">
+    <i class="nav-icon fas fa-ticket-alt"></i>
+    <p>Data Tiket</p>
+</a>
+</li>
                     <!-- Verifikasi Tiket -->
                     <li class="nav-item">
                         <a href="<?= base_url('verification') ?>" class="nav-link">
@@ -46,18 +36,25 @@
                             <p>
                                 Verifikasi Tiket
 
-                                <?php if($submitted > 0): ?>
-
-                                    <span class="right badge badge-danger">
-                                        <?= $submitted ?>
-                                    </span>
-
-                                <?php endif; ?>
+                               <?php if (isset($submitted) && $submitted > 0): ?>
+    <span class="right badge badge-danger">
+        <?= $submitted ?>
+    </span>
+<?php endif; ?>
 
                             </p>
 
                         </a>
                     </li>
+
+                    <li class="nav-item">
+    <a href="<?= base_url('disposition') ?>" class="nav-link">
+        <i class="nav-icon fas fa-share"></i>
+        <p>Disposisi Tiket</p>
+    </a>
+</li>
+
+
 
                     <!-- Laporan Tiket -->
                     <li class="nav-item">
@@ -82,22 +79,6 @@
                             <p>Laporan Tamu</p>
                         </a>
                     </li>
-
-                    <li class="nav-item">
-
-                    <a href="<?= base_url('online') ?>" class="nav-link">
-
-                        <i class="nav-icon fas fa-globe"></i>
-
-                        <p>
-
-                            Pengajuan Online
-
-                        </p>
-
-                    </a>
-
-                </li>
 
                     <!-- Tracking Tiket -->
                     <li class="nav-item">

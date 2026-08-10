@@ -178,6 +178,15 @@
                 <option value="Perpustakaan">Perpustakaan</option>
 
             </select>
+            <div class="form-group mt-3">
+    <label>Judul Tiket</label>
+    <input type="text"
+           name="ticket_title"
+           class="form-control"
+           value="<?= old('ticket_title') ?>"
+           placeholder="Masukkan Judul Tiket"
+           required>
+</div>
 
         </div>
 
@@ -395,18 +404,6 @@
 </div>
 
 <hr>
-
-            <div class="form-group">
-
-                <label>Judul Tiket</label>
-
-                <input type="text"
-                       name="ticket_title"
-                       class="form-control"
-                       value="<?= old('ticket_title') ?>"
-                       required>
-
-            </div>
 
             <div class="form-group">
 

@@ -1,131 +1,117 @@
-<nav class="topbar">
+<header class="ult-topbar">
 
-    <div>
+    <div class="ult-topbar-left">
 
-        <h4 class="page-title mb-0">
+        <button type="button" class="btn-icon"
+            id="sidebarToggle"
+            aria-label="Toggle Sidebar">
 
-            <?= esc($title ?? 'Dashboard') ?>
-
-        </h4>
-
-        <small class="text-muted">
-
-            Sistem Informasi Unit Layanan Terpadu POLBAN
-
-        </small>
-
-    </div>
-
-    <div class="topbar-right">
-
-        <div class="today">
-
-            <i class="bi bi-calendar-event me-1"></i>
-
-            <?= date('d F Y') ?>
-
-        </div>
-
-        <button
-            class="notification"
-            data-bs-toggle="tooltip"
-            title="Notifikasi">
-
-            <i class="bi bi-bell-fill"></i>
+            <i class="fas fa-bars"></i>
 
         </button>
 
+        <span class="fw-bold d-none d-sm-inline" style="color:var(--ult-primary);">
+
+            Sistem Informasi Layanan Terpadu
+
+        </span>
+
+    </div>
+
+    <div class="ult-topbar-right">
+
+        <!-- Notification -->
         <div class="dropdown">
 
-            <a
-                href="#"
-                class="text-decoration-none text-dark d-flex align-items-center"
-                data-bs-toggle="dropdown">
+            <button type="button"
+                class="btn-icon"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
 
-                <div class="avatar me-3">
+                <i class="far fa-bell"></i>
 
-                    <?= strtoupper(substr(session('full_name') ?? 'A', 0, 1)) ?>
+                <?php if (!empty($notificationCount) && $notificationCount > 0): ?>
 
-                </div>
+                    <span class="ult-badge ult-badge-red"
+                        style="position:absolute;top:4px;right:4px;padding:2px 6px;font-size:.65rem;">
 
-                <div class="text-start">
-
-                    <div class="fw-semibold">
-
-                        <?= esc(session('full_name') ?? 'Administrator') ?>
-
-                    </div>
-
-                    <span class="role-badge">
-
-                        Administrator
+                        <?= $notificationCount ?>
 
                     </span>
 
-                </div>
+                <?php endif; ?>
 
-                <i class="bi bi-chevron-down ms-3"></i>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow"
+                style="min-width:320px;">
+
+                <li class="dropdown-header">
+                    <?= $notificationCount ?? 0 ?> Notifikasi
+                </li>
+
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <li>
+                    <a class="dropdown-item text-center"
+                        href="<?= site_url('notifications') ?>">
+
+                        Lihat Semua Notifikasi
+
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- User -->
+        <div class="dropdown">
+
+            <a href="#"
+                class="ult-user-menu"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+
+                <img src="<?= base_url($user['photo'] ?? 'assets/img/avatar.svg') ?>"
+                    alt="User">
+
+                <span class="d-none d-md-inline">
+
+                    <?= esc($user['full_name'] ?? 'User') ?>
+
+                </span>
+
+                <i class="fas fa-chevron-down small"></i>
 
             </a>
 
             <ul class="dropdown-menu dropdown-menu-end shadow">
 
                 <li>
+                    <a class="dropdown-item"
+                        href="<?= site_url('profile') ?>">
 
-                    <h6 class="dropdown-header">
-
-                        Akun
-
-                    </h6>
-
-                </li>
-
-                <li>
-
-                    <a
-                        class="dropdown-item"
-                        href="#">
-
-                        <i class="bi bi-person-circle me-2"></i>
-
-                        Profil Saya
+                        <i class="fas fa-user me-2"></i>
+                        Profil
 
                     </a>
-
                 </li>
 
                 <li>
-
-                    <a
-                        class="dropdown-item"
-                        href="#">
-
-                        <i class="bi bi-gear me-2"></i>
-
-                        Pengaturan
-
-                    </a>
-
-                </li>
-
-                <li>
-
                     <hr class="dropdown-divider">
-
                 </li>
 
                 <li>
+                    <a class="dropdown-item text-danger"
+                        href="<?= site_url('logout') ?>">
 
-                    <a
-                        class="dropdown-item text-danger"
-                        href="<?= base_url('logout') ?>">
-
-                        <i class="bi bi-box-arrow-right me-2"></i>
-
+                        <i class="fas fa-sign-out-alt me-2"></i>
                         Logout
 
                     </a>
-
                 </li>
 
             </ul>
@@ -134,4 +120,4 @@
 
     </div>
 
-</nav>
+</header>

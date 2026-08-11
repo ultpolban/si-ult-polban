@@ -6,15 +6,15 @@ Sistem Informasi Unit Layanan Terpadu (SI-ULT) Politeknik Negeri Bandung merupak
 
 ## Kelompok
 
-| No | Nama | Tugas |
-|----|------|-------|
-| 1 | Iqbal | Backend 1 (Login, Logout, Registrasi, Role & Permission, Manajemen User) |
-| 2 | Anggi | Backend 2 (Manajemen Layanan, Kategori Layanan, Unit Kerja, Pengajuan Tiket, Upload Dokumen) |
-| 3 | Febriyan | Backend 3 (Verifikasi Tiket, Disposisi Tiket, Dashboard Backend, Laporan, Statistik, Notifikasi) |
-| 4 | Aditia | Frontend 1 (Landing Page, Beranda, Daftar Layanan, Detail Layanan, FAQ, Kontak) |
-| 5 | Raffi | Frontend 2 (Dashboard Pemohon, Form Pengajuan Layanan, Tracking Status Tiket, Profil Pengguna) |
-| 6 | Alvin | Frontend 3 (Dashboard Petugas ULT, Dashboard Unit Tujuan, Halaman Verifikasi, Disposisi, Update Status Tiket) |
-| 7 | Rizky | Frontend 4 (Dashboard Admin, Dashboard Pimpinan, Manajemen User, Manajemen Layanan, Grafik Statistik, Halaman Laporan) |
+| No  | Nama     | Tugas                                                                                                                  |
+| --- | -------- | ---------------------------------------------------------------------------------------------------------------------- |
+| 1   | Iqbal    | Backend 1 (Login, Logout, Registrasi, Role & Permission, Manajemen User)                                               |
+| 2   | Anggi    | Backend 2 (Manajemen Layanan, Kategori Layanan, Unit Layanan, Pengajuan Tiket, Upload Dokumen)                         |
+| 3   | Febriyan | Backend 3 (Verifikasi Tiket, Disposisi Tiket, Dashboard Backend, Laporan, Statistik, Notifikasi)                       |
+| 4   | Aditia   | Frontend 1 (Landing Page, Beranda, Daftar Layanan, Detail Layanan, FAQ, Kontak)                                        |
+| 5   | Raffi    | Frontend 2 (Dashboard Pemohon, Form Pengajuan Layanan, Tracking Status Tiket, Profil Pengguna)                         |
+| 6   | Alvin    | Frontend 3 (Dashboard Petugas ULT, Dashboard Unit Tujuan, Halaman Verifikasi, Disposisi, Update Status Tiket)          |
+| 7   | Rizky    | Frontend 4 (Dashboard Admin, Dashboard Pimpinan, Manajemen User, Manajemen Layanan, Grafik Statistik, Halaman Laporan) |
 
 ---
 
@@ -46,13 +46,13 @@ Sistem Informasi Unit Layanan Terpadu (SI-ULT) Politeknik Negeri Bandung merupak
 
 # Role Pengguna
 
-| Role | Hak Akses |
-|------|-----------|
-| Admin | Mengelola seluruh pengguna dan sistem |
-| Petugas ULT | Mengelola layanan |
-| Unit Kerja | Menindaklanjuti layanan |
-| Pemohon | Mengajukan layanan |
-| Pimpinan | Melihat laporan |
+| Role         | Hak Akses                             |
+| ------------ | ------------------------------------- |
+| Admin        | Mengelola seluruh pengguna dan sistem |
+| Petugas ULT  | Mengelola layanan                     |
+| Unit Layanan | Menindaklanjuti layanan               |
+| Pemohon      | Mengajukan layanan                    |
+| Pimpinan     | Melihat laporan                       |
 
 ---
 
@@ -152,9 +152,27 @@ php spark migrate
 
 ## 6. Jalankan Seeder
 
+Jalankan seluruh seeder sekaligus (role, permission, data akademik, layanan, dan admin default):
+
+```bash
+php spark db:seed DatabaseSeeder
+```
+
+Atau jalankan seeder per modul:
+
 ```bash
 php spark db:seed RoleSeeder
-php spark db:seed UserSeeder
+php spark db:seed PermissionSeeder
+php spark db:seed RolePermissionSeeder
+php spark db:seed ApplicantTypeSeeder
+php spark db:seed DepartmentSeeder
+php spark db:seed StudyProgramSeeder
+php spark db:seed ClassSeeder
+php spark db:seed ServiceUnitSeeder
+php spark db:seed ServiceCategorySeeder
+php spark db:seed ServiceSeeder
+php spark db:seed ServiceRequirementSeeder
+php spark db:seed AdminSeeder
 ```
 
 ---
@@ -175,12 +193,12 @@ http://localhost:8080
 
 # Login Default
 
-## Admin
+## Super Administrator
 
 Email
 
 ```
-admin@ultpolban.ac.id
+superadmin@polban.ac.id
 ```
 
 Password

@@ -1,155 +1,183 @@
-<?= $this->extend('layouts/main') ?>
+<!DOCTYPE html>
+<html lang="id">
 
-<?= $this->section('content') ?>
+<head>
 
-<div class="container-fluid">
+    <meta charset="UTF-8">
 
-    <div class="row justify-content-center">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <div class="col-xl-10">
+    <title><?= esc($title ?? 'Registrasi') ?> - SI ULT POLBAN</title>
 
-            <div class="card shadow border-0">
+    <link rel="icon" href="<?= base_url('assets/img/favicon.svg') ?>">
 
-                <div class="card-header bg-primary text-white">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
-                    <div class="d-flex justify-content-between align-items-center">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-                        <div>
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
 
-                            <h4 class="mb-1">
+</head>
 
-                                <i class="bi bi-person-plus-fill"></i>
+<body>
 
-                                Registrasi Pemohon
+    <div class="auth-page">
 
-                            </h4>
+        <div class="auth-container auth-register">
 
-                            <small>
+            <div class="auth-card">
 
-                                Silakan lengkapi seluruh data sesuai jenis pemohon.
+                <!-- Left -->
+                <div class="auth-left">
 
-                            </small>
+                    <div>
 
-                        </div>
+                        <span class="system-badge">
+
+                            <i class="fas fa-star me-1"></i>
+
+                            Layanan Terpadu
+
+                        </span>
+
+                        <h1>
+
+                            Bergabung Dengan<br>
+
+                            SI ULT POLBAN
+
+                        </h1>
+
+                        <p>
+
+                            Daftar sebagai pemohon layanan.
+
+                            Lengkapi data sesuai jenis pemohon Anda.
+
+                        </p>
+
+                    </div>
+
+                    <div class="auth-icon">
+
+                        <i class="fas fa-user-plus"></i>
 
                     </div>
 
                 </div>
 
-                <div class="card-body">
+                <!-- Right -->
+                <div class="auth-right">
+
+                    <div class="text-center mb-4">
+
+                        <img src="<?= base_url('assets/images/logo.svg') ?>"
+                            alt="Logo"
+                            width="64">
+
+                        <h2 class="mt-3 mb-1">Buat Akun Pemohon</h2>
+
+                        <p>Pilih jenis pemohon untuk menyesuaikan formulir</p>
+
+                    </div>
 
                     <?php if (session()->getFlashdata('error')) : ?>
 
                         <div class="alert alert-danger">
 
-                            <?= session()->getFlashdata('error') ?>
+                            <i class="fas fa-exclamation-circle me-2"></i>
+
+                            <?= esc(session()->getFlashdata('error')) ?>
 
                         </div>
 
                     <?php endif; ?>
 
-                    <?php if (session()->getFlashdata('errors')) : ?>
+                    <?php if (session()->getFlashdata('success')) : ?>
 
-                        <div class="alert alert-danger">
+                        <div class="alert alert-success">
 
-                            <ul class="mb-0">
+                            <i class="fas fa-check-circle me-2"></i>
 
-                                <?php foreach (session()->getFlashdata('errors') as $error) : ?>
+                            <?= esc(session()->getFlashdata('success')) ?>
 
-                                    <li><?= esc($error) ?></li>
+                        </div>
+
+                    <?php endif; ?>
+
+                    <form action="<?= base_url('register') ?>"
+                        method="post"
+                        id="registerForm">
+
+                        <?= csrf_field(); ?>
+
+                        <!-- Step 1: Pilih Jenis Pemohon -->
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                Jenis Pemohon <span class="text-danger">*</span>
+
+                            </label>
+
+                            <select
+                                name="applicant_type_id"
+                                id="applicantType"
+                                class="form-select"
+                                required>
+
+                                <option value="">-- Pilih Jenis Pemohon --</option>
+
+                                <?php foreach ($applicantTypes as $at): ?>
+
+                                    <option value="<?= $at['id'] ?>"
+                                        data-code="<?= esc($at['code']) ?>"
+                                        <?= old('applicant_type_id') == $at['id'] ? 'selected' : '' ?>>
+
+                                        <?= esc($at['name']) ?>
+
+                                    </option>
 
                                 <?php endforeach; ?>
 
-                            </ul>
+                            </select>
 
                         </div>
 
-                    <?php endif; ?>
+                        <!-- Form dinamis per jenis pemohon -->
+                        <div id="dynamicFields">
 
-                    <form
-                        action="<?= base_url('register/store') ?>"
-                        method="post"
-                        enctype="multipart/form-data">
-
-                        <?= csrf_field() ?>
-
-                        <!-- ================================================= -->
-                        <!-- DATA AKUN -->
-                        <!-- ================================================= -->
-
-                        <?= $this->include('auth/partials/account') ?>
-
-                        <!-- ================================================= -->
-                        <!-- DATA PRIBADI -->
-                        <!-- ================================================= -->
-
-                        <?= $this->include('auth/partials/personal') ?>
-
-                        <!-- ================================================= -->
-                        <!-- DATA KHUSUS PEMOHON -->
-                        <!-- ================================================= -->
-
-                        <?= $this->include('auth/partials/mahasiswa') ?>
-
-                        <?= $this->include('auth/partials/dosen') ?>
-
-                        <?= $this->include('auth/partials/tendik') ?>
-
-                        <?= $this->include('auth/partials/alumni') ?>
-
-                        <?= $this->include('auth/partials/orangtua') ?>
-
-                        <?= $this->include('auth/partials/mitra') ?>
-
-                        <?= $this->include('auth/partials/publik') ?>
-
-                        <!-- ================================================= -->
-                        <!-- BUTTON -->
-                        <!-- ================================================= -->
-
-                        <div class="card border-0 bg-light mt-4">
-
-                            <div class="card-body">
-
-                                <div class="d-flex justify-content-end gap-2">
-
-                                    <a
-                                        href="<?= base_url('login') ?>"
-                                        class="btn btn-secondary">
-
-                                        <i class="bi bi-arrow-left"></i>
-
-                                        Kembali
-
-                                    </a>
-
-                                    <button
-                                        type="reset"
-                                        class="btn btn-warning">
-
-                                        <i class="bi bi-arrow-clockwise"></i>
-
-                                        Reset
-
-                                    </button>
-
-                                    <button
-                                        type="submit"
-                                        class="btn btn-primary">
-
-                                        <i class="bi bi-check-circle-fill"></i>
-
-                                        Daftar
-
-                                    </button>
-
-                                </div>
-
-                            </div>
+                            <?= $this->include('auth/_register_fields') ?>
 
                         </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100 mt-2">
+
+                            <i class="fas fa-user-plus me-2"></i>
+
+                            Daftar
+
+                        </button>
 
                     </form>
+
+                    <div class="text-center mt-3">
+
+                        <small class="text-muted">
+
+                            Sudah punya akun?
+
+                            <a href="<?= base_url('login') ?>">
+
+                                Login di sini
+
+                            </a>
+
+                        </small>
+
+                    </div>
 
                 </div>
 
@@ -159,13 +187,39 @@
 
     </div>
 
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<?= $this->endSection() ?>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+    <script>
+        $(function() {
 
-<?= $this->section('script') ?>
+            const fieldsUrl = "<?= base_url('register/fields') ?>";
 
-<?= $this->include('auth/partials/script') ?>
+            $('#applicantType').on('change', function() {
 
-<?= $this->endSection() ?>
+                const id = $(this).val();
+
+                if (!id) {
+                    $('#dynamicFields').html('<p class="text-muted text-center py-3">Pilih jenis pemohon terlebih dahulu.</p>');
+                    return;
+                }
+
+                $.get(fieldsUrl + '/' + id, function(res) {
+
+                    if (res) {
+
+                        $('#dynamicFields').html(res);
+
+                    }
+
+                });
+
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

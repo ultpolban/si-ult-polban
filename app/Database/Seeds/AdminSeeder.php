@@ -8,43 +8,67 @@ class AdminSeeder extends Seeder
 {
     public function run()
     {
-        $db = \Config\Database::connect();
-
-        // Jangan membuat admin dua kali
-        $admin = $db->table('users')
-            ->where('personal_email', 'admin@ultpolban.ac.id')
+        $role = $this->db
+            ->table('roles')
+            ->where('code', 'SUPER_ADMIN')
             ->get()
-            ->getRow();
+            ->getRowArray();
 
-        if ($admin) {
-            echo "Admin sudah ada.";
+        if (!$role) {
+            echo "Role SUPER_ADMIN tidak ditemukan." . PHP_EOL;
             return;
         }
 
-        $db->table('users')->insert([
+        $email = 'superadmin@polban.ac.id';
 
-            'role_id' => 1,
+        $user = $this->db
+            ->table('users')
+            ->where('email', $email)
+            ->get()
+            ->getRowArray();
 
-            // Karena user_type_id NOT NULL,
-            // gunakan Mahasiswa (id = 1) sementara.
-            'user_type_id' => 1,
+        if ($user) {
+            echo "Super Administrator sudah tersedia." . PHP_EOL;
+            return;
+        }
 
-            'full_name' => 'Administrator',
+        $now = date('Y-m-d H:i:s');
 
-            'personal_email' => 'admin@ultpolban.ac.id',
+        $this->db->table('users')->insert([
 
-            'institution_email' => 'admin@ultpolban.ac.id',
+            'role_id' => $role['id'],
+
+            'full_name' => 'Super Administrator',
+
+            'identity_number' => 'ADM001',
+
+            'phone_number' => '081234567890',
+
+            'email' => $email,
 
             'password' => password_hash('admin123', PASSWORD_DEFAULT),
 
-            'is_active' => 1,
+            'profile_photo' => null,
 
-            'created_at' => date('Y-m-d H:i:s'),
+            'is_active' => true,
 
-            'updated_at' => date('Y-m-d H:i:s'),
+            'last_login' => null,
+
+            'remember_token' => null,
+
+            'email_verified_at' => $now,
+
+            'created_at' => $now,
+
+            'updated_at' => $now,
 
         ]);
 
-        echo "Admin berhasil dibuat.";
+        echo "======================================" . PHP_EOL;
+        echo " Super Administrator berhasil dibuat " . PHP_EOL;
+        echo "======================================" . PHP_EOL;
+        echo "Email    : superadmin@polban.ac.id" . PHP_EOL;
+        echo "Password : admin123" . PHP_EOL;
+        echo "======================================" . PHP_EOL;
     }
 }

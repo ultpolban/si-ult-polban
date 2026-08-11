@@ -4,61 +4,79 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class UnitLayanan extends Migration
+class CreateMasterDepartmentsTable extends Migration
 {
     public function up()
     {
         $this->forge->addField([
+
             'id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'kode' => [
+
+            'code' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '50',
-                'unique'     => true,
+                'constraint' => 10,
             ],
-            'nama' => [
+
+            'name' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '255',
+                'constraint' => 150,
             ],
-            'email' => [
+
+            'short_name' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => 30,
                 'null'       => true,
             ],
-            'telepon' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '20',
-                'null'       => true,
+
+            'description' => [
+                'type' => 'TEXT',
+                'null' => true,
             ],
-            'status' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Aktif', 'Nonaktif'],
-                'default'    => 'Aktif',
+
+            'sort_order' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'default'    => 1,
             ],
+
+            'is_active' => [
+                'type'    => 'BOOLEAN',
+                'default' => true,
+            ],
+
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
+
             'updated_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
+
             'deleted_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
+
         ]);
-        
+
         $this->forge->addKey('id', true);
-        $this->forge->createTable('unit_layanan');
+
+        $this->forge->addUniqueKey('code');
+
+        $this->forge->addKey('is_active');
+
+        $this->forge->createTable('master_departments', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('unit_layanan');
+        $this->forge->dropTable('master_departments', true);
     }
 }

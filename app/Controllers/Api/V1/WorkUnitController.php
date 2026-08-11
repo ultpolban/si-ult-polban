@@ -6,7 +6,7 @@ use App\Models\WorkUnitModel;
 
 class WorkUnitController extends BaseApiController
 {
-    protected WorkUnitModel $model;
+    protected $model;
 
     public function __construct()
     {

@@ -39,7 +39,7 @@
 
             <a
                 href="#"
-                class="text-decoration-none text-dark d-flex align-items-center"
+                class="text-decoration-none text-white d-flex align-items-center"
                 data-bs-toggle="dropdown">
 
                 <div class="avatar me-3">

@@ -1,6 +1,16 @@
 <?= $this->extend('layouts/template') ?>
 
 <?= $this->section('content') ?>
+<?php
+/**
+ * @var int $totalUser
+ * @var int $userAktif
+ * @var int $petugasUlt
+ * @var int $pemohon
+ * @var array $recentUsers
+ */
+?>
+<?= $this->extend('layouts/template') ?>
 
 <div class="container-fluid py-2">
     <!-- Header -->

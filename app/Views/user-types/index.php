@@ -6,13 +6,13 @@
 
     <div>
 
-        <h2 class="fw-bold text-white mb-1">
+        <h2 class="fw-bold text-dark mb-1">
 
             Management Jenis Pemohon
 
         </h2>
 
-        <small class="text-white-50">
+        <small class="text-muted">
 
             Kelola seluruh jenis pemohon pada SI-ULT POLBAN
 
@@ -62,33 +62,7 @@
 
 <?php endif; ?>
 
-<div class="row mb-4">
 
-    <div class="col-md-3">
-
-        <div class="card stat-card">
-
-            <div class="card-body">
-
-                <h6 class="text-uppercase text-white-50">
-
-                    Total Jenis Pemohon
-
-                </h6>
-
-                <h2 class="fw-bold text-warning">
-
-                    <?= $totalType ?>
-
-                </h2>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 
 <div class="card mb-4">
 

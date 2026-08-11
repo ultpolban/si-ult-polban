@@ -3,9 +3,9 @@
     <!-- Sidebar Header -->
     <div class="sidebar-header">
 
-        <div class="logo-icon">
+        <div class="logo-icon" style="background: transparent;">
 
-            <i class="bi bi-buildings-fill"></i>
+            <img src="<?= base_url('assets/images/ULT POLBAN.png') ?>" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0px 0px 8px rgba(255,255,255,0.8));">
 
         </div>
 
@@ -23,7 +23,7 @@
     <div class="sidebar-menu">
 
         <span class="menu-title">
-            MAIN MENU
+            MANAGEMENT
         </span>
 
         <a href="<?= base_url('dashboard') ?>"
@@ -38,18 +38,27 @@
         <a href="<?= base_url('users') ?>"
             class="<?= service('uri')->getSegment(1) == 'users' ? 'active' : '' ?>">
 
-            <i class="bi bi-people-fill"></i>
+            <i class="bi bi-person-fill"></i>
 
-            Management User
+            User
 
         </a>
 
         <a href="<?= base_url('roles') ?>"
             class="<?= service('uri')->getSegment(1) == 'roles' ? 'active' : '' ?>">
 
-            <i class="bi bi-person-badge-fill"></i>
+            <i class="bi bi-shield-lock-fill"></i>
 
-            Management Role
+            Role
+
+        </a>
+
+        <a href="<?= base_url('permissions') ?>"
+            class="<?= service('uri')->getSegment(1) == 'permissions' ? 'active' : '' ?>">
+
+            <i class="bi bi-key-fill"></i>
+
+            Permission
 
         </a>
 
@@ -86,15 +95,6 @@
 
         </a>
 
-        <a href="<?= base_url('work-units') ?>"
-            class="<?= service('uri')->getSegment(1) == 'work-units' ? 'active' : '' ?>">
-
-            <i class="bi bi-building-fill-gear"></i>
-
-            Unit Kerja
-
-        </a>
-
         <a href="<?= base_url('classes') ?>"
             class="<?= service('uri')->getSegment(1) == 'classes' ? 'active' : '' ?>">
 
@@ -104,26 +104,133 @@
 
         </a>
 
-        <hr>
+        <a href="<?= base_url('work-units') ?>"
+            class="<?= service('uri')->getSegment(1) == 'work-units' ? 'active' : '' ?>">
 
-        <span class="menu-title">
-            ACCOUNT
-        </span>
+            <i class="bi bi-building-fill-gear"></i>
 
-        <a href="#">
-
-            <i class="bi bi-person-circle"></i>
-
-            Profil Saya
+            Unit Kerja
 
         </a>
 
-        <a href="#">
+        <a href="<?= base_url('unit-layanan') ?>"
+            class="<?= service('uri')->getSegment(1) == 'unit-layanan' ? 'active' : '' ?>">
 
-            <i class="bi bi-gear-fill"></i>
+            <i class="bi bi-building-fill"></i>
 
-            Pengaturan
+            Unit Layanan
 
+        </a>
+
+        <a href="<?= base_url('kategori-layanan') ?>"
+            class="<?= service('uri')->getSegment(1) == 'kategori-layanan' ? 'active' : '' ?>">
+
+            <i class="bi bi-tags-fill"></i>
+
+            Kategori Layanan
+
+        </a>
+
+        <a href="<?= base_url('layanan') ?>"
+            class="<?= service('uri')->getSegment(1) == 'layanan' ? 'active' : '' ?>">
+
+            <i class="bi bi-clipboard-check"></i>
+
+            Layanan
+
+        </a>
+
+        <a href="<?= base_url('persyaratan-layanan') ?>"
+            class="<?= service('uri')->getSegment(1) == 'persyaratan-layanan' ? 'active' : '' ?>">
+
+            <i class="bi bi-journal-text"></i>
+
+            Persyaratan Layanan
+
+        </a>
+
+        <hr>
+
+        <span class="menu-title">
+            LAYANAN
+        </span>
+
+        <a href="<?= base_url('pengajuan-layanan') ?>"
+            class="<?= service('uri')->getSegment(1) == 'pengajuan-layanan' ? 'active' : '' ?>">
+
+            <i class="bi bi-send-fill"></i>
+
+            Pengajuan Layanan
+
+        </a>
+
+        <a href="<?= base_url('verifikasi') ?>"
+            class="<?= service('uri')->getSegment(1) == 'verifikasi' ? 'active' : '' ?>">
+
+            <i class="bi bi-patch-check-fill"></i>
+
+            Verifikasi
+
+        </a>
+
+        <hr>
+
+        <span class="menu-title">
+            SYSTEM
+        </span>
+
+        <a href="<?= base_url('notifikasi') ?>"
+            class="<?= service('uri')->getSegment(1) == 'notifikasi' ? 'active' : '' ?>">
+            <i class="bi bi-bell-fill"></i>
+            Notifikasi
+        </a>
+
+        <a href="<?= base_url('activity-log') ?>"
+            class="<?= service('uri')->getSegment(1) == 'activity-log' ? 'active' : '' ?>">
+            <i class="bi bi-clock-history"></i>
+            Activity Log
+        </a>
+
+        <hr>
+
+        <span class="menu-title">
+            TIKET
+        </span>
+
+        <a href="<?= base_url('tiket/manajemen') ?>"
+            class="<?= service('uri')->getSegment(2) == 'manajemen' ? 'active' : '' ?>">
+            <i class="bi bi-view-stacked"></i>
+            Manajemen Tiket
+        </a>
+
+        <a href="<?= base_url('tiket/buat') ?>"
+            class="<?= service('uri')->getSegment(2) == 'buat' ? 'active' : '' ?>">
+            <i class="bi bi-plus-circle-fill"></i>
+            Buat Tiket
+        </a>
+
+        <a href="<?= base_url('tiket/lacak') ?>"
+            class="<?= service('uri')->getSegment(2) == 'lacak' ? 'active' : '' ?>">
+            <i class="bi bi-search"></i>
+            Lacak Tiket
+        </a>
+
+        <a href="<?= base_url('laporan') ?>"
+            class="<?= service('uri')->getSegment(1) == 'laporan' ? 'active' : '' ?>">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            Laporan
+        </a>
+
+        <a href="<?= base_url('statistik') ?>"
+            class="<?= service('uri')->getSegment(1) == 'statistik' ? 'active' : '' ?>">
+            <i class="bi bi-pie-chart-fill"></i>
+            Statistik
+        </a>
+
+        <a href="<?= base_url('profil') ?>"
+            class="<?= service('uri')->getSegment(1) == 'profil' ? 'active' : '' ?>">
+            <i class="bi bi-person-gear"></i>
+            Profil
         </a>
 
         <a href="<?= base_url('logout') ?>">

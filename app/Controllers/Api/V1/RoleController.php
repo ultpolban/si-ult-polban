@@ -6,7 +6,7 @@ use App\Models\RoleModel;
 
 class RoleController extends BaseApiController
 {
-    protected RoleModel $model;
+    protected $model;
 
     public function __construct()
     {

@@ -12,7 +12,7 @@ class AdminSeeder extends Seeder
 
         // Jangan membuat admin dua kali
         $admin = $db->table('users')
-            ->where('personal_email', 'admin@polban.ac.id')
+            ->where('personal_email', 'admin@ultpolban.ac.id')
             ->get()
             ->getRow();
 
@@ -31,9 +31,9 @@ class AdminSeeder extends Seeder
 
             'full_name' => 'Administrator',
 
-            'personal_email' => 'admin@polban.ac.id',
+            'personal_email' => 'admin@ultpolban.ac.id',
 
-            'institution_email' => 'admin@polban.ac.id',
+            'institution_email' => 'admin@ultpolban.ac.id',
 
             'password' => password_hash('admin123', PASSWORD_DEFAULT),
 

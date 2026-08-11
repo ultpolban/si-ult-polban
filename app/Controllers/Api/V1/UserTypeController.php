@@ -6,7 +6,7 @@ use App\Models\UserTypeModel;
 
 class UserTypeController extends BaseApiController
 {
-    protected UserTypeModel $model;
+    protected $model;
 
     public function __construct()
     {

@@ -138,7 +138,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
             $routes->get('edit/(:num)', 'RoleController::edit/$1');
             $routes->post('update/(:num)', 'RoleController::update/$1');
 
-            $routes->get('delete/(:num)', 'RoleController::delete/$1');
+            $routes->post('delete/(:num)', 'RoleController::delete/$1');
         });
 
         /*
@@ -155,7 +155,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
             $routes->get('edit/(:num)', 'UserTypeController::edit/$1');
             $routes->post('update/(:num)', 'UserTypeController::update/$1');
 
-            $routes->get('delete/(:num)', 'UserTypeController::delete/$1');
+            $routes->post('delete/(:num)', 'UserTypeController::delete/$1');
         });
 
         /*
@@ -172,7 +172,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
             $routes->get('edit/(:num)', 'DepartmentController::edit/$1');
             $routes->post('update/(:num)', 'DepartmentController::update/$1');
 
-            $routes->get('delete/(:num)', 'DepartmentController::delete/$1');
+            $routes->post('delete/(:num)', 'DepartmentController::delete/$1');
         });
 
         /*
@@ -189,7 +189,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
             $routes->get('edit/(:num)', 'StudyProgramController::edit/$1');
             $routes->post('update/(:num)', 'StudyProgramController::update/$1');
 
-            $routes->get('delete/(:num)', 'StudyProgramController::delete/$1');
+            $routes->post('delete/(:num)', 'StudyProgramController::delete/$1');
         });
 
         /*
@@ -206,10 +206,50 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
             $routes->get('edit/(:num)', 'WorkUnitController::edit/$1');
             $routes->post('update/(:num)', 'WorkUnitController::update/$1');
 
-            $routes->get('delete/(:num)', 'WorkUnitController::delete/$1');
+            $routes->post('delete/(:num)', 'WorkUnitController::delete/$1');
+        });
+
+        // Kategori Layanan
+        $routes->group('kategori-layanan', function($routes) {
+            $routes->get('/', 'KategoriLayananController::index');
+            $routes->post('store', 'KategoriLayananController::store');
+            $routes->post('update/(:num)', 'KategoriLayananController::update/$1');
+            $routes->get('delete/(:num)', 'KategoriLayananController::delete/$1');
+        });
+
+        // Layanan
+        $routes->group('layanan', function($routes) {
+            $routes->get('/', 'LayananController::index');
+            $routes->post('store', 'LayananController::store');
+            $routes->post('update/(:num)', 'LayananController::update/$1');
+            $routes->get('delete/(:num)', 'LayananController::delete/$1');
+        });
+
+        // Persyaratan Layanan
+        $routes->group('persyaratan-layanan', function($routes) {
+            $routes->get('/', 'PersyaratanLayananController::index');
+            $routes->post('store', 'PersyaratanLayananController::store');
+            $routes->post('update/(:num)', 'PersyaratanLayananController::update/$1');
+            $routes->get('delete/(:num)', 'PersyaratanLayananController::delete/$1');
         });
     });
 });
+
+// Unit Layanan
+$routes->group('unit-layanan', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'UnitLayananController::index');
+    $routes->post('store', 'UnitLayananController::store');
+    $routes->post('update/(:num)', 'UnitLayananController::update/$1');
+    $routes->get('delete/(:num)', 'UnitLayananController::delete/$1');
+});
+$routes->group('pengajuan-layanan', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'PengajuanLayananController::index');
+    $routes->get('create', 'PengajuanLayananController::create');
+    $routes->post('store', 'PengajuanLayananController::store');
+});
+
+$routes->get('verifikasi', 'VerifikasiController::index', ['filter' => 'auth']);
+$routes->get('activity-log', 'ActivityLogController::index', ['filter' => 'auth']);
 
 $routes->get('study-programs/by-department/(:num)', 'StudyProgramController::byDepartment/$1');
 $routes->get('users/partial/(:any)', 'UserController::partial/$1');

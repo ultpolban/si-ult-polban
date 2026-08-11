@@ -4,12 +4,12 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h4 class="mb-0 text-primary">Master Layanan</h4>
-        <small class="text-muted">Kelola data master layanan.</small>
+        <h4 class="mb-0 text-primary">Master Persyaratan Layanan</h4>
+        <small class="text-muted">Kelola persyaratan setiap layanan.</small>
     </div>
     <div>
         <button class="btn btn-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#modalTambah">
-            <i class="bi bi-plus-lg me-1"></i> Tambah Layanan
+            <i class="bi bi-plus-lg me-1"></i> Tambah Persyaratan
         </button>
     </div>
 </div>
@@ -25,7 +25,7 @@
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <div class="w-100">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Cari layanan...">
+                <input type="text" class="form-control" placeholder="Cari persyaratan...">
                 <button class="btn btn-primary" type="button" style="width: 100px;">
                     <i class="bi bi-search me-1"></i> Cari
                 </button>
@@ -39,38 +39,36 @@
                 <thead class="bg-light">
                     <tr>
                         <th class="ps-4">No</th>
-                        <th>Unit Layanan</th>
-                        <th>Kategori</th>
-                        <th>Kode</th>
-                        <th>Nama Layanan</th>
-                        <th>SLA (Jam)</th>
-                        <th>Online</th>
+                        <th>Layanan</th>
+                        <th>Persyaratan</th>
+                        <th>Tipe File</th>
+                        <th>Ukuran</th>
+                        <th>Wajib</th>
                         <th>Status</th>
                         <th class="pe-4 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (empty($layanan)) : ?>
+                    <?php if (empty($persyaratan)) : ?>
                         <tr>
-                            <td colspan="9" class="text-center py-4 text-muted">
-                                Belum ada data layanan.
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                Belum ada data persyaratan.
                             </td>
                         </tr>
                     <?php else : ?>
-                        <?php foreach ($layanan as $key => $row) : ?>
+                        <?php foreach ($persyaratan as $key => $row) : ?>
                             <tr>
                                 <td class="ps-4"><?= $key + 1 ?></td>
-                                <td><?= esc($row['unit_nama'] ?? '-') ?></td>
-                                <td><?= esc($row['kategori_nama'] ?? '-') ?></td>
-                                <td><?= esc($row['kode']) ?></td>
-                                <td><?= esc($row['nama']) ?></td>
-                                <td><?= esc($row['sla']) ?> Jam</td>
+                                <td><?= esc($row['layanan_nama'] ?? '-') ?></td>
+                                <td><?= esc($row['persyaratan']) ?></td>
+                                <td><?= esc($row['tipe_file']) ?></td>
+                                <td><?= esc($row['ukuran']) ?></td>
                                 <td>
                                     <?php 
                                         $on = 'bg-secondary';
-                                        if ($row['online'] == 'Online') $on = 'bg-primary';
+                                        if ($row['wajib'] == 'Wajib') $on = 'bg-primary';
                                     ?>
-                                    <span class="badge <?= $on ?>"><?= $row['online'] ?></span>
+                                    <span class="badge <?= $on ?> rounded-pill px-3"><?= $row['wajib'] ?></span>
                                 </td>
                                 <td>
                                     <?php 
@@ -84,17 +82,16 @@
                                         <button type="button" class="btn btn-info text-white" title="View"><i class="bi bi-eye"></i></button>
                                         <button type="button" class="btn btn-warning text-dark btn-edit"
                                             data-id="<?= $row['id'] ?>"
-                                            data-unit="<?= $row['unit_layanan_id'] ?>"
-                                            data-kategori="<?= $row['kategori_layanan_id'] ?>"
-                                            data-kode="<?= esc($row['kode']) ?>"
-                                            data-nama="<?= esc($row['nama']) ?>"
-                                            data-sla="<?= esc($row['sla']) ?>"
-                                            data-online="<?= esc($row['online']) ?>"
+                                            data-layanan="<?= $row['layanan_id'] ?>"
+                                            data-persyaratan="<?= esc($row['persyaratan']) ?>"
+                                            data-tipe="<?= esc($row['tipe_file']) ?>"
+                                            data-ukuran="<?= esc($row['ukuran']) ?>"
+                                            data-wajib="<?= esc($row['wajib']) ?>"
                                             data-status="<?= $row['status'] ?>"
                                             title="Edit" data-bs-toggle="modal" data-bs-target="#modalEdit">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
-                                        <a href="<?= base_url('layanan/delete/' . $row['id']) ?>" class="btn btn-danger" title="Delete" onclick="return confirm('Yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></a>
+                                        <a href="<?= base_url('persyaratan-layanan/delete/' . $row['id']) ?>" class="btn btn-danger" title="Delete" onclick="return confirm('Yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -110,47 +107,38 @@
 <div class="modal fade" id="modalTambah" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="<?= base_url('layanan/store') ?>" method="POST">
+            <form action="<?= base_url('persyaratan-layanan/store') ?>" method="POST">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Layanan</h5>
+                    <h5 class="modal-title">Tambah Persyaratan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Unit Layanan</label>
-                        <select name="unit_layanan_id" class="form-select" required>
-                            <option value="">Pilih Unit...</option>
-                            <?php foreach ($units as $u) : ?>
-                                <option value="<?= $u['id'] ?>"><?= esc($u['nama']) ?></option>
+                        <label class="form-label">Layanan</label>
+                        <select name="layanan_id" class="form-select" required>
+                            <option value="">Pilih Layanan...</option>
+                            <?php foreach ($layanans as $l) : ?>
+                                <option value="<?= $l['id'] ?>"><?= esc($l['nama']) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Kategori Layanan</label>
-                        <select name="kategori_layanan_id" class="form-select" required>
-                            <option value="">Pilih Kategori...</option>
-                            <?php foreach ($kategori as $k) : ?>
-                                <option value="<?= $k['id'] ?>"><?= esc($k['nama']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <label class="form-label">Persyaratan</label>
+                        <input type="text" name="persyaratan" class="form-control" placeholder="Contoh: Bukti Pembayaran" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Kode Layanan</label>
-                        <input type="text" name="kode" class="form-control" required>
+                        <label class="form-label">Tipe File</label>
+                        <input type="text" name="tipe_file" class="form-control" placeholder="Contoh: pdf, png, jpg" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Nama Layanan</label>
-                        <input type="text" name="nama" class="form-control" required>
+                        <label class="form-label">Ukuran Maksimal (MB)</label>
+                        <input type="text" name="ukuran" class="form-control" placeholder="Contoh: 4096 MB" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">SLA (Jam)</label>
-                        <input type="number" name="sla" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Online</label>
-                        <select name="online" class="form-select" required>
-                            <option value="Online">Online</option>
-                            <option value="Offline">Offline</option>
+                        <label class="form-label">Wajib</label>
+                        <select name="wajib" class="form-select" required>
+                            <option value="Wajib">Wajib</option>
+                            <option value="Opsional">Opsional</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -176,45 +164,36 @@
         <div class="modal-content">
             <form action="" method="POST" id="formEdit">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Layanan</h5>
+                    <h5 class="modal-title">Edit Persyaratan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Unit Layanan</label>
-                        <select name="unit_layanan_id" id="edit_unit" class="form-select" required>
-                            <option value="">Pilih Unit...</option>
-                            <?php foreach ($units as $u) : ?>
-                                <option value="<?= $u['id'] ?>"><?= esc($u['nama']) ?></option>
+                        <label class="form-label">Layanan</label>
+                        <select name="layanan_id" id="edit_layanan" class="form-select" required>
+                            <option value="">Pilih Layanan...</option>
+                            <?php foreach ($layanans as $l) : ?>
+                                <option value="<?= $l['id'] ?>"><?= esc($l['nama']) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Kategori Layanan</label>
-                        <select name="kategori_layanan_id" id="edit_kategori" class="form-select" required>
-                            <option value="">Pilih Kategori...</option>
-                            <?php foreach ($kategori as $k) : ?>
-                                <option value="<?= $k['id'] ?>"><?= esc($k['nama']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <label class="form-label">Persyaratan</label>
+                        <input type="text" name="persyaratan" id="edit_persyaratan" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Kode Layanan</label>
-                        <input type="text" name="kode" id="edit_kode" class="form-control" required>
+                        <label class="form-label">Tipe File</label>
+                        <input type="text" name="tipe_file" id="edit_tipe" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Nama Layanan</label>
-                        <input type="text" name="nama" id="edit_nama" class="form-control" required>
+                        <label class="form-label">Ukuran Maksimal</label>
+                        <input type="text" name="ukuran" id="edit_ukuran" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">SLA (Jam)</label>
-                        <input type="number" name="sla" id="edit_sla" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Online</label>
-                        <select name="online" id="edit_online" class="form-select" required>
-                            <option value="Online">Online</option>
-                            <option value="Offline">Offline</option>
+                        <label class="form-label">Wajib</label>
+                        <select name="wajib" id="edit_wajib" class="form-select" required>
+                            <option value="Wajib">Wajib</option>
+                            <option value="Opsional">Opsional</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -241,14 +220,13 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
             const form = document.getElementById('formEdit');
-            form.action = '<?= base_url('layanan/update') ?>/' + id;
+            form.action = '<?= base_url('persyaratan-layanan/update') ?>/' + id;
             
-            document.getElementById('edit_unit').value = this.getAttribute('data-unit');
-            document.getElementById('edit_kategori').value = this.getAttribute('data-kategori');
-            document.getElementById('edit_kode').value = this.getAttribute('data-kode');
-            document.getElementById('edit_nama').value = this.getAttribute('data-nama');
-            document.getElementById('edit_sla').value = this.getAttribute('data-sla');
-            document.getElementById('edit_online').value = this.getAttribute('data-online');
+            document.getElementById('edit_layanan').value = this.getAttribute('data-layanan');
+            document.getElementById('edit_persyaratan').value = this.getAttribute('data-persyaratan');
+            document.getElementById('edit_tipe').value = this.getAttribute('data-tipe');
+            document.getElementById('edit_ukuran').value = this.getAttribute('data-ukuran');
+            document.getElementById('edit_wajib').value = this.getAttribute('data-wajib');
             document.getElementById('edit_status').value = this.getAttribute('data-status');
         });
     });

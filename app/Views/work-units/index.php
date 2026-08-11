@@ -6,11 +6,11 @@
 
     <div>
 
-        <h2 class="fw-bold text-white mb-1">
+        <h2 class="fw-bold text-dark mb-1">
             Management Unit Kerja
         </h2>
 
-        <small class="text-white-50">
+        <small class="text-muted">
             Kelola seluruh unit kerja SI-ULT POLBAN
         </small>
 
@@ -51,33 +51,7 @@
 
 <?php endif; ?>
 
-<div class="row mb-4">
 
-    <div class="col-lg-3">
-
-        <div class="card stat-card">
-
-            <div class="card-body">
-
-                <h6 class="text-uppercase text-white-50">
-
-                    Total Unit Kerja
-
-                </h6>
-
-                <h2 class="fw-bold text-warning">
-
-                    <?= $totalUnit ?>
-
-                </h2>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 
 <div class="card mb-4">
 

@@ -59,6 +59,16 @@ class Admin extends BaseController
         return view('admin/layanan', $data);
     }
 
+    public function kategoriLayanan()
+    {
+        return view('admin/kategori_layanan');
+    }
+
+    public function persyaratanLayanan()
+    {
+        return view('admin/persyaratan_layanan');
+    }
+
     public function laporan()
     {
         $data['laporan'] = [

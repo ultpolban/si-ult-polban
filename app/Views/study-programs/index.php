@@ -6,13 +6,13 @@
 
     <div>
 
-        <h2 class="fw-bold text-white mb-1">
+        <h2 class="fw-bold text-dark mb-1">
 
             Management Program Studi
 
         </h2>
 
-        <small class="text-white-50">
+        <small class="text-muted">
 
             Kelola seluruh Program Studi SI-ULT POLBAN
 

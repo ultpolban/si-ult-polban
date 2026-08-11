@@ -12,8 +12,8 @@
 
 <link
     rel="icon"
-    type="image/x-icon"
-    href="<?= base_url('favicon.ico') ?>">
+    type="image/png"
+    href="<?= base_url('assets/images/ULT POLBAN.png') ?>">
 
 <!-- Google Font -->
 

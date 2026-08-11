@@ -4,12 +4,12 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h4 class="mb-0 text-primary">Master Layanan</h4>
-        <small class="text-muted">Kelola data master layanan.</small>
+        <h4 class="mb-0 text-primary">Master Kategori Layanan</h4>
+        <small class="text-muted">Kelola data master kategori layanan.</small>
     </div>
     <div>
         <button class="btn btn-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#modalTambah">
-            <i class="bi bi-plus-lg me-1"></i> Tambah Layanan
+            <i class="bi bi-plus-lg me-1"></i> Tambah Kategori
         </button>
     </div>
 </div>
@@ -25,7 +25,7 @@
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <div class="w-100">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Cari layanan...">
+                <input type="text" class="form-control" placeholder="Cari kategori layanan...">
                 <button class="btn btn-primary" type="button" style="width: 100px;">
                     <i class="bi bi-search me-1"></i> Cari
                 </button>
@@ -40,38 +40,30 @@
                     <tr>
                         <th class="ps-4">No</th>
                         <th>Unit Layanan</th>
-                        <th>Kategori</th>
                         <th>Kode</th>
-                        <th>Nama Layanan</th>
-                        <th>SLA (Jam)</th>
-                        <th>Online</th>
+                        <th>Nama Kategori</th>
+                        <th>Icon</th>
+                        <th>Color</th>
                         <th>Status</th>
                         <th class="pe-4 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (empty($layanan)) : ?>
+                    <?php if (empty($kategori)) : ?>
                         <tr>
-                            <td colspan="9" class="text-center py-4 text-muted">
-                                Belum ada data layanan.
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                Belum ada kategori layanan.
                             </td>
                         </tr>
                     <?php else : ?>
-                        <?php foreach ($layanan as $key => $row) : ?>
+                        <?php foreach ($kategori as $key => $row) : ?>
                             <tr>
                                 <td class="ps-4"><?= $key + 1 ?></td>
                                 <td><?= esc($row['unit_nama'] ?? '-') ?></td>
-                                <td><?= esc($row['kategori_nama'] ?? '-') ?></td>
                                 <td><?= esc($row['kode']) ?></td>
                                 <td><?= esc($row['nama']) ?></td>
-                                <td><?= esc($row['sla']) ?> Jam</td>
-                                <td>
-                                    <?php 
-                                        $on = 'bg-secondary';
-                                        if ($row['online'] == 'Online') $on = 'bg-primary';
-                                    ?>
-                                    <span class="badge <?= $on ?>"><?= $row['online'] ?></span>
-                                </td>
+                                <td><?= esc($row['icon'] ?? '-') ?></td>
+                                <td><?= esc($row['color'] ?? '-') ?></td>
                                 <td>
                                     <?php 
                                         $bg = 'bg-danger';
@@ -85,16 +77,15 @@
                                         <button type="button" class="btn btn-warning text-dark btn-edit"
                                             data-id="<?= $row['id'] ?>"
                                             data-unit="<?= $row['unit_layanan_id'] ?>"
-                                            data-kategori="<?= $row['kategori_layanan_id'] ?>"
                                             data-kode="<?= esc($row['kode']) ?>"
                                             data-nama="<?= esc($row['nama']) ?>"
-                                            data-sla="<?= esc($row['sla']) ?>"
-                                            data-online="<?= esc($row['online']) ?>"
+                                            data-icon="<?= esc($row['icon']) ?>"
+                                            data-color="<?= esc($row['color']) ?>"
                                             data-status="<?= $row['status'] ?>"
                                             title="Edit" data-bs-toggle="modal" data-bs-target="#modalEdit">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
-                                        <a href="<?= base_url('layanan/delete/' . $row['id']) ?>" class="btn btn-danger" title="Delete" onclick="return confirm('Yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></a>
+                                        <a href="<?= base_url('kategori-layanan/delete/' . $row['id']) ?>" class="btn btn-danger" title="Delete" onclick="return confirm('Yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -110,9 +101,9 @@
 <div class="modal fade" id="modalTambah" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="<?= base_url('layanan/store') ?>" method="POST">
+            <form action="<?= base_url('kategori-layanan/store') ?>" method="POST">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Layanan</h5>
+                    <h5 class="modal-title">Tambah Kategori Layanan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -126,32 +117,20 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Kategori Layanan</label>
-                        <select name="kategori_layanan_id" class="form-select" required>
-                            <option value="">Pilih Kategori...</option>
-                            <?php foreach ($kategori as $k) : ?>
-                                <option value="<?= $k['id'] ?>"><?= esc($k['nama']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Kode Layanan</label>
+                        <label class="form-label">Kode Kategori</label>
                         <input type="text" name="kode" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Nama Layanan</label>
+                        <label class="form-label">Nama Kategori</label>
                         <input type="text" name="nama" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">SLA (Jam)</label>
-                        <input type="number" name="sla" class="form-control" required>
+                        <label class="form-label">Icon (Bootstrap Icon class)</label>
+                        <input type="text" name="icon" class="form-control" placeholder="bi-file-earmark">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Online</label>
-                        <select name="online" class="form-select" required>
-                            <option value="Online">Online</option>
-                            <option value="Offline">Offline</option>
-                        </select>
+                        <label class="form-label">Color (Hex/Class)</label>
+                        <input type="text" name="color" class="form-control" placeholder="#ffffff or bg-primary">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Status</label>
@@ -176,7 +155,7 @@
         <div class="modal-content">
             <form action="" method="POST" id="formEdit">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Layanan</h5>
+                    <h5 class="modal-title">Edit Kategori Layanan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -190,32 +169,20 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Kategori Layanan</label>
-                        <select name="kategori_layanan_id" id="edit_kategori" class="form-select" required>
-                            <option value="">Pilih Kategori...</option>
-                            <?php foreach ($kategori as $k) : ?>
-                                <option value="<?= $k['id'] ?>"><?= esc($k['nama']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Kode Layanan</label>
+                        <label class="form-label">Kode Kategori</label>
                         <input type="text" name="kode" id="edit_kode" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Nama Layanan</label>
+                        <label class="form-label">Nama Kategori</label>
                         <input type="text" name="nama" id="edit_nama" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">SLA (Jam)</label>
-                        <input type="number" name="sla" id="edit_sla" class="form-control" required>
+                        <label class="form-label">Icon</label>
+                        <input type="text" name="icon" id="edit_icon" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Online</label>
-                        <select name="online" id="edit_online" class="form-select" required>
-                            <option value="Online">Online</option>
-                            <option value="Offline">Offline</option>
-                        </select>
+                        <label class="form-label">Color</label>
+                        <input type="text" name="color" id="edit_color" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Status</label>
@@ -241,14 +208,13 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
             const form = document.getElementById('formEdit');
-            form.action = '<?= base_url('layanan/update') ?>/' + id;
+            form.action = '<?= base_url('kategori-layanan/update') ?>/' + id;
             
             document.getElementById('edit_unit').value = this.getAttribute('data-unit');
-            document.getElementById('edit_kategori').value = this.getAttribute('data-kategori');
             document.getElementById('edit_kode').value = this.getAttribute('data-kode');
             document.getElementById('edit_nama').value = this.getAttribute('data-nama');
-            document.getElementById('edit_sla').value = this.getAttribute('data-sla');
-            document.getElementById('edit_online').value = this.getAttribute('data-online');
+            document.getElementById('edit_icon').value = this.getAttribute('data-icon');
+            document.getElementById('edit_color').value = this.getAttribute('data-color');
             document.getElementById('edit_status').value = this.getAttribute('data-status');
         });
     });

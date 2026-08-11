@@ -277,6 +277,107 @@ Ajukan Layanan
 
 </section>
 
+<!-- Statistik Pengunjung -->
+<section class="visitor-statistics py-5">
+
+    <div class="container">
+
+        <h2 class="section-title text-center mb-4">
+            Statistik Pengunjung
+        </h2>
+
+        <div class="row justify-content-center g-4">
+
+            <!-- Hari Ini -->
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar-day"></i>
+                    </div>
+
+                    <h3 class="counter">
+                        <?= $visitors_today; ?>
+                    </h3>
+
+                    <h5>Hari Ini</h5>
+
+                    <p>
+                        Pengunjung Hari Ini
+                    </p>
+
+                </div>
+            </div>
+
+            <!-- Minggu Ini -->
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar-week"></i>
+                    </div>
+
+                    <h3 class="counter">
+                        <?= $visitors_week; ?>
+                    </h3>
+
+                    <h5>Minggu Ini</h5>
+
+                    <p>
+                        Pengunjung Minggu Ini
+                    </p>
+
+                </div>
+            </div>
+
+            <!-- Bulan Ini -->
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar-month"></i>
+                    </div>
+
+                    <h3 class="counter">
+                        <?= $visitors_month; ?>
+                    </h3>
+
+                    <h5>Bulan Ini</h5>
+
+                    <p>
+                        Pengunjung Bulan Ini
+                    </p>
+
+                </div>
+            </div>
+
+            <!-- Tahun Ini -->
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar"></i>
+                    </div>
+
+                    <h3 class="counter">
+                        <?= $visitors_year; ?>
+                    </h3>
+
+                    <h5>Tahun Ini</h5>
+
+                    <p>
+                        Pengunjung Tahun <?= date('Y'); ?>
+                    </p>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
 <section class="py-5" id="statistik">
     <div class="container">
 
@@ -326,6 +427,8 @@ Ajukan Layanan
 
     </div>
 </section>
+
+
 
 
 

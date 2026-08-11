@@ -6,14 +6,66 @@ use App\Models\FaqModel;
 use App\Models\ServiceModel;
 use App\Models\RequirementModel;
 use App\Models\StatisticModel;
+use App\Models\VisitorModel;
 
 class Home extends BaseController
 {
-public function index()
-{
-    $faqModel = new FaqModel();
-    $serviceModel = new ServiceModel();
-    $requirementModel = new RequirementModel();
+    public function index()
+    {
+        $faqModel = new FaqModel();
+        $serviceModel = new ServiceModel();
+        $requirementModel = new RequirementModel();
+        $visitorModel = new VisitorModel(); 
+
+// Statistik pengunjung berdasarkan IP
+$visitorIp = $this->request->getIPAddress();
+
+$today = date('Y-m-d');
+
+$alreadyVisited = $visitorModel
+                    ->where('visitor_ip', $visitorIp)
+                    ->where('visited_date', $today)
+                    ->first();
+
+if (!$alreadyVisited) {
+    $visitorModel->insert([
+        'visitor_ip'   => $visitorIp,
+        'visited_date' => $today
+    ]);
+}
+    // Statistik pengunjung
+
+// Hari ini
+$data['visitors_today'] = $visitorModel
+    ->where('visited_date', date('Y-m-d'))
+    ->countAllResults();
+
+// Minggu ini
+$startOfWeek = date('Y-m-d', strtotime('monday this week'));
+$endOfWeek   = date('Y-m-d', strtotime('sunday this week'));
+
+$data['visitors_week'] = $visitorModel
+    ->where('visited_date >=', $startOfWeek)
+    ->where('visited_date <=', $endOfWeek)
+    ->countAllResults();
+
+// Bulan ini
+$startOfMonth = date('Y-m-01');
+$endOfMonth   = date('Y-m-t');
+
+$data['visitors_month'] = $visitorModel
+    ->where('visited_date >=', $startOfMonth)
+    ->where('visited_date <=', $endOfMonth)
+    ->countAllResults();
+
+// Tahun ini
+$startOfYear = date('Y-01-01');
+$endOfYear   = date('Y-12-31');
+
+$data['visitors_year'] = $visitorModel
+    ->where('visited_date >=', $startOfYear)
+    ->where('visited_date <=', $endOfYear)
+    ->countAllResults();
 
     // FAQ
     $data['faqs'] = $faqModel

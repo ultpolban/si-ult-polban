@@ -6,19 +6,6 @@ use App\Controllers\BaseController;
 
 class MahasiswaTicketController extends BaseController
 {
-    /**
-     * =========================================================
-     * DATA DUMMY LAYANAN
-     * =========================================================
-     *
-     * Sementara menggunakan data dummy karena database layanan
-     * belum selesai.
-     *
-     * Struktur:
-     * Unit Layanan
-     *   -> Jenis Layanan
-     *       -> Persyaratan
-     */
     private function getDataLayanan()
     {
         return [
@@ -364,17 +351,6 @@ class MahasiswaTicketController extends BaseController
     return view('mahasiswa/ticket/create', $data);
 }
 
-
-    /**
-     * =========================================================
-     * STORE / PROSES PENGAJUAN
-     * =========================================================
-     *
-     * Untuk sementara belum menyimpan ke database.
-     *
-     * Nanti setelah database selesai, bagian ini tinggal
-     * diganti dengan proses insert ke tabel ticket/pengajuan.
-     */
     public function store()
 {
     $action = $this->request->getPost('action');
@@ -467,13 +443,13 @@ class MahasiswaTicketController extends BaseController
         );
     }
 
-    // ==========================================
-    // BUAT NOMOR TIKET
-    // ==========================================
+// ==========================================
+// BUAT NOMOR TIKET (FORMAT POLBAN MAHASISWA)
+// ==========================================
 
-    $ticketNumber = 'ULT-' . date('Ymd') . '-' . strtoupper(
-        substr(bin2hex(random_bytes(3)), 0, 5)
-    );
+$ticketNumber = 'ULT-MHS-' . strtoupper(
+    substr(bin2hex(random_bytes(5)), 0, 8)
+);
 
     // ==========================================
     // DATA TIKET DUMMY
@@ -647,55 +623,65 @@ public function draftSuccess()
     ]);
 }
 
-public function tracking($nomorTiket = null)
-{
-    // Ambil semua tiket dummy dari session
-    $tickets = session()->get('mahasiswa_tickets') ?? [];
 
-    // Kalau nomor tiket dikirim lewat URL
-    if ($nomorTiket) {
-
-        foreach ($tickets as $ticket) {
-
-            if ($ticket['nomor_tiket'] === $nomorTiket) {
-
-                return view('mahasiswa/ticket/tracking', [
-                    'title'  => 'Tracking Tiket',
-                    'ticket' => $ticket
-                ]);
-            }
-        }
-
-        // Tiket tidak ditemukan
-        return redirect()
-            ->to(base_url('mahasiswa/ticket/tracking'))
-            ->with('error', 'Nomor tiket tidak ditemukan.');
-    }
-
-    // Kalau belum memilih nomor tiket,
-    // tampilkan semua tiket mahasiswa
-    return view('mahasiswa/ticket/tracking', [
-        'title'   => 'Tracking Tiket',
-        'tickets' => $tickets
-    ]);
-}
-
-
-/**
- * =========================================================
- * HISTORY / TRACKING TIKET
- * =========================================================
- */
 public function history()
 {
-    $data = [
-        'title' => 'Tracking Tiket',
+    // ==========================================
+    // DATA DUMMY TRACKING TIKET
+    // ==========================================
 
-        // Dummy sementara
-        'tickets' => []
+    $tickets = [
+
+        [
+            'id' => 1,
+            'nomor' => 'ULT-20260807-A7K92',
+            'unit_layanan' => 'Akademik',
+            'layanan' => 'Surat Keterangan Aktif Kuliah',
+            'keterangan' => 'Untuk keperluan pengajuan beasiswa.',
+            'dokumen' => null,
+            'status' => 'Submitted',
+            'created_at' => '07 Agustus 2026 09:15'
+        ],
+
+        [
+            'id' => 2,
+            'nomor' => 'ULT-20260806-B4M21',
+            'unit_layanan' => 'Kemahasiswaan',
+            'layanan' => 'Pengajuan Beasiswa',
+            'keterangan' => 'Pengajuan beasiswa pendidikan.',
+            'dokumen' => null,
+            'status' => 'Diproses',
+            'created_at' => '06 Agustus 2026 13:40'
+        ],
+
+        [
+            'id' => 3,
+            'nomor' => 'ULT-20260804-K8P34',
+            'unit_layanan' => 'Keuangan',
+            'layanan' => 'Konfirmasi Pembayaran Kuliah',
+            'keterangan' => 'Konfirmasi pembayaran UKT semester berjalan.',
+            'dokumen' => null,
+            'status' => 'Selesai',
+            'created_at' => '04 Agustus 2026 10:20'
+        ],
+
+        [
+            'id' => 4,
+            'nomor' => 'ULT-20260802-R5N17',
+            'unit_layanan' => 'Akademik',
+            'layanan' => 'Legalisasi Dokumen Akademik',
+            'keterangan' => 'Legalisasi dokumen untuk keperluan administrasi.',
+            'dokumen' => null,
+            'status' => 'Ditolak',
+            'created_at' => '02 Agustus 2026 14:05'
+        ],
+
     ];
 
-    return view('mahasiswa/ticket/history', $data);
+    return view('mahasiswa/ticket/history', [
+        'title' => 'Tracking Tiket',
+        'tickets' => $tickets
+    ]);
 }
 
 

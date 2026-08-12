@@ -186,16 +186,6 @@ $routes->post(
     'MahasiswaTicketController::reply/$1'
 );
 
-$routes->get(
-    'mahasiswa/ticket/tracking',
-    'MahasiswaTicketController::tracking'
-);
-
-$routes->get(
-    'mahasiswa/ticket/tracking/(:segment)',
-    'MahasiswaTicketController::tracking/$1'
-);
-
 // =====================================================
 // ROUTE PROFILE MAHASISWA
 // =====================================================

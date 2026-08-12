@@ -186,6 +186,21 @@ $routes->post(
     'MahasiswaTicketController::reply/$1'
 );
 
+$routes->get(
+    'mahasiswa/ticket/jenis-layanan',
+    'MahasiswaTicketController::jenisLayanan'
+);
+
+$routes->get(
+    'mahasiswa/ticket/persyaratan',
+    'MahasiswaTicketController::persyaratan'
+);
+
+$routes->post(
+    'mahasiswa/ticket/save-draft',
+    'MahasiswaTicketController::saveDraft'
+);
+
 // =====================================================
 // ROUTE PROFILE MAHASISWA
 // =====================================================

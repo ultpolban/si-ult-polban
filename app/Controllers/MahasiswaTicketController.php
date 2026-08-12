@@ -2,7 +2,12 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
+use App\Models\ServiceRequestModel;
+use App\Models\ServiceRequestFileModel;
+use App\Models\MasterServiceUnitModel;
+use App\Models\MasterServiceModel;
+use App\Models\MasterServiceRequirementModel;
+use App\Models\UserProfileModel;
 
 class MahasiswaTicketController extends BaseController
 {
@@ -328,173 +333,289 @@ class MahasiswaTicketController extends BaseController
 
  public function create()
 {
+    $unitModel = new MasterServiceUnitModel();
+
+    // Ambil unit layanan yang aktif dari database
+    $units = $unitModel
+        ->where('is_active', 1)
+        ->orderBy('sort_order', 'ASC')
+        ->findAll();
+
+    // Data pemohon sementara
+    // Nanti bisa kita sambungkan ke akun mahasiswa
+    $user = [
+        'nama'    => 'Muhamad Rafi Putra Zakaria',
+        'nik'     => '3273010101040001',
+        'nim'     => '45678',
+        'email'   => 'mochrafiputrazakaria@gmail.com',
+        'telepon' => '083123456788',
+    ];
+
     $data = [
-
         'title' => 'Ajukan Layanan',
-
-        // Data pemohon dummy sementara
-        'user' => [
-
-            'nama' => 'Muhamad Rafi Putra Zakaria',
-            'nik' => '3273010101040001',
-            'nim' => '45678',
-            'email' => 'mochrafiputrazakaria@gmail.com',
-            'telepon' => '083123456788',
-
-        ],
-
-        // Data layanan dummy
-        'layanan' => $this->getDataLayanan(),
-
+        'user'  => $user,
+        'units' => $units,
     ];
 
     return view('mahasiswa/ticket/create', $data);
 }
 
+public function saveDraft()
+{
+    $serviceRequestModel = new ServiceRequestModel();
+
+    // ==========================================
+    // AMBIL SERVICE / JENIS LAYANAN
+    // ==========================================
+
+    $serviceId = $this->request->getPost('jenis_layanan');
+
+    if (empty($serviceId)) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Silakan pilih jenis layanan terlebih dahulu.');
+    }
+
+
+    // ==========================================
+    // AMBIL USER PROFILE
+    // ==========================================
+
+$userId = session()->get('user_id');
+
+if (empty($userId)) {
+    return redirect()->back()
+        ->withInput()
+        ->with('error', 'Akun pengguna tidak ditemukan. Silakan login kembali.');
+}
+
+$userProfileModel = new UserProfileModel();
+
+$userProfile = $userProfileModel
+    ->where('user_id', $userId)
+    ->first();
+
+if (!$userProfile) {
+    return redirect()->back()
+        ->withInput()
+        ->with('error', 'Data profil mahasiswa tidak ditemukan.');
+}
+
+$userProfileId = $userProfile['id'];
+
+
+    // ==========================================
+    // GENERATE NOMOR TIKET
+    // ==========================================
+
+    $ticketNumber = 'ULT-MHS-DRAFT-' . strtoupper(
+        bin2hex(random_bytes(4))
+    );
+
+
+    // ==========================================
+    // WAKTU
+    // ==========================================
+
+    $now = date('Y-m-d H:i:s');
+
+
+    // ==========================================
+    // DATA DRAFT
+    // ==========================================
+
+$data = [
+    'ticket_number'   => null,
+    'user_profile_id' => $userProfileId,
+    'service_id'      => $serviceId,
+    'title'           => 'Pengajuan Layanan',
+    'description'     => $this->request->getPost('keterangan'),
+    'status'          => 'draft',
+    'priority'        => 'normal',
+    'submitted_at'    => null,
+    'created_at'      => $now,
+    'updated_at'      => $now,
+];
+
+
+    // ==========================================
+    // SIMPAN
+    // ==========================================
+
+    $serviceRequestModel->insert($data);
+
+
+    // ==========================================
+    // REDIRECT
+    // ==========================================
+
+    return redirect()
+        ->to(base_url('mahasiswa/ticket/draft'))
+        ->with('success', 'Pengajuan berhasil disimpan sebagai draft.');
+}
+
+public function jenisLayanan()
+{
+    $unitId = $this->request->getGet('unit_id');
+
+    if (!$unitId) {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Unit layanan tidak ditemukan.',
+            'data'    => [],
+        ]);
+    }
+
+    $serviceModel = new \App\Models\MasterServiceModel();
+
+    $services = $serviceModel
+        ->where('service_unit_id', $unitId)
+        ->where('is_active', 1)
+        ->orderBy('sort_order', 'ASC')
+        ->findAll();
+
+    return $this->response->setJSON([
+        'success' => true,
+        'data'    => $services,
+    ]);
+}
+
+public function persyaratan()
+{
+    $serviceId = $this->request->getGet('service_id');
+
+    if (!$serviceId) {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Jenis layanan tidak ditemukan.',
+            'data'    => [],
+        ]);
+    }
+
+    $requirementModel = new \App\Models\MasterServiceRequirementModel();
+
+    $requirements = $requirementModel
+        ->where('service_id', $serviceId)
+        ->where('is_active', 1)
+        ->orderBy('sort_order', 'ASC')
+        ->findAll();
+
+    return $this->response->setJSON([
+        'success' => true,
+        'data'    => $requirements,
+    ]);
+}
+
     public function store()
 {
-    $action = $this->request->getPost('action');
+    $serviceRequestModel = new ServiceRequestModel();
 
-    $namaPemohon = $this->request->getPost('nama_pemohon');
-    $nik         = $this->request->getPost('nik');
-    $unit        = $this->request->getPost('unit_layanan');
-    $jenis       = $this->request->getPost('jenis_layanan');
-    $keterangan  = $this->request->getPost('keterangan');
 
     // ==========================================
-    // VALIDASI
+    // AMBIL JENIS LAYANAN
     // ==========================================
 
-    if (empty($namaPemohon)) {
+    $serviceId = $this->request->getPost('jenis_layanan');
+
+    if (empty($serviceId)) {
         return redirect()->back()
             ->withInput()
-            ->with('error', 'Nama pemohon tidak boleh kosong.');
+            ->with('error', 'Silakan pilih jenis layanan terlebih dahulu.');
     }
 
-    if (empty($nik)) {
-        return redirect()->back()
-            ->withInput()
-            ->with('error', 'NIK tidak boleh kosong.');
-    }
-
-    if (empty($unit)) {
-        return redirect()->back()
-            ->withInput()
-            ->with('error', 'Silakan pilih Unit Layanan.');
-    }
-
-    if (empty($jenis)) {
-        return redirect()->back()
-            ->withInput()
-            ->with('error', 'Silakan pilih Jenis Layanan.');
-    }
-
-    // ==========================================
-    // DOKUMEN
-    // ==========================================
-
-    $files = $this->request->getFileMultiple('dokumen');
-
-    $jumlahDokumen = 0;
-
-    if ($files) {
-        foreach ($files as $file) {
-            if ($file && $file->isValid()) {
-                $jumlahDokumen++;
-            }
-        }
-    }
-
-    // ==========================================
-    // SIMPAN SEBAGAI DRAFT
-    // ==========================================
-
-    if ($action === 'draft') {
-
-        $draftNumber = 'DRF-' . date('Ymd') . '-' . strtoupper(
-            substr(bin2hex(random_bytes(3)), 0, 5)
-        );
-
-        $draft = [
-            'nomor_draft'     => $draftNumber,
-            'nama_pemohon'    => $namaPemohon,
-            'nik'             => $nik,
-            'unit_layanan'    => $unit,
-            'jenis_layanan'   => $jenis,
-            'keterangan'      => $keterangan,
-            'jumlah_dokumen'  => $jumlahDokumen,
-            'created_at'      => date('Y-m-d H:i:s'),
-        ];
-
-        // Ambil draft yang sudah ada
-        $drafts = session()->get('mahasiswa_drafts') ?? [];
-
-        // Tambahkan draft baru
-        $drafts[] = $draft;
-
-        // Simpan ke session
-        session()->set('mahasiswa_drafts', $drafts);
-
-        // Simpan draft sementara untuk halaman sukses
-        session()->set('draft_success', $draft);
-
-        return redirect()->to(
-            base_url('mahasiswa/ticket/draft-success')
-        );
-    }
 
 // ==========================================
-// BUAT NOMOR TIKET (FORMAT POLBAN MAHASISWA)
+// AMBIL USER PROFILE
 // ==========================================
 
-$ticketNumber = 'ULT-MHS-' . strtoupper(
-    substr(bin2hex(random_bytes(5)), 0, 8)
-);
+$userId = session()->get('user_id');
+
+if (empty($userId)) {
+    return redirect()->back()
+        ->withInput()
+        ->with('error', 'Akun pengguna tidak ditemukan. Silakan login kembali.');
+}
+
+$userProfileModel = new UserProfileModel();
+
+$userProfile = $userProfileModel
+    ->where('user_id', $userId)
+    ->first();
+
+if (!$userProfile) {
+    return redirect()->back()
+        ->withInput()
+        ->with('error', 'Data profil mahasiswa tidak ditemukan.');
+}
+
+$userProfileId = $userProfile['id'];
+
 
     // ==========================================
-    // DATA TIKET DUMMY
+    // GENERATE NOMOR TIKET
     // ==========================================
 
-    $ticket = [
-        'nomor_tiket'    => $ticketNumber,
-        'nama_pemohon'   => $namaPemohon,
-        'nik'            => $nik,
-        'unit_layanan'   => $unit,
-        'jenis_layanan'  => $jenis,
-        'keterangan'     => $keterangan,
-        'jumlah_dokumen' => $jumlahDokumen,
-        'status'         => 'Menunggu Verifikasi',
-        'created_at'     => date('Y-m-d H:i:s'),
-    ];
-
-    // ==========================================
-    // SIMPAN TIKET KE SESSION
-    // ==========================================
-
-    $tickets = session()->get('mahasiswa_tickets') ?? [];
-
-    $tickets[] = $ticket;
-
-    session()->set('mahasiswa_tickets', $tickets);
-
-    // Tiket terakhir
-    session()->set('last_ticket', $ticket);
-
-    // ==========================================
-    // REDIRECT SUCCESS
-    // ==========================================
-
-    return redirect()->to(
-        base_url('mahasiswa/ticket/success')
+    $ticketNumber = 'ULT-MHS-' . strtoupper(
+        bin2hex(random_bytes(4))
     );
+
+
+    // ==========================================
+    // WAKTU
+    // ==========================================
+
+    $now = date('Y-m-d H:i:s');
+
+
+    // ==========================================
+    // DATA PENGAJUAN
+    // ==========================================
+
+$data = [
+    'ticket_number'   => $ticketNumber,
+    'user_profile_id' => $userProfileId,
+    'service_id'      => $serviceId,
+    'title'           => 'Pengajuan Layanan',
+    'description'     => $this->request->getPost('keterangan'),
+    'status'          => 'submitted',
+    'priority'        => 'normal',
+    'submitted_at'    => $now,
+    'created_at'      => $now,
+    'updated_at'      => $now,
+];
+
+
+    // ==========================================
+    // SIMPAN PENGAJUAN
+    // ==========================================
+
+    $serviceRequestModel->insert($data);
+
+
+    // ==========================================
+    // AMBIL ID TIKET
+    // ==========================================
+
+    $ticketId = $serviceRequestModel->getInsertID();
+
+
+    // ==========================================
+    // AMBIL DATA TIKET
+    // ==========================================
+
+    $ticket = $serviceRequestModel->find($ticketId);
+
+
+    // ==========================================
+    // SUCCESS
+    // ==========================================
+
+    return view('mahasiswa/ticket/success', [
+        'ticket' => $ticket
+    ]);
 }
 
 
-    /**
-     * =========================================================
-     * DATA LAYANAN UNTUK TEST / DEBUG
-     * =========================================================
-     */
     public function layanan()
     {
         return $this->response->setJSON(

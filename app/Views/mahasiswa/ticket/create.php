@@ -286,17 +286,15 @@
                                     -- Pilih Unit Layanan --
                                 </option>
 
-                                <option value="Akademik">
-                                    Akademik
-                                </option>
+                                <?php foreach ($units as $unit): ?>
 
-                                <option value="Kemahasiswaan">
-                                    Kemahasiswaan
-                                </option>
+                                    <option value="<?= esc($unit['id']) ?>">
 
-                                <option value="Keuangan">
-                                    Keuangan
-                                </option>
+                                        <?= esc($unit['name']) ?>
+
+                                    </option>
+
+                                <?php endforeach; ?>
 
                             </select>
 
@@ -389,28 +387,28 @@
 
 
         <!-- =================================================
-             DOKUMEN
-        ================================================== -->
+     DOKUMEN PERSYARATAN
+================================================== -->
 
         <div class="card shadow-sm mb-4"
             style="
-                border-radius:15px;
-                border:none;
-            ">
+        border-radius:15px;
+        border:none;
+    ">
 
             <div class="card-header"
                 style="
-                    background:#0b3d91;
-                    color:white;
-                    border-radius:15px 15px 0 0;
-                    border-bottom:4px solid #f28c28;
-                ">
+            background:#0b3d91;
+            color:white;
+            border-radius:15px 15px 0 0;
+            border-bottom:4px solid #f28c28;
+        ">
 
                 <h5 class="mb-0">
 
                     <i class="fas fa-paperclip mr-2"></i>
 
-                    Dokumen Persyaratan
+                    Upload Dokumen Persyaratan
 
                 </h5>
 
@@ -423,73 +421,42 @@
 
                     <i class="fas fa-info-circle mr-2"></i>
 
-                    Anda dapat mengunggah lebih dari satu dokumen.
-                    Pastikan dokumen sesuai dengan persyaratan layanan.
+                    Silakan unggah dokumen sesuai dengan persyaratan
+                    layanan yang telah dipilih.
 
                 </div>
 
 
+                <!-- =============================================
+             CONTAINER DOKUMEN
+        ============================================== -->
+
                 <div id="dokumenWrapper">
 
-                    <div class="dokumen-item mb-3">
+                    <div class="alert alert-info mb-0">
 
-                        <div class="row">
+                        <i class="fas fa-info-circle mr-2"></i>
 
-                            <div class="col-md-10">
-
-                                <input
-                                    type="file"
-                                    name="dokumen[]"
-                                    class="form-control"
-                                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-
-                            </div>
-
-                            <div class="col-md-2">
-
-                                <button
-                                    type="button"
-                                    class="btn btn-danger btn-block btn-hapus-dokumen"
-                                    style="display:none;">
-
-                                    <i class="fas fa-trash mr-1"></i>
-
-                                    Hapus
-
-                                </button>
-
-                            </div>
-
-                        </div>
+                        Pilih jenis layanan terlebih dahulu untuk
+                        mengunggah dokumen persyaratan.
 
                     </div>
 
                 </div>
 
 
-                <button
-                    type="button"
-                    id="btnTambahDokumen"
-                    class="btn btn-outline-primary">
+                <small class="d-block text-muted mt-3">
 
-                    <i class="fas fa-plus mr-1"></i>
+                    <i class="fas fa-file mr-1"></i>
 
-                    Tambah Dokumen
-
-                </button>
-
-
-                <small class="d-block text-muted mt-2">
-
-                    Format yang diperbolehkan:
-                    PDF, JPG, JPEG, PNG, DOC, DOCX.
+                    Format yang diperbolehkan mengikuti ketentuan
+                    masing-masing persyaratan.
 
                 </small>
 
             </div>
 
         </div>
-
 
         <!-- =================================================
              KETERANGAN
@@ -549,20 +516,19 @@
 
         <div class="card shadow-sm mb-5"
             style="
-                border-radius:15px;
-                border:none;
-            ">
+        border-radius:15px;
+        border:none;
+    ">
 
             <div class="card-body">
 
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
 
                     <a
-                        href="<?= base_url('mahasiswa/ticket/history') ?>"
+                        href="<?= base_url('dashboard-mahasiswa') ?>"
                         class="btn btn-secondary mb-2">
 
                         <i class="fas fa-arrow-left mr-1"></i>
-
                         Kembali
 
                     </a>
@@ -570,22 +536,26 @@
 
                     <div>
 
-                        <!-- DRAFT -->
+                        <!-- =========================
+                     SIMPAN DRAFT
+                ========================== -->
 
                         <button
                             type="submit"
                             name="action"
                             value="draft"
+                            formaction="<?= base_url('mahasiswa/ticket/save-draft') ?>"
                             class="btn btn-outline-primary mr-2 mb-2">
 
                             <i class="fas fa-save mr-1"></i>
-
                             Simpan Draft
 
                         </button>
 
 
-                        <!-- KIRIM -->
+                        <!-- =========================
+                     KIRIM PENGAJUAN
+                ========================== -->
 
                         <button
                             type="submit"
@@ -593,15 +563,14 @@
                             value="submit"
                             class="btn mb-2"
                             style="
-                                background:#0b3d91;
-                                color:white;
-                                font-weight:600;
-                                border-radius:8px;
-                                padding:10px 25px;
-                            ">
+                        background:#0b3d91;
+                        color:white;
+                        font-weight:600;
+                        border-radius:8px;
+                        padding:10px 25px;
+                    ">
 
                             <i class="fas fa-paper-plane mr-1"></i>
-
                             Kirim Pengajuan
 
                         </button>
@@ -626,281 +595,586 @@
 ========================================================== -->
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
 
-document.addEventListener('DOMContentLoaded', function () {
+        // =====================================================
+        // ELEMENT
+        // =====================================================
 
-    // =====================================================
-    // DATA LAYANAN DARI CONTROLLER
-    // =====================================================
+        const unitSelect =
+            document.getElementById('unitLayanan');
 
-    const dataLayanan = <?= json_encode($layanan ?? []) ?>;
+        const jenisSelect =
+            document.getElementById('jenisLayanan');
 
+        const persyaratanContainer =
+            document.getElementById('persyaratanContainer');
 
-    // =====================================================
-    // ELEMENT
-    // =====================================================
+        const listPersyaratan =
+            document.getElementById('listPersyaratan');
 
-    const unitSelect = document.getElementById('unitLayanan');
-    const jenisSelect = document.getElementById('jenisLayanan');
-
-    const persyaratanContainer =
-        document.getElementById('persyaratanContainer');
-
-    const listPersyaratan =
-        document.getElementById('listPersyaratan');
+        const dokumenWrapper =
+            document.getElementById('dokumenWrapper');
 
 
-    // =====================================================
-    // UNIT LAYANAN
-    // =====================================================
+        // =====================================================
+        // UNIT LAYANAN
+        // =====================================================
 
-    unitSelect.addEventListener('change', function () {
+        unitSelect.addEventListener('change', function() {
 
-        const unit = this.value;
-
-        jenisSelect.innerHTML = '';
-        listPersyaratan.innerHTML = '';
-
-        persyaratanContainer.style.display = 'none';
+            const unitId = this.value;
 
 
-        // Reset jika belum memilih unit
+            // Reset jenis layanan
 
-        if (!unit || !dataLayanan[unit]) {
+            jenisSelect.innerHTML = `
+            <option value="">
+                -- Memuat Jenis Layanan... --
+            </option>
+        `;
 
             jenisSelect.disabled = true;
 
-            jenisSelect.innerHTML = `
+
+            // Reset persyaratan
+
+            listPersyaratan.innerHTML = '';
+
+            persyaratanContainer.style.display = 'none';
+
+
+            // Reset dokumen
+
+            dokumenWrapper.innerHTML = `
+            <div class="alert alert-info mb-0">
+
+                <i class="fas fa-info-circle mr-2"></i>
+
+                Pilih jenis layanan terlebih dahulu untuk
+                mengunggah dokumen persyaratan.
+
+            </div>
+        `;
+
+
+            // Jika unit belum dipilih
+
+            if (!unitId) {
+
+                jenisSelect.innerHTML = `
                 <option value="">
                     -- Pilih Unit Layanan Terlebih Dahulu --
                 </option>
             `;
 
-            return;
-        }
+                return;
+            }
 
 
-        // Aktifkan jenis layanan
+            // =================================================
+            // AMBIL JENIS LAYANAN
+            // =================================================
 
-        jenisSelect.disabled = false;
+            fetch(
+                    '<?= base_url('mahasiswa/ticket/jenis-layanan') ?>?unit_id=' +
+                    encodeURIComponent(unitId)
+                )
 
-        jenisSelect.innerHTML = `
-            <option value="">
-                -- Pilih Jenis Layanan --
-            </option>
+                .then(function(response) {
+
+                    if (!response.ok) {
+                        throw new Error(
+                            'Gagal mengambil jenis layanan.'
+                        );
+                    }
+
+                    return response.json();
+
+                })
+
+                .then(function(result) {
+
+                    jenisSelect.innerHTML = `
+                <option value="">
+                    -- Pilih Jenis Layanan --
+                </option>
+            `;
+
+
+                    if (
+                        !result.success ||
+                        !result.data ||
+                        result.data.length === 0
+                    ) {
+
+                        jenisSelect.innerHTML = `
+                    <option value="">
+                        -- Tidak Ada Jenis Layanan --
+                    </option>
+                `;
+
+                        return;
+                    }
+
+
+                    result.data.forEach(function(layanan) {
+
+                        const option =
+                            document.createElement('option');
+
+                        option.value = layanan.id;
+
+                        option.textContent = layanan.name;
+
+                        jenisSelect.appendChild(option);
+
+                    });
+
+
+                    jenisSelect.disabled = false;
+
+                })
+
+                .catch(function(error) {
+
+                    console.error(error);
+
+                    jenisSelect.innerHTML = `
+                <option value="">
+                    -- Gagal Mengambil Data --
+                </option>
+            `;
+
+                });
+
+        });
+
+
+        // =====================================================
+        // JENIS LAYANAN
+        // =====================================================
+
+        jenisSelect.addEventListener('change', function() {
+
+            const serviceId = this.value;
+
+
+            // Reset
+
+            listPersyaratan.innerHTML = '';
+
+            persyaratanContainer.style.display = 'none';
+
+
+            dokumenWrapper.innerHTML = `
+            <div class="alert alert-info mb-0">
+
+                <i class="fas fa-info-circle mr-2"></i>
+
+                Pilih jenis layanan untuk melihat dokumen
+                persyaratan.
+
+            </div>
         `;
 
 
-        // Ambil jenis layanan
-
-        dataLayanan[unit].forEach(function (layanan) {
-
-            const option =
-                document.createElement('option');
-
-            option.value = layanan.nama;
-
-            option.textContent = layanan.nama;
-
-            jenisSelect.appendChild(option);
-
-        });
-
-    });
-
-
-    // =====================================================
-    // JENIS LAYANAN
-    // =====================================================
-
-    jenisSelect.addEventListener('change', function () {
-
-        const unit = unitSelect.value;
-        const jenis = this.value;
-
-
-        listPersyaratan.innerHTML = '';
-
-
-        if (!unit || !jenis) {
-
-            persyaratanContainer.style.display = 'none';
-
-            return;
-        }
-
-
-        // Cari layanan yang dipilih
-
-        const layananDipilih =
-            dataLayanan[unit].find(function (layanan) {
-
-                return layanan.nama === jenis;
-
-            });
-
-
-        if (!layananDipilih) {
-
-            persyaratanContainer.style.display = 'none';
-
-            return;
-        }
-
-
-        // =================================================
-        // TAMPILKAN PERSYARATAN
-        // =================================================
-
-        layananDipilih.persyaratan.forEach(function (item) {
-
-            const li =
-                document.createElement('li');
-
-            li.className = 'mb-2';
-
-            li.innerHTML = `
-                <i class="fas fa-check-circle text-success mr-2"></i>
-                ${item}
-            `;
-
-            listPersyaratan.appendChild(li);
-
-        });
-
-
-        persyaratanContainer.style.display = 'block';
-
-    });
-
-
-    // =====================================================
-    // TAMBAH DOKUMEN
-    // =====================================================
-
-    const dokumenWrapper =
-        document.getElementById('dokumenWrapper');
-
-    const btnTambahDokumen =
-        document.getElementById('btnTambahDokumen');
-
-
-    function updateTombolHapus() {
-
-        const items =
-            dokumenWrapper.querySelectorAll('.dokumen-item');
-
-
-        items.forEach(function (item) {
-
-            const btn =
-                item.querySelector('.btn-hapus-dokumen');
-
-
-            if (items.length > 1) {
-
-                btn.style.display = 'block';
-
-            } else {
-
-                btn.style.display = 'none';
-
+            if (!serviceId) {
+                return;
             }
 
-        });
 
-    }
+            // =================================================
+            // LOADING
+            // =================================================
+
+            persyaratanContainer.style.display = 'block';
+
+            listPersyaratan.innerHTML = `
+            <li class="text-muted">
+
+                <i class="fas fa-spinner fa-spin mr-2"></i>
+
+                Memuat persyaratan...
+
+            </li>
+        `;
 
 
-    // =====================================================
-    // TAMBAH FILE
-    // =====================================================
+            // =================================================
+            // AMBIL PERSYARATAN
+            // =================================================
 
-    btnTambahDokumen.addEventListener('click', function () {
+            fetch(
+                    '<?= base_url('mahasiswa/ticket/persyaratan') ?>?service_id=' +
+                    encodeURIComponent(serviceId)
+                )
 
-        const item =
-            document.createElement('div');
+                .then(function(response) {
 
-        item.className =
-            'dokumen-item mb-3';
+                    if (!response.ok) {
+                        throw new Error(
+                            'Gagal mengambil persyaratan.'
+                        );
+                    }
+
+                    return response.json();
+
+                })
+
+                .then(function(result) {
 
 
-        item.innerHTML = `
+                    if (
+                        !result.success ||
+                        !result.data ||
+                        result.data.length === 0
+                    ) {
 
-            <div class="row">
+                        listPersyaratan.innerHTML = `
+                    <li class="text-muted">
 
-                <div class="col-md-10">
+                        Tidak ada persyaratan khusus
+                        untuk layanan ini.
+
+                    </li>
+                `;
+
+
+                        dokumenWrapper.innerHTML = `
+                    <div class="alert alert-warning mb-0">
+
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+
+                        Tidak ada dokumen persyaratan
+                        untuk layanan ini.
+
+                    </div>
+                `;
+
+                        return;
+                    }
+
+
+                    // =================================================
+                    // TAMPILKAN PERSYARATAN
+                    // =================================================
+
+                    result.data.forEach(function(persyaratan) {
+
+                        const li =
+                            document.createElement('li');
+
+                        li.className = 'mb-3';
+
+
+                        let html = `
+
+                    <i class="fas fa-check-circle
+                        text-success mr-2"></i>
+
+                    <strong>
+                        ${escapeHtml(persyaratan.name)}
+                    </strong>
+
+                `;
+
+
+                        // Wajib / Opsional
+
+                        if (persyaratan.is_required == 1) {
+
+                            html += `
+                        <span class="badge badge-danger ml-2">
+                            Wajib
+                        </span>
+                    `;
+
+                        } else {
+
+                            html += `
+                        <span class="badge badge-secondary ml-2">
+                            Opsional
+                        </span>
+                    `;
+
+                        }
+
+
+                        // Deskripsi
+
+                        if (persyaratan.description) {
+
+                            html += `
+                        <div class="text-muted small ml-4 mt-1">
+
+                            ${escapeHtml(
+                                persyaratan.description
+                            )}
+
+                        </div>
+                    `;
+
+                        }
+
+
+                        li.innerHTML = html;
+
+                        listPersyaratan.appendChild(li);
+
+                    });
+
+
+                    // =================================================
+                    // TAMPILKAN UPLOAD DOKUMEN
+                    // =================================================
+
+                    dokumenWrapper.innerHTML = '';
+
+
+                    result.data.forEach(function(persyaratan) {
+
+                        const item =
+                            document.createElement('div');
+
+                        item.className =
+                            'border rounded p-3 mb-3';
+
+
+                        let requiredAttribute = '';
+
+                        if (persyaratan.is_required == 1) {
+                            requiredAttribute = 'required';
+                        }
+
+
+                        item.innerHTML = `
+
+                    <div class="mb-2">
+
+                        <strong>
+                            ${escapeHtml(
+                                persyaratan.name
+                            )}
+                        </strong>
+
+                        ${
+                            persyaratan.is_required == 1
+                            ? `
+                                <span class="badge badge-danger ml-2">
+                                    Wajib
+                                </span>
+                              `
+                            : `
+                                <span class="badge badge-secondary ml-2">
+                                    Opsional
+                                </span>
+                              `
+                        }
+
+                    </div>
+
+
+                    ${
+                        persyaratan.description
+                        ? `
+                            <div class="text-muted small mb-2">
+
+                                ${escapeHtml(
+                                    persyaratan.description
+                                )}
+
+                            </div>
+                          `
+                        : ''
+                    }
+
 
                     <input
                         type="file"
-                        name="dokumen[]"
-                        class="form-control"
-                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                        name="dokumen[${persyaratan.id}]"
+                        class="form-control dokumen-persyaratan"
+                        accept="${getAcceptExtensions(
+                            persyaratan.allowed_extensions
+                        )}"
+                        ${requiredAttribute}>
+
+
+                    <small class="text-muted">
+
+                        <i class="fas fa-upload mr-1"></i>
+
+                        Upload:
+                        ${escapeHtml(
+                            persyaratan.name
+                        )}
+
+                    </small>
+
+                `;
+
+
+                        dokumenWrapper.appendChild(item);
+
+                    });
+
+                })
+
+                .catch(function(error) {
+
+                    console.error(error);
+
+
+                    listPersyaratan.innerHTML = `
+                <li class="text-danger">
+
+                    <i class="fas fa-times-circle mr-2"></i>
+
+                    Gagal mengambil data persyaratan.
+
+                </li>
+            `;
+
+
+                    dokumenWrapper.innerHTML = `
+                <div class="alert alert-danger mb-0">
+
+                    <i class="fas fa-times-circle mr-2"></i>
+
+                    Gagal mengambil dokumen persyaratan.
 
                 </div>
+            `;
 
-                <div class="col-md-2">
+                });
 
-                    <button
-                        type="button"
-                        class="btn btn-danger btn-block btn-hapus-dokumen">
-
-                        <i class="fas fa-trash mr-1"></i>
-                        Hapus
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        `;
+        });
 
 
-        dokumenWrapper.appendChild(item);
+        // =====================================================
+        // ESCAPE HTML
+        // =====================================================
 
-        updateTombolHapus();
+        function escapeHtml(text) {
 
-    });
+            if (
+                text === null ||
+                text === undefined
+            ) {
 
+                return '';
 
-    // =====================================================
-    // HAPUS FILE
-    // =====================================================
-
-    dokumenWrapper.addEventListener('click', function (event) {
-
-        const button =
-            event.target.closest('.btn-hapus-dokumen');
+            }
 
 
-        if (!button) {
-            return;
+            return String(text)
+
+                .replace(/&/g, '&amp;')
+
+                .replace(/</g, '&lt;')
+
+                .replace(/>/g, '&gt;')
+
+                .replace(/"/g, '&quot;')
+
+                .replace(/'/g, '&#039;');
+
         }
 
 
-        const item =
-            button.closest('.dokumen-item');
+        // =====================================================
+        // FORMAT EXTENSION FILE
+        // =====================================================
+
+        function getAcceptExtensions(extensions) {
+
+            if (!extensions) {
+
+                return '.pdf,.jpg,.jpeg,.png,.doc,.docx';
+
+            }
 
 
-        if (item) {
+            // Jika sudah berupa array
 
-            item.remove();
+            if (Array.isArray(extensions)) {
+
+                return extensions
+
+                    .map(function(ext) {
+
+                        ext = String(ext).trim();
+
+                        if (!ext.startsWith('.')) {
+                            ext = '.' + ext;
+                        }
+
+                        return ext;
+
+                    })
+
+                    .join(',');
+
+            }
+
+
+            // Jika berupa JSON
+
+            try {
+
+                const parsed =
+                    JSON.parse(extensions);
+
+
+                if (Array.isArray(parsed)) {
+
+                    return parsed
+
+                        .map(function(ext) {
+
+                            ext = String(ext).trim();
+
+                            if (!ext.startsWith('.')) {
+                                ext = '.' + ext;
+                            }
+
+                            return ext;
+
+                        })
+
+                        .join(',');
+
+                }
+
+            } catch (error) {
+
+                // Bukan JSON
+
+            }
+
+
+            // Jika berupa:
+            // pdf,jpg,jpeg
+
+            return String(extensions)
+
+                .split(',')
+
+                .map(function(ext) {
+
+                    ext = ext.trim();
+
+                    if (!ext.startsWith('.')) {
+                        ext = '.' + ext;
+                    }
+
+                    return ext;
+
+                })
+
+                .join(',');
 
         }
 
-
-        updateTombolHapus();
-
     });
-
-
-    // =====================================================
-    // INITIAL
-    // =====================================================
-
-    updateTombolHapus();
-
-});
-
 </script>

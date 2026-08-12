@@ -8,29 +8,60 @@ class RoleSeeder extends Seeder
 {
     public function run()
     {
-        $data = [
+        $now = date('Y-m-d H:i:s');
+
+        $roles = [
+
             [
-                'role_name' => 'Admin',
-                'description' => 'Administrator Sistem'
+                'code'        => 'SUPER_ADMIN',
+                'name'        => 'Super Administrator',
+                'description' => 'Memiliki akses penuh ke seluruh sistem.',
+                'sort_order'  => 1,
             ],
+
             [
-                'role_name' => 'Petugas ULT',
-                'description' => 'Petugas Unit Layanan Terpadu'
+                'code'        => 'ADMIN_ULT',
+                'name'        => 'Admin ULT',
+                'description' => 'Mengelola layanan dan operasional Unit Layanan Terpadu.',
+                'sort_order'  => 2,
             ],
+
             [
-                'role_name' => 'Unit Tujuan',
-                'description' => 'Unit yang memproses layanan'
+                'code'        => 'PETUGAS_AKADEMIK',
+                'name'        => 'Petugas Akademik',
+                'description' => 'Memverifikasi dan memproses layanan akademik.',
+                'sort_order'  => 3,
             ],
+
             [
-                'role_name' => 'Pemohon',
-                'description' => 'Mahasiswa/Dosen/Publik'
+                'code'        => 'PETUGAS_KEUANGAN',
+                'name'        => 'Petugas Keuangan',
+                'description' => 'Memverifikasi dan memproses layanan keuangan.',
+                'sort_order'  => 4,
             ],
+
             [
-                'role_name' => 'Pimpinan',
-                'description' => 'Pimpinan POLBAN'
+                'code'        => 'PETUGAS_UMUM',
+                'name'        => 'Petugas Umum',
+                'description' => 'Memverifikasi dan memproses layanan umum.',
+                'sort_order'  => 5,
             ],
+
+            [
+                'code'        => 'PEMOHON',
+                'name'        => 'Pemohon',
+                'description' => 'Pengguna yang mengajukan layanan.',
+                'sort_order'  => 6,
+            ],
+
         ];
 
-        $this->db->table('roles')->insertBatch($data);
+        foreach ($roles as &$role) {
+            $role['is_active'] = true;
+            $role['created_at'] = $now;
+            $role['updated_at'] = $now;
+        }
+
+        $this->db->table('roles')->insertBatch($roles);
     }
 }

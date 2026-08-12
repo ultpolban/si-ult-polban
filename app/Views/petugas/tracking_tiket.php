@@ -2,35 +2,42 @@
 
 <?= $this->section('content') ?>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
 
 <style>
 
 /* =========================================================
-   GENERAL
+   GLOBAL
 ========================================================= */
 
-body,
-.container-fluid {
+body {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
-    background: #eef3fb;
-    color: #263238;
+    background: #f4f7fb !important;
+    color: #1e293b;
 }
 
 .tracking-page {
-    padding: 28px 30px;
+    padding: 35px 42px;
 }
 
-.page-title {
-    font-size: 1.55rem;
+.page-header-title {
+    font-size: 30px;
     font-weight: 800;
-    color: #1a237e;
+    color: #18233f;
+    letter-spacing: -.5px;
+}
+
+.page-header-title i {
+    color: #ff9800;
 }
 
 .page-subtitle {
-    color: #7b8794;
-    font-size: .88rem;
+    color: #71819b;
+    font-size: 14px;
 }
 
 
@@ -38,24 +45,12 @@ body,
    CARD
 ========================================================= */
 
-.tracking-card {
+.dashboard-card {
     background: #fff;
-    border-radius: 10px;
-    border: 1px solid #e0e6ef;
-    box-shadow: 0 3px 12px rgba(30, 55, 90, .08);
+    border: 1px solid #e1e8f1;
+    border-radius: 18px;
     overflow: hidden;
-}
-
-.tracking-card-header {
-    background: #29398f;
-    color: #fff;
-    padding: 15px 20px;
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.tracking-card-header i {
-    margin-right: 8px;
+    box-shadow: 0 8px 30px rgba(25, 48, 90, .06);
 }
 
 
@@ -64,30 +59,88 @@ body,
 ========================================================= */
 
 .search-area {
-    background: #fff;
-    padding: 18px 20px;
-    border-bottom: 1px solid #e5eaf0;
+    padding: 22px;
+    border-bottom: 1px solid #e3e9f1;
 }
 
-.search-input {
-    height: 43px;
-    border: 1px solid #ccd5e0;
-    border-radius: 7px;
-    padding-left: 42px;
-    font-size: .88rem;
+.search-box-wrapper {
+    position: relative;
+    width: 500px;
+    max-width: 100%;
 }
 
-.search-input:focus {
-    border-color: #29398f;
-    box-shadow: 0 0 0 3px rgba(41,57,143,.10);
+.search-box-wrapper .form-control {
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid #cdd8e7;
+    padding-left: 45px;
+    padding-right: 45px;
+    font-size: 14px;
+    transition: .25s ease;
+}
+
+.search-box-wrapper .form-control:focus {
+    border-color: #293b9b;
+    box-shadow: 0 0 0 4px rgba(41,59,155,.10);
 }
 
 .search-icon {
     position: absolute;
-    left: 15px;
+    left: 17px;
     top: 50%;
     transform: translateY(-50%);
-    color: #29398f;
+    color: #293b9b;
+    z-index: 5;
+}
+
+.btn-clear-search {
+    position: absolute;
+    right: 9px;
+    top: 7px;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 50%;
+    background: #eef2f8;
+    color: #293b9b;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-clear-search:hover {
+    background: #293b9b;
+    color: white;
+}
+
+.search-result-info {
+    color: #6b7b94;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.search-back-row {
+    display: none;
+    align-items: center;
+    margin-top: 14px;
+}
+
+.btn-back-search {
+    border: 1px solid #293b9b;
+    background: #fff;
+    color: #293b9b;
+    border-radius: 9px;
+    padding: 8px 15px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: .2s;
+}
+
+.btn-back-search:hover {
+    background: #293b9b;
+    color: #fff;
 }
 
 
@@ -95,93 +148,418 @@ body,
    TABLE
 ========================================================= */
 
-.table-tracking {
-    margin-bottom: 0;
+.table-dashboard {
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
-.table-tracking thead th {
-    background: #29398f;
-    color: #fff;
-    border: none;
-    font-size: .82rem;
-    padding: 14px 16px;
+.table-dashboard thead th {
+    background: #f7f9fc;
+    color: #425574;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 17px 20px;
+    border-bottom: 2px solid #e1e8f1;
+    white-space: nowrap;
+}
+
+.table-dashboard tbody td {
+    padding: 17px 20px;
+    border-bottom: 1px solid #edf1f6;
     vertical-align: middle;
+    font-size: 14px;
 }
 
-.table-tracking tbody td {
-    padding: 15px 16px;
-    font-size: .86rem;
-    border-bottom: 1px solid #edf0f4;
-    vertical-align: middle;
-}
-
-.table-tracking tbody tr:hover {
-    background: #f8faff;
-}
-
-.ticket-number {
-    color: #1769e0;
-    font-weight: 700;
-    font-family: monospace;
-}
-
-.service-tag {
-    background: #eef2f8;
-    color: #495057;
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: .78rem;
-    font-weight: 600;
-}
-
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 6px 12px;
-    border-radius: 5px;
-    font-size: .75rem;
-    font-weight: 700;
-}
-
-.status-verified {
-    background: #dff6e8;
-    color: #159447;
-}
-
-.status-assigned {
-    background: #e8efff;
-    color: #29398f;
-}
-
-.btn-progress {
-    background: #29398f;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 13px;
-    font-size: .78rem;
-    font-weight: 600;
+.tracking-row {
     transition: .2s ease;
 }
 
-.btn-progress:hover {
-    background: #1d2b75;
+.tracking-row:hover {
+    background: #f8faff;
+}
+
+.service-tag {
+    display: inline-block;
+    background: #f1f5fa;
+    color: #40516e;
+    border: 1px solid #dde5ef;
+    border-radius: 9px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.badge-verified {
+    background: #dcf8eb;
+    color: #087c58;
+    border: 1px solid #b5ecd5;
+}
+
+.badge-assigned {
+    background: #fff3cf;
+    color: #a86600;
+    border: 1px solid #ffdf7e;
+}
+
+.btn-action-view {
+    border: 1px solid #cddcff;
+    background: #eff4ff;
+    color: #293b9b;
+    border-radius: 10px;
+    padding: 9px 15px;
+    font-size: 12px;
+    font-weight: 700;
+    transition: .25s ease;
+}
+
+.btn-action-view:hover {
+    background: #293b9b;
     color: #fff;
     transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(41,59,155,.2);
+}
+
+.no-result-row td {
+    text-align: center;
+    padding: 45px !important;
+    color: #8795aa;
 }
 
 
 /* =========================================================
-   DETAIL TRACKING
-   STYLE MENYERUPAI BACKEND
+   DETAIL HEADER
 ========================================================= */
 
-.detail-wrapper {
-    animation: fadeIn .25s ease;
+.detail-header-card {
+    background: linear-gradient(
+        135deg,
+        #26388f 0%,
+        #354cac 100%
+    );
+    color: #fff;
 }
 
-@keyframes fadeIn {
+.detail-header-card h5 {
+    font-size: 17px;
+}
+
+.detail-status {
+    font-size: 12px;
+    padding: 8px 15px;
+    border-radius: 30px;
+    font-weight: 800;
+}
+
+.detail-status.verified {
+    background: #d9f8eb;
+    color: #087c58;
+}
+
+.detail-status.assigned {
+    background: #fff0c5;
+    color: #9a6500;
+}
+
+
+/* =========================================================
+   INFO CARD
+========================================================= */
+
+.info-metric-card {
+    height: 100%;
+    background: #f8fafc;
+    border: 1px solid #e0e7f0;
+    border-radius: 13px;
+    padding: 18px;
+    transition: .25s ease;
+}
+
+.info-metric-card:hover {
+    background: #fff;
+    border-color: #cbd7e8;
+    box-shadow: 0 6px 18px rgba(25,48,90,.06);
+}
+
+.info-label {
+    display: block;
+    color: #77869d;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.info-value {
+    color: #27344a;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   TIMELINE - 5 TAHAP
+========================================================= */
+
+.timeline-wrapper {
+    position: relative;
+    width: 100%;
+    padding: 35px 18px 20px;
+    overflow: hidden;
+}
+
+.timeline {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: 100%;
+    min-height: 145px;
+}
+
+/*
+    GARIS DASAR
+
+    Titik tengah 5 bulatan:
+    10% - 30% - 50% - 70% - 90%
+
+    Jadi garis dimulai dari titik tengah
+    bulatan pertama dan berakhir di titik tengah
+    bulatan kelima.
+*/
+
+.timeline::before {
+    content: "";
+    position: absolute;
+
+    left: 10%;
+    right: 10%;
+
+    top: 29px;
+
+    height: 6px;
+
+    background: #dfe6ef;
+
+    border-radius: 10px;
+
+    z-index: 1;
+}
+
+
+/*
+    GARIS HIJAU
+
+    Untuk posisi Disposisi:
+    dari bulatan 1 ke bulatan 3
+
+    10% -> 50%
+    = 40%
+*/
+
+.timeline::after {
+    content: "";
+    position: absolute;
+
+    left: 10%;
+    width: 40%;
+
+    top: 29px;
+
+    height: 6px;
+
+    background: linear-gradient(
+        90deg,
+        #0dbb83,
+        #10b981
+    );
+
+    border-radius: 10px;
+
+    z-index: 2;
+
+    transition: width .5s ease;
+}
+
+
+/* =========================================================
+   TIMELINE ITEM
+========================================================= */
+
+.timeline-item {
+    position: relative;
+    z-index: 5;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+    min-width: 0;
+}
+
+.timeline-circle {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #fff;
+
+    border: 5px solid #dce4ef;
+
+    color: #95a3b7;
+
+    font-size: 20px;
+
+    box-sizing: border-box;
+
+    position: relative;
+    z-index: 10;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        background .25s ease,
+        border-color .25s ease;
+}
+
+.timeline-item.completed .timeline-circle {
+    background: #0dbb83;
+    border-color: #0dbb83;
+    color: #fff;
+
+    box-shadow:
+        0 5px 16px rgba(13,187,131,.25);
+}
+
+.timeline-item.active .timeline-circle {
+    background: #ff9800;
+    border-color: #ff9800;
+    color: #fff;
+
+    box-shadow:
+        0 0 0 6px rgba(255,152,0,.14),
+        0 7px 20px rgba(255,152,0,.3);
+
+    transform: scale(1.05);
+}
+
+.timeline-item.pending .timeline-circle {
+    background: #fff;
+    border-color: #dce4ef;
+    color: #a0adbd;
+}
+
+.timeline-item:hover .timeline-circle {
+    transform: translateY(-3px) scale(1.05);
+}
+
+.timeline-title {
+    margin-top: 13px;
+    font-size: 14px;
+    line-height: 1.3;
+    font-weight: 800;
+    color: #29364c;
+}
+
+.timeline-item.completed .timeline-title {
+    color: #07845b;
+}
+
+.timeline-item.active .timeline-title {
+    color: #e87900;
+}
+
+.timeline-desc {
+    margin-top: 5px;
+    color: #8a99ad;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   ACTIVITY
+========================================================= */
+
+.activity-log-box {
+    margin-top: 25px;
+    background: #f8fafc;
+    border: 1px solid #dfe7f0;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.activity-title {
+    color: #29364c;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.activity-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #dff8ec;
+    color: #0a9a69;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.btn-back-pro {
+    border: none;
+    background: #293b9b;
+    color: #fff;
+    border-radius: 10px;
+
+    padding: 10px 18px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    transition: .25s ease;
+}
+
+.btn-back-pro:hover {
+    background: #1f2f82;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(41,59,155,.2);
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+.view-pane {
+    animation: fadeTracking .35s ease;
+}
+
+@keyframes fadeTracking {
     from {
         opacity: 0;
         transform: translateY(8px);
@@ -194,377 +572,110 @@ body,
 }
 
 
-/* Header */
-
-.progress-header {
-    background: #29398f;
-    color: #fff;
-    padding: 15px 22px;
-    border-radius: 8px 8px 0 0;
-}
-
-.progress-header-title {
-    font-size: 1rem;
-    font-weight: 700;
-    margin: 0;
-}
-
-.progress-header-title i {
-    color: #ffca28;
-    margin-right: 8px;
-}
-
-
-/* Ticket number */
-
-.ticket-summary {
-    text-align: center;
-    padding: 27px 20px 20px;
-    background: #fff;
-}
-
-.ticket-label {
-    color: #777;
-    font-size: .78rem;
-    margin-bottom: 5px;
-}
-
-.ticket-code {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: #263238;
-    margin-bottom: 8px;
-}
-
-.detail-status {
-    display: inline-block;
-    padding: 6px 15px;
-    border-radius: 5px;
-    color: #fff;
-    font-size: .75rem;
-    font-weight: 700;
-    background: #29398f;
-}
-
-
-/* =========================================================
-   PROGRESS STEPPER
-========================================================= */
-
-.progress-container {
-    background: #fff;
-    padding: 30px 6%;
-    overflow-x: auto;
-}
-
-.progress-track {
-    position: relative;
-    min-width: 650px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.progress-line {
-    position: absolute;
-    top: 22px;
-    left: 6%;
-    right: 6%;
-    height: 4px;
-    background: #dfe3e8;
-    z-index: 1;
-}
-
-.progress-line-active {
-    position: absolute;
-    top: 22px;
-    left: 6%;
-    height: 4px;
-    background: #2eae59;
-    z-index: 2;
-    transition: width .4s ease;
-}
-
-.progress-step {
-    position: relative;
-    z-index: 3;
-    width: 20%;
-    text-align: center;
-}
-
-.progress-circle {
-    width: 44px;
-    height: 44px;
-    margin: 0 auto 9px;
-    border-radius: 50%;
-    background: #f1f3f5;
-    border: 3px solid #e0e4e8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #8b939b;
-    font-size: .95rem;
-    transition: .25s ease;
-}
-
-.progress-step.completed .progress-circle {
-    background: #28b45a;
-    border-color: #28b45a;
-    color: #fff;
-}
-
-.progress-step.active .progress-circle {
-    background: #2485e8;
-    border-color: #2485e8;
-    color: #fff;
-    box-shadow: 0 0 0 5px rgba(36,133,232,.12);
-}
-
-.progress-step.completed .step-name {
-    color: #28a852;
-}
-
-.progress-step.active .step-name {
-    color: #2485e8;
-}
-
-.step-name {
-    font-size: .78rem;
-    font-weight: 800;
-    color: #555;
-    margin-bottom: 3px;
-}
-
-.step-status {
-    font-size: .68rem;
-    color: #8b939b;
-}
-
-
-/* =========================================================
-   STATUS TICKET
-========================================================= */
-
-.status-section {
-    background: #fff;
-    margin-top: 18px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 3px 12px rgba(30,55,90,.07);
-}
-
-.status-body {
-    padding: 22px;
-    font-size: .88rem;
-    color: #444;
-}
-
-
-/* =========================================================
-   INFORMASI TIKET
-========================================================= */
-
-.info-section {
-    background: #fff;
-    margin-top: 18px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 3px 12px rgba(30,55,90,.07);
-}
-
-.info-body {
-    padding: 25px;
-}
-
-.info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 80px;
-    row-gap: 22px;
-}
-
-.info-item {
-    min-height: 45px;
-}
-
-.info-label {
-    color: #777;
-    font-size: .76rem;
-    margin-bottom: 5px;
-}
-
-.info-value {
-    color: #263238;
-    font-size: .86rem;
-    font-weight: 500;
-}
-
-.info-value strong {
-    font-weight: 700;
-}
-
-.info-badge {
-    display: inline-block;
-    background: #29398f;
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: .72rem;
-    font-weight: 700;
-}
-
-.info-badge-blue {
-    background: #18a8ba;
-}
-
-
-/* =========================================================
-   RIWAYAT AKTIVITAS
-========================================================= */
-
-.history-section {
-    background: #fff;
-    margin-top: 18px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 3px 12px rgba(30,55,90,.07);
-}
-
-.history-body {
-    padding: 20px 25px;
-}
-
-.history-item {
-    border-left: 3px solid #2196f3;
-    padding: 0 0 18px 18px;
-    margin-left: 3px;
-}
-
-.history-item:last-child {
-    padding-bottom: 0;
-}
-
-.history-title {
-    font-weight: 700;
-    font-size: .86rem;
-    color: #263238;
-}
-
-.history-meta {
-    font-size: .7rem;
-    color: #8b939b;
-    margin-top: 4px;
-}
-
-.history-meta span {
-    margin-right: 14px;
-}
-
-
-/* =========================================================
-   BUTTON BACK
-========================================================= */
-
-.btn-back {
-    margin-top: 20px;
-    margin-bottom: 30px;
-    background: #29398f;
-    color: #fff;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    font-size: .8rem;
-    font-weight: 600;
-}
-
-.btn-back:hover {
-    background: #1d2b75;
-    color: #fff;
-}
-
-
 /* =========================================================
    RESPONSIVE
 ========================================================= */
 
-@media(max-width: 768px) {
+@media (max-width: 900px) {
 
     .tracking-page {
-        padding: 18px 12px;
+        padding: 25px 20px;
     }
 
-    .info-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
+    .timeline-wrapper {
+        overflow-x: auto;
     }
 
-    .progress-container {
-        padding-left: 15px;
-        padding-right: 15px;
+    .timeline {
+        min-width: 720px;
     }
 
-    .progress-track {
-        min-width: 600px;
+}
+
+@media (max-width: 576px) {
+
+    .tracking-page {
+        padding: 20px 12px;
     }
 
-    .table-tracking {
-        min-width: 850px;
+    .page-header-title {
+        font-size: 24px;
     }
+
+    .timeline {
+        min-width: 650px;
+    }
+
 }
 
 </style>
 
 
-<div class="container-fluid tracking-page">
+<div class="tracking-page">
 
     <!-- =====================================================
-         VIEW DAFTAR TRACKING
+         HALAMAN UTAMA TRACKING
     ====================================================== -->
 
-    <div id="viewIndexTracking">
+    <div id="viewIndexTracking" class="view-pane">
 
         <div class="mb-4">
-            <h3 class="page-title mb-1">
+
+            <h3 class="page-header-title mb-1">
                 <i class="fas fa-route me-2"></i>
                 Tracking Status Tiket
             </h3>
 
             <p class="page-subtitle mb-0">
-                Daftar permohonan layanan yang telah didisposisikan ke unit untuk dipantau progresnya.
+                Daftar permohonan layanan yang telah didisposisikan
+                ke unit untuk dipantau progresnya.
             </p>
+
         </div>
 
 
-        <div class="tracking-card">
+        <div class="dashboard-card">
 
-            <div class="tracking-card-header">
-                <i class="fas fa-location-arrow"></i>
-                Tracking Progres Tiket
-            </div>
-
+            <!-- SEARCH -->
 
             <div class="search-area">
 
-                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div class="d-flex flex-column flex-lg-row
+                            align-items-lg-center
+                            justify-content-between gap-3">
 
-                    <div class="position-relative" style="width: 330px; max-width: 100%;">
+                    <div class="search-box-wrapper">
 
                         <i class="fas fa-search search-icon"></i>
 
                         <input
                             type="text"
                             id="searchTrackingInput"
-                            class="form-control search-input"
-                            placeholder="Cari nomor tiket atau nama pemohon..."
+                            class="form-control"
+                            placeholder="Cari nomor tiket, nama pemohon, atau layanan..."
+                            autocomplete="off"
                         >
+
+                        <button
+                            type="button"
+                            id="btnClearSearch"
+                            class="btn-clear-search"
+                        >
+                            <i class="fas fa-times"></i>
+                        </button>
 
                     </div>
 
 
-                    <div class="fw-semibold text-muted small">
+                    <div class="search-result-info">
 
                         Total Disposisi:
 
-                        <span class="badge bg-primary rounded-pill px-3 py-2">
+                        <span
+                            id="totalDisposisiBadge"
+                            class="badge text-white ms-1 px-3 py-2 rounded-pill"
+                            style="background:#293b9b;"
+                        >
                             6 Tiket
                         </span>
 
@@ -572,18 +683,46 @@ body,
 
                 </div>
 
+
+                <div id="searchBackRow" class="search-back-row">
+
+                    <button
+                        type="button"
+                        id="btnBackSearch"
+                        class="btn-back-search"
+                    >
+                        <i class="fas fa-arrow-left me-1"></i>
+                        Kembali / Tampilkan Semua
+                    </button>
+
+                    <span
+                        id="searchInfoText"
+                        class="ms-3 search-result-info"
+                    >
+                        Menampilkan hasil pencarian
+                    </span>
+
+                </div>
+
             </div>
 
 
+            <!-- TABLE -->
+
             <div class="table-responsive">
 
-                <table class="table table-tracking" id="tabelTrackingIndex">
+                <table
+                    class="table table-dashboard"
+                    id="tabelTrackingIndex"
+                >
 
                     <thead>
 
                         <tr class="text-center">
 
-                            <th width="60">No</th>
+                            <th style="width:60px;">
+                                No
+                            </th>
 
                             <th class="text-start">
                                 Nomor Tiket
@@ -601,7 +740,7 @@ body,
                                 Status
                             </th>
 
-                            <th width="160">
+                            <th style="width:170px;">
                                 Aksi
                             </th>
 
@@ -612,76 +751,76 @@ body,
 
                     <tbody>
 
-                        <?php
+                    <?php
 
-                        $disposisiData = [
+                    $disposisiData = [
 
-                            [
-                                'ULT-20260806074739865',
-                                'Asep',
-                                'Keuangan',
-                                'Verified',
-                                'Bagian Keuangan',
-                                'Dokumen pengajuan anggaran telah diverifikasi lengkap, valid, dan didisposisikan ke Bagian Keuangan.'
-                            ],
+                        [
+                            'ULT-20260806074739865',
+                            'Asep',
+                            'Keuangan',
+                            'Verified',
+                            'Bagian Keuangan',
+                            'Dokumen pengajuan anggaran telah diverifikasi lengkap, valid, dan didisposisikan ke Bagian Keuangan.'
+                        ],
 
-                            [
-                                'ULT-20260805023213577',
-                                'Apin',
-                                'Beasiswa',
-                                'Verified',
-                                'Bagian Akademik & Kemahasiswaan',
-                                'Syarat administratif beasiswa memenuhi kriteria dan telah didisposisikan.'
-                            ],
+                        [
+                            'ULT-20260805023213577',
+                            'Apin',
+                            'Beasiswa',
+                            'Verified',
+                            'Bagian Akademik & Kemahasiswaan',
+                            'Syarat administratif beasiswa memenuhi kriteria dan telah didisposisikan.'
+                        ],
 
-                            [
-                                'ULT-20260730081403481',
-                                'Apin',
-                                'Kemahasiswaan',
-                                'Assigned',
-                                'Bagian Akademik & Kemahasiswaan',
-                                'Tiket telah diverifikasi dan masuk tahap disposisi pimpinan unit kemahasiswaan.'
-                            ],
+                        [
+                            'ULT-20260730081403481',
+                            'Apin',
+                            'Kemahasiswaan',
+                            'Assigned',
+                            'Bagian Akademik & Kemahasiswaan',
+                            'Tiket telah diverifikasi dan masuk tahap disposisi pimpinan unit kemahasiswaan.'
+                        ],
 
-                            [
-                                'ULT-20260730080403262',
-                                'Ikbal',
-                                'Kemahasiswaan',
-                                'Assigned',
-                                'Subbag Kerjasama & Humas',
-                                'Disposisi tiket diterima unit untuk koordinasi layanan tamu institusi.'
-                            ],
+                        [
+                            'ULT-20260730080403262',
+                            'Ikbal',
+                            'Kemahasiswaan',
+                            'Assigned',
+                            'Subbag Kerjasama & Humas',
+                            'Disposisi tiket diterima unit untuk koordinasi layanan tamu institusi.'
+                        ],
 
-                            [
-                                'ULT-20260730002942605',
-                                'Rizki AM',
-                                'Beasiswa',
-                                'Assigned',
-                                'Bagian Keuangan',
-                                'Verifikasi berkas rekening telah selesai dan didisposisikan ke petugas loket.'
-                            ],
+                        [
+                            'ULT-20260730002942605',
+                            'Rizki AM',
+                            'Beasiswa',
+                            'Assigned',
+                            'Bagian Keuangan',
+                            'Verifikasi berkas rekening telah selesai dan didisposisikan ke petugas loket.'
+                        ],
 
-                            [
-                                'ULT-20260730002841489',
-                                'Adit',
-                                'Informasi Akademik',
-                                'Assigned',
-                                'UPT TIK',
-                                'Disposisi penanganan sistem informasi akademik diteruskan ke tim teknis UPT TIK.'
-                            ]
+                        [
+                            'ULT-20260730002841489',
+                            'Adit',
+                            'Informasi Akademik',
+                            'Assigned',
+                            'UPT TIK',
+                            'Disposisi penanganan sistem informasi akademik diteruskan ke tim teknis UPT TIK.'
+                        ]
 
-                        ];
+                    ];
 
 
-                        foreach ($disposisiData as $i => $row):
+                    foreach ($disposisiData as $i => $row):
 
-                        ?>
+                    ?>
 
                         <tr
                             class="tracking-row text-center"
-                            data-notiket="<?= $row[0] ?>"
-                            data-nama="<?= strtolower($row[1]) ?>"
-                            data-layanan="<?= strtolower($row[2]) ?>"
+                            data-notiket="<?= esc(strtolower($row[0])) ?>"
+                            data-nama="<?= esc(strtolower($row[1])) ?>"
+                            data-layanan="<?= esc(strtolower($row[2])) ?>"
                         >
 
                             <td class="fw-bold text-muted">
@@ -689,24 +828,20 @@ body,
                             </td>
 
 
-                            <td class="text-start">
-
-                                <span class="ticket-number">
-                                    <?= $row[0] ?>
-                                </span>
-
+                            <td class="text-start fw-bold text-primary font-monospace">
+                                <?= esc($row[0]) ?>
                             </td>
 
 
-                            <td class="text-start fw-bold">
-                                <?= $row[1] ?>
+                            <td class="text-start fw-bold text-dark">
+                                <?= esc($row[1]) ?>
                             </td>
 
 
                             <td class="text-start">
 
                                 <span class="service-tag">
-                                    <?= $row[2] ?>
+                                    <?= esc($row[2]) ?>
                                 </span>
 
                             </td>
@@ -714,16 +849,20 @@ body,
 
                             <td>
 
-                                <span class="status-badge
-                                    <?= ($row[3] == 'Verified')
-                                        ? 'status-verified'
-                                        : 'status-assigned'
+                                <span
+                                    class="badge-status
+                                    <?= ($row[3] === 'Verified')
+                                        ? 'badge-verified'
+                                        : 'badge-assigned'
                                     ?>"
                                 >
 
-                                    <i class="fas fa-circle" style="font-size:5px;"></i>
+                                    <i
+                                        class="fas fa-circle"
+                                        style="font-size:6px;"
+                                    ></i>
 
-                                    <?= $row[3] ?>
+                                    <?= esc($row[3]) ?>
 
                                 </span>
 
@@ -734,17 +873,16 @@ body,
 
                                 <button
                                     type="button"
-                                    class="btn-progress btn-lihat-progres"
-                                    data-notiket="<?= $row[0] ?>"
-                                    data-nama="<?= $row[1] ?>"
-                                    data-layanan="<?= $row[2] ?>"
-                                    data-status="<?= $row[3] ?>"
-                                    data-unit="<?= $row[4] ?>"
-                                    data-catatan="<?= $row[5] ?>"
+                                    class="btn-action-view btn-lihat-progres"
+                                    data-notiket="<?= esc($row[0]) ?>"
+                                    data-nama="<?= esc($row[1]) ?>"
+                                    data-layanan="<?= esc($row[2]) ?>"
+                                    data-status="<?= esc($row[3]) ?>"
+                                    data-unit="<?= esc($row[4]) ?>"
+                                    data-catatan="<?= esc($row[5]) ?>"
                                 >
 
-                                    <i class="fas fa-route me-1"></i>
-
+                                    <i class="fas fa-route"></i>
                                     Lihat Progres
 
                                 </button>
@@ -753,7 +891,33 @@ body,
 
                         </tr>
 
-                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+
+
+                    <tr
+                        id="noResultRow"
+                        class="no-result-row"
+                        style="display:none;"
+                    >
+
+                        <td colspan="6">
+
+                            <i
+                                class="fas fa-search-minus fa-2x mb-3"
+                            ></i>
+
+                            <div class="fw-bold">
+                                Tiket tidak ditemukan
+                            </div>
+
+                            <small>
+                                Coba gunakan nomor tiket,
+                                nama pemohon, atau layanan lain.
+                            </small>
+
+                        </td>
+
+                    </tr>
 
                     </tbody>
 
@@ -768,67 +932,63 @@ body,
 
 
     <!-- =====================================================
-         VIEW DETAIL TRACKING
+         DETAIL TRACKING
     ====================================================== -->
 
-    <div id="viewDetailTracking" class="detail-wrapper d-none">
+    <div
+        id="viewDetailTracking"
+        class="view-pane d-none"
+    >
 
         <div class="mb-4">
 
-            <h3 class="page-title mb-1">
+            <h3 class="page-header-title mb-1">
 
-                <i class="fas fa-route me-2"></i>
+                <i class="fas fa-chart-line me-2"></i>
 
-                Tracking Progres Tiket
+                Tracking Status Tiket
 
             </h3>
 
             <p class="page-subtitle mb-0">
 
-                Pantau dan lacak detail tahapan penyelesaian permohonan layanan secara real-time.
+                Pantau dan lacak detail tahapan penyelesaian
+                permohonan layanan secara real-time.
 
             </p>
 
         </div>
 
 
-        <!-- =================================================
-             CARD PROGRES
-        ================================================== -->
+        <div class="dashboard-card mb-4">
 
-        <div class="tracking-card">
+            <!-- DETAIL HEADER -->
 
-            <div class="progress-header">
+            <div
+                class="detail-header-card py-3 px-4
+                       d-flex justify-content-between
+                       align-items-center"
+            >
 
-                <h5 class="progress-header-title">
+                <div class="d-flex align-items-center gap-2">
 
-                    <i class="fas fa-map-marker-alt"></i>
+                    <i
+                        class="fas fa-ticket-alt"
+                        style="color:#ffd000;"
+                    ></i>
 
-                    Tracking Progres Tiket
+                    <h5 class="mb-0 fw-bold">
 
-                </h5>
+                        Detail Pelacakan Tiket Layanan
 
-            </div>
+                    </h5>
 
-
-            <!-- NOMOR TIKET -->
-
-            <div class="ticket-summary">
-
-                <div class="ticket-label">
-                    Nomor Tiket
                 </div>
 
-                <div
-                    id="detailNoTiket"
-                    class="ticket-code"
-                >
-                    -
-                </div>
 
                 <span
                     id="detailBadgeStatus"
-                    class="detail-status"
+                    class="detail-status assigned"
                 >
                     Assigned
                 </span>
@@ -836,137 +996,360 @@ body,
             </div>
 
 
-            <!-- =================================================
-                 STEPPER
-            ================================================== -->
+            <div class="card-body p-4">
 
-            <div class="progress-container">
+                <!-- INFO ROW 1 -->
 
-                <div class="progress-track">
+                <div class="row g-3 mb-4">
 
-                    <div class="progress-line"></div>
+                    <div class="col-md-3 col-sm-6">
 
-                    <div
-                        class="progress-line-active"
-                        id="dynamicProgressBar"
-                    ></div>
+                        <div class="info-metric-card">
 
+                            <span class="info-label">
 
-                    <!-- STEP 1 -->
+                                <i class="fas fa-hashtag text-primary me-1"></i>
+                                Nomor Tiket
 
-                    <div
-                        class="progress-step completed"
-                        id="step1"
-                    >
+                            </span>
 
-                        <div class="progress-circle">
+                            <strong
+                                id="detailNoTiket"
+                                class="info-value text-primary font-monospace"
+                            >
+                                -
+                            </strong>
 
-                            <i class="fas fa-check"></i>
-
-                        </div>
-
-                        <div class="step-name">
-                            Diajukan
-                        </div>
-
-                        <div class="step-status">
-                            Selesai
                         </div>
 
                     </div>
 
 
-                    <!-- STEP 2 -->
+                    <div class="col-md-3 col-sm-6">
 
-                    <div
-                        class="progress-step completed"
-                        id="step2"
-                    >
+                        <div class="info-metric-card">
 
-                        <div class="progress-circle">
+                            <span class="info-label">
 
-                            <i class="fas fa-check"></i>
+                                <i class="fas fa-user text-primary me-1"></i>
+                                Nama Pemohon
 
-                        </div>
+                            </span>
 
-                        <div class="step-name">
-                            Diverifikasi
-                        </div>
+                            <strong
+                                id="detailNama"
+                                class="info-value"
+                            >
+                                -
+                            </strong>
 
-                        <div class="step-status">
-                            Selesai
                         </div>
 
                     </div>
 
 
-                    <!-- STEP 3 -->
+                    <div class="col-md-3 col-sm-6">
 
-                    <div
-                        class="progress-step active"
-                        id="step3"
-                    >
+                        <div class="info-metric-card">
 
-                        <div class="progress-circle">
+                            <span class="info-label">
 
-                            <i class="fas fa-arrow-right"></i>
+                                <i class="fas fa-concierge-bell text-primary me-1"></i>
+                                Kategori Layanan
 
-                        </div>
+                            </span>
 
-                        <div class="step-name">
-                            Didisposisi
-                        </div>
+                            <strong
+                                id="detailLayanan"
+                                class="info-value"
+                            >
+                                -
+                            </strong>
 
-                        <div class="step-status">
-                            Selesai
                         </div>
 
                     </div>
 
 
-                    <!-- STEP 4 -->
+                    <div class="col-md-3 col-sm-6">
 
-                    <div
-                        class="progress-step"
-                        id="step4"
-                    >
+                        <div class="info-metric-card">
 
-                        <div class="progress-circle">
+                            <span class="info-label">
 
-                            <i class="fas fa-cog"></i>
+                                <i class="far fa-calendar-alt text-primary me-1"></i>
+                                Tanggal Pengajuan
+
+                            </span>
+
+                            <strong class="info-value">
+                                10-08-2026 14:00
+                            </strong>
 
                         </div>
 
-                        <div class="step-name">
-                            Diproses Unit
-                        </div>
+                    </div>
 
-                        <div class="step-status">
-                            Menunggu
+                </div>
+
+
+                <!-- INFO ROW 2 -->
+
+                <div class="row g-3 mb-4">
+
+                    <div class="col-md-6">
+
+                        <div class="info-metric-card">
+
+                            <span class="info-label">
+
+                                <i class="fas fa-sitemap text-success me-1"></i>
+                                Unit Disposisi Tujuan
+
+                            </span>
+
+                            <strong
+                                id="detailUnit"
+                                class="info-value"
+                            >
+                                -
+                            </strong>
+
                         </div>
 
                     </div>
 
 
-                    <!-- STEP 5 -->
+                    <div class="col-md-6">
 
-                    <div
-                        class="progress-step"
-                        id="step5"
-                    >
+                        <div class="info-metric-card">
 
-                        <div class="progress-circle">
+                            <span class="info-label">
 
-                            <i class="fas fa-check"></i>
+                                <i class="fas fa-clock text-warning me-1"></i>
+                                Estimasi Waktu Penanganan
+
+                            </span>
+
+                            <strong class="info-value">
+                                1 - 2 Hari Kerja
+                            </strong>
 
                         </div>
 
-                        <div class="step-name">
-                            Selesai
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     LINIMASA
+                ================================================== -->
+
+                <div class="pt-3 border-top">
+
+                    <h6 class="fw-bold text-dark mb-0">
+
+                        <i
+                            class="fas fa-route me-2"
+                            style="color:#ff9800;"
+                        ></i>
+
+                        Linimasa Tahapan Progres
+
+                    </h6>
+
+
+                    <div class="timeline-wrapper">
+
+                        <div class="timeline">
+
+                            <!-- 1 -->
+
+                            <div
+                                id="step1"
+                                class="timeline-item completed"
+                            >
+
+                                <div class="timeline-circle">
+
+                                    <i class="fas fa-paper-plane"></i>
+
+                                </div>
+
+                                <div class="timeline-title">
+                                    Diajukan
+                                </div>
+
+                                <div class="timeline-desc">
+                                    Tiket Dibuat
+                                </div>
+
+                            </div>
+
+
+                            <!-- 2 -->
+
+                            <div
+                                id="step2"
+                                class="timeline-item completed"
+                            >
+
+                                <div class="timeline-circle">
+
+                                    <i class="fas fa-user-check"></i>
+
+                                </div>
+
+                                <div class="timeline-title">
+                                    Verifikasi
+                                </div>
+
+                                <div class="timeline-desc">
+                                    Cek Berkas
+                                </div>
+
+                            </div>
+
+
+                            <!-- 3 -->
+
+                            <div
+                                id="step3"
+                                class="timeline-item active"
+                            >
+
+                                <div class="timeline-circle">
+
+                                    <i class="fas fa-share-square"></i>
+
+                                </div>
+
+                                <div class="timeline-title">
+                                    Disposisi
+                                </div>
+
+                                <div class="timeline-desc">
+                                    Diteruskan Unit
+                                </div>
+
+                            </div>
+
+
+                            <!-- 4 -->
+
+                            <div
+                                id="step4"
+                                class="timeline-item pending"
+                            >
+
+                                <div class="timeline-circle">
+
+                                    <i class="fas fa-cogs"></i>
+
+                                </div>
+
+                                <div class="timeline-title">
+                                    Proses Unit
+                                </div>
+
+                                <div class="timeline-desc">
+                                    Dikerjakan
+                                </div>
+
+                            </div>
+
+
+                            <!-- 5 -->
+
+                            <div
+                                id="step5"
+                                class="timeline-item pending"
+                            >
+
+                                <div class="timeline-circle">
+
+                                    <i class="fas fa-check-circle"></i>
+
+                                </div>
+
+                                <div class="timeline-title">
+                                    Selesai
+                                </div>
+
+                                <div class="timeline-desc">
+                                    Tuntas
+                                </div>
+
+                            </div>
+
                         </div>
 
-                        <div class="step-status">
-                            Menunggu
+                    </div>
+
+
+
+                    <!-- =================================================
+                         RIWAYAT
+                    ================================================== -->
+
+                    <div class="activity-log-box">
+
+                        <div class="d-flex align-items-center">
+
+                            <i
+                                class="fas fa-history text-primary me-2"
+                            ></i>
+
+                            <strong class="activity-title">
+
+                                Riwayat Aktivitas &
+                                Catatan Petugas Unit
+
+                            </strong>
+
+                        </div>
+
+
+                        <hr>
+
+
+                        <div class="d-flex align-items-start gap-3">
+
+                            <div class="activity-icon">
+
+                                <i class="fas fa-check"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <strong
+                                    class="d-block"
+                                    style="font-size:14px;"
+                                >
+                                    Pembaruan Status Disposisi
+                                </strong>
+
+                                <p
+                                    id="detailCatatan"
+                                    class="mb-1 text-muted small"
+                                >
+                                    -
+                                </p>
+
+                                <small class="text-muted">
+
+                                    <i class="far fa-clock me-1"></i>
+
+                                    10 Agustus 2026,
+                                    14:30 WIB
+
+                                </small>
+
+                            </div>
+
                         </div>
 
                     </div>
@@ -978,346 +1361,23 @@ body,
         </div>
 
 
+        <!-- TOMBOL KEMBALI -->
 
-        <!-- =================================================
-             STATUS TIKET
-        ================================================== -->
+        <div class="mb-4">
 
-        <div class="status-section">
-
-            <div class="tracking-card-header">
-
-                <i class="fas fa-circle-info"></i>
-
-                Status Tiket
-
-            </div>
-
-
-            <div
-                class="status-body"
-                id="detailStatusText"
+            <button
+                type="button"
+                id="btnKembaliIndex"
+                class="btn-back-pro"
             >
 
-                Tiket sudah didisposisikan ke unit dan menunggu diproses oleh unit.
+                <i class="fas fa-arrow-left me-1"></i>
 
-            </div>
+                Kembali ke Daftar Tracking
+
+            </button>
 
         </div>
-
-
-
-        <!-- =================================================
-             INFORMASI TIKET
-        ================================================== -->
-
-        <div class="info-section">
-
-            <div class="tracking-card-header">
-
-                <i class="fas fa-info-circle"></i>
-
-                Informasi Tiket
-
-            </div>
-
-
-            <div class="info-body">
-
-                <div class="info-grid">
-
-
-                    <!-- KIRI -->
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            Nomor Tiket
-                        </div>
-
-                        <div
-                            id="infoNoTiket"
-                            class="info-value"
-                        >
-                            -
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            Email
-                        </div>
-
-                        <div class="info-value">
-                            zhufa@gmail.com
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            Nama Pemohon
-                        </div>
-
-                        <div
-                            id="infoNama"
-                            class="info-value"
-                        >
-                            -
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            Layanan
-                        </div>
-
-                        <div
-                            id="infoLayanan"
-                            class="info-value"
-                        >
-                            -
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            NIM
-                        </div>
-
-                        <div class="info-value">
-                            0987665
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            Sumber
-                        </div>
-
-                        <div class="info-value">
-                            Online
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            Nomor HP
-                        </div>
-
-                        <div class="info-value">
-                            0987666
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            Unit Tujuan
-                        </div>
-
-                        <div
-                            id="infoUnit"
-                            class="info-value"
-                        >
-                            <span class="info-badge">
-                                <i class="fas fa-building me-1"></i>
-                                -
-                            </span>
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            Judul Tiket
-                        </div>
-
-                        <div class="info-value">
-                            -
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            Status
-                        </div>
-
-                        <div
-                            id="infoStatus"
-                            class="info-value"
-                        >
-                            <span class="info-badge">
-                                Assigned
-                            </span>
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            Prioritas
-                        </div>
-
-                        <div class="info-value">
-                            Normal
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            Lama Proses
-                        </div>
-
-                        <div class="info-value">
-
-                            <span class="info-badge info-badge-blue">
-
-                                17 Hari 22 Jam
-
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =================================================
-             RIWAYAT AKTIVITAS
-        ================================================== -->
-
-        <div class="history-section">
-
-            <div class="tracking-card-header">
-
-                <i class="fas fa-clock-rotate-left"></i>
-
-                Riwayat Aktivitas
-
-            </div>
-
-
-            <div class="history-body">
-
-                <div class="history-item">
-
-                    <div class="history-title">
-                        Aktivitas tiket
-                    </div>
-
-                    <div class="history-meta">
-
-                        <span>
-                            2026-07-27 01:10:44
-                        </span>
-
-                        <span>
-                            Administrator
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="history-item">
-
-                    <div class="history-title">
-                        Aktivitas tiket
-                    </div>
-
-                    <div class="history-meta">
-
-                        <span>
-                            2026-07-27 05:18:38
-                        </span>
-
-                        <span>
-                            Administrator
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="history-item">
-
-                    <div class="history-title">
-                        Aktivitas tiket
-                    </div>
-
-                    <div class="history-meta">
-
-                        <span>
-                            2026-07-27 09:46:09
-                        </span>
-
-                        <span>
-                            Administrator
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =================================================
-             KEMBALI
-        ================================================== -->
-
-        <button
-            type="button"
-            id="btnKembaliIndex"
-            class="btn btn-back"
-        >
-
-            <i class="fas fa-arrow-left me-1"></i>
-
-            Kembali ke Tracking
-
-        </button>
 
     </div>
 
@@ -1327,12 +1387,11 @@ body,
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function () {
 
-
-    /* =====================================================
+    /* =========================================================
        ELEMENT
-    ===================================================== */
+    ========================================================= */
 
     const viewIndex =
         document.getElementById('viewIndexTracking');
@@ -1340,47 +1399,62 @@ document.addEventListener("DOMContentLoaded", function () {
     const viewDetail =
         document.getElementById('viewDetailTracking');
 
-    const buttons =
-        document.querySelectorAll('.btn-lihat-progres');
+    const searchInput =
+        document.getElementById('searchTrackingInput');
 
-    const btnBack =
+    const clearButton =
+        document.getElementById('btnClearSearch');
+
+    const backSearchButton =
+        document.getElementById('btnBackSearch');
+
+    const searchBackRow =
+        document.getElementById('searchBackRow');
+
+    const searchInfoText =
+        document.getElementById('searchInfoText');
+
+    const noResultRow =
+        document.getElementById('noResultRow');
+
+    const totalBadge =
+        document.getElementById('totalDisposisiBadge');
+
+    const trackingRows =
+        document.querySelectorAll('.tracking-row');
+
+    const btnKembaliIndex =
         document.getElementById('btnKembaliIndex');
 
 
-    /* DETAIL */
+
+    /* =========================================================
+       DETAIL ELEMENT
+    ========================================================= */
 
     const detailNoTiket =
         document.getElementById('detailNoTiket');
 
+    const detailNama =
+        document.getElementById('detailNama');
+
+    const detailLayanan =
+        document.getElementById('detailLayanan');
+
     const detailBadgeStatus =
         document.getElementById('detailBadgeStatus');
 
+    const detailUnit =
+        document.getElementById('detailUnit');
 
-    /* INFO */
-
-    const infoNoTiket =
-        document.getElementById('infoNoTiket');
-
-    const infoNama =
-        document.getElementById('infoNama');
-
-    const infoLayanan =
-        document.getElementById('infoLayanan');
-
-    const infoUnit =
-        document.getElementById('infoUnit');
-
-    const infoStatus =
-        document.getElementById('infoStatus');
+    const detailCatatan =
+        document.getElementById('detailCatatan');
 
 
-    /* STATUS */
 
-    const detailStatusText =
-        document.getElementById('detailStatusText');
-
-
-    /* STEPPER */
+    /* =========================================================
+       TIMELINE
+    ========================================================= */
 
     const step1 =
         document.getElementById('step1');
@@ -1397,271 +1471,357 @@ document.addEventListener("DOMContentLoaded", function () {
     const step5 =
         document.getElementById('step5');
 
-    const progress =
-        document.getElementById('dynamicProgressBar');
 
 
+    /* =========================================================
+       RESET TIMELINE
+    ========================================================= */
 
-    /* =====================================================
-       FUNGSI UPDATE STEPPER
-    ===================================================== */
-
-    function resetSteps() {
-
-        step1.className = 'progress-step';
-        step2.className = 'progress-step';
-        step3.className = 'progress-step';
-        step4.className = 'progress-step';
-        step5.className = 'progress-step';
-
-        progress.style.width = '0%';
-
-    }
-
-
-    function setAssigned() {
-
-        resetSteps();
+    function resetTimeline() {
 
         step1.className =
-            'progress-step completed';
+            'timeline-item completed';
 
         step2.className =
-            'progress-step completed';
+            'timeline-item completed';
 
         step3.className =
-            'progress-step active';
-
-        progress.style.width =
-            '50%';
-
-        step3.querySelector('.step-status').innerText =
-            'Sedang diproses';
-
-        step4.querySelector('.step-status').innerText =
-            'Menunggu';
-
-        step5.querySelector('.step-status').innerText =
-            'Menunggu';
-
-    }
-
-
-    function setVerified() {
-
-        resetSteps();
-
-        step1.className =
-            'progress-step completed';
-
-        step2.className =
-            'progress-step completed';
-
-        step3.className =
-            'progress-step completed';
+            'timeline-item active';
 
         step4.className =
-            'progress-step completed';
+            'timeline-item pending';
 
         step5.className =
-            'progress-step completed';
-
-        progress.style.width =
-            '100%';
-
-        step3.querySelector('.step-status').innerText =
-            'Selesai';
-
-        step4.querySelector('.step-status').innerText =
-            'Selesai';
-
-        step5.querySelector('.step-status').innerText =
-            'Selesai';
+            'timeline-item pending';
 
     }
 
 
 
-    /* =====================================================
-       TOMBOL LIHAT PROGRES
-    ===================================================== */
+    /* =========================================================
+       SET STATUS DISPOSISI
+       
+       PENTING:
+       Assigned / Verified hanya sampai DISPOSISI.
+       Tidak boleh langsung Selesai.
+    ========================================================= */
 
-    buttons.forEach(function(button) {
+    function setDisposisiStatus(status) {
 
-        button.addEventListener('click', function() {
+        resetTimeline();
 
-
-            const noTiket =
-                this.dataset.notiket;
-
-            const nama =
-                this.dataset.nama;
-
-            const layanan =
-                this.dataset.layanan;
-
-            const status =
-                this.dataset.status;
-
-            const unit =
-                this.dataset.unit;
-
-
-            /* DETAIL */
-
-            detailNoTiket.innerText =
-                noTiket;
-
+        if (status === 'Verified') {
 
             detailBadgeStatus.innerText =
-                status;
+                'Verified';
+
+            detailBadgeStatus.className =
+                'detail-status verified';
+
+        } else {
+
+            detailBadgeStatus.innerText =
+                'Assigned';
+
+            detailBadgeStatus.className =
+                'detail-status assigned';
+
+        }
+
+    }
 
 
-            /* INFO */
 
-            infoNoTiket.innerText =
-                noTiket;
+    /* =========================================================
+       LIHAT PROGRES
+    ========================================================= */
 
-            infoNama.innerText =
-                nama;
+    document
+        .querySelectorAll('.btn-lihat-progres')
+        .forEach(function (button) {
 
-            infoLayanan.innerText =
-                layanan;
+            button.addEventListener('click', function () {
+
+                const noTiket =
+                    this.dataset.notiket;
+
+                const nama =
+                    this.dataset.nama;
+
+                const layanan =
+                    this.dataset.layanan;
+
+                const status =
+                    this.dataset.status;
+
+                const unit =
+                    this.dataset.unit;
+
+                const catatan =
+                    this.dataset.catatan;
 
 
-            infoUnit.innerHTML =
-                '<span class="info-badge">' +
-                '<i class="fas fa-building me-1"></i>' +
-                unit +
-                '</span>';
+
+                detailNoTiket.innerText =
+                    noTiket;
+
+                detailNama.innerText =
+                    nama;
+
+                detailLayanan.innerText =
+                    layanan;
+
+                detailUnit.innerText =
+                    unit;
+
+                detailCatatan.innerText =
+                    catatan;
 
 
-            infoStatus.innerHTML =
-                '<span class="info-badge">' +
-                status +
-                '</span>';
+
+                setDisposisiStatus(status);
 
 
-            /* STATUS TIKET */
 
-            if (status === 'Verified') {
+                viewIndex.classList.add('d-none');
 
-                detailStatusText.innerText =
-                    'Tiket telah diverifikasi dan seluruh proses penanganan layanan telah diselesaikan.';
+                viewDetail.classList.remove('d-none');
 
-                setVerified();
 
-                detailBadgeStatus.style.background =
-                    '#28b45a';
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+
+            });
+
+        });
+
+
+
+    /* =========================================================
+       KEMBALI KE DAFTAR TRACKING
+    ========================================================= */
+
+    if (btnKembaliIndex) {
+
+        btnKembaliIndex.addEventListener(
+            'click',
+            function () {
+
+                viewDetail.classList.add(
+                    'd-none'
+                );
+
+                viewIndex.classList.remove(
+                    'd-none'
+                );
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+
+            }
+        );
+
+    }
+
+
+
+    /* =========================================================
+       SEARCH
+    ========================================================= */
+
+    function performSearch() {
+
+        const keyword =
+            searchInput.value
+                .toLowerCase()
+                .trim();
+
+
+
+        let visibleCount = 0;
+
+
+
+        trackingRows.forEach(function (row) {
+
+            const noTiket =
+                row.dataset.notiket || '';
+
+            const nama =
+                row.dataset.nama || '';
+
+            const layanan =
+                row.dataset.layanan || '';
+
+
+
+            const match =
+                noTiket.includes(keyword) ||
+                nama.includes(keyword) ||
+                layanan.includes(keyword);
+
+
+
+            if (match) {
+
+                row.style.display = '';
+
+                visibleCount++;
 
             } else {
 
-                detailStatusText.innerText =
-                    'Tiket sudah didisposisikan ke unit dan menunggu diproses oleh unit.';
-
-                setAssigned();
-
-                detailBadgeStatus.style.background =
-                    '#29398f';
+                row.style.display = 'none';
 
             }
 
-
-            /* PINDAH VIEW */
-
-            viewIndex.classList.add('d-none');
-
-            viewDetail.classList.remove('d-none');
-
-
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-
         });
 
-    });
+
+
+        /* TAMPILKAN / SEMBUNYIKAN NO RESULT */
+
+        if (noResultRow) {
+
+            noResultRow.style.display =
+                visibleCount === 0
+                ? ''
+                : 'none';
+
+        }
 
 
 
-    /* =====================================================
-       KEMBALI
-    ===================================================== */
+        /* CLEAR BUTTON */
 
-    if (btnBack) {
+        if (clearButton) {
 
-        btnBack.addEventListener('click', function() {
+            clearButton.style.display =
+                keyword.length > 0
+                ? 'flex'
+                : 'none';
 
-            viewDetail.classList.add('d-none');
+        }
 
-            viewIndex.classList.remove('d-none');
 
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
 
-        });
+        /* TOMBOL KEMBALI */
+
+        if (searchBackRow) {
+
+            searchBackRow.style.display =
+                keyword.length > 0
+                ? 'flex'
+                : 'none';
+
+        }
+
+
+
+        /* TOTAL */
+
+        if (totalBadge) {
+
+            totalBadge.innerText =
+                keyword.length > 0
+                ? visibleCount + ' Tiket'
+                : trackingRows.length + ' Tiket';
+
+        }
+
+
+
+        if (searchInfoText) {
+
+            if (keyword.length > 0) {
+
+                searchInfoText.innerText =
+                    'Menampilkan ' +
+                    visibleCount +
+                    ' hasil pencarian';
+
+            } else {
+
+                searchInfoText.innerText =
+                    'Menampilkan seluruh data tiket';
+
+            }
+
+        }
 
     }
 
-
-
-    /* =====================================================
-       SEARCH
-    ===================================================== */
-
-    const searchInput =
-        document.getElementById('searchTrackingInput');
-
-    const rows =
-        document.querySelectorAll('.tracking-row');
 
 
     if (searchInput) {
 
-        searchInput.addEventListener('input', function() {
-
-            const keyword =
-                this.value.toLowerCase().trim();
-
-
-            rows.forEach(function(row) {
-
-                const noTiket =
-                    row.dataset.notiket.toLowerCase();
-
-                const nama =
-                    row.dataset.nama.toLowerCase();
-
-                const layanan =
-                    row.dataset.layanan.toLowerCase();
-
-
-                if (
-                    noTiket.includes(keyword) ||
-                    nama.includes(keyword) ||
-                    layanan.includes(keyword)
-                ) {
-
-                    row.style.display = '';
-
-                } else {
-
-                    row.style.display = 'none';
-
-                }
-
-            });
-
-        });
+        searchInput.addEventListener(
+            'input',
+            performSearch
+        );
 
     }
+
+
+
+    /* =========================================================
+       CLEAR SEARCH
+    ========================================================= */
+
+    if (clearButton) {
+
+        clearButton.addEventListener(
+            'click',
+            function () {
+
+                searchInput.value = '';
+
+                performSearch();
+
+                searchInput.focus();
+
+            }
+        );
+
+    }
+
+
+
+    /* =========================================================
+       KEMBALI / TAMPILKAN SEMUA
+    ========================================================= */
+
+    if (backSearchButton) {
+
+        backSearchButton.addEventListener(
+            'click',
+            function () {
+
+                searchInput.value = '';
+
+                performSearch();
+
+                searchInput.focus();
+
+            }
+        );
+
+    }
+
+
+
+    /* =========================================================
+       INITIAL
+    ========================================================= */
+
+    resetTimeline();
 
 });
 
 </script>
-
 
 <?= $this->endSection() ?>

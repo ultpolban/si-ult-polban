@@ -48,7 +48,7 @@
                             value="<?= $role['id'] ?>"
                             <?= old('role_id', $user['role_id'] ?? '') == $role['id'] ? 'selected' : '' ?>>
 
-                            <?= esc($role['role_name']) ?>
+                            <?= esc($role['role_name'] ?? $role['name'] ?? '-') ?>
 
                         </option>
 

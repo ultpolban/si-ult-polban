@@ -20,16 +20,17 @@ class UserController extends BaseApiController
     {
         $users = $this->userModel
             ->select("
-                users.id,
-                users.full_name,
-                users.personal_email,
-                users.phone,
-                users.is_active,
-                roles.role_name,
-                user_types.type_name
-            ")
+                    users.id,
+                    users.full_name,
+                    users.email,
+                    users.phone_number as phone,
+                    users.is_active,
+                    roles.name as role_name,
+                    master_applicant_types.name
+                ")
             ->join('roles', 'roles.id = users.role_id')
-            ->join('user_types', 'user_types.id = users.user_type_id')
+            ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
+            ->join('master_applicant_types', 'master_applicant_types.id = user_profiles.applicant_type_id', 'left')
             ->orderBy('users.full_name', 'ASC')
             ->findAll();
 
@@ -40,18 +41,20 @@ class UserController extends BaseApiController
     {
         $user = $this->userModel
             ->select("
-            users.*,
-            roles.role_name,
-            user_types.type_name,
-            departments.department_name,
-            study_programs.program_name,
-            work_units.unit_name
-        ")
+                users.*,
+                roles.name as role_name,
+                master_applicant_types.name,
+                master_departments.name as department_name,
+                master_study_programs.name as program_name,
+                master_service_units.name as unit_name
+            ")
             ->join('roles', 'roles.id = users.role_id')
-            ->join('user_types', 'user_types.id = users.user_type_id')
-            ->join('departments', 'departments.id = users.department_id', 'left')
-            ->join('study_programs', 'study_programs.id = users.study_program_id', 'left')
-            ->join('work_units', 'work_units.id = users.work_unit_id', 'left')
+            ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
+            ->join('master_applicant_types', 'master_applicant_types.id = user_profiles.applicant_type_id', 'left')
+            ->join('master_study_programs', 'master_study_programs.id = user_profiles.study_program_id', 'left')
+            ->join('master_departments', 'master_departments.id = master_study_programs.department_id', 'left')
+
+
             ->where('users.id', $id)
             ->first();
 

@@ -42,28 +42,52 @@ class UserController extends BaseController
 
     private function getMasterData(): array
     {
+        $roles = $this->roleModel
+            ->orderBy('name', 'ASC')
+            ->findAll();
+
+        foreach ($roles as &$role) {
+            $role['role_name'] = $role['name'] ?? '';
+        }
+
+        $userTypes = $this->userTypeModel
+            ->orderBy('name', 'ASC')
+            ->findAll();
+
+        foreach ($userTypes as &$type) {
+            $type['type_name'] = $type['name'] ?? '';
+        }
+
+        // Keep Backend1 schema, but expose the legacy Frontend4 aliases
+        // expected by the existing views/forms.
+        $departments = $this->departmentModel
+            ->select('master_departments.*, master_departments.name as department_name')
+            ->orderBy('name', 'ASC')
+            ->findAll();
+
+        $workUnits = $this->workUnitModel
+            ->select('master_service_units.*, master_service_units.code as unit_code, master_service_units.name as unit_name, master_service_units.name as nama, master_service_units.phone as telepon, CASE WHEN master_service_units.is_active = 1 THEN \'Aktif\' ELSE \'Nonaktif\' END as status')
+            ->orderBy('name', 'ASC')
+            ->findAll();
+
+        $studyPrograms = $this->studyProgramModel
+            ->select('master_study_programs.*, master_study_programs.name as program_name, master_study_programs.degree as education_level')
+            ->orderBy('degree', 'ASC')
+            ->orderBy('name', 'ASC')
+            ->findAll();
+
+        $classes = $this->classModel
+            ->select('master_classes.*, master_classes.name as class_name, master_classes.name as nama')
+            ->orderBy('name', 'ASC')
+            ->findAll();
+
         return [
-
-            'roles' => $this->roleModel
-                ->orderBy('role_name', 'ASC')
-                ->findAll(),
-
-            'userTypes' => $this->userTypeModel
-                ->orderBy('type_name', 'ASC')
-                ->findAll(),
-
-            'departments' => $this->departmentModel
-                ->orderBy('department_name', 'ASC')
-                ->findAll(),
-
-            'workUnits' => $this->workUnitModel
-                ->orderBy('unit_name', 'ASC')
-                ->findAll(),
-
-            'classes' => $this->classModel
-                ->orderBy('class_name', 'ASC')
-                ->findAll()
-
+            'roles' => $roles,
+            'userTypes' => $userTypes,
+            'departments' => $departments,
+            'workUnits' => $workUnits,
+            'studyPrograms' => $studyPrograms,
+            'classes' => $classes,
         ];
     }
 
@@ -108,186 +132,17 @@ class UserController extends BaseController
         $password = $this->request->getPost('password');
 
         $data = [
-
-            /*
-        |--------------------------------------------------------------------------
-        | ACCOUNT
-        |--------------------------------------------------------------------------
-        */
-
-            'role_id' => $this->request->getPost('role_id'),
-
-            'user_type_id' => $this->request->getPost('user_type_id'),
-
-            'full_name' => trim($this->request->getPost('full_name')),
-
-            'personal_email' => trim($this->request->getPost('personal_email')),
-
-            'institution_email' => $this->request->getPost('institution_email'),
-
-            'password' => ($hashPassword && !empty($password))
+            'role_id'        => $this->request->getPost('role_id'),
+            'full_name'      => trim((string) $this->request->getPost('full_name')),
+            'email'          => trim((string) $this->request->getPost('email')),
+            'phone_number'  => $this->request->getPost('phone'),
+            'password'      => ($hashPassword && !empty($password))
                 ? password_hash($password, PASSWORD_DEFAULT)
                 : null,
-
-            'is_active' => $this->request->getPost('is_active'),
-
-            /*
-        |--------------------------------------------------------------------------
-        | PERSONAL
-        |--------------------------------------------------------------------------
-        */
-
-            'phone' => $this->request->getPost('phone'),
-
-            'gender' => $this->request->getPost('gender'),
-
-            'birth_place' => $this->request->getPost('birth_place'),
-
-            'birth_date' => $this->request->getPost('birth_date'),
-
-            'address' => $this->request->getPost('address')
-
+            'is_active'      => $this->request->getPost('is_active') ?: 1,
         ];
 
-        $userType = (int) $this->request->getPost('user_type_id');
-
-        switch ($userType) {
-
-            /*
-        |--------------------------------------------------------------------------
-        | Mahasiswa
-        |--------------------------------------------------------------------------
-        */
-
-            case 1:
-
-                $data['nim'] = $this->request->getPost('nim');
-
-                $data['department_id'] = $this->request->getPost('department_id');
-
-                $data['study_program_id'] = $this->request->getPost('study_program_id');
-
-                $data['class_id'] = $this->request->getPost('class_id');
-
-                $data['angkatan'] = $this->request->getPost('angkatan');
-
-                $data['entry_year'] = $this->request->getPost('entry_year');
-
-                $data['student_status'] = $this->request->getPost('student_status');
-
-                break;
-
-            /*
-        |--------------------------------------------------------------------------
-        | Dosen
-        |--------------------------------------------------------------------------
-        */
-
-            case 2:
-
-                $data['nip'] = $this->request->getPost('nip');
-
-                $data['nidn'] = $this->request->getPost('nidn');
-
-                $data['department_id'] = $this->request->getPost('department_id');
-
-                $data['work_unit_id'] = $this->request->getPost('work_unit_id');
-
-                $data['academic_position'] = $this->request->getPost('academic_position');
-
-                $data['functional_position'] = $this->request->getPost('functional_position');
-
-                $data['employee_status'] = $this->request->getPost('employee_status');
-
-                break;
-
-            /*
-        |--------------------------------------------------------------------------
-        | Tendik
-        |--------------------------------------------------------------------------
-        */
-
-            case 3:
-
-                $data['nip'] = $this->request->getPost('nip');
-
-                $data['work_unit_id'] = $this->request->getPost('work_unit_id');
-
-                $data['position'] = $this->request->getPost('position');
-
-                $data['employee_status'] = $this->request->getPost('employee_status');
-
-                break;
-
-            /*
-        |--------------------------------------------------------------------------
-        | Alumni
-        |--------------------------------------------------------------------------
-        */
-
-            case 4:
-
-                $data['nim'] = $this->request->getPost('nim');
-
-                $data['department_id'] = $this->request->getPost('department_id');
-
-                $data['study_program_id'] = $this->request->getPost('study_program_id');
-
-                $data['graduation_year'] = $this->request->getPost('graduation_year');
-
-                break;
-
-            /*
-        |--------------------------------------------------------------------------
-        | Orang Tua / Wali
-        |--------------------------------------------------------------------------
-        */
-
-            case 5:
-
-                $data['student_name'] = $this->request->getPost('student_name');
-
-                $data['student_nim'] = $this->request->getPost('student_nim');
-
-                $data['relationship'] = $this->request->getPost('relationship');
-
-                break;
-
-            /*
-        |--------------------------------------------------------------------------
-        | Mitra
-        |--------------------------------------------------------------------------
-        */
-
-            case 6:
-
-                $data['institution_name'] = $this->request->getPost('institution_name');
-
-                $data['institution_type'] = $this->request->getPost('institution_type');
-
-                $data['position'] = $this->request->getPost('position');
-
-                $data['job_title'] = $this->request->getPost('job_title');
-
-                break;
-
-            /*
-        |--------------------------------------------------------------------------
-        | Publik
-        |--------------------------------------------------------------------------
-        */
-
-            case 7:
-
-                $data['identity_number'] = $this->request->getPost('identity_number');
-
-                break;
-        }
-
-        return array_filter(
-            $data,
-            static fn($value) => $value !== '' && $value !== null
-        );
+        return array_filter($data, static fn($value) => $value !== '' && $value !== null);
     }
 
     /*
@@ -301,11 +156,9 @@ class UserController extends BaseController
         $emailRule = 'required|valid_email';
 
         if ($id === null) {
-
-            $emailRule .= '|is_unique[users.personal_email]';
+            $emailRule .= '|is_unique[users.email]';
         } else {
-
-            $emailRule .= '|is_unique[users.personal_email,id,' . $id . ']';
+            $emailRule .= '|is_unique[users.email,id,' . $id . ']';
         }
 
         $rules = [
@@ -318,7 +171,7 @@ class UserController extends BaseController
 
             'full_name' => 'required|min_length[3]|max_length[150]',
 
-            'personal_email' => $emailRule,
+            'email' => $emailRule,
 
             'password' => $id === null
                 ? 'required|min_length[8]'
@@ -513,7 +366,7 @@ class UserController extends BaseController
                 'max_length' => 'Nama lengkap maksimal 150 karakter.'
             ],
 
-            'personal_email' => [
+            'email' => [
                 'required'    => 'Email pribadi wajib diisi.',
                 'valid_email' => 'Format email tidak valid.',
                 'is_unique'   => 'Email sudah digunakan.'
@@ -681,7 +534,7 @@ class UserController extends BaseController
 
     public function index()
     {
-        $keyword = trim($this->request->getGet('keyword'));
+        $keyword = trim($this->request->getGet('keyword') ?? '');
         $role    = $this->request->getGet('role');
         $type    = $this->request->getGet('type');
 
@@ -698,13 +551,25 @@ class UserController extends BaseController
 
             'pager' => $this->userModel->pager,
 
-            'roles' => $this->roleModel
-                ->orderBy('role_name')
-                ->findAll(),
+            'roles' => array_map(
+                static function (array $role): array {
+                    $role['role_name'] = $role['name'] ?? '';
+                    return $role;
+                },
+                $this->roleModel
+                    ->orderBy('name')
+                    ->findAll()
+            ),
 
-            'userTypes' => $this->userTypeModel
-                ->orderBy('type_name')
-                ->findAll(),
+            'userTypes' => array_map(
+                static function (array $type): array {
+                    $type['type_name'] = $type['name'] ?? '';
+                    return $type;
+                },
+                $this->userTypeModel
+                    ->orderBy('name')
+                    ->findAll()
+            ),
 
             'keyword' => $keyword,
 
@@ -757,11 +622,9 @@ class UserController extends BaseController
     public function getStudyPrograms($departmentId)
     {
         $studyPrograms = $this->studyProgramModel
-
+            ->select('master_study_programs.*, master_study_programs.name as program_name, master_study_programs.degree as education_level')
             ->where('department_id', $departmentId)
-
-            ->orderBy('program_name', 'ASC')
-
+            ->orderBy('name', 'ASC')
             ->findAll();
 
         return $this->response->setJSON($studyPrograms);
@@ -812,7 +675,7 @@ class UserController extends BaseController
 
             $userData = $this->buildUserData(true);
 
-            $userData['photo'] = $photoName;
+            $userData['profile_photo'] = $photoName;
 
             /*
         |--------------------------------------------------------------------------
@@ -821,6 +684,25 @@ class UserController extends BaseController
         */
 
             $this->userModel->insert($userData);
+
+            // Simpan profil ke user_profiles agar sesuai dengan skema DB
+            $userId = $this->userModel->getInsertID();
+
+            $profileData = [
+                'user_id' => $userId,
+                'applicant_type_id' => $this->request->getPost('user_type_id') ?: null,
+                'study_program_id' => $this->request->getPost('study_program_id') ?: null,
+                'class_id' => $this->request->getPost('class_id') ?: null,
+                'nim' => $this->request->getPost('nim') ?: null,
+                'nik' => $this->request->getPost('nik') ?: null,
+                'name' => $this->request->getPost('full_name') ?: null,
+                'email' => $this->request->getPost('email') ?: null,
+                'phone' => $this->request->getPost('phone') ?: null,
+                'address' => $this->request->getPost('address') ?: null,
+                'photo' => $photoName,
+            ];
+
+            $this->db->table('user_profiles')->insert($profileData);
 
             if ($db->transStatus() === false) {
                 throw new \RuntimeException('Gagal menyimpan data user.');
@@ -867,16 +749,24 @@ class UserController extends BaseController
 
         $studyPrograms = [];
 
-        if (!empty($user['department_id'])) {
+        // Derive department from user_profiles -> master_study_programs
+        $deptId = null;
 
+        $profile = $this->db->table('user_profiles')
+            ->where('user_id', $id)
+            ->get()
+            ->getRowArray();
+
+        if (!empty($profile['study_program_id'])) {
+            $prog = $this->studyProgramModel->find($profile['study_program_id']);
+            $deptId = $prog['department_id'] ?? null;
+        }
+
+        if (!empty($deptId)) {
             $studyPrograms = $this->studyProgramModel
-
-                ->where('department_id', $user['department_id'])
-
-                ->orderBy('education_level', 'ASC')
-
-                ->orderBy('program_name', 'ASC')
-
+                ->where('department_id', $deptId)
+                ->orderBy('degree', 'ASC')
+                ->orderBy('name', 'ASC')
                 ->findAll();
         }
 
@@ -945,7 +835,7 @@ class UserController extends BaseController
         |--------------------------------------------------------------------------
         */
 
-            $userData['photo'] = $this->uploadPhoto($user['photo']);
+            $userData['profile_photo'] = $this->uploadPhoto($user['profile_photo'] ?? null);
 
             /*
         |--------------------------------------------------------------------------
@@ -968,6 +858,30 @@ class UserController extends BaseController
         */
 
             $this->userModel->update($id, $userData);
+
+            // Update atau insert ke user_profiles
+            $profileTable = $this->db->table('user_profiles');
+            $existing = $profileTable->where('user_id', $id)->get()->getRowArray();
+
+            $profileData = [
+                'applicant_type_id' => $this->request->getPost('user_type_id') ?: null,
+                'study_program_id' => $this->request->getPost('study_program_id') ?: null,
+                'class_id' => $this->request->getPost('class_id') ?: null,
+                'nim' => $this->request->getPost('nim') ?: null,
+                'nik' => $this->request->getPost('nik') ?: null,
+                'name' => $this->request->getPost('full_name') ?: null,
+                'email' => $this->request->getPost('email') ?: null,
+                'phone' => $this->request->getPost('phone') ?: null,
+                'address' => $this->request->getPost('address') ?: null,
+                'photo' => $userData['profile_photo'] ?? null,
+            ];
+
+            if ($existing) {
+                $profileTable->where('user_id', $id)->update($profileData);
+            } else {
+                $profileData['user_id'] = $id;
+                $profileTable->insert($profileData);
+            }
 
             if ($db->transStatus() === false) {
                 throw new \RuntimeException('Gagal memperbarui data user.');
@@ -1016,7 +930,7 @@ class UserController extends BaseController
 
         $role = $this->roleModel->find($user['role_id']);
 
-        if ($role && $role['role_name'] === 'Administrator') {
+        if ($role && $role['name'] === 'Administrator') {
 
             return redirect()
 

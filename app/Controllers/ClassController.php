@@ -71,7 +71,7 @@ class ClassController extends BaseController
             'title' => 'Tambah Kelas',
 
             'studyPrograms' => $this->studyProgramModel
-                ->orderBy('program_name')
+                ->orderBy('name')
                 ->findAll(),
 
             'validation' => \Config\Services::validation()
@@ -93,10 +93,8 @@ class ClassController extends BaseController
         $rules = [
 
             'study_program_id' => 'required',
-
-            'class_name' => 'required',
-
-            'status' => 'required'
+            'name' => 'required',
+            'is_active' => 'required'
 
         ];
 
@@ -108,11 +106,8 @@ class ClassController extends BaseController
         }
 
         $exist = $this->classModel
-
             ->where('study_program_id', $this->request->getPost('study_program_id'))
-
-            ->where('class_name', $this->request->getPost('class_name'))
-
+            ->where('name', $this->request->getPost('name'))
             ->first();
 
         if ($exist) {
@@ -127,13 +122,9 @@ class ClassController extends BaseController
         }
 
         $this->classModel->save([
-
             'study_program_id' => $this->request->getPost('study_program_id'),
-
-            'class_name' => strtoupper($this->request->getPost('class_name')),
-
-            'status' => $this->request->getPost('status')
-
+            'name' => strtoupper($this->request->getPost('name')),
+            'is_active' => $this->request->getPost('is_active')
         ]);
 
         return redirect()
@@ -191,9 +182,7 @@ class ClassController extends BaseController
             'class' => $class,
 
             'studyPrograms' => $this->studyProgramModel
-
-                ->orderBy('program_name')
-
+                ->orderBy('name')
                 ->findAll(),
 
             'validation' => \Config\Services::validation()
@@ -211,13 +200,9 @@ class ClassController extends BaseController
     {
 
         $exist = $this->classModel
-
             ->where('study_program_id', $this->request->getPost('study_program_id'))
-
-            ->where('class_name', $this->request->getPost('class_name'))
-
+            ->where('name', $this->request->getPost('name'))
             ->where('id !=', $id)
-
             ->first();
 
         if ($exist) {
@@ -232,13 +217,9 @@ class ClassController extends BaseController
         }
 
         $this->classModel->update($id, [
-
             'study_program_id' => $this->request->getPost('study_program_id'),
-
-            'class_name' => strtoupper($this->request->getPost('class_name')),
-
-            'status' => $this->request->getPost('status')
-
+            'name' => strtoupper($this->request->getPost('name')),
+            'is_active' => $this->request->getPost('is_active')
         ]);
 
         return redirect()

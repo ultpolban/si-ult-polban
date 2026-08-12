@@ -17,7 +17,7 @@ class Admin extends BaseController
 
         // Get 5 recent users with role name
         $recentUsers = $userModel
-            ->select('users.*, roles.role_name')
+            ->select('users.*, roles.name as role_name')
             ->join('roles', 'roles.id = users.role_id')
             ->orderBy('users.id', 'DESC')
             ->limit(5)

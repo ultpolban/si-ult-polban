@@ -6,13 +6,13 @@ use CodeIgniter\Model;
 
 class KategoriLayananModel extends Model
 {
-    protected $table            = 'kategori_layanan';
+    protected $table            = 'master_service_categories';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['unit_layanan_id', 'kode', 'nama', 'icon', 'color', 'status'];
+    protected $allowedFields    = ['service_unit_id', 'code', 'name', 'icon', 'color', 'is_active'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -46,8 +46,9 @@ class KategoriLayananModel extends Model
 
     public function getKategoriWithUnit()
     {
-        return $this->select('kategori_layanan.*, unit_layanan.nama as unit_nama')
-                    ->join('unit_layanan', 'unit_layanan.id = kategori_layanan.unit_layanan_id', 'left')
+        return $this->select("master_service_categories.*, master_service_units.name as unit_nama, master_service_categories.service_unit_id as unit_layanan_id, master_service_categories.code as kode, master_service_categories.name as nama, CASE WHEN master_service_categories.is_active = 1 THEN 'Aktif' ELSE 'Nonaktif' END as status")
+                    ->join('master_service_units', 'master_service_units.id = master_service_categories.service_unit_id', 'left')
+                    ->orderBy('master_service_categories.name', 'ASC')
                     ->findAll();
     }
 }

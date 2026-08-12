@@ -27,7 +27,7 @@ class UserTypeController extends BaseController
 
     public function index()
     {
-        $keyword = trim($this->request->getGet('keyword'));
+        $keyword = trim($this->request->getGet('keyword') ?? '');
 
         $perPage = 10;
 
@@ -38,6 +38,10 @@ class UserTypeController extends BaseController
             ->paginate($perPage);
 
         foreach ($types as &$type) {
+
+            // Backend1 menyimpan nama jenis pemohon di kolom `name`,
+            // sementara View Frontend4 memakai key `type_name`.
+            $type['type_name'] = $type['name'] ?? '';
 
             $type['total_user'] = $this->userTypeModel
                 ->countUser($type['id']);
@@ -108,8 +112,8 @@ class UserTypeController extends BaseController
 
         $this->userTypeModel->insert([
 
-            'type_name' => trim(
-                $this->request->getPost('type_name')
+            'name' => trim(
+                $this->request->getPost('name')
             ),
 
             'description' => trim(
@@ -199,8 +203,8 @@ class UserTypeController extends BaseController
 
         $this->userTypeModel->update($id, [
 
-            'type_name' => trim(
-                $this->request->getPost('type_name')
+            'name' => trim(
+                $this->request->getPost('name')
             ),
 
             'description' => trim(
@@ -289,15 +293,15 @@ class UserTypeController extends BaseController
 
         if ($id === null) {
 
-            $typeRule .= '|is_unique[user_types.type_name]';
+            $typeRule .= '|is_unique[master_applicant_types.name]';
         } else {
 
-            $typeRule .= '|is_unique[user_types.type_name,id,' . $id . ']';
+            $typeRule .= '|is_unique[master_applicant_types.name,id,' . $id . ']';
         }
 
         return [
 
-            'type_name'   => $typeRule,
+            'name'   => $typeRule,
 
             'description' => 'permit_empty|max_length[255]'
 
@@ -314,7 +318,7 @@ class UserTypeController extends BaseController
     {
         return [
 
-            'type_name' => [
+            'name' => [
 
                 'required'   => 'Nama jenis pemohon wajib diisi.',
 

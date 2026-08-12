@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class WorkUnitModel extends Model
 {
-    protected $table = 'work_units';
+    protected $table = 'master_service_units';
 
     protected $primaryKey = 'id';
 
@@ -17,11 +17,16 @@ class WorkUnitModel extends Model
     protected $protectFields = true;
 
     protected $allowedFields = [
-
-        'unit_code',
-
-        'unit_name'
-
+        'code',
+        'name',
+        'description',
+        'email',
+        'phone',
+        'location',
+        'website',
+        'logo',
+        'sort_order',
+        'is_active'
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -49,23 +54,14 @@ class WorkUnitModel extends Model
     public function search(?string $keyword = null)
     {
         $builder = $this;
-
         if (!empty($keyword)) {
-
             $builder = $builder
-
                 ->groupStart()
-
-                ->like('unit_code', $keyword)
-
-                ->orLike('unit_name', $keyword)
-
+                ->like('code', $keyword)
+                ->orLike('name', $keyword)
                 ->groupEnd();
         }
-
-        return $builder
-
-            ->orderBy('unit_name', 'ASC');
+        return $builder->select("master_service_units.*, master_service_units.code as unit_code, master_service_units.name as nama, master_service_units.name as unit_name, master_service_units.phone as telepon, CASE WHEN master_service_units.is_active = 1 THEN 'Aktif' ELSE 'Nonaktif' END as status")->orderBy('name', 'ASC');
     }
 
     /*
@@ -76,11 +72,8 @@ class WorkUnitModel extends Model
 
     public function countUser(int $unitId): int
     {
-        return (new UserModel())
-
-            ->where('work_unit_id', $unitId)
-
-            ->countAllResults();
+        // Backend1 no longer stores work_unit_id on users.
+        return 0;
     }
 
     /*
@@ -91,10 +84,6 @@ class WorkUnitModel extends Model
 
     public function getByCode(string $code): ?array
     {
-        return $this
-
-            ->where('unit_code', $code)
-
-            ->first();
+        return $this->where('code', $code)->first();
     }
 }

@@ -21,15 +21,15 @@ class StudyProgramController extends BaseApiController
         $departmentId = $this->request->getGet('department_id');
 
         $builder = $this->studyProgramModel
-            ->select('study_programs.*, departments.department_name')
-            ->join('departments', 'departments.id = study_programs.department_id', 'left');
+            ->select('master_study_programs.*, master_departments.name as department_name')
+            ->join('master_departments', 'master_departments.id = master_study_programs.department_id', 'left');
 
         if (!empty($departmentId)) {
             $builder->where('study_programs.department_id', $departmentId);
         }
 
         $data = $builder
-            ->orderBy('study_programs.program_name', 'ASC')
+            ->orderBy('master_study_programs.name', 'ASC')
             ->findAll();
 
         return $this->successResponse($data, 'Data program studi berhasil diambil.');
@@ -41,9 +41,9 @@ class StudyProgramController extends BaseApiController
     public function show($id = null)
     {
         $data = $this->studyProgramModel
-            ->select('study_programs.*, departments.department_name')
-            ->join('departments', 'departments.id = study_programs.department_id', 'left')
-            ->where('study_programs.id', $id)
+            ->select('master_study_programs.*, master_departments.name as department_name')
+            ->join('master_departments', 'master_departments.id = master_study_programs.department_id', 'left')
+            ->where('master_study_programs.id', $id)
             ->first();
 
         if (!$data) {

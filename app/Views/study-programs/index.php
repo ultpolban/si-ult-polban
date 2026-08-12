@@ -140,13 +140,13 @@
 
                             <td><?= $no++ ?></td>
 
-                            <td><?= esc($program['department_name']) ?></td>
+                            <td><?= esc($program['department_name'] ?? $program['department'] ?? '-') ?></td>
 
                             <td>
 
                                 <span class="badge bg-success">
 
-                                    <?= esc($program['education_level']) ?>
+                                    <?= esc($program['education_level'] ?? $program['degree'] ?? '-') ?>
 
                                 </span>
 

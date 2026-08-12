@@ -27,7 +27,7 @@ class DepartmentController extends BaseController
 
     public function index()
     {
-        $keyword = trim($this->request->getGet('keyword'));
+        $keyword = trim($this->request->getGet('keyword') ?? '');
 
         $perPage = 10;
 
@@ -38,6 +38,8 @@ class DepartmentController extends BaseController
             ->paginate($perPage);
 
         foreach ($departments as &$department) {
+
+            $department['department_name'] = $department['name'] ?? '';
 
             $department['total_user'] = $this->departmentModel
 
@@ -111,12 +113,12 @@ class DepartmentController extends BaseController
 
         $this->departmentModel->insert([
 
-            'department_code' => strtoupper(
-                trim($this->request->getPost('department_code'))
+            'code' => strtoupper(
+                trim($this->request->getPost('code'))
             ),
 
-            'department_name' => trim(
-                $this->request->getPost('department_name')
+            'name' => trim(
+                $this->request->getPost('name')
             )
 
         ]);
@@ -202,12 +204,12 @@ class DepartmentController extends BaseController
 
         $this->departmentModel->update($id, [
 
-            'department_code' => strtoupper(
-                trim($this->request->getPost('department_code'))
+            'code' => strtoupper(
+                trim($this->request->getPost('code'))
             ),
 
-            'department_name' => trim(
-                $this->request->getPost('department_name')
+            'name' => trim(
+                $this->request->getPost('name')
             )
         ]);
 
@@ -249,11 +251,7 @@ class DepartmentController extends BaseController
     |--------------------------------------------------------------------------
     */
 
-        $totalUser = $this->userModel
-
-            ->where('department_id', $id)
-
-            ->countAllResults();
+        $totalUser = $this->departmentModel->countUser($id);
 
         if ($totalUser > 0) {
 
@@ -315,17 +313,17 @@ class DepartmentController extends BaseController
 
         if ($id === null) {
 
-            $codeRule .= '|is_unique[departments.department_code]';
+            $codeRule .= '|is_unique[master_departments.code]';
         } else {
 
-            $codeRule .= '|is_unique[departments.department_code,id,' . $id . ']';
+            $codeRule .= '|is_unique[master_departments.code,id,' . $id . ']';
         }
 
         return [
 
-            'department_code' => $codeRule,
+            'code' => $codeRule,
 
-            'department_name' => 'required|max_length[150]'
+            'name' => 'required|max_length[150]'
 
         ];
     }
@@ -334,7 +332,7 @@ class DepartmentController extends BaseController
     {
         return [
 
-            'department_code' => [
+            'code' => [
 
                 'required' => 'Kode jurusan wajib diisi.',
 
@@ -342,7 +340,7 @@ class DepartmentController extends BaseController
 
             ],
 
-            'department_name' => [
+            'name' => [
 
                 'required' => 'Nama jurusan wajib diisi.'
 

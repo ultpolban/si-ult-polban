@@ -249,7 +249,7 @@ FILTER DATA USER
                                 value="<?= $role['id'] ?>"
                                 <?= $selectedRole == $role['id'] ? 'selected' : '' ?>>
 
-                                <?= esc($role['role_name']) ?>
+                                <?= esc($role['role_name'] ?? $role['name'] ?? '-') ?>
 
                             </option>
 
@@ -285,7 +285,7 @@ FILTER DATA USER
                                 value="<?= $type['id'] ?>"
                                 <?= $selectedType == $type['id'] ? 'selected' : '' ?>>
 
-                                <?= esc($type['type_name']) ?>
+                                <?= esc($type['type_name'] ?? $type['name'] ?? '-') ?>
 
                             </option>
 
@@ -493,7 +493,7 @@ DAFTAR USER
 
                                 <?php
 
-                                $badgeRole = match ($user['role_name']) {
+                                $badgeRole = match ($user['role_name'] ?? $user['name'] ?? 'User') {
 
                                     'Administrator' => 'danger',
 
@@ -510,7 +510,7 @@ DAFTAR USER
 
                                 <span class="badge bg-<?= $badgeRole ?>">
 
-                                    <?= esc($user['role_name']) ?>
+                                    <?= esc($user['role_name'] ?? $user['name'] ?? '-') ?>
 
                                 </span>
 

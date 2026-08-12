@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class StudyProgramModel extends Model
 {
-    protected $table = 'study_programs';
+    protected $table = 'master_study_programs';
 
     protected $primaryKey = 'id';
 
@@ -20,9 +20,19 @@ class StudyProgramModel extends Model
 
         'department_id',
 
-        'education_level',
+        'code',
 
-        'program_name'
+        'name',
+
+        'short_name',
+
+        'degree',
+
+        'description',
+
+        'sort_order',
+
+        'is_active'
 
     ];
 
@@ -42,11 +52,11 @@ class StudyProgramModel extends Model
     {
         $builder = $this
 
-            ->select('study_programs.*, departments.department_name')
+            ->select('master_study_programs.*, master_departments.name as department_name, master_study_programs.degree as education_level, master_study_programs.name as program_name')
 
             ->join(
-                'departments',
-                'departments.id = study_programs.department_id'
+                'master_departments',
+                'master_departments.id = master_study_programs.department_id'
             );
 
         if (!empty($keyword)) {
@@ -55,22 +65,22 @@ class StudyProgramModel extends Model
 
                 ->groupStart()
 
-                ->like('study_programs.program_name', $keyword)
+                ->like('master_study_programs.name', $keyword)
 
-                ->orLike('departments.department_name', $keyword)
+                ->orLike('master_departments.name', $keyword)
 
-                ->orLike('study_programs.education_level', $keyword)
+                ->orLike('master_study_programs.degree', $keyword)
 
                 ->groupEnd();
         }
 
         return $builder
 
-            ->orderBy('departments.department_name', 'ASC')
+            ->orderBy('master_departments.name', 'ASC')
 
-            ->orderBy('study_programs.education_level', 'ASC')
+            ->orderBy('master_study_programs.degree', 'ASC')
 
-            ->orderBy('study_programs.program_name', 'ASC');
+            ->orderBy('master_study_programs.name', 'ASC');
     }
 
     /*
@@ -81,7 +91,7 @@ class StudyProgramModel extends Model
 
     public function countUser(int $studyProgramId): int
     {
-        return (new UserModel())
+        return $this->db->table('user_profiles')
 
             ->where('study_program_id', $studyProgramId)
 
@@ -98,11 +108,11 @@ class StudyProgramModel extends Model
     {
         return $this
 
-            ->select('study_programs.*, departments.department_name')
+            ->select('master_study_programs.*, master_departments.name as department_name, master_study_programs.degree as education_level, master_study_programs.name as program_name')
 
             ->join(
-                'departments',
-                'departments.id = study_programs.department_id'
+                'master_departments',
+                'master_departments.id = master_study_programs.department_id'
             )
 
             ->find($id);
@@ -120,9 +130,9 @@ class StudyProgramModel extends Model
 
             ->where('department_id', $departmentId)
 
-            ->orderBy('education_level', 'ASC')
+            ->orderBy('degree', 'ASC')
 
-            ->orderBy('program_name', 'ASC')
+            ->orderBy('name', 'ASC')
 
             ->findAll();
     }

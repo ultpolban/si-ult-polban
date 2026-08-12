@@ -19,7 +19,7 @@ class UnitLayananController extends BaseController
     {
         $data = [
             'title' => 'Master Unit Layanan',
-            'units' => $this->unitModel->findAll()
+            'units' => $this->unitModel->getAllForView()
         ];
         
         return view('unit_layanan/index', $data);
@@ -28,11 +28,11 @@ class UnitLayananController extends BaseController
     public function store()
     {
         $this->unitModel->save([
-            'kode'    => $this->request->getPost('kode'),
-            'nama'    => $this->request->getPost('nama'),
-            'email'   => $this->request->getPost('email'),
-            'telepon' => $this->request->getPost('telepon'),
-            'status'  => $this->request->getPost('status') ?? 'Aktif',
+            'code'      => $this->request->getPost('kode'),
+            'name'      => $this->request->getPost('nama'),
+            'email'     => $this->request->getPost('email'),
+            'phone'     => $this->request->getPost('telepon'),
+            'is_active' => $this->request->getPost('status') === 'Aktif' ? 1 : 0,
         ]);
         return redirect()->to('/unit-layanan')->with('success', 'Unit Layanan berhasil ditambahkan.');
     }
@@ -40,11 +40,11 @@ class UnitLayananController extends BaseController
     public function update($id)
     {
         $this->unitModel->update($id, [
-            'kode'    => $this->request->getPost('kode'),
-            'nama'    => $this->request->getPost('nama'),
-            'email'   => $this->request->getPost('email'),
-            'telepon' => $this->request->getPost('telepon'),
-            'status'  => $this->request->getPost('status'),
+            'code'      => $this->request->getPost('kode'),
+            'name'      => $this->request->getPost('nama'),
+            'email'     => $this->request->getPost('email'),
+            'phone'     => $this->request->getPost('telepon'),
+            'is_active' => $this->request->getPost('status') === 'Aktif' ? 1 : 0,
         ]);
         return redirect()->to('/unit-layanan')->with('success', 'Unit Layanan berhasil diperbarui.');
     }

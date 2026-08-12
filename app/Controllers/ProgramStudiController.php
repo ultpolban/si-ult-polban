@@ -20,8 +20,8 @@ class ProgramStudiController extends BaseController
     public function index()
     {
         $builder = $this->model->builder();
-        $builder->select('program_studis.*, jurusans.nama_jurusan as jurusan_nama');
-        $builder->join('jurusans', 'jurusans.id = program_studis.jurusan_id', 'left');
+        $builder->select('master_study_programs.*, master_departments.name as jurusan_nama');
+        $builder->join('master_departments', 'master_departments.id = master_study_programs.department_id', 'left');
         $query = $builder->get();
         $data['programs'] = $query->getResultArray();
         $data['jurusans'] = $this->jurusanModel->findAll();
@@ -43,11 +43,11 @@ class ProgramStudiController extends BaseController
         $data = compact('kode', 'nama', 'jurusan_id', 'jenjang', 'status');
         // adjust keys
         $data = [
-            'kode' => $kode,
-            'nama_program' => $nama,
-            'jurusan_id' => $jurusan_id,
-            'jenjang' => $jenjang,
-            'status' => $status,
+            'code' => $kode,
+            'name' => $nama,
+            'department_id' => $jurusan_id,
+            'degree' => $jenjang,
+            'is_active' => $status === 'Aktif' ? 1 : 0,
         ];
 
         if ($this->model->insert($data)) {
@@ -76,11 +76,11 @@ class ProgramStudiController extends BaseController
         }
 
         $data = [
-            'kode' => $kode,
-            'nama_program' => $nama,
-            'jurusan_id' => $jurusan_id,
-            'jenjang' => $jenjang,
-            'status' => $status,
+            'code' => $kode,
+            'name' => $nama,
+            'department_id' => $jurusan_id,
+            'degree' => $jenjang,
+            'is_active' => $status === 'Aktif' ? 1 : 0,
         ];
 
         if ($this->model->update($id, $data)) {

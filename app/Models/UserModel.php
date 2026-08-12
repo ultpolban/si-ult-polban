@@ -17,128 +17,17 @@ class UserModel extends Model
     protected $protectFields = true;
 
     protected $allowedFields = [
-
-        /*
-    |--------------------------------------------------------------------------
-    | Relasi
-    |--------------------------------------------------------------------------
-    */
-
         'role_id',
-        'user_type_id',
-        'department_id',
-        'study_program_id',
-        'work_unit_id',
-        'class_id',
-
-        /*
-    |--------------------------------------------------------------------------
-    | Identitas
-    |--------------------------------------------------------------------------
-    */
-
-        'nim',
-        'nip',
-        'nidn',
-
         'full_name',
-
-        'gender',
-        'birth_place',
-        'birth_date',
-
-        'phone',
-
-        'institution_email',
-        'personal_email',
-
-        'address',
-
-        'photo',
-
-        /*
-    |--------------------------------------------------------------------------
-    | Password
-    |--------------------------------------------------------------------------
-    */
-
+        'identity_number',
+        'phone_number',
+        'email',
         'password',
-
-        /*
-    |--------------------------------------------------------------------------
-    | Status
-    |--------------------------------------------------------------------------
-    */
-
+        'profile_photo',
         'is_active',
-        'email_verified_at',
         'last_login',
-
-        /*
-    |--------------------------------------------------------------------------
-    | Mahasiswa
-    |--------------------------------------------------------------------------
-    */
-
-        'angkatan',
-        'semester',
-        'student_status',
-        'entry_year',
-
-        /*
-    |--------------------------------------------------------------------------
-    | Dosen
-    |--------------------------------------------------------------------------
-    */
-
-        'academic_position',
-        'functional_position',
-
-        /*
-    |--------------------------------------------------------------------------
-    | Pegawai
-    |--------------------------------------------------------------------------
-    */
-
-        'employee_status',
-
-        /*
-    |--------------------------------------------------------------------------
-    | Alumni
-    |--------------------------------------------------------------------------
-    */
-
-        'graduation_year',
-
-        /*
-    |--------------------------------------------------------------------------
-    | Orang Tua / Wali
-    |--------------------------------------------------------------------------
-    */
-
-        'student_name',
-        'student_nim',
-        'relationship',
-
-        /*
-    |--------------------------------------------------------------------------
-    | Mitra
-    |--------------------------------------------------------------------------
-    */
-
-        'institution_name',
-        'institution_type',
-        'position',
-        'job_title',
-
-        /*
-    |--------------------------------------------------------------------------
-    | Publik
-    |--------------------------------------------------------------------------
-    */
-
-        'identity_number'
-
+        'remember_token',
+        'email_verified_at',
     ];
 
     protected $useTimestamps = true;
@@ -159,58 +48,8 @@ class UserModel extends Model
 
     protected function baseQuery()
     {
-        return $this->select('
-            users.*,
-
-            roles.role_name,
-
-            user_types.type_name,
-
-            departments.department_name,
-
-            study_programs.program_name,
-            study_programs.education_level,
-
-            work_units.unit_name,
-
-            classes.class_name
-        ')
-
-            ->join(
-                'roles',
-                'roles.id = users.role_id',
-                'left'
-            )
-
-            ->join(
-                'user_types',
-                'user_types.id = users.user_type_id',
-                'left'
-            )
-
-            ->join(
-                'departments',
-                'departments.id = users.department_id',
-                'left'
-            )
-
-            ->join(
-                'study_programs',
-                'study_programs.id = users.study_program_id',
-                'left'
-            )
-
-            ->join(
-                'work_units',
-                'work_units.id = users.work_unit_id',
-                'left'
-            )
-
-            ->join(
-                'classes',
-                'classes.id = users.class_id',
-                'left'
-            );
+        return $this->select('users.*, users.email as personal_email, users.phone_number as phone, users.profile_photo as photo, roles.name as role_name')
+            ->join('roles', 'roles.id = users.role_id', 'left');
     }
 
     /*
@@ -234,6 +73,15 @@ class UserModel extends Model
     public function getUserById($id)
     {
         return $this->baseQuery()
+            ->select(
+                'users.*, users.email as personal_email, users.phone_number as phone, users.profile_photo as photo, user_profiles.nim, user_profiles.nik, user_profiles.study_program_id, user_profiles.class_id, '
+                    . 'master_study_programs.name as program_name, master_study_programs.degree as degree, master_study_programs.department_id as department_id, '
+                    . 'master_departments.name as department_name, master_classes.name as class_name, NULL as unit_name'
+            )
+            ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
+            ->join('master_study_programs', 'master_study_programs.id = user_profiles.study_program_id', 'left')
+            ->join('master_departments', 'master_departments.id = master_study_programs.department_id', 'left')
+            ->join('master_classes', 'master_classes.id = user_profiles.class_id', 'left')
             ->where('users.id', $id)
             ->first();
     }
@@ -247,7 +95,9 @@ class UserModel extends Model
     public function getUserByEmail($email)
     {
         return $this->baseQuery()
-            ->where('users.personal_email', $email)
+            ->select('user_profiles.applicant_type_id')
+            ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
+            ->where('users.email', $email)
             ->first();
     }
 
@@ -308,7 +158,10 @@ class UserModel extends Model
         ?int $role = null,
         ?int $type = null
     ) {
-        $builder = $this->baseQuery();
+        $builder = $this->baseQuery()
+            ->select('users.email as personal_email, users.phone_number as phone, users.profile_photo as photo, user_profiles.nim, user_profiles.nik, master_applicant_types.name as type_name')
+            ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
+            ->join('master_applicant_types', 'master_applicant_types.id = user_profiles.applicant_type_id', 'left');
 
         if (!empty($keyword)) {
 
@@ -316,13 +169,11 @@ class UserModel extends Model
 
                 ->like('users.full_name', $keyword)
 
-                ->orLike('users.personal_email', $keyword)
+                ->orLike('users.email', $keyword)
 
-                ->orLike('users.nim', $keyword)
+                ->orLike('user_profiles.nim', $keyword)
 
-                ->orLike('users.nip', $keyword)
-
-                ->orLike('users.nidn', $keyword)
+                ->orLike('user_profiles.nik', $keyword)
 
                 ->groupEnd();
         }
@@ -334,7 +185,7 @@ class UserModel extends Model
 
         if (!empty($type)) {
 
-            $builder->where('users.user_type_id', $type);
+            $builder->where('user_profiles.applicant_type_id', $type);
         }
 
         return $builder->orderBy(
@@ -371,44 +222,50 @@ class UserModel extends Model
 
     public function countMahasiswa(): int
     {
-        return $this
-            ->where('user_type_id', 1)
+        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
+            ->where('user_profiles.applicant_type_id', 1)
             ->countAllResults();
     }
 
     public function countDosen(): int
     {
-        return $this->where('user_type_id', 2)
+        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
+            ->where('user_profiles.applicant_type_id', 2)
             ->countAllResults();
     }
 
     public function countTendik(): int
     {
-        return $this->where('user_type_id', 3)
+        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
+            ->where('user_profiles.applicant_type_id', 3)
             ->countAllResults();
     }
 
     public function countAlumni(): int
     {
-        return $this->where('user_type_id', 4)
+        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
+            ->where('user_profiles.applicant_type_id', 4)
             ->countAllResults();
     }
 
     public function countOrangTua(): int
     {
-        return $this->where('user_type_id', 5)
+        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
+            ->where('user_profiles.applicant_type_id', 5)
             ->countAllResults();
     }
 
     public function countMitra(): int
     {
-        return $this->where('user_type_id', 6)
+        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
+            ->where('user_profiles.applicant_type_id', 6)
             ->countAllResults();
     }
 
     public function countPublik(): int
     {
-        return $this->where('user_type_id', 7)
+        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
+            ->where('user_profiles.applicant_type_id', 7)
             ->countAllResults();
     }
 

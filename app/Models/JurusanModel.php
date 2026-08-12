@@ -6,13 +6,17 @@ use CodeIgniter\Model;
 
 class JurusanModel extends Model
 {
-    protected $table = 'jurusans';
+    protected $table = 'master_departments';
 
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-        'kode',
-        'nama_jurusan',
+        'code',
+        'name',
+        'short_name',
+        'description',
+        'sort_order',
+        'is_active',
         'created_at',
         'updated_at'
     ];

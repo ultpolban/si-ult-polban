@@ -50,7 +50,7 @@ class Validation extends BaseConfig
 
         'full_name' => 'required|min_length[3]|max_length[150]',
 
-        'personal_email' => 'required|valid_email|is_unique[users.personal_email]',
+        'personal_email' => 'required|valid_email|is_unique[users.email]',
 
         'phone' => 'required|min_length[10]|max_length[15]',
 

@@ -30,7 +30,7 @@ class StudyProgramController extends BaseController
 
     public function index()
     {
-        $keyword = trim($this->request->getGet('keyword'));
+        $keyword = trim($this->request->getGet('keyword') ?? '');
 
         $perPage = 10;
 
@@ -39,6 +39,8 @@ class StudyProgramController extends BaseController
             ->paginate($perPage);
 
         foreach ($studyPrograms as &$program) {
+
+            $program['education_level'] = $program['degree'] ?? '';
 
             $program['total_user'] = $this->studyProgramModel
                 ->countUser($program['id']);
@@ -51,7 +53,7 @@ class StudyProgramController extends BaseController
             'studyPrograms' => $studyPrograms,
 
             'departments' => $this->departmentModel
-                ->orderBy('department_name')
+                ->orderBy('name')
                 ->findAll(),
 
             'pager' => $this->studyProgramModel->pager,
@@ -78,7 +80,7 @@ class StudyProgramController extends BaseController
             'studyProgram' => [],
 
             'departments' => $this->departmentModel
-                ->orderBy('department_name')
+                ->orderBy('name')
                 ->findAll(),
 
             'validation' => \Config\Services::validation()
@@ -92,9 +94,9 @@ class StudyProgramController extends BaseController
 
             'department_id' => 'required',
 
-            'education_level' => 'required',
+            'degree' => 'required',
 
-            'program_name' => 'required|max_length[150]'
+            'name' => 'required|max_length[150]'
 
         ];
     }
@@ -107,11 +109,11 @@ class StudyProgramController extends BaseController
                 'required' => 'Jurusan wajib dipilih.'
             ],
 
-            'education_level' => [
+            'degree' => [
                 'required' => 'Jenjang wajib dipilih.'
             ],
 
-            'program_name' => [
+            'name' => [
                 'required' => 'Nama Program Studi wajib diisi.'
             ]
 
@@ -137,9 +139,9 @@ class StudyProgramController extends BaseController
 
             'department_id' => $this->request->getPost('department_id'),
 
-            'education_level' => $this->request->getPost('education_level'),
+            'degree' => $this->request->getPost('degree'),
 
-            'program_name' => $this->request->getPost('program_name')
+            'name' => $this->request->getPost('name')
 
         ]);
 
@@ -168,7 +170,7 @@ class StudyProgramController extends BaseController
             'studyProgram' => $studyProgram,
 
             'departments' => $this->departmentModel
-                ->orderBy('department_name', 'ASC')
+                ->orderBy('name', 'ASC')
                 ->findAll(),
 
             'validation' => \Config\Services::validation()
@@ -209,10 +211,10 @@ class StudyProgramController extends BaseController
 
             'department_id'   => $this->request->getPost('department_id'),
 
-            'education_level' => $this->request->getPost('education_level'),
+            'degree' => $this->request->getPost('degree'),
 
-            'program_name'    => trim(
-                $this->request->getPost('program_name')
+            'name'    => trim(
+                $this->request->getPost('name')
             )
 
         ]);
@@ -276,9 +278,9 @@ class StudyProgramController extends BaseController
 
             ->where('department_id', $departmentId)
 
-            ->orderBy('education_level', 'ASC')
+            ->orderBy('degree', 'ASC')
 
-            ->orderBy('program_name', 'ASC')
+            ->orderBy('name', 'ASC')
 
             ->findAll();
 

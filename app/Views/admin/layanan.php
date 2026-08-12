@@ -62,22 +62,22 @@
                                 <td class="ps-4"><?= $key + 1 ?></td>
                                 <td><?= esc($row['unit_nama'] ?? '-') ?></td>
                                 <td><?= esc($row['kategori_nama'] ?? '-') ?></td>
-                                <td><?= esc($row['kode']) ?></td>
-                                <td><?= esc($row['nama']) ?></td>
-                                <td><?= esc($row['sla']) ?> Jam</td>
+                                <td><?= esc($row['kode'] ?? $row['code'] ?? '-') ?></td>
+                                <td><?= esc($row['nama'] ?? $row['name'] ?? '-') ?></td>
+                                <td><?= esc($row['sla'] ?? $row['service_hours'] ?? 0) ?> Jam</td>
                                 <td>
                                     <?php 
                                         $on = 'bg-secondary';
-                                        if ($row['online'] == 'Online') $on = 'bg-primary';
+                                        if (($row['online'] ?? (($row['is_online'] ?? 0) ? 'Online' : 'Offline')) == 'Online') $on = 'bg-primary';
                                     ?>
-                                    <span class="badge <?= $on ?>"><?= $row['online'] ?></span>
+                                    <span class="badge <?= $on ?>"><?= esc($row['online'] ?? (($row['is_online'] ?? 0) ? 'Online' : 'Offline')) ?></span>
                                 </td>
                                 <td>
                                     <?php 
                                         $bg = 'bg-danger';
-                                        if ($row['status'] == 'Aktif') $bg = 'bg-success';
+                                        if (($row['status'] ?? (($row['is_active'] ?? 0) ? 'Aktif' : 'Nonaktif')) == 'Aktif') $bg = 'bg-success';
                                     ?>
-                                    <span class="badge <?= $bg ?>"><?= $row['status'] ?></span>
+                                    <span class="badge <?= $bg ?>"><?= esc($row['status'] ?? (($row['is_active'] ?? 0) ? 'Aktif' : 'Nonaktif')) ?></span>
                                 </td>
                                 <td class="pe-4 text-center">
                                     <div class="btn-group btn-group-sm">
@@ -86,11 +86,11 @@
                                             data-id="<?= $row['id'] ?>"
                                             data-unit="<?= $row['unit_layanan_id'] ?>"
                                             data-kategori="<?= $row['kategori_layanan_id'] ?>"
-                                            data-kode="<?= esc($row['kode']) ?>"
-                                            data-nama="<?= esc($row['nama']) ?>"
-                                            data-sla="<?= esc($row['sla']) ?>"
-                                            data-online="<?= esc($row['online']) ?>"
-                                            data-status="<?= $row['status'] ?>"
+                                            data-kode="<?= esc($row['kode'] ?? $row['code'] ?? '-') ?>"
+                                            data-nama="<?= esc($row['nama'] ?? $row['name'] ?? '-') ?>"
+                                            data-sla="<?= esc($row['sla'] ?? $row['service_hours'] ?? 0) ?>"
+                                            data-online="<?= esc($row['online'] ?? (($row['is_online'] ?? 0) ? 'Online' : 'Offline')) ?>"
+                                            data-status="<?= esc($row['status'] ?? (($row['is_active'] ?? 0) ? 'Aktif' : 'Nonaktif')) ?>"
                                             title="Edit" data-bs-toggle="modal" data-bs-target="#modalEdit">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
@@ -121,7 +121,7 @@
                         <select name="unit_layanan_id" class="form-select" required>
                             <option value="">Pilih Unit...</option>
                             <?php foreach ($units as $u) : ?>
-                                <option value="<?= $u['id'] ?>"><?= esc($u['nama']) ?></option>
+                                <option value="<?= $u['id'] ?>"><?= esc($u['nama'] ?? $u['name'] ?? '-') ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -130,7 +130,7 @@
                         <select name="kategori_layanan_id" class="form-select" required>
                             <option value="">Pilih Kategori...</option>
                             <?php foreach ($kategori as $k) : ?>
-                                <option value="<?= $k['id'] ?>"><?= esc($k['nama']) ?></option>
+                                <option value="<?= $k['id'] ?>"><?= esc($k['nama'] ?? $k['name'] ?? '-') ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -185,7 +185,7 @@
                         <select name="unit_layanan_id" id="edit_unit" class="form-select" required>
                             <option value="">Pilih Unit...</option>
                             <?php foreach ($units as $u) : ?>
-                                <option value="<?= $u['id'] ?>"><?= esc($u['nama']) ?></option>
+                                <option value="<?= $u['id'] ?>"><?= esc($u['nama'] ?? $u['name'] ?? '-') ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -194,7 +194,7 @@
                         <select name="kategori_layanan_id" id="edit_kategori" class="form-select" required>
                             <option value="">Pilih Kategori...</option>
                             <?php foreach ($kategori as $k) : ?>
-                                <option value="<?= $k['id'] ?>"><?= esc($k['nama']) ?></option>
+                                <option value="<?= $k['id'] ?>"><?= esc($k['nama'] ?? $k['name'] ?? '-') ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

@@ -6,14 +6,14 @@ use CodeIgniter\Model;
 
 class UnitLayananModel extends Model
 {
-    protected $table            = 'unit_layanan';
+    protected $table            = 'master_service_units';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'kode', 'nama', 'email', 'telepon', 'status'
+        'code', 'name', 'email', 'phone', 'is_active'
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -45,4 +45,11 @@ class UnitLayananModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getAllForView(): array
+    {
+        return $this->select("master_service_units.*, master_service_units.code as kode, master_service_units.name as nama, master_service_units.phone as telepon, CASE WHEN master_service_units.is_active = 1 THEN 'Aktif' ELSE 'Nonaktif' END as status")
+            ->orderBy('master_service_units.name', 'ASC')
+            ->findAll();
+    }
 }

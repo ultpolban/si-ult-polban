@@ -51,24 +51,24 @@ class RegisterController extends BaseController
             'title' => 'Registrasi Pemohon',
 
             'userTypes' => $this->userTypeModel
-                ->orderBy('type_name')
+                ->orderBy('name')
                 ->findAll(),
 
             'departments' => $this->departmentModel
-                ->orderBy('department_name')
+                ->orderBy('name')
                 ->findAll(),
 
             'studyPrograms' => $this->studyProgramModel
-                ->orderBy('education_level')
-                ->orderBy('program_name')
+                ->orderBy('degree')
+                ->orderBy('name')
                 ->findAll(),
 
             'workUnits' => $this->workUnitModel
-                ->orderBy('unit_name')
+                ->orderBy('name')
                 ->findAll(),
 
             'classes' => $this->classModel
-                ->orderBy('class_name')
+                ->orderBy('name')
                 ->findAll()
 
         ]);
@@ -93,7 +93,7 @@ class RegisterController extends BaseController
             'full_name'              => 'required|min_length[3]',
             'user_type_id'           => 'required',
 
-            'personal_email'         => 'required|valid_email|is_unique[users.personal_email]',
+            'email'         => 'required|valid_email|is_unique[users.email]',
 
             'phone'                  => 'required|min_length[10]',
 
@@ -115,7 +115,7 @@ class RegisterController extends BaseController
         $userType = $this->userTypeModel
             ->find($this->request->getPost('user_type_id'));
 
-        $type = strtolower($userType['type_name'] ?? '');
+        $type = strtolower($userType['name'] ?? '');
 
         switch ($type) {
 
@@ -209,7 +209,7 @@ class RegisterController extends BaseController
 */
 
         $role = $this->roleModel
-            ->where('role_name', 'Pemohon')
+            ->where('name', 'Pemohon')
             ->first();
 
         if (!$role) {
@@ -245,7 +245,7 @@ class RegisterController extends BaseController
 
             // Akun
             'full_name' => $this->request->getPost('full_name'),
-            'personal_email' => $this->request->getPost('personal_email'),
+            'email' => $this->request->getPost('email'),
             'institution_email' => $this->request->getPost('institution_email'),
             'password' => password_hash(
                 $this->request->getPost('password'),
@@ -378,11 +378,11 @@ class RegisterController extends BaseController
     public function getStudyPrograms($departmentId)
     {
         $programs = $this->studyProgramModel
-            ->select('id, program_name, education_level')
+            ->select('id, name, degree')
             ->where('department_id', $departmentId)
-            ->where('status', 'Aktif')
-            ->orderBy('education_level', 'ASC')
-            ->orderBy('program_name', 'ASC')
+            ->where('is_active', 1)
+            ->orderBy('degree', 'ASC')
+            ->orderBy('name', 'ASC')
             ->findAll();
 
         return $this->response->setJSON($programs);

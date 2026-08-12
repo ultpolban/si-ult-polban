@@ -237,7 +237,7 @@
 
                         <td>
 
-                            <?= esc($class['education_level']) ?>
+                            <?= esc($class['education_level'] ?? $class['degree'] ?? '-') ?>
 
                             -
 
@@ -249,7 +249,7 @@
 
                             <strong>
 
-                                <?= esc($class['class_name']) ?>
+                                <?= esc($class['class_name'] ?? $class['name'] ?? '-') ?>
 
                             </strong>
 
@@ -257,7 +257,7 @@
 
                         <td>
 
-                            <?php if ($class['status']) : ?>
+                            <?php if (($class['status'] ?? $class['is_active'] ?? 0)) : ?>
 
                                 <span class="badge bg-success">
 

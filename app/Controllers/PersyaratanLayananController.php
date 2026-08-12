@@ -22,7 +22,10 @@ class PersyaratanLayananController extends BaseController
         $data = [
             'title'       => 'Master Persyaratan Layanan',
             'persyaratan' => $this->persyaratanModel->getPersyaratanWithLayanan(),
-            'layanans'    => $layananModel->findAll()
+            'layanans'    => array_map(static function (array $row): array {
+                $row['nama'] = $row['nama'] ?? $row['name'] ?? '';
+                return $row;
+            }, $layananModel->findAll())
         ];
         
         return view('admin/persyaratan_layanan', $data);
@@ -31,12 +34,13 @@ class PersyaratanLayananController extends BaseController
     public function store()
     {
         $this->persyaratanModel->save([
-            'layanan_id'  => $this->request->getPost('layanan_id'),
-            'persyaratan' => $this->request->getPost('persyaratan'),
-            'tipe_file'   => $this->request->getPost('tipe_file'),
-            'ukuran'      => $this->request->getPost('ukuran'),
-            'wajib'       => $this->request->getPost('wajib'),
-            'status'      => $this->request->getPost('status') ?? 'Aktif',
+            'service_id'          => $this->request->getPost('layanan_id'),
+            'name'                => $this->request->getPost('persyaratan'),
+            'file_type'           => $this->request->getPost('tipe_file') ?? 'pdf',
+            'max_file_size'       => $this->request->getPost('ukuran') ?? 2048,
+            'is_required'         => $this->request->getPost('wajib') ? 1 : 0,
+            'allowed_extensions'  => $this->request->getPost('tipe_file'),
+            'is_active'           => $this->request->getPost('status') === 'Aktif' ? 1 : 0,
         ]);
         return redirect()->to('/persyaratan-layanan')->with('success', 'Persyaratan berhasil ditambahkan.');
     }
@@ -44,12 +48,13 @@ class PersyaratanLayananController extends BaseController
     public function update($id)
     {
         $this->persyaratanModel->update($id, [
-            'layanan_id'  => $this->request->getPost('layanan_id'),
-            'persyaratan' => $this->request->getPost('persyaratan'),
-            'tipe_file'   => $this->request->getPost('tipe_file'),
-            'ukuran'      => $this->request->getPost('ukuran'),
-            'wajib'       => $this->request->getPost('wajib'),
-            'status'      => $this->request->getPost('status'),
+            'service_id'          => $this->request->getPost('layanan_id'),
+            'name'                => $this->request->getPost('persyaratan'),
+            'file_type'           => $this->request->getPost('tipe_file') ?? 'pdf',
+            'max_file_size'       => $this->request->getPost('ukuran') ?? 2048,
+            'is_required'         => $this->request->getPost('wajib') ? 1 : 0,
+            'allowed_extensions'  => $this->request->getPost('tipe_file'),
+            'is_active'           => $this->request->getPost('status') === 'Aktif' ? 1 : 0,
         ]);
         return redirect()->to('/persyaratan-layanan')->with('success', 'Persyaratan berhasil diperbarui.');
     }

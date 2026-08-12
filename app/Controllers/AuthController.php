@@ -48,47 +48,45 @@ class AuthController extends BaseController
 
             // Role (tanpa Administrator)
             'roles' => $this->roleModel
-                ->where('role_name !=', 'Administrator')
-                ->orderBy('role_name', 'ASC')
+                ->where('name !=', 'Administrator')
+                ->orderBy('name', 'ASC')
                 ->findAll(),
 
             // Jenis Pemohon
             'userTypes' => $this->userTypeModel
-                ->orderBy('type_name', 'ASC')
+                ->orderBy('name', 'ASC')
                 ->findAll(),
 
             // Jurusan
             'departments' => $this->departmentModel
-                ->orderBy('department_name', 'ASC')
+                ->orderBy('name', 'ASC')
                 ->findAll(),
 
             // Program Studi
             'studyPrograms' => $this->studyProgramModel
-                ->select('
-                study_programs.*,
-                departments.department_name
-            ')
+                ->select('master_study_programs.*, master_departments.name as department_name')
                 ->join(
-                    'departments',
-                    'departments.id = study_programs.department_id',
+                    'master_departments',
+                    'master_departments.id = master_study_programs.department_id',
                     'left'
                 )
-                ->orderBy('education_level', 'ASC')
-                ->orderBy('program_name', 'ASC')
+                ->orderBy('degree', 'ASC')
+                ->orderBy('master_study_programs.name', 'ASC')
                 ->findAll(),
 
             // Unit Kerja
             'workUnits' => $this->workUnitModel
-                ->orderBy('unit_name', 'ASC')
+                ->orderBy('name', 'ASC')
                 ->findAll(),
 
             // Kelas
             'classes' => $this->classModel
-                ->orderBy('class_name', 'ASC')
+                ->orderBy('name', 'ASC')
                 ->findAll()
 
         ];
     }
+
 
     private function validationRules(): array
     {
@@ -100,7 +98,7 @@ class AuthController extends BaseController
 
             'full_name' => 'required|min_length[3]|max_length[150]',
 
-            'personal_email' => 'required|valid_email|is_unique[users.personal_email]',
+            'email' => 'required|valid_email|is_unique[users.email]',
 
             'password' => 'required|min_length[8]',
 
@@ -241,7 +239,7 @@ class AuthController extends BaseController
                 'required' => 'Nama lengkap wajib diisi.'
             ],
 
-            'personal_email' => [
+            'email' => [
                 'required' => 'Email pribadi wajib diisi.',
                 'valid_email' => 'Format email tidak valid.',
                 'is_unique' => 'Email sudah terdaftar.'
@@ -304,7 +302,7 @@ class AuthController extends BaseController
 
             // Data akun
             'full_name'          => trim($this->request->getPost('full_name')),
-            'personal_email'     => trim($this->request->getPost('personal_email')),
+            'email'              => trim($this->request->getPost('email')),
             'institution_email'  => $this->request->getPost('institution_email'),
 
             // Password
@@ -589,14 +587,14 @@ class AuthController extends BaseController
 
             'user_id'        => $user['id'],
             'full_name'      => $user['full_name'],
-            'personal_email' => $user['personal_email'],
+            'email'          => $user['email'] ?? '',
 
             'role_id'        => $user['role_id'],
-            'role_name'      => $user['role_name'],
+            'role_name'      => $user['role_name'] ?? '',
 
-            'user_type_id'   => $user['user_type_id'],
+            'user_type_id'   => $user['applicant_type_id'] ?? null,
 
-            'photo'          => $user['photo'],
+            'photo'          => $user['photo'] ?? null,
 
             'is_active'      => $user['is_active'],
 

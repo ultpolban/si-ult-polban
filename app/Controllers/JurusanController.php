@@ -33,8 +33,8 @@ class JurusanController extends BaseController
         }
 
         $data = [
-            'kode' => $kode,
-            'nama_jurusan' => $nama
+            'code' => $kode,
+            'name' => $nama
         ];
 
         if ($this->jurusanModel->insert($data)) {
@@ -80,8 +80,8 @@ class JurusanController extends BaseController
         }
 
         $data = [
-            'kode' => $kode,
-            'nama_jurusan' => $nama
+            'code' => $kode,
+            'name' => $nama
         ];
 
         if ($this->jurusanModel->update($id, $data)) {

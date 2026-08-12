@@ -6,16 +6,19 @@ use CodeIgniter\Model;
 
 class ProgramStudiModel extends Model
 {
-    protected $table = 'program_studis';
+    protected $table = 'master_study_programs';
 
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-        'kode',
-        'nama_program',
-        'jurusan_id',
-        'jenjang',
-        'status',
+        'department_id',
+        'code',
+        'name',
+        'short_name',
+        'degree',
+        'description',
+        'sort_order',
+        'is_active',
         'created_at',
         'updated_at'
     ];

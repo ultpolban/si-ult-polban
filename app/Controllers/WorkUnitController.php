@@ -27,7 +27,7 @@ class WorkUnitController extends BaseController
 
     public function index()
     {
-        $keyword = trim($this->request->getGet('keyword'));
+        $keyword = trim($this->request->getGet('keyword') ?? '');
 
         $perPage = 10;
 
@@ -37,9 +37,13 @@ class WorkUnitController extends BaseController
 
         foreach ($workUnits as &$unit) {
 
+            $unit['unit_code'] = $unit['code'] ?? '';
+
             $unit['total_user'] = $this->workUnitModel
                 ->countUser($unit['id']);
         }
+
+        unset($unit);
 
         return view('work-units/index', [
 
@@ -97,15 +101,12 @@ class WorkUnitController extends BaseController
         }
 
         $this->workUnitModel->insert([
-
-            'unit_code' => strtoupper(
-                trim($this->request->getPost('unit_code'))
+            'code' => strtoupper(
+                trim($this->request->getPost('code'))
             ),
-
-            'unit_name' => trim(
-                $this->request->getPost('unit_name')
+            'name' => trim(
+                $this->request->getPost('name')
             )
-
         ]);
 
         return redirect()
@@ -124,40 +125,27 @@ class WorkUnitController extends BaseController
         $codeRule = 'required|max_length[20]';
 
         if ($id === null) {
-
-            $codeRule .= '|is_unique[work_units.unit_code]';
+            $codeRule .= '|is_unique[master_service_units.code]';
         } else {
-
-            $codeRule .= '|is_unique[work_units.unit_code,id,' . $id . ']';
+            $codeRule .= '|is_unique[master_service_units.code,id,' . $id . ']';
         }
 
         return [
-
-            'unit_code' => $codeRule,
-
-            'unit_name' => 'required|max_length[150]'
-
+            'code' => $codeRule,
+            'name' => 'required|max_length[150]'
         ];
     }
 
     private function validationMessages(): array
     {
         return [
-
-            'unit_code' => [
-
+            'code' => [
                 'required' => 'Kode unit wajib diisi.',
-
                 'is_unique' => 'Kode unit sudah digunakan.'
-
             ],
-
-            'unit_name' => [
-
+            'name' => [
                 'required' => 'Nama unit wajib diisi.'
-
             ]
-
         ];
     }
 
@@ -225,15 +213,12 @@ class WorkUnitController extends BaseController
         }
 
         $this->workUnitModel->update($id, [
-
-            'unit_code' => strtoupper(
-                trim($this->request->getPost('unit_code'))
+            'code' => strtoupper(
+                trim($this->request->getPost('code'))
             ),
-
-            'unit_name' => trim(
-                $this->request->getPost('unit_name')
+            'name' => trim(
+                $this->request->getPost('name')
             )
-
         ]);
 
         return redirect()
@@ -262,31 +247,9 @@ class WorkUnitController extends BaseController
                 ->with('error', 'Unit kerja tidak ditemukan.');
         }
 
-        /*
-    |--------------------------------------------------------------------------
-    | Cek apakah masih digunakan user
-    |--------------------------------------------------------------------------
-    */
-
-        $totalUser = $this->userModel
-
-            ->where('work_unit_id', $id)
-
-            ->countAllResults();
-
-        if ($totalUser > 0) {
-
-            return redirect()
-
-                ->to(base_url('work-units'))
-
-                ->with(
-                    'error',
-                    'Unit kerja tidak dapat dihapus karena masih digunakan oleh ' . $totalUser . ' user.'
-                );
-        }
-
+        // Backend1 tidak menyimpan work_unit_id di users.
         $this->workUnitModel->delete($id);
+
 
         return redirect()
 

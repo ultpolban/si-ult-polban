@@ -253,3 +253,39 @@ $routes->get('activity-log', 'ActivityLogController::index', ['filter' => 'auth'
 
 $routes->get('study-programs/by-department/(:num)', 'StudyProgramController::byDepartment/$1');
 $routes->get('users/partial/(:any)', 'UserController::partial/$1');
+
+// Dashboard Jurusan (AJAX-based)
+$routes->group('jurusan', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'JurusanController::index');
+    $routes->post('store', 'JurusanController::store');
+    $routes->get('edit/(:num)', 'JurusanController::edit/$1');
+    $routes->post('update/(:num)', 'JurusanController::update/$1');
+    $routes->get('delete/(:num)', 'JurusanController::delete/$1');
+});
+
+
+// -----------------------------------------------------------------------------
+// Frontend4 compatibility routes for Backend1 modules
+// -----------------------------------------------------------------------------
+$routes->get('permissions', 'PermissionController::index', ['filter' => 'auth']);
+
+$routes->get('notifikasi', 'NotificationController::index', ['filter' => 'auth']);
+$routes->get('notifikasi/read/(:num)', 'NotificationController::read/$1', ['filter' => 'auth']);
+$routes->get('notifikasi/read-all', 'NotificationController::readAll', ['filter' => 'auth']);
+
+$routes->get('tiket/manajemen', 'Admin::tiket', ['filter' => 'auth']);
+$routes->get('tiket/buat', 'Admin::tiket', ['filter' => 'auth']);
+$routes->get('tiket/lacak', 'Admin::tracking', ['filter' => 'auth']);
+$routes->get('laporan', 'Admin::laporan', ['filter' => 'auth']);
+$routes->get('statistik', 'Admin::statistik', ['filter' => 'auth']);
+$routes->get('profil', 'ProfileController::index', ['filter' => 'auth']);
+$routes->post('profil/update', 'ProfileController::update', ['filter' => 'auth']);
+
+// Dashboard Program Studi (AJAX-based)
+$routes->group('program-studi', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'ProgramStudiController::index');
+    $routes->post('store', 'ProgramStudiController::store');
+    $routes->get('edit/(:num)', 'ProgramStudiController::edit/$1');
+    $routes->post('update/(:num)', 'ProgramStudiController::update/$1');
+    $routes->get('delete/(:num)', 'ProgramStudiController::delete/$1');
+});

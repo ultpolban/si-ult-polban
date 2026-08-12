@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/template') ?>
+<?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
 <?php
@@ -10,7 +10,7 @@
  * @var array $recentUsers
  */
 ?>
-<?= $this->extend('layouts/template') ?>
+<?= $this->extend('layouts/main') ?>
 
 <div class="container-fluid py-2">
     <!-- Header -->

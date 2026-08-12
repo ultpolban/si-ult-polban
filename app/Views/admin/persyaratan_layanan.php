@@ -60,22 +60,22 @@
                             <tr>
                                 <td class="ps-4"><?= $key + 1 ?></td>
                                 <td><?= esc($row['layanan_nama'] ?? '-') ?></td>
-                                <td><?= esc($row['persyaratan']) ?></td>
-                                <td><?= esc($row['tipe_file']) ?></td>
-                                <td><?= esc($row['ukuran']) ?></td>
+                                <td><?= esc($row['persyaratan'] ?? $row['name'] ?? '-') ?></td>
+                                <td><?= esc($row['tipe_file'] ?? $row['file_type'] ?? '-') ?></td>
+                                <td><?= esc($row['ukuran'] ?? $row['max_file_size'] ?? 0) ?></td>
                                 <td>
                                     <?php 
                                         $on = 'bg-secondary';
-                                        if ($row['wajib'] == 'Wajib') $on = 'bg-primary';
+                                        if (($row['wajib'] ?? (($row['is_required'] ?? 0) ? 'Wajib' : 'Opsional')) == 'Wajib') $on = 'bg-primary';
                                     ?>
-                                    <span class="badge <?= $on ?> rounded-pill px-3"><?= $row['wajib'] ?></span>
+                                    <span class="badge <?= $on ?> rounded-pill px-3"><?= esc($row['wajib'] ?? (($row['is_required'] ?? 0) ? 'Wajib' : 'Opsional')) ?></span>
                                 </td>
                                 <td>
                                     <?php 
                                         $bg = 'bg-danger';
-                                        if ($row['status'] == 'Aktif') $bg = 'bg-success';
+                                        if (($row['status'] ?? (($row['is_active'] ?? 0) ? 'Aktif' : 'Nonaktif')) == 'Aktif') $bg = 'bg-success';
                                     ?>
-                                    <span class="badge <?= $bg ?>"><?= $row['status'] ?></span>
+                                    <span class="badge <?= $bg ?>"><?= esc($row['status'] ?? (($row['is_active'] ?? 0) ? 'Aktif' : 'Nonaktif')) ?></span>
                                 </td>
                                 <td class="pe-4 text-center">
                                     <div class="btn-group btn-group-sm">
@@ -83,11 +83,11 @@
                                         <button type="button" class="btn btn-warning text-dark btn-edit"
                                             data-id="<?= $row['id'] ?>"
                                             data-layanan="<?= $row['layanan_id'] ?>"
-                                            data-persyaratan="<?= esc($row['persyaratan']) ?>"
-                                            data-tipe="<?= esc($row['tipe_file']) ?>"
-                                            data-ukuran="<?= esc($row['ukuran']) ?>"
-                                            data-wajib="<?= esc($row['wajib']) ?>"
-                                            data-status="<?= $row['status'] ?>"
+                                            data-persyaratan="<?= esc($row['persyaratan'] ?? $row['name'] ?? '-') ?>"
+                                            data-tipe="<?= esc($row['tipe_file'] ?? $row['file_type'] ?? '-') ?>"
+                                            data-ukuran="<?= esc($row['ukuran'] ?? $row['max_file_size'] ?? 0) ?>"
+                                            data-wajib="<?= esc($row['wajib'] ?? (($row['is_required'] ?? 0) ? 'Wajib' : 'Opsional')) ?>"
+                                            data-status="<?= esc($row['status'] ?? (($row['is_active'] ?? 0) ? 'Aktif' : 'Nonaktif')) ?>"
                                             title="Edit" data-bs-toggle="modal" data-bs-target="#modalEdit">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
@@ -118,7 +118,7 @@
                         <select name="layanan_id" class="form-select" required>
                             <option value="">Pilih Layanan...</option>
                             <?php foreach ($layanans as $l) : ?>
-                                <option value="<?= $l['id'] ?>"><?= esc($l['nama']) ?></option>
+                                <option value="<?= $l['id'] ?>"><?= esc($l['nama'] ?? $l['name'] ?? '-') ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -173,7 +173,7 @@
                         <select name="layanan_id" id="edit_layanan" class="form-select" required>
                             <option value="">Pilih Layanan...</option>
                             <?php foreach ($layanans as $l) : ?>
-                                <option value="<?= $l['id'] ?>"><?= esc($l['nama']) ?></option>
+                                <option value="<?= $l['id'] ?>"><?= esc($l['nama'] ?? $l['name'] ?? '-') ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

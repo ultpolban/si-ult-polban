@@ -27,7 +27,7 @@ class RoleController extends BaseController
 
     public function index()
     {
-        $keyword = trim($this->request->getGet('keyword'));
+        $keyword = trim($this->request->getGet('keyword') ?? '');
 
         $perPage = 10;
 
@@ -38,6 +38,10 @@ class RoleController extends BaseController
             ->paginate($perPage);
 
         foreach ($roles as &$role) {
+
+            // Backend1 menyimpan nama role di kolom `name`,
+            // sementara View Frontend4 memakai key `role_name`.
+            $role['role_name'] = $role['name'] ?? '';
 
             $role['total_user'] = $this->roleModel
 
@@ -109,8 +113,8 @@ class RoleController extends BaseController
 
         $this->roleModel->insert([
 
-            'role_name'   => trim(
-                $this->request->getPost('role_name')
+            'name'   => trim(
+                $this->request->getPost('name')
             ),
 
             'description' => trim(
@@ -200,8 +204,8 @@ class RoleController extends BaseController
 
         $this->roleModel->update($id, [
 
-            'role_name' => trim(
-                $this->request->getPost('role_name')
+            'name' => trim(
+                $this->request->getPost('name')
             ),
 
             'description' => trim(
@@ -308,15 +312,15 @@ class RoleController extends BaseController
 
         if ($id === null) {
 
-            $roleRule .= '|is_unique[roles.role_name]';
+            $roleRule .= '|is_unique[roles.name as role_name]';
         } else {
 
-            $roleRule .= '|is_unique[roles.role_name,id,' . $id . ']';
+            $roleRule .= '|is_unique[roles.name as role_name,id,' . $id . ']';
         }
 
         return [
 
-            'role_name' => $roleRule,
+            'name' => $roleRule,
 
             'description' => 'permit_empty|max_length[255]'
 
@@ -333,7 +337,7 @@ class RoleController extends BaseController
     {
         return [
 
-            'role_name' => [
+            'name' => [
 
                 'required'   => 'Nama role wajib diisi.',
 

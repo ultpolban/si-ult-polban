@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class UserTypeModel extends Model
 {
-    protected $table = 'user_types';
+    protected $table = 'master_applicant_types';
 
     protected $primaryKey = 'id';
 
@@ -18,7 +18,7 @@ class UserTypeModel extends Model
 
     protected $allowedFields = [
 
-        'type_name',
+        'name',
 
         'description'
 
@@ -56,7 +56,7 @@ class UserTypeModel extends Model
 
                 ->groupStart()
 
-                ->like('type_name', $keyword)
+                ->like('name', $keyword)
 
                 ->orLike('description', $keyword)
 
@@ -65,7 +65,7 @@ class UserTypeModel extends Model
 
         return $builder
 
-            ->orderBy('type_name', 'ASC');
+            ->orderBy('name', 'ASC');
     }
 
     /*
@@ -77,9 +77,8 @@ class UserTypeModel extends Model
     public function countUser(int $typeId): int
     {
         return (new UserModel())
-
-            ->where('user_type_id', $typeId)
-
+            ->join('user_profiles', 'user_profiles.user_id = users.id')
+            ->where('user_profiles.applicant_type_id', $typeId)
             ->countAllResults();
     }
 }

@@ -88,7 +88,7 @@ class AuthService
 
         // Cek Email
         if ($this->userModel
-            ->where('personal_email', $data['personal_email'])
+            ->where('email', $data['personal_email'])
             ->first()
         ) {
 
@@ -100,7 +100,7 @@ class AuthService
 
         // Role Pemohon
         $role = $this->roleModel
-            ->where('role_name', 'Pemohon')
+            ->where('name', 'Pemohon')
             ->first();
 
         if (!$role) {
@@ -110,48 +110,32 @@ class AuthService
             ];
         }
 
-        // Simpan User
+        // Simpan user utama sesuai schema Backend1.
+        $email = $data['personal_email'] ?? $data['institution_email'] ?? null;
         $this->userModel->insert([
-
             'role_id' => $role['id'],
-
-            'user_type_id' => $data['user_type_id'],
-
-            'department_id' => $data['department_id'] ?? null,
-
-            'study_program_id' => $data['study_program_id'] ?? null,
-
-            'work_unit_id' => $data['work_unit_id'] ?? null,
-
-            'nim' => $data['nim'] ?? null,
-
-            'nip' => $data['nip'] ?? null,
-
-            'nidn' => $data['nidn'] ?? null,
-
             'full_name' => $data['full_name'],
-
-            'gender' => $data['gender'],
-
-            'birth_place' => $data['birth_place'] ?? null,
-
-            'birth_date' => $data['birth_date'] ?? null,
-
-            'phone' => $data['phone'],
-
-            'institution_email' => $data['institution_email'] ?? null,
-
-            'personal_email' => $data['personal_email'],
-
-            'address' => $data['address'] ?? null,
-
-            'password' => password_hash(
-                $data['password'],
-                PASSWORD_DEFAULT
-            ),
-
+            'identity_number' => $data['nik'] ?? $data['nim'] ?? $data['nip'] ?? null,
+            'phone_number' => $data['phone'] ?? null,
+            'email' => $email,
+            'password' => password_hash($data['password'], PASSWORD_DEFAULT),
             'is_active' => 1,
+        ]);
 
+        $userId = $this->userModel->getInsertID();
+
+        // Simpan detail profil di tabel terpisah.
+        $this->db->table('user_profiles')->insert([
+            'user_id' => $userId,
+            'applicant_type_id' => $data['user_type_id'] ?? null,
+            'study_program_id' => $data['study_program_id'] ?? null,
+            'class_id' => $data['class_id'] ?? null,
+            'nim' => $data['nim'] ?? null,
+            'nik' => $data['nik'] ?? null,
+            'name' => $data['full_name'],
+            'email' => $email,
+            'phone' => $data['phone'] ?? null,
+            'address' => $data['address'] ?? null,
         ]);
 
         return [
@@ -166,7 +150,7 @@ class AuthService
     public function login(array $data)
     {
         $user = $this->userModel
-            ->where('personal_email', $data['personal_email'])
+            ->where('email', $data['personal_email'])
             ->first();
 
         if (!$user) {

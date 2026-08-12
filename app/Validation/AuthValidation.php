@@ -21,7 +21,7 @@ class AuthValidation
             ],
 
             'personal_email' => [
-                'rules' => 'required|valid_email|is_unique[users.personal_email]'
+                'rules' => 'required|valid_email|is_unique[users.email]'
             ],
 
             'phone' => [

@@ -60,14 +60,21 @@ class PengajuanLayananController extends BaseController
         // Generate tiket
         $tiket = 'TKT-' . date('Ymd') . '-' . strtoupper(substr(md5(uniqid()), 0, 4));
 
+        $priorityMap = [
+            'Normal' => 'normal',
+            'Penting' => 'high',
+            'Mendesak' => 'urgent'
+        ];
+        $priority = $priorityMap[$this->request->getPost('prioritas')] ?? 'normal';
+
         $data = [
-            'tiket'      => $tiket,
-            'user_id'    => session()->get('id') ?? 1, // Fallback to 1 for dev if not logged in
-            'layanan_id' => $this->request->getPost('layanan_id'),
-            'judul'      => $this->request->getPost('judul'),
-            'deskripsi'  => $this->request->getPost('deskripsi'),
-            'prioritas'  => $this->request->getPost('prioritas'),
-            'status'     => 'Pending',
+            'ticket_number'   => $tiket,
+            'user_profile_id' => 1, // Fallback to 1 for dev if not logged in
+            'service_id'      => $this->request->getPost('layanan_id'),
+            'title'           => $this->request->getPost('judul'),
+            'description'     => $this->request->getPost('deskripsi'),
+            'priority'        => $priority,
+            'status'          => 'submitted',
         ];
 
         $this->pengajuanModel->insert($data);

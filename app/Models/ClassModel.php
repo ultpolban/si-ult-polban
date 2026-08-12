@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class ClassModel extends Model
 {
-    protected $table = 'classes';
+    protected $table = 'master_classes';
 
     protected $primaryKey = 'id';
 
@@ -17,13 +17,17 @@ class ClassModel extends Model
     protected $protectFields = true;
 
     protected $allowedFields = [
-
         'study_program_id',
-
-        'class_name',
-
-        'status'
-
+        'code',
+        'name',
+        'level',
+        'parallel_class',
+        'entry_year',
+        'description',
+        'sort_order',
+        'is_active',
+        'created_at',
+        'updated_at'
     ];
 
     protected $useTimestamps = true;
@@ -43,16 +47,14 @@ class ClassModel extends Model
     protected function baseQuery()
     {
         return $this->select('
-                classes.*,
-
-                study_programs.program_name,
-
-                study_programs.education_level
+                master_classes.*,
+                master_classes.name as class_name,
+                master_study_programs.name as program_name,
+                master_study_programs.degree as education_level, master_classes.is_active as status
             ')
-
             ->join(
-                'study_programs',
-                'study_programs.id = classes.study_program_id',
+                'master_study_programs',
+                'master_study_programs.id = master_classes.study_program_id',
                 'left'
             );
     }
@@ -65,11 +67,14 @@ class ClassModel extends Model
 
     public function getClasses()
     {
+        return $this->getmaster_classes();
+    }
+
+    public function getmaster_classes()
+    {
         return $this->baseQuery()
-
-            ->orderBy('study_programs.program_name', 'ASC')
-
-            ->orderBy('classes.class_name', 'ASC');
+            ->orderBy('master_study_programs.name', 'ASC')
+            ->orderBy('master_classes.name', 'ASC');
     }
 
     /*
@@ -82,7 +87,7 @@ class ClassModel extends Model
     {
         return $this->baseQuery()
 
-            ->where('classes.id', $id)
+            ->where('master_classes.id', $id)
 
             ->first();
     }
@@ -98,13 +103,9 @@ class ClassModel extends Model
         $builder = $this->baseQuery();
 
         if (!empty($keyword)) {
-
             $builder->groupStart()
-
-                ->like('classes.class_name', $keyword)
-
-                ->orLike('study_programs.program_name', $keyword)
-
+                ->like('master_classes.name', $keyword)
+                ->orLike('master_study_programs.name', $keyword)
                 ->groupEnd();
         }
 
@@ -119,16 +120,12 @@ class ClassModel extends Model
 
     public function countActive()
     {
-        return $this->where('status', 1)
-
-            ->countAllResults();
+        return $this->where('is_active', 1)->countAllResults();
     }
 
     public function countInactive()
     {
-        return $this->where('status', 0)
-
-            ->countAllResults();
+        return $this->where('is_active', 0)->countAllResults();
     }
 
     /*
@@ -140,13 +137,9 @@ class ClassModel extends Model
     public function getByStudyProgram($studyProgramId)
     {
         return $this
-
             ->where('study_program_id', $studyProgramId)
-
-            ->where('status', 1)
-
-            ->orderBy('class_name')
-
+            ->where('is_active', 1)
+            ->orderBy('name')
             ->findAll();
     }
 }

@@ -188,7 +188,7 @@
 
                                 <span class="badge bg-primary">
 
-                                    <?= esc($workUnit['unit_code']) ?>
+                                    <?= esc($workUnit['unit_code'] ?? $workUnit['code'] ?? '-') ?>
 
                                 </span>
 

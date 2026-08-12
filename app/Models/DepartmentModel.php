@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class DepartmentModel extends Model
 {
-    protected $table = 'departments';
+    protected $table = 'master_departments';
 
     protected $primaryKey = 'id';
 
@@ -17,11 +17,12 @@ class DepartmentModel extends Model
     protected $protectFields = true;
 
     protected $allowedFields = [
-
-        'department_code',
-
-        'department_name'
-
+        'code',
+        'name',
+        'short_name',
+        'description',
+        'sort_order',
+        'is_active'
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -48,24 +49,15 @@ class DepartmentModel extends Model
 
     public function search(?string $keyword = null)
     {
-        $builder = $this;
-
+        $builder = $this->select('master_departments.*, master_departments.code as department_code');
         if (!empty($keyword)) {
-
             $builder = $builder
-
                 ->groupStart()
-
-                ->like('department_code', $keyword)
-
-                ->orLike('department_name', $keyword)
-
+                ->like('code', $keyword)
+                ->orLike('name', $keyword)
                 ->groupEnd();
         }
-
-        return $builder
-
-            ->orderBy('department_name', 'ASC');
+        return $builder->orderBy('name', 'ASC');
     }
 
     /*
@@ -78,7 +70,11 @@ class DepartmentModel extends Model
     {
         return (new UserModel())
 
-            ->where('department_id', $departmentId)
+            ->join('user_profiles', 'user_profiles.user_id = users.id')
+
+            ->join('master_study_programs', 'master_study_programs.id = user_profiles.study_program_id', 'left')
+
+            ->where('master_study_programs.department_id', $departmentId)
 
             ->countAllResults();
     }
@@ -106,10 +102,6 @@ class DepartmentModel extends Model
 
     public function getByCode(string $code): ?array
     {
-        return $this
-
-            ->where('department_code', $code)
-
-            ->first();
+        return $this->where('code', $code)->first();
     }
 }

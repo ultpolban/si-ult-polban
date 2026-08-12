@@ -6,14 +6,14 @@ use CodeIgniter\Model;
 
 class PengajuanLayananModel extends Model
 {
-    protected $table            = 'pengajuan_layanan';
+    protected $table            = 'service_requests';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'tiket', 'user_id', 'layanan_id', 'judul', 'deskripsi', 'prioritas', 'status'
+        'ticket_number', 'user_profile_id', 'service_id', 'title', 'description', 'priority', 'status', 'assigned_to', 'submitted_at'
     ];
 
     protected bool $allowEmptyInserts = false;

@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\AdminController;
 use App\Services\TicketService;
 use App\Services\ServiceService;
+use App\Services\ServiceUnitService;
 use App\Models\UserProfileModel;
 use App\Models\UserModel;
 use App\Constants\Permissions;
@@ -14,6 +15,7 @@ class TicketController extends AdminController
 {
     protected TicketService $ticketService;
     protected ServiceService $serviceService;
+    protected ServiceUnitService $serviceUnitService;
     protected UserProfileModel $profileModel;
     protected UserModel $userModel;
 
@@ -23,6 +25,7 @@ class TicketController extends AdminController
 
         $this->ticketService   = new TicketService();
         $this->serviceService  = new ServiceService();
+        $this->serviceUnitService = new ServiceUnitService();
         $this->profileModel    = new UserProfileModel();
         $this->userModel       = new UserModel();
     }
@@ -78,6 +81,7 @@ class TicketController extends AdminController
             'pageTitle'  => 'Buat Tiket',
             'breadcrumb' => ['Tiket', 'Buat'],
             'services'   => $this->serviceService->getActive(),
+            'serviceUnits' => $this->serviceUnitService->getActive(),
             'applicants' => $applicants,
             'assignees'  => $this->userModel->getActive(),
             'ticket'     => [],
@@ -151,6 +155,7 @@ class TicketController extends AdminController
             'breadcrumb' => ['Tiket', 'Edit'],
             'ticket'     => $ticket,
             'services'   => $this->serviceService->getActive(),
+            'serviceUnits' => $this->serviceUnitService->getActive(),
             'applicants' => $this->profileModel->findAll(),
             'assignees'  => $this->userModel->getActive(),
         ]));

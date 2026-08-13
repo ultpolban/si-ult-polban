@@ -45,7 +45,7 @@ class ServiceRequestModel extends BaseModel
         'ticket_number'   => 'required|max_length[50]',
         'user_profile_id' => 'required|integer',
         'service_id'      => 'required|integer',
-        'title'           => 'required|max_length[255]',
+        'title'           => 'permit_empty|max_length[255]',
         'description'     => 'permit_empty',
         'status'          => 'required',
         'priority'        => 'required',

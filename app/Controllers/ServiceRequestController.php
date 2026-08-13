@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\AdminController;
 use App\Services\ServiceRequestService;
 use App\Services\ServiceService;
+use App\Services\ServiceUnitService;
 use App\Models\UserProfileModel;
 use App\Constants\Permissions;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -13,6 +14,7 @@ class ServiceRequestController extends AdminController
 {
     protected ServiceRequestService $serviceRequestService;
     protected ServiceService $serviceService;
+    protected ServiceUnitService $serviceUnitService;
     protected UserProfileModel $profileModel;
 
     public function __construct()
@@ -21,6 +23,7 @@ class ServiceRequestController extends AdminController
 
         $this->serviceRequestService = new ServiceRequestService();
         $this->serviceService        = new ServiceService();
+        $this->serviceUnitService    = new ServiceUnitService();
         $this->profileModel          = new UserProfileModel();
     }
 
@@ -62,6 +65,7 @@ class ServiceRequestController extends AdminController
             'breadcrumb' => ['Pengajuan Layanan', 'Buat'],
             'profile'    => $profile,
             'services'   => $this->serviceService->getActive(),
+            'serviceUnits' => $this->serviceUnitService->getActive(),
         ]));
     }
 
@@ -125,6 +129,7 @@ class ServiceRequestController extends AdminController
             'pageTitle' => 'Edit Pengajuan',
             'request'   => $request,
             'services'  => $this->serviceService->getActive(),
+            'serviceUnits' => $this->serviceUnitService->getActive(),
         ]));
     }
 

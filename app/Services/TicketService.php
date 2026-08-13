@@ -4,16 +4,43 @@ namespace App\Services;
 
 use App\Models\TicketModel;
 use App\Models\ServiceRequestLogModel;
+use App\Models\MasterServiceModel;
 
 class TicketService extends BaseService
 {
     protected TicketModel $ticketModel;
     protected ServiceRequestLogModel $logModel;
+    protected MasterServiceModel $serviceModel;
 
     public function __construct()
     {
         $this->ticketModel = new TicketModel();
         $this->logModel    = new ServiceRequestLogModel();
+        $this->serviceModel = new MasterServiceModel();
+    }
+
+    /**
+     * Resolve judul tiket.
+     *
+     * Karena kolom form judul dihapus, judul otomatis diisi dari nama layanan
+     * agar data tetap bermakna dan kolom database (NOT NULL) tetap valid.
+     */
+    protected function resolveTitle(array $data): string
+    {
+        if (!empty($data['title'])) {
+            return $data['title'];
+        }
+
+        $serviceId = (int) ($data['service_id'] ?? 0);
+
+        if ($serviceId > 0) {
+            $service = $this->serviceModel->find($serviceId);
+            if ($service) {
+                return (string) $service['name'];
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -86,7 +113,7 @@ class TicketService extends BaseService
             'ticket_number'   => $this->ticketModel->generateTicketNumber(),
             'user_profile_id' => $data['user_profile_id'] ?? null,
             'service_id'      => $data['service_id'] ?? null,
-            'title'           => $data['title'] ?? '',
+            'title'           => $this->resolveTitle($data),
             'description'     => $data['description'] ?? null,
             'status'          => $data['status'] ?? 'submitted',
             'priority'        => $data['priority'] ?? 'normal',

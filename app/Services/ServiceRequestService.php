@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\ServiceRequestModel;
 use App\Models\ServiceRequestFileModel;
 use App\Models\ServiceRequestLogModel;
+use App\Models\MasterServiceModel;
 use RuntimeException;
 
 class ServiceRequestService extends BaseService
@@ -12,12 +13,38 @@ class ServiceRequestService extends BaseService
     protected ServiceRequestModel $requestModel;
     protected ServiceRequestFileModel $fileModel;
     protected ServiceRequestLogModel $logModel;
+    protected MasterServiceModel $serviceModel;
 
     public function __construct()
     {
         $this->requestModel = new ServiceRequestModel();
         $this->fileModel    = new ServiceRequestFileModel();
         $this->logModel     = new ServiceRequestLogModel();
+        $this->serviceModel = new MasterServiceModel();
+    }
+
+    /**
+     * Resolve judul pengajuan.
+     *
+     * Karena kolom form judul dihapus, judul otomatis diisi dari nama layanan
+     * agar data tetap bermakna dan kolom database (NOT NULL) tetap valid.
+     */
+    protected function resolveTitle(array $data): string
+    {
+        if (!empty($data['title'])) {
+            return trim($data['title']);
+        }
+
+        $serviceId = (int) ($data['service_id'] ?? 0);
+
+        if ($serviceId > 0) {
+            $service = $this->serviceModel->find($serviceId);
+            if ($service) {
+                return (string) $service['name'];
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -62,7 +89,7 @@ class ServiceRequestService extends BaseService
             'ticket_number'  => $this->generateTicketNumber(),
             'user_profile_id' => (int) ($data['user_profile_id'] ?? 0),
             'service_id'     => (int) $data['service_id'],
-            'title'          => trim($data['title']),
+            'title'          => $this->resolveTitle($data),
             'description'    => trim($data['description'] ?? ''),
             'status'         => 'submitted',
             'priority'       => $data['priority'] ?? 'normal',
@@ -86,7 +113,7 @@ class ServiceRequestService extends BaseService
     public function update(int $id, array $data): bool
     {
         return $this->requestModel->update($id, [
-            'title'       => trim($data['title']),
+            'title'       => $this->resolveTitle($data),
             'description' => trim($data['description'] ?? ''),
             'priority'    => $data['priority'] ?? 'normal',
         ]);

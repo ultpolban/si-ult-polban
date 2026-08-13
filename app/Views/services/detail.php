@@ -65,11 +65,12 @@
 
                 </a>
 
-                <a href="#" class="btn btn-ajukan">
-
-                    Ajukan Layanan
-
-                </a>
+               <button type="button"
+        class="btn btn-ajukan"
+        data-bs-toggle="modal"
+        data-bs-target="#loginModal">
+    Ajukan Layanan
+</button>
 
             </div>
 
@@ -79,4 +80,55 @@
 
 </div>
 
+
+                <!-- Modal Login Diperlukan -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">
+                    Login Diperlukan
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+
+            <div class="modal-body text-center">
+
+                <i class="bi bi-lock-fill fs-1 text-primary"></i>
+
+                <h5 class="mt-3">
+                    Silakan Login Terlebih Dahulu
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Anda harus login terlebih dahulu
+                    untuk mengajukan layanan.
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Batal
+                </button>
+
+                <a href="<?= base_url('login') ?>"
+                   class="btn btn-ajukan">
+                    Login Sekarang
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 <?= $this->include('layouts/footer') ?>

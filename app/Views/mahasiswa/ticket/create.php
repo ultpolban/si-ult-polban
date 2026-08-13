@@ -544,6 +544,7 @@
                             type="submit"
                             name="action"
                             value="draft"
+                            formnovalidate
                             formaction="<?= base_url('mahasiswa/ticket/save-draft') ?>"
                             class="btn btn-outline-primary mr-2 mb-2">
 

@@ -362,11 +362,13 @@ class MahasiswaTicketController extends BaseController
 
 public function saveDraft()
 {
+    $db = \Config\Database::connect();
+
     $serviceRequestModel = new ServiceRequestModel();
 
-    // =====================================================
-    // AMBIL SERVICE / JENIS LAYANAN
-    // =====================================================
+    // ==========================================
+    // AMBIL SERVICE
+    // ==========================================
 
     $serviceId = $this->request->getPost('jenis_layanan');
 
@@ -381,9 +383,9 @@ public function saveDraft()
     }
 
 
-    // =====================================================
-    // AMBIL USER PROFILE
-    // =====================================================
+    // ==========================================
+    // USER PROFILE
+    // ==========================================
 
     $userProfileId = session()->get('user_profile_id');
 
@@ -398,71 +400,259 @@ public function saveDraft()
     }
 
 
-    // =====================================================
-    // GENERATE NOMOR TIKET
-    // =====================================================
+    // ==========================================
+    // PASTIKAN SERVICE AKTIF
+    // ==========================================
+
+    $service = $db->table('master_services')
+        ->where('id', $serviceId)
+        ->where('is_active', 1)
+        ->get()
+        ->getRowArray();
+
+    if (!$service) {
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with(
+                'error',
+                'Jenis layanan tidak valid.'
+            );
+    }
+
+
+    // ==========================================
+    // DATA DRAFT
+    // ==========================================
+
+    $now = date('Y-m-d H:i:s');
 
     $ticketNumber = 'ULT-MHS-' . strtoupper(
         bin2hex(random_bytes(5))
     );
 
 
-    // =====================================================
-    // WAKTU
-    // =====================================================
-
-    $now = date('Y-m-d H:i:s');
-
-
-    // =====================================================
-    // DATA DARI FORM
-    // =====================================================
-
-    $keterangan = $this->request->getPost('keterangan');
-
-
-    // =====================================================
-    // DATA DRAFT
-    // =====================================================
-
     $data = [
-
         'ticket_number'   => $ticketNumber,
-
         'user_profile_id' => $userProfileId,
-
         'service_id'      => $serviceId,
-
         'title'           => 'Pengajuan Layanan Mahasiswa',
-
-        'description'     => $keterangan,
-
+        'description'     => $this->request->getPost('keterangan'),
         'status'          => 'draft',
-
         'priority'        => 'normal',
-
         'submitted_at'    => null,
-
         'created_at'      => $now,
-
         'updated_at'      => $now,
-
     ];
 
 
-    // =====================================================
-    // SIMPAN DRAFT
-    // =====================================================
+    // ==========================================
+    // SIMPAN SERVICE REQUEST
+    // ==========================================
 
     $serviceRequestModel->insert($data);
 
+    $serviceRequestId =
+        $serviceRequestModel->getInsertID();
 
-    // =====================================================
-    // REDIRECT KE HALAMAN DRAFT
-    // =====================================================
+
+    // ==========================================
+    // SIMPAN DOKUMEN YANG DIUPLOAD
+    // ==========================================
+
+    $files = $this->request->getFiles();
+
+    $documents = $files['dokumen'] ?? [];
+
+
+    if (!empty($documents)) {
+
+        $requirements = $db->table(
+            'master_service_requirements'
+        )
+            ->where(
+                'service_id',
+                $serviceId
+            )
+            ->where(
+                'is_active',
+                1
+            )
+            ->get()
+            ->getResultArray();
+
+
+        $requirementMap = [];
+
+        foreach ($requirements as $requirement) {
+            $requirementMap[
+                $requirement['id']
+            ] = $requirement;
+        }
+
+
+        foreach ($documents as $requirementId => $file) {
+
+            if (
+                !isset(
+                    $requirementMap[$requirementId]
+                )
+            ) {
+                continue;
+            }
+
+
+            if (
+                !$file ||
+                !$file->isValid() ||
+                $file->hasMoved()
+            ) {
+                continue;
+            }
+
+
+            $requirement =
+                $requirementMap[$requirementId];
+
+
+            // ======================================
+            // CEK UKURAN
+            // ======================================
+
+            $maxSize =
+                ((int) ($requirement['max_file_size'] ?? 2048))
+                * 1024;
+
+            if (
+                $file->getSize() > $maxSize
+            ) {
+                continue;
+            }
+
+
+            // ======================================
+            // CEK EXTENSION
+            // ======================================
+
+            $extension =
+                strtolower(
+                    $file->getClientExtension()
+                );
+
+
+            $allowed =
+                $requirement['allowed_extensions']
+                ?? 'pdf,jpg,jpeg,png,doc,docx,xls,xlsx';
+
+
+            $allowedExtensions =
+                array_map(
+                    'trim',
+                    explode(',', strtolower($allowed))
+                );
+
+
+            if (
+                !in_array(
+                    $extension,
+                    $allowedExtensions
+                )
+            ) {
+                continue;
+            }
+
+
+            // ======================================
+            // FOLDER
+            // ======================================
+
+            $uploadPath =
+                FCPATH .
+                'uploads/service_requests/' .
+                $serviceRequestId .
+                '/';
+
+
+            if (
+                !is_dir($uploadPath)
+            ) {
+                mkdir(
+                    $uploadPath,
+                    0777,
+                    true
+                );
+            }
+
+
+            // ======================================
+            // NAMA FILE
+            // ======================================
+
+            $newName =
+                $file->getRandomName();
+
+
+            $file->move(
+                $uploadPath,
+                $newName
+            );
+
+
+            // ======================================
+            // SIMPAN DATABASE
+            // ======================================
+
+            $db->table(
+                'service_request_files'
+            )->insert([
+
+                'service_request_id'
+                    => $serviceRequestId,
+
+                'requirement_id'
+                    => $requirementId,
+
+                'original_name'
+                    => $file->getClientName(),
+
+                'file_name'
+                    => $newName,
+
+                'file_path'
+                    => 'uploads/service_requests/' .
+                       $serviceRequestId .
+                       '/' .
+                       $newName,
+
+                'file_extension'
+                    => $extension,
+
+                'mime_type'
+                    => $file->getClientMimeType(),
+
+                'file_size'
+                    => $file->getSize(),
+
+                'is_verified'
+                    => 0,
+
+                'created_at'
+                    => $now,
+
+                'updated_at'
+                    => $now,
+
+            ]);
+        }
+    }
+
 
     return redirect()
-        ->to(base_url('mahasiswa/ticket/draft'))
+        ->to(
+            base_url(
+                'mahasiswa/ticket/draft'
+            )
+        )
         ->with(
             'success',
             'Pengajuan berhasil disimpan sebagai draft.'
@@ -704,12 +894,126 @@ public function draft()
         'DESC'
     );
 
-    $drafts = $builder->get()->getResultArray();
+$drafts = $builder->get()->getResultArray();
 
-    $data = [
-        'title'  => 'Draft Pengajuan',
-        'drafts' => $drafts
-    ];
+
+// =========================================================
+// CEK KELENGKAPAN DOKUMEN SETIAP DRAFT
+// =========================================================
+
+foreach ($drafts as &$draft) {
+
+    // -----------------------------------------
+    // Ambil semua persyaratan WAJIB
+    // berdasarkan service_id
+    // -----------------------------------------
+
+    $requirements = $db
+        ->table('master_service_requirements')
+        ->where(
+            'service_id',
+            $draft['service_id']
+        )
+        ->where(
+            'is_required',
+            1
+        )
+        ->where(
+            'is_active',
+            1
+        )
+        ->get()
+        ->getResultArray();
+
+
+    // -----------------------------------------
+    // Kalau layanan tidak punya persyaratan
+    // -----------------------------------------
+
+    if (empty($requirements)) {
+
+        $draft['document_complete'] = true;
+
+        continue;
+    }
+
+
+    // -----------------------------------------
+    // Ambil dokumen yang sudah diupload
+    // -----------------------------------------
+
+    $uploadedFiles = $db
+        ->table('service_request_files')
+        ->where(
+            'service_request_id',
+            $draft['id']
+        )
+        ->where(
+            'deleted_at',
+            null
+        )
+        ->get()
+        ->getResultArray();
+
+
+    // -----------------------------------------
+    // Simpan ID requirement yang sudah ada
+    // -----------------------------------------
+
+    $uploadedRequirementIds = [];
+
+    foreach ($uploadedFiles as $file) {
+
+        $uploadedRequirementIds[] =
+            (int) $file['requirement_id'];
+    }
+
+
+    // -----------------------------------------
+    // Anggap lengkap terlebih dahulu
+    // -----------------------------------------
+
+    $complete = true;
+
+
+    // -----------------------------------------
+    // Cek satu per satu persyaratan wajib
+    // -----------------------------------------
+
+    foreach ($requirements as $requirement) {
+
+        if (
+            !in_array(
+                (int) $requirement['id'],
+                $uploadedRequirementIds
+            )
+        ) {
+
+            $complete = false;
+
+            break;
+        }
+    }
+
+
+    // -----------------------------------------
+    // Simpan hasil pengecekan
+    // -----------------------------------------
+
+    $draft['document_complete'] = $complete;
+}
+
+unset($draft);
+
+
+// =========================================================
+// DATA UNTUK VIEW
+// =========================================================
+
+$data = [
+    'title'  => 'Draft Pengajuan',
+    'drafts' => $drafts
+];
 
     return view(
         'mahasiswa/ticket/draft',
@@ -771,10 +1075,21 @@ public function editDraft($id)
 {
     $db = \Config\Database::connect();
 
-    // Ambil user_profile_id dari session
+    // ==========================================
+    // USER PROFILE
+    // ==========================================
+
     $userProfileId = session()->get('user_profile_id');
 
-    // Ambil draft + layanan + unit layanan
+    if (!$userProfileId) {
+        return redirect()->to(base_url('login'));
+    }
+
+
+    // ==========================================
+    // AMBIL DATA DRAFT
+    // ==========================================
+
     $builder = $db->table('service_requests sr');
 
     $draft = $builder
@@ -813,7 +1128,11 @@ public function editDraft($id)
         ->get()
         ->getRowArray();
 
-    // Kalau draft tidak ditemukan
+
+    // ==========================================
+    // DRAFT TIDAK DITEMUKAN
+    // ==========================================
+
     if (!$draft) {
 
         session()->setFlashdata(
@@ -826,14 +1145,22 @@ public function editDraft($id)
         );
     }
 
-    // Ambil semua unit layanan
+
+    // ==========================================
+    // SEMUA UNIT LAYANAN
+    // ==========================================
+
     $units = $db->table('master_service_units')
         ->where('is_active', 1)
         ->orderBy('sort_order', 'ASC')
         ->get()
         ->getResultArray();
 
-    // Ambil semua layanan aktif
+
+    // ==========================================
+    // SEMUA LAYANAN
+    // ==========================================
+
     $services = $db->table('master_services ms')
         ->select('
             ms.id,
@@ -847,13 +1174,63 @@ public function editDraft($id)
         ->get()
         ->getResultArray();
 
+
+    // ==========================================
+    // PERSYARATAN DOKUMEN
+    // SESUAI JENIS LAYANAN
+    // ==========================================
+
+    $requirements = $db->table('master_service_requirements')
+        ->where('service_id', $draft['service_id'])
+        ->where('is_active', 1)
+        ->orderBy('sort_order', 'ASC')
+        ->get()
+        ->getResultArray();
+
+
+    // ==========================================
+    // FILE YANG SUDAH DIUPLOAD
+    // ==========================================
+
+    $uploadedFiles = $db->table('service_request_files')
+        ->where('service_request_id', $draft['id'])
+        ->where('deleted_at', null)
+        ->get()
+        ->getResultArray();
+
+
+    // ==========================================
+    // BENTUKKAN BERDASARKAN REQUIREMENT ID
+    // ==========================================
+
+    $uploadedByRequirement = [];
+
+    foreach ($uploadedFiles as $file) {
+
+        $uploadedByRequirement[
+            $file['requirement_id']
+        ] = $file;
+    }
+
+
+    // ==========================================
+    // RETURN VIEW
+    // ==========================================
+
     return view(
         'mahasiswa/ticket/edit_draft',
         [
-            'title'    => 'Edit Draft Pengajuan',
-            'draft'    => $draft,
-            'units'    => $units,
-            'services' => $services
+            'title' => 'Edit Draft Pengajuan',
+
+            'draft' => $draft,
+
+            'units' => $units,
+
+            'services' => $services,
+
+            'requirements' => $requirements,
+
+            'uploadedFiles' => $uploadedByRequirement
         ]
     );
 }
@@ -869,27 +1246,18 @@ public function updateDraft($id)
 
     $userProfileId = session()->get('user_profile_id');
 
-    $serviceId = $this->request->getPost('service_id');
-    $description = $this->request->getPost('description');
 
-    // Validasi sederhana
-    if (!$serviceId) {
+    // ==========================================
+    // CEK DRAFT
+    // ==========================================
 
-        session()->setFlashdata(
-            'error',
-            'Jenis layanan wajib dipilih.'
-        );
-
-        return redirect()->back()->withInput();
-    }
-
-    // Pastikan draft milik user yang sedang login
     $draft = $db->table('service_requests')
         ->where('id', $id)
         ->where('user_profile_id', $userProfileId)
         ->where('status', 'draft')
         ->get()
         ->getRowArray();
+
 
     if (!$draft) {
 
@@ -903,24 +1271,46 @@ public function updateDraft($id)
         );
     }
 
-    // Ambil data layanan
+
+    // ==========================================
+    // DATA FORM
+    // ==========================================
+
+    $unitId = $this->request->getPost('unit_layanan');
+
+    $serviceId = $this->request->getPost('service_id');
+
+    $description = $this->request->getPost('description');
+
+
+    // ==========================================
+    // VALIDASI SERVICE
+    // ==========================================
+
     $service = $db->table('master_services')
         ->where('id', $serviceId)
+        ->where('service_unit_id', $unitId)
         ->where('is_active', 1)
         ->get()
         ->getRowArray();
+
 
     if (!$service) {
 
         session()->setFlashdata(
             'error',
-            'Jenis layanan tidak ditemukan.'
+            'Jenis layanan tidak sesuai dengan unit layanan.'
         );
 
-        return redirect()->back()->withInput();
+        return redirect()->back()
+            ->withInput();
     }
 
-    // Update draft
+
+    // ==========================================
+    // UPDATE DRAFT
+    // ==========================================
+
     $db->table('service_requests')
         ->where('id', $id)
         ->update([
@@ -930,10 +1320,266 @@ public function updateDraft($id)
             'updated_at' => date('Y-m-d H:i:s')
         ]);
 
+
+    // ==========================================
+    // FILE UPLOAD
+    // ==========================================
+
+    $documents = $this->request->getFiles();
+
+
+    if (
+        isset($documents['documents']) &&
+        is_array($documents['documents'])
+    ) {
+
+
+        $uploadPath = FCPATH . 'uploads/service_requests/';
+
+
+        // Buat folder kalau belum ada
+
+        if (!is_dir($uploadPath)) {
+
+            mkdir(
+                $uploadPath,
+                0777,
+                true
+            );
+        }
+
+
+        foreach (
+            $documents['documents']
+            as $requirementId => $file
+        ) {
+
+
+            // Tidak ada file baru
+
+            if (
+                !$file ||
+                !$file->isValid() ||
+                $file->getError() === UPLOAD_ERR_NO_FILE
+            ) {
+
+                continue;
+            }
+
+
+            // ==========================================
+            // AMBIL REQUIREMENT
+            // ==========================================
+
+            $requirement = $db
+                ->table('master_service_requirements')
+                ->where('id', $requirementId)
+                ->where('service_id', $serviceId)
+                ->where('is_active', 1)
+                ->get()
+                ->getRowArray();
+
+
+            if (!$requirement) {
+
+                continue;
+            }
+
+
+            // ==========================================
+            // VALIDASI UKURAN
+            // ==========================================
+
+            $maxSize =
+                ((int) $requirement['max_file_size']) * 1024;
+
+
+            if (
+                $maxSize > 0 &&
+                $file->getSize() > $maxSize
+            ) {
+
+                session()->setFlashdata(
+                    'error',
+                    'Ukuran file "' .
+                    $file->getClientName() .
+                    '" terlalu besar.'
+                );
+
+                return redirect()->back()
+                    ->withInput();
+            }
+
+
+            // ==========================================
+            // VALIDASI EXTENSION
+            // ==========================================
+
+            $extension =
+                strtolower(
+                    $file->getClientExtension()
+                );
+
+
+            $allowedExtensions =
+                $requirement['allowed_extensions']
+                ?? 'pdf,jpg,jpeg,png,doc,docx';
+
+
+            $allowedExtensions =
+                array_map(
+                    'trim',
+                    explode(
+                        ',',
+                        strtolower(
+                            $allowedExtensions
+                        )
+                    )
+                );
+
+
+            if (
+                !in_array(
+                    $extension,
+                    $allowedExtensions
+                )
+            ) {
+
+                session()->setFlashdata(
+                    'error',
+                    'Format file "' .
+                    $file->getClientName() .
+                    '" tidak diperbolehkan.'
+                );
+
+                return redirect()->back()
+                    ->withInput();
+            }
+
+
+            // ==========================================
+            // NAMA FILE BARU
+            // ==========================================
+
+            $newName =
+                $file->getRandomName();
+
+
+            $file->move(
+                $uploadPath,
+                $newName
+            );
+
+
+            // ==========================================
+            // CEK FILE LAMA
+            // ==========================================
+
+            $oldFile = $db
+                ->table('service_request_files')
+                ->where(
+                    'service_request_id',
+                    $id
+                )
+                ->where(
+                    'requirement_id',
+                    $requirementId
+                )
+                ->where(
+                    'deleted_at',
+                    null
+                )
+                ->get()
+                ->getRowArray();
+
+
+            // ==========================================
+            // FILE LAMA DIHAPUS
+            // ==========================================
+
+            if ($oldFile) {
+
+                $db->table('service_request_files')
+                    ->where(
+                        'id',
+                        $oldFile['id']
+                    )
+                    ->update([
+                        'deleted_at' =>
+                            date('Y-m-d H:i:s'),
+
+                        'updated_at' =>
+                            date('Y-m-d H:i:s')
+                    ]);
+            }
+
+
+            // ==========================================
+            // SIMPAN FILE BARU
+            // ==========================================
+
+            $db->table('service_request_files')
+                ->insert([
+
+                    'service_request_id' =>
+                        $id,
+
+                    'requirement_id' =>
+                        $requirementId,
+
+                    'original_name' =>
+                        $file->getClientName(),
+
+                    'file_name' =>
+                        $newName,
+
+                    'file_path' =>
+                        'uploads/service_requests/' .
+                        $newName,
+
+                    'file_extension' =>
+                        $extension,
+
+                    'mime_type' =>
+                        $file->getMimeType(),
+
+                    'file_size' =>
+                        $file->getSize(),
+
+                    'is_verified' =>
+                        0,
+
+                    'verified_by' =>
+                        null,
+
+                    'verified_at' =>
+                        null,
+
+                    'notes' =>
+                        null,
+
+                    'created_at' =>
+                        date('Y-m-d H:i:s'),
+
+                    'updated_at' =>
+                        date('Y-m-d H:i:s'),
+
+                    'deleted_at' =>
+                        null
+                ]);
+        }
+    }
+
+
+    // ==========================================
+    // SELESAI
+    // ==========================================
+
     session()->setFlashdata(
         'success',
         'Draft berhasil diperbarui.'
     );
+
 
     return redirect()->to(
         base_url('mahasiswa/ticket/draft')

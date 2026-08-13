@@ -109,11 +109,12 @@
                 <div class="card-body">
 
                     <form
-                        action="<?= base_url(
-                            'mahasiswa/ticket/update-draft/' . $draft['id']
-                        ) ?>"
-                        method="post"
-                    >
+    action="<?= base_url(
+        'mahasiswa/ticket/update-draft/' . $draft['id']
+    ) ?>"
+    method="post"
+    enctype="multipart/form-data"
+>
 
                         <?= csrf_field() ?>
 
@@ -243,6 +244,213 @@
                             ><?= esc($draft['description'] ?? '') ?></textarea>
 
                         </div>
+
+                        <!-- ==========================================
+     DOKUMEN PERSYARATAN
+========================================== -->
+
+<div class="form-group mt-4">
+
+    <label class="font-weight-bold">
+
+        <i class="fas fa-file-upload mr-1"></i>
+
+        Dokumen Persyaratan
+
+    </label>
+
+
+    <?php if (!empty($requirements)): ?>
+
+        <div class="alert alert-info">
+
+            <i class="fas fa-info-circle mr-2"></i>
+
+            Silakan upload semua dokumen yang dipersyaratkan
+            untuk layanan ini.
+
+        </div>
+
+
+        <?php foreach ($requirements as $requirement): ?>
+
+            <?php
+
+                $requirementId = $requirement['id'];
+
+                $existingFile =
+                    $uploadedFiles[$requirementId] ?? null;
+
+            ?>
+
+
+            <div
+                class="card mb-3 border"
+            >
+
+                <div class="card-body">
+
+
+                    <div class="row">
+
+
+                        <!-- INFORMASI PERSYARATAN -->
+
+                        <div class="col-md-7">
+
+                            <h6
+                                class="font-weight-bold"
+                                style="color:#17365d;"
+                            >
+
+                                <?= esc(
+                                    $requirement['name']
+                                ) ?>
+
+
+                                <?php if (
+                                    $requirement['is_required']
+                                ): ?>
+
+                                    <span class="text-danger">
+                                        *
+                                    </span>
+
+                                <?php endif; ?>
+
+                            </h6>
+
+
+                            <?php if (
+                                !empty(
+                                    $requirement['description']
+                                )
+                            ): ?>
+
+                                <small class="text-muted">
+
+                                    <?= esc(
+                                        $requirement['description']
+                                    ) ?>
+
+                                </small>
+
+                            <?php endif; ?>
+
+
+                            <div class="mt-2">
+
+                                <small class="text-muted">
+
+                                    Format:
+                                    <?= esc(
+                                        $requirement[
+                                            'allowed_extensions'
+                                        ] ?? 'pdf,jpg,jpeg,png,doc,docx'
+                                    ) ?>
+
+                                    <br>
+
+                                    Maksimal:
+                                    <?= esc(
+                                        $requirement[
+                                            'max_file_size'
+                                        ] ?? 2048
+                                    ) ?>
+                                    KB
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- FILE -->
+
+                        <div class="col-md-5">
+
+
+                            <?php if ($existingFile): ?>
+
+                                <div
+                                    class="alert alert-success py-2"
+                                >
+
+                                    <i
+                                        class="fas fa-check-circle mr-1"
+                                    ></i>
+
+                                    Dokumen sudah diupload
+
+                                    <br>
+
+                                    <small>
+
+                                        <?= esc(
+                                            $existingFile[
+                                                'original_name'
+                                            ]
+                                        ) ?>
+
+                                    </small>
+
+                                </div>
+
+
+                                <input
+                                    type="file"
+                                    name="documents[<?= $requirementId ?>]"
+                                    class="form-control"
+                                >
+
+                                <small class="text-muted">
+
+                                    Upload file baru jika ingin
+                                    mengganti dokumen.
+
+                                </small>
+
+
+                            <?php else: ?>
+
+                                <input
+                                    type="file"
+                                    name="documents[<?= $requirementId ?>]"
+                                    class="form-control"
+                                    <?= $requirement['is_required']
+                                        ? 'required'
+                                        : '' ?>
+                                >
+
+                            <?php endif; ?>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        <?php endforeach; ?>
+
+
+    <?php else: ?>
+
+        <div class="alert alert-warning">
+
+            <i class="fas fa-exclamation-triangle mr-2"></i>
+
+            Tidak ada persyaratan dokumen untuk layanan ini.
+
+        </div>
+
+    <?php endif; ?>
+
+</div>
 
 
                         <!-- ==================================

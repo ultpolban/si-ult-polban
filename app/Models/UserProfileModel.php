@@ -6,22 +6,30 @@ use CodeIgniter\Model;
 
 class UserProfileModel extends Model
 {
-    protected $table            = 'user_profiles';
-    protected $primaryKey       = 'id';
-    protected $returnType       = 'array';
+    protected $table = 'user_profiles';
+    protected $primaryKey = 'id';
+
+    protected $returnType = 'array';
 
     protected $allowedFields = [
         'user_id',
-        'nama',
-        'nik',
+        'applicant_type_id',
+        'study_program_id',
+        'class_id',
+        'student_name',
+        'institution_name',
+        'position',
         'nim',
-        'jenis_kelamin',
-        'tempat_lahir',
-        'tanggal_lahir',
-        'alamat',
-        'no_hp',
+        'nik',
+        'name',
         'email',
+        'phone',
+        'address',
+        'photo',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
 }

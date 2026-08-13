@@ -257,271 +257,75 @@
                                 <tbody>
 
 
-                                    <?php foreach (
-                                        $drafts
-                                        as $index => $draft
-                                    ) : ?>
-
-
-                                        <tr>
-
-
-                                            <!-- NO -->
-
-                                            <td>
-
-                                                <?= $index + 1 ?>
-
-                                            </td>
-
-
-
-                                            <!-- UNIT LAYANAN -->
-
-                                            <td>
-
-                                                <?= esc(
-                                                    $draft[
-                                                        'unit_layanan'
-                                                    ]
-                                                    ?? '-'
-                                                ) ?>
-
-                                            </td>
-
-
-
-                                            <!-- JENIS LAYANAN -->
-
-                                            <td>
-
-                                                <?= esc(
-                                                    $draft[
-                                                        'layanan'
-                                                    ]
-                                                    ?? '-'
-                                                ) ?>
-
-                                            </td>
-
-
-
-                                            <!-- KETERANGAN -->
-
-                                            <td>
-
-                                                <?= esc(
-                                                    $draft[
-                                                        'keterangan'
-                                                    ]
-                                                    ?? '-'
-                                                ) ?>
-
-                                            </td>
-
-
-
-                                            <!-- DOKUMEN -->
-
-                                            <td>
-
-                                                <?php if (
-                                                    !empty(
-                                                        $draft[
-                                                            'dokumen'
-                                                        ]
-                                                    )
-                                                ) : ?>
-
-
-                                                    <a
-                                                        href="<?= base_url(
-                                                            'uploads/dokumen/' .
-                                                            $draft[
-                                                                'dokumen'
-                                                            ]
-                                                        ) ?>"
-                                                        target="_blank"
-                                                        class="
-                                                            btn
-                                                            btn-sm
-                                                            btn-primary
-                                                        "
-                                                    >
-
-                                                        <i
-                                                            class="
-                                                                fas
-                                                                fa-file-alt
-                                                            "
-                                                        ></i>
-
-                                                        Lihat
-
-                                                    </a>
-
-
-                                                <?php else : ?>
-
-
-                                                    <span
-                                                        class="
-                                                            text-muted
-                                                        "
-                                                    >
-
-                                                        Tidak ada
-
-                                                    </span>
-
-
-                                                <?php endif; ?>
-
-                                            </td>
-
-
-
-                                            <!-- STATUS -->
-
-                                            <td>
-
-                                                <span
-                                                    class="
-                                                        badge
-                                                        badge-secondary
-                                                    "
-                                                >
-
-                                                    <i
-                                                        class="
-                                                            fas
-                                                            fa-file-alt
-                                                            mr-1
-                                                        "
-                                                    ></i>
-
-                                                    Draft
-
-                                                </span>
-
-                                            </td>
-
-
-
-                                            <!-- TANGGAL -->
-
-                                            <td>
-
-                                                <?= esc(
-                                                    $draft[
-                                                        'created_at'
-                                                    ]
-                                                    ?? '-'
-                                                ) ?>
-
-                                            </td>
-
-
-
-                                            <!-- AKSI -->
-
-                                            <td>
-
-                                                <div
-                                                    class="
-                                                        d-flex
-                                                        flex-wrap
-                                                    "
-                                                >
-
-
-                                                    <!-- LANJUTKAN -->
-
-                                                    <a
-                                                        href="<?= base_url(
-                                                            'mahasiswa/ticket/draft/edit/' .
-                                                            $index
-                                                        ) ?>"
-                                                        class="
-                                                            btn
-                                                            btn-sm
-                                                            mr-1
-                                                            mb-1
-                                                        "
-                                                        style="
-                                                            background-color:#f28c28;
-                                                            border-color:#f28c28;
-                                                            color:white;
-                                                        "
-                                                    >
-
-                                                        <i
-                                                            class="
-                                                                fas
-                                                                fa-edit
-                                                                mr-1
-                                                            "
-                                                        ></i>
-
-                                                        Lanjutkan
-
-                                                    </a>
-
-
-
-                                                    <!-- HAPUS -->
-
-                                                    <form
-                                                        action="<?= base_url(
-                                                            'mahasiswa/ticket/draft/delete/' .
-                                                            $index
-                                                        ) ?>"
-                                                        method="post"
-                                                        class="d-inline"
-                                                        onsubmit="
-                                                            return confirm(
-                                                                'Apakah Anda yakin ingin menghapus draft ini?'
-                                                            );
-                                                        "
-                                                    >
-
-                                                        <?= csrf_field() ?>
-
-
-                                                        <button
-                                                            type="submit"
-                                                            class="
-                                                                btn
-                                                                btn-sm
-                                                                btn-danger
-                                                                mb-1
-                                                            "
-                                                        >
-
-                                                            <i
-                                                                class="
-                                                                    fas
-                                                                    fa-trash
-                                                                    mr-1
-                                                                "
-                                                            ></i>
-
-                                                            Hapus
-
-                                                        </button>
-
-                                                    </form>
-
-
-                                                </div>
-
-                                            </td>
-
-
-                                        </tr>
-
-
-                                    <?php endforeach; ?>
+                                    <?php foreach ($drafts as $index => $draft): ?>
+
+<tr>
+
+    <!-- NO -->
+    <td>
+        <?= $index + 1 ?>
+    </td>
+
+    <!-- UNIT LAYANAN -->
+    <td>
+        <?= esc($draft['unit_name'] ?? '-') ?>
+    </td>
+
+    <!-- JENIS LAYANAN -->
+    <td>
+        <?= esc($draft['service_name'] ?? '-') ?>
+    </td>
+
+    <!-- KETERANGAN -->
+    <td>
+        <?= esc($draft['description'] ?? '-') ?>
+    </td>
+
+    <!-- DOKUMEN -->
+    <td>
+        Tidak ada
+    </td>
+
+    <!-- STATUS -->
+    <td>
+        <span class="badge bg-secondary">
+            <i class="fas fa-file-alt"></i>
+            Draft
+        </span>
+    </td>
+
+    <!-- TANGGAL -->
+    <td>
+        <?= !empty($draft['created_at'])
+            ? date('Y-m-d H:i:s', strtotime($draft['created_at']))
+            : '-' ?>
+    </td>
+
+    <!-- AKSI -->
+    <td>
+
+        <a
+            href="<?= base_url('mahasiswa/ticket/edit-draft/' . $draft['id']) ?>"
+            class="btn btn-warning btn-sm"
+        >
+            <i class="fas fa-edit"></i>
+            Lanjutkan
+        </a>
+
+        <a
+            href="<?= base_url('mahasiswa/ticket/delete-draft/' . $draft['id']) ?>"
+            class="btn btn-danger btn-sm"
+            onclick="return confirm('Yakin ingin menghapus draft ini?')"
+        >
+            <i class="fas fa-trash"></i>
+            Hapus
+        </a>
+
+    </td>
+
+</tr>
+
+<?php endforeach; ?>
 
 
                                 </tbody>

@@ -12,8 +12,6 @@ class ServiceRequestModel extends Model
 
     protected $returnType = 'array';
 
-    protected $useSoftDeletes = true;
-
     protected $allowedFields = [
         'ticket_number',
         'user_profile_id',
@@ -31,13 +29,12 @@ class ServiceRequestModel extends Model
         'cancelled_at',
         'admin_note',
         'rejection_reason',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
 
-    protected $createdField = 'created_at';
-
-    protected $updatedField = 'updated_at';
-
-    protected $deletedField = 'deleted_at';
+    protected $useSoftDeletes = false;
 }

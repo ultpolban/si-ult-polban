@@ -364,94 +364,109 @@ public function saveDraft()
 {
     $serviceRequestModel = new ServiceRequestModel();
 
-    // ==========================================
+    // =====================================================
     // AMBIL SERVICE / JENIS LAYANAN
-    // ==========================================
+    // =====================================================
 
     $serviceId = $this->request->getPost('jenis_layanan');
 
     if (empty($serviceId)) {
-        return redirect()->back()
+        return redirect()
+            ->back()
             ->withInput()
-            ->with('error', 'Silakan pilih jenis layanan terlebih dahulu.');
+            ->with(
+                'error',
+                'Silakan pilih jenis layanan terlebih dahulu.'
+            );
     }
 
 
-    // ==========================================
+    // =====================================================
     // AMBIL USER PROFILE
-    // ==========================================
+    // =====================================================
 
-$userId = session()->get('user_id');
+    $userProfileId = session()->get('user_profile_id');
 
-if (empty($userId)) {
-    return redirect()->back()
-        ->withInput()
-        ->with('error', 'Akun pengguna tidak ditemukan. Silakan login kembali.');
-}
-
-$userProfileModel = new UserProfileModel();
-
-$userProfile = $userProfileModel
-    ->where('user_id', $userId)
-    ->first();
-
-if (!$userProfile) {
-    return redirect()->back()
-        ->withInput()
-        ->with('error', 'Data profil mahasiswa tidak ditemukan.');
-}
-
-$userProfileId = $userProfile['id'];
+    if (empty($userProfileId)) {
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with(
+                'error',
+                'Data profil mahasiswa tidak ditemukan.'
+            );
+    }
 
 
-    // ==========================================
+    // =====================================================
     // GENERATE NOMOR TIKET
-    // ==========================================
+    // =====================================================
 
-    $ticketNumber = 'ULT-MHS-DRAFT-' . strtoupper(
-        bin2hex(random_bytes(4))
+    $ticketNumber = 'ULT-MHS-' . strtoupper(
+        bin2hex(random_bytes(5))
     );
 
 
-    // ==========================================
+    // =====================================================
     // WAKTU
-    // ==========================================
+    // =====================================================
 
     $now = date('Y-m-d H:i:s');
 
 
-    // ==========================================
+    // =====================================================
+    // DATA DARI FORM
+    // =====================================================
+
+    $keterangan = $this->request->getPost('keterangan');
+
+
+    // =====================================================
     // DATA DRAFT
-    // ==========================================
+    // =====================================================
 
-$data = [
-    'ticket_number'   => null,
-    'user_profile_id' => $userProfileId,
-    'service_id'      => $serviceId,
-    'title'           => 'Pengajuan Layanan',
-    'description'     => $this->request->getPost('keterangan'),
-    'status'          => 'draft',
-    'priority'        => 'normal',
-    'submitted_at'    => null,
-    'created_at'      => $now,
-    'updated_at'      => $now,
-];
+    $data = [
+
+        'ticket_number'   => $ticketNumber,
+
+        'user_profile_id' => $userProfileId,
+
+        'service_id'      => $serviceId,
+
+        'title'           => 'Pengajuan Layanan Mahasiswa',
+
+        'description'     => $keterangan,
+
+        'status'          => 'draft',
+
+        'priority'        => 'normal',
+
+        'submitted_at'    => null,
+
+        'created_at'      => $now,
+
+        'updated_at'      => $now,
+
+    ];
 
 
-    // ==========================================
-    // SIMPAN
-    // ==========================================
+    // =====================================================
+    // SIMPAN DRAFT
+    // =====================================================
 
     $serviceRequestModel->insert($data);
 
 
-    // ==========================================
-    // REDIRECT
-    // ==========================================
+    // =====================================================
+    // REDIRECT KE HALAMAN DRAFT
+    // =====================================================
 
     return redirect()
         ->to(base_url('mahasiswa/ticket/draft'))
-        ->with('success', 'Pengajuan berhasil disimpan sebagai draft.');
+        ->with(
+            'success',
+            'Pengajuan berhasil disimpan sebagai draft.'
+        );
 }
 
 public function jenisLayanan()
@@ -623,21 +638,83 @@ $data = [
         );
     }
 
-    /**
+/**
  * =========================================================
  * HALAMAN DRAFT PENGAJUAN
  * =========================================================
  */
 public function draft()
 {
-    $data = [
-        'title' => 'Draft Pengajuan',
+    $db = \Config\Database::connect();
 
-        // Dummy sementara
-        'drafts' => []
+    // Ambil user yang sedang login
+    $user = session()->get('user') ?? [];
+
+    // Ambil user_profile_id
+    $userProfileId = $user['user_profile_id']
+        ?? $user['profile_id']
+        ?? null;
+
+    // Query draft + jenis layanan + unit layanan
+    $builder = $db->table('service_requests sr');
+
+    $builder->select([
+        'sr.id',
+        'sr.ticket_number',
+        'sr.user_profile_id',
+        'sr.service_id',
+        'sr.title',
+        'sr.description',
+        'sr.status',
+        'sr.created_at',
+
+        // Nama jenis layanan
+        'ms.name AS service_name',
+
+        // Nama unit layanan
+        'msu.name AS unit_name'
+    ]);
+
+    $builder->join(
+        'master_services ms',
+        'ms.id = sr.service_id',
+        'left'
+    );
+
+    $builder->join(
+        'master_service_units msu',
+        'msu.id = ms.service_unit_id',
+        'left'
+    );
+
+    // Hanya draft
+    $builder->where('sr.status', 'draft');
+
+    // Hanya draft milik mahasiswa yang sedang login
+    if ($userProfileId !== null) {
+        $builder->where(
+            'sr.user_profile_id',
+            $userProfileId
+        );
+    }
+
+    // Terbaru di atas
+    $builder->orderBy(
+        'sr.created_at',
+        'DESC'
+    );
+
+    $drafts = $builder->get()->getResultArray();
+
+    $data = [
+        'title'  => 'Draft Pengajuan',
+        'drafts' => $drafts
     ];
 
-    return view('mahasiswa/ticket/draft', $data);
+    return view(
+        'mahasiswa/ticket/draft',
+        $data
+    );
 }
 
 
@@ -648,6 +725,34 @@ public function draft()
  */
 public function deleteDraft($id)
 {
+    $serviceRequestModel = new \App\Models\ServiceRequestModel();
+
+    // Ambil user_profile_id dari session
+    $userProfileId = session()->get('user_profile_id');
+
+    // Cari draft berdasarkan ID
+    $draft = $serviceRequestModel
+        ->where('id', $id)
+        ->where('user_profile_id', $userProfileId)
+        ->where('status', 'draft')
+        ->first();
+
+    // Kalau draft tidak ditemukan
+    if (!$draft) {
+
+        session()->setFlashdata(
+            'error',
+            'Draft tidak ditemukan atau bukan milik Anda.'
+        );
+
+        return redirect()->to(
+            base_url('mahasiswa/ticket/draft')
+        );
+    }
+
+    // Hapus draft
+    $serviceRequestModel->delete($id);
+
     session()->setFlashdata(
         'success',
         'Draft berhasil dihapus.'
@@ -657,36 +762,101 @@ public function deleteDraft($id)
         base_url('mahasiswa/ticket/draft')
     );
 }
-
-
 /**
  * =========================================================
- * EDIT DRAFT
+ * EDIT / LANJUTKAN DRAFT
  * =========================================================
  */
 public function editDraft($id)
 {
-    $data = [
-        'title' => 'Edit Draft Pengajuan',
+    $db = \Config\Database::connect();
 
-        'draft' => [
-            'id' => $id,
-            'nama_pemohon' => 'Muhamad Rafi Putra Zakaria',
-            'nik' => '3273010101040001',
-            'unit_layanan' => '',
-            'jenis_layanan' => '',
-            'keterangan' => '',
-        ],
+    // Ambil user_profile_id dari session
+    $userProfileId = session()->get('user_profile_id');
 
-        'layanan' => $this->getDataLayanan(),
-    ];
+    // Ambil draft + layanan + unit layanan
+    $builder = $db->table('service_requests sr');
+
+    $draft = $builder
+        ->select('
+            sr.id,
+            sr.ticket_number,
+            sr.user_profile_id,
+            sr.service_id,
+            sr.title,
+            sr.description,
+            sr.status,
+            sr.priority,
+            sr.created_at,
+            sr.updated_at,
+
+            ms.name AS service_name,
+            ms.description AS service_description,
+            ms.service_unit_id,
+
+            msu.name AS unit_name,
+            msu.code AS unit_code
+        ')
+        ->join(
+            'master_services ms',
+            'ms.id = sr.service_id',
+            'left'
+        )
+        ->join(
+            'master_service_units msu',
+            'msu.id = ms.service_unit_id',
+            'left'
+        )
+        ->where('sr.id', $id)
+        ->where('sr.status', 'draft')
+        ->where('sr.user_profile_id', $userProfileId)
+        ->get()
+        ->getRowArray();
+
+    // Kalau draft tidak ditemukan
+    if (!$draft) {
+
+        session()->setFlashdata(
+            'error',
+            'Draft tidak ditemukan atau bukan milik Anda.'
+        );
+
+        return redirect()->to(
+            base_url('mahasiswa/ticket/draft')
+        );
+    }
+
+    // Ambil semua unit layanan
+    $units = $db->table('master_service_units')
+        ->where('is_active', 1)
+        ->orderBy('sort_order', 'ASC')
+        ->get()
+        ->getResultArray();
+
+    // Ambil semua layanan aktif
+    $services = $db->table('master_services ms')
+        ->select('
+            ms.id,
+            ms.service_unit_id,
+            ms.code,
+            ms.name,
+            ms.description
+        ')
+        ->where('ms.is_active', 1)
+        ->orderBy('ms.sort_order', 'ASC')
+        ->get()
+        ->getResultArray();
 
     return view(
         'mahasiswa/ticket/edit_draft',
-        $data
+        [
+            'title'    => 'Edit Draft Pengajuan',
+            'draft'    => $draft,
+            'units'    => $units,
+            'services' => $services
+        ]
     );
 }
-
 
 /**
  * =========================================================
@@ -695,6 +865,71 @@ public function editDraft($id)
  */
 public function updateDraft($id)
 {
+    $db = \Config\Database::connect();
+
+    $userProfileId = session()->get('user_profile_id');
+
+    $serviceId = $this->request->getPost('service_id');
+    $description = $this->request->getPost('description');
+
+    // Validasi sederhana
+    if (!$serviceId) {
+
+        session()->setFlashdata(
+            'error',
+            'Jenis layanan wajib dipilih.'
+        );
+
+        return redirect()->back()->withInput();
+    }
+
+    // Pastikan draft milik user yang sedang login
+    $draft = $db->table('service_requests')
+        ->where('id', $id)
+        ->where('user_profile_id', $userProfileId)
+        ->where('status', 'draft')
+        ->get()
+        ->getRowArray();
+
+    if (!$draft) {
+
+        session()->setFlashdata(
+            'error',
+            'Draft tidak ditemukan atau bukan milik Anda.'
+        );
+
+        return redirect()->to(
+            base_url('mahasiswa/ticket/draft')
+        );
+    }
+
+    // Ambil data layanan
+    $service = $db->table('master_services')
+        ->where('id', $serviceId)
+        ->where('is_active', 1)
+        ->get()
+        ->getRowArray();
+
+    if (!$service) {
+
+        session()->setFlashdata(
+            'error',
+            'Jenis layanan tidak ditemukan.'
+        );
+
+        return redirect()->back()->withInput();
+    }
+
+    // Update draft
+    $db->table('service_requests')
+        ->where('id', $id)
+        ->update([
+            'service_id' => $serviceId,
+            'title' => $service['name'],
+            'description' => $description,
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
     session()->setFlashdata(
         'success',
         'Draft berhasil diperbarui.'
@@ -704,24 +939,6 @@ public function updateDraft($id)
         base_url('mahasiswa/ticket/draft')
     );
 }
-
-
-public function success()
-{
-    $ticket = session()->get('last_ticket');
-
-    if (!$ticket) {
-        return redirect()->to(
-            base_url('mahasiswa/ticket/create')
-        );
-    }
-
-    return view('mahasiswa/ticket/success', [
-        'title'  => 'Pengajuan Berhasil',
-        'ticket' => $ticket
-    ]);
-}
-
 
 /**
  * =========================================================
@@ -741,6 +958,22 @@ public function draftSuccess()
     return view('mahasiswa/ticket/draft_success', [
         'title' => 'Draft Berhasil Disimpan',
         'draft' => $draft
+    ]);
+}
+
+public function success()
+{
+    $ticket = session()->get('last_ticket');
+
+    if (!$ticket) {
+        return redirect()->to(
+            base_url('mahasiswa/ticket/create')
+        );
+    }
+
+    return view('mahasiswa/ticket/success', [
+        'title'  => 'Pengajuan Berhasil',
+        'ticket' => $ticket
     ]);
 }
 

@@ -157,17 +157,17 @@ $routes->get(
 );
 
 $routes->get(
-    'mahasiswa/ticket/draft/delete/(:num)',
+    'mahasiswa/ticket/delete-draft/(:num)',
     'MahasiswaTicketController::deleteDraft/$1'
 );
 
 $routes->get(
-    'mahasiswa/ticket/draft/edit/(:num)',
+    'mahasiswa/ticket/edit-draft/(:num)',
     'MahasiswaTicketController::editDraft/$1'
 );
 
 $routes->post(
-    'mahasiswa/ticket/draft/update/(:num)',
+    'mahasiswa/ticket/update-draft/(:num)',
     'MahasiswaTicketController::updateDraft/$1'
 );
 

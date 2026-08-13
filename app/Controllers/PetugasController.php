@@ -6,391 +6,518 @@ use App\Controllers\BaseController;
 
 class PetugasController extends BaseController
 {
+    /**
+     * ============================================================
+     * DATA TIKET
+     * ============================================================
+     * Semua halaman memakai sumber data yang sama.
+     * Jadi tiket dummy juga bisa:
+     * - Detail
+     * - Verifikasi
+     * - Disposisi
+     */
+    private function getAllTiket()
+    {
+        return [
+
+            // =====================================================
+            // 3 TIKET AWAL
+            // =====================================================
+
+            [
+                'id' => 1,
+                'nomor_tiket' => 'ULT-20260720-0001',
+                'nama_pemohon' => 'Rafi Putra',
+                'nim' => '231511001',
+                'nik' => '3201123456780001',
+                'layanan' => 'Surat Aktif Kuliah',
+                'kategori' => 'Akademik',
+                'prioritas' => 'High',
+                'status' => 'Submitted',
+                'dokumen' => '',
+                'tanggal' => '20 Juli 2026',
+                'created_at' => '2026-07-20 08:30:00',
+                'email' => 'rafi@student.polban.ac.id',
+                'no_hp' => '081234567890',
+                'deskripsi' => 'Saya mengajukan Surat Aktif Kuliah untuk keperluan beasiswa.'
+            ],
+
+            [
+                'id' => 2,
+                'nomor_tiket' => 'ULT-20260721-0002',
+                'nama_pemohon' => 'Siti Nurhaliza',
+                'nim' => '231511002',
+                'nik' => '3201123456780002',
+                'layanan' => 'Bantuan UKT',
+                'kategori' => 'Keuangan',
+                'prioritas' => 'Medium',
+                'status' => 'Verified',
+                'dokumen' => '',
+                'tanggal' => '21 Juli 2026',
+                'created_at' => '2026-07-21 09:15:00',
+                'email' => 'siti@student.polban.ac.id',
+                'no_hp' => '081298765432',
+                'deskripsi' => 'Mengajukan bantuan pembayaran UKT semester ganjil.'
+            ],
+
+            [
+                'id' => 3,
+                'nomor_tiket' => 'ULT-20260722-0003',
+                'nama_pemohon' => 'Ahmad Fauzi',
+                'nim' => '231511003',
+                'nik' => '3201123456780003',
+                'layanan' => 'Beasiswa Prestasi',
+                'kategori' => 'Kemahasiswaan',
+                'prioritas' => 'Low',
+                'status' => 'Disposisi',
+                'dokumen' => '',
+                'tanggal' => '22 Juli 2026',
+                'created_at' => '2026-07-22 10:00:00',
+                'email' => 'ahmad@student.polban.ac.id',
+                'no_hp' => '081377788899',
+                'deskripsi' => 'Mengajukan beasiswa prestasi akademik.'
+            ],
+
+            // =====================================================
+            // DATA DUMMY
+            // =====================================================
+
+            [
+                'id' => 4,
+                'nomor_tiket' => 'ULT-20260808-0015',
+                'nama_pemohon' => 'Rian Hidayat',
+                'nim' => '231511004',
+                'nik' => '3201123456780015',
+                'layanan' => 'Surat Aktif Kuliah',
+                'kategori' => 'Akademik',
+                'prioritas' => 'High',
+                'status' => 'Submitted',
+                'dokumen' => 'ada',
+                'tanggal' => '08 Agustus 2026',
+                'created_at' => '2026-08-08 14:30:00',
+                'email' => 'rian@student.polban.ac.id',
+                'no_hp' => '081234560004',
+                'deskripsi' => 'Pengajuan surat aktif kuliah.'
+            ],
+
+            [
+                'id' => 5,
+                'nomor_tiket' => 'ULT-20260808-0014',
+                'nama_pemohon' => 'Dewi Lestari',
+                'nim' => '231511005',
+                'nik' => '3201123456780014',
+                'layanan' => 'Bantuan UKT',
+                'kategori' => 'Keuangan',
+                'prioritas' => 'Medium',
+                'status' => 'Verified',
+                'dokumen' => '',
+                'tanggal' => '08 Agustus 2026',
+                'created_at' => '2026-08-08 13:45:00',
+                'email' => 'dewi@student.polban.ac.id',
+                'no_hp' => '081234560005',
+                'deskripsi' => 'Pengajuan bantuan UKT.'
+            ],
+
+            [
+                'id' => 6,
+                'nomor_tiket' => 'ULT-20260808-0013',
+                'nama_pemohon' => 'Fajar Nugraha',
+                'nim' => '231511006',
+                'nik' => '3201123456780013',
+                'layanan' => 'Beasiswa Prestasi',
+                'kategori' => 'Kemahasiswaan',
+                'prioritas' => 'Low',
+                'status' => 'Disposisi',
+                'dokumen' => 'ada',
+                'tanggal' => '08 Agustus 2026',
+                'created_at' => '2026-08-08 12:30:00',
+                'email' => 'fajar@student.polban.ac.id',
+                'no_hp' => '081234560006',
+                'deskripsi' => 'Pengajuan beasiswa prestasi.'
+            ],
+
+            [
+                'id' => 7,
+                'nomor_tiket' => 'ULT-20260807-0012',
+                'nama_pemohon' => 'Siti Aminah',
+                'nim' => '231511007',
+                'nik' => '3201123456780012',
+                'layanan' => 'Surat Keterangan Lulus',
+                'kategori' => 'Akademik',
+                'prioritas' => 'Medium',
+                'status' => 'Submitted',
+                'dokumen' => 'ada',
+                'tanggal' => '07 Agustus 2026',
+                'created_at' => '2026-08-07 16:20:00',
+                'email' => 'sitiaminah@student.polban.ac.id',
+                'no_hp' => '081234560007',
+                'deskripsi' => 'Pengajuan surat keterangan lulus.'
+            ],
+
+            [
+                'id' => 8,
+                'nomor_tiket' => 'ULT-20260807-0011',
+                'nama_pemohon' => 'Budi Santoso',
+                'nim' => '231511008',
+                'nik' => '3201123456780011',
+                'layanan' => 'Pengajuan Cuti',
+                'kategori' => 'Akademik',
+                'prioritas' => 'Medium',
+                'status' => 'Verified',
+                'dokumen' => '',
+                'tanggal' => '07 Agustus 2026',
+                'created_at' => '2026-08-07 15:10:00',
+                'email' => 'budi@student.polban.ac.id',
+                'no_hp' => '081234560008',
+                'deskripsi' => 'Pengajuan cuti akademik.'
+            ],
+
+            [
+                'id' => 9,
+                'nomor_tiket' => 'ULT-20260807-0010',
+                'nama_pemohon' => 'Ahmad Fauzi',
+                'nim' => '231511009',
+                'nik' => '3201123456780010',
+                'layanan' => 'Beasiswa Prestasi',
+                'kategori' => 'Kemahasiswaan',
+                'prioritas' => 'Low',
+                'status' => 'Disposisi',
+                'dokumen' => '',
+                'tanggal' => '07 Agustus 2026',
+                'created_at' => '2026-08-07 13:00:00',
+                'email' => 'ahmad2@student.polban.ac.id',
+                'no_hp' => '081234560009',
+                'deskripsi' => 'Pengajuan beasiswa prestasi.'
+            ],
+
+            [
+                'id' => 10,
+                'nomor_tiket' => 'ULT-20260807-0009',
+                'nama_pemohon' => 'Annisa Rahma',
+                'nim' => '231511010',
+                'nik' => '3201123456780009',
+                'layanan' => 'Legalisir Ijazah',
+                'kategori' => 'Akademik',
+                'prioritas' => 'High',
+                'status' => 'Completed',
+                'dokumen' => 'ada',
+                'tanggal' => '07 Agustus 2026',
+                'created_at' => '2026-08-07 11:45:00',
+                'email' => 'annisa@student.polban.ac.id',
+                'no_hp' => '081234560010',
+                'deskripsi' => 'Permohonan legalisir ijazah.'
+            ],
+
+            [
+                'id' => 11,
+                'nomor_tiket' => 'ULT-20260807-0008',
+                'nama_pemohon' => 'Yoga Pratama',
+                'nim' => '231511011',
+                'nik' => '3201123456780008',
+                'layanan' => 'Keringanan UKT',
+                'kategori' => 'Keuangan',
+                'prioritas' => 'Medium',
+                'status' => 'Verified',
+                'dokumen' => 'ada',
+                'tanggal' => '07 Agustus 2026',
+                'created_at' => '2026-08-07 10:30:00',
+                'email' => 'yoga@student.polban.ac.id',
+                'no_hp' => '081234560011',
+                'deskripsi' => 'Pengajuan keringanan UKT.'
+            ],
+
+            [
+                'id' => 12,
+                'nomor_tiket' => 'ULT-20260807-0007',
+                'nama_pemohon' => 'Intan Permata',
+                'nim' => '231511012',
+                'nik' => '3201123456780007',
+                'layanan' => 'Surat Pengantar PKL',
+                'kategori' => 'Akademik',
+                'prioritas' => 'High',
+                'status' => 'Submitted',
+                'dokumen' => '',
+                'tanggal' => '07 Agustus 2026',
+                'created_at' => '2026-08-07 09:20:00',
+                'email' => 'intan@student.polban.ac.id',
+                'no_hp' => '081234560012',
+                'deskripsi' => 'Pengajuan surat pengantar PKL.'
+            ],
+
+            [
+                'id' => 13,
+                'nomor_tiket' => 'ULT-20260807-0006',
+                'nama_pemohon' => 'Reza Pahlevi',
+                'nim' => '231511013',
+                'nik' => '3201123456780006',
+                'layanan' => 'Pindah Kelas',
+                'kategori' => 'Akademik',
+                'prioritas' => 'Medium',
+                'status' => 'Rejected',
+                'dokumen' => 'ada',
+                'tanggal' => '07 Agustus 2026',
+                'created_at' => '2026-08-07 08:15:00',
+                'email' => 'reza@student.polban.ac.id',
+                'no_hp' => '081234560013',
+                'deskripsi' => 'Permohonan pindah kelas.'
+            ],
+
+            [
+                'id' => 14,
+                'nomor_tiket' => 'ULT-20260806-0005',
+                'nama_pemohon' => 'Putri Wulandari',
+                'nim' => '231511014',
+                'nik' => '3201123456780005',
+                'layanan' => 'Konseling Akademik',
+                'kategori' => 'Kemahasiswaan',
+                'prioritas' => 'Low',
+                'status' => 'Completed',
+                'dokumen' => '',
+                'tanggal' => '06 Agustus 2026',
+                'created_at' => '2026-08-06 16:00:00',
+                'email' => 'putri@student.polban.ac.id',
+                'no_hp' => '081234560014',
+                'deskripsi' => 'Pengajuan layanan konseling akademik.'
+            ],
+
+            [
+                'id' => 15,
+                'nomor_tiket' => 'ULT-20260806-0004',
+                'nama_pemohon' => 'Dedi Kurniawan',
+                'nim' => '231511015',
+                'nik' => '3201123456780004',
+                'layanan' => 'Penggantian KTM Hilang',
+                'kategori' => 'Kemahasiswaan',
+                'prioritas' => 'High',
+                'status' => 'Verified',
+                'dokumen' => 'ada',
+                'tanggal' => '06 Agustus 2026',
+                'created_at' => '2026-08-06 14:30:00',
+                'email' => 'dedi@student.polban.ac.id',
+                'no_hp' => '081234560015',
+                'deskripsi' => 'Permohonan penggantian KTM yang hilang.'
+            ],
+
+            [
+                'id' => 16,
+                'nomor_tiket' => 'ULT-20260806-0003',
+                'nama_pemohon' => 'Nabila Putri',
+                'nim' => '231511016',
+                'nik' => '3201123456780003',
+                'layanan' => 'Surat Rekomendasi',
+                'kategori' => 'Akademik',
+                'prioritas' => 'Medium',
+                'status' => 'Disposisi',
+                'dokumen' => 'ada',
+                'tanggal' => '06 Agustus 2026',
+                'created_at' => '2026-08-06 12:00:00',
+                'email' => 'nabila@student.polban.ac.id',
+                'no_hp' => '081234560016',
+                'deskripsi' => 'Pengajuan surat rekomendasi.'
+            ],
+
+            [
+                'id' => 17,
+                'nomor_tiket' => 'ULT-20260806-0002',
+                'nama_pemohon' => 'Galih Ramadhan',
+                'nim' => '231511017',
+                'nik' => '3201123456780002',
+                'layanan' => 'Bantuan Beasiswa',
+                'kategori' => 'Keuangan',
+                'prioritas' => 'High',
+                'status' => 'Verified',
+                'dokumen' => '',
+                'tanggal' => '06 Agustus 2026',
+                'created_at' => '2026-08-06 10:45:00',
+                'email' => 'galih@student.polban.ac.id',
+                'no_hp' => '081234560017',
+                'deskripsi' => 'Pengajuan bantuan beasiswa.'
+            ],
+
+            [
+                'id' => 18,
+                'nomor_tiket' => 'ULT-20260806-0001',
+                'nama_pemohon' => 'Maya Sari',
+                'nim' => '231511018',
+                'nik' => '3201123456780001',
+                'layanan' => 'Surat Aktif Kuliah',
+                'kategori' => 'Akademik',
+                'prioritas' => 'Medium',
+                'status' => 'Submitted',
+                'dokumen' => 'ada',
+                'tanggal' => '06 Agustus 2026',
+                'created_at' => '2026-08-06 08:30:00',
+                'email' => 'maya@student.polban.ac.id',
+                'no_hp' => '081234560018',
+                'deskripsi' => 'Pengajuan surat aktif kuliah.'
+            ],
+        ];
+    }
+
+    // ============================================================
+    // DASHBOARD
+    // ============================================================
+
     public function dashboard()
     {
         return view('petugas/dashboard');
     }
 
+    // ============================================================
+    // DATA TIKET
+    // ============================================================
+
     public function tiket()
     {
-        // 1. Ambil input filter dari form/URL GET
-        $search   = $this->request->getGet('search');
-        $status   = $this->request->getGet('status');
-        $kategori = $this->request->getGet('kategori');
-
-        // 2. Data Dummy Tiket (Sesuaikan dengan query Model DB Anda jika sudah ada)
-        $allTiket = [
-            [
-                'id'           => 1,
-                'nomor_tiket'  => 'ULT-20260720-0001',
-                'nama_pemohon' => 'Rafi Putra',
-                'nim'          => '231511001',
-                'layanan'      => 'Surat Aktif Kuliah',
-                'kategori'     => 'Akademik',
-                'prioritas'    => 'High',
-                'status'       => 'Submitted',
-                'tanggal'      => '2026-07-20'
-            ],
-            [
-                'id'           => 2,
-                'nomor_tiket'  => 'ULT-20260721-0002',
-                'nama_pemohon' => 'Siti Nurhaliza',
-                'nim'          => '231511002',
-                'layanan'      => 'Bantuan UKT',
-                'kategori'     => 'Keuangan',
-                'prioritas'    => 'Medium',
-                'status'       => 'Verified',
-                'tanggal'      => '2026-07-21'
-            ],
-            [
-                'id'           => 3,
-                'nomor_tiket'  => 'ULT-20260722-0003',
-                'nama_pemohon' => 'Ahmad Fauzi',
-                'nim'          => '231511003',
-                'layanan'      => 'Beasiswa Prestasi',
-                'kategori'     => 'Kemahasiswaan',
-                'prioritas'    => 'Low',
-                'status'       => 'Disposisi',
-                'tanggal'      => '2026-07-22'
-            ]
-        ];
-
-        // 3. Logika Filter Data
-        $filteredTiket = array_filter($allTiket, function ($item) use ($search, $status, $kategori) {
-            $matchSearch = true;
-            $matchStatus = true;
-            $matchKategori = true;
-
-            if (!empty($search)) {
-                $searchLower = strtolower($search);
-                $matchSearch = (strpos(strtolower($item['nomor_tiket']), $searchLower) !== false) ||
-                               (strpos(strtolower($item['nama_pemohon']), $searchLower) !== false) ||
-                               (strpos(strtolower($item['nim']), $searchLower) !== false) ||
-                               (strpos(strtolower($item['layanan']), $searchLower) !== false);
-            }
-
-            if (!empty($status)) {
-                $matchStatus = (strtolower($item['status']) === strtolower($status));
-            }
-
-            if (!empty($kategori)) {
-                $matchKategori = (strtolower($item['kategori']) === strtolower($kategori));
-            }
-
-            return $matchSearch && $matchStatus && $matchKategori;
-        });
-
-        $data = [
-            'tiket_list' => $filteredTiket,
-            'search'     => $search,
-            'status'     => $status,
-            'kategori'   => $kategori
-        ];
-
-        return view('petugas/tiket', $data);
+        return view('petugas/tiket', [
+            'tiket_list' => $this->getAllTiket()
+        ]);
     }
+
+    // ============================================================
+    // DETAIL
+    // ============================================================
 
     public function detail($id = null)
-{
-    $allTiket = [
+    {
+        $tiket = $this->findTiket($id);
 
-        [
-            'id' => 1,
-            'nomor_tiket' => 'ULT-20260720-0001',
-            'nama_pemohon' => 'Rafi Putra',
-            'nim' => '231511001',
-            'layanan' => 'Surat Aktif Kuliah',
-            'kategori' => 'Akademik',
-            'prioritas' => 'High',
-            'status' => 'Submitted',
-            'tanggal' => '20 Juli 2026',
-            'email' => 'rafi@student.polban.ac.id',
-            'no_hp' => '081234567890',
-            'deskripsi' => 'Saya mengajukan Surat Aktif Kuliah untuk keperluan beasiswa.'
-        ],
-
-        [
-            'id' => 2,
-            'nomor_tiket' => 'ULT-20260721-0002',
-            'nama_pemohon' => 'Siti Nurhaliza',
-            'nim' => '231511002',
-            'layanan' => 'Bantuan UKT',
-            'kategori' => 'Keuangan',
-            'prioritas' => 'Medium',
-            'status' => 'Verified',
-            'tanggal' => '21 Juli 2026',
-            'email' => 'siti@student.polban.ac.id',
-            'no_hp' => '081298765432',
-            'deskripsi' => 'Mengajukan bantuan pembayaran UKT semester ganjil.'
-        ],
-
-        [
-            'id' => 3,
-            'nomor_tiket' => 'ULT-20260722-0003',
-            'nama_pemohon' => 'Ahmad Fauzi',
-            'nim' => '231511003',
-            'layanan' => 'Beasiswa Prestasi',
-            'kategori' => 'Kemahasiswaan',
-            'prioritas' => 'Low',
-            'status' => 'Disposisi',
-            'tanggal' => '22 Juli 2026',
-            'email' => 'ahmad@student.polban.ac.id',
-            'no_hp' => '081377788899',
-            'deskripsi' => 'Mengajukan beasiswa prestasi akademik.'
-        ]
-
-    ];
-
-    $tiket = null;
-
-    foreach ($allTiket as $item) {
-
-        if ($item['id'] == $id) {
-
-            $tiket = $item;
-            break;
-
-        }
-
+        return view('petugas/detail', [
+            'id' => $id,
+            'tiket' => $tiket
+        ]);
     }
 
-    if (!$tiket) {
-
-        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-
-    }
-
-    return view('petugas/detail', [
-
-        'id' => $id,
-        'tiket' => $tiket
-
-    ]);
-}
+    // ============================================================
+    // VERIFIKASI
+    // ============================================================
 
     public function verifikasi($id = null)
-{
-    $allTiket = [
-        [
-            'id' => 1,
-            'nomor_tiket' => 'ULT-20260720-0001',
-            'nama_pemohon' => 'Rafi Putra',
-            'nim' => '231511001',
-            'layanan' => 'Surat Aktif Kuliah',
-            'kategori' => 'Akademik',
-            'prioritas' => 'High',
-            'status' => 'Submitted',
-            'tanggal' => '2026-07-20',
-            'email' => 'rafi@student.polban.ac.id',
-            'no_hp' => '081234567890',
-            'deskripsi' => 'Mengajukan Surat Aktif Kuliah.'
-        ],
-        [
-            'id' => 2,
-            'nomor_tiket' => 'ULT-20260721-0002',
-            'nama_pemohon' => 'Siti Nurhaliza',
-            'nim' => '231511002',
-            'layanan' => 'Bantuan UKT',
-            'kategori' => 'Keuangan',
-            'prioritas' => 'Medium',
-            'status' => 'Verified',
-            'tanggal' => '2026-07-21',
-            'email' => 'siti@student.polban.ac.id',
-            'no_hp' => '081298765432',
-            'deskripsi' => 'Mengajukan bantuan pembayaran UKT.'
-        ],
-        [
-            'id' => 3,
-            'nomor_tiket' => 'ULT-20260722-0003',
-            'nama_pemohon' => 'Ahmad Fauzi',
-            'nim' => '231511003',
-            'layanan' => 'Beasiswa Prestasi',
-            'kategori' => 'Kemahasiswaan',
-            'prioritas' => 'Low',
-            'status' => 'Disposisi',
-            'tanggal' => '2026-07-22',
-            'email' => 'ahmad@student.polban.ac.id',
-            'no_hp' => '081212121212',
-            'deskripsi' => 'Mengajukan Beasiswa Prestasi.'
-        ]
-    ];
+    {
+        $tiket = $this->findTiket($id);
 
-    $tiket = null;
-
-    foreach ($allTiket as $row) {
-        if ($row['id'] == $id) {
-            $tiket = $row;
-            break;
-        }
+        return view('petugas/verifikasi', [
+            'tiket' => $tiket,
+            'id' => $id
+        ]);
     }
 
-    return view('petugas/verifikasi', [
-        'tiket' => $tiket,
-        'id' => $id
-    ]);
-}
+    // ============================================================
+    // SIMPAN VERIFIKASI
+    // ============================================================
 
-    // =======================================================
-    // METHOD UNTUK MENYIMPAN HASIL VERIFIKASI (MEMPERBAIKI ERROR 404)
-    // =======================================================
     public function simpanVerifikasi($id = null)
     {
-        // Tangkap data dari form verifikasi
         $statusVerifikasi = $this->request->getPost('status_verifikasi');
-        $catatan          = $this->request->getPost('catatan');
+        $catatan = $this->request->getPost('catatan');
 
-        // TODO: Silakan tambahkan kode update ke database Anda di sini
-        // Contoh: $this->tiketModel->update($id, ['status' => $statusVerifikasi, 'catatan' => $catatan]);
-
-        // Redirect kembali ke halaman data tiket dengan pesan sukses
-        return redirect()->to(base_url('petugas/tiket'))->with('success', 'Verifikasi tiket berhasil disimpan!');
+        return redirect()
+            ->to(base_url('petugas/tiket'))
+            ->with('success', 'Verifikasi tiket berhasil disimpan!');
     }
+
+    // ============================================================
+    // DISPOSISI
+    // ============================================================
 
     public function disposisi($id = null)
-{
-    $allTiket = [
+    {
+        $tiket = $this->findTiket($id);
 
-        [
-            'id' => 1,
-            'nomor_tiket' => 'ULT-20260720-0001',
-            'nama_pemohon' => 'Rafi Putra',
-            'nim' => '231511001',
-            'layanan' => 'Surat Aktif Kuliah',
-            'kategori' => 'Akademik',
-            'prioritas' => 'High',
-            'status' => 'Submitted',
-            'tanggal' => '20 Juli 2026',
-            'email' => 'rafi@student.polban.ac.id',
-            'no_hp' => '081234567890',
-            'deskripsi' => 'Saya mengajukan Surat Aktif Kuliah untuk keperluan beasiswa.'
-        ],
-
-        [
-            'id' => 2,
-            'nomor_tiket' => 'ULT-20260721-0002',
-            'nama_pemohon' => 'Siti Nurhaliza',
-            'nim' => '231511002',
-            'layanan' => 'Bantuan UKT',
-            'kategori' => 'Keuangan',
-            'prioritas' => 'Medium',
-            'status' => 'Verified',
-            'tanggal' => '21 Juli 2026',
-            'email' => 'siti@student.polban.ac.id',
-            'no_hp' => '081298765432',
-            'deskripsi' => 'Mengajukan bantuan pembayaran UKT semester ganjil.'
-        ],
-
-        [
-            'id' => 3,
-            'nomor_tiket' => 'ULT-20260722-0003',
-            'nama_pemohon' => 'Ahmad Fauzi',
-            'nim' => '231511003',
-            'layanan' => 'Beasiswa Prestasi',
-            'kategori' => 'Kemahasiswaan',
-            'prioritas' => 'Low',
-            'status' => 'Disposisi',
-            'tanggal' => '22 Juli 2026',
-            'email' => 'ahmad@student.polban.ac.id',
-            'no_hp' => '081377788899',
-            'deskripsi' => 'Mengajukan beasiswa prestasi akademik.'
-        ]
-
-    ];
-
-    $tiket = null;
-
-    foreach ($allTiket as $row) {
-
-        if ($row['id'] == $id) {
-
-            $tiket = $row;
-            break;
-
-        }
-
+        return view('petugas/disposisi', [
+            'tiket' => $tiket,
+            'id' => $id
+        ]);
     }
 
-    if (!$tiket) {
+    // ============================================================
+    // KIRIM DISPOSISI
+    // ============================================================
 
-        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-
-    }
-
-    return view('petugas/disposisi', [
-
-        'tiket' => $tiket,
-        'id' => $id
-
-    ]);
-}
-    // =======================================================
-    // METHOD UNTUK MENGIRIM DISPOSISI (MENCEGAH ERROR SERUPA)
-    // =======================================================
     public function kirimDisposisi($id = null)
     {
-        // Tangkap data dari form disposisi
         $unitTujuan = $this->request->getPost('unit_tujuan');
-        $prioritas  = $this->request->getPost('prioritas');
-        $targetSla  = $this->request->getPost('target_sla');
+        $prioritas = $this->request->getPost('prioritas');
+        $targetSla = $this->request->getPost('target_sla');
 
-        // TODO: Silakan tambahkan kode update/insert disposisi ke database Anda di sini
-
-        // Redirect kembali ke halaman data tiket dengan pesan sukses
-        return redirect()->to(base_url('petugas/tiket'))->with('success', 'Disposisi tiket berhasil dikirim!');
+        return redirect()
+            ->to(base_url('petugas/tiket'))
+            ->with('success', 'Disposisi tiket berhasil dikirim!');
     }
 
+    // ============================================================
+    // CARI TIKET BERDASARKAN ID
+    // ============================================================
+
+    private function findTiket($id)
+    {
+        $allTiket = $this->getAllTiket();
+
+        foreach ($allTiket as $tiket) {
+            if ((int) $tiket['id'] === (int) $id) {
+                return $tiket;
+            }
+        }
+
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+    }
+
+    // ============================================================
+    // MENU LAIN
+    // ============================================================
+
     public function laporanTamu()
-{
-    return view('petugas/laporan_tamu');
+    {
+        return view('petugas/laporan_tamu');
+    }
+
+    public function statistikTiket()
+    {
+        return view('petugas/statistik_tiket');
+    }
+
+    public function laporanTiket()
+    {
+        return view('petugas/laporan_tiket');
+    }
+
+    public function trackingTiket()
+    {
+        return view('petugas/tracking_tiket');
+    }
+
+    public function detail_tamu($id)
+    {
+        return view('petugas/detail_tamu', [
+            'id' => $id
+        ]);
+    }
+
+    public function verifikasi_tamu($id)
+    {
+        return view('petugas/verifikasi_tamu', [
+            'id' => $id
+        ]);
+    }
+
+    public function disposisi_tamu($id)
+    {
+        return view('petugas/disposisi_tamu', [
+            'id' => $id
+        ]);
+    }
+
+    public function edit_tamu($id)
+    {
+        return view('petugas/edit_tamu', [
+            'id' => $id
+        ]);
+    }
+
+    public function delete_tamu($id)
+    {
+        return redirect()
+            ->back()
+            ->with('success', 'Data tiket/tamu berhasil dihapus.');
+    }
 }
-
-public function statistikTiket()
-{
-    return view('petugas/statistik_tiket');
-}
-
-public function laporanTiket()
-{
-    return view('petugas/laporan_tiket');
-}
-
-public function trackingTiket()
-{
-    return view('petugas/tracking_tiket');
-}
-
-// --- Tambahkan method ini di dalam PetugasController.php ---
-
-public function detail_tamu($id)
-{
-    // Logika mengambil data detail berdasarkan ID
-    return view('petugas/detail_tamu', ['id' => $id]);
-}
-
-public function verifikasi_tamu($id)
-{
-    // Logika halaman verifikasi
-    return view('petugas/verifikasi_tamu', ['id' => $id]);
-}
-
-public function disposisi_tamu($id)
-{
-    // Logika halaman disposisi
-    return view('petugas/disposisi_tamu', ['id' => $id]);
-}
-
-public function edit_tamu($id)
-{
-    // Logika halaman edit
-    return view('petugas/edit_tamu', ['id' => $id]);
-}
-
-public function delete_tamu($id)
-{
-    // Logika hapus data dari database
-    // $this->tamuModel->delete($id);
-    return redirect()->back()->with('success', 'Data tiket/tamu berhasil dihapus.');
-}
-
-}
-

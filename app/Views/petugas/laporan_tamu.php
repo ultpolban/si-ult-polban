@@ -711,14 +711,14 @@
                     <tbody id="tamuTableBody">
                         <?php
                         $dummy = [
-                            ['ULT-20260806074739865', 'Asep', 'Keuangan', 'Verified', '06-08-2026 07:47', 'asep@gmail.com', '081234567890', 'Universitas Padjadjaran', 'Pengajuan rekapitulasi pembayaran UKT.'],
-                            ['ULT-20260805023213577', 'Apin', 'Beasiswa', 'Verified', '05-08-2026 02:32', 'apin@polban.ac.id', '082198765432', 'Politeknik Negeri Bandung', 'Penyerahan berkas Beasiswa KIP-K.'],
-                            ['ULT-20260730081403481', 'Apin', 'Kemahasiswaan', 'Assigned', '30-07-2026 08:14', 'apin@polban.ac.id', '082198765432', 'Politeknik Negeri Bandung', 'Legalisir sertifikat kemahasiswaan.'],
-                            ['ULT-20260730080403262', 'Ikbal', 'Kemahasiswaan', 'Assigned', '30-07-2026 08:04', 'ikbal@gmail.com', '085712345678', 'Universitas Indonesia', 'Izin kegiatan Ormawa.'],
-                            ['ULT-20260730002942605', 'Rizki AM', 'Beasiswa', 'Assigned', '30-07-2026 00:29', 'rizki@gmail.com', '081311223344', 'Telkom University', 'Kendala pencairan dana beasiswa.'],
-                            ['ULT-20260730002841489', 'Adit', 'Informasi Akademik', 'Assigned', '30-07-2026 00:28', 'adit@gmail.com', '089655443322', 'ITB', 'Prosedur perbaikan nilai KRS.'],
-                            ['ULT-20260729065029720', 'Zein Gtg', 'Surat Aktif Kuliah', 'Assigned', '29-07-2026 06:50', 'zein@gmail.com', '081299887766', 'Universitas Pasundan', 'Cetak Surat Aktif Kuliah.'],
-                            ['ULT-20260728093734525', 'Zein', 'Surat Aktif Kuliah', 'Submitted', '28-07-2026 09:37', 'zein@gmail.com', '081299887766', 'Universitas Pasundan', 'Permohonan ulang Surat Aktif Kuliah.']
+                            ['ULT-20260806074739865', 'Asep', 'Bagian Keuangan', 'Verified', '06-08-2026 07:47', 'asep@gmail.com', '081234567890', 'Universitas Padjadjaran', 'Pengajuan rekapitulasi pembayaran UKT.'],
+                            ['ULT-20260805023213577', 'Apin', 'Bagian Kemahasiswaan', 'Verified', '05-08-2026 02:32', 'apin@polban.ac.id', '082198765432', 'Politeknik Negeri Bandung', 'Penyerahan berkas Beasiswa KIP-K.'],
+                            ['ULT-20260730081403481', 'Apin', 'Bagian Kemahasiswaan', 'Assigned', '30-07-2026 08:14', 'apin@polban.ac.id', '082198765432', 'Politeknik Negeri Bandung', 'Legalisir sertifikat kemahasiswaan.'],
+                            ['ULT-20260730080403262', 'Ikbal', 'Bagian Kemahasiswaan', 'Assigned', '30-07-2026 08:04', 'ikbal@gmail.com', '085712345678', 'Universitas Indonesia', 'Izin kegiatan Ormawa.'],
+                            ['ULT-20260730002942605', 'Rizki AM', 'Bagian Keuangan', 'Assigned', '30-07-2026 00:29', 'rizki@gmail.com', '081311223344', 'Telkom University', 'Kendala pencairan dana beasiswa.'],
+                            ['ULT-20260730002841489', 'Adit', 'Bagian Akademik', 'Assigned', '30-07-2026 00:28', 'adit@gmail.com', '089655443322', 'ITB', 'Prosedur perbaikan nilai KRS.'],
+                            ['ULT-20260729065029720', 'Zein Gtg', 'Bagian Akademik', 'Assigned', '29-07-2026 06:50', 'zein@gmail.com', '081299887766', 'Universitas Pasundan', 'Cetak Surat Aktif Kuliah.'],
+                            ['ULT-20260728093734525', 'Zein', 'Bagian Akademik', 'Submitted', '28-07-2026 09:37', 'zein@gmail.com', '081299887766', 'Universitas Pasundan', 'Permohonan ulang Surat Aktif Kuliah.']
                         ];
                         foreach ($dummy as $i => $d):
                         ?>
@@ -747,8 +747,8 @@
                                         <button class="btn-action btn-action-amber btn-edit-tamu" title="Edit Tiket" data-bs-toggle="modal" data-bs-target="#modalEditTiket" data-notiket="<?= $d[0] ?>" data-nama="<?= $d[1] ?>" data-layanan="<?= $d[2] ?>" data-status="<?= $d[3] ?>" data-email="<?= $d[5] ?>" data-hp="<?= $d[6] ?>" data-instansi="<?= $d[7] ?>" data-deskripsi="<?= $d[8] ?>">
                                             <i class="fas fa-pen"></i>
                                         </button>
-                                        <button class="btn-action btn-action-delete btn-delete-tamu" title="Delete Tiket" data-bs-toggle="modal" data-bs-target="#modalDeleteTiket" data-notiket="<?= $d[0] ?>" data-nama="<?= $d[1] ?>">
-                                            <i class="fas fa-trash-alt"></i>
+                                        <button class="btn-action btn-action-delete btn-delete-tamu" title="Hapus Tiket" data-bs-toggle="modal" data-bs-target="#modalDeleteTiket" data-notiket="<?= $d[0] ?>" data-nama="<?= $d[1] ?>">
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -758,10 +758,10 @@
                 </table>
             </div>
 
-            <div id="emptySearchState" class="text-center py-5 d-none">
-                <i class="fas fa-search-minus text-muted fa-3x mb-3"></i>
-                <h6 class="fw-bold text-dark mb-1">Tiket Tidak Ditemukan</h6>
-                <p class="text-muted small mb-0">Coba ubah kata kunci pencarian atau filter Anda.</p>
+            <div id="tabelEmptyState" class="text-center py-5 d-none">
+                <div class="mb-3 text-muted" style="font-size: 3rem;"><i class="fas fa-folder-open"></i></div>
+                <h5 class="fw-bold text-dark">Data Tidak Ditemukan</h5>
+                <p class="text-muted small">Tidak ada data laporan tamu yang cocok dengan kriteria pencarian atau filter Anda.</p>
             </div>
         </div>
 
@@ -775,38 +775,31 @@
             <div class="modal-header modal-header-ultra">
                 <div class="d-flex align-items-center">
                     <div class="modal-icon-badge">
-                        <i class="fas fa-file-signature text-white"></i>
+                        <i class="fas fa-user-plus text-white"></i>
                     </div>
                     <div>
-                        <h5 class="fw-bold mb-0 text-white">
-                            Tambah Laporan Tamu (Walk In)
-                        </h5>
-                        <small class="text-white-50">
-                            Form input rekapitulasi laporan pengunjung ULT POLBAN
-                        </small>
+                        <h5 class="fw-bold mb-0 text-white">Tambah Laporan Tamu (Walk-In)</h5>
+                        <small class="text-white-50">Catat kunjungan tamu langsung di Unit Layanan Terpadu</small>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close">
-                </button>
+                <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form id="formTambahTamu" action="#" method="post">
+            <form id="formTambahTamu" action="<?= base_url('laporantamu/store') ?>" method="POST" enctype="multipart/form-data">
+                <?= csrf_field() ?>
                 <div class="modal-body offline-modal-body">
-
+                    
                     <div class="offline-info-box">
-                        <i class="fas fa-info-circle me-2"></i> Masukkan data pemohon/tamu yang berkunjung langsung ke ULT POLBAN secara offline/walk-in.
+                        <i class="fas fa-info-circle me-2"></i> Silakan pilih jenis pemohon terlebih dahulu untuk menampilkan form isian yang sesuai.
                     </div>
 
                     <div class="row g-3">
-
                         <div class="col-12">
-                            <label class="offline-form-label">
-                                Jenis Pemohon <span class="required">*</span>
-                            </label>
+                            <label class="offline-form-label">Jenis Pemohon <span class="required">*</span></label>
                             <div class="offline-input-group">
                                 <i class="fas fa-user-tag offline-input-icon"></i>
                                 <select id="addJenisPemohon" name="jenis_pemohon" class="offline-select" required>
-                                    <option value="" selected disabled> -- Pilih Jenis Pemohon -- </option>
+                                    <option value="" selected disabled>-- Pilih Jenis Pemohon --</option>
                                     <option value="Mahasiswa">Mahasiswa</option>
                                     <option value="Dosen">Dosen</option>
                                     <option value="Tenaga Kependidikan">Tenaga Kependidikan</option>
@@ -887,10 +880,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded-3 border">
-                            <span class="text-muted text-uppercase fw-bold" style="font-size: 0.72rem;">Status Saat Ini</span>
-                            <div class="mt-1">
-                                <span id="dispStatusCurrent" class="badge-status badge-verified">-</span>
-                            </div>
+                            <span class="text-muted text-uppercase fw-bold" style="font-size: 0.72rem;">Status Tiket</span>
+                            <div class="mt-1"><span id="dispStatus" class="badge-status badge-verified">-</span></div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -917,10 +908,16 @@
                             <h6 id="dispHp" class="fw-bold text-dark mt-1 mb-0">-</h6>
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-md-6">
                         <div class="p-3 bg-light rounded-3 border">
                             <span class="text-muted text-uppercase fw-bold" style="font-size: 0.72rem;">Instansi / Unit Asal</span>
                             <h6 id="dispInstansi" class="fw-bold text-dark mt-1 mb-0">-</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <span class="text-muted text-uppercase fw-bold" style="font-size: 0.72rem;">Tanggal Masuk</span>
+                            <h6 id="dispTanggal" class="fw-bold text-dark mt-1 mb-0">-</h6>
                         </div>
                     </div>
                     <div class="col-12">
@@ -1003,18 +1000,23 @@
                         <input type="text" id="dispNoTiketField" class="offline-input" readonly style="background-color: #f1f5f9; padding-left: 16px !important;">
                     </div>
                     <div class="mb-3">
-                        <label class="offline-form-label">Tujuan Disposisi Unit <span class="required">*</span></label>
+                        <label class="offline-form-label">Unit / Bagian Tujuan Disposisi <span class="required">*</span></label>
                         <select class="offline-select" required style="padding-left: 16px !important;">
                             <option value="" selected disabled>-- Pilih Unit Tujuan --</option>
+                            <option value="Unit Layanan Terpadu">Unit Layanan Terpadu</option>
+                            <option value="Bagian Akademik">Bagian Akademik</option>
                             <option value="Bagian Keuangan">Bagian Keuangan</option>
-                            <option value="Bagian Akademik & Kemahasiswaan">Bagian Akademik & Kemahasiswaan</option>
-                            <option value="Subbag Kerjasama & Humas">Subbag Kerjasama & Humas</option>
-                            <option value="UPT TIK">UPT TIK</option>
+                            <option value="Bagian Kemahasiswaan">Bagian Kemahasiswaan</option>
+                            <option value="Perpustakaan">Perpustakaan</option>
+                            <option value="Jurusan">Jurusan</option>
+                            <option value="UPT Teknologi Informasi dan Komunikasi">UPT Teknologi Informasi dan Komunikasi</option>
+                            <option value="Bagian Administrasi Umum">Bagian Administrasi Umum</option>
+                            <option value="Administrasi Umum">Administrasi Umum</option>
                         </select>
                     </div>
                     <div class="mb-0">
-                        <label class="offline-form-label">Pesan / Instruksi Disposisi <span class="required">*</span></label>
-                        <textarea class="offline-textarea" placeholder="Tulis instruksi tindak lanjut untuk unit terkait..." required style="padding-left: 16px !important; min-height: 90px;"></textarea>
+                        <label class="offline-form-label">Catatan Disposisi</label>
+                        <textarea class="offline-textarea" placeholder="Tambahkan instruksi atau catatan disposisi..." style="padding-left: 16px !important; min-height: 90px;"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer modal-footer-ultra">
@@ -1067,11 +1069,15 @@
                         <div class="col-md-6">
                             <label class="offline-form-label">Layanan Tujuan <span class="required">*</span></label>
                             <select id="editLayanan" class="offline-select" required style="padding-left: 16px !important;">
-                                <option value="Keuangan">Keuangan</option>
-                                <option value="Beasiswa">Beasiswa</option>
-                                <option value="Kemahasiswaan">Kemahasiswaan</option>
-                                <option value="Informasi Akademik">Informasi Akademik</option>
-                                <option value="Surat Aktif Kuliah">Surat Aktif Kuliah</option>
+                                <option value="Unit Layanan Terpadu">Unit Layanan Terpadu</option>
+                                <option value="Bagian Akademik">Bagian Akademik</option>
+                                <option value="Bagian Keuangan">Bagian Keuangan</option>
+                                <option value="Bagian Kemahasiswaan">Bagian Kemahasiswaan</option>
+                                <option value="Perpustakaan">Perpustakaan</option>
+                                <option value="Jurusan">Jurusan</option>
+                                <option value="UPT Teknologi Informasi dan Komunikasi">UPT Teknologi Informasi dan Komunikasi</option>
+                                <option value="Bagian Administrasi Umum">Bagian Administrasi Umum</option>
+                                <option value="Administrasi Umum">Administrasi Umum</option>
                             </select>
                         </div>
                         <div class="col-12">
@@ -1094,8 +1100,8 @@
         <div class="modal-content modal-content-ultra">
             <div class="modal-header bg-danger text-white py-3 px-4">
                 <div class="d-flex align-items-center">
-                    <div class="modal-icon-badge bg-white bg-opacity-25">
-                        <i class="fas fa-trash-alt text-white"></i>
+                    <div class="modal-icon-badge bg-white bg-opacity-25 text-white me-3">
+                        <i class="fas fa-exclamation-triangle"></i>
                     </div>
                     <div>
                         <h5 class="fw-bold mb-0 text-white">Konfirmasi Hapus Tiket</h5>
@@ -1104,20 +1110,15 @@
                 </div>
                 <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="formDeleteTiket">
-                <div class="modal-body p-4 text-center">
-                    <div class="mb-3">
-                        <i class="fas fa-exclamation-triangle text-danger fa-3x mb-2"></i>
-                        <h6 class="fw-bold text-dark">Apakah Anda yakin ingin menghapus tiket ini?</h6>
-                        <p class="text-muted small mb-0">Nomor Tiket: <span id="deleteNoTiketSpan" class="fw-bold text-primary">-</span></p>
-                        <p class="text-muted small">Pemohon: <span id="deleteNamaSpan" class="fw-bold text-dark">-</span></p>
-                    </div>
-                </div>
-                <div class="modal-footer modal-footer-ultra justify-content-center">
-                    <button type="button" class="btn btn-modal-cancel px-4" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger px-4 fw-bold rounded-3 shadow-sm" style="background-color: #dc2626; border: none;">Ya, Hapus Data</button>
-                </div>
-            </form>
+            <div class="modal-body p-4 text-center">
+                <p class="text-muted mb-2">Apakah Anda yakin ingin menghapus data laporan tamu berikut?</p>
+                <h5 id="deleteNoTiketSpan" class="fw-bold text-dark mb-1">-</h5>
+                <p class="fw-semibold text-primary mb-0" id="deleteNamaSpan">-</p>
+            </div>
+            <div class="modal-footer modal-footer-ultra justify-content-center">
+                <button type="button" class="btn btn-modal-cancel px-4" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger px-4 fw-bold rounded-3 shadow-sm" id="confirmDeleteBtn" data-bs-dismiss="modal" style="padding: 10px 22px;">Ya, Hapus</button>
+            </div>
         </div>
     </div>
 </div>
@@ -1131,8 +1132,8 @@
                         <i class="fas fa-filter text-white"></i>
                     </div>
                     <div>
-                        <h5 class="fw-bold mb-0 text-white">Filter & Pencarian Lanjutan</h5>
-                        <small class="text-white-50">Saring data berdasarkan status atau layanan</small>
+                        <h5 class="fw-bold mb-0 text-white">Filter & Cari Data Tamu</h5>
+                        <small class="text-white-50">Saring tabel berdasarkan status dan layanan</small>
                     </div>
                 </div>
                 <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1151,11 +1152,15 @@
                     <label class="offline-form-label">Filter Layanan</label>
                     <select id="filterLayananModal" class="offline-select" style="padding-left: 16px !important;">
                         <option value="">Semua Layanan</option>
-                        <option value="Keuangan">Keuangan</option>
-                        <option value="Beasiswa">Beasiswa</option>
-                        <option value="Kemahasiswaan">Kemahasiswaan</option>
-                        <option value="Informasi Akademik">Informasi Akademik</option>
-                        <option value="Surat Aktif Kuliah">Surat Aktif Kuliah</option>
+                        <option value="Unit Layanan Terpadu">Unit Layanan Terpadu</option>
+                        <option value="Bagian Akademik">Bagian Akademik</option>
+                        <option value="Bagian Keuangan">Bagian Keuangan</option>
+                        <option value="Bagian Kemahasiswaan">Bagian Kemahasiswaan</option>
+                        <option value="Perpustakaan">Perpustakaan</option>
+                        <option value="Jurusan">Jurusan</option>
+                        <option value="UPT Teknologi Informasi dan Komunikasi">UPT Teknologi Informasi dan Komunikasi</option>
+                        <option value="Bagian Administrasi Umum">Bagian Administrasi Umum</option>
+                        <option value="Administrasi Umum">Administrasi Umum</option>
                     </select>
                 </div>
             </div>
@@ -1220,7 +1225,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-
         // ======================================================================
         // DYNAMIC FORM BUILDER UNTUK TAMBAH LAPORAN TAMU
         // ======================================================================
@@ -1256,6 +1260,13 @@
                             </div>
                         </div>
                         <div class="col-md-6">
+                            <label class="offline-form-label">Kelas / Angkatan <span class="required">*</span></label>
+                            <div class="offline-input-group">
+                                <i class="fas fa-users offline-input-icon"></i>
+                                <input type="text" name="kelas" class="offline-input" placeholder="Contoh: 3A / 2023" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
                             <label class="offline-form-label">No. WhatsApp / HP <span class="required">*</span></label>
                             <div class="offline-input-group">
                                 <i class="fas fa-phone offline-input-icon"></i>
@@ -1275,11 +1286,15 @@
                                 <i class="fas fa-concierge-bell offline-input-icon"></i>
                                 <select name="layanan" class="offline-select" required>
                                     <option value="" selected disabled>-- Pilih Layanan --</option>
-                                    <option value="Keuangan">Keuangan</option>
-                                    <option value="Beasiswa">Beasiswa</option>
-                                    <option value="Kemahasiswaan">Kemahasiswaan</option>
-                                    <option value="Informasi Akademik">Informasi Akademik</option>
-                                    <option value="Surat Aktif Kuliah">Surat Aktif Kuliah</option>
+                                    <option value="Unit Layanan Terpadu">Unit Layanan Terpadu</option>
+                                    <option value="Bagian Akademik">Bagian Akademik</option>
+                                    <option value="Bagian Keuangan">Bagian Keuangan</option>
+                                    <option value="Bagian Kemahasiswaan">Bagian Kemahasiswaan</option>
+                                    <option value="Perpustakaan">Perpustakaan</option>
+                                    <option value="Jurusan">Jurusan</option>
+                                    <option value="UPT Teknologi Informasi dan Komunikasi">UPT Teknologi Informasi dan Komunikasi</option>
+                                    <option value="Bagian Administrasi Umum">Bagian Administrasi Umum</option>
+                                    <option value="Administrasi Umum">Administrasi Umum</option>
                                 </select>
                             </div>
                         </div>
@@ -1320,11 +1335,15 @@
                                 <i class="fas fa-concierge-bell offline-input-icon"></i>
                                 <select name="layanan" class="offline-select" required>
                                     <option value="" selected disabled>-- Pilih Layanan --</option>
-                                    <option value="Keuangan">Keuangan</option>
-                                    <option value="Beasiswa">Beasiswa</option>
-                                    <option value="Kemahasiswaan">Kemahasiswaan</option>
-                                    <option value="Informasi Akademik">Informasi Akademik</option>
-                                    <option value="Surat Aktif Kuliah">Surat Aktif Kuliah</option>
+                                    <option value="Unit Layanan Terpadu">Unit Layanan Terpadu</option>
+                                    <option value="Bagian Akademik">Bagian Akademik</option>
+                                    <option value="Bagian Keuangan">Bagian Keuangan</option>
+                                    <option value="Bagian Kemahasiswaan">Bagian Kemahasiswaan</option>
+                                    <option value="Perpustakaan">Perpustakaan</option>
+                                    <option value="Jurusan">Jurusan</option>
+                                    <option value="UPT Teknologi Informasi dan Komunikasi">UPT Teknologi Informasi dan Komunikasi</option>
+                                    <option value="Bagian Administrasi Umum">Bagian Administrasi Umum</option>
+                                    <option value="Administrasi Umum">Administrasi Umum</option>
                                 </select>
                             </div>
                         </div>
@@ -1335,19 +1354,34 @@
         }
 
         // ======================================================================
-        // KARAKTER COUNTER TEXTAREA
+        // RESET MODAL TAMBAH LAPORAN KETIKA DITUTUP (HIDDEN / CANCEL / CLOSE)
         // ======================================================================
-        const addDeskripsi = document.getElementById('addDeskripsi');
+        const modalTambahTamuEl = document.getElementById('modalTambahTamu');
+        const formTambahTamuEl = document.getElementById('formTambahTamu');
+
+        if (modalTambahTamuEl && formTambahTamuEl) {
+            modalTambahTamuEl.addEventListener('hidden.bs.modal', function () {
+                formTambahTamuEl.reset();
+                if (dynamicContainer) {
+                    dynamicContainer.innerHTML = '';
+                }
+            });
+        }
+
+        // ======================================================================
+        // KARAKTER COUNTER UNTUK DESKRIPSI
+        // ======================================================================
+        const descTextarea = document.getElementById('addDeskripsi');
         const charCount = document.getElementById('charCount');
-        if (addDeskripsi && charCount) {
-            addDeskripsi.addEventListener('input', function() {
+        if (descTextarea && charCount) {
+            descTextarea.addEventListener('input', function() {
                 const len = this.value.length;
                 charCount.innerText = `${len} / 500 Karakter`;
             });
         }
 
         // ======================================================================
-        // POPULATE MODALS DARI TOMBOL AKSI TABEL
+        // POPULATE DATA KE MODAL DETAIL, VERIFIKASI, DISPOSISI, EDIT & DELETE
         // ======================================================================
         document.querySelectorAll('.btn-detail-tamu').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -1357,12 +1391,13 @@
                 document.getElementById('dispEmail').innerText = this.getAttribute('data-email');
                 document.getElementById('dispHp').innerText = this.getAttribute('data-hp');
                 document.getElementById('dispInstansi').innerText = this.getAttribute('data-instansi');
+                document.getElementById('dispTanggal').innerText = this.getAttribute('data-tanggal');
                 document.getElementById('dispDeskripsi').innerText = this.getAttribute('data-deskripsi');
 
-                const status = this.getAttribute('data-status');
-                const badge = document.getElementById('dispStatusCurrent');
-                badge.innerText = status;
-                badge.className = 'badge-status ' + (status === 'Verified' ? 'badge-verified' : (status === 'Assigned' ? 'badge-assigned' : 'badge-submitted'));
+                const statusVal = this.getAttribute('data-status');
+                const badgeEl = document.getElementById('dispStatus');
+                badgeEl.innerText = statusVal;
+                badgeEl.className = 'badge-status ' + (statusVal === 'Verified' ? 'badge-verified' : (statusVal === 'Assigned' ? 'badge-assigned' : 'badge-submitted'));
             });
         });
 
@@ -1406,7 +1441,6 @@
             const modalEl = document.getElementById('modalTambahTamu');
             const modalInstance = bootstrap.Modal.getInstance(modalEl);
             if (modalInstance) modalInstance.hide();
-
             showToast('Laporan Berhasil Disimpan!', 'Data laporan tamu (walk-in) baru berhasil ditambahkan ke sistem.', 'success');
             this.reset();
             if (dynamicContainer) dynamicContainer.innerHTML = '';
@@ -1417,7 +1451,6 @@
             const modalEl = document.getElementById('modalVerifikasiTamu');
             const modalInstance = bootstrap.Modal.getInstance(modalEl);
             if (modalInstance) modalInstance.hide();
-
             showToast('Verifikasi Diperbarui!', 'Status verifikasi tiket tamu berhasil diperbarui.', 'success');
         });
 
@@ -1426,7 +1459,6 @@
             const modalEl = document.getElementById('modalDisposisiTamu');
             const modalInstance = bootstrap.Modal.getInstance(modalEl);
             if (modalInstance) modalInstance.hide();
-
             showToast('Disposisi Terkirim!', 'Tiket berhasil didisposisikan ke unit tujuan terkait.', 'success');
         });
 
@@ -1435,59 +1467,43 @@
             const modalEl = document.getElementById('modalEditTiket');
             const modalInstance = bootstrap.Modal.getInstance(modalEl);
             if (modalInstance) modalInstance.hide();
-
-            showToast('Data Diperbarui!', 'Informasi data tiket tamu berhasil disimpan.', 'success');
+            showToast('Perubahan Disimpan!', 'Data tiket tamu berhasil diperbarui.', 'success');
         });
 
-        document.getElementById('formDeleteTiket')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const modalEl = document.getElementById('modalDeleteTiket');
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if (modalInstance) modalInstance.hide();
-
-            showToast('Tiket Dihapus!', 'Data tiket tamu berhasil dihapus dari sistem.', 'danger');
+        document.getElementById('confirmDeleteBtn')?.addEventListener('click', function() {
+            showToast('Tiket Dihapus', 'Data laporan tamu berhasil dihapus dari sistem.', 'danger');
         });
 
         // ======================================================================
-        // REAL-TIME SEARCH, FILTER & KEMBALI BUTTON HANDLER
+        // LIVE SEARCH & FILTER TABLE SYSTEM
         // ======================================================================
         const searchInput = document.getElementById('quickSearchInput');
         const filterStatusModal = document.getElementById('filterStatusModal');
         const filterLayananModal = document.getElementById('filterLayananModal');
-        const resetFilterBtn = document.getElementById('resetFilterBtn');
         const btnKembaliTabel = document.getElementById('btnKembaliTabel');
+        const resetFilterBtn = document.getElementById('resetFilterBtn');
         const rows = document.querySelectorAll('.tamu-row');
-        const emptyState = document.getElementById('emptySearchState');
+        const emptyState = document.getElementById('tabelEmptyState');
         const totalDataBadge = document.getElementById('totalDataBadge');
 
         function filterTable() {
-            const query = searchInput ? searchInput.value.toLowerCase() : '';
-            const statusFilter = filterStatusModal ? filterStatusModal.value : '';
-            const layananFilter = filterLayananModal ? filterLayananModal.value : '';
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const statusVal = filterStatusModal ? filterStatusModal.value : '';
+            const layananVal = filterLayananModal ? filterLayananModal.value : '';
 
             let visibleCount = 0;
-            const isFiltering = (query !== '' || statusFilter !== '' || layananFilter !== '');
 
-            // Munculkan atau sembunyikan tombol kembali secara dinamis
-            if (btnKembaliTabel) {
-                if (isFiltering) {
-                    btnKembaliTabel.classList.remove('d-none');
-                } else {
-                    btnKembaliTabel.classList.add('d-none');
-                }
-            }
-
-            rows.forEach((row, index) => {
+            rows.forEach(row => {
                 const notiket = row.getAttribute('data-notiket').toLowerCase();
                 const nama = row.getAttribute('data-nama');
                 const layanan = row.getAttribute('data-layanan');
                 const status = row.getAttribute('data-status');
 
-                const matchQuery = notiket.includes(query) || nama.includes(query);
-                const matchStatus = !statusFilter || status === statusFilter;
-                const matchLayanan = !layananFilter || layanan === layananFilter;
+                const matchSearch = (notiket.includes(query) || nama.includes(query));
+                const matchStatus = (statusVal === '' || status === statusVal);
+                const matchLayanan = (layananVal === '' || layanan === layananVal);
 
-                if (matchQuery && matchStatus && matchLayanan) {
+                if (matchSearch && matchStatus && matchLayanan) {
                     row.style.display = '';
                     visibleCount++;
                     const numCell = row.querySelector('.row-number');
@@ -1514,7 +1530,6 @@
         if (filterStatusModal) filterStatusModal.addEventListener('change', filterTable);
         if (filterLayananModal) filterLayananModal.addEventListener('change', filterTable);
 
-        // Tombol Kembali Handler
         if (btnKembaliTabel) {
             btnKembaliTabel.addEventListener('click', function() {
                 if (searchInput) searchInput.value = '';

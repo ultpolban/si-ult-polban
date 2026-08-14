@@ -56,9 +56,13 @@ $routes->group('petugas', function($routes){
     $routes->get('verifikasi/(:num)', 'PetugasController::verifikasi/$1');
     $routes->post('verifikasi/simpan', 'PetugasController::simpanVerifikasi');$routes->post('verifikasi/simpan/(:num)', 'PetugasController::simpanVerifikasi/$1');
 
-    // Route Disposisi dengan ID & Form Action
-    $routes->get('disposisi/(:num)', 'PetugasController::disposisi/$1');
-    $routes->post('disposisi/kirim', 'PetugasController::kirimDisposisi');$routes->post('disposisi/kirim/(:num)', 'PetugasController::kirimDisposisi/$1');
+   // Route Disposisi dengan ID & Form Action
+$routes->get('disposisi/(:num)', 'PetugasController::disposisi/$1');
+$routes->post('disposisi/kirim', 'PetugasController::kirimDisposisi');
+$routes->post('disposisi/kirim/(:num)', 'PetugasController::kirimDisposisi/$1');
+
+// PROFILE PETUGAS
+$routes->get('profile', 'PetugasController::profile');
 });
 
 /*

@@ -520,4 +520,10 @@ class PetugasController extends BaseController
             ->back()
             ->with('success', 'Data tiket/tamu berhasil dihapus.');
     }
+
+    public function profile()
+{
+    return view('petugas/profile');
+}
+
 }

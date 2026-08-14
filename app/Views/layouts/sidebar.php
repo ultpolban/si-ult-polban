@@ -38,6 +38,15 @@
                 data-widget="treeview"
                 role="menu">
 
+                </li>
+
+               <a href="<?= base_url('petugas/profile') ?>" class="nav-link">
+    <i class="fas fa-user"></i>
+    <span>Profil</span>
+</a>
+
+                <li class="nav-item">
+
                 <li class="nav-item">
                     <a href="<?= base_url('petugas') ?>" class="nav-link <?= url_is('petugas') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-home"></i>
@@ -62,7 +71,7 @@
                 <li class="nav-item">
                     <a href="<?= base_url('petugas/tiket?status=Verified') ?>" class="nav-link <?= (isset($_GET['status']) && $_GET['status'] == 'Verified') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-share-square"></i>
-                        <p>Disposisi</p>
+                        <p>Disposisi Tiket</p>
                     </a>
                 </li>
 
@@ -92,9 +101,7 @@
                         <i class="nav-icon fas fa-route"></i>
                         <p>Tracking Tiket</p>
                     </a>
-                </li>
-
-                <li class="nav-item">
+                
                     <a href="<?= base_url('logout') ?>" class="nav-link">
                         <i class="nav-icon fas fa-sign-out-alt"></i>
                         <p>Logout</p>

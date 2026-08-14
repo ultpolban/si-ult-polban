@@ -2,77 +2,94 @@
 
 namespace App\Controllers;
 
+use App\Models\UserProfileModel;
+
 class MahasiswaProfileController extends BaseController
 {
-/// =====================================================
+// =====================================================
 // TAMPILKAN PROFILE MAHASISWA
 // =====================================================
 public function index()
 {
-    // =================================================
-    // AMBIL ID USER PROFILE DARI SESSION
-    // =================================================
+    $user = session()->get('user') ?? [];
 
-    $userProfileId = session()->get(
-        'user_profile_id'
-    );
+    // =====================================================
+    // AMBIL ID USER YANG SEDANG LOGIN
+    // =====================================================
 
+    $userId = $user['id'] ?? null;
 
-    // =================================================
-    // CEK SESSION
-    // =================================================
-
-    if (!$userProfileId) {
-
+    if (!$userId) {
         return redirect()
-            ->to(
-                base_url('login')
-            )
+            ->to(base_url('login'))
             ->with(
                 'error',
-                'Session profile tidak ditemukan.'
+                'Session user tidak ditemukan.'
             );
     }
 
 
-    // =================================================
-    // DATABASE
-    // =================================================
+    // =====================================================
+    // MODEL PROFILE
+    // =====================================================
 
-    $db = \Config\Database::connect();
+    $profileModel = new UserProfileModel();
 
 
-    // =================================================
-    // AMBIL DATA PROFILE
-    // =================================================
+    // =====================================================
+    // AMBIL DATA PROFILE + MASTER DATA
+    // =====================================================
 
-    $profile = $db->table(
-        'user_profiles'
+$profile = $profileModel
+    ->select('
+        user_profiles.*,
+
+        user_profiles.name AS nama,
+
+        user_profiles.phone AS no_hp,
+
+        user_profiles.photo AS foto,
+
+        master_study_programs.name AS prodi,
+
+        master_departments.name AS jurusan,
+
+        master_classes.name AS kelas
+    ')
+    ->join(
+        'master_study_programs',
+        'master_study_programs.id = user_profiles.study_program_id',
+        'left'
     )
-        ->where(
-            'id',
-            $userProfileId
-        )
-        ->where(
-            'deleted_at',
-            null
-        )
-        ->get()
-        ->getRowArray();
+    ->join(
+        'master_departments',
+        'master_departments.id = master_study_programs.department_id',
+        'left'
+    )
+    ->join(
+        'master_classes',
+        'master_classes.id = user_profiles.class_id',
+        'left'
+    )
+    ->where(
+        'user_profiles.user_id',
+        $userId
+    )
+    ->where(
+        'user_profiles.deleted_at',
+        null
+    )
+    ->first();
 
 
-    // =================================================
+    // =====================================================
     // PROFILE TIDAK DITEMUKAN
-    // =================================================
+    // =====================================================
 
     if (!$profile) {
 
         return redirect()
-            ->to(
-                base_url(
-                    'dashboard-mahasiswa'
-                )
-            )
+            ->back()
             ->with(
                 'error',
                 'Data profil mahasiswa tidak ditemukan.'
@@ -80,46 +97,15 @@ public function index()
     }
 
 
-    // =================================================
-    // SAMAKAN NAMA DATA DATABASE
-    // DENGAN YANG DIPAKAI VIEW
-    // =================================================
-
-    $profile['nama'] =
-        $profile['name']
-        ?? '-';
-
-    $profile['no_hp'] =
-        $profile['phone']
-        ?? '-';
-
-    $profile['alamat'] =
-        $profile['address']
-        ?? '-';
-
-    $profile['foto'] =
-        $profile['photo']
-        ?? null;
-
-
-    // =================================================
+    // =====================================================
     // DATA YANG DIKIRIM KE VIEW
-    // =================================================
+    // =====================================================
 
     $data = [
-
-        'title' =>
-            'Profil Mahasiswa',
-
-        'profile' =>
-            $profile
-
+        'title'   => 'Profil Mahasiswa',
+        'profile' => $profile
     ];
 
-
-    // =================================================
-    // VIEW
-    // =================================================
 
     return view(
         'mahasiswa/profile/index',

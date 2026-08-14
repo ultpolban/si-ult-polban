@@ -7,14 +7,7 @@ use CodeIgniter\Model;
 class UserProfileModel extends Model
 {
     protected $table = 'user_profiles';
-
     protected $primaryKey = 'id';
-
-    protected $returnType = 'array';
-
-    protected $useSoftDeletes = true;
-
-    protected $deletedField = 'deleted_at';
 
     protected $allowedFields = [
         'user_id',
@@ -35,4 +28,8 @@ class UserProfileModel extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    protected $useTimestamps = true;
+    protected $useSoftDeletes = true;
+    protected $deletedField = 'deleted_at';
 }

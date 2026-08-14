@@ -2,8 +2,10 @@
 
 <?= $this->section('content') ?>
 
+<!-- BARIS 1 -->
 <div class="row">
 
+    <!-- TOTAL -->
     <div class="col-lg-3 col-6">
         <div class="small-box bg-primary">
             <div class="inner">
@@ -16,6 +18,7 @@
         </div>
     </div>
 
+    <!-- SUBMITTED -->
     <div class="col-lg-3 col-6">
         <div class="small-box bg-warning">
             <div class="inner">
@@ -28,8 +31,22 @@
         </div>
     </div>
 
+    <!-- VERIFIED -->
     <div class="col-lg-3 col-6">
         <div class="small-box bg-info">
+            <div class="inner">
+                <h3><?= $verified ?></h3>
+                <p>Verified</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ASSIGNED -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-primary">
             <div class="inner">
                 <h3><?= $assigned ?></h3>
                 <p>Assigned</p>
@@ -40,6 +57,13 @@
         </div>
     </div>
 
+</div>
+
+
+<!-- BARIS 2 -->
+<div class="row">
+
+    <!-- IN PROGRESS -->
     <div class="col-lg-3 col-6">
         <div class="small-box bg-success">
             <div class="inner">
@@ -52,11 +76,8 @@
         </div>
     </div>
 
-</div>
-
-<div class="row">
-
-    <div class="col-lg-4">
+    <!-- COMPLETED -->
+    <div class="col-lg-3 col-6">
         <div class="small-box bg-success">
             <div class="inner">
                 <h3><?= $completed ?></h3>
@@ -68,7 +89,8 @@
         </div>
     </div>
 
-    <div class="col-lg-4">
+    <!-- NEED REVISION -->
+    <div class="col-lg-3 col-6">
         <div class="small-box bg-secondary">
             <div class="inner">
                 <h3><?= $revision ?></h3>
@@ -80,7 +102,8 @@
         </div>
     </div>
 
-    <div class="col-lg-4">
+    <!-- REJECTED -->
+    <div class="col-lg-3 col-6">
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3><?= $rejected ?></h3>
@@ -94,7 +117,40 @@
 
 </div>
 
-<!-- Progress Penyelesaian -->
+
+<!-- STATUS LAIN -->
+<?php if ($other > 0): ?>
+
+<div class="row">
+
+    <div class="col-lg-3 col-6">
+
+        <div class="small-box bg-dark">
+
+            <div class="inner">
+
+                <h3><?= $other ?></h3>
+
+                <p>Status Lainnya</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-question-circle"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<?php endif; ?>
+
+
+<!-- PROGRESS PENYELESAIAN -->
 
 <div class="card">
 
@@ -124,16 +180,15 @@
 
 </div>
 
-<!-- Grafik -->
+
+<!-- GRAFIK -->
 
 <div class="card">
 
     <div class="card-header">
 
         <h3 class="card-title">
-
             Grafik Statistik Tiket
-
         </h3>
 
     </div>
@@ -145,6 +200,7 @@
     </div>
 
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -159,19 +215,14 @@ new Chart(ctx, {
     data: {
 
         labels: [
-
             'Submitted',
-
+            'Verified',
             'Assigned',
-
             'In Progress',
-
             'Completed',
-
-            'Revision',
-
-            'Rejected'
-
+            'Need Revision',
+            'Rejected',
+            'Lainnya'
         ],
 
         datasets: [{
@@ -179,19 +230,14 @@ new Chart(ctx, {
             label: 'Jumlah Tiket',
 
             data: [
-
                 <?= $submitted ?>,
-
+                <?= $verified ?>,
                 <?= $assigned ?>,
-
                 <?= $progress ?>,
-
                 <?= $completed ?>,
-
                 <?= $revision ?>,
-
-                <?= $rejected ?>
-
+                <?= $rejected ?>,
+                <?= $other ?>
             ]
 
         }]
@@ -205,9 +251,7 @@ new Chart(ctx, {
         plugins: {
 
             legend: {
-
                 display: false
-
             }
 
         },
@@ -216,7 +260,11 @@ new Chart(ctx, {
 
             y: {
 
-                beginAtZero: true
+                beginAtZero: true,
+
+                ticks: {
+                    precision: 0
+                }
 
             }
 

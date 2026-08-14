@@ -213,137 +213,172 @@
 
 </form>
 
-        <table class="table table-bordered table-striped">
+       <table class="table table-bordered table-striped">
 
-            <thead style="background:#293582; color:white;">
-                <tr>
-                    <th>No. Tiket</th>
-                    <th>Nama Pemohon</th>
-                    <th>NIM</th>
-                    <th>Layanan</th>
-                    <th>Sumber</th>
-                    <th>Status</th>
-                    <th width="170">Aksi</th>
-                </tr>
-            </thead>
+    <thead style="background:#293582; color:white;">
+        <tr>
+            <th width="50">No</th>
+            <th>No. Tiket</th>
+            <th>Nama Pemohon</th>
+            <th>NIM</th>
+            <th>Layanan</th>
+            <th>Sumber</th>
+            <th>Status</th>
+            <th width="170">Aksi</th>
+        </tr>
+    </thead>
 
-            <tbody>
+    <tbody>
 
-            <?php if(empty($tickets)): ?>
+    <?php if(empty($tickets)): ?>
 
-                <tr>
-                    <td colspan="7" class="text-center">
-                        Tidak ada data tiket.
-                    </td>
-                </tr>
+        <tr>
+            <td colspan="8" class="text-center">
+                Tidak ada data tiket.
+            </td>
+        </tr>
 
-            <?php else: ?>
+    <?php else: ?>
 
-               
+        <?php
+// Nomor selalu dimulai dari 1 di setiap halaman
+$no = 1;
+?>
 
-                <?php foreach($tickets as $ticket): ?>
+        <?php foreach($tickets as $ticket): ?>
 
-                <?php
-                    $badge = 'secondary';
+            <?php
+                $badge = 'secondary';
 
-                    switch($ticket['status']){
-                        case 'Submitted':
-                            $badge = 'warning';
-                            break;
-                        case 'Verified':
-                            $badge = 'success';
-                           break;
-                        case 'Need Revision':
-                            $badge = 'primary';
-                            break;
-                        case 'Rejected':
-                            $badge = 'danger';
-                            break;
-                        case 'Assigned':
-                            $badge = 'info';
-                            break;
-                        case 'Completed':
-                            $badge = 'dark';
-                            break;
-                    }
-                ?>
+                switch($ticket['status']){
+                    case 'Submitted':
+                        $badge = 'warning';
+                        break;
 
-                <tr>
+                    case 'Verified':
+                        $badge = 'success';
+                        break;
 
-                   
+                    case 'Need Revision':
+                        $badge = 'primary';
+                        break;
 
-                    <td><?= esc($ticket['ticket_number']) ?></td>
+                    case 'Rejected':
+                        $badge = 'danger';
+                        break;
 
-                    <td><?= esc($ticket['applicant_name']) ?></td>
+                    case 'Assigned':
+                        $badge = 'info';
+                        break;
 
-                    <td><?= esc($ticket['nim']) ?></td>
+                    case 'Completed':
+                        $badge = 'dark';
+                        break;
+                }
+            ?>
 
-                    <td><?= esc($ticket['service_name']) ?></td>
+            <tr>
 
-                 <td>
-    <?php if(($ticket['submission_type'] ?? '') == 'Walk In'): ?>
+                <!-- NO -->
+                <td>
+                    <?= $no++ ?>
+                </td>
 
-    <span class="badge badge-info">
-        Walk In
-    </span>
+                <!-- NO TIKET -->
+                <td>
+                    <?= esc($ticket['ticket_number']) ?>
+                </td>
 
-<?php else: ?>
+                <!-- NAMA -->
+                <td>
+                    <?= esc($ticket['applicant_name']) ?>
+                </td>
 
-    <span class="badge badge-secondary">
-        Online
-    </span>
+                <!-- NIM -->
+                <td>
+                    <?= esc($ticket['nim']) ?>
+                </td>
+
+                <!-- LAYANAN -->
+                <td>
+                    <?= esc($ticket['service_name']) ?>
+                </td>
+
+                <!-- SUMBER -->
+                <td>
+                    <?php if(($ticket['submission_type'] ?? '') == 'Walk In'): ?>
+
+                        <span class="badge badge-info">
+                            Walk In
+                        </span>
+
+                    <?php else: ?>
+
+                        <span class="badge badge-secondary">
+                            Online
+                        </span>
+
+                    <?php endif; ?>
+                </td>
+
+                <!-- STATUS -->
+                <td>
+                    <span class="badge badge-<?= $badge ?>">
+                        <?= esc($ticket['status']) ?>
+                    </span>
+                </td>
+
+                <!-- AKSI -->
+                <td class="text-center">
+
+                    <!-- DETAIL -->
+                    <a href="<?= base_url('verification/detail/' . $ticket['id']) ?>"
+                       class="btn btn-info btn-sm"
+                       title="Detail">
+
+                        <i class="fas fa-eye"></i>
+
+                    </a>
+
+                    <!-- VERIFIKASI -->
+                    <a href="<?= base_url('verification/verify/' . $ticket['id']) ?>"
+                       class="btn btn-success btn-sm"
+                       title="Verifikasi">
+
+                        <i class="fas fa-check"></i>
+
+                    </a>
+
+                    <!-- DISPOSISI -->
+                    <a href="<?= base_url('disposition/create/' . $ticket['id']) ?>"
+                       class="btn btn-primary btn-sm"
+                       title="Disposisi">
+
+                        <i class="fas fa-share"></i>
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+        <?php endforeach; ?>
+
+    <?php endif; ?>
+
+    </tbody>
+
+</table>
+
+
+<!-- PAGINATION -->
+<?php if (!empty($tickets)): ?>
+
+<div class="d-flex justify-content-center mt-3">
+        <?= $pager->links() ?>
+    </div>
 
 <?php endif; ?>
-</td>
-
-                    <td>
-                        <span class="badge badge-<?= $badge ?>">
-                            <?= esc($ticket['status']) ?>
-                        </span>
-                    </td>
-
-                 <td class="text-center">
-
-    <!-- DETAIL -->
-    <a href="<?= base_url('verification/detail/' . $ticket['id']) ?>"
-       class="btn btn-info btn-sm"
-       title="Detail">
-
-        <i class="fas fa-eye"></i>
-
-    </a>
-
-
-    <!-- VERIFIKASI -->
-    <a href="<?= base_url('verification/verify/' . $ticket['id']) ?>"
-       class="btn btn-success btn-sm"
-       title="Verifikasi">
-
-        <i class="fas fa-check"></i>
-
-    </a>
-
-
-    <!-- DISPOSISI -->
-    <a href="<?= base_url('disposition/create/' . $ticket['id']) ?>"
-       class="btn btn-primary btn-sm"
-       title="Disposisi">
-
-        <i class="fas fa-share"></i>
-
-    </a>
-
-</td>
-
-                                </tr>
-
-                <?php endforeach; ?>
-
-            <?php endif; ?>
-
-            </tbody>
-
-        </table>
 
     </div>
 

@@ -14,40 +14,56 @@ class DataTicket extends BaseController
     }
 
     // Semua tiket
-   public function index()
-{
-    $keyword = $this->request->getGet('keyword');
-    $status = $this->request->getGet('status');
-    $submission_type = $this->request->getGet('submission_type');
+    public function index()
+    {
+        $keyword = $this->request->getGet('keyword');
+        $status = $this->request->getGet('status');
+        $submission_type = $this->request->getGet('submission_type');
 
-    $builder = $this->ticketModel;
+        $builder = $this->ticketModel;
 
-    if (!empty($keyword)) {
-        $builder->groupStart()
-            ->like('ticket_number', $keyword)
-            ->orLike('applicant_name', $keyword)
-            ->orLike('nim', $keyword)
-            ->orLike('service_name', $keyword)
-            ->groupEnd();
-    }
+        // =========================
+        // PENCARIAN
+        // =========================
+        if (!empty($keyword)) {
+            $builder->groupStart()
+                ->like('ticket_number', $keyword)
+                ->orLike('applicant_name', $keyword)
+                ->orLike('nim', $keyword)
+                ->orLike('service_name', $keyword)
+                ->groupEnd();
+        }
 
-    if (!empty($status)) {
-        $builder->where('status', $status);
-    }
+        // =========================
+        // FILTER STATUS
+        // =========================
+        if (!empty($status)) {
+            $builder->where('status', $status);
+        }
 
-    if (!empty($submission_type)) {
-        $builder->where('submission_type', $submission_type);
-    }
+        // =========================
+        // FILTER JENIS
+        // =========================
+        if (!empty($submission_type)) {
+            $builder->where('submission_type', $submission_type);
+        }
 
-    $data = [
-        'keyword' => $keyword,
-        'status' => $status,
-        'submission_type' => $submission_type,
-        'tickets' => $builder
+        // =========================
+        // PAGINATION
+        // MAKSIMAL 10 TIKET / HALAMAN
+        // =========================
+        $tickets = $builder
             ->orderBy('submitted_at', 'DESC')
-            ->findAll(),
-    ];
+            ->paginate(10);
 
-    return view('datatiket/index', $data);
-}
+        $data = [
+            'keyword'        => $keyword,
+            'status'         => $status,
+            'submission_type'=> $submission_type,
+            'tickets'        => $tickets,
+            'pager'          => $this->ticketModel->pager,
+        ];
+
+        return view('datatiket/index', $data);
+    }
 }

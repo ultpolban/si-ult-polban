@@ -10,86 +10,91 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 class VerificationController extends BaseController
 {
     public function index()
-    {
-        $ticketModel = new TicketModel();
+{
+    $ticketModel = new TicketModel();
 
-        // Ambil filter
-        $keyword = trim($this->request->getGet('keyword') ?? '');
-        $status = trim($this->request->getGet('status') ?? '');
-        $submission_type = trim($this->request->getGet('submission_type') ?? '');
+    // Ambil filter
+    $keyword = trim($this->request->getGet('keyword') ?? '');
+    $status = trim($this->request->getGet('status') ?? '');
+    $submission_type = trim($this->request->getGet('submission_type') ?? '');
 
-        // =========================
-        // FILTER TIKET
-        // =========================
-        $builder = $ticketModel;
+    // =========================
+    // FILTER TIKET
+    // =========================
+    $builder = $ticketModel;
 
-        // Filter status
-        if ($status !== '') {
-            $builder->where('status', $status);
-        }
-
-        // Filter pencarian
-        if ($keyword !== '') {
-            $builder->groupStart()
-                ->like('ticket_number', $keyword)
-                ->orLike('applicant_name', $keyword)
-                ->orLike('nim', $keyword)
-                ->orLike('service_name', $keyword)
-                ->groupEnd();
-        }
-
-        // Filter sumber
-        if ($submission_type !== '') {
-            $builder->where('submission_type', $submission_type);
-        }
-
-        // Ambil tiket
-        $tickets = $builder
-            ->orderBy('submitted_at', 'DESC')
-            ->findAll();
-
-        // =========================
-        // DATA UNTUK VIEW
-        // =========================
-        $data = [
-            'keyword' => $keyword,
-            'status' => $status,
-            'submission_type' => $submission_type,
-            'tickets' => $tickets,
-
-            // Statistik
-            'submitted' => (new TicketModel())
-                ->where('status', 'Submitted')
-                ->countAllResults(),
-
-            'assigned' => (new TicketModel())
-                ->where('status', 'Assigned')
-                ->countAllResults(),
-
-            'verified' => (new TicketModel())
-                ->where('status', 'Verified')
-                ->countAllResults(),
-
-            'progress' => (new TicketModel())
-                ->where('status', 'In Progress')
-                ->countAllResults(),
-
-            'completed' => (new TicketModel())
-                ->where('status', 'Completed')
-                ->countAllResults(),
-
-            'revision' => (new TicketModel())
-                ->where('status', 'Need Revision')
-                ->countAllResults(),
-
-            'rejected' => (new TicketModel())
-                ->where('status', 'Rejected')
-                ->countAllResults(),
-        ];
-
-        return view('verification/index', $data);
+    // Filter status
+    if ($status !== '') {
+        $builder->where('status', $status);
     }
 
+    // Filter pencarian
+    if ($keyword !== '') {
+        $builder->groupStart()
+            ->like('ticket_number', $keyword)
+            ->orLike('applicant_name', $keyword)
+            ->orLike('nim', $keyword)
+            ->orLike('service_name', $keyword)
+            ->groupEnd();
+    }
+
+    // Filter sumber
+    if ($submission_type !== '') {
+        $builder->where('submission_type', $submission_type);
+    }
+
+    // =========================
+    // PAGINATION
+    // 10 TIKET PER HALAMAN
+    // =========================
+    $tickets = $builder
+        ->orderBy('submitted_at', 'DESC')
+        ->paginate(10, 'default');
+
+    // =========================
+    // DATA UNTUK VIEW
+    // =========================
+    $data = [
+        'keyword' => $keyword,
+        'status' => $status,
+        'submission_type' => $submission_type,
+        'tickets' => $tickets,
+
+        // Pager
+        'pager' => $ticketModel->pager,
+
+        // Statistik
+        'submitted' => (new TicketModel())
+            ->where('status', 'Submitted')
+            ->countAllResults(),
+
+        'assigned' => (new TicketModel())
+            ->where('status', 'Assigned')
+            ->countAllResults(),
+
+        'verified' => (new TicketModel())
+            ->where('status', 'Verified')
+            ->countAllResults(),
+
+        'progress' => (new TicketModel())
+            ->where('status', 'In Progress')
+            ->countAllResults(),
+
+        'completed' => (new TicketModel())
+            ->where('status', 'Completed')
+            ->countAllResults(),
+
+        'revision' => (new TicketModel())
+            ->where('status', 'Need Revision')
+            ->countAllResults(),
+
+        'rejected' => (new TicketModel())
+            ->where('status', 'Rejected')
+            ->countAllResults(),
+    ];
+
+    return view('verification/index', $data);
+}
 
     public function detail($id = null)
     {

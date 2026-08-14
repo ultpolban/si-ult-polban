@@ -24,29 +24,46 @@ class DispositionController extends BaseController
     }
 
     // Detail disposisi
-    public function detail($id)
-    {
-        $data['ticket'] = $this->ticketModel->find($id);
+ public function detail($id)
+{
+    $ticketModel = new TicketModel();
 
-        if (!$data['ticket']) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        }
+    $ticket = $ticketModel->find($id);
 
-        return view('disposition/detail', $data);
+    if (!$ticket) {
+        return redirect()->to('/disposition')
+            ->with('error', 'Tiket tidak ditemukan.');
     }
+
+    return view('disposition/detail', [
+        'ticket' => $ticket
+    ]);
+}
 
     // Proses kirim ke unit
 public function process($id)
 {
-    $data = [
-        'assigned_unit' => $this->request->getPost('assigned_unit'),
-        'priority'      => $this->request->getPost('priority'),
-        'status'        => 'Assigned',
-    ];
+    $ticketModel = new TicketModel();
 
-    $this->ticketModel->update($id, $data);
+    $ticket = $ticketModel->find($id);
 
-    return redirect()->to(base_url('disposition'))
-        ->with('success', 'Tiket berhasil didisposisikan.');
+    if (!$ticket) {
+        return redirect()->back()
+            ->with('error', 'Tiket tidak ditemukan.');
+    }
+
+    // Unit tujuan otomatis dari tiket
+    $unitTujuan = $ticket['assigned_unit'];
+
+    // Instruksi dari petugas
+    $instruction = $this->request->getPost('instruction');
+
+    $ticketModel->update($id, [
+        'assigned_unit' => $unitTujuan,
+        'status'       => 'Assigned',
+    ]);
+
+    return redirect()->to('/disposition')
+        ->with('success', 'Tiket berhasil didisposisikan ke unit ' . $unitTujuan);
 }
 }

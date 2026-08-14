@@ -13,7 +13,7 @@ class TrackingController extends BaseController
     public function __construct()
     {
         $this->ticketModel = new TicketModel();
-        $this->logModel = new TicketLogModel();
+        $this->logModel    = new TicketLogModel();
     }
 
     /**
@@ -24,10 +24,11 @@ class TrackingController extends BaseController
         $tickets = $this->getTrackingTickets();
 
         return view('tracking/index', [
-            'ticket'  => null,
-            'logs'    => [],
-            'tickets' => $tickets,
-            'error'   => session()->getFlashdata('error')
+            'ticket'   => null,
+            'logs'     => [],
+            'tickets'  => $tickets,
+            'error'    => session()->getFlashdata('error'),
+            'isSearch' => false
         ]);
     }
 
@@ -52,14 +53,21 @@ class TrackingController extends BaseController
 
         if (!$ticket) {
             return view('tracking/index', [
-                'ticket'  => null,
-                'logs'    => [],
-                'tickets' => $this->getTrackingTickets(),
-                'error'   => 'Nomor tiket tidak ditemukan.'
+                'ticket'   => null,
+                'logs'     => [],
+                'tickets'  => [],
+                'error'    => 'Nomor tiket tidak ditemukan.',
+                'isSearch' => true
             ]);
         }
 
-        return $this->showDetail($ticket);
+        return view('tracking/index', [
+            'ticket'   => null,
+            'logs'     => [],
+            'tickets'  => [$ticket],
+            'error'    => null,
+            'isSearch' => true
+        ]);
     }
 
     /**
@@ -111,6 +119,7 @@ class TrackingController extends BaseController
          */
 
         switch ($status) {
+
             case 'Completed':
                 $progressStep = 5;
                 break;
@@ -121,6 +130,10 @@ class TrackingController extends BaseController
 
             case 'Assigned':
                 $progressStep = 3;
+                break;
+
+            case 'Verified':
+                $progressStep = 2;
                 break;
 
             default:
@@ -159,15 +172,75 @@ class TrackingController extends BaseController
     }
 
     /**
+     * ==========================================================
+     * DUMMY TEST
+     * ==========================================================
+     *
+     * Digunakan hanya untuk mencoba perubahan status tiket
+     * dari Assigned -> In Progress -> Completed.
+     *
+     * Nanti fungsi ini bisa dihapus setelah testing selesai.
+     */
+    public function dummy($ticketNumber, $status)
+    {
+        $ticket = $this->ticketModel
+            ->where('ticket_number', $ticketNumber)
+            ->first();
+
+        // Tiket tidak ditemukan
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('tracking'))
+                ->with('error', 'Nomor tiket tidak ditemukan.');
+        }
+
+        // Status yang boleh digunakan untuk dummy
+        $allowedStatus = [
+            'Assigned',
+            'In Progress',
+            'Completed'
+        ];
+
+        if (!in_array($status, $allowedStatus)) {
+            return redirect()
+                ->to(base_url('tracking/detail/' . $ticketNumber))
+                ->with('error', 'Status dummy tidak valid.');
+        }
+
+        $updateData = [
+            'status'     => $status,
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        // Jika selesai, simpan waktu selesai
+        if ($status === 'Completed') {
+            $updateData['completed_at'] = date('Y-m-d H:i:s');
+        }
+
+        $this->ticketModel
+            ->where('ticket_number', $ticketNumber)
+            ->set($updateData)
+            ->update();
+
+        return redirect()->to(
+            base_url('tracking/detail/' . $ticketNumber)
+        );
+    }
+
+    /**
      * Hitung lama proses
      */
-    private function calculateDuration($submittedAt, $updatedAt = null, $status = null)
-    {
+    private function calculateDuration(
+        $submittedAt,
+        $updatedAt = null,
+        $status = null
+    ) {
         if (empty($submittedAt)) {
             return '-';
         }
 
         try {
+
             $mulai = new \DateTime($submittedAt);
 
             if ($status === 'Completed' && !empty($updatedAt)) {
@@ -182,7 +255,9 @@ class TrackingController extends BaseController
             $jam  = (int) $selisih->h;
 
             return $hari . ' Hari ' . $jam . ' Jam';
+
         } catch (\Throwable $e) {
+
             return '-';
         }
     }

@@ -10,11 +10,16 @@ class StatisticsController extends BaseController
     {
         $ticketModel = new TicketModel();
 
-        // Hitung jumlah tiap status
+        // Total seluruh tiket
         $total = $ticketModel->countAll();
 
+        // Hitung berdasarkan status
         $submitted = $ticketModel
             ->where('status', 'Submitted')
+            ->countAllResults();
+
+        $verified = $ticketModel
+            ->where('status', 'Verified')
             ->countAllResults();
 
         $assigned = $ticketModel
@@ -37,7 +42,19 @@ class StatisticsController extends BaseController
             ->where('status', 'Rejected')
             ->countAllResults();
 
-        // Persentase tiket selesai
+        // Status lain yang mungkin ada di database
+        $knownStatusTotal =
+            $submitted +
+            $verified +
+            $assigned +
+            $progress +
+            $completed +
+            $revision +
+            $rejected;
+
+        $other = max(0, $total - $knownStatusTotal);
+
+        // Persentase penyelesaian
         $progressPercent = 0;
 
         if ($total > 0) {
@@ -45,14 +62,16 @@ class StatisticsController extends BaseController
         }
 
         $data = [
-            'total'            => $total,
-            'submitted'        => $submitted,
-            'assigned'         => $assigned,
-            'progress'         => $progress,
-            'completed'        => $completed,
-            'revision'         => $revision,
-            'rejected'         => $rejected,
-            'progressPercent'  => $progressPercent
+            'total'           => $total,
+            'submitted'       => $submitted,
+            'verified'        => $verified,
+            'assigned'        => $assigned,
+            'progress'        => $progress,
+            'completed'       => $completed,
+            'revision'        => $revision,
+            'rejected'        => $rejected,
+            'other'           => $other,
+            'progressPercent' => $progressPercent
         ];
 
         return view('statistics/index', $data);

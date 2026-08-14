@@ -274,23 +274,21 @@ Verified (60%)
         <div class="form-group">
             <label>Unit Tujuan <span class="text-danger">*</span></label>
 
-            <select name="assigned_unit" class="form-control" required>
+         <div class="form-group">
 
-                <option value="">-- Pilih Unit --</option>
+    <input type="text"
+           class="form-control"
+           value="<?= esc($ticket['assigned_unit'] ?? '-') ?>"
+           readonly>
 
-                <option value="Akademik">Akademik</option>
+    <input type="hidden"
+           name="assigned_unit"
+           value="<?= esc($ticket['assigned_unit'] ?? '') ?>">
 
-                <option value="Kemahasiswaan">Kemahasiswaan</option>
-
-                <option value="Keuangan">Keuangan</option>
-
-                <option value="SDM">SDM</option>
-
-                <option value="UPT Perpustakaan">UPT Perpustakaan</option>
-
-                <option value="UPT TIK">UPT TIK</option>
-
-            </select>
+    <small class="text-muted">
+        Unit tujuan ditentukan otomatis berdasarkan tiket.
+    </small>
+</div>
 
         </div>
 

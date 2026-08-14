@@ -270,9 +270,6 @@
                                             Keterangan
                                         </th>
 
-                                        <th>
-                                            Dokumen
-                                        </th>
 
                                         <th>
                                             Status
@@ -373,67 +370,6 @@
                                                     ]
                                                     ?? '-'
                                                 ) ?>
-
-                                            </td>
-
-
-
-                                            <!-- DOKUMEN -->
-
-                                            <td>
-
-                                                <?php if (
-                                                    !empty(
-                                                        $ticket[
-                                                            'dokumen'
-                                                        ]
-                                                    )
-                                                ) : ?>
-
-
-                                                    <a
-                                                        href="<?= base_url(
-                                                            'uploads/dokumen/' .
-                                                            $ticket[
-                                                                'dokumen'
-                                                            ]
-                                                        ) ?>"
-                                                        target="_blank"
-                                                        class="
-                                                            btn
-                                                            btn-sm
-                                                            btn-primary
-                                                        "
-                                                    >
-
-                                                        <i
-                                                            class="
-                                                                fas
-                                                                fa-file-alt
-                                                                mr-1
-                                                            "
-                                                        ></i>
-
-                                                        Lihat
-
-                                                    </a>
-
-
-                                                <?php else : ?>
-
-
-                                                    <span
-                                                        class="
-                                                            text-muted
-                                                        "
-                                                    >
-
-                                                        Tidak Ada
-
-                                                    </span>
-
-
-                                                <?php endif; ?>
 
                                             </td>
 
@@ -756,6 +692,5 @@
     </section>
 
 </div>
-
 
 <?= $this->include('layouts/footer') ?>

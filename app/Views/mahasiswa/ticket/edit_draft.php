@@ -1,7 +1,5 @@
 <?= $this->include('layouts/header') ?>
-
 <?= $this->include('layouts/navbar') ?>
-
 <?= $this->include('layouts/sidebar_mahasiswa') ?>
 
 
@@ -21,8 +19,7 @@
 
                     <h1
                         class="font-weight-bold"
-                        style="color:#0b3d91;"
-                    >
+                        style="color:#0b3d91;">
 
                         <i class="fas fa-edit mr-2"></i>
 
@@ -90,8 +87,7 @@
                     style="
                         background-color:#0b3d91;
                         border-bottom:4px solid #f28c28;
-                    "
-                >
+                    ">
 
                     <h5 class="mb-0">
 
@@ -109,12 +105,11 @@
                 <div class="card-body">
 
                     <form
-    action="<?= base_url(
-        'mahasiswa/ticket/update-draft/' . $draft['id']
-    ) ?>"
-    method="post"
-    enctype="multipart/form-data"
->
+                        action="<?= base_url(
+                                    'mahasiswa/ticket/update-draft/' . $draft['id']
+                                ) ?>"
+                        method="post"
+                        enctype="multipart/form-data">
 
                         <?= csrf_field() ?>
 
@@ -134,33 +129,23 @@
                             </label>
 
                             <select
-                                name="unit_layanan"
+                                name="unit_id"
                                 id="unit_layanan"
                                 class="form-control"
-                                required
-                            >
+                                required>
 
                                 <option value="">
-
                                     -- Pilih Unit Layanan --
-
                                 </option>
 
                                 <?php foreach ($units as $unit): ?>
 
                                     <option
                                         value="<?= $unit['id'] ?>"
-                                        <?= (
-                                            $draft['service_unit_id']
-                                            == $unit['id']
-                                        )
+                                        <?= (int)$draft['service_unit_id'] === (int)$unit['id']
                                             ? 'selected'
-                                            : ''
-                                        ?>
-                                    >
-
+                                            : '' ?>>
                                         <?= esc($unit['name']) ?>
-
                                     </option>
 
                                 <?php endforeach; ?>
@@ -185,34 +170,24 @@
                             </label>
 
                             <select
-                                name="service_id"
-                                id="service_id"
+                                name="jenis_layanan"
+                                id="layanan"
                                 class="form-control"
-                                required
-                            >
+                                required>
 
                                 <option value="">
-
                                     -- Pilih Jenis Layanan --
-
                                 </option>
 
                                 <?php foreach ($services as $service): ?>
 
                                     <option
                                         value="<?= $service['id'] ?>"
-                                        data-unit="<?= $service['service_unit_id'] ?>"
-                                        <?= (
-                                            $draft['service_id']
-                                            == $service['id']
-                                        )
+                                        data-unit-id="<?= $service['service_unit_id'] ?>"
+                                        <?= (int)$draft['service_id'] === (int)$service['id']
                                             ? 'selected'
-                                            : ''
-                                        ?>
-                                    >
-
+                                            : '' ?>>
                                         <?= esc($service['name']) ?>
-
                                     </option>
 
                                 <?php endforeach; ?>
@@ -240,218 +215,157 @@
                                 name="description"
                                 class="form-control"
                                 rows="5"
-                                placeholder="Masukkan keterangan pengajuan..."
-                            ><?= esc($draft['description'] ?? '') ?></textarea>
+                                placeholder="Masukkan keterangan pengajuan..."><?= esc($draft['description'] ?? '') ?></textarea>
 
                         </div>
 
                         <!-- ==========================================
-     DOKUMEN PERSYARATAN
+     PERSYARATAN DOKUMEN
 ========================================== -->
 
-<div class="form-group mt-4">
+                        <div class="mb-4">
 
-    <label class="font-weight-bold">
+                            <label class="font-weight-bold">
+                                Persyaratan Dokumen
+                            </label>
 
-        <i class="fas fa-file-upload mr-1"></i>
+                            <div id="requirements-container">
 
-        Dokumen Persyaratan
+                                <?php if (!empty($requirements)): ?>
 
-    </label>
+                                    <?php foreach ($requirements as $requirement): ?>
 
+                                        <?php
+                                        $oldFile =
+                                            $uploadedFiles[$requirement['id']] ?? null;
+                                        ?>
 
-    <?php if (!empty($requirements)): ?>
+                                        <div
+                                            class="card mb-3 requirement-item"
+                                            data-requirement-id="<?= $requirement['id'] ?>">
 
-        <div class="alert alert-info">
+                                            <div class="card-body">
 
-            <i class="fas fa-info-circle mr-2"></i>
+                                                <label class="font-weight-bold">
 
-            Silakan upload semua dokumen yang dipersyaratkan
-            untuk layanan ini.
+                                                    <?= esc(
+                                                        $requirement['name']
+                                                    ) ?>
 
-        </div>
+                                                    <?php if (
+                                                        $requirement['is_required']
+                                                    ): ?>
 
+                                                        <span class="text-danger">
+                                                            *
+                                                        </span>
 
-        <?php foreach ($requirements as $requirement): ?>
+                                                    <?php endif; ?>
 
-            <?php
-
-                $requirementId = $requirement['id'];
-
-                $existingFile =
-                    $uploadedFiles[$requirementId] ?? null;
-
-            ?>
-
-
-            <div
-                class="card mb-3 border"
-            >
-
-                <div class="card-body">
-
-
-                    <div class="row">
+                                                </label>
 
 
-                        <!-- INFORMASI PERSYARATAN -->
+                                                <?php if (
+                                                    !empty($requirement['description'])
+                                                ): ?>
 
-                        <div class="col-md-7">
+                                                    <p class="text-muted mb-2">
 
-                            <h6
-                                class="font-weight-bold"
-                                style="color:#17365d;"
-                            >
+                                                        <?= esc(
+                                                            $requirement['description']
+                                                        ) ?>
 
-                                <?= esc(
-                                    $requirement['name']
-                                ) ?>
+                                                    </p>
+
+                                                <?php endif; ?>
 
 
-                                <?php if (
-                                    $requirement['is_required']
-                                ): ?>
+                                                <?php if ($oldFile): ?>
 
-                                    <span class="text-danger">
-                                        *
-                                    </span>
+                                                    <div
+                                                        class="alert alert-success">
+
+                                                        <i
+                                                            class="fas fa-check-circle mr-1"></i>
+
+                                                        Dokumen sudah diupload:
+
+                                                        <strong>
+                                                            <?= esc(
+                                                                $oldFile['original_name']
+                                                            ) ?>
+                                                        </strong>
+
+                                                    </div>
+
+                                                <?php else: ?>
+
+                                                    <div
+                                                        class="alert alert-warning">
+
+                                                        <i
+                                                            class="fas fa-exclamation-circle mr-1"></i>
+
+                                                        Dokumen belum diupload.
+
+                                                    </div>
+
+                                                <?php endif; ?>
+
+
+                                                <input
+                                                    type="file"
+                                                    name="dokumen[<?= $requirement['id'] ?>]"
+                                                    class="form-control"
+                                                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx">
+
+
+                                                <small class="text-muted">
+
+                                                    Maksimal:
+                                                    <?= esc(
+                                                        $requirement['max_file_size']
+                                                            ?? 2048
+                                                    ) ?>
+                                                    KB
+
+                                                    <?php if (
+                                                        !empty($requirement['allowed_extensions'])
+                                                    ): ?>
+
+                                                        <br>
+
+                                                        Format:
+                                                        <?= esc(
+                                                            $requirement['allowed_extensions']
+                                                        ) ?>
+
+                                                    <?php endif; ?>
+
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                    <?php endforeach; ?>
+
+                                <?php else: ?>
+
+                                    <div class="alert alert-info">
+
+                                        <i class="fas fa-info-circle mr-1"></i>
+
+                                        Tidak ada persyaratan dokumen
+                                        untuk layanan ini.
+
+                                    </div>
 
                                 <?php endif; ?>
-
-                            </h6>
-
-
-                            <?php if (
-                                !empty(
-                                    $requirement['description']
-                                )
-                            ): ?>
-
-                                <small class="text-muted">
-
-                                    <?= esc(
-                                        $requirement['description']
-                                    ) ?>
-
-                                </small>
-
-                            <?php endif; ?>
-
-
-                            <div class="mt-2">
-
-                                <small class="text-muted">
-
-                                    Format:
-                                    <?= esc(
-                                        $requirement[
-                                            'allowed_extensions'
-                                        ] ?? 'pdf,jpg,jpeg,png,doc,docx'
-                                    ) ?>
-
-                                    <br>
-
-                                    Maksimal:
-                                    <?= esc(
-                                        $requirement[
-                                            'max_file_size'
-                                        ] ?? 2048
-                                    ) ?>
-                                    KB
-
-                                </small>
 
                             </div>
 
                         </div>
-
-
-                        <!-- FILE -->
-
-                        <div class="col-md-5">
-
-
-                            <?php if ($existingFile): ?>
-
-                                <div
-                                    class="alert alert-success py-2"
-                                >
-
-                                    <i
-                                        class="fas fa-check-circle mr-1"
-                                    ></i>
-
-                                    Dokumen sudah diupload
-
-                                    <br>
-
-                                    <small>
-
-                                        <?= esc(
-                                            $existingFile[
-                                                'original_name'
-                                            ]
-                                        ) ?>
-
-                                    </small>
-
-                                </div>
-
-
-                                <input
-                                    type="file"
-                                    name="documents[<?= $requirementId ?>]"
-                                    class="form-control"
-                                >
-
-                                <small class="text-muted">
-
-                                    Upload file baru jika ingin
-                                    mengganti dokumen.
-
-                                </small>
-
-
-                            <?php else: ?>
-
-                                <input
-                                    type="file"
-                                    name="documents[<?= $requirementId ?>]"
-                                    class="form-control"
-                                    <?= $requirement['is_required']
-                                        ? 'required'
-                                        : '' ?>
-                                >
-
-                            <?php endif; ?>
-
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-        <?php endforeach; ?>
-
-
-    <?php else: ?>
-
-        <div class="alert alert-warning">
-
-            <i class="fas fa-exclamation-triangle mr-2"></i>
-
-            Tidak ada persyaratan dokumen untuk layanan ini.
-
-        </div>
-
-    <?php endif; ?>
-
-</div>
-
 
                         <!-- ==================================
                              TOMBOL
@@ -461,10 +375,9 @@
 
                             <a
                                 href="<?= base_url(
-                                    'mahasiswa/ticket/draft'
-                                ) ?>"
-                                class="btn btn-secondary"
-                            >
+                                            'mahasiswa/ticket/draft'
+                                        ) ?>"
+                                class="btn btn-secondary">
 
                                 <i class="fas fa-arrow-left mr-1"></i>
 
@@ -475,17 +388,24 @@
 
                             <button
                                 type="submit"
+                                name="action"
+                                value="draft"
+                                class="btn btn-outline-primary">
+                                <i class="fas fa-save mr-1"></i>
+                                Simpan Draft
+                            </button>
+
+                            <button
+                                type="submit"
+                                name="action"
+                                value="submit"
                                 class="btn text-white"
                                 style="
-                                    background-color:#f28c28;
-                                    border-color:#f28c28;
-                                "
-                            >
-
-                                <i class="fas fa-save mr-1"></i>
-
-                                Simpan Draft
-
+                                background:#0b3d91;
+                                border-color:#0b3d91;
+                                ">
+                                <i class="fas fa-paper-plane mr-1"></i>
+                                Ajukan
                             </button>
 
                         </div>
@@ -502,60 +422,297 @@
 
 </div>
 
-
 <script>
+    document.addEventListener(
+        'DOMContentLoaded',
+        function() {
 
-document.addEventListener('DOMContentLoaded', function () {
+            const unit =
+                document.getElementById(
+                    'unit_layanan'
+                );
 
-    const unitSelect = document.getElementById('unit_layanan');
+            const layanan =
+                document.getElementById(
+                    'layanan'
+                );
 
-    const serviceSelect = document.getElementById('service_id');
+            const container =
+                document.getElementById(
+                    'requirements-container'
+                );
 
-    function filterServices() {
 
-        const selectedUnit = unitSelect.value;
+            function filterServices() {
 
-        const options = serviceSelect.querySelectorAll('option');
+                const unitId =
+                    unit.value;
 
-        options.forEach(function (option) {
 
-            if (!option.value) {
-                return;
+                Array.from(
+                    layanan.options
+                ).forEach(function(option) {
+
+                    if (!option.value) {
+                        return;
+                    }
+
+
+                    option.hidden =
+                        option.dataset.unitId !==
+                        unitId;
+                });
+
+
+                if (
+                    layanan.value &&
+                    layanan.selectedOptions[0] &&
+                    layanan.selectedOptions[0]
+                    .dataset.unitId !== unitId
+                ) {
+
+                    layanan.value = '';
+
+                    container.innerHTML = '';
+                }
             }
 
-            const unitId = option.getAttribute('data-unit');
 
-            if (
-                selectedUnit === ''
-                ||
-                unitId === selectedUnit
+            unit.addEventListener(
+                'change',
+                function() {
+
+                    filterServices();
+
+                    layanan.value = '';
+
+                    container.innerHTML = '';
+
+                }
+            );
+
+
+            layanan.addEventListener(
+                'change',
+                function() {
+
+                    const serviceId =
+                        this.value;
+
+
+                    if (!serviceId) {
+
+                        container.innerHTML = '';
+
+                        return;
+                    }
+
+
+                    fetch(
+                            '<?= base_url(
+                                    'mahasiswa/ticket/persyaratan'
+                                ) ?>?service_id=' +
+                            serviceId
+                        )
+                        .then(
+                            response =>
+                            response.json()
+                        )
+                        .then(
+                            result => {
+
+                                if (
+                                    !result.success
+                                ) {
+
+                                    container.innerHTML =
+                                        '<div class="alert alert-danger">' +
+                                        'Persyaratan gagal dimuat.' +
+                                        '</div>';
+
+                                    return;
+                                }
+
+
+                                renderRequirements(
+                                    result.data
+                                );
+
+                            }
+                        )
+                        .catch(
+                            error => {
+
+                                console.error(error);
+
+                                container.innerHTML =
+                                    '<div class="alert alert-danger">' +
+                                    'Terjadi kesalahan saat memuat persyaratan.' +
+                                    '</div>';
+                            }
+                        );
+
+                }
+            );
+
+
+            function renderRequirements(
+                requirements
             ) {
 
-                option.style.display = '';
+                if (
+                    !requirements.length
+                ) {
 
-            } else {
+                    container.innerHTML =
+                        '<div class="alert alert-info">' +
+                        '<i class="fas fa-info-circle mr-1"></i>' +
+                        'Tidak ada persyaratan dokumen untuk layanan ini.' +
+                        '</div>';
 
-                option.style.display = 'none';
-
-                if (option.selected) {
-                    option.selected = false;
+                    return;
                 }
 
+
+                let html = '';
+
+
+                requirements.forEach(
+                    function(requirement) {
+
+                        html += `
+
+                        <div
+                            class="card mb-3"
+                        >
+
+                            <div class="card-body">
+
+                                <label
+                                    class="font-weight-bold"
+                                >
+
+                                    ${escapeHtml(
+                                        requirement.name
+                                    )}
+
+                                    ${
+                                        requirement.is_required == 1
+                                        ? '<span class="text-danger">*</span>'
+                                        : ''
+                                    }
+
+                                </label>
+
+                                ${
+                                    requirement.description
+                                    ? `
+                                        <p class="text-muted">
+                                            ${escapeHtml(
+                                                requirement.description
+                                            )}
+                                        </p>
+                                    `
+                                    : ''
+                                }
+
+                                <input
+                                    type="file"
+                                    name="dokumen[${requirement.id}]"
+                                    class="form-control"
+                                >
+
+                                <small
+                                    class="text-muted"
+                                >
+
+                                    Maksimal
+                                    ${requirement.max_file_size || 2048}
+                                    KB
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    `;
+                    }
+                );
+
+
+                container.innerHTML = html;
             }
 
-        });
 
-    }
+            function escapeHtml(text) {
 
-    unitSelect.addEventListener(
-        'change',
-        filterServices
+                const div =
+                    document.createElement('div');
+
+                div.textContent =
+                    text ?? '';
+
+                return div.innerHTML;
+            }
+
+
+            filterServices();
+
+        }
     );
+</script>
 
-    filterServices();
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
 
-});
+        const unitSelect = document.getElementById('unit_layanan');
 
+        const serviceSelect = document.getElementById('service_id');
+
+        function filterServices() {
+
+            const selectedUnit = unitSelect.value;
+
+            const options = serviceSelect.querySelectorAll('option');
+
+            options.forEach(function(option) {
+
+                if (!option.value) {
+                    return;
+                }
+
+                const unitId = option.getAttribute('data-unit');
+
+                if (
+                    selectedUnit === '' ||
+                    unitId === selectedUnit
+                ) {
+
+                    option.style.display = '';
+
+                } else {
+
+                    option.style.display = 'none';
+
+                    if (option.selected) {
+                        option.selected = false;
+                    }
+
+                }
+
+            });
+
+        }
+
+        unitSelect.addEventListener(
+            'change',
+            filterServices
+        );
+
+        filterServices();
+
+    });
 </script>
 
 

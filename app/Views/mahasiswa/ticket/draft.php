@@ -282,20 +282,22 @@
     </td>
 
     <!-- DOKUMEN -->
-    <td>
+   <td class="text-center">
 
-    <?php if (!empty($draft['document_complete'])): ?>
+    <?php if (
+        !empty($draft['document_complete'])
+    ): ?>
 
-        <span class="badge bg-success">
+        <span class="badge badge-success">
             <i class="fas fa-check-circle mr-1"></i>
             Selesai
         </span>
 
     <?php else: ?>
 
-        <span class="badge bg-warning text-dark">
-            <i class="fas fa-clock mr-1"></i>
-            Belum Lengkap
+        <span class="badge badge-warning">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            Belum lengkap
         </span>
 
     <?php endif; ?>

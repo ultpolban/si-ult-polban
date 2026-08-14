@@ -4,106 +4,128 @@ namespace App\Controllers;
 
 class MahasiswaProfileController extends BaseController
 {
-    // =====================================================
-    // TAMPILKAN PROFILE MAHASISWA
-    // =====================================================
-    public function index()
-    {
-        // Ambil data user dari session
-        $user = session()->get('user') ?? [];
+/// =====================================================
+// TAMPILKAN PROFILE MAHASISWA
+// =====================================================
+public function index()
+{
+    // =================================================
+    // AMBIL ID USER PROFILE DARI SESSION
+    // =================================================
 
-        // Ambil data profile mahasiswa
-        $profile = session()->get('mahasiswa_profile') ?? [];
-
-
-        // =====================================================
-        // JIKA PROFILE BELUM ADA
-        // GUNAKAN DATA DEFAULT SEMENTARA
-        // =====================================================
-
-        if (empty($profile)) {
-
-            $profile = [
-
-                // ==============================
-                // DATA PRIBADI
-                // ==============================
-
-                'nama' => $user['nama']
-                    ?? 'Muhamad Rafi Putra Zakaria',
-
-                'nim' => $user['nim']
-                    ?? '45678',
-
-                'nik' => $user['nik']
-                    ?? '',
-
-                'email' => $user['email']
-                    ?? 'mochrafiputrazakaria@gmail.com',
-
-                'no_hp' => $user['no_hp']
-                    ?? '083123456788',
-
-                'jenis_kelamin' => $user['jenis_kelamin']
-                    ?? 'Laki-laki',
-
-                'alamat' => $user['alamat']
-                    ?? 'Jl Babakan Radio',
-
-                'foto' => $user['foto']
-                    ?? null,
+    $userProfileId = session()->get(
+        'user_profile_id'
+    );
 
 
-                // ==============================
-                // INFORMASI AKADEMIK
-                // ==============================
+    // =================================================
+    // CEK SESSION
+    // =================================================
 
-                'prodi' => $user['prodi']
-                    ?? 'D3 Teknik Informatika',
+    if (!$userProfileId) {
 
-                'fakultas' => $user['fakultas']
-                    ?? 'Sekolah Vokasi',
-
-                'jurusan' => $user['jurusan']
-                    ?? 'Teknik Komputer dan Informatika',
-
-                'semester' => $user['semester']
-                    ?? 4,
-
-                'angkatan' => $user['angkatan']
-                    ?? 2022,
-
-                'status' => $user['status']
-                    ?? 'Aktif'
-            ];
-
-
-            // Simpan data awal ke session
-            session()->set(
-                'mahasiswa_profile',
-                $profile
+        return redirect()
+            ->to(
+                base_url('login')
+            )
+            ->with(
+                'error',
+                'Session profile tidak ditemukan.'
             );
-        }
-
-
-        // =====================================================
-        // DATA YANG DIKIRIM KE VIEW
-        // =====================================================
-
-        $data = [
-
-            'title' => 'Profil Mahasiswa',
-
-            'profile' => $profile
-
-        ];
-
-
-        return view(
-            'mahasiswa/profile/index',
-            $data
-        );
     }
+
+
+    // =================================================
+    // DATABASE
+    // =================================================
+
+    $db = \Config\Database::connect();
+
+
+    // =================================================
+    // AMBIL DATA PROFILE
+    // =================================================
+
+    $profile = $db->table(
+        'user_profiles'
+    )
+        ->where(
+            'id',
+            $userProfileId
+        )
+        ->where(
+            'deleted_at',
+            null
+        )
+        ->get()
+        ->getRowArray();
+
+
+    // =================================================
+    // PROFILE TIDAK DITEMUKAN
+    // =================================================
+
+    if (!$profile) {
+
+        return redirect()
+            ->to(
+                base_url(
+                    'dashboard-mahasiswa'
+                )
+            )
+            ->with(
+                'error',
+                'Data profil mahasiswa tidak ditemukan.'
+            );
+    }
+
+
+    // =================================================
+    // SAMAKAN NAMA DATA DATABASE
+    // DENGAN YANG DIPAKAI VIEW
+    // =================================================
+
+    $profile['nama'] =
+        $profile['name']
+        ?? '-';
+
+    $profile['no_hp'] =
+        $profile['phone']
+        ?? '-';
+
+    $profile['alamat'] =
+        $profile['address']
+        ?? '-';
+
+    $profile['foto'] =
+        $profile['photo']
+        ?? null;
+
+
+    // =================================================
+    // DATA YANG DIKIRIM KE VIEW
+    // =================================================
+
+    $data = [
+
+        'title' =>
+            'Profil Mahasiswa',
+
+        'profile' =>
+            $profile
+
+    ];
+
+
+    // =================================================
+    // VIEW
+    // =================================================
+
+    return view(
+        'mahasiswa/profile/index',
+        $data
+    );
+}
 
 
     // =====================================================

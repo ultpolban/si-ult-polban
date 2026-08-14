@@ -2,267 +2,605 @@
 <?= $this->include('layouts/navbar') ?>
 <?= $this->include('layouts/sidebar_mahasiswa') ?>
 
+<?php
+    $ticketNumber = $ticket['ticket_number'] ?? '-';
+    $serviceName  = $ticket['service_name'] ?? $ticket['service_name'] ?? '-';
+    $status       = $ticket['status'] ?? 'submitted';
+    $createdAt    = $ticket['created_at'] ?? $ticket['submitted_at'] ?? null;
+
+    // Format tanggal
+    $formattedDate = '-';
+
+    if (!empty($createdAt)) {
+        $timestamp = strtotime($createdAt);
+
+        if ($timestamp) {
+            $formattedDate = date('d F Y, H:i', $timestamp);
+        }
+    }
+
+    // Status tampilan
+    $statusLabel = 'Menunggu Verifikasi';
+    $statusClass = 'status-warning';
+
+    if ($status === 'submitted') {
+        $statusLabel = 'Menunggu Verifikasi';
+        $statusClass = 'status-warning';
+    } elseif ($status === 'verified') {
+        $statusLabel = 'Terverifikasi';
+        $statusClass = 'status-info';
+    } elseif ($status === 'processing') {
+        $statusLabel = 'Sedang Diproses';
+        $statusClass = 'status-info';
+    } elseif ($status === 'completed') {
+        $statusLabel = 'Selesai';
+        $statusClass = 'status-success';
+    }
+?>
+
+<style>
+    /* ==========================================
+       SUCCESS PAGE
+    ========================================== */
+
+    .success-page {
+        background: #f4f6f9;
+        min-height: calc(100vh - 57px);
+        padding: 35px 20px 50px;
+    }
+
+    .success-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    /* ==========================================
+       SUCCESS HEADER
+    ========================================== */
+
+    .success-card {
+        background: #ffffff;
+        border-radius: 18px;
+        border: none;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .success-top {
+        text-align: center;
+        padding: 45px 30px 35px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    .success-icon {
+        width: 82px;
+        height: 82px;
+        margin: 0 auto 20px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #e8f7ee;
+        border: 5px solid #c8efd8;
+        border-radius: 50%;
+
+        color: #198754;
+        font-size: 38px;
+    }
+
+    .success-title {
+        color: #0b3d91;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .success-subtitle {
+        color: #6c757d;
+        font-size: 15px;
+        margin-bottom: 0;
+    }
+
+    /* ==========================================
+       TICKET NUMBER
+    ========================================== */
+
+    .ticket-box {
+        margin: 30px auto 0;
+        max-width: 500px;
+        background: #f8faff;
+        border: 2px dashed #0b3d91;
+        border-radius: 14px;
+        padding: 20px;
+    }
+
+    .ticket-label {
+        color: #6c757d;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .ticket-number-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .ticket-number {
+        color: #0b3d91;
+        font-size: 25px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        word-break: break-word;
+    }
+
+    .copy-ticket {
+        border: none;
+        background: transparent;
+        color: #0b3d91;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 5px 8px;
+    }
+
+    .copy-ticket:hover {
+        color: #f28c28;
+    }
+
+    /* ==========================================
+       INFORMATION
+    ========================================== */
+
+    .section-title {
+        color: #17365d;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 18px;
+    }
+
+    .info-section {
+        padding: 30px;
+    }
+
+    .info-item {
+        height: 100%;
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 18px;
+        border-left: 4px solid #0b3d91;
+    }
+
+    .info-icon {
+        width: 38px;
+        height: 38px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #eaf1ff;
+        border-radius: 10px;
+
+        color: #0b3d91;
+        margin-bottom: 12px;
+    }
+
+    .info-label {
+        color: #6c757d;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        color: #17365d;
+        font-weight: 700;
+        font-size: 15px;
+        word-break: break-word;
+    }
+
+    /* ==========================================
+       STATUS
+    ========================================== */
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+
+        padding: 7px 12px;
+        border-radius: 20px;
+
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .status-warning {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-info {
+        background: #cff4fc;
+        color: #055160;
+    }
+
+    .status-success {
+        background: #d1e7dd;
+        color: #0f5132;
+    }
+
+    /* ==========================================
+       TIMELINE
+    ========================================== */
+
+    .timeline-section {
+        padding: 0 30px 30px;
+    }
+
+    .timeline {
+        position: relative;
+        margin-top: 25px;
+    }
+
+    .timeline-item {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        padding-bottom: 25px;
+    }
+
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+
+    .timeline-line {
+        position: absolute;
+        left: 17px;
+        top: 35px;
+        bottom: -5px;
+        width: 2px;
+        background: #dee2e6;
+    }
+
+    .timeline-item:last-child .timeline-line {
+        display: none;
+    }
+
+    .timeline-icon {
+        position: relative;
+        z-index: 2;
+
+        width: 36px;
+        height: 36px;
+
+        flex-shrink: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: #eaf1ff;
+        color: #0b3d91;
+    }
+
+    .timeline-item.active .timeline-icon {
+        background: #0b3d91;
+        color: #ffffff;
+        box-shadow: 0 0 0 5px #eaf1ff;
+    }
+
+    .timeline-content {
+        padding-left: 15px;
+    }
+
+    .timeline-title {
+        color: #17365d;
+        font-weight: 700;
+        margin-bottom: 3px;
+        font-size: 14px;
+    }
+
+    .timeline-description {
+        color: #6c757d;
+        font-size: 13px;
+        margin-bottom: 0;
+    }
+
+    /* ==========================================
+       BUTTON
+    ========================================== */
+
+    .action-section {
+        padding: 25px 30px 35px;
+        border-top: 1px solid #eeeeee;
+        text-align: center;
+    }
+
+    .btn-tracking {
+        background: #0b3d91;
+        border: 2px solid #0b3d91;
+        color: #ffffff;
+
+        font-weight: 600;
+        border-radius: 9px;
+
+        padding: 11px 24px;
+        min-width: 180px;
+    }
+
+    .btn-tracking:hover {
+        background: #082f70;
+        border-color: #082f70;
+        color: #ffffff;
+    }
+
+    .btn-dashboard {
+        background: #ffffff;
+        border: 2px solid #0b3d91;
+        color: #0b3d91;
+
+        font-weight: 600;
+        border-radius: 9px;
+
+        padding: 11px 24px;
+        min-width: 180px;
+    }
+
+    .btn-dashboard:hover {
+        background: #0b3d91;
+        color: #ffffff;
+    }
+
+    .help-text {
+        margin-top: 18px;
+        color: #6c757d;
+        font-size: 12px;
+    }
+
+    .help-text i {
+        color: #f28c28;
+    }
+
+    /* ==========================================
+       RESPONSIVE
+    ========================================== */
+
+    @media (max-width: 576px) {
+
+        .success-page {
+            padding: 20px 12px 35px;
+        }
+
+        .success-top {
+            padding: 35px 20px 30px;
+        }
+
+        .success-title {
+            font-size: 23px;
+        }
+
+        .ticket-number {
+            font-size: 20px;
+        }
+
+        .info-section,
+        .timeline-section {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .action-section {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .btn-tracking,
+        .btn-dashboard {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+    }
+</style>
+
+
+<!-- =====================================================
+     CONTENT
+====================================================== -->
+
 <div class="content-wrapper">
 
-    <section class="content">
+    <div class="success-page">
 
-        <div class="container-fluid pt-4 pb-4">
+        <div class="success-container">
 
-            <div class="row justify-content-center">
+            <div class="success-card">
 
-                <div class="col-lg-8 col-md-10">
+                <!-- =========================================
+                     SUCCESS HEADER
+                ========================================== -->
 
-                    <div class="card shadow-lg border-0">
+                <div class="success-top">
 
-                        <!-- HEADER -->
-                        <div class="card-header text-center border-0"
-                             style="
-                                background: linear-gradient(135deg, #0b3d91, #174a96);
-                                color: white;
-                                padding: 28px 20px;
-                             ">
+                    <div class="success-icon">
 
-                            <div class="mb-2">
-                                <i class="fas fa-check-circle"
-                                   style="font-size:55px;">
-                                </i>
-                            </div>
+                        <i class="fas fa-check"></i>
 
-                            <h3 class="font-weight-bold mb-1">
-                                Pengajuan Berhasil!
-                            </h3>
+                    </div>
 
-                            <p class="mb-0" style="opacity: .9;">
-                                Pengajuan layanan kamu berhasil dikirim
-                            </p>
+
+                    <h1 class="success-title">
+
+                        Pengajuan Berhasil Dikirim
+
+                    </h1>
+
+
+                    <p class="success-subtitle">
+
+                        Pengajuan layanan Anda telah berhasil
+                        dikirim dan tercatat dalam sistem SI-ULT POLBAN.
+
+                    </p>
+
+
+                    <!-- NOMOR TIKET -->
+
+                    <div class="ticket-box">
+
+                        <div class="ticket-label">
+
+                            Nomor Tiket Anda
 
                         </div>
 
 
-                        <!-- BODY -->
-                        <div class="card-body text-center p-4 p-md-5">
+                        <div class="ticket-number-wrapper">
 
-                            <!-- ICON SUCCESS -->
+                            <span
+                                class="ticket-number"
+                                id="ticketNumber">
 
-                            <div class="mb-3">
+                                <?= esc($ticketNumber) ?>
 
-                                <div style="
-                                    width:85px;
-                                    height:85px;
-                                    border-radius:50%;
-                                    background:#e8f5e9;
-                                    display:flex;
-                                    align-items:center;
-                                    justify-content:center;
-                                    margin:auto;
-                                ">
+                            </span>
 
-                                    <i class="fas fa-check"
-                                       style="
-                                            font-size:42px;
-                                            color:#198754;
-                                       ">
-                                    </i>
+
+                            <button
+                                type="button"
+                                class="copy-ticket"
+                                onclick="copyTicket()"
+                                title="Salin nomor tiket">
+
+                                <i class="far fa-copy"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     INFORMASI PENGAJUAN
+                ========================================== -->
+
+                <div class="info-section">
+
+                    <h5 class="section-title">
+
+                        <i class="fas fa-info-circle mr-2"></i>
+
+                        Informasi Pengajuan
+
+                    </h5>
+
+
+                    <div class="row">
+
+                        <!-- JENIS LAYANAN -->
+
+                        <div class="col-md-4 mb-3">
+
+                            <div class="info-item">
+
+                                <div class="info-icon">
+
+                                    <i class="fas fa-list-alt"></i>
+
+                                </div>
+
+
+                                <div class="info-label">
+
+                                    Jenis Layanan
+
+                                </div>
+
+
+                                <div class="info-value">
+
+                                   <?= esc($ticket['service_name'] ?? '-') ?>
 
                                 </div>
 
                             </div>
 
-
-                            <h4 class="font-weight-bold mb-2">
-                                Pengajuan Layanan Berhasil Dikirim
-                            </h4>
-
-                            <p class="text-muted mb-4">
-                                Pengajuan kamu telah berhasil diterima oleh
-                                sistem ULT POLBAN dan sedang menunggu proses
-                                verifikasi.
-                            </p>
+                        </div>
 
 
-                            <!-- NOMOR TIKET -->
+                        <!-- STATUS -->
 
-                            <div class="ticket-box mb-4"
-                                 style="
-                                    background:#f4f7fb;
-                                    border:2px dashed #174a96;
-                                    border-radius:12px;
-                                    padding:25px 15px;
-                                 ">
+                        <div class="col-md-4 mb-3">
 
-                                <div class="text-muted mb-2">
-                                    <i class="fas fa-ticket-alt"></i>
-                                    Nomor Tiket Kamu
+                            <div class="info-item">
+
+                                <div class="info-icon">
+
+                                    <i class="fas fa-tasks"></i>
+
                                 </div>
 
-                                <h2 class="font-weight-bold mb-2"
-                                    style="
-                                        color:#174a96;
-                                        letter-spacing:2px;
-                                    ">
 
-                                    <?= esc($ticket['nomor_tiket']) ?>
+                                <div class="info-label">
 
-                                </h2>
+                                    Status Pengajuan
 
-                                <small class="text-muted">
-                                    Simpan nomor tiket ini untuk melihat
-                                    perkembangan pengajuan kamu.
-                                </small>
-
-                            </div>
+                                </div>
 
 
-                            <!-- INFORMASI PENGAJUAN -->
+                                <div class="info-value">
 
-                            <div class="text-left mb-4">
+                                    <span
+                                        class="status-badge <?= esc($statusClass) ?>">
 
-                                <h5 class="font-weight-bold mb-3"
-                                    style="color:#174a96;">
+                                        <i class="fas fa-clock"></i>
 
-                                    <i class="fas fa-file-alt"></i>
-                                    Informasi Pengajuan
+                                        <?= esc($statusLabel) ?>
 
-                                </h5>
-
-
-                                <div class="table-responsive">
-
-                                    <table class="table table-bordered mb-0">
-
-                                        <tr>
-
-                                            <th style="width:35%; background:#f8f9fa;">
-                                                Nama Pemohon
-                                            </th>
-
-                                            <td>
-                                                <?= esc($ticket['nama_pemohon']) ?>
-                                            </td>
-
-                                        </tr>
-
-
-                                        <tr>
-
-                                            <th style="background:#f8f9fa;">
-                                                Unit Layanan
-                                            </th>
-
-                                            <td>
-                                                <?= esc($ticket['unit_layanan']) ?>
-                                            </td>
-
-                                        </tr>
-
-
-                                        <tr>
-
-                                            <th style="background:#f8f9fa;">
-                                                Jenis Layanan
-                                            </th>
-
-                                            <td>
-                                                <?= esc($ticket['jenis_layanan']) ?>
-                                            </td>
-
-                                        </tr>
-
-
-                                        <tr>
-
-                                            <th style="background:#f8f9fa;">
-                                                Status
-                                            </th>
-
-                                            <td>
-
-                                                <span class="badge badge-warning px-3 py-2">
-
-                                                    <i class="fas fa-clock"></i>
-
-                                                    <?= esc($ticket['status']) ?>
-
-                                                </span>
-
-                                            </td>
-
-                                        </tr>
-
-                                    </table>
+                                    </span>
 
                                 </div>
 
                             </div>
 
+                        </div>
 
-                            <!-- INFO -->
 
-                            <div class="alert alert-light border text-left">
+                        <!-- TANGGAL -->
 
-                                <div class="d-flex">
+                        <div class="col-md-4 mb-3">
 
-                                    <div class="mr-3">
+                            <div class="info-item">
 
-                                        <i class="fas fa-info-circle"
-                                           style="
-                                                color:#174a96;
-                                                font-size:24px;
-                                           ">
-                                        </i>
+                                <div class="info-icon">
 
-                                    </div>
-
-                                    <div>
-
-                                        <strong>
-                                            Informasi
-                                        </strong>
-
-                                        <p class="mb-0 mt-1 text-muted">
-
-                                            Gunakan nomor tiket untuk
-                                            memantau proses pengajuan layanan
-                                            kamu melalui halaman Tracking Tiket.
-
-                                        </p>
-
-                                    </div>
+                                    <i class="far fa-calendar-alt"></i>
 
                                 </div>
 
-                            </div>
+
+                                <div class="info-label">
+
+                                    Tanggal Pengajuan
+
+                                </div>
 
 
-                            <hr class="my-4">
+                                <div class="info-value">
 
+                                    <?= esc($formattedDate) ?>
 
-                            <!-- BUTTON -->
-
-                            <div class="d-flex justify-content-center flex-wrap">
-
-                                <a href="<?= base_url('mahasiswa/ticket/history') ?>"
-                                   class="btn btn-primary mr-2 mb-2 px-4"
-                                   style="
-                                        background:#174a96;
-                                        border-color:#174a96;
-                                   ">
-
-                                    <i class="fas fa-search mr-1"></i>
-
-                                    Tracking Tiket
-
-                                </a>
-
-
-                                <a href="<?= base_url('mahasiswa/dashboard') ?>"
-                                   class="btn btn-outline-secondary mb-2 px-4">
-
-                                    <i class="fas fa-home mr-1"></i>
-
-                                    Dashboard
-
-                                </a>
+                                </div>
 
                             </div>
 
@@ -270,19 +608,161 @@
 
                     </div>
 
+                </div>
 
-                    <!-- FOOTER INFO -->
 
-                    <div class="text-center mt-3">
+                <!-- =========================================
+                     TIMELINE
+                ========================================== -->
 
-                        <small class="text-muted">
+                <div class="timeline-section">
 
-                            <i class="fas fa-university"></i>
+                    <h5 class="section-title">
 
-                            Unit Layanan Terpadu
-                            Politeknik Negeri Bandung
+                        <i class="fas fa-route mr-2"></i>
 
-                        </small>
+                        Tahapan Pengajuan
+
+                    </h5>
+
+
+                    <div class="timeline">
+
+                        <!-- STEP 1 -->
+
+                        <div class="timeline-item active">
+
+                            <div class="timeline-line"></div>
+
+                            <div class="timeline-icon">
+
+                                <i class="fas fa-check"></i>
+
+                            </div>
+
+
+                            <div class="timeline-content">
+
+                                <div class="timeline-title">
+
+                                    Pengajuan diterima
+
+                                </div>
+
+                                <p class="timeline-description">
+
+                                    Pengajuan Anda telah berhasil
+                                    dikirim ke sistem SI-ULT POLBAN.
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- STEP 2 -->
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-line"></div>
+
+                            <div class="timeline-icon">
+
+                                <i class="fas fa-user-check"></i>
+
+                            </div>
+
+
+                            <div class="timeline-content">
+
+                                <div class="timeline-title">
+
+                                    Menunggu verifikasi petugas
+
+                                </div>
+
+                                <p class="timeline-description">
+
+                                    Petugas akan memeriksa data dan
+                                    dokumen persyaratan Anda.
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- STEP 3 -->
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-icon">
+
+                                <i class="fas fa-cogs"></i>
+
+                            </div>
+
+
+                            <div class="timeline-content">
+
+                                <div class="timeline-title">
+
+                                    Proses layanan
+
+                                </div>
+
+                                <p class="timeline-description">
+
+                                    Pengajuan akan diproses oleh
+                                    unit layanan terkait.
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     ACTION BUTTON
+                ========================================== -->
+
+                <div class="action-section">
+
+                    <a
+                        href="<?= base_url('mahasiswa/ticket/history') ?>"
+                        class="btn btn-tracking mr-2">
+
+                        <i class="fas fa-ticket-alt mr-2"></i>
+
+                        Lihat Tracking
+
+                    </a>
+
+
+                    <a
+                        href="<?= base_url('dashboard-mahasiswa') ?>"
+                        class="btn btn-dashboard">
+
+                        <i class="fas fa-home mr-2"></i>
+
+                        Dashboard
+
+                    </a>
+
+
+                    <div class="help-text">
+
+                        <i class="fas fa-lightbulb mr-1"></i>
+
+                        Simpan nomor tiket Anda untuk memudahkan
+                        pengecekan status pengajuan.
 
                     </div>
 
@@ -292,8 +772,51 @@
 
         </div>
 
-    </section>
+    </div>
 
 </div>
+
+
+<script>
+
+function copyTicket() {
+
+    const ticketElement =
+        document.getElementById('ticketNumber');
+
+    const ticketNumber =
+        ticketElement.innerText.trim();
+
+    navigator.clipboard.writeText(ticketNumber)
+        .then(function () {
+
+            const button =
+                document.querySelector('.copy-ticket');
+
+            const original =
+                button.innerHTML;
+
+            button.innerHTML =
+                '<i class="fas fa-check"></i>';
+
+            setTimeout(function () {
+
+                button.innerHTML = original;
+
+            }, 1500);
+
+        })
+        .catch(function () {
+
+            alert(
+                'Nomor tiket: ' + ticketNumber
+            );
+
+        });
+
+}
+
+</script>
+
 
 <?= $this->include('layouts/footer') ?>

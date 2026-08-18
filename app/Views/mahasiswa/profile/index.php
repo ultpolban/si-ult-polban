@@ -26,10 +26,6 @@
         $profile['no_hp']
         ?? '-';
 
-    $jenisKelamin =
-        $profile['jenis_kelamin']
-        ?? '-';
-
     $alamat =
         $profile['alamat']
         ?? '-';
@@ -661,42 +657,6 @@
 
                             </div>
 
-
-                            <!-- JENIS KELAMIN -->
-
-                            <div class="row mb-3">
-
-                                <div
-                                    class="
-                                        col-sm-4
-                                        font-weight-bold
-                                    "
-                                >
-
-                                    <i
-                                        class="
-                                            fas
-                                            fa-venus-mars
-                                            text-primary
-                                            mr-2
-                                        "
-                                    ></i>
-
-                                    Jenis Kelamin
-
-                                </div>
-
-                                <div class="col-sm-8">
-
-                                    <?= esc(
-                                        $jenisKelamin
-                                    ) ?>
-
-                                </div>
-
-                            </div>
-
-
                             <!-- ALAMAT -->
 
                             <div class="row mb-3">
@@ -863,8 +823,7 @@
                                 mb-3
                             "
                         >
-
-                            <div
+                         <div
                                 style="
                                     background:#f5f8fc;
                                     padding:20px;
@@ -874,7 +833,6 @@
                                     height:100%;
                                 "
                             >
-
                                 <small
                                     class="text-muted"
                                 >
@@ -896,10 +854,7 @@
                             </div>
 
                         </div>
-
-
                         <!-- ANGKATAN -->
-
                         <div
                             class="
                                 col-lg-3
@@ -907,7 +862,6 @@
                                 mb-3
                             "
                         >
-
                             <div
                                 style="
                                     background:#f5f8fc;
@@ -936,22 +890,12 @@
                                     ) ?>
 
                                 </h5>
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </section>
-
 </div>
-
-
 <?= $this->include('layouts/footer'); ?>

@@ -6,112 +6,254 @@ use App\Models\UserProfileModel;
 
 class MahasiswaProfileController extends BaseController
 {
-// =====================================================
-// TAMPILKAN PROFILE MAHASISWA
-// =====================================================
-public function index()
-{
-    $user = session()->get('user') ?? [];
-
     // =====================================================
-    // AMBIL ID USER YANG SEDANG LOGIN
+    // AMBIL USER ID YANG SEDANG LOGIN
     // =====================================================
+    private function getUserId()
+    {
+        $userId = session()->get('user_id');
 
-    $userId = $user['id'] ?? null;
+        // Alternatif jika project menggunakan session user
+        if (!$userId) {
+            $user = session()->get('user');
 
-    if (!$userId) {
-        return redirect()
-            ->to(base_url('login'))
-            ->with(
-                'error',
-                'Session user tidak ditemukan.'
-            );
+            if (is_array($user)) {
+                $userId = $user['id'] ?? null;
+            }
+        }
+
+        return $userId;
     }
 
 
     // =====================================================
-    // MODEL PROFILE
+    // AMBIL DATA PROFILE DARI DATABASE
     // =====================================================
+    private function getProfile($userId)
+    {
+        $db = \Config\Database::connect();
 
-    $profileModel = new UserProfileModel();
+        $builder = $db->table('user_profiles up');
 
+        $builder->select('
+            up.id,
+            up.user_id,
+            up.applicant_type_id,
 
-    // =====================================================
-    // AMBIL DATA PROFILE + MASTER DATA
-    // =====================================================
+            up.student_name,
+            up.institution_name,
+            up.position,
 
-$profile = $profileModel
-    ->select('
-        user_profiles.*,
+            up.nim,
+            up.nik,
 
-        user_profiles.name AS nama,
+            up.name AS nama,
+            up.email,
 
-        user_profiles.phone AS no_hp,
+            up.phone AS no_hp,
+            up.address AS alamat,
+            up.photo AS foto,
 
-        user_profiles.photo AS foto,
+            up.study_program_id,
+            up.class_id,
 
-        master_study_programs.name AS prodi,
+            mc.name AS nama_kelas,
+            mc.code AS kode_kelas,
+            mc.level AS semester,
+            mc.parallel_class,
+            mc.entry_year AS angkatan,
 
-        master_departments.name AS jurusan,
+            msp.name AS prodi,
+            msp.code AS kode_prodi,
+            msp.department_id,
 
-        master_classes.name AS kelas
-    ')
-    ->join(
-        'master_study_programs',
-        'master_study_programs.id = user_profiles.study_program_id',
-        'left'
-    )
-    ->join(
-        'master_departments',
-        'master_departments.id = master_study_programs.department_id',
-        'left'
-    )
-    ->join(
-        'master_classes',
-        'master_classes.id = user_profiles.class_id',
-        'left'
-    )
-    ->where(
-        'user_profiles.user_id',
-        $userId
-    )
-    ->where(
-        'user_profiles.deleted_at',
-        null
-    )
-    ->first();
+            md.name AS jurusan,
+            md.code AS kode_jurusan
 
+        ');
 
-    // =====================================================
-    // PROFILE TIDAK DITEMUKAN
-    // =====================================================
+        // =================================================
+        // RELASI CLASS
+        // =================================================
+        $builder->join(
+            'master_classes mc',
+            'mc.id = up.class_id
+             AND mc.deleted_at IS NULL',
+            'left'
+        );
 
-    if (!$profile) {
+        // =================================================
+        // RELASI PROGRAM STUDI
+        // =================================================
+        $builder->join(
+            'master_study_programs msp',
+            'msp.id = up.study_program_id
+             AND msp.deleted_at IS NULL',
+            'left'
+        );
 
-        return redirect()
-            ->back()
-            ->with(
-                'error',
-                'Data profil mahasiswa tidak ditemukan.'
-            );
+        // =================================================
+        // RELASI JURUSAN
+        // =================================================
+        $builder->join(
+            'master_departments md',
+            'md.id = msp.department_id
+             AND md.deleted_at IS NULL',
+            'left'
+        );
+
+        // =================================================
+        // USER YANG LOGIN
+        // =================================================
+        $builder->where(
+            'up.user_id',
+            $userId
+        );
+
+        // Jangan ambil profile yang dihapus
+        $builder->where(
+            'up.deleted_at',
+            null
+        );
+
+        return $builder
+            ->get()
+            ->getRowArray();
     }
 
 
     // =====================================================
-    // DATA YANG DIKIRIM KE VIEW
+    // HALAMAN PROFIL MAHASISWA
     // =====================================================
+    public function index()
+    {
+        $userId = $this->getUserId();
 
-    $data = [
-        'title'   => 'Profil Mahasiswa',
-        'profile' => $profile
-    ];
+        // =================================================
+        // BELUM LOGIN
+        // =================================================
+        if (!$userId) {
+            return redirect()
+                ->to('/login')
+                ->with(
+                    'error',
+                    'Silakan login terlebih dahulu.'
+                );
+        }
 
 
-    return view(
-        'mahasiswa/profile/index',
-        $data
-    );
-}
+        // =================================================
+        // AMBIL PROFILE
+        // =================================================
+        $profile = $this->getProfile($userId);
+
+
+        // =================================================
+        // PROFILE TIDAK DITEMUKAN
+        // =================================================
+        if (!$profile) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Data profil mahasiswa tidak ditemukan.'
+                );
+        }
+
+
+        // =================================================
+        // DATA UNTUK VIEW
+        // =================================================
+        $data = [
+
+            'title' => 'Profil Mahasiswa',
+
+            'profile' => [
+
+                // -----------------------------------------
+                // DATA PRIBADI
+                // -----------------------------------------
+                'nama' =>
+                    $profile['nama']
+                    ?? $profile['student_name']
+                    ?? '-',
+
+                'nim' =>
+                    $profile['nim']
+                    ?? '-',
+
+                'nik' =>
+                    $profile['nik']
+                    ?? '-',
+
+                'email' =>
+                    $profile['email']
+                    ?? '-',
+
+                'no_hp' =>
+                    $profile['no_hp']
+                    ?? '-',
+
+                'alamat' =>
+                    $profile['alamat']
+                    ?? '-',
+
+                'foto' =>
+                    $profile['foto']
+                    ?? null,
+
+
+                // -----------------------------------------
+                // DATA AKADEMIK
+                // -----------------------------------------
+                'prodi' =>
+                    $profile['prodi']
+                    ?? '-',
+
+                'jurusan' =>
+                    $profile['jurusan']
+                    ?? '-',
+
+                'semester' =>
+                    $profile['semester']
+                    ?? '-',
+
+                'angkatan' =>
+                    $profile['angkatan']
+                    ?? '-',
+
+                'nama_kelas' =>
+                    $profile['nama_kelas']
+                    ?? '-',
+
+                'kode_kelas' =>
+                    $profile['kode_kelas']
+                    ?? '-',
+
+                'study_program_id' =>
+                    $profile['study_program_id']
+                    ?? null,
+
+                'class_id' =>
+                    $profile['class_id']
+                    ?? null,
+
+
+                // -----------------------------------------
+                // SEMENTARA
+                // -----------------------------------------
+                'fakultas' => '-',
+
+                'status' => 'Aktif'
+            ]
+        ];
+
+
+        return view(
+            'mahasiswa/profile/index',
+            $data
+        );
+    }
 
 
     // =====================================================
@@ -119,17 +261,29 @@ $profile = $profileModel
     // =====================================================
     public function edit()
     {
-        // Ambil profile dari session
-        $profile =
-            session()->get(
-                'mahasiswa_profile'
-            )
-            ?? [];
+        $userId = $this->getUserId();
 
 
-        // Jika profile belum ada
-        if (empty($profile)) {
+        // =================================================
+        // BELUM LOGIN
+        // =================================================
+        if (!$userId) {
+            return redirect()
+                ->to('/login')
+                ->with(
+                    'error',
+                    'Silakan login terlebih dahulu.'
+                );
+        }
 
+
+        // =================================================
+        // AMBIL DATA TERBARU DARI DATABASE
+        // =================================================
+        $profile = $this->getProfile($userId);
+
+
+        if (!$profile) {
             return redirect()
                 ->to(
                     base_url(
@@ -138,17 +292,88 @@ $profile = $profileModel
                 )
                 ->with(
                     'error',
-                    'Data profile belum tersedia.'
+                    'Data profil mahasiswa tidak ditemukan.'
                 );
         }
 
 
+        // =================================================
+        // DATA UNTUK FORM EDIT
+        // =================================================
         $data = [
 
             'title' => 'Edit Profil Mahasiswa',
 
-            'profile' => $profile
+            'profile' => [
 
+                'id' =>
+                    $profile['id']
+                    ?? null,
+
+                'user_id' =>
+                    $profile['user_id']
+                    ?? null,
+
+                // DATA PRIBADI
+                'nama' =>
+                    $profile['nama']
+                    ?? $profile['student_name']
+                    ?? '',
+
+                'nim' =>
+                    $profile['nim']
+                    ?? '',
+
+                'nik' =>
+                    $profile['nik']
+                    ?? '',
+
+                'email' =>
+                    $profile['email']
+                    ?? '',
+
+                'no_hp' =>
+                    $profile['no_hp']
+                    ?? '',
+
+                'alamat' =>
+                    $profile['alamat']
+                    ?? '',
+
+                'foto' =>
+                    $profile['foto']
+                    ?? null,
+
+
+                // DATA AKADEMIK
+                'prodi' =>
+                    $profile['prodi']
+                    ?? '',
+
+                'jurusan' =>
+                    $profile['jurusan']
+                    ?? '',
+
+                'semester' =>
+                    $profile['semester']
+                    ?? '',
+
+                'angkatan' =>
+                    $profile['angkatan']
+                    ?? '',
+
+                'study_program_id' =>
+                    $profile['study_program_id']
+                    ?? null,
+
+                'class_id' =>
+                    $profile['class_id']
+                    ?? null,
+
+                'nama_kelas' =>
+                    $profile['nama_kelas']
+                    ?? '',
+            ]
         ];
 
 
@@ -164,126 +389,84 @@ $profile = $profileModel
     // =====================================================
     public function update()
     {
-        // =====================================================
-        // AMBIL PROFILE LAMA
-        // =====================================================
-
-        $profile =
-            session()->get(
-                'mahasiswa_profile'
-            )
-            ?? [];
+        // =================================================
+        // AMBIL USER LOGIN
+        // =================================================
+        $userId = $this->getUserId();
 
 
-        if (empty($profile)) {
-
+        if (!$userId) {
             return redirect()
-                ->to(
-                    base_url(
-                        'mahasiswa/profile'
-                    )
-                )
+                ->to('/login')
                 ->with(
                     'error',
-                    'Data profile tidak ditemukan.'
+                    'Silakan login terlebih dahulu.'
                 );
         }
 
 
-        // =====================================================
-        // AMBIL DATA PRIBADI DARI FORM
-        // =====================================================
-
-        $nama =
-            trim(
-                $this->request->getPost(
-                    'nama'
-                )
-            );
+        // =================================================
+        // AMBIL PROFILE LAMA
+        // =================================================
+        $profile = $this->getProfile($userId);
 
 
+        if (!$profile) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Data profil mahasiswa tidak ditemukan.'
+                );
+        }
 
 
+        // =================================================
+        // AMBIL DATA DARI FORM
+        // =================================================
 
-        $email =
-            trim(
-                $this->request->getPost(
-                    'email'
-                )
-            );
+        $nama = trim(
+            (string) $this->request->getPost('nama')
+        );
 
+        $email = trim(
+            (string) $this->request->getPost('email')
+        );
 
-        $noHp =
-            trim(
-                $this->request->getPost(
-                    'no_hp'
-                )
-            );
+        $noHp = trim(
+            (string) $this->request->getPost('no_hp')
+        );
 
+        $alamat = trim(
+            (string) $this->request->getPost('alamat')
+        );
 
-        $jenisKelamin =
-            trim(
-                $this->request->getPost(
-                    'jenis_kelamin'
-                )
-            );
+        $prodi = trim(
+            (string) $this->request->getPost('prodi')
+        );
 
+        $jurusan = trim(
+            (string) $this->request->getPost('jurusan')
+        );
 
-        $alamat =
-            trim(
-                $this->request->getPost(
-                    'alamat'
-                )
-            );
+        $semester = $this->request->getPost(
+            'semester'
+        );
 
-
-        // =====================================================
-        // AMBIL INFORMASI AKADEMIK DARI FORM
-        // =====================================================
-
-        $prodi =
-            trim(
-                $this->request->getPost(
-                    'prodi'
-                )
-            );
+        $angkatan = $this->request->getPost(
+            'angkatan'
+        );
 
 
-
-        $jurusan =
-            trim(
-                $this->request->getPost(
-                    'jurusan'
-                )
-            );
-
-
-        $semester =
-            $this->request->getPost(
-                'semester'
-            );
-
-
-        $angkatan =
-            $this->request->getPost(
-                'angkatan'
-            );
-
-
-        // =====================================================
-        // VALIDASI DATA WAJIB
-        // =====================================================
+        // =================================================
+        // VALIDASI DATA PRIBADI
+        // =================================================
 
         if (
             empty($nama) ||
             empty($email) ||
             empty($noHp) ||
-            empty($jenisKelamin) ||
-            empty($alamat) ||
-            empty($prodi) ||
-            empty($jurusan) ||
-            empty($semester) ||
-            empty($angkatan)
+            empty($alamat)
         ) {
 
             return redirect()
@@ -291,14 +474,14 @@ $profile = $profileModel
                 ->withInput()
                 ->with(
                     'error',
-                    'Mohon lengkapi semua data profile dan informasi akademik.'
+                    'Nama, email, nomor HP, dan alamat wajib diisi.'
                 );
         }
 
 
-        // =====================================================
+        // =================================================
         // VALIDASI EMAIL
-        // =====================================================
+        // =================================================
 
         if (
             !filter_var(
@@ -317,14 +500,35 @@ $profile = $profileModel
         }
 
 
-        // =====================================================
+        // =================================================
+        // VALIDASI AKADEMIK
+        // =================================================
+
+        if (
+            empty($prodi) ||
+            empty($jurusan) ||
+            empty($semester) ||
+            empty($angkatan)
+        ) {
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Data program studi, jurusan, semester, dan angkatan wajib diisi.'
+                );
+        }
+
+
+        // =================================================
         // VALIDASI SEMESTER
-        // =====================================================
+        // =================================================
 
         if (
             !is_numeric($semester) ||
-            $semester < 1 ||
-            $semester > 14
+            (int) $semester < 1 ||
+            (int) $semester > 14
         ) {
 
             return redirect()
@@ -337,14 +541,14 @@ $profile = $profileModel
         }
 
 
-        // =====================================================
+        // =================================================
         // VALIDASI ANGKATAN
-        // =====================================================
+        // =================================================
 
         if (
             !is_numeric($angkatan) ||
-            $angkatan < 2000 ||
-            $angkatan > 2100
+            (int) $angkatan < 2000 ||
+            (int) $angkatan > 2100
         ) {
 
             return redirect()
@@ -357,53 +561,180 @@ $profile = $profileModel
         }
 
 
-        // =====================================================
-        // UPDATE DATA PRIBADI
-        // =====================================================
+        // =================================================
+        // CONNECT DATABASE
+        // =================================================
 
-        $profile['nama'] =
-            $nama;
-
-// NIM & NIK tidak diubah
-
-        $profile['email'] =
-            $email;
-
-        $profile['no_hp'] =
-            $noHp;
-
-        $profile['jenis_kelamin'] =
-            $jenisKelamin;
-
-        $profile['alamat'] =
-            $alamat;
+        $db = \Config\Database::connect();
 
 
-        // =====================================================
-        // UPDATE INFORMASI AKADEMIK
-        // =====================================================
+        // =================================================
+        // CARI JURUSAN
+        // =================================================
 
-        $profile['prodi'] =
-            $prodi;
+        $department = $db
+            ->table('master_departments')
+            ->where(
+                'name',
+                $jurusan
+            )
+            ->where(
+                'deleted_at',
+                null
+            )
+            ->get()
+            ->getRowArray();
 
-        $profile['jurusan'] =
-            $jurusan;
 
-        $profile['semester'] =
-            (int) $semester;
+        if (!$department) {
 
-        $profile['angkatan'] =
-            (int) $angkatan;
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Jurusan "' .
+                    $jurusan .
+                    '" tidak ditemukan di database.'
+                );
+        }
 
 
-        // =====================================================
-        // UPLOAD FOTO PROFILE
-        // =====================================================
+        // =================================================
+        // CARI PROGRAM STUDI
+        // SESUAI DENGAN JURUSAN
+        // =================================================
 
-        $foto =
-            $this->request->getFile(
-                'foto'
-            );
+        $studyProgram = $db
+            ->table('master_study_programs')
+            ->where(
+                'name',
+                $prodi
+            )
+            ->where(
+                'department_id',
+                $department['id']
+            )
+            ->where(
+                'deleted_at',
+                null
+            )
+            ->get()
+            ->getRowArray();
+
+
+        if (!$studyProgram) {
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Program Studi "' .
+                    $prodi .
+                    '" tidak ditemukan pada jurusan "' .
+                    $jurusan .
+                    '".'
+                );
+        }
+
+
+        // =================================================
+        // CARI KELAS
+        //
+        // Berdasarkan:
+        // - study_program_id
+        // - semester / level
+        // - angkatan / entry_year
+        // =================================================
+
+        $class = $db
+            ->table('master_classes')
+            ->where(
+                'study_program_id',
+                $studyProgram['id']
+            )
+            ->where(
+                'level',
+                (int) $semester
+            )
+            ->where(
+                'entry_year',
+                (int) $angkatan
+            )
+            ->where(
+                'is_active',
+                1
+            )
+            ->where(
+                'deleted_at',
+                null
+            )
+            ->orderBy(
+                'id',
+                'ASC'
+            )
+            ->get()
+            ->getRowArray();
+
+
+        // =================================================
+        // KELAS TIDAK DITEMUKAN
+        // =================================================
+        if (!$class) {
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Kelas untuk Program Studi "' .
+                    $prodi .
+                    '", Semester ' .
+                    $semester .
+                    ', Angkatan ' .
+                    $angkatan .
+                    ' belum tersedia di database.'
+                );
+        }
+
+
+        // =================================================
+        // DATA USER_PROFILE YANG DIUPDATE
+        // =================================================
+
+        $updateData = [
+
+            'name' =>
+                $nama,
+
+            'email' =>
+                $email,
+
+            'phone' =>
+                $noHp,
+
+            'address' =>
+                $alamat,
+
+            'study_program_id' =>
+                $studyProgram['id'],
+
+            'class_id' =>
+                $class['id'],
+
+            'updated_at' =>
+                date('Y-m-d H:i:s')
+        ];
+
+
+        // =================================================
+        // UPLOAD FOTO
+        // =================================================
+
+        $foto = $this->request->getFile(
+            'foto'
+        );
 
 
         if (
@@ -412,11 +743,10 @@ $profile = $profileModel
             !$foto->hasMoved()
         ) {
 
-            // =================================================
-            // VALIDASI UKURAN FOTO
+            // ---------------------------------------------
+            // VALIDASI UKURAN
             // Maksimal 2 MB
-            // =================================================
-
+            // ---------------------------------------------
             if (
                 $foto->getSize()
                 > 2 * 1024 * 1024
@@ -432,10 +762,9 @@ $profile = $profileModel
             }
 
 
-            // =================================================
-            // VALIDASI FORMAT FOTO
-            // =================================================
-
+            // ---------------------------------------------
+            // VALIDASI EXTENSION
+            // ---------------------------------------------
             $allowedExtensions = [
 
                 'jpg',
@@ -446,16 +775,16 @@ $profile = $profileModel
             ];
 
 
-            $extension =
-                strtolower(
-                    $foto->getExtension()
-                );
+            $extension = strtolower(
+                $foto->getExtension()
+            );
 
 
             if (
                 !in_array(
                     $extension,
-                    $allowedExtensions
+                    $allowedExtensions,
+                    true
                 )
             ) {
 
@@ -469,33 +798,43 @@ $profile = $profileModel
             }
 
 
-            // =================================================
+            // ---------------------------------------------
             // FOLDER UPLOAD
-            // =================================================
+            // ---------------------------------------------
 
             $uploadPath =
                 FCPATH .
                 'uploads/profile';
 
 
-            // Buat folder jika belum ada
             if (
                 !is_dir(
                     $uploadPath
                 )
             ) {
 
-                mkdir(
-                    $uploadPath,
-                    0777,
-                    true
-                );
+                if (
+                    !mkdir(
+                        $uploadPath,
+                        0777,
+                        true
+                    )
+                ) {
+
+                    return redirect()
+                        ->back()
+                        ->withInput()
+                        ->with(
+                            'error',
+                            'Folder upload foto tidak dapat dibuat.'
+                        );
+                }
             }
 
 
-            // =================================================
+            // ---------------------------------------------
             // HAPUS FOTO LAMA
-            // =================================================
+            // ---------------------------------------------
 
             if (
                 !empty(
@@ -504,127 +843,94 @@ $profile = $profileModel
                 )
             ) {
 
-                $fotoLama =
+                $oldPhotoPath =
                     $uploadPath .
                     DIRECTORY_SEPARATOR .
                     $profile['foto'];
 
 
                 if (
-                    file_exists(
-                        $fotoLama
+                    is_file(
+                        $oldPhotoPath
                     )
                 ) {
 
                     unlink(
-                        $fotoLama
+                        $oldPhotoPath
                     );
                 }
             }
 
 
-            // =================================================
-            // NAMA FILE FOTO BARU
-            // =================================================
+            // ---------------------------------------------
+            // NAMA FOTO BARU
+            // ---------------------------------------------
 
-            $namaFoto =
+            $newPhotoName =
                 $foto->getRandomName();
 
 
-            // =================================================
+            // ---------------------------------------------
             // PINDAHKAN FOTO
-            // =================================================
+            // ---------------------------------------------
 
-            $foto->move(
-                $uploadPath,
-                $namaFoto
-            );
+            try {
+
+                $foto->move(
+                    $uploadPath,
+                    $newPhotoName
+                );
+
+            } catch (\Throwable $e) {
+
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Foto gagal diupload.'
+                    );
+            }
 
 
-            // Simpan nama foto ke profile
-            $profile['foto'] =
-                $namaFoto;
+            // ---------------------------------------------
+            // SIMPAN NAMA FOTO KE DATABASE
+            // ---------------------------------------------
+
+            $updateData['photo'] =
+                $newPhotoName;
         }
 
 
-        // =====================================================
-        // SIMPAN PROFILE KE SESSION
-        // =====================================================
+        // =================================================
+        // UPDATE DATABASE
+        // =================================================
 
-        session()->set(
-            'mahasiswa_profile',
-            $profile
-        );
+        $model = new UserProfileModel();
 
 
-        // =====================================================
-        // UPDATE SESSION USER
-        // Supaya data user lain ikut berubah
-        // =====================================================
+        try {
 
-        $user =
-            session()->get(
-                'user'
-            )
-            ?? [];
+            $model->update(
+                $profile['id'],
+                $updateData
+            );
 
+        } catch (\Throwable $e) {
 
-        // Data pribadi
-        $user['nama'] =
-            $profile['nama'];
-
-        $user['nim'] =
-            $profile['nim'];
-
-        $user['nik'] =
-            $profile['nik'];
-
-        $user['email'] =
-            $profile['email'];
-
-        $user['no_hp'] =
-            $profile['no_hp'];
-
-        $user['jenis_kelamin'] =
-            $profile['jenis_kelamin'];
-
-        $user['alamat'] =
-            $profile['alamat'];
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Data profil gagal diperbarui.'
+                );
+        }
 
 
-        // Data akademik
-        $user['prodi'] =
-            $profile['prodi'];
-
-        $user['fakultas'] =
-            $profile['fakultas'];
-
-        $user['jurusan'] =
-            $profile['jurusan'];
-
-        $user['semester'] =
-            $profile['semester'];
-
-        $user['angkatan'] =
-            $profile['angkatan'];
-
-
-        // Foto
-        $user['foto'] =
-            $profile['foto']
-            ?? null;
-
-
-        // Simpan kembali session user
-        session()->set(
-            'user',
-            $user
-        );
-
-
-        // =====================================================
-        // KEMBALI KE PROFILE
-        // =====================================================
+        // =================================================
+        // SELESAI
+        // =================================================
 
         return redirect()
             ->to(

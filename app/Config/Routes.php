@@ -15,14 +15,15 @@ $routes->get('/', 'Home::index');
 // AUTH
 // ==========================================
 
-$routes->get('login', 'AuthController::login');
-$routes->post('login', 'AuthController::authenticate');
+$routes->get('login', 'Auth\AuthController::index');
+$routes->post('login', 'Auth\AuthController::authenticate');
 
-$routes->get('register', 'AuthController::register');
-$routes->post('register', 'AuthController::storeRegister');
+$routes->get('register', 'Auth\RegisterController::index');
+$routes->post('register', 'Auth\RegisterController::store');
 
-$routes->get('logout', 'AuthController::logout');
+$routes->get('register/fields/(:num)', 'Auth\RegisterController::fields/$1');
 
+$routes->get('logout', 'Auth\AuthController::logout');
 
 /*
 |--------------------------------------------------------------------------

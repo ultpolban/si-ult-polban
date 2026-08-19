@@ -1,4 +1,4 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+[cite: 3]<aside class="main-sidebar sidebar-dark-primary elevation-4">
 
     <a href="<?= base_url('petugas') ?>"
        class="brand-link text-center"
@@ -38,14 +38,12 @@
                 data-widget="treeview"
                 role="menu">
 
-                </li>
-
-               <a href="<?= base_url('petugas/profile') ?>" class="nav-link">
-    <i class="fas fa-user"></i>
-    <span>Profil</span>
-</a>
-
                 <li class="nav-item">
+                    <a href="<?= base_url('petugas/profile') ?>" class="nav-link">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>Profil</p>
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a href="<?= base_url('petugas') ?>" class="nav-link <?= url_is('petugas') ? 'active' : '' ?>">
@@ -54,24 +52,30 @@
                     </a>
                 </li>
 
+                <!-- Data Tiket dengan Badge -->
                 <li class="nav-item">
                     <a href="<?= base_url('petugas/tiket') ?>" class="nav-link <?= (url_is('petugas/tiket*') && !isset($_GET['status'])) ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-ticket-alt"></i>
                         <p>Data Tiket</p>
+                        <span class="badge badge-primary float-right" id="sidebar-badge-tiket">0</span>
                     </a>
                 </li>
 
+                <!-- Verifikasi Tiket dengan Badge -->
                 <li class="nav-item">
                     <a href="<?= base_url('petugas/tiket?status=Submitted') ?>" class="nav-link <?= (isset($_GET['status']) && $_GET['status'] == 'Submitted') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-user-check"></i>
                         <p>Verifikasi Tiket</p>
+                        <span class="badge badge-warning float-right text-white" id="sidebar-badge-verifikasi">0</span>
                     </a>
                 </li>
 
+                <!-- Disposisi Tiket dengan Badge -->
                 <li class="nav-item">
                     <a href="<?= base_url('petugas/tiket?status=Verified') ?>" class="nav-link <?= (isset($_GET['status']) && $_GET['status'] == 'Verified') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-share-square"></i>
                         <p>Disposisi Tiket</p>
+                        <span class="badge badge-info float-right" id="sidebar-badge-disposisi">0</span>
                     </a>
                 </li>
 
@@ -101,7 +105,9 @@
                         <i class="nav-icon fas fa-route"></i>
                         <p>Tracking Tiket</p>
                     </a>
-                
+                </li>
+
+                <li class="nav-item">
                     <a href="<?= base_url('logout') ?>" class="nav-link">
                         <i class="nav-icon fas fa-sign-out-alt"></i>
                         <p>Logout</p>

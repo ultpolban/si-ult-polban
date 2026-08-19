@@ -563,7 +563,7 @@
 |--------------------------------------------------------------------------
 | Data dari controller tetap dipakai.
 | Data dummy ditambahkan agar tabel memiliki banyak data untuk
-| mengetes pagination 10 data per halaman.
+| mengetes pagination per halaman[cite: 1].
 */
 
 $realTickets = !empty($tiket_list) && is_array($tiket_list)
@@ -873,15 +873,15 @@ foreach ($tiket_list as $statRow) {
 
 /*
 |--------------------------------------------------------------------------
-| PAGINATION
+| PAGINATION & CUSTOM PER PAGE
 |--------------------------------------------------------------------------
-| 10 tiket per halaman.
-| Halaman 1 = nomor 1-10
-| Halaman 2 = nomor 11-20
-| dst.
+| Petugas bisa mengetik jumlah tiket yang ingin ditampilkan per halaman.
 */
 
-$perPage = 10;
+$perPage = isset($_GET['limit']) && $_GET['limit'] !== '' ? (int) $_GET['limit'] : 10;
+if ($perPage < 1) {
+    $perPage = 10;
+}
 
 $totalData = count($filteredTickets);
 
@@ -928,6 +928,10 @@ if ($statusValue !== '') {
 
 if ($kategoriValue !== '') {
     $queryParams['kategori'] = $kategoriValue;
+}
+
+if (isset($_GET['limit']) && $_GET['limit'] !== '') {
+    $queryParams['limit'] = $_GET['limit'];
 }
 
 function ticketPageUrl($page, $queryParams = [])
@@ -1099,7 +1103,7 @@ function ticketPageUrl($page, $queryParams = [])
 
             <div class="row g-2 align-items-center">
 
-                <div class="col-xl-5 col-lg-4 col-md-12">
+                <div class="col-xl-4 col-lg-3 col-md-12">
 
                     <div class="input-group ticket-input-group">
 
@@ -1121,7 +1125,7 @@ function ticketPageUrl($page, $queryParams = [])
                 </div>
 
 
-                <div class="col-xl-3 col-lg-3 col-md-6">
+                <div class="col-xl-3 col-lg-3 col-md-4">
 
                     <select
                         name="status"
@@ -1158,7 +1162,7 @@ function ticketPageUrl($page, $queryParams = [])
                 </div>
 
 
-                <div class="col-xl-2 col-lg-3 col-md-6">
+                <div class="col-xl-2 col-lg-2 col-md-4">
 
                     <select
                         name="kategori"
@@ -1192,6 +1196,19 @@ function ticketPageUrl($page, $queryParams = [])
 
                     </select>
 
+                </div>
+
+                <!-- INPUT JUMLAH TAMPILAN PER HALAMAN -->
+                <div class="col-xl-1 col-lg-2 col-md-4">
+                    <input
+                        type="number"
+                        name="limit"
+                        class="form-control ticket-select text-center"
+                        placeholder="Jml"
+                        min="1"
+                        value="<?= esc($perPage) ?>"
+                        title="Jumlah tiket per halaman"
+                    >
                 </div>
 
 

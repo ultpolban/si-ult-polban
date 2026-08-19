@@ -4,7 +4,7 @@
 
 <style>
     /* =========================================================
-       PROFILE PETUGAS ULT POLBAN - OFFICIAL DASHBOARD THEME (DEWA EDITION)
+       PROFILE PETUGAS ULT POLBAN - OFFICIAL DASHBOARD THEME (DEWA EDITION V3.2 FIXED)
        ========================================================= */
 
     :root {
@@ -27,14 +27,19 @@
         --ult-border-hover: #cbd5e1;
         
         /* Glassmorphism Ultra & Shadow Tokens */
-        --ult-glass-bg: rgba(255, 255, 255, 0.72);
+        --ult-glass-bg: rgba(255, 255, 255, 0.78);
         --ult-glass-border: rgba(255, 255, 255, 0.6);
         --ult-shadow-xl: 0 25px 50px -12px rgba(15, 23, 42, 0.08), 0 10px 20px -8px rgba(15, 23, 42, 0.04);
         --ult-shadow-glow: 0 12px 36px rgba(30, 64, 175, 0.18);
         --ult-shadow-amber: 0 10px 25px rgba(217, 119, 6, 0.2);
+        
+        /* Character Branding Variable (Default) */
+        --theme-char-bg: linear-gradient(135deg, #3b82f6, #1e40af);
+        --theme-badge-bg: #eff6ff;
+        --theme-badge-text: #1d4ed8;
     }
 
-    /* --- PILIHAN TEMA FILM & NORMAL --- */
+    /* --- PILIHAN TEMA FILM & KARAKTER VISUAL --- */
     body.theme-spiderman {
         --ult-navy-deep: #1a0505;
         --ult-primary: #dc2626;
@@ -42,8 +47,11 @@
         --ult-cyan: #3b82f6;
         --ult-amber: #f59e0b;
         --ult-bg: #fff1f2;
-        --ult-glass-bg: rgba(255, 241, 242, 0.85);
-        --ult-shadow-xl: 0 25px 50px -12px rgba(220, 38, 38, 0.15);
+        --ult-glass-bg: rgba(255, 241, 242, 0.88);
+        --ult-shadow-xl: 0 25px 50px -12px rgba(220, 38, 38, 0.2);
+        --theme-char-bg: linear-gradient(135deg, #dc2626, #991b1b);
+        --theme-badge-bg: #fee2e2;
+        --theme-badge-text: #b91c1c;
     }
 
     body.theme-mcqueen {
@@ -53,8 +61,11 @@
         --ult-cyan: #facc15;
         --ult-amber: #ea580c;
         --ult-bg: #fff1f2;
-        --ult-glass-bg: rgba(255, 242, 242, 0.88);
-        --ult-shadow-xl: 0 25px 50px -12px rgba(185, 28, 28, 0.2);
+        --ult-glass-bg: rgba(255, 242, 242, 0.9);
+        --ult-shadow-xl: 0 25px 50px -12px rgba(185, 28, 28, 0.22);
+        --theme-char-bg: linear-gradient(135deg, #ea580c, #b91c1c);
+        --theme-badge-bg: #ffedd5;
+        --theme-badge-text: #c2410c;
     }
 
     body.theme-up {
@@ -64,8 +75,11 @@
         --ult-cyan: #34d399;
         --ult-amber: #fbbf24;
         --ult-bg: #f0f9ff;
-        --ult-glass-bg: rgba(240, 249, 255, 0.85);
-        --ult-shadow-xl: 0 25px 50px -12px rgba(2, 132, 199, 0.15);
+        --ult-glass-bg: rgba(240, 249, 255, 0.88);
+        --ult-shadow-xl: 0 25px 50px -12px rgba(2, 132, 199, 0.18);
+        --theme-char-bg: linear-gradient(135deg, #0284c7, #0369a1);
+        --theme-badge-bg: #e0f2fe;
+        --theme-badge-text: #0369a1;
     }
 
     body.theme-monster {
@@ -75,8 +89,11 @@
         --ult-cyan: #84cc16;
         --ult-amber: #10b981;
         --ult-bg: #f0fdf4;
-        --ult-glass-bg: rgba(240, 253, 244, 0.85);
-        --ult-shadow-xl: 0 25px 50px -12px rgba(13, 148, 136, 0.15);
+        --ult-glass-bg: rgba(240, 253, 244, 0.88);
+        --ult-shadow-xl: 0 25px 50px -12px rgba(13, 148, 136, 0.18);
+        --theme-char-bg: linear-gradient(135deg, #10b981, #047857);
+        --theme-badge-bg: #d1fae5;
+        --theme-badge-text: #047857;
     }
 
     body.theme-elemental {
@@ -86,8 +103,11 @@
         --ult-cyan: #0284c7;
         --ult-amber: #fb923c;
         --ult-bg: #fff7ed;
-        --ult-glass-bg: rgba(255, 247, 237, 0.88);
-        --ult-shadow-xl: 0 25px 50px -12px rgba(194, 65, 12, 0.18);
+        --ult-glass-bg: rgba(255, 247, 237, 0.9);
+        --ult-shadow-xl: 0 25px 50px -12px rgba(194, 65, 12, 0.2);
+        --theme-char-bg: linear-gradient(135deg, #f97316, #c2410c);
+        --theme-badge-bg: #ffedd5;
+        --theme-badge-text: #c2410c;
     }
 
     .petugas-profile {
@@ -112,6 +132,7 @@
         pointer-events: none;
         z-index: 0;
         opacity: 0.45;
+        transition: background 0.5s ease;
     }
 
     .petugas-profile::before {
@@ -196,6 +217,7 @@
         background: linear-gradient(135deg, var(--ult-navy-deep) 0%, var(--ult-primary) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        transition: all 0.4s ease;
     }
 
     .profile-title-wrap p {
@@ -203,6 +225,22 @@
         color: var(--ult-text-muted);
         font-size: 14px;
         font-weight: 500;
+    }
+
+    /* THEME CHARACTER BADGE HEADER */
+    .theme-character-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        background: var(--theme-badge-bg);
+        color: var(--theme-badge-text);
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        transition: all 0.4s ease;
     }
 
     /* BUTTON ACTION PROFESSIONAL WITH RIPPLE */
@@ -262,7 +300,7 @@
         box-shadow: var(--ult-shadow-xl);
         position: relative;
         transform-style: preserve-3d;
-        transition: transform 0.15s ease-out, box-shadow 0.4s ease;
+        transition: transform 0.15s ease-out, box-shadow 0.4s ease, background 0.5s ease;
     }
 
     .profile-main-card:hover {
@@ -278,6 +316,7 @@
         align-items: center;
         position: relative;
         overflow: hidden;
+        transition: background 0.5s ease;
     }
 
     .profile-card-header-bg-glow {
@@ -322,12 +361,12 @@
     /* PROFILE TOP LAYOUT */
     .profile-top {
         display: grid;
-        grid-template-columns: 320px 1fr;
+        grid-template-columns: 340px 1fr;
         gap: 42px;
         align-items: stretch;
     }
 
-    /* PHOTO SECTION WITH GLASSMORPHISM CARD */
+    /* PHOTO SECTION WITH THEME CHARACTER ART CARD */
     .profile-photo-section {
         display: flex;
         flex-direction: column;
@@ -340,6 +379,21 @@
         border-radius: 24px;
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.8);
+        overflow: hidden;
+    }
+
+    /* THEME CHARACTER DECORATIVE BANNER/AVATAR ACCENT */
+    .theme-char-banner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 85px;
+        background: var(--theme-char-bg);
+        opacity: 0.12;
+        border-radius: 24px 24px 0 0;
+        z-index: 0;
+        transition: background 0.5s ease;
     }
 
     .profile-photo-wrapper {
@@ -347,6 +401,7 @@
         width: 176px;
         height: 176px;
         margin-bottom: 24px;
+        z-index: 2;
     }
 
     .profile-photo-ring {
@@ -436,6 +491,7 @@
         letter-spacing: -0.5px;
         word-break: break-word;
         transition: all 0.3s ease;
+        z-index: 2;
     }
 
     .profile-role {
@@ -448,6 +504,7 @@
         align-items: center;
         justify-content: center;
         gap: 6px;
+        z-index: 2;
     }
 
     .profile-status {
@@ -463,6 +520,7 @@
         font-size: 12.5px;
         font-weight: 700;
         box-shadow: 0 4px 14px var(--ult-green-glow);
+        z-index: 2;
     }
 
     .status-dot {
@@ -486,6 +544,31 @@
         font-size: 12px;
         text-align: center;
         font-weight: 500;
+        z-index: 2;
+    }
+
+    /* THEME CHARACTER VISUAL ILLUSTRATION CARD */
+    .theme-char-preview {
+        margin-top: 18px;
+        width: 100%;
+        padding: 10px 14px;
+        background: rgba(255,255,255,0.7);
+        border-radius: 14px;
+        border: 1px solid var(--ult-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--ult-navy-deep);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        z-index: 2;
+    }
+
+    .theme-char-preview i {
+        font-size: 16px;
+        color: var(--ult-primary-light);
     }
 
     /* DATA SECTION */
@@ -511,6 +594,7 @@
         justify-content: center;
         font-size: 18px;
         box-shadow: 0 6px 16px rgba(37, 99, 235, 0.1);
+        transition: background 0.5s ease, color 0.5s ease;
     }
 
     .section-heading h4 {
@@ -531,7 +615,7 @@
         padding: 20px 24px;
         border: 1px solid var(--ult-border);
         border-radius: 18px;
-        background: rgba(248, 250, 252, 0.8);
+        background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(8px);
         transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         position: relative;
@@ -585,6 +669,7 @@
     .data-label i {
         color: var(--ult-primary-light);
         font-size: 14px;
+        transition: color 0.5s ease;
     }
 
     .data-copy-badge {
@@ -647,7 +732,7 @@
         width: 4px;
         height: 100%;
         background: var(--ult-primary);
-        transition: width 0.3s ease;
+        transition: width 0.3s ease, background 0.5s ease;
     }
 
     .info-card.orange::before { background: var(--ult-amber); }
@@ -704,43 +789,30 @@
         font-weight: 800;
     }
 
-    /* MODAL ENHANCEMENT GLASSMORPHISM & THEME CARDS SEPERTI FOTO KE 2 */
+    /* MODAL ENHANCEMENT GLASSMORPHISM (SUPER DEWA) */
     .profile-modal .modal-content {
         border: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 28px;
+        border-radius: 32px;
         overflow: hidden;
-        box-shadow: 0 35px 80px rgba(15, 23, 42, 0.35);
+        box-shadow: 0 40px 90px rgba(15, 23, 42, 0.35);
         background: rgba(255, 255, 255, 0.96);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
     }
 
     .profile-modal .modal-header {
         border: 0;
-        padding: 24px 32px;
+        padding: 30px 38px;
         background: linear-gradient(135deg, var(--ult-navy-deep) 0%, var(--ult-primary) 100%);
         color: #ffffff;
         position: relative;
         overflow: hidden;
     }
 
-    .profile-modal .modal-header::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--ult-cyan), var(--ult-amber), var(--ult-primary-light));
-    }
-
     .profile-modal .modal-title {
         font-weight: 800;
-        font-size: 20px;
+        font-size: 22px;
         letter-spacing: -0.4px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
     }
 
     .profile-modal .btn-close {
@@ -755,38 +827,33 @@
     }
 
     .profile-modal .modal-body {
-        padding: 32px;
-        max-height: 75vh;
-        overflow-y: auto;
+        padding: 40px;
     }
 
     .profile-modal .form-label {
-        color: var(--ult-navy-deep);
+        color: var(--ult-text-dark);
         font-weight: 700;
-        font-size: 12.5px;
+        font-size: 13px;
         margin-bottom: 8px;
         display: flex;
         align-items: center;
         gap: 6px;
     }
 
-    .profile-modal .form-label i {
-        color: var(--ult-primary-light);
-    }
-
-    .profile-modal .form-control {
+    .profile-modal .form-control,
+    .profile-modal .form-select {
         border: 1.5px solid var(--ult-border);
-        border-radius: 14px;
-        padding: 12px 16px;
-        min-height: 48px;
-        font-size: 13.5px;
+        border-radius: 16px;
+        padding: 14px 18px;
+        min-height: 52px;
+        font-size: 14px;
+        font-weight: 600;
         transition: all 0.3s ease;
         background: #f8fafc;
-        color: var(--ult-text-dark);
-        font-weight: 600;
     }
 
-    .profile-modal .form-control:focus {
+    .profile-modal .form-control:focus,
+    .profile-modal .form-select:focus {
         border-color: var(--ult-primary-light);
         box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
         background: #ffffff;
@@ -798,71 +865,56 @@
         opacity: 1;
     }
 
-    /* THEME CARDS GRID SEPERTI FOTO KE-2 */
-    .theme-cards-container {
+    /* THEME OPTIONS SELECTOR GRID PREVIEW IN MODAL */
+    .theme-options-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
+        gap: 10px;
         margin-top: 6px;
     }
 
-    .theme-card-option {
+    .theme-option-card {
         border: 2px solid var(--ult-border);
-        border-radius: 16px;
-        padding: 14px 10px;
+        border-radius: 14px;
+        padding: 12px;
         text-align: center;
         cursor: pointer;
-        background: #ffffff;
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
+        background: #ffffff;
     }
 
-    .theme-card-option i {
-        font-size: 22px;
-        color: var(--ult-text-muted);
-        transition: transform 0.3s ease, color 0.3s ease;
+    .theme-option-card:hover {
+        border-color: var(--ult-primary-light);
+        transform: translateY(-2px);
     }
 
-    .theme-card-option span {
-        font-size: 12px;
+    .theme-option-card.active {
+        border-color: var(--ult-primary);
+        background: #eff6ff;
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.15);
+    }
+
+    .theme-option-card i {
+        font-size: 20px;
+        margin-bottom: 4px;
+        display: block;
+        color: var(--ult-primary-light);
+    }
+
+    .theme-option-card span {
+        font-size: 11.5px;
         font-weight: 700;
         color: var(--ult-text-dark);
     }
 
-    .theme-card-option:hover {
-        border-color: var(--ult-primary-light);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(30, 64, 175, 0.08);
-    }
-
-    .theme-card-option:hover i {
-        transform: scale(1.15);
-        color: var(--ult-primary-light);
-    }
-
-    .theme-card-option.active {
-        border-color: var(--ult-primary);
-        background: linear-gradient(135deg, rgba(37, 99, 235, 0.04) 0%, rgba(6, 182, 212, 0.08) 100%);
-        box-shadow: 0 8px 22px rgba(30, 64, 175, 0.15);
-    }
-
-    .theme-card-option.active i,
-    .theme-card-option.active span {
-        color: var(--ult-primary);
-    }
-
     .btn-profile-save {
         border: 0;
-        border-radius: 14px;
+        border-radius: 16px;
         background: linear-gradient(135deg, var(--ult-primary-light) 0%, var(--ult-primary) 100%);
         color: #ffffff;
-        padding: 12px 28px;
+        padding: 14px 32px;
         font-weight: 800;
-        font-size: 13.5px;
+        font-size: 14px;
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         box-shadow: 0 10px 24px rgba(30, 64, 175, 0.28);
         cursor: pointer;
@@ -873,21 +925,10 @@
         overflow: hidden;
     }
 
-    .btn-profile-save:hover:not(:disabled) {
+    .btn-profile-save:hover {
         transform: translateY(-2px) scale(1.02);
         box-shadow: 0 16px 32px rgba(30, 64, 175, 0.4);
         color: #ffffff;
-    }
-
-    /* TOMBOL SIMPAN KETIKA DISABLED (TIDAK ADA PERUBAHAN) */
-    .btn-profile-save:disabled,
-    .btn-profile-save.disabled {
-        background: #cbd5e1 !important;
-        color: #64748b !important;
-        cursor: not-allowed !important;
-        box-shadow: none !important;
-        transform: none !important;
-        opacity: 0.7;
     }
 
     /* TOAST NOTIFICATION SYSTEM APPLE macOS/iOS SPRING ANIMATION */
@@ -1032,8 +1073,8 @@
         .profile-info-grid {
             grid-template-columns: repeat(2, 1fr);
         }
-
-        .theme-cards-container {
+        
+        .theme-options-grid {
             grid-template-columns: repeat(2, 1fr);
         }
     }
@@ -1063,7 +1104,7 @@
 
         .data-grid,
         .profile-info-grid,
-        .theme-cards-container {
+        .theme-options-grid {
             grid-template-columns: 1fr;
         }
 
@@ -1097,6 +1138,9 @@
             </div>
 
             <div>
+                <div class="theme-character-badge" id="themeHeaderBadge">
+                    <i class="fas fa-film"></i> <span id="themeBadgeText">Official Dashboard Theme</span>
+                </div>
                 <h1>Profil Petugas</h1>
                 <p>Kelola dan tinjau identitas resmi petugas Unit Layanan Terpadu Polban.</p>
             </div>
@@ -1105,8 +1149,7 @@
         <button
             type="button"
             class="profile-edit-main-btn ripple-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#modalEditProfile"
+            id="openEditModalBtn"
         >
             <i class="fas fa-pen"></i>
             <span>Edit Profil</span>
@@ -1136,8 +1179,9 @@
 
             <div class="profile-top">
 
-                <!-- FOTO SECTION -->
+                <!-- FOTO SECTION DENGAN KARAKTER FILM -->
                 <div class="profile-photo-section stagger-item">
+                    <div class="theme-char-banner"></div>
 
                     <div class="profile-photo-wrapper">
                         <div class="profile-photo-ring"></div>
@@ -1180,6 +1224,12 @@
                     <div class="profile-status">
                         <span class="status-dot"></span>
                         Akun Aktif & Terverifikasi
+                    </div>
+
+                    <!-- KONTEN KARAKTER FILM GRAFIS -->
+                    <div class="theme-char-preview" id="themeCharInfoBox">
+                        <i class="fas fa-star" id="themeCharIcon"></i>
+                        <span id="themeCharText">Tema Normal / Standar</span>
                     </div>
 
                     <div class="photo-help">
@@ -1381,7 +1431,7 @@
 
 
 <!-- =========================================================
-     MODAL EDIT PROFILE DEWA (SEPERTI FOTO KE-2)
+     MODAL EDIT PROFILE DEWA (DENGAN PILIHAN TEMA KARAKTER VISUAL)
      ========================================================= -->
 
 <div
@@ -1398,7 +1448,7 @@
 
                 <div>
                     <h5 class="modal-title">
-                        <i class="fas fa-user-edit"></i>
+                        <i class="fas fa-user-edit me-2"></i>
                         Edit Informasi Profil & Karakter Tema
                     </h5>
 
@@ -1425,7 +1475,7 @@
                         <div class="col-md-6">
 
                             <label class="form-label">
-                                <i class="fas fa-user"></i> Nama Lengkap
+                                <i class="fas fa-user text-primary"></i> Nama Lengkap
                             </label>
 
                             <input
@@ -1442,7 +1492,7 @@
                         <div class="col-md-6">
 
                             <label class="form-label">
-                                <i class="fas fa-envelope"></i> Email Official
+                                <i class="fas fa-envelope text-primary"></i> Email Official
                             </label>
 
                             <input
@@ -1459,7 +1509,7 @@
                         <div class="col-md-6">
 
                             <label class="form-label">
-                                <i class="fas fa-id-badge"></i> ID Petugas (System Locked)
+                                <i class="fas fa-id-badge text-primary"></i> ID Petugas (System Locked)
                             </label>
 
                             <input
@@ -1475,7 +1525,7 @@
                         <div class="col-md-6">
 
                             <label class="form-label">
-                                <i class="fas fa-phone-alt"></i> Nomor WhatsApp / HP
+                                <i class="fas fa-phone text-primary"></i> Nomor WhatsApp / HP
                             </label>
 
                             <input
@@ -1491,7 +1541,7 @@
                         <div class="col-md-6">
 
                             <label class="form-label">
-                                <i class="fas fa-briefcase"></i> Jabatan
+                                <i class="fas fa-briefcase text-primary"></i> Jabatan
                             </label>
 
                             <input
@@ -1507,7 +1557,7 @@
                         <div class="col-md-6">
 
                             <label class="form-label">
-                                <i class="fas fa-building"></i> Unit / Departemen
+                                <i class="fas fa-building text-primary"></i> Unit / Departemen
                             </label>
 
                             <input
@@ -1520,36 +1570,44 @@
                         </div>
 
 
+                        <!-- SELECTOR TEMA FILM BERKARAKTER INTERAKTIF -->
                         <div class="col-12">
                             <label class="form-label">
-                                <i class="fas fa-palette"></i> Pilih Tema Karakter Film Favorit
+                                <i class="fas fa-palette text-primary"></i> Pilih Tema Karakter Film Favorit
                             </label>
+                            
+                            <select class="form-select d-none" id="themeSelector">
+                                <option value="normal">Normal</option>
+                                <option value="spiderman">Spiderman</option>
+                                <option value="mcqueen">Lightning McQueen</option>
+                                <option value="up">UP (Carl & Balloons)</option>
+                                <option value="monster">Monsters Inc (Sully)</option>
+                                <option value="elemental">Elemental (Ember & Wade)</option>
+                            </select>
 
-                            <input type="hidden" id="themeSelector" value="normal">
-
-                            <div class="theme-cards-container">
-                                <div class="theme-card-option active" data-theme="normal">
+                            <div class="theme-options-grid">
+                                <div class="theme-option-card" data-theme="normal">
                                     <i class="fas fa-shield-alt"></i>
                                     <span>Normal Pro</span>
                                 </div>
-                                <div class="theme-card-option" data-theme="spiderman">
+                                <div class="theme-option-card" data-theme="spiderman">
                                     <i class="fas fa-spider"></i>
                                     <span>Spider-Man</span>
                                 </div>
-                                <div class="theme-card-option" data-theme="mcqueen">
+                                <div class="theme-option-card" data-theme="mcqueen">
                                     <i class="fas fa-car-side"></i>
                                     <span>McQueen</span>
                                 </div>
-                                <div class="theme-card-option" data-theme="up">
-                                    <i class="fas fa-house-user"></i>
+                                <div class="theme-option-card" data-theme="up">
+                                    <i class="fas fa-house"></i>
                                     <span>UP Movie</span>
                                 </div>
-                                <div class="theme-card-option" data-theme="monster">
+                                <div class="theme-option-card" data-theme="monster">
                                     <i class="fas fa-ghost"></i>
                                     <span>Monsters Inc</span>
                                 </div>
-                                <div class="theme-card-option" data-theme="elemental">
-                                    <i class="fas fa-fire-alt"></i>
+                                <div class="theme-option-card" data-theme="elemental">
+                                    <i class="fas fa-fire"></i>
                                     <span>Elemental</span>
                                 </div>
                             </div>
@@ -1559,7 +1617,7 @@
                         <div class="col-12">
 
                             <label class="form-label">
-                                <i class="fas fa-camera"></i> Unggah Foto Profil Baru
+                                <i class="fas fa-camera text-primary"></i> Unggah Foto Profil Baru
                             </label>
 
                             <input
@@ -1579,7 +1637,7 @@
                         <button
                             type="button"
                             class="btn btn-light border px-4 fw-bold ripple-btn"
-                            style="border-radius:14px;"
+                            style="border-radius:16px;"
                             data-bs-dismiss="modal"
                         >
                             Batal
@@ -1588,8 +1646,6 @@
                         <button
                             type="submit"
                             class="btn-profile-save ripple-btn"
-                            id="btnSaveProfile"
-                            disabled
                         >
                             <i class="fas fa-save me-1"></i>
                             Simpan Perubahan
@@ -1626,21 +1682,24 @@
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const STORAGE_KEY = 'si_ult_petugas_profile_v2';
-    const THEME_KEY = 'si_ult_petugas_theme';
+    const STORAGE_KEY = 'si_ult_petugas_profile_v3';
+    const THEME_KEY = 'si_ult_petugas_theme_v3';
 
     const editForm = document.getElementById('profileEditForm');
     const themeSelector = document.getElementById('themeSelector');
-    const themeCardOptions = document.querySelectorAll('.theme-card-option');
-    const btnSaveProfile = document.getElementById('btnSaveProfile');
+    const themeCards = document.querySelectorAll('.theme-option-card');
+
+    const themeHeaderBadge = document.getElementById('themeHeaderBadge');
+    const themeBadgeText = document.getElementById('themeBadgeText');
+    const themeCharInfoBox = document.getElementById('themeCharInfoBox');
+    const themeCharIcon = document.getElementById('themeCharIcon');
+    const themeCharText = document.getElementById('themeCharText');
 
     const photoInput = document.getElementById('photoInput');
     const modalPhotoInput = document.getElementById('modalPhotoInput');
-
     const photoContainer = document.getElementById('photoContainer');
 
     const displayName = document.getElementById('displayName');
@@ -1666,144 +1725,65 @@ document.addEventListener('DOMContentLoaded', function () {
     const TOAST_DURATION = 3800;
 
     /* =========================================================
-       FUNGSI TEMA DINAMIS & INTERACTIVE CARDS
+       FIX BUTTON MODAL TRIGGER MANUAL VIA JAVASCRIPT
        ========================================================= */
+    const openEditModalBtn = document.getElementById('openEditModalBtn');
+    if (openEditModalBtn) {
+        openEditModalBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const modalEl = document.getElementById('modalEditProfile');
+            if (modalEl) {
+                const bootstrapModal = new bootstrap.Modal(modalEl);
+                bootstrapModal.show();
+            }
+        });
+    }
+
+    /* =========================================================
+       FUNGSI TEMA DINAMIS & KARAKTER FILM MAPPING
+       ========================================================= */
+    const themeDetails = {
+        normal: { name: 'Official Dashboard Theme', icon: 'fas fa-shield-alt', text: 'Tema Standar ULT POLBAN Profesional' },
+        spiderman: { name: 'Spider-Man Edition', icon: 'fas fa-spider', text: 'Karakter: Spider-Man (Friendly Neighborhood)' },
+        mcqueen: { name: 'Lightning McQueen Edition', icon: 'fas fa-car-side', text: 'Karakter: Lightning McQueen (Ka-Chow!)' },
+        up: { name: 'UP Movie Edition', icon: 'fas fa-house', text: 'Karakter: Carl & Ellie (Adventure is Out There)' },
+        monster: { name: 'Monsters Inc Edition', icon: 'fas fa-ghost', text: 'Karakter: Sulley & Mike (We Scare Because We Care)' },
+        elemental: { name: 'Elemental Edition', icon: 'fas fa-fire', text: 'Karakter: Ember & Wade (Fire & Water Elements)' }
+    };
+
     function applyTheme(themeName) {
         document.body.classList.remove('theme-spiderman', 'theme-mcqueen', 'theme-up', 'theme-monster', 'theme-elemental');
+        
         if (themeName && themeName !== 'normal') {
             document.body.classList.add(`theme-${themeName}`);
         }
+        
         if (themeSelector) {
             themeSelector.value = themeName;
         }
 
-        themeCardOptions.forEach(card => {
+        themeCards.forEach(card => {
             if (card.getAttribute('data-theme') === themeName) {
                 card.classList.add('active');
             } else {
                 card.classList.remove('active');
             }
         });
+
+        const detail = themeDetails[themeName] || themeDetails['normal'];
+        if (themeBadgeText) themeBadgeText.textContent = detail.name;
+        if (themeCharIcon) themeCharIcon.className = detail.icon;
+        if (themeCharText) themeCharText.textContent = detail.text;
     }
 
     const savedTheme = localStorage.getItem(THEME_KEY) || 'normal';
     applyTheme(savedTheme);
 
-
-    /* =========================================================
-       LOAD DATA PROFIL DARI STORAGE & INITIAL BASELINE CHECK
-       ========================================================= */
-    let savedData = {};
-
-    try {
-        savedData = JSON.parse(
-            localStorage.getItem(STORAGE_KEY) || '{}'
-        );
-    } catch (error) {
-        savedData = {};
-    }
-
-    function applySavedData() {
-        if (savedData.name) {
-            displayName.textContent = savedData.name;
-            displayNameData.textContent = savedData.name;
-            editName.value = savedData.name;
-        }
-
-        if (savedData.email) {
-            displayEmail.textContent = savedData.email;
-            editEmail.value = savedData.email;
-        }
-
-        if (savedData.phone) {
-            displayPhone.textContent = savedData.phone;
-            editPhone.value = savedData.phone;
-        }
-
-        if (savedData.position) {
-            displayPosition.textContent = savedData.position;
-            editPosition.value = savedData.position;
-        }
-
-        if (savedData.unit) {
-            displayUnit.textContent = savedData.unit;
-            editUnit.value = savedData.unit;
-        }
-
-        if (savedData.photo) {
-            showPhoto(savedData.photo);
-        }
-    }
-
-    applySavedData();
-
-    // Baseline untuk mendeteksi perubahan form
-    const initialFormState = {
-        name: editName.value,
-        email: editEmail.value,
-        phone: editPhone.value,
-        position: editPosition.value,
-        unit: editUnit.value,
-        theme: savedTheme,
-        photo: savedData.photo || ''
-    };
-
-    function checkFormChanges() {
-        const currentState = {
-            name: editName.value.trim(),
-            email: editEmail.value.trim(),
-            phone: editPhone.value.trim(),
-            position: editPosition.value.trim(),
-            unit: editUnit.value.trim(),
-            theme: themeSelector ? themeSelector.value : 'normal',
-            photo: savedData.photo || ''
-        };
-
-        const isChanged = 
-            currentState.name !== initialFormState.name ||
-            currentState.email !== initialFormState.email ||
-            currentState.phone !== initialFormState.phone ||
-            currentState.position !== initialFormState.position ||
-            currentState.unit !== initialFormState.unit ||
-            currentState.theme !== initialFormState.theme ||
-            currentState.photo !== initialFormState.photo;
-
-        if (isChanged) {
-            btnSaveProfile.removeAttribute('disabled');
-            btnSaveProfile.classList.remove('disabled');
-        } else {
-            btnSaveProfile.setAttribute('disabled', 'true');
-            btnSaveProfile.classList.add('disabled');
-        }
-    }
-
-    // Event listener untuk memantau perubahan input form real-time
-    [editName, editEmail, editPhone, editPosition, editUnit].forEach(input => {
-        if (input) {
-            input.addEventListener('input', checkFormChanges);
-            input.addEventListener('change', checkFormChanges);
-        }
-    });
-
-    themeCardOptions.forEach(card => {
+    themeCards.forEach(card => {
         card.addEventListener('click', function() {
             const selectedTheme = this.getAttribute('data-theme');
             applyTheme(selectedTheme);
-            checkFormChanges();
         });
-    });
-
-    // Reset state saat modal ditutup agar tombol kembali disabled
-    const modalElement = document.getElementById('modalEditProfile');
-    modalElement.addEventListener('hidden.bs.modal', function () {
-        editName.value = savedData.name || initialFormState.name;
-        editEmail.value = savedData.email || initialFormState.email;
-        editPhone.value = savedData.phone || initialFormState.phone;
-        editPosition.value = savedData.position || initialFormState.position;
-        editUnit.value = savedData.unit || initialFormState.unit;
-        applyTheme(localStorage.getItem(THEME_KEY) || 'normal');
-        btnSaveProfile.setAttribute('disabled', 'true');
-        btnSaveProfile.classList.add('disabled');
     });
 
 
@@ -1844,9 +1824,8 @@ document.addEventListener('DOMContentLoaded', function () {
     /* =========================================================
        3. RIPPLE CLICK EFFECT ON BUTTONS (DEWA LEVEL)
        ========================================================= */
-    document.querySelectorAll('.ripple-btn, .profile-edit-main-btn, .btn-profile-save').forEach(btn => {
+    document.querySelectorAll('.ripple-btn, .btn-profile-save').forEach(btn => {
         btn.addEventListener('click', function (e) {
-            if (this.hasAttribute('disabled') || this.classList.contains('disabled')) return;
             const circle = document.createElement('span');
             const diameter = Math.max(this.clientWidth, this.clientHeight);
             const radius = diameter / 2;
@@ -1973,6 +1952,54 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     /* =========================================================
+       LOAD DATA PROFIL DARI STORAGE
+       ========================================================= */
+    let savedData = {};
+
+    try {
+        savedData = JSON.parse(
+            localStorage.getItem(STORAGE_KEY) || '{}'
+        );
+    } catch (error) {
+        savedData = {};
+    }
+
+    function applySavedData() {
+        if (savedData.name) {
+            displayName.textContent = savedData.name;
+            displayNameData.textContent = savedData.name;
+            editName.value = savedData.name;
+        }
+
+        if (savedData.email) {
+            displayEmail.textContent = savedData.email;
+            editEmail.value = savedData.email;
+        }
+
+        if (savedData.phone) {
+            displayPhone.textContent = savedData.phone;
+            editPhone.value = savedData.phone;
+        }
+
+        if (savedData.position) {
+            displayPosition.textContent = savedData.position;
+            editPosition.value = savedData.position;
+        }
+
+        if (savedData.unit) {
+            displayUnit.textContent = savedData.unit;
+            editUnit.value = savedData.unit;
+        }
+
+        if (savedData.photo) {
+            showPhoto(savedData.photo);
+        }
+    }
+
+    applySavedData();
+
+
+    /* =========================================================
        EFEK VISUAL TAMPILAN FOTO DEWA
        ========================================================= */
     function showPhoto(imageSource) {
@@ -2021,8 +2048,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             localStorage.setItem(STORAGE_KEY, JSON.stringify(savedData));
             showPhoto(imageSource);
-            checkFormChanges();
-            showToast('Foto profil baru siap disimpan!', 'success', 'Foto Dipilih');
+            showToast('Foto profil baru berhasil diperbarui!', 'success', 'Foto Disimpan');
         };
         reader.readAsDataURL(file);
     }
@@ -2037,7 +2063,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     /* =========================================================
-       SUBMIT FORM EDIT PROFIL INTERAKTIF & TUTUP MODAL OTOMATIS
+       SUBMIT FORM EDIT PROFIL INTERAKTIF
        ========================================================= */
     editForm.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -2061,7 +2087,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Simpan Data
         savedData.name = name;
         savedData.email = email;
         savedData.phone = phone || '-';
@@ -2071,15 +2096,6 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(savedData));
         localStorage.setItem(THEME_KEY, selectedTheme);
         applyTheme(selectedTheme);
-
-        // Perbarui baseline awal setelah simpan
-        initialFormState.name = name;
-        initialFormState.email = email;
-        initialFormState.phone = phone || '-';
-        initialFormState.position = position || 'Petugas ULT';
-        initialFormState.unit = unit || 'Unit Layanan Terpadu';
-        initialFormState.theme = selectedTheme;
-        initialFormState.photo = savedData.photo || '';
 
         const elementsToAnimate = [displayName, displayNameData, displayEmail, displayPhone, displayPosition, displayUnit];
         elementsToAnimate.forEach(el => {
@@ -2102,26 +2118,14 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }, 280);
 
-        // LANGSUNG TUTUP MODAL EDIT PROFIL SECARA PROGRAMATIK
-        let modalInstance = bootstrap.Modal.getInstance(modalElement);
-        if (!modalInstance) {
-            modalInstance = new bootstrap.Modal(modalElement);
+        const modalElement = document.getElementById('modalEditProfile');
+        const modal = bootstrap.Modal.getInstance(modalElement);
+
+        if (modal) {
+            modal.hide();
         }
-        modalInstance.hide();
 
-        // Bersihkan Backdrop Bootstrap sepenuhnya agar kembali ke halaman utama profil dengan mulus
-        setTimeout(() => {
-            document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
-            document.body.classList.remove('modal-open');
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
-        }, 350);
-
-        // Kunci kembali tombol simpan karena sudah disimpan
-        btnSaveProfile.setAttribute('disabled', 'true');
-        btnSaveProfile.classList.add('disabled');
-
-        showToast('Profil petugas berhasil diperbarui dan halaman ditutup.', 'success', 'Perubahan Disimpan');
+        showToast('Profil petugas & tema karakter berhasil diperbarui secara permanen.', 'success', 'Pembaruan Disimpan');
     });
 
 });

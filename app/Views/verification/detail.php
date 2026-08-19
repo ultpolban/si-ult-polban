@@ -1,215 +1,437 @@
 <?= $this->extend('layouts/template') ?>
+
 <?= $this->section('content') ?>
 
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1>Detail Tiket</h1>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="content">
 <div class="container-fluid">
 
-    <?php if(session()->getFlashdata('success')): ?>
-        <div class="alert alert-success">
-            <?= session()->getFlashdata('success') ?>
-        </div>
-    <?php endif; ?>
-
-    <!-- Informasi Tiket -->
-    <div class="card card-primary">
+    <div class="card">
 
         <div class="card-header">
+
             <h3 class="card-title">
-                Informasi Tiket
+                <i class="fas fa-ticket-alt"></i>
+                Detail Tiket
             </h3>
-        </div>
 
-        <div class="card-body">
+            <div class="card-tools">
 
-            <table class="table table-bordered">
+                <a href="<?= site_url('verification') ?>"
+                   class="btn btn-secondary btn-sm">
 
-                <tr>
-                    <th width="250">Nomor Tiket</th>
-                    <td><?= esc($ticket['ticket_number']) ?></td>
-                </tr>
+                    <i class="fas fa-arrow-left"></i>
+                    Kembali
 
-                <tr>
-                    <th>Nama Pemohon</th>
-                    <td><?= esc($ticket['applicant_name']) ?></td>
-                </tr>
-
-                <tr>
-                    <th>NIM</th>
-                    <td><?= esc($ticket['nim']) ?></td>
-                </tr>
-
-                <tr>
-                    <th>Email</th>
-                    <td><?= esc($ticket['email']) ?></td>
-                </tr>
-
-                <tr>
-                    <th>No HP</th>
-                    <td><?= esc($ticket['phone']) ?></td>
-                </tr>
-
-                <tr>
-                    <th>Layanan</th>
-                    <td><?= esc($ticket['service_name']) ?></td>
-                </tr>
-
-                <tr>
-                    <th>Judul Tiket</th>
-                    <td><?= esc($ticket['ticket_title']) ?></td>
-                </tr>
-
-                <tr>
-                    <th>Deskripsi</th>
-                    <td><?= nl2br(esc($ticket['ticket_description'])) ?></td>
-                </tr>
-
-                <tr>
-                    <th>Jenis Pengajuan</th>
-                    <td><?= esc($ticket['submission_type']) ?></td>
-                </tr>
-
-                <tr>
-                    <th>Status</th>
-                    <td>
-                        <span class="badge badge-info">
-                            <?= esc($ticket['status']) ?>
-                        </span>
-                    </td>
-                </tr>
-
-            </table>
-
-        </div>
-
-    </div>
-
-    <!-- Lampiran -->
-    <div class="card card-info">
-
-        <div class="card-header">
-            <h3 class="card-title">
-                Lampiran
-            </h3>
-        </div>
-
-        <div class="card-body">
-
-            <?php if (!empty($ticket['attachment'])): ?>
-
-                <a href="<?= base_url('uploads/'.$ticket['attachment']) ?>"
-                   target="_blank"
-                   class="btn btn-primary">
-                    <i class="fas fa-paperclip"></i>
-                    Lihat Lampiran
                 </a>
 
-            <?php else: ?>
+            </div>
 
-                <span class="text-danger">
-                    Tidak ada lampiran.
-                </span>
+        </div>
+
+
+        <div class="card-body">
+
+            <?php if (session()->getFlashdata('success')): ?>
+
+                <div class="alert alert-success">
+
+                    <?= esc(
+                        session()->getFlashdata('success')
+                    ) ?>
+
+                </div>
 
             <?php endif; ?>
 
-        </div>
 
-    </div>
+            <?php if (session()->getFlashdata('error')): ?>
 
-    <!-- Riwayat -->
-    <div class="card card-secondary">
+                <div class="alert alert-danger">
 
-        <div class="card-header">
-            <h3 class="card-title">
-                Riwayat Proses
-            </h3>
-        </div>
+                    <?= esc(
+                        session()->getFlashdata('error')
+                    ) ?>
 
-        <div class="card-body">
+                </div>
 
-            <?php if(!empty($logs)): ?>
+            <?php endif; ?>
+
+
+            <!-- INFORMASI TIKET -->
+
+            <h5 class="mb-3">
+                Informasi Tiket
+            </h5>
+
+            <div class="table-responsive">
 
                 <table class="table table-bordered">
 
-                    <thead>
-
-                    <tr>
-                        <th>Tanggal</th>
-                        <th>Petugas</th>
-                        <th>Aktivitas</th>
-                    </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                    <?php foreach($logs as $log): ?>
-
                     <tr>
 
-                        <td><?= esc($log['created_at']) ?></td>
+                        <th width="25%">
+                            Nomor Tiket
+                        </th>
 
-                        <td><?= esc($log['user_name']) ?></td>
-
-                        <td><?= esc($log['activity']) ?></td>
+                        <td>
+                            <?= esc(
+                                $ticket['ticket_number']
+                                ?? '-'
+                            ) ?>
+                        </td>
 
                     </tr>
 
-                    <?php endforeach; ?>
 
-                    </tbody>
+                    <tr>
+
+                        <th>
+                            Layanan
+                        </th>
+
+                        <td>
+                            <?= esc(
+                                $ticket['service_display_name']
+                                ?? '-'
+                            ) ?>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <th>
+                            Kode Layanan
+                        </th>
+
+                        <td>
+                            <?= esc(
+                                $ticket['service_code']
+                                ?? '-'
+                            ) ?>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <td>
+
+                            <?php
+                            $status = strtolower(
+                                trim(
+                                    $ticket['status'] ?? ''
+                                )
+                            );
+
+                            $badge = 'secondary';
+
+                            if ($status === 'submitted') {
+                                $badge = 'warning';
+                            } elseif ($status === 'verified') {
+                                $badge = 'success';
+                            } elseif (
+                                $status === 'need_revision' ||
+                                $status === 'revision'
+                            ) {
+                                $badge = 'info';
+                            } elseif ($status === 'rejected') {
+                                $badge = 'danger';
+                            }
+                            ?>
+
+                            <span class="badge badge-<?= $badge ?>">
+
+                                <?= esc(
+                                    $ticket['status'] ?? '-'
+                                ) ?>
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <th>
+                            Prioritas
+                        </th>
+
+                        <td>
+                            <?= esc(
+                                $ticket['priority']
+                                ?? '-'
+                            ) ?>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <th>
+                            Tanggal Pengajuan
+                        </th>
+
+                        <td>
+                            <?= esc(
+                                $ticket['submitted_at']
+                                ?? $ticket['created_at']
+                                ?? '-'
+                            ) ?>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <th>
+                            Tanggal Verifikasi
+                        </th>
+
+                        <td>
+                            <?= esc(
+                                $ticket['verified_at']
+                                ?? '-'
+                            ) ?>
+                        </td>
+
+                    </tr>
 
                 </table>
 
+            </div>
+
+
+            <!-- DATA PEMOHON -->
+
+            <h5 class="mt-4 mb-3">
+                Data Pemohon
+            </h5>
+
+            <?php if (!empty($profile)): ?>
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered">
+
+                        <?php foreach ($profile as $key => $value): ?>
+
+                            <?php
+                            if (
+                                $key === 'id' ||
+                                $key === 'created_at' ||
+                                $key === 'updated_at'
+                            ) {
+                                continue;
+                            }
+                            ?>
+
+                            <tr>
+
+                                <th width="25%">
+
+                                    <?= esc(
+                                        ucwords(
+                                            str_replace(
+                                                '_',
+                                                ' ',
+                                                $key
+                                            )
+                                        )
+                                    ) ?>
+
+                                </th>
+
+                                <td>
+                                    <?= esc(
+                                        $value ?? '-'
+                                    ) ?>
+                                </td>
+
+                            </tr>
+
+                        <?php endforeach; ?>
+
+                    </table>
+
+                </div>
+
             <?php else: ?>
 
-                <p class="text-muted">
-                    Belum ada riwayat proses.
-                </p>
+                <div class="alert alert-info">
+
+                    Data profil pemohon tidak ditemukan.
+
+                </div>
 
             <?php endif; ?>
 
-        </div>
 
-    </div>
+            <!-- UNIT -->
 
-    <!-- Komentar -->
-    <div class="card card-warning">
+            <?php if (!empty($unit)): ?>
 
-        <div class="card-header">
-            <h3 class="card-title">
-                Komentar Verifikasi
-            </h3>
-        </div>
+                <h5 class="mt-4 mb-3">
+                    Unit Layanan
+                </h5>
 
-        <div class="card-body">
+                <div class="table-responsive">
 
-            <?php if(!empty($comments)): ?>
+                    <table class="table table-bordered">
 
-                <?php foreach($comments as $comment): ?>
+                        <?php foreach ($unit as $key => $value): ?>
 
-                    <div class="border rounded p-3 mb-2">
+                            <?php
+                            if (
+                                $key === 'id' ||
+                                $key === 'created_at' ||
+                                $key === 'updated_at'
+                            ) {
+                                continue;
+                            }
+                            ?>
 
-                        <strong>
-                            <?= esc($comment['sender']) ?>
-                        </strong>
+                            <tr>
 
-                        <small class="float-right text-muted">
-                            <?= esc($comment['created_at']) ?>
-                        </small>
+                                <th width="25%">
 
-                        <hr>
+                                    <?= esc(
+                                        ucwords(
+                                            str_replace(
+                                                '_',
+                                                ' ',
+                                                $key
+                                            )
+                                        )
+                                    ) ?>
 
-                        <?= nl2br(esc($comment['comment'])) ?>
+                                </th>
+
+                                <td>
+                                    <?= esc(
+                                        $value ?? '-'
+                                    ) ?>
+                                </td>
+
+                            </tr>
+
+                        <?php endforeach; ?>
+
+                    </table>
+
+                </div>
+
+            <?php endif; ?>
+
+
+            <!-- AKSI VERIFIKASI -->
+
+            <?php if ($status === 'submitted'): ?>
+
+                <hr>
+
+                <h5 class="mb-3">
+                    Tindakan Verifikasi
+                </h5>
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <form
+                            method="post"
+                            action="<?= site_url(
+                                'verification/verify/' .
+                                $ticket['id']
+                            ) ?>">
+
+                            <?= csrf_field() ?>
+
+                            <button
+                                type="submit"
+                                class="btn btn-success btn-block"
+                                onclick="return confirm('Verifikasi tiket ini?')">
+
+                                <i class="fas fa-check"></i>
+
+                                Verifikasi
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <button
+                            type="button"
+                            class="btn btn-warning btn-block"
+                            data-toggle="modal"
+                            data-target="#revisionModal">
+
+                            <i class="fas fa-edit"></i>
+
+                            Need Revision
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <button
+                            type="button"
+                            class="btn btn-danger btn-block"
+                            data-toggle="modal"
+                            data-target="#rejectModal">
+
+                            <i class="fas fa-times"></i>
+
+                            Reject
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            <?php endif; ?>
+
+
+            <!-- KOMENTAR -->
+
+            <h5 class="mt-4 mb-3">
+                Riwayat Komentar
+            </h5>
+
+            <?php if (!empty($comments)): ?>
+
+                <?php foreach ($comments as $comment): ?>
+
+                    <div class="card card-outline card-secondary mb-2">
+
+                        <div class="card-body">
+
+                            <?= esc(
+                                $comment['comment']
+                                ?? $comment['content']
+                                ?? $comment['message']
+                                ?? '-'
+                            ) ?>
+
+                        </div>
 
                     </div>
 
@@ -223,87 +445,262 @@
 
             <?php endif; ?>
 
+
+            <!-- LOG -->
+
+            <h5 class="mt-4 mb-3">
+                Riwayat Tiket
+            </h5>
+
+            <?php if (!empty($logs)): ?>
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Keterangan
+                                </th>
+
+                                <th>
+                                    Waktu
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <?php foreach ($logs as $log): ?>
+
+                                <tr>
+
+                                    <td>
+                                        <?= esc(
+                                            $log['status']
+                                            ?? '-'
+                                        ) ?>
+                                    </td>
+
+                                    <td>
+                                        <?= esc(
+                                            $log['description']
+                                            ?? $log['note']
+                                            ?? $log['message']
+                                            ?? '-'
+                                        ) ?>
+                                    </td>
+
+                                    <td>
+                                        <?= esc(
+                                            $log['created_at']
+                                            ?? '-'
+                                        ) ?>
+                                    </td>
+
+                                </tr>
+
+                            <?php endforeach; ?>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <?php else: ?>
+
+                <p class="text-muted">
+                    Belum ada riwayat.
+                </p>
+
+            <?php endif; ?>
+
         </div>
 
     </div>
 
-    <!-- Disposisi -->
-    <div class="card card-success">
+</div>
 
-        <div class="card-header">
-            <h3 class="card-title">
-                Informasi Disposisi
-            </h3>
-        </div>
 
-        <div class="card-body">
+<!-- MODAL NEED REVISION -->
 
-            <table class="table table-bordered">
+<div class="modal fade"
+     id="revisionModal"
+     tabindex="-1">
 
-                <tr>
-                    <th width="250">Unit Tujuan</th>
-                    <td><?= !empty($ticket['assigned_unit']) ? esc($ticket['assigned_unit']) : '-' ?></td>
-                </tr>
+    <div class="modal-dialog">
 
-                <tr>
-                    <th>Diverifikasi Oleh</th>
-                    <td><?= !empty($ticket['verified_by']) ? esc($ticket['verified_by']) : '-' ?></td>
-                </tr>
+        <div class="modal-content">
 
-                <tr>
-                    <th>Tanggal Verifikasi</th>
-                    <td><?= !empty($ticket['verified_at']) ? esc($ticket['verified_at']) : '-' ?></td>
-                </tr>
+            <form
+                method="post"
+                action="<?= site_url(
+                    'verification/revision/' .
+                    $ticket['id']
+                ) ?>">
 
-            </table>
+                <?= csrf_field() ?>
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Need Revision
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal">
+
+                        <span>&times;</span>
+
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+
+                        <label>
+                            Alasan Revisi
+                        </label>
+
+                        <textarea
+                            name="comment"
+                            class="form-control"
+                            rows="5"
+                            required></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+
+                        Batal
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-warning">
+
+                        Kirim Revisi
+
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
 
     </div>
 
-    <!-- Tombol -->
-    <div class="mt-3">
-
-    <!-- KEMBALI KE HALAMAN DISPOSISI -->
-    <a href="<?= base_url('disposition') ?>"
-       class="btn btn-secondary">
-
-        <i class="fas fa-arrow-left"></i>
-        Kembali
-
-    </a>
-
-
-    <!-- TOMBOL VERIFIKASI -->
-    <?php if (($ticket['status'] ?? '') !== 'Verified' && ($ticket['status'] ?? '') !== 'Assigned'): ?>
-
-        <a href="<?= base_url('verification/verify/' . $ticket['id']) ?>"
-           class="btn btn-success">
-
-            <i class="fas fa-check-circle"></i>
-            Verifikasi
-
-        </a>
-
-    <?php endif; ?>
-
-
-    <!-- TOMBOL DISPOSISI -->
-    <?php if (($ticket['status'] ?? '') === 'Verified'): ?>
-
-        <a href="<?= base_url('disposition/detail/' . $ticket['id']) ?>"
-           class="btn btn-warning">
-
-            <i class="fas fa-share"></i>
-            Disposisi
-
-        </a>
-
-    <?php endif; ?>
-
 </div>
 
+
+<!-- MODAL REJECT -->
+
+<div class="modal fade"
+     id="rejectModal"
+     tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form
+                method="post"
+                action="<?= site_url(
+                    'verification/reject/' .
+                    $ticket['id']
+                ) ?>">
+
+                <?= csrf_field() ?>
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Tolak Tiket
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal">
+
+                        <span>&times;</span>
+
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+
+                        <label>
+                            Alasan Penolakan
+                        </label>
+
+                        <textarea
+                            name="comment"
+                            class="form-control"
+                            rows="5"
+                            required></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+
+                        Batal
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
+
+                        Tolak Tiket
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
 </div>
-</section>
 
 <?= $this->endSection() ?>

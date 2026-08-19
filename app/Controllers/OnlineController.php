@@ -3,14 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\TicketModel;
+use Config\Database;
 
 class OnlineController extends BaseController
 {
     protected $ticketModel;
+    protected $db;
 
     public function __construct()
     {
         $this->ticketModel = new TicketModel();
+        $this->db = Database::connect();
     }
 
     // ==========================
@@ -41,83 +44,65 @@ class OnlineController extends BaseController
         helper(['form']);
 
         $rules = [
-            'service_name'       => 'required',
+            'service_id'         => 'required|integer',
             'applicant_name'     => 'required',
-            'applicant_type'     => 'required',
             'ticket_title'       => 'required',
             'ticket_description' => 'required'
         ];
 
         if (!$this->validate($rules)) {
-
             return redirect()->back()
                 ->withInput()
                 ->with('errors', $this->validator->getErrors());
         }
 
-        $ticketNumber = 'ULT-' . date('YmdHis') . rand(100,999);
+        $ticketNumber = 'ULT-' . date('YmdHis') . rand(100, 999);
+        $serviceId = (int) $this->request->getPost('service_id');
+        $applicantName = $this->request->getPost('applicant_name');
+        $email = $this->request->getPost('email');
+        $phone = $this->request->getPost('phone');
+        $nim = $this->request->getPost('nim');
 
         $attachment = null;
-
         $file = $this->request->getFile('attachment');
 
         if ($file && $file->isValid() && !$file->hasMoved()) {
-
             $attachment = $file->getRandomName();
-
-            $file->move(FCPATH.'uploads', $attachment);
+            $file->move(FCPATH . 'uploads', $attachment);
         }
 
-        $this->ticketModel->insert([
+        // Obter ou criar perfil de usuário
+        $userProfileId = $this->getOrCreateUserProfile(
+            $applicantName,
+            $nim,
+            $email,
+            $phone
+        );
 
-            'ticket_number'      => $ticketNumber,
-            'submission_type'    => 'Online',
+        if (!$userProfileId) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal membuat profil pengguna.');
+        }
 
-            'service_name'       => $this->request->getPost('service_name'),
-
-            'applicant_name'     => $this->request->getPost('applicant_name'),
-            'applicant_type'     => $this->request->getPost('applicant_type'),
-
-            'nim'                => $this->request->getPost('nim'),
-            'email'              => $this->request->getPost('email'),
-            'phone'              => $this->request->getPost('phone'),
-
-            'program_studi'      => $this->request->getPost('program_studi'),
-            'jurusan'            => $this->request->getPost('jurusan'),
-            'angkatan'           => $this->request->getPost('angkatan'),
-
-            'fakultas'           => $this->request->getPost('fakultas'),
-            'jabatan_dosen'      => $this->request->getPost('jabatan_dosen'),
-
-            'unit_kerja'         => $this->request->getPost('unit_kerja'),
-            'jabatan_tendik'     => $this->request->getPost('jabatan_tendik'),
-
-            'nama_mahasiswa'     => $this->request->getPost('nama_mahasiswa'),
-            'nim_mahasiswa'      => $this->request->getPost('nim_mahasiswa'),
-            'hubungan'           => $this->request->getPost('hubungan'),
-
-            'prodi_alumni'       => $this->request->getPost('prodi_alumni'),
-            'tahun_lulus'        => $this->request->getPost('tahun_lulus'),
-
-            'instansi'           => $this->request->getPost('instansi'),
-            'pic'                => $this->request->getPost('pic'),
-            'jabatan_mitra'      => $this->request->getPost('jabatan_mitra'),
-
-            'instansi_public'    => $this->request->getPost('instansi_public'),
-            'alamat_public'      => $this->request->getPost('alamat_public'),
-
-            'alamat'             => $this->request->getPost('alamat'),
-            'pekerjaan'          => $this->request->getPost('pekerjaan'),
-
-            'ticket_title'       => $this->request->getPost('ticket_title'),
-            'ticket_description' => $this->request->getPost('ticket_description'),
-
-            'attachment'         => $attachment,
-
-            'status'             => 'Submitted',
-            'priority'           => 'Normal',
-            'submitted_at'       => date('Y-m-d H:i:s')
+        // Inserir tiket
+        $inserted = $this->ticketModel->insert([
+            'ticket_number'  => $ticketNumber,
+            'user_profile_id' => $userProfileId,
+            'service_id'     => $serviceId,
+            'title'          => $this->request->getPost('ticket_title'),
+            'description'    => $this->request->getPost('ticket_description'),
+            'attachment'     => $attachment,
+            'status'         => 'submitted',
+            'priority'       => 'normal',
+            'submitted_at'   => date('Y-m-d H:i:s')
         ]);
+
+        if (!$inserted) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal menyimpan tiket: ' . implode(', ', $this->ticketModel->errors()));
+        }
 
         return redirect()->to('/online/success/' . $ticketNumber);
     }
@@ -130,5 +115,58 @@ class OnlineController extends BaseController
         return view('online/success', [
             'ticket_number' => $ticket
         ]);
+    }
+
+    // ==========================
+    // HELPER: Obter ou criar perfil de usuário
+    // ==========================
+    private function getOrCreateUserProfile($name, $nim = null, $email = null, $phone = null)
+    {
+        if (empty($name)) {
+            return null;
+        }
+
+        // Tentar encontrar perfil existente por email ou NIM
+        if (!empty($email)) {
+            $existing = $this->db->table('user_profiles')
+                ->where('email', $email)
+                ->where('deleted_at IS NULL', null, false)
+                ->get()
+                ->getRowArray();
+
+            if ($existing) {
+                return $existing['id'];
+            }
+        }
+
+        if (!empty($nim)) {
+            $existing = $this->db->table('user_profiles')
+                ->where('nim', $nim)
+                ->where('deleted_at IS NULL', null, false)
+                ->get()
+                ->getRowArray();
+
+            if ($existing) {
+                return $existing['id'];
+            }
+        }
+
+        // Criar novo perfil
+        $profileData = [
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'nim' => $nim,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+
+        $inserted = $this->db->table('user_profiles')
+            ->insert($profileData);
+
+        if ($inserted) {
+            return $this->db->insertID();
+        }
+
+        return null;
     }
 }

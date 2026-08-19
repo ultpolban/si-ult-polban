@@ -66,6 +66,11 @@ class ReportController extends BaseController
     // ==========================
     public function excel()
     {
+        if (!class_exists(\PhpOffice\PhpSpreadsheet\Spreadsheet::class)) {
+            return redirect()->to(base_url('report'))
+                ->with('error', 'Export Excel belum tersedia karena library PhpSpreadsheet belum terinstal.');
+        }
+
         $ticketModel = new TicketModel();
 
         $tickets = $ticketModel
@@ -87,12 +92,12 @@ class ReportController extends BaseController
 
         foreach ($tickets as $ticket) {
 
-            $sheet->setCellValue('A'.$row, $ticket['ticket_number']);
-            $sheet->setCellValue('B'.$row, $ticket['applicant_name']);
-            $sheet->setCellValue('C'.$row, $ticket['applicant_type']);
-            $sheet->setCellValue('D'.$row, $ticket['service_name']);
-            $sheet->setCellValue('E'.$row, $ticket['status']);
-            $sheet->setCellValue('F'.$row, $ticket['submitted_at']);
+            $sheet->setCellValue('A' . $row, $ticket['ticket_number'] ?? '');
+            $sheet->setCellValue('B' . $row, $ticket['applicant_name'] ?? '');
+            $sheet->setCellValue('C' . $row, $ticket['applicant_type'] ?? '');
+            $sheet->setCellValue('D' . $row, $ticket['service_name'] ?? '');
+            $sheet->setCellValue('E' . $row, $ticket['status'] ?? '');
+            $sheet->setCellValue('F' . $row, $ticket['submitted_at'] ?? '');
 
             $row++;
         }

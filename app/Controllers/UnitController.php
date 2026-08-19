@@ -7,16 +7,21 @@ use App\Models\TicketLogModel;
 
 class UnitController extends BaseController
 {
-  public function index()
-{
-    $data['tickets']=$this->ticketModel
+    protected $ticketModel;
 
-        ->where('status','Assigned')
+    public function __construct()
+    {
+        $this->ticketModel = new TicketModel();
+    }
 
-        ->findAll();
+    public function index()
+    {
+        $data['tickets'] = $this->ticketModel
+            ->where('status', 'Assigned')
+            ->findAll();
 
-    return view('unit/index',$data);
-}
+        return view('unit/index', $data);
+    }
 
     public function process($id)
     {
@@ -34,7 +39,7 @@ class UnitController extends BaseController
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
-        return redirect()->to('/unit')
+        return redirect()->to(base_url('unit'))
             ->with('success', 'Tiket sedang diproses.');
     }
 
@@ -55,7 +60,7 @@ class UnitController extends BaseController
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
-        return redirect()->to('/unit')
+        return redirect()->to(base_url('unit'))
             ->with('success', 'Tiket selesai diproses.');
     }
 }

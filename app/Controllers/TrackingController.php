@@ -39,8 +39,8 @@ class TrackingController extends BaseController
     {
         $ticketNumber = trim(
             $this->request->getPost('ticket_number')
-            ?: $this->request->getGet('ticket_number')
-            ?: ''
+                ?: $this->request->getGet('ticket_number')
+                ?: ''
         );
 
         if ($ticketNumber === '') {
@@ -166,6 +166,7 @@ class TrackingController extends BaseController
                 'In Progress',
                 'Completed'
             ])
+            ->where('assigned_unit IS NOT NULL', null, false)
             ->where('assigned_unit !=', '')
             ->orderBy('updated_at', 'DESC')
             ->findAll();
@@ -255,7 +256,6 @@ class TrackingController extends BaseController
             $jam  = (int) $selisih->h;
 
             return $hari . ' Hari ' . $jam . ' Jam';
-
         } catch (\Throwable $e) {
 
             return '-';

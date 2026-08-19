@@ -34,346 +34,95 @@
 
 <section class="content">
 
-<div class="container-fluid">
-
-<div class="row">
-
-    <div class="col-lg-3 col-md-6">
-
-        <div class="small-box bg-info">
-
-            <div class="inner">
-
-                <h3><?= esc($ticket['status']) ?></h3>
-
-                <p>Status Tiket</p>
-
-            </div>
-
-            <div class="icon">
-
-                <i class="fas fa-ticket-alt"></i>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-3 col-md-6">
-
-        <div class="small-box bg-success">
-
-            <div class="inner">
-
-                <h3><?= esc($ticket['priority']) ?></h3>
-
-                <p>Prioritas</p>
-
-            </div>
-
-            <div class="icon">
-
-                <i class="fas fa-star"></i>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-3 col-md-6">
-
-        <div class="small-box bg-warning">
-
-            <div class="inner">
-
-                <h3><?= esc($ticket['submission_type']) ?></h3>
-
-                <p>Jenis Pengajuan</p>
-
-            </div>
-
-            <div class="icon">
-
-                <i class="fas fa-globe"></i>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-3 col-md-6">
-
-        <div class="small-box bg-primary">
-
-            <div class="inner">
-
-                <h3>
-
-                    <?= !empty($ticket['assigned_unit']) ? esc($ticket['assigned_unit']) : '-' ?>
-
-                </h3>
-
-                <p>Unit Tujuan</p>
-
-            </div>
-
-            <div class="icon">
-
-                <i class="fas fa-building"></i>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<form action="<?= base_url('verification/process/'.$ticket['id']) ?>" method="post">
-
-<div class="card card-primary">
-
-    <div class="card-header">
-
-        <h3 class="card-title">
-
-            <i class="fas fa-id-card"></i>
-
-            Informasi Permohonan
-
-        </h3>
-
-    </div>
-
-    <div class="card-body">
+    <div class="container-fluid">
 
         <div class="row">
 
-            <div class="col-md-6">
+            <div class="col-lg-3 col-md-6">
 
-                <table class="table table-borderless">
+                <div class="small-box bg-info">
 
-                    <tr>
+                    <div class="inner">
 
-                        <th width="180">Nomor Tiket</th>
+                        <h3><?= esc($ticket['status'] ?? 'Unknown') ?></h3>
 
-                        <td><?= esc($ticket['ticket_number']) ?></td>
-
-                    </tr>
-
-                    <tr>
-
-                        <th>Nama Pemohon</th>
-
-                        <td><?= esc($ticket['applicant_name']) ?></td>
-
-                    </tr>
-
-                    <tr>
-
-                        <th>NIM</th>
-
-                        <td><?= esc($ticket['nim']) ?></td>
-
-                    </tr>
-
-                    <tr>
-
-                        <th>Email</th>
-
-                        <td><?= esc($ticket['email']) ?></td>
-
-                    </tr>
-
-                    <tr>
-
-                        <th>No. HP</th>
-
-                        <td><?= esc($ticket['phone']) ?></td>
-
-                    </tr>
-
-                </table>
-
-            </div>
-
-            <div class="col-md-6">
-
-                <table class="table table-borderless">
-
-                    <tr>
-
-                        <th width="180">Layanan</th>
-
-                        <td><?= esc($ticket['service_name']) ?></td>
-
-                    </tr>
-
-                    <tr>
-
-                        <th>Jenis</th>
-
-                        <td><?= esc($ticket['submission_type']) ?></td>
-
-                    </tr>
-
-                    <tr>
-
-                        <th>Prioritas</th>
-
-                        <td><?= esc($ticket['priority']) ?></td>
-
-                    </tr>
-
-                    <tr>
-
-                        <th>Status</th>
-
-                        <td>
-
-                            <span class="badge badge-info">
-
-                                <?= esc($ticket['status']) ?>
-
-                            </span>
-
-                        </td>
-
-                    </tr>
-
-                </table>
-
-            </div>
-
-        </div>
-
-        <hr>
-
-        <h5>Deskripsi Permohonan</h5>
-
-        <div class="alert alert-light">
-
-            <?= nl2br(esc($ticket['ticket_description'])) ?>
-
-        </div>
-
-    </div>
-
-</div>
-
-<div class="card card-info">
-
-    <div class="card-header">
-
-        <h3 class="card-title">
-
-            <i class="fas fa-paperclip"></i>
-
-            Lampiran Pemohon
-
-        </h3>
-
-    </div>
-
-    <div class="card-body">
-
-        <div class="row">
-
-            <div class="col-md-8">
-
-                <?php if(!empty($ticket['attachment'])): ?>
-
-                    <?php
-                        $ext = strtolower(pathinfo($ticket['attachment'], PATHINFO_EXTENSION));
-                    ?>
-
-                    <?php if($ext == 'pdf'): ?>
-
-                        <iframe
-                            src="<?= base_url('uploads/'.$ticket['attachment']) ?>"
-                            width="100%"
-                            height="600"
-                            style="border:1px solid #ddd;border-radius:5px;">
-                        </iframe>
-
-                    <?php else: ?>
-
-                        <img
-                            src="<?= base_url('uploads/'.$ticket['attachment']) ?>"
-                            class="img-fluid img-thumbnail">
-
-                    <?php endif; ?>
-
-                <?php else: ?>
-
-                    <div class="alert alert-warning">
-
-                        <i class="fas fa-exclamation-circle"></i>
-
-                        Tidak ada lampiran.
+                        <p>Status Tiket</p>
 
                     </div>
 
-                <?php endif; ?>
+                    <div class="icon">
 
-            </div>
-
-            <div class="col-md-4">
-
-                <div class="card">
-
-                    <div class="card-header bg-light">
-
-                        <strong>File Lampiran</strong>
+                        <i class="fas fa-ticket-alt"></i>
 
                     </div>
 
-                    <div class="card-body text-center">
+                </div>
 
-                        <?php if(!empty($ticket['attachment'])): ?>
+            </div>
 
-                            <i class="fas fa-file-alt fa-4x text-primary mb-3"></i>
+            <div class="col-lg-3 col-md-6">
 
-                            <p>
+                <div class="small-box bg-success">
 
-                                <?= esc($ticket['attachment']) ?>
+                    <div class="inner">
 
-                            </p>
+                        <h3><?= esc($ticket['priority'] ?? '-') ?></h3>
 
-                            <a
-                                href="<?= base_url('uploads/'.$ticket['attachment']) ?>"
-                                target="_blank"
-                                class="btn btn-info btn-block">
+                        <p>Prioritas</p>
 
-                                <i class="fas fa-eye"></i>
+                    </div>
 
-                                Lihat Lampiran
+                    <div class="icon">
 
-                            </a>
+                        <i class="fas fa-star"></i>
 
-                            <a
-                                href="<?= base_url('uploads/'.$ticket['attachment']) ?>"
-                                download
-                                class="btn btn-success btn-block">
+                    </div>
 
-                                <i class="fas fa-download"></i>
+                </div>
 
-                                Download
+            </div>
 
-                            </a>
+            <div class="col-lg-3 col-md-6">
 
-                        <?php else: ?>
+                <div class="small-box bg-warning">
 
-                            <p class="text-muted">
+                    <div class="inner">
 
-                                Belum ada file.
+                        <h3><?= esc($ticket['submission_type'] ?? '-') ?></h3>
 
-                            </p>
+                        <p>Jenis Pengajuan</p>
 
-                        <?php endif; ?>
+                    </div>
+
+                    <div class="icon">
+
+                        <i class="fas fa-globe"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="small-box bg-primary">
+
+                    <div class="inner">
+
+                        <h3>
+
+                            <?= !empty($ticket['assigned_unit']) ? esc($ticket['assigned_unit']) : '-' ?>
+
+                        </h3>
+
+                        <p>Unit Tujuan</p>
+
+                    </div>
+
+                    <div class="icon">
+
+                        <i class="fas fa-building"></i>
 
                     </div>
 
@@ -383,394 +132,645 @@
 
         </div>
 
-    </div>
+        <form action="<?= base_url('verification/process/' . $ticket['id']) ?>" method="post">
 
-</div>
+            <div class="card card-primary">
 
-<div class="card card-success">
+                <div class="card-header">
 
-    <div class="card-header">
+                    <h3 class="card-title">
 
-        <h3 class="card-title">
+                        <i class="fas fa-id-card"></i>
 
-            <i class="fas fa-check-square"></i>
+                        Informasi Permohonan
 
-            Checklist Kelengkapan
+                    </h3>
 
-        </h3>
+                </div>
 
-    </div>
+                <div class="card-body">
 
-    <div class="card-body">
+                    <div class="row">
 
-        <div class="custom-control custom-checkbox mb-2">
+                        <div class="col-md-6">
 
-            <input type="checkbox" class="custom-control-input" id="cek1">
+                            <table class="table table-borderless">
 
-            <label class="custom-control-label" for="cek1">
+                                <tr>
 
-                Formulir permohonan telah diisi lengkap
+                                    <th width="180">Nomor Tiket</th>
 
-            </label>
+                                    <td><?= esc($ticket['ticket_number'] ?? '-') ?></td>
 
-        </div>
+                                </tr>
 
-        <div class="custom-control custom-checkbox mb-2">
+                                <tr>
 
-            <input type="checkbox" class="custom-control-input" id="cek2">
+                                    <th>Nama Pemohon</th>
 
-            <label class="custom-control-label" for="cek2">
+                                    <td><?= esc($ticket['applicant_name'] ?? '-') ?></td>
 
-                Dokumen persyaratan lengkap
+                                </tr>
 
-            </label>
+                                <tr>
 
-        </div>
+                                    <th>NIM</th>
 
-        <div class="custom-control custom-checkbox mb-2">
+                                    <td><?= esc($ticket['nim'] ?? '-') ?></td>
 
-            <input type="checkbox" class="custom-control-input" id="cek3">
+                                </tr>
 
-            <label class="custom-control-label" for="cek3">
+                                <tr>
 
-                Data pemohon sesuai
+                                    <th>Email</th>
 
-            </label>
+                                    <td><?= esc($ticket['email'] ?? '-') ?></td>
 
-        </div>
+                                </tr>
 
-        <div class="custom-control custom-checkbox">
+                                <tr>
 
-            <input type="checkbox" class="custom-control-input" id="cek4">
+                                    <th>No. HP</th>
 
-            <label class="custom-control-label" for="cek4">
+                                    <td><?= esc($ticket['phone'] ?? '-') ?></td>
 
-                Siap diproses ke tahap disposisi
+                                </tr>
 
-            </label>
+                            </table>
 
-        </div>
+                        </div>
 
-    </div>
+                        <div class="col-md-6">
 
-</div>
+                            <table class="table table-borderless">
 
-<div class="card card-secondary">
+                                <tr>
 
-    <div class="card-header">
+                                    <th width="180">Layanan</th>
 
-        <h3 class="card-title">
+                                    <td><?= esc($ticket['service_name'] ?? '-') ?></td>
 
-            <i class="fas fa-history"></i>
+                                </tr>
 
-            Riwayat Proses Verifikasi
+                                <tr>
 
-        </h3>
+                                    <th>Jenis</th>
 
-    </div>
+                                    <td><?= esc($ticket['submission_type'] ?? '-') ?></td>
 
-    <div class="card-body">
+                                </tr>
 
-        <?php if(!empty($logs)): ?>
+                                <tr>
 
-            <ul class="timeline">
+                                    <th>Prioritas</th>
 
-                <?php foreach($logs as $log): ?>
+                                    <td><?= esc($ticket['priority'] ?? '-') ?></td>
 
-                <li>
+                                </tr>
 
-                    <i class="fas fa-check bg-primary"></i>
+                                <tr>
 
-                    <div class="timeline-item">
+                                    <th>Status</th>
 
-                        <span class="time">
+                                    <td>
 
-                            <i class="far fa-clock"></i>
+                                        <span class="badge badge-info">
 
-                            <?= date('d M Y H:i', strtotime($log['created_at'])) ?>
+                                            <?= esc($ticket['status'] ?? 'Unknown') ?>
 
-                        </span>
+                                        </span>
 
-                        <h3 class="timeline-header">
+                                    </td>
 
-                            <?= esc($log['user_name']) ?>
+                                </tr>
 
-                        </h3>
-
-                        <div class="timeline-body">
-
-                            <?= esc($log['activity']) ?>
+                            </table>
 
                         </div>
 
                     </div>
 
-                </li>
+                    <hr>
 
-                <?php endforeach; ?>
+                    <h5>Deskripsi Permohonan</h5>
 
-            </ul>
+                    <div class="alert alert-light">
 
-        <?php else: ?>
+                        <?= nl2br(esc($ticket['ticket_description'] ?? '-')) ?>
 
-            <div class="alert alert-info">
-
-                Belum ada riwayat verifikasi.
-
-            </div>
-
-        <?php endif; ?>
-
-    </div>
-
-</div>
-<div class="card card-success">
-
-    <div class="card-header">
-
-        <h3 class="card-title">
-
-            <i class="fas fa-user-check"></i>
-
-            Form Verifikasi Tiket
-
-        </h3>
-
-    </div>
-
-    <div class="card-body">
-
-        <div class="row">
-
-            <div class="col-md-6">
-
-                <div class="form-group">
-
-                    <label>Status Verifikasi <span class="text-danger">*</span></label>
-
-                    <select name="status" class="form-control" required>
-
-                        <option value="">-- Pilih Keputusan --</option>
-
-                        <option value="Verified">✔ Verifikasi</option>
-
-                        <option value="Need Revision">📝 Need Revision</option>
-
-                        <option value="Rejected">✖ Reject</option>
-
-                    </select>
+                    </div>
 
                 </div>
 
             </div>
 
-            <div class="col-md-6">
+            <div class="card card-info">
 
-                <div class="form-group">
+                <div class="card-header">
 
-                    <label>Prioritas</label>
+                    <h3 class="card-title">
 
-                    <select name="priority" class="form-control">
+                        <i class="fas fa-paperclip"></i>
 
-                        <option value="Low">Low</option>
+                        Lampiran Pemohon
 
-                        <option value="Medium">Medium</option>
+                    </h3>
 
-                        <option value="High">High</option>
+                </div>
 
-                        <option value="Urgent">Urgent</option>
+                <div class="card-body">
 
-                    </select>
+                    <div class="row">
+
+                        <div class="col-md-8">
+
+                            <?php if (!empty($ticket['attachment'])): ?>
+
+                                <?php
+                                $ext = strtolower(pathinfo($ticket['attachment'], PATHINFO_EXTENSION));
+                                ?>
+
+                                <?php if ($ext == 'pdf'): ?>
+
+                                    <iframe
+                                        src="<?= base_url('uploads/' . $ticket['attachment']) ?>"
+                                        width="100%"
+                                        height="600"
+                                        style="border:1px solid #ddd;border-radius:5px;">
+                                    </iframe>
+
+                                <?php else: ?>
+
+                                    <img
+                                        src="<?= base_url('uploads/' . $ticket['attachment']) ?>"
+                                        class="img-fluid img-thumbnail">
+
+                                <?php endif; ?>
+
+                            <?php else: ?>
+
+                                <div class="alert alert-warning">
+
+                                    <i class="fas fa-exclamation-circle"></i>
+
+                                    Tidak ada lampiran.
+
+                                </div>
+
+                            <?php endif; ?>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="card">
+
+                                <div class="card-header bg-light">
+
+                                    <strong>File Lampiran</strong>
+
+                                </div>
+
+                                <div class="card-body text-center">
+
+                                    <?php if (!empty($ticket['attachment'])): ?>
+
+                                        <i class="fas fa-file-alt fa-4x text-primary mb-3"></i>
+
+                                        <p>
+
+                                            <?= esc($ticket['attachment']) ?>
+
+                                        </p>
+
+                                        <a
+                                            href="<?= base_url('uploads/' . $ticket['attachment']) ?>"
+                                            target="_blank"
+                                            class="btn btn-info btn-block">
+
+                                            <i class="fas fa-eye"></i>
+
+                                            Lihat Lampiran
+
+                                        </a>
+
+                                        <a
+                                            href="<?= base_url('uploads/' . $ticket['attachment']) ?>"
+                                            download
+                                            class="btn btn-success btn-block">
+
+                                            <i class="fas fa-download"></i>
+
+                                            Download
+
+                                        </a>
+
+                                    <?php else: ?>
+
+                                        <p class="text-muted">
+
+                                            Belum ada file.
+
+                                        </p>
+
+                                    <?php endif; ?>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
             </div>
-        </div>
 
-        <div class="form-group">
+            <div class="card card-success">
 
-            <label>Unit Tujuan</label>
+                <div class="card-header">
 
-            <select name="assigned_unit" class="form-control">
+                    <h3 class="card-title">
 
-                <option value="">-- Pilih Unit --</option>
+                        <i class="fas fa-check-square"></i>
 
-                <option value="Akademik">Akademik</option>
+                        Checklist Kelengkapan
 
-                <option value="Kemahasiswaan">Kemahasiswaan</option>
+                    </h3>
 
-                <option value="Keuangan">Keuangan</option>
+                </div>
 
-                <option value="SDM">SDM</option>
+                <div class="card-body">
 
-                <option value="Kerja Sama">Kerja Sama</option>
+                    <div class="custom-control custom-checkbox mb-2">
 
-                <option value="Perpustakaan">Perpustakaan</option>
+                        <input type="checkbox" class="custom-control-input" id="cek1">
 
-                <option value="UPT TIK">UPT TIK</option>
+                        <label class="custom-control-label" for="cek1">
 
-            </select>
+                            Formulir permohonan telah diisi lengkap
 
-        </div>
+                        </label>
 
-        <div class="form-group">
+                    </div>
 
-            <label>Catatan Verifikasi</label>
+                    <div class="custom-control custom-checkbox mb-2">
 
-            <textarea
-                name="verification_note"
-                class="form-control"
-                rows="5"
-                placeholder="Tuliskan hasil pemeriksaan dokumen..."></textarea>
+                        <input type="checkbox" class="custom-control-input" id="cek2">
 
-        </div>
+                        <label class="custom-control-label" for="cek2">
 
-        <div class="form-group">
+                            Dokumen persyaratan lengkap
 
-            <label>Komentar Petugas</label>
+                        </label>
 
-            <textarea
-                name="comment"
-                class="form-control"
-                rows="3"
-                placeholder="Tambahkan komentar jika diperlukan..."></textarea>
+                    </div>
 
-        </div>
+                    <div class="custom-control custom-checkbox mb-2">
+
+                        <input type="checkbox" class="custom-control-input" id="cek3">
+
+                        <label class="custom-control-label" for="cek3">
+
+                            Data pemohon sesuai
+
+                        </label>
+
+                    </div>
+
+                    <div class="custom-control custom-checkbox">
+
+                        <input type="checkbox" class="custom-control-input" id="cek4">
+
+                        <label class="custom-control-label" for="cek4">
+
+                            Siap diproses ke tahap disposisi
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card card-secondary">
+
+                <div class="card-header">
+
+                    <h3 class="card-title">
+
+                        <i class="fas fa-history"></i>
+
+                        Riwayat Proses Verifikasi
+
+                    </h3>
+
+                </div>
+
+                <div class="card-body">
+
+                    <?php if (!empty($logs)): ?>
+
+                        <ul class="timeline">
+
+                            <?php foreach ($logs as $log): ?>
+
+                                <li>
+
+                                    <i class="fas fa-check bg-primary"></i>
+
+                                    <div class="timeline-item">
+
+                                        <span class="time">
+
+                                            <i class="far fa-clock"></i>
+
+                                            <?= date('d M Y H:i', strtotime($log['created_at'])) ?>
+
+                                        </span>
+
+                                        <h3 class="timeline-header">
+
+                                            <?= esc($log['user_name']) ?>
+
+                                        </h3>
+
+                                        <div class="timeline-body">
+
+                                            <?= esc($log['activity']) ?>
+
+                                        </div>
+
+                                    </div>
+
+                                </li>
+
+                            <?php endforeach; ?>
+
+                        </ul>
+
+                    <?php else: ?>
+
+                        <div class="alert alert-info">
+
+                            Belum ada riwayat verifikasi.
+
+                        </div>
+
+                    <?php endif; ?>
+
+                </div>
+
+            </div>
+            <div class="card card-success">
+
+                <div class="card-header">
+
+                    <h3 class="card-title">
+
+                        <i class="fas fa-user-check"></i>
+
+                        Form Verifikasi Tiket
+
+                    </h3>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+
+                                <label>Status Verifikasi <span class="text-danger">*</span></label>
+
+                                <select name="status" class="form-control" required>
+
+                                    <option value="">-- Pilih Keputusan --</option>
+
+                                    <option value="Verified">✔ Verifikasi</option>
+
+                                    <option value="Need Revision">📝 Need Revision</option>
+
+                                    <option value="Rejected">✖ Reject</option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+
+                                <label>Prioritas</label>
+
+                                <select name="priority" class="form-control">
+
+                                    <option value="Low">Low</option>
+
+                                    <option value="Medium">Medium</option>
+
+                                    <option value="High">High</option>
+
+                                    <option value="Urgent">Urgent</option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Unit Tujuan</label>
+
+                        <select name="assigned_unit" class="form-control">
+
+                            <option value="">-- Pilih Unit --</option>
+
+                            <option value="Akademik">Akademik</option>
+
+                            <option value="Kemahasiswaan">Kemahasiswaan</option>
+
+                            <option value="Keuangan">Keuangan</option>
+
+                            <option value="SDM">SDM</option>
+
+                            <option value="Kerja Sama">Kerja Sama</option>
+
+                            <option value="Perpustakaan">Perpustakaan</option>
+
+                            <option value="UPT TIK">UPT TIK</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Catatan Verifikasi</label>
+
+                        <textarea
+                            name="verification_note"
+                            class="form-control"
+                            rows="5"
+                            placeholder="Tuliskan hasil pemeriksaan dokumen..."></textarea>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Komentar Petugas</label>
+
+                        <textarea
+                            name="comment"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Tambahkan komentar jika diperlukan..."></textarea>
+
+                    </div>
+
+                </div>
+
+                <div class="card-footer d-flex justify-content-between">
+
+                    <!-- KEMBALI -->
+                    <a href="<?= base_url('verification') ?>"
+                        class="btn btn-secondary">
+
+                        <i class="fas fa-arrow-left"></i>
+                        Kembali
+
+                    </a>
+
+
+                    <div>
+
+                        <!-- VERIFIKASI -->
+                        <button
+                            type="submit"
+                            name="action"
+                            value="verify"
+                            id="btnVerify"
+                            class="btn btn-success">
+
+                            <i class="fas fa-check-circle"></i>
+                            Simpan Verifikasi
+
+                        </button>
+
+
+                        <!-- NEED REVISION -->
+                        <button
+                            type="submit"
+                            name="action"
+                            value="revision"
+                            id="btnRevision"
+                            class="btn btn-warning">
+
+                            <i class="fas fa-edit"></i>
+                            Need Revision
+
+                        </button>
+
+
+                        <!-- REJECT -->
+                        <button
+                            type="submit"
+                            name="action"
+                            value="reject"
+                            id="btnReject"
+                            class="btn btn-danger">
+
+                            <i class="fas fa-times"></i>
+                            Reject
+
+                        </button>
+
+
+                        <!-- DISPOSISI -->
+                        <a
+                            href="<?= base_url('disposition') ?>"
+                            id="btnDisposition"
+                            class="btn btn-primary">
+
+                            <i class="fas fa-share"></i>
+                            Disposisi
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+
+                const statusSelect = document.querySelector('select[name="status"]');
+
+                const btnVerify = document.getElementById('btnVerify');
+                const btnRevision = document.getElementById('btnRevision');
+                const btnReject = document.getElementById('btnReject');
+                const btnDisposition = document.getElementById('btnDisposition');
+
+
+                function updateButtons() {
+
+                    const status = statusSelect.value;
+
+                    // Sembunyikan semua tombol keputusan
+                    btnVerify.style.display = 'none';
+                    btnRevision.style.display = 'none';
+                    btnReject.style.display = 'none';
+
+
+                    // VERIFIKASI
+                    if (status === 'Verified') {
+
+                        btnVerify.style.display = 'inline-block';
+
+                    }
+
+
+                    // NEED REVISION
+                    else if (status === 'Need Revision') {
+
+                        btnRevision.style.display = 'inline-block';
+
+                    }
+
+
+                    // REJECT
+                    else if (status === 'Rejected') {
+
+                        btnReject.style.display = 'inline-block';
+
+                    }
+
+                }
+
+
+                // Jalankan saat halaman pertama dibuka
+                updateButtons();
+
+
+                // Jalankan setiap status berubah
+                statusSelect.addEventListener('change', updateButtons);
+
+            });
+        </script>
 
     </div>
-
-   <div class="card-footer d-flex justify-content-between">
-
-    <!-- KEMBALI -->
-    <a href="<?= base_url('verification') ?>"
-       class="btn btn-secondary">
-
-        <i class="fas fa-arrow-left"></i>
-        Kembali
-
-    </a>
-
-
-    <div>
-
-        <!-- VERIFIKASI -->
-        <button
-            type="submit"
-            name="action"
-            value="verify"
-            id="btnVerify"
-            class="btn btn-success">
-
-            <i class="fas fa-check-circle"></i>
-            Simpan Verifikasi
-
-        </button>
-
-
-        <!-- NEED REVISION -->
-        <button
-            type="submit"
-            name="action"
-            value="revision"
-            id="btnRevision"
-            class="btn btn-warning">
-
-            <i class="fas fa-edit"></i>
-            Need Revision
-
-        </button>
-
-
-        <!-- REJECT -->
-        <button
-            type="submit"
-            name="action"
-            value="reject"
-            id="btnReject"
-            class="btn btn-danger">
-
-            <i class="fas fa-times"></i>
-            Reject
-
-        </button>
-
-
-        <!-- DISPOSISI -->
-        <a
-            href="<?= base_url('disposition') ?>"
-            id="btnDisposition"
-            class="btn btn-primary">
-
-            <i class="fas fa-share"></i>
-            Disposisi
-
-        </a>
-
-    </div>
-
-</div>
-
-</div>
-</form>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-
-    const statusSelect = document.querySelector('select[name="status"]');
-
-    const btnVerify = document.getElementById('btnVerify');
-    const btnRevision = document.getElementById('btnRevision');
-    const btnReject = document.getElementById('btnReject');
-    const btnDisposition = document.getElementById('btnDisposition');
-
-
-    function updateButtons() {
-
-        const status = statusSelect.value;
-
-        // Sembunyikan semua tombol keputusan
-        btnVerify.style.display = 'none';
-        btnRevision.style.display = 'none';
-        btnReject.style.display = 'none';
-
-
-        // VERIFIKASI
-        if (status === 'Verified') {
-
-            btnVerify.style.display = 'inline-block';
-
-        }
-
-
-        // NEED REVISION
-        else if (status === 'Need Revision') {
-
-            btnRevision.style.display = 'inline-block';
-
-        }
-
-
-        // REJECT
-        else if (status === 'Rejected') {
-
-            btnReject.style.display = 'inline-block';
-
-        }
-
-    }
-
-
-    // Jalankan saat halaman pertama dibuka
-    updateButtons();
-
-
-    // Jalankan setiap status berubah
-    statusSelect.addEventListener('change', updateButtons);
-
-});
-</script>
-
-</div>
 </section>
 
 <?= $this->endSection() ?>

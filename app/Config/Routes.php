@@ -12,6 +12,8 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->get('/', 'Home::index');
 
+
+
 // ==============================
 // AUTH
 // ==============================
@@ -24,12 +26,18 @@ $routes->post('register', 'AuthController::storeRegister');
 
 $routes->get('logout', 'AuthController::logout');
 
+
+// ==============================
+// DATA TIKET
+// ==============================
 // ==============================
 // DATA TIKET
 // ==============================
 
-$routes->get('datatiket', 'DataTicket::index');
-
+$routes->get(
+    'datatiket',
+    'DataTicketController::index'
+);
 
 // ============================================================
 // ROUTE LOGIN / AUTH
@@ -37,23 +45,58 @@ $routes->get('datatiket', 'DataTicket::index');
 
 $routes->group('', ['filter' => 'auth'], function ($routes) {
 
-    // ==========================
+   
+
+// ==============================
+// PROFIL PETUGAS
+// ==============================
+
+$routes->get('profile', 'ProfileController::index');
+$routes->get('profile/edit', 'ProfileController::edit');
+$routes->post('profile/update', 'ProfileController::update');
+// ==========================
     // DASHBOARD
     // ==========================
 
-    $routes->get('dashboard', 'DashboardController::index');
+    $routes->get(
+        'dashboard',
+        'DashboardController::index'
+    );
 
 
     // ==========================
     // USER
     // ==========================
 
-    $routes->get('users', 'UserController::index');
-    $routes->get('users/create', 'UserController::create');
-    $routes->post('users/store', 'UserController::store');
-    $routes->get('users/edit/(:num)', 'UserController::edit/$1');
-    $routes->post('users/update/(:num)', 'UserController::update/$1');
-    $routes->get('users/delete/(:num)', 'UserController::delete/$1');
+    $routes->get(
+        'users',
+        'UserController::index'
+    );
+
+    $routes->get(
+        'users/create',
+        'UserController::create'
+    );
+
+    $routes->post(
+        'users/store',
+        'UserController::store'
+    );
+
+    $routes->get(
+        'users/edit/(:num)',
+        'UserController::edit/$1'
+    );
+
+    $routes->post(
+        'users/update/(:num)',
+        'UserController::update/$1'
+    );
+
+    $routes->get(
+        'users/delete/(:num)',
+        'UserController::delete/$1'
+    );
 
 
     // ==========================
@@ -100,7 +143,6 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // DISPOSISI
     // ==========================
 
-    // Bahasa Indonesia
     $routes->get(
         'disposisi',
         'DispositionController::index'
@@ -116,10 +158,14 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         'DispositionController::process/$1'
     );
 
-    // Bahasa Inggris
     $routes->get(
         'disposition',
         'DispositionController::index'
+    );
+
+    $routes->get(
+        'disposition/create/(:num)',
+        'DispositionController::create/$1'
     );
 
     $routes->get(
@@ -178,9 +224,9 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     );
 
 
-    // ==========================
-    // LAPORAN TAMU
-    // ==========================
+    // ============================================================
+    // LAPORAN TAMU / WALK IN
+    // ============================================================
 
     $routes->get(
         'guest-report',
@@ -197,26 +243,36 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         'GuestReportController::store'
     );
 
+
+    // ============================================================
+    // AJAX WALK IN
+    // ============================================================
+
+    // Jenis layanan berdasarkan Unit Layanan
     $routes->get(
-        'guest-report/detail/(:num)',
-        'GuestReportController::detail/$1'
+        'guest-report/services-by-unit/(:num)',
+        'GuestReportController::servicesByUnit/$1'
     );
 
+    // Persyaratan berdasarkan Jenis Layanan
     $routes->get(
-        'guest-report/edit/(:num)',
-        'GuestReportController::edit/$1'
+        'guest-report/requirements/(:num)',
+        'GuestReportController::requirements/$1'
     );
 
-    $routes->post(
-        'guest-report/update/(:num)',
-        'GuestReportController::update/$1'
-    );
+$routes->group('verification', function ($routes) {
 
-    $routes->get(
-        'guest-report/delete/(:num)',
-        'GuestReportController::delete/$1'
-    );
+    $routes->get('/', 'VerificationController::index');
 
+    $routes->get('detail/(:num)', 'VerificationController::detail/$1');
+
+    $routes->post('verify/(:num)', 'VerificationController::verify/$1');
+
+    $routes->post('revision/(:num)', 'VerificationController::revision/$1');
+
+    $routes->post('reject/(:num)', 'VerificationController::reject/$1');
+
+});
 
     // ==========================
     // PENGAJUAN ONLINE
@@ -311,7 +367,6 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         'tracking/dummy/(:segment)/(:segment)',
         'TrackingController::dummy/$1/$2'
     );
-
 });
 
 
@@ -353,6 +408,5 @@ $routes->group(
             'delete/(:num)',
             'UserController::delete/$1'
         );
-
     }
 );

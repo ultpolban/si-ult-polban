@@ -29,13 +29,13 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', 'Password salah');
         }
 
-        session()->set([
-            'user_id' => $user['id'],
-            'name' => $user['name'],
-            'email' => $user['email'],
-            'role_id' => $user['role_id'],
-            'logged_in' => true
-        ]);
+       session()->set([
+    'user_id' => $user['id'],
+    'name' => $user['full_name'],
+    'email' => $user['email'],
+    'role_id' => $user['role_id'],
+    'logged_in' => true
+]);
 
         return redirect()->to('/dashboard');
     }
@@ -70,18 +70,17 @@ class AuthController extends BaseController
 
         $userModel = new \App\Models\UserModel();
 
-        $userModel->save([
-            'name'      => $this->request->getPost('name'),
-            'email'     => $this->request->getPost('email'),
-            'phone'     => $this->request->getPost('phone'),
-            'password'  => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-
-            // Role Pemohon
-            'role_id'   => 4,
-
-            'is_active' => 1
-        ]);
-
+       $userModel->save([
+    'full_name'    => $this->request->getPost('name'),
+    'email'        => $this->request->getPost('email'),
+    'phone_number' => $this->request->getPost('phone'),
+    'password'     => password_hash(
+        $this->request->getPost('password'),
+        PASSWORD_DEFAULT
+    ),
+    'role_id'      => 4,
+    'is_active'    => 1
+]);
         return redirect()->to('/login')
             ->with('success', 'Registrasi berhasil, silakan login.');
     }

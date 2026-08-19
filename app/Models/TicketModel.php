@@ -6,79 +6,79 @@ use CodeIgniter\Model;
 
 class TicketModel extends Model
 {
-    protected $table = 'tickets';
-
-    protected $primaryKey = 'id';
-
-    protected $returnType = 'array';
+    protected $table            = 'tickets';
+    protected $primaryKey       = 'id';
+    protected $returnType       = 'array';
+    protected $useAutoIncrement = true;
 
     protected $allowedFields = [
-
-        // Data Tiket
         'ticket_number',
-        'service_name',
-        'ticket_title',
-        'ticket_description',
-        'attachment',
-
-        // Data Pemohon
-        'applicant_name',
-        'applicant_type',
-        'nim',
-        'email',
-        'phone',
-
-        // Mahasiswa
-        'program_studi',
-        'jurusan',
-        'angkatan',
-
-        // Dosen
-        'fakultas',
-        'jabatan_dosen',
-
-        // Tendik
-        'unit_kerja',
-        'jabatan_tendik',
-
-        // Orang Tua
-        'nama_mahasiswa',
-        'nim_mahasiswa',
-        'hubungan',
-
-        // Alumni
-        'prodi_alumni',
-        'tahun_lulus',
-
-        // Mitra
-        'instansi',
-        'pic',
-        'jabatan_mitra',
-
-        // Public
-        'instansi_public',
-        'alamat_public',
-
-        // Masyarakat
-        'alamat',
-        'pekerjaan',
-
-        // Proses Tiket
+        'user_profile_id',
+        'service_id',
         'status',
         'priority',
-        'assigned_unit',
-        'verified_by',
-        'verification_note',
-
-        // Waktu
         'submitted_at',
         'verified_at',
         'completed_at',
         'created_at',
-        'updated_at',
-
-        'submission_type',
+        'updated_at'
     ];
 
     protected $useTimestamps = false;
+
+    public function getTickets()
+    {
+        return $this->db->table('tickets t')
+            ->select('
+                t.*,
+                ms.name AS service_display_name,
+                ms.code AS service_code
+            ')
+            ->join(
+                'master_services ms',
+                'ms.id = t.service_id',
+                'left'
+            )
+            ->orderBy('t.id', 'DESC')
+            ->get()
+            ->getResultArray();
+    }
+
+    public function getTicketDetail($id)
+    {
+        return $this->db->table('tickets t')
+            ->select('
+                t.*,
+                ms.name AS service_display_name,
+                ms.code AS service_code,
+                ms.service_unit_id
+            ')
+            ->join(
+                'master_services ms',
+                'ms.id = t.service_id',
+                'left'
+            )
+            ->where('t.id', $id)
+            ->get()
+            ->getRowArray();
+    }
+
+    public function getByStatus($status)
+    {
+        return $this->db->table('tickets t')
+            ->select('
+                t.*,
+                ms.name AS service_display_name,
+                ms.code AS service_code
+            ')
+            ->join(
+                'master_services ms',
+                'ms.id = t.service_id',
+                'left'
+            )
+            ->where('LOWER(t.status)', strtolower($status))
+            ->orderBy('t.id', 'DESC')
+            ->get()
+            ->getResultArray();
+    }
 }

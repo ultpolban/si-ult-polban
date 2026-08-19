@@ -74,10 +74,10 @@
             <div class="btn-group">
 
                 <button type="button"
-                        class="btn btn-primary dropdown-toggle"
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false">
+                    class="btn btn-primary dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
 
                     <i class="fas fa-download"></i>
                     Export Laporan
@@ -87,18 +87,18 @@
                 <div class="dropdown-menu">
 
                     <a class="dropdown-item"
-                       href="<?= base_url('report/pdf') ?>"
-                       target="_blank">
+                        href="<?= base_url('report/pdf') ?>"
+                        target="_blank">
 
                         <i class="fas fa-file-pdf text-danger"></i>
                         Export PDF
 
                     </a>
 
-                    <?php if(method_exists('\App\Controllers\ReportController','excel')): ?>
+                    <?php if (class_exists('PhpOffice\\PhpSpreadsheet\\Spreadsheet')): ?>
 
                         <a class="dropdown-item"
-                           href="<?= base_url('report/excel') ?>">
+                            href="<?= base_url('report/excel') ?>">
 
                             <i class="fas fa-file-excel text-success"></i>
                             Export Excel
@@ -108,7 +108,7 @@
                     <?php endif; ?>
 
                     <a class="dropdown-item"
-                       href="<?= base_url('report/csv') ?>">
+                        href="<?= base_url('report/csv') ?>">
 
                         <i class="fas fa-file-csv text-primary"></i>
                         Export CSV
@@ -142,83 +142,82 @@
 
             <tbody>
 
-            <?php if(empty($tickets)): ?>
-
-                <tr>
-
-                    <td colspan="8" class="text-center">
-                        Tidak ada data.
-                    </td>
-
-                </tr>
-
-            <?php else: ?>
-
-                <?php $no = 1; ?>
-
-                <?php foreach($tickets as $ticket): ?>
-
-                    <?php
-
-                    $color = 'secondary';
-
-                    switch($ticket['status']){
-
-                        case 'Submitted':
-                            $color = 'warning';
-                            break;
-
-                        case 'Assigned':
-                            $color = 'info';
-                            break;
-
-                        case 'In Progress':
-                            $color = 'primary';
-                            break;
-
-                        case 'Completed':
-                            $color = 'success';
-                            break;
-
-                        case 'Need Revision':
-                            $color = 'dark';
-                            break;
-
-                        case 'Rejected':
-                            $color = 'danger';
-                            break;
-
-                    }
-
-                    ?>
+                <?php if (empty($tickets)): ?>
 
                     <tr>
 
-                        <td><?= $no++ ?></td>
-
-                        <td><?= esc($ticket['ticket_number']) ?></td>
-
-                        <td><?= esc($ticket['applicant_name']) ?></td>
-
-                        <td><?= esc($ticket['applicant_type']) ?></td>
-
-                        <td><?= esc($ticket['service_name']) ?></td>
-
-                        <td>
-                            <span class="badge badge-<?= $color ?>">
-                                <?= esc($ticket['status']) ?>
-                            </span>
+                        <td colspan="8" class="text-center">
+                            Tidak ada data.
                         </td>
-
-                        <td><?= esc($ticket['priority']) ?></td>
-
-                        <td><?= date('d-m-Y H:i', strtotime($ticket['submitted_at'])) ?></td>
 
                     </tr>
 
-                <?php endforeach; ?>
+                <?php else: ?>
 
-            <?php endif; ?>
+                    <?php $no = 1; ?>
+
+                    <?php foreach ($tickets as $ticket): ?>
+
+                        <?php
+
+                        $color = 'secondary';
+
+                        switch ($ticket['status']) {
+
+                            case 'Submitted':
+                                $color = 'warning';
+                                break;
+
+                            case 'Assigned':
+                                $color = 'info';
+                                break;
+
+                            case 'In Progress':
+                                $color = 'primary';
+                                break;
+
+                            case 'Completed':
+                                $color = 'success';
+                                break;
+
+                            case 'Need Revision':
+                                $color = 'dark';
+                                break;
+
+                            case 'Rejected':
+                                $color = 'danger';
+                                break;
+                        }
+
+                        ?>
+
+                        <tr>
+
+                            <td><?= $no++ ?></td>
+
+                            <td><?= esc($ticket['ticket_number'] ?? '-') ?></td>
+
+                            <td><?= esc($ticket['applicant_name'] ?? '-') ?></td>
+
+                            <td><?= esc($ticket['applicant_type'] ?? '-') ?></td>
+
+                            <td><?= esc($ticket['service_name'] ?? '-') ?></td>
+
+                            <td>
+                                <span class="badge badge-<?= $color ?>">
+                                    <?= esc($ticket['status'] ?? 'Unknown') ?>
+                                </span>
+                            </td>
+
+                            <td><?= esc($ticket['priority'] ?? '-') ?></td>
+
+                            <td><?= !empty($ticket['submitted_at']) ? date('d-m-Y H:i', strtotime($ticket['submitted_at'])) : '-' ?></td>
+
+                        </tr>
+
+                    <?php endforeach; ?>
+
+                <?php endif; ?>
 
             </tbody>
 

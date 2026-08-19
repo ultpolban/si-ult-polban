@@ -10,14 +10,17 @@ class DashboardController extends BaseController
     {
         $ticketModel = new TicketModel();
 
+        // Mengambil jumlah total tiket untuk badge "Data Tiket"
+        $totalTiket = $ticketModel->countAll();
+
+        // Mengambil jumlah tiket "Submitted" untuk badge "Verifikasi Tiket" & Notifikasi Lonceng
+        $submittedTiket = $ticketModel->where('status', 'Submitted')->countAllResults();
+
         $data = [
-
-            'total' => $ticketModel->countAll(),
-
-            'submitted' => $ticketModel
-                ->where('status', 'Submitted')
-                ->countAllResults(),
-
+            'total'       => $totalTiket,
+            'total_tiket' => $totalTiket,      // Digunakan untuk badge di Sidebar Data Tiket
+            'submitted'   => $submittedTiket,  // Digunakan untuk badge Verifikasi Tiket & Notifikasi Lonceng
+            
             'assigned' => $ticketModel
                 ->where('status', 'Assigned')
                 ->countAllResults(),
@@ -45,7 +48,6 @@ class DashboardController extends BaseController
             'tickets' => $ticketModel
                 ->orderBy('submitted_at', 'DESC')
                 ->findAll(5)
-
         ];
 
         return view('dashboard/index', $data);

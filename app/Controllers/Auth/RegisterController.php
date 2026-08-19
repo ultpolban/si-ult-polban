@@ -35,20 +35,29 @@ class RegisterController extends BaseController
      * Halaman Registrasi
      */
     public function index()
-    {
-        if (session()->get('isLoggedIn')) {
-            return redirect()->to('/dashboard-mahasiswa');
+{
+    if (session()->get('isLoggedIn')) {
+
+        $userId = (int) session()->get('user_id');
+
+        $dashboardUrl = $this->getDashboardUrl($userId);
+
+        if ($dashboardUrl) {
+            return redirect()->to($dashboardUrl);
         }
 
-        return view('auth/register', [
-            'title'          => 'Registrasi',
-            'applicantTypes' => $this->applicantTypeModel->getActive(),
-            'studyPrograms'  => $this->studyProgramModel->getActive(),
-            'classes'        => $this->classModel->getActive(),
-            'applicantCode'  => 'UMUM',
-            'applicantType'  => null,
-        ]);
+        session()->destroy();
     }
+
+    return view('auth/register', [
+        'title'          => 'Registrasi',
+        'applicantTypes' => $this->applicantTypeModel->getActive(),
+        'studyPrograms'  => $this->studyProgramModel->getActive(),
+        'classes'        => $this->classModel->getActive(),
+        'applicantCode'  => 'UMUM',
+        'applicantType'  => null,
+    ]);
+}
 
     /**
      * Proses Registrasi
@@ -136,29 +145,80 @@ class RegisterController extends BaseController
         }
 
         // Ambil data jenis pemohon
-        $applicantType = $this->applicantTypeModel->find($applicantTypeId);
-        $applicantCode = strtoupper($applicantType['code'] ?? '');
+$applicantType = $this->applicantTypeModel->find($applicantTypeId);
+
+if (!$applicantType) {
+    return redirect()
+        ->back()
+        ->withInput()
+        ->with('error', 'Jenis pemohon tidak valid.');
+}
+
+$applicantCode = strtoupper(trim($applicantType['code'] ?? ''));
+
+
+if ($applicantCode === 'MHS') {
+
+    $nim = trim($post['nim'] ?? '');
+    $studyProgramId = (int) ($post['study_program_id'] ?? 0);
+    $classId = (int) ($post['class_id'] ?? 0);
+
+    if ($nim === '') {
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with('error', 'NIM wajib diisi.');
+    }
+
+    if ($studyProgramId <= 0) {
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with('error', 'Program studi wajib dipilih.');
+    }
+
+    if ($classId <= 0) {
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with('error', 'Kelas wajib dipilih.');
+    }
+}
 
         // Simpan profil pemohon
-        $this->profileModel->insert([
-            'user_id'           => (int) $userId,
-            'applicant_type_id' => $applicantTypeId,
-            'study_program_id'  => $this->nullableInt($post['study_program_id'] ?? 0),
-            'class_id'          => $this->nullableInt($post['class_id'] ?? 0),
-            'nim'               => $this->nullable($post['nim'] ?? null, $applicantCode),
-            'nik'               => $this->nullable($post['nik'] ?? null, $applicantCode),
-            'student_name'      => $this->nullable($post['student_name'] ?? null),
-            'institution_name'  => $this->nullable($post['institution_name'] ?? null),
-            'position'          => $this->nullable($post['position'] ?? null),
-            'name'              => $fullName,
-            'email'             => $email,
-            'phone'             => trim($post['phone_number'] ?? ''),
-            'address'           => trim($post['address'] ?? ''),
-            'photo'             => null,
-            'created_at'        => $now,
-            'updated_at'        => $now,
-            'deleted_at'        => null,
-        ]);
+       $profileId = $this->profileModel->insert([
+    'user_id'           => (int) $userId,
+    'applicant_type_id' => $applicantTypeId,
+    'study_program_id'  => $this->nullableInt($post['study_program_id'] ?? 0),
+    'class_id'          => $this->nullableInt($post['class_id'] ?? 0),
+    'nim'               => $this->nullable($post['nim'] ?? null, $applicantCode),
+    'nik'               => $this->nullable($post['nik'] ?? null, $applicantCode),
+    'student_name'      => $this->nullable($post['student_name'] ?? null),
+    'institution_name'  => $this->nullable($post['institution_name'] ?? null),
+    'position'          => $this->nullable($post['position'] ?? null),
+    'name'              => $fullName,
+    'email'             => $email,
+    'phone'             => trim($post['phone_number'] ?? ''),
+    'address'           => trim($post['address'] ?? ''),
+    'photo'             => null,
+    'created_at'        => $now,
+    'updated_at'        => $now,
+    'deleted_at'        => null,
+]);
+
+if (!$profileId) {
+
+    // Hapus user yang tadi sudah berhasil dibuat
+    $this->userModel->delete($userId);
+
+    return redirect()
+        ->back()
+        ->withInput()
+        ->with(
+            'error',
+            'Data profil gagal disimpan.'
+        );
+}
 
         // Auto login
         $user = $this->userModel->find($userId);
@@ -175,33 +235,55 @@ class RegisterController extends BaseController
             'user'       => $user,
         ]);
 
-        return redirect()->to('/dashboard-mahasiswa')
-            ->with('success', 'Registrasi berhasil. Selamat datang, ' . $fullName . '!');
+        $dashboardUrl = $this->getDashboardUrl((int) $userId);
+
+if (!$dashboardUrl) {
+
+    session()->destroy();
+
+    return redirect()
+        ->to('/login')
+        ->with(
+            'error',
+            'Registrasi berhasil, tetapi dashboard untuk jenis pemohon ini belum tersedia.'
+        );
+}
+
+return redirect()
+    ->to($dashboardUrl)
+    ->with(
+        'success',
+        'Registrasi berhasil. Selamat datang, ' . $fullName . '!'
+    );
     }
 
     /**
      * Ambil form dinamis berdasarkan jenis pemohon (AJAX)
      */
-    public function fields(int $applicantTypeId)
-    {
-        $applicantType = $this->applicantTypeModel->find($applicantTypeId);
+public function fields(int $applicantTypeId)
+{
+    $applicantType = $this->applicantTypeModel->find($applicantTypeId);
 
-        if (!$applicantType) {
-            return $this->response->setBody('<p class="text-muted text-center py-3">Jenis pemohon tidak ditemukan.</p>');
-        }
-
-        $code = strtoupper($applicantType['code'] ?? '');
-
-        $data = [
-            'applicantCode' => $code,
-            'applicantType' => $applicantType,
-            'studyPrograms' => $this->studyProgramModel->getActive(),
-            'classes'       => $this->classModel->getActive(),
-            'data'          => [],
-        ];
-
-        return view('auth/_register_fields', $data);
+    if (!$applicantType) {
+        return $this->response->setBody(
+            '<p class="text-muted text-center py-3">
+                Jenis pemohon tidak ditemukan.
+            </p>'
+        );
     }
+
+    $code = strtoupper(trim($applicantType['code'] ?? ''));
+
+    $data = [
+        'applicantCode' => $code,
+        'applicantType' => $applicantType,
+        'studyPrograms' => $this->studyProgramModel->getActive(),
+        'classes'       => $this->classModel->getActive(),
+        'data'          => [],
+    ];
+
+    return view('auth/_register_fields', $data);
+}
 
     /**
      * Helper: kosongkan jika tidak ada
@@ -226,4 +308,60 @@ class RegisterController extends BaseController
 
         return $value > 0 ? $value : null;
     }
+
+    /**
+ * Tentukan dashboard berdasarkan jenis pemohon
+ */
+private function getDashboardUrl(int $userId): ?string
+{
+    $db = \Config\Database::connect();
+
+    $profile = $db->table('user_profiles up')
+        ->select('
+            up.applicant_type_id,
+            mat.code AS applicant_code
+        ')
+        ->join(
+            'master_applicant_types mat',
+            'mat.id = up.applicant_type_id',
+            'left'
+        )
+        ->where('up.user_id', $userId)
+        ->where('up.deleted_at', null)
+        ->get()
+        ->getRowArray();
+
+    if (!$profile) {
+        return null;
+    }
+
+    $code = strtoupper(trim($profile['applicant_code'] ?? ''));
+
+    switch ($code) {
+
+        case 'MHS':
+            return '/dashboard-mahasiswa';
+
+        case 'DOSEN':
+            return '/dosen/dashboard';
+
+        case 'TENDIK':
+            return '/dashboard-tendik';
+
+        case 'WALI':
+            return '/dashboard-orangtua';
+
+        case 'MITRA':
+            return '/dashboard-mitra';
+
+        case 'UMUM':
+            return '/dashboard-umum';
+
+        case 'ALUMNI':
+            return '/dashboard-alumni';
+
+        default:
+            return null;
+    }
+}
 }

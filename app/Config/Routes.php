@@ -25,6 +25,11 @@ $routes->get('register/fields/(:num)', 'Auth\RegisterController::fields/$1');
 
 $routes->get('logout', 'Auth\AuthController::logout');
 
+$routes->get(
+    'reset-password-mhs',
+    'ResetPasswordController::reset'
+);
+
 /*
 |--------------------------------------------------------------------------
 | DASHBOARD ORANG TUA

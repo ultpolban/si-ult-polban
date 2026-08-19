@@ -144,12 +144,13 @@
 
                         </div>
 
-                        <!-- Form dinamis per jenis pemohon -->
-                        <div id="dynamicFields">
+<div id="dynamicFields">
 
-                            <?= $this->include('auth/_register_fields') ?>
+    <p class="text-muted text-center py-3">
+        Pilih jenis pemohon terlebih dahulu.
+    </p>
 
-                        </div>
+</div>
 
                         <button
                             type="submit"
@@ -187,39 +188,90 @@
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <script>
-        $(function() {
+<script>
+$(document).ready(function () {
 
-            const fieldsUrl = "<?= base_url('register/fields') ?>";
+    const fieldsUrl = "<?= base_url('register/fields') ?>";
 
-            $('#applicantType').on('change', function() {
+    function loadApplicantFields() {
 
-                const id = $(this).val();
+        const applicantTypeId = $('#applicantType').val();
 
-                if (!id) {
-                    $('#dynamicFields').html('<p class="text-muted text-center py-3">Pilih jenis pemohon terlebih dahulu.</p>');
-                    return;
-                }
+        console.log('Applicant Type ID:', applicantTypeId);
+        console.log(
+            'Request URL:',
+            fieldsUrl + '/' + applicantTypeId
+        );
 
-                $.get(fieldsUrl + '/' + id, function(res) {
+        if (!applicantTypeId) {
 
-                    if (res) {
+            $('#dynamicFields').html(
+                '<p class="text-muted text-center py-3">' +
+                'Pilih jenis pemohon terlebih dahulu.' +
+                '</p>'
+            );
 
-                        $('#dynamicFields').html(res);
+            return;
+        }
 
-                    }
+        $.ajax({
 
-                });
+            url: fieldsUrl + '/' + applicantTypeId,
 
-            });
+            type: 'GET',
+
+            success: function (response) {
+
+                console.log('Response fields:', response);
+
+                $('#dynamicFields').html(response);
+
+            },
+
+            error: function (xhr) {
+
+                console.error(
+                    'Gagal mengambil field.'
+                );
+
+                console.error(
+                    'Status:',
+                    xhr.status
+                );
+
+                console.error(
+                    'Response:',
+                    xhr.responseText
+                );
+
+                $('#dynamicFields').html(
+                    '<div class="alert alert-danger">' +
+                    'Gagal memuat form jenis pemohon.' +
+                    '</div>'
+                );
+            }
 
         });
-    </script>
+    }
+
+
+    // Ketika dropdown berubah
+    $('#applicantType').on('change', function () {
+
+        loadApplicantFields();
+
+    });
+
+
+    // Ketika halaman pertama kali dibuka
+    loadApplicantFields();
+
+});
+</script>
 
 </body>
-
 </html>

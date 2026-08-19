@@ -2,157 +2,378 @@
 
 namespace App\Controllers;
 
+use App\Models\UserModel;
+use App\Models\UserProfileModel;
+
 class MahasiswaController extends BaseController
 {
+    protected UserModel $userModel;
+    protected UserProfileModel $profileModel;
+
+    public function __construct()
+    {
+        helper(['form']);
+
+        $this->userModel    = new UserModel();
+        $this->profileModel = new UserProfileModel();
+    }
+
     // ==========================================
     // DASHBOARD MAHASISWA
     // ==========================================
-    public function dashboard()
-    {
-        $sessionUser = session()->get('user') ?? [];
+   public function dashboard()
+{
+    // =====================================================
+    // 1. AMBIL DATA USER DARI SESSION
+    // =====================================================
 
-        $user = [
-            'nama'     => $sessionUser['nama'] ?? 'Mahasiswa',
-            'nim'      => $sessionUser['nim'] ?? '-',
-            'prodi'    => $sessionUser['prodi'] ?? '-',
-            'jurusan'  => $sessionUser['jurusan'] ?? '-',
-            'semester' => $sessionUser['semester'] ?? '-',
-            'angkatan' => $sessionUser['angkatan'] ?? '-',
-            'status'   => $sessionUser['status'] ?? 'Aktif',
-        ];
+    $sessionUser = session()->get('user') ?? [];
 
-        // ==========================================
-        // AMBIL DATA TIKET
-        // ==========================================
+    $user = [
+        'nama'     => $sessionUser['nama'] ?? 'Mahasiswa',
+        'nim'      => $sessionUser['nim'] ?? '-',
+        'prodi'    => $sessionUser['prodi'] ?? '-',
+        'jurusan'  => $sessionUser['jurusan'] ?? '-',
+        'semester' => $sessionUser['semester'] ?? '-',
+        'angkatan' => $sessionUser['angkatan'] ?? '-',
+        'status'   => $sessionUser['status'] ?? 'Aktif',
+    ];
 
-        $tickets = session()->get('mahasiswa_tickets') ?? [];
 
-        // ==========================================
-        // AMBIL DATA DRAFT
-        // ==========================================
+    // =====================================================
+    // 2. AMBIL USER PROFILE ID
+    // =====================================================
 
-        $drafts = session()->get('mahasiswa_drafts') ?? [];
+    $userProfileId = session()->get('user_profile_id');
 
-        // ==========================================
-        // HITUNG STATISTIK
-        // ==========================================
 
-        $total = count($tickets);
+    // =====================================================
+    // FALLBACK:
+    // JIKA user_profile_id BELUM ADA DI SESSION
+    // =====================================================
 
-        $diproses = 0;
-        $revisi   = 0;
-        $selesai  = 0;
+    if (empty($userProfileId)) {
 
-        foreach ($tickets as $ticket) {
+        $userId = session()->get('user_id');
 
-            $status = strtolower(
-                $ticket['status'] ?? ''
-            );
+        if (!empty($userId)) {
 
-            if (
-                in_array(
-                    $status,
-                    [
-                        'in progress',
-                        'diproses',
-                        'processing',
-                        'submitted'
-                    ]
-                )
-            ) {
-                $diproses++;
-            }
+            $userProfileModel = new \App\Models\UserProfileModel();
 
-            if (
-                in_array(
-                    $status,
-                    [
-                        'revision',
-                        'revisi'
-                    ]
-                )
-            ) {
-                $revisi++;
-            }
+            $profile = $userProfileModel
+                ->where('user_id', $userId)
+                ->first();
 
-            if (
-                in_array(
-                    $status,
-                    [
-                        'completed',
-                        'selesai'
-                    ]
-                )
-            ) {
-                $selesai++;
+            if ($profile) {
+
+                $userProfileId = $profile['id'];
+
             }
         }
+    }
 
-        // ==========================================
-        // STATISTIK
-        // ==========================================
 
-        $statistik = [
+    // =====================================================
+    // 3. AMBIL TIKET DARI DATABASE
+    // =====================================================
 
-            'total'      => $total,
+    $tickets = [];
 
-            'diproses'   => $diproses,
+    if (!empty($userProfileId)) {
 
-            'revisi'     => $revisi,
+        $db = \Config\Database::connect();
 
-            'selesai'    => $selesai,
+        $tickets = $db->table('service_requests sr')
+            ->select('
+                sr.id,
+                sr.ticket_number,
+                sr.user_profile_id,
+                sr.service_id,
+                sr.title,
+                sr.description,
+                sr.status,
+                sr.priority,
+                sr.submitted_at,
+                sr.created_at,
+                sr.updated_at,
+                ms.name AS service_name
+            ')
+            ->join(
+                'master_services ms',
+                'ms.id = sr.service_id',
+                'left'
+            )
+            ->where(
+                'sr.user_profile_id',
+                $userProfileId
+            )
+            ->where(
+                'sr.deleted_at IS NULL',
+                null,
+                false
+            )
+            ->orderBy(
+                'sr.created_at',
+                'DESC'
+            )
+            ->get()
+            ->getResultArray();
+    }
 
-            'notifikasi' => 0
 
-        ];
+    // =====================================================
+    // 4. HITUNG STATISTIK
+    // =====================================================
 
-        // ==========================================
-        // DATA DASHBOARD
-        // ==========================================
+    $total = count($tickets);
 
-        $data = [
+    $diproses = 0;
 
-            'title' => 'Dashboard Mahasiswa',
+    $revisi = 0;
 
-            'user' => $user,
+    $selesai = 0;
 
-            'statistik' => $statistik,
 
-            'tickets' => $tickets,
+    foreach ($tickets as $ticket) {
 
-            'drafts' => $drafts,
+        $status = strtolower(
+            trim(
+                $ticket['status'] ?? ''
+            )
+        );
 
-            'jadwal' => [
 
+        // ================================================
+        // SEDANG DIPROSES
+        // ================================================
+
+        if (
+            in_array(
+                $status,
                 [
-                    'judul'   => 'Batas Pengajuan Beasiswa',
-                    'tanggal' => '25 Juli 2026'
+                    'submitted',
+                    'verification',
+                    'verified',
+                    'in progress',
+                    'processing',
+                    'processed',
+                    'diproses',
                 ],
+                true
+            )
+        ) {
 
+            $diproses++;
+        }
+
+
+        // ================================================
+        // PERLU REVISI
+        // ================================================
+
+        if (
+            in_array(
+                $status,
                 [
-                    'judul'   => 'Pengambilan Surat',
-                    'tanggal' => '28 Juli 2026'
-                ]
+                    'revision',
+                    'revisi',
+                ],
+                true
+            )
+        ) {
 
+            $revisi++;
+        }
+
+
+        // ================================================
+        // SELESAI
+        // ================================================
+
+        if (
+            in_array(
+                $status,
+                [
+                    'completed',
+                    'selesai',
+                ],
+                true
+            )
+        ) {
+
+            $selesai++;
+        }
+    }
+
+
+    // =====================================================
+    // 5. STATISTIK DASHBOARD
+    // =====================================================
+
+    $statistik = [
+
+        'total' => $total,
+
+        'diproses' => $diproses,
+
+        'revisi' => $revisi,
+
+        'selesai' => $selesai,
+
+        'notifikasi' => 0,
+
+    ];
+
+
+    // =====================================================
+    // 6. RIWAYAT PENGAJUAN
+    // =====================================================
+    // Hanya tiket yang sudah selesai.
+    // Ini sesuai dengan view dashboard kamu sekarang.
+
+    $riwayat = [];
+
+
+    foreach ($tickets as $ticket) {
+
+        $status = strtolower(
+            trim(
+                $ticket['status'] ?? ''
+            )
+        );
+
+
+        if (
+            in_array(
+                $status,
+                [
+                    'completed',
+                    'selesai',
+                ],
+                true
+            )
+        ) {
+
+            $riwayat[] = [
+
+                'id' => $ticket['id'],
+
+                'nomor' =>
+                    $ticket['ticket_number']
+                    ?? '-',
+
+                'layanan' =>
+                    $ticket['service_name']
+                    ?? '-',
+
+                'unit_layanan' =>
+                    '-',
+
+                'created_at' =>
+                    $ticket['created_at']
+                    ?? $ticket['submitted_at']
+                    ?? null,
+
+                'status' =>
+                    $ticket['status']
+                    ?? 'completed',
+
+            ];
+        }
+    }
+
+
+    // =====================================================
+    // 7. AMBIL DATA DRAFT
+    // =====================================================
+    // Untuk sementara tetap menggunakan session.
+    // Nanti kita sambungkan ke database pada step berikutnya.
+
+    $drafts = session()->get(
+        'mahasiswa_drafts'
+    ) ?? [];
+
+
+    // =====================================================
+    // 8. DATA DASHBOARD
+    // =====================================================
+
+    $data = [
+
+        'title' =>
+            'Dashboard Mahasiswa',
+
+        'user' =>
+            $user,
+
+        'statistik' =>
+            $statistik,
+
+        'tickets' =>
+            $tickets,
+
+        'riwayat' =>
+            $riwayat,
+
+        'drafts' =>
+            $drafts,
+
+
+        // =================================================
+        // JADWAL
+        // =================================================
+
+        'jadwal' => [
+
+            [
+                'judul' =>
+                    'Batas Pengajuan Beasiswa',
+
+                'tanggal' =>
+                    '25 Juli 2026',
             ],
 
-            'akademik' => [
+            [
+                'judul' =>
+                    'Pengambilan Surat',
 
-                'ipk'    => '3.71',
+                'tanggal' =>
+                    '28 Juli 2026',
+            ],
 
-                'sks'    => 98,
+        ],
 
-                'status' => 'Aktif',
 
-                'dosen'  => 'Dr. Budi Santoso'
+        // =================================================
+        // AKADEMIK
+        // =================================================
 
-            ]
+        'akademik' => [
 
-        ];
+            'ipk' =>
+                '3.71',
 
-        return view(
-            'mahasiswa/dashboard',
-            $data
-        );
-    }
+            'sks' =>
+                98,
+
+            'status' =>
+                'Aktif',
+
+            'dosen' =>
+                'Dr. Budi Santoso',
+
+        ],
+
+    ];
+
+
+    // =====================================================
+    // 9. TAMPILKAN DASHBOARD
+    // =====================================================
+
+    return view(
+        'mahasiswa/dashboard',
+        $data
+    );
+}
 }

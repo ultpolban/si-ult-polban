@@ -331,37 +331,72 @@ class MahasiswaTicketController extends BaseController
     }
 
 
- public function create()
+public function create()
 {
     $unitModel = new MasterServiceUnitModel();
 
     // =====================================================
-    // AMBIL PROFILE MAHASISWA DARI SESSION
+    // AMBIL USER LOGIN DARI SESSION
     // =====================================================
 
     $user = session()->get('user') ?? [];
 
-    $profile = session()->get('mahasiswa_profile') ?? [];
-
-    $userProfileId = session()->get('user_profile_id');
-
+    $userId = (int) (
+        session()->get('user_id')
+        ?? ($user['id'] ?? 0)
+    );
 
     // =====================================================
-    // CEK PROFILE MAHASISWA
+    // CEK USER LOGIN
     // =====================================================
 
-    if (!$userProfileId || empty($profile)) {
+    if ($userId <= 0) {
 
-        session()->setFlashdata(
-            'error',
-            'Data profil mahasiswa tidak ditemukan.'
-        );
-
-        return redirect()->to(
-            base_url('dashboard-mahasiswa')
-        );
+        return redirect()
+            ->to(base_url('login'))
+            ->with(
+                'error',
+                'Sesi login tidak ditemukan. Silakan login kembali.'
+            );
     }
 
+    // =====================================================
+    // AMBIL PROFILE MAHASISWA DARI DATABASE
+    // =====================================================
+
+    $profileModel = new \App\Models\UserProfileModel();
+
+    $profile = $profileModel
+        ->where('user_id', $userId)
+        ->where('deleted_at', null)
+        ->first();
+
+    // =====================================================
+    // CEK PROFILE
+    // =====================================================
+
+    if (!$profile) {
+
+        return redirect()
+            ->to(base_url('dashboard-mahasiswa'))
+            ->with(
+                'error',
+                'Data profil mahasiswa tidak ditemukan.'
+            );
+    }
+
+    // =====================================================
+    // SIMPAN ID PROFILE KE SESSION
+    // Supaya fitur lain yang masih menggunakan session
+    // tetap kompatibel.
+    // =====================================================
+
+    $userProfileId = (int) $profile['id'];
+
+    session()->set([
+        'user_profile_id' => $userProfileId,
+        'mahasiswa_profile' => $profile,
+    ]);
 
     // =====================================================
     // AMBIL UNIT LAYANAN
@@ -372,7 +407,6 @@ class MahasiswaTicketController extends BaseController
         ->orderBy('sort_order', 'ASC')
         ->findAll();
 
-
     // =====================================================
     // DATA PEMOHON
     // =====================================================
@@ -380,7 +414,9 @@ class MahasiswaTicketController extends BaseController
     $pemohon = [
 
         'nama' => $user['nama']
-            ?? '',
+            ?? $user['full_name']
+            ?? $profile['name']
+            ?? 'Mahasiswa',
 
         'nik' => $profile['nik']
             ?? $user['nik']
@@ -391,13 +427,15 @@ class MahasiswaTicketController extends BaseController
             ?? '',
 
         'email' => $user['email']
+            ?? $profile['email']
             ?? '',
 
         'telepon' => $user['no_hp']
+            ?? $user['phone_number']
+            ?? $profile['phone']
             ?? '',
 
     ];
-
 
     // =====================================================
     // DATA VIEW
@@ -417,6 +455,9 @@ class MahasiswaTicketController extends BaseController
 
     ];
 
+    // =====================================================
+    // TAMPILKAN HALAMAN AJUKAN LAYANAN
+    // =====================================================
 
     return view(
         'mahasiswa/ticket/create',

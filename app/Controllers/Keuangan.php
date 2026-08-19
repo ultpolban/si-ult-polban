@@ -3,285 +3,644 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\PenangananTiketModel;
+use App\Models\TicketModel;
 
 class Keuangan extends BaseController
 {
-    protected $penangananTiketModel;
+    protected $ticketModel;
 
     public function __construct()
     {
-        $this->penangananTiketModel = new PenangananTiketModel();
+        $this->ticketModel = new TicketModel();
     }
+
+
+    // =========================================================
+    // INDEX
+    // =========================================================
 
     public function index()
     {
         return $this->dashboard();
     }
 
+
     // =========================================================
     // DASHBOARD
     // =========================================================
+
     public function dashboard()
     {
-        $unitName = 'Keuangan';
+        $tickets = $this->ticketModel
+            ->orderBy('id', 'DESC')
+            ->findAll();
 
-        $query = $this->penangananTiketModel
-            ->select('
-                penanganan_tiket.id,
-                penanganan_tiket.status,
-                penanganan_tiket.created_at,
-                pengajuan_tiket.no_tiket,
-                pengajuan_tiket.nama_pemohon,
-                pengajuan_tiket.nim,
-                pengajuan_tiket.judul,
-                layanan.nama_layanan,
-                unit_layanan.nama_unit
-            ')
-            ->join(
-                'pengajuan_tiket',
-                'pengajuan_tiket.id = penanganan_tiket.tiket_id',
-                'left'
-            )
-            ->join(
-                'layanan',
-                'layanan.id = pengajuan_tiket.layanan_id',
-                'left'
-            )
-            ->join(
-                'kategori_layanan',
-                'kategori_layanan.id = layanan.kategori_id',
-                'left'
-            )
-            ->join(
-                'unit_layanan',
-                'unit_layanan.id = kategori_layanan.unit_id',
-                'left'
-            )
-            ->where(
-                'unit_layanan.nama_unit',
-                $unitName
-            )
-            ->orderBy(
-                'penanganan_tiket.id',
-                'DESC'
+        $menunggu = 0;
+        $diproses = 0;
+        $selesai  = 0;
+        $ditolak  = 0;
+        $dibatalkan = 0;
+
+        foreach ($tickets as $ticket) {
+
+            $status = strtolower(
+                trim((string) ($ticket['status'] ?? ''))
             );
 
-        $tiket = $query->findAll();
+            switch ($status) {
 
-        $data = [
-            'title'     => 'Dashboard Keuangan',
-            'total'     => count($tiket),
-            'menunggu'  => 0,
-            'diproses'  => 0,
-            'selesai'   => 0,
-            'tiket'     => $tiket
-        ];
+                case 'menunggu':
+                    $menunggu++;
+                    break;
 
-        foreach ($tiket as $item) {
+                case 'diproses':
+                    $diproses++;
+                    break;
 
-            if (($item['status'] ?? '') == 'Menunggu') {
+                case 'selesai':
+                    $selesai++;
+                    break;
 
-                $data['menunggu']++;
+                case 'ditolak':
+                    $ditolak++;
+                    break;
 
-            } elseif (($item['status'] ?? '') == 'Diproses') {
-
-                $data['diproses']++;
-
-            } elseif (($item['status'] ?? '') == 'Selesai') {
-
-                $data['selesai']++;
+                case 'dibatalkan':
+                case 'dibatalkan':
+                    $dibatalkan++;
+                    break;
             }
         }
 
-        return view('keuangan/dashboard', $data);
+        $data = [
+
+            'title' => 'Dashboard Keuangan',
+
+            'total' => count($tickets),
+
+            'menunggu' => $menunggu,
+
+            'diproses' => $diproses,
+
+            'selesai' => $selesai,
+
+            'ditolak' => $ditolak,
+
+            'dibatalkan' => $dibatalkan,
+
+            'tiket' => $tickets,
+        ];
+
+        return view(
+            'keuangan/dashboard',
+            $data
+        );
     }
 
+
     // =========================================================
-    // PROFIL KEUANGAN
+    // PROFIL PETUGAS
     // =========================================================
-public function profil()
-{
-    return view('keuangan/profil', [
-        'title' => 'Profil Petugas Keuangan'
-    ]);
-}
+
+    public function profil()
+    {
+        $session = session();
+
+        $data = [
+
+            'title' => 'Profil Petugas Keuangan',
+
+            'name' => $session->get('name')
+                ?: 'Andi Pratama',
+
+            'nip' => $session->get('nip')
+                ?: '198705152024011001',
+
+            'email' => $session->get('email')
+                ?: 'andi.pratama@polban.ac.id',
+
+            'no_hp' => $session->get('no_hp')
+                ?: '081234567890',
+
+            'jabatan' => $session->get('jabatan')
+                ?: 'Petugas Unit Layanan',
+
+        ];
+
+        return view(
+            'keuangan/profil',
+            $data
+        );
+    }
+
+
+    // =========================================================
+    // PROFILE
+    // =========================================================
+
+    public function profile()
+    {
+        return $this->profil();
+    }
+
+
+    // =========================================================
+    // EDIT PROFIL
+    // =========================================================
+
+    public function editProfil()
+    {
+        return redirect()->to(
+            base_url('keuangan/profile')
+        );
+    }
+
+
+    // =========================================================
+    // UPDATE PROFIL
+    // =========================================================
+
+    public function updateProfil()
+    {
+        $session = session();
+
+        $name = trim(
+            (string) $this->request->getPost('name')
+        );
+
+        $nip = trim(
+            (string) $this->request->getPost('nip')
+        );
+
+        $email = trim(
+            (string) $this->request->getPost('email')
+        );
+
+        $no_hp = trim(
+            (string) $this->request->getPost('no_hp')
+        );
+
+        $jabatan = trim(
+            (string) $this->request->getPost('jabatan')
+        );
+
+
+        // =====================================================
+        // VALIDASI NAMA
+        // =====================================================
+
+        if ($name === '') {
+
+            return redirect()
+                ->to(base_url('keuangan/profile'))
+                ->withInput()
+                ->with(
+                    'error',
+                    'Nama Lengkap wajib diisi.'
+                );
+        }
+
+
+        // =====================================================
+        // VALIDASI NIP
+        // =====================================================
+
+        if ($nip === '') {
+
+            return redirect()
+                ->to(base_url('keuangan/profile'))
+                ->withInput()
+                ->with(
+                    'error',
+                    'NIP wajib diisi.'
+                );
+        }
+
+
+        // =====================================================
+        // VALIDASI EMAIL
+        // =====================================================
+
+        if ($email === '') {
+
+            return redirect()
+                ->to(base_url('keuangan/profile'))
+                ->withInput()
+                ->with(
+                    'error',
+                    'Email wajib diisi.'
+                );
+        }
+
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+            return redirect()
+                ->to(base_url('keuangan/profile'))
+                ->withInput()
+                ->with(
+                    'error',
+                    'Format email tidak valid.'
+                );
+        }
+
+
+        // =====================================================
+        // SIMPAN KE SESSION
+        // =====================================================
+
+        $session->set([
+
+            'name' => $name,
+
+            'nip' => $nip,
+
+            'email' => $email,
+
+            'no_hp' => $no_hp,
+
+            'jabatan' => $jabatan,
+
+        ]);
+
+
+        // =====================================================
+        // KEMBALI
+        // =====================================================
+
+        return redirect()
+            ->to(base_url('keuangan/profile'))
+            ->with(
+                'success',
+                'Profil berhasil diperbarui.'
+            );
+    }
+
+
+    // =========================================================
+    // UPDATE PROFILE
+    // =========================================================
+
+    public function updateProfile()
+    {
+        return $this->updateProfil();
+    }
+
+
+    // =========================================================
+    // DETAIL TIKET
+    // =========================================================
+
+    public function detail($id)
+    {
+        $tiket = $this->ticketModel
+            ->find($id);
+
+        if (!$tiket) {
+
+            return redirect()
+                ->to(base_url('keuangan/dashboard'))
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
+        }
+
+
+        return view(
+            'keuangan/detail',
+            [
+                'title' => 'Detail Tiket Keuangan',
+
+                'tiket' => $tiket,
+            ]
+        );
+    }
+
+
+    // =========================================================
+    // PROSES TIKET
+    // =========================================================
+
+    public function proses($id)
+    {
+        $tiket = $this->ticketModel
+            ->find($id);
+
+        if (!$tiket) {
+
+            return redirect()
+                ->to(base_url('keuangan/dashboard'))
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
+        }
+
+
+        return view(
+            'keuangan/proses',
+            [
+                'title' => 'Proses Tiket Keuangan',
+
+                'tiket' => $tiket,
+            ]
+        );
+    }
+
+
+    // =========================================================
+    // UPDATE PROSES TIKET
+    // =========================================================
+
+    public function updateProses($id)
+    {
+        $tiket = $this->ticketModel
+            ->find($id);
+
+        if (!$tiket) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
+        }
+
+
+        $status = trim(
+            (string) $this->request->getPost('status')
+        );
+
+        $catatan = trim(
+            (string) $this->request->getPost('catatan')
+        );
+
+
+        // =====================================================
+        // DATA UPDATE
+        // =====================================================
+
+        $dataUpdate = [
+
+            'status' => $status,
+
+        ];
+
+
+        // =====================================================
+        // SIMPAN CATATAN KE ADMIN NOTE
+        // =====================================================
+
+        if ($catatan !== '') {
+
+            $dataUpdate['admin_note'] = $catatan;
+        }
+
+
+        // =====================================================
+        // UPDATE WAKTU BERDASARKAN STATUS
+        // =====================================================
+
+        $now = date('Y-m-d H:i:s');
+
+        switch (strtolower($status)) {
+
+            case 'diproses':
+
+                $dataUpdate['processed_at'] = $now;
+
+                break;
+
+
+            case 'selesai':
+
+                $dataUpdate['completed_at'] = $now;
+
+                break;
+
+
+            case 'ditolak':
+
+                $dataUpdate['rejected_at'] = $now;
+
+                break;
+
+
+            case 'dibatalkan':
+
+                $dataUpdate['cancelled_at'] = $now;
+
+                break;
+        }
+
+
+        // =====================================================
+        // UPDATE DATABASE
+        // =====================================================
+
+        $this->ticketModel->update(
+            $id,
+            $dataUpdate
+        );
+
+
+        return redirect()
+            ->to(
+                base_url(
+                    'keuangan/detail/' . $id
+                )
+            )
+            ->with(
+                'success',
+                'Status tiket berhasil diperbarui.'
+            );
+    }
+
 
     // =========================================================
     // KIRIM KE PETUGAS ULT
     // =========================================================
+
     public function kirim($id)
     {
-        $tiket = $this->penangananTiketModel->find($id);
+        $tiket = $this->ticketModel
+            ->find($id);
 
         if (!$tiket) {
-            return redirect()->back()
-                ->with('error', 'Data tiket tidak ditemukan');
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
         }
 
-        if ((string) ($tiket['status'] ?? '') !== 'Selesai') {
-            return redirect()->back()
+
+        $status = strtolower(
+            trim((string) ($tiket['status'] ?? ''))
+        );
+
+
+        if ($status !== 'selesai') {
+
+            return redirect()
+                ->back()
                 ->with(
                     'error',
                     'Tiket hanya bisa dikirim ke Petugas ULT setelah status Selesai.'
                 );
         }
 
-        $this->penangananTiketModel->update($id, [
-            'status' => 'Diproses'
-        ]);
 
-        return redirect()->to('/keuangan/detail/' . $id)
+        /*
+         * Setelah dikirim ke ULT,
+         * status dikembalikan menjadi Diproses.
+         */
+
+        $this->ticketModel->update(
+
+            $id,
+
+            [
+                'status' => 'Diproses',
+
+                'processed_at' => date(
+                    'Y-m-d H:i:s'
+                ),
+            ]
+        );
+
+
+        return redirect()
+            ->to(
+                base_url(
+                    'keuangan/detail/' . $id
+                )
+            )
             ->with(
                 'success',
                 'Tiket berhasil dikirim ke Petugas ULT.'
             );
     }
 
+
     // =========================================================
     // KIRIM KE PEMOHON
     // =========================================================
+
     public function kirimKePemohon($id)
     {
-        $tiket = $this->penangananTiketModel->find($id);
+        $tiket = $this->ticketModel
+            ->find($id);
 
         if (!$tiket) {
-            return redirect()->back()
-                ->with('error', 'Data tiket tidak ditemukan');
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
         }
 
+
         $status = strtolower(
-            (string) ($tiket['status'] ?? '')
+            trim((string) ($tiket['status'] ?? ''))
         );
 
-        if (!in_array($status, ['selesai', 'diproses'], true)) {
-            return redirect()->back()
+
+        if (!in_array(
+            $status,
+            [
+                'selesai',
+                'diproses'
+            ],
+            true
+        )) {
+
+            return redirect()
+                ->back()
                 ->with(
                     'error',
                     'Tiket hanya bisa dikirim ke pemohon setelah status Selesai atau Diproses.'
                 );
         }
 
-        $this->penangananTiketModel->update($id, [
-            'status' => 'Selesai'
-        ]);
 
-        return redirect()->to('/keuangan/detail/' . $id)
+        $this->ticketModel->update(
+
+            $id,
+
+            [
+                'status' => 'Selesai',
+
+                'completed_at' => date(
+                    'Y-m-d H:i:s'
+                ),
+            ]
+        );
+
+
+        return redirect()
+            ->to(
+                base_url(
+                    'keuangan/detail/' . $id
+                )
+            )
             ->with(
                 'success',
                 'Tiket berhasil dikirim ke pemohon.'
             );
     }
 
+
     // =========================================================
-    // DETAIL TIKET
+    // RIWAYAT
     // =========================================================
-    public function detail($id)
+
+    public function riwayat()
     {
-        $tiket = $this->penangananTiketModel
-            ->select('
-                penanganan_tiket.*,
-                pengajuan_tiket.no_tiket,
-                pengajuan_tiket.nama_pemohon,
-                pengajuan_tiket.nim,
-                pengajuan_tiket.judul,
-                pengajuan_tiket.deskripsi,
-                layanan.nama_layanan,
-                kategori_layanan.nama_kategori,
-                unit_layanan.nama_unit
-            ')
-            ->join(
-                'pengajuan_tiket',
-                'pengajuan_tiket.id = penanganan_tiket.tiket_id',
-                'left'
-            )
-            ->join(
-                'layanan',
-                'layanan.id = pengajuan_tiket.layanan_id',
-                'left'
-            )
-            ->join(
-                'kategori_layanan',
-                'kategori_layanan.id = layanan.kategori_id',
-                'left'
-            )
-            ->join(
-                'unit_layanan',
-                'unit_layanan.id = kategori_layanan.unit_id',
-                'left'
-            )
-            ->where(
-                'penanganan_tiket.id',
-                $id
-            )
-            ->first();
+        $tickets = $this->ticketModel
+            ->orderBy('id', 'DESC')
+            ->findAll();
 
-        if (!$tiket) {
-            return redirect()->to('/keuangan')
-                ->with(
-                    'error',
-                    'Data tiket tidak ditemukan'
-                );
-        }
+        return view(
+            'keuangan/dashboard',
+            [
+                'title' => 'Riwayat Tiket Keuangan',
 
-        return view('keuangan/detail', [
-            'title' => 'Detail Tiket Keuangan',
-            'tiket' => $tiket
-        ]);
+                'total' => count($tickets),
+
+                'menunggu' => 0,
+
+                'diproses' => 0,
+
+                'selesai' => 0,
+
+                'ditolak' => 0,
+
+                'dibatalkan' => 0,
+
+                'tiket' => $tickets,
+            ]
+        );
     }
 
+
     // =========================================================
-    // PROSES TIKET
+    // HAPUS DOKUMEN
     // =========================================================
-    public function proses($id)
+
+    public function hapusDokumen($id)
     {
-        $tiket = $this->penangananTiketModel
-            ->select('
-                penanganan_tiket.*,
-                pengajuan_tiket.no_tiket,
-                pengajuan_tiket.judul,
-                pengajuan_tiket.deskripsi,
-                layanan.nama_layanan,
-                kategori_layanan.nama_kategori,
-                unit_layanan.nama_unit
-            ')
-            ->join(
-                'pengajuan_tiket',
-                'pengajuan_tiket.id = penanganan_tiket.tiket_id',
-                'left'
-            )
-            ->join(
-                'layanan',
-                'layanan.id = pengajuan_tiket.layanan_id',
-                'left'
-            )
-            ->join(
-                'kategori_layanan',
-                'kategori_layanan.id = layanan.kategori_id',
-                'left'
-            )
-            ->join(
-                'unit_layanan',
-                'unit_layanan.id = kategori_layanan.unit_id',
-                'left'
-            )
-            ->where(
-                'penanganan_tiket.id',
-                $id
-            )
-            ->first();
-
-        if (!$tiket) {
-            return redirect()->to('/keuangan')
-                ->with(
-                    'error',
-                    'Data tiket tidak ditemukan'
-                );
-        }
-
-        return view('keuangan/proses', [
-            'title' => 'Proses Tiket Keuangan',
-            'tiket' => $tiket
-        ]);
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                'Dokumen berhasil diproses.'
+            );
     }
 }

@@ -7,9 +7,9 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 
-// ===============================
+// =====================================================
 // UNIT LAYANAN
-// ===============================
+// =====================================================
 
 $routes->get(
     'unit-layanan',
@@ -24,6 +24,15 @@ $routes->get(
 $routes->get(
     'unit-layanan/profile',
     'UnitLayanan::profile'
+);
+
+// =====================================================
+// UPDATE PROFIL PETUGAS UNIT LAYANAN
+// =====================================================
+
+$routes->post(
+    'unit-layanan/profile/update',
+    'UnitLayanan::updateProfile'
 );
 
 $routes->get(
@@ -65,9 +74,11 @@ $routes->get(
     'unit-layanan/riwayat',
     'UnitLayanan::riwayat'
 );
-// ===============================
+
+
+// =====================================================
 // HAPUS FILE HASIL
-// ===============================
+// =====================================================
 
 $routes->get(
     'unit-layanan/hapus-file/(:num)/(:num)',
@@ -79,13 +90,10 @@ $routes->get(
     'UnitLayanan::hapusDokumen/$1'
 );
 
-$routes->get('kemahasiswaan/dashboard', 'Kemahasiswaan::index');
-$routes->get('keuangan/dashboard', 'Keuangan::index');
 
-
-// ===============================
+// =====================================================
 // KEMAHASISWAAN
-// ===============================
+// =====================================================
 
 $routes->get(
     'kemahasiswaan',
@@ -100,6 +108,26 @@ $routes->get(
 $routes->get(
     'kemahasiswaan/profile',
     'Kemahasiswaan::profile'
+);
+
+// =====================================================
+// EDIT & UPDATE PROFIL PETUGAS KEMAHASISWAAN
+// =====================================================
+
+$routes->get(
+    'kemahasiswaan/profile/edit',
+    'Kemahasiswaan::editProfil'
+);
+
+$routes->post(
+    'kemahasiswaan/profile/update',
+    'Kemahasiswaan::updateProfil'
+);
+
+// Alternatif URL update profil
+$routes->post(
+    'kemahasiswaan/update-profil',
+    'Kemahasiswaan::updateProfil'
 );
 
 $routes->get(
@@ -133,42 +161,104 @@ $routes->get(
 );
 
 
-
-// ===============================
+// =====================================================
 // KEUANGAN
-// ===============================
+// =====================================================
 
-$routes->get('keuangan', 'Keuangan::index');
-$routes->get('keuangan/dashboard', 'Keuangan::dashboard');
+// Dashboard
+$routes->get(
+    'keuangan',
+    'Keuangan::index'
+);
 
-// Profil
-$routes->get('keuangan/profile', 'Keuangan::profil');
+$routes->get(
+    'keuangan/dashboard',
+    'Keuangan::dashboard'
+);
 
-// Detail
-$routes->get('keuangan/detail/(:num)', 'Keuangan::detail/$1');
 
-// Proses
-$routes->get('keuangan/proses/(:num)', 'Keuangan::proses/$1');
+// =====================================================
+// PROFIL PETUGAS KEUANGAN
+// =====================================================
 
-// Update proses
+$routes->get(
+    'keuangan/profile',
+    'Keuangan::profil'
+);
+
+// Halaman edit profil
+$routes->get(
+    'keuangan/edit-profil',
+    'Keuangan::editProfil'
+);
+
+// Proses update profil
+$routes->post(
+    'keuangan/update-profil',
+    'Keuangan::updateProfil'
+);
+
+// Alternatif URL update profil
+$routes->post(
+    'keuangan/profile/update',
+    'Keuangan::updateProfil'
+);
+
+
+// =====================================================
+// DETAIL TIKET
+// =====================================================
+
+$routes->get(
+    'keuangan/detail/(:num)',
+    'Keuangan::detail/$1'
+);
+
+
+// =====================================================
+// PROSES TIKET
+// =====================================================
+
+$routes->get(
+    'keuangan/proses/(:num)',
+    'Keuangan::proses/$1'
+);
+
+
+// =====================================================
+// UPDATE PROSES TIKET
+// =====================================================
+
 $routes->post(
     'keuangan/updateProses/(:num)',
     'Keuangan::updateProses/$1'
 );
 
-// Kirim ke Petugas ULT
+
+// =====================================================
+// KIRIM KE PETUGAS ULT
+// =====================================================
+
 $routes->get(
     'keuangan/kirim/(:num)',
     'Keuangan::kirim/$1'
 );
 
-// Kirim ke Pemohon
+
+// =====================================================
+// KIRIM KE PEMOHON
+// =====================================================
+
 $routes->get(
     'keuangan/kirim-pemohon/(:num)',
     'Keuangan::kirimKePemohon/$1'
 );
 
-// Hapus dokumen
+
+// =====================================================
+// HAPUS DOKUMEN
+// =====================================================
+
 $routes->get(
     'keuangan/hapus-dokumen/(:num)',
     'Keuangan::hapusDokumen/$1'

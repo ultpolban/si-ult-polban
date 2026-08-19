@@ -3,18 +3,65 @@
 <?= $this->section('content') ?>
 
 <?php
-// Data petugas.
-// Jika session memiliki data, gunakan data session.
-// Jika belum ada, gunakan data dummy.
+// =====================================================
+// DATA PETUGAS
+// =====================================================
+
 $namaPetugas  = session()->get('name') ?: 'Siti Nurhaliza';
 $nipPetugas   = session()->get('nip') ?: '199001182024012003';
 $emailPetugas = session()->get('email') ?: 'siti.nurhaliza@polban.ac.id';
 $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
+$jabatan      = session()->get('jabatan') ?: 'Petugas Unit Layanan';
 ?>
 
 <div class="container-fluid">
 
+    <!-- ===================================================== -->
+    <!-- NOTIFIKASI -->
+    <!-- ===================================================== -->
+
+    <?php if (session()->getFlashdata('success')): ?>
+
+        <div class="alert alert-success alert-dismissible fade show shadow-sm"
+             role="alert">
+
+            <i class="fas fa-check-circle me-2"></i>
+
+            <?= esc(session()->getFlashdata('success')) ?>
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+    <?php endif; ?>
+
+
+    <?php if (session()->getFlashdata('error')): ?>
+
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm"
+             role="alert">
+
+            <i class="fas fa-exclamation-circle me-2"></i>
+
+            <?= esc(session()->getFlashdata('error')) ?>
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+    <?php endif; ?>
+
+
+    <!-- ===================================================== -->
     <!-- JUDUL -->
+    <!-- ===================================================== -->
+
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
@@ -38,10 +85,14 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
     </div>
 
 
+    <!-- ===================================================== -->
     <!-- CARD PROFIL -->
+    <!-- ===================================================== -->
+
     <div class="card shadow-sm border-0">
 
         <!-- HEADER -->
+
         <div class="card-header text-white"
              style="background-color:#293582;">
 
@@ -55,30 +106,38 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
                 </h5>
 
-                <a href="<?= base_url('kemahasiswaan/profile/edit') ?>"
-                   class="btn btn-sm text-white"
-                   style="background-color:#ff7f00;">
+
+                <!-- TOMBOL EDIT PROFIL -->
+
+                <button type="button"
+                        class="btn btn-sm text-white"
+                        style="background-color:#ff7f00;"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalEditProfil">
 
                     <i class="fas fa-edit me-1"></i>
 
                     Edit Profil
 
-                </a>
+                </button>
 
             </div>
 
         </div>
 
 
-        <!-- BODY -->
+        <!-- ================================================= -->
+        <!-- BODY CARD -->
+        <!-- ================================================= -->
+
         <div class="card-body p-4">
 
             <div class="row">
 
 
-                <!-- ========================= -->
+                <!-- ================================================= -->
                 <!-- FOTO / IDENTITAS -->
-                <!-- ========================= -->
+                <!-- ================================================= -->
 
                 <div class="col-lg-4 text-center border-end">
 
@@ -100,6 +159,8 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
                     </div>
 
 
+                    <!-- NAMA -->
+
                     <h4 class="fw-bold mb-1"
                         style="color:#293582;">
 
@@ -108,19 +169,24 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
                     </h4>
 
 
+                    <!-- JABATAN -->
+
                     <p class="text-muted mb-3">
 
                         <i class="fas fa-id-badge me-1"></i>
 
-                        Petugas Unit Layanan
+                        <?= esc($jabatan) ?>
 
                     </p>
 
 
+                    <!-- STATUS -->
+
                     <span class="badge bg-success px-3 py-2">
 
                         <i class="fas fa-circle me-1"
-                           style="font-size:8px;"></i>
+                           style="font-size:8px;">
+                        </i>
 
                         Aktif
 
@@ -129,10 +195,9 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
                 </div>
 
 
-
-                <!-- ========================= -->
+                <!-- ================================================= -->
                 <!-- INFORMASI PETUGAS -->
-                <!-- ========================= -->
+                <!-- ================================================= -->
 
                 <div class="col-lg-8">
 
@@ -147,6 +212,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
 
                     <!-- NAMA -->
+
                     <div class="row mb-3">
 
                         <div class="col-md-4 fw-bold">
@@ -167,6 +233,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
 
                     <!-- NIP -->
+
                     <div class="row mb-3">
 
                         <div class="col-md-4 fw-bold">
@@ -187,6 +254,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
 
                     <!-- EMAIL -->
+
                     <div class="row mb-3">
 
                         <div class="col-md-4 fw-bold">
@@ -207,6 +275,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
 
                     <!-- NO HP -->
+
                     <div class="row mb-3">
 
                         <div class="col-md-4 fw-bold">
@@ -227,6 +296,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
 
                     <!-- JABATAN -->
+
                     <div class="row mb-3">
 
                         <div class="col-md-4 fw-bold">
@@ -239,7 +309,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
                         <div class="col-md-8">
 
-                            Petugas Unit Layanan
+                            <?= esc($jabatan) ?>
 
                         </div>
 
@@ -247,6 +317,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
 
                     <!-- UNIT -->
+
                     <div class="row mb-3">
 
                         <div class="col-md-4 fw-bold">
@@ -274,6 +345,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
 
                     <!-- STATUS -->
+
                     <div class="row mb-3">
 
                         <div class="col-md-4 fw-bold">
@@ -286,7 +358,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
                         <div class="col-md-8">
 
-                            <span class="badge bg-success">
+                            <span class="badge bg-success px-3 py-2">
 
                                 Aktif
 
@@ -301,12 +373,14 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
             </div>
 
 
+            <!-- GARIS PEMISAH -->
+
             <hr class="my-4">
 
 
-            <!-- ================================= -->
+            <!-- ================================================= -->
             <!-- INFORMASI UNIT KEMAHASISWAAN -->
-            <!-- ================================= -->
+            <!-- ================================================= -->
 
             <h4 class="fw-bold mb-4"
                 style="color:#293582;">
@@ -322,6 +396,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
 
                 <!-- UNIT -->
+
                 <div class="col-md-4">
 
                     <div class="card border-0 shadow-sm h-100">
@@ -368,6 +443,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
 
                 <!-- JABATAN -->
+
                 <div class="col-md-4">
 
                     <div class="card border-0 shadow-sm h-100">
@@ -398,7 +474,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
                                     <h6 class="fw-bold mb-0">
 
-                                        Petugas Unit Layanan
+                                        <?= esc($jabatan) ?>
 
                                     </h6>
 
@@ -414,6 +490,7 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
 
 
                 <!-- LAYANAN -->
+
                 <div class="col-md-4">
 
                     <div class="card border-0 shadow-sm h-100">
@@ -466,5 +543,233 @@ $noHpPetugas  = session()->get('no_hp') ?: '081376543210';
     </div>
 
 </div>
+
+
+<!-- ========================================================= -->
+<!-- MODAL EDIT PROFIL KEMAHASISWAAN -->
+<!-- ========================================================= -->
+
+<div class="modal fade"
+     id="modalEditProfil"
+     tabindex="-1"
+     aria-labelledby="modalEditProfilLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
+
+
+            <!-- HEADER MODAL -->
+
+            <div class="modal-header text-white"
+                 style="background-color:#293582;">
+
+                <h5 class="modal-title"
+                    id="modalEditProfilLabel">
+
+                    <i class="fas fa-user-edit me-2"></i>
+
+                    Edit Profil Petugas Kemahasiswaan
+
+                </h5>
+
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+
+            <!-- FORM -->
+
+            <form action="<?= base_url('kemahasiswaan/profile/update') ?>"
+                  method="post">
+
+                <?= csrf_field() ?>
+
+                <div class="modal-body p-4">
+
+                    <div class="row">
+
+
+                        <!-- NAMA -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                <i class="fas fa-user text-primary me-2"></i>
+
+                                Nama Lengkap
+
+                            </label>
+
+                            <input type="text"
+                                   name="name"
+                                   class="form-control"
+                                   value="<?= esc($namaPetugas) ?>"
+                                   placeholder="Masukkan nama lengkap"
+                                   required>
+
+                        </div>
+
+
+                        <!-- NIP -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                <i class="fas fa-id-card text-primary me-2"></i>
+
+                                NIP
+
+                            </label>
+
+                            <input type="text"
+                                   name="nip"
+                                   class="form-control"
+                                   value="<?= esc($nipPetugas) ?>"
+                                   placeholder="Masukkan NIP"
+                                   required>
+
+                        </div>
+
+
+                        <!-- EMAIL -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                <i class="fas fa-envelope text-primary me-2"></i>
+
+                                Email
+
+                            </label>
+
+                            <input type="email"
+                                   name="email"
+                                   class="form-control"
+                                   value="<?= esc($emailPetugas) ?>"
+                                   placeholder="Masukkan email"
+                                   required>
+
+                        </div>
+
+
+                        <!-- NO HP -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                <i class="fas fa-phone text-primary me-2"></i>
+
+                                Nomor HP
+
+                            </label>
+
+                            <input type="text"
+                                   name="no_hp"
+                                   class="form-control"
+                                   value="<?= esc($noHpPetugas) ?>"
+                                   placeholder="Masukkan nomor HP">
+
+                        </div>
+
+
+                        <!-- JABATAN -->
+
+                        <div class="col-md-12 mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                <i class="fas fa-briefcase text-primary me-2"></i>
+
+                                Jabatan
+
+                            </label>
+
+                            <input type="text"
+                                   name="jabatan"
+                                   class="form-control"
+                                   value="<?= esc($jabatan) ?>"
+                                   placeholder="Masukkan jabatan">
+
+                        </div>
+
+
+                        <!-- UNIT -->
+
+                        <div class="col-md-12 mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                <i class="fas fa-building text-primary me-2"></i>
+
+                                Unit Layanan
+
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="Kemahasiswaan"
+                                   readonly>
+
+                            <small class="text-muted">
+
+                                <i class="fas fa-info-circle me-1"></i>
+
+                                Unit layanan tidak dapat diubah.
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FOOTER -->
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+
+                        <i class="fas fa-times me-1"></i>
+
+                        Batal
+
+                    </button>
+
+
+                    <button type="submit"
+                            class="btn text-white"
+                            style="background-color:#293582;">
+
+                        <i class="fas fa-save me-1"></i>
+
+                        Simpan Perubahan
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <?= $this->endSection() ?>

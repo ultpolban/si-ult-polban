@@ -3,161 +3,439 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\PenangananTiketModel;
+use App\Models\TicketModel;
 use App\Models\DokumenHasilModel;
 
 class Kemahasiswaan extends BaseController
 {
-    protected $penangananTiketModel;
+    protected $ticketModel;
     protected $dokumenHasilModel;
+
+
+    // =========================================================
+    // CONSTRUCTOR
+    // =========================================================
 
     public function __construct()
     {
-        $this->penangananTiketModel = new PenangananTiketModel();
+        $this->ticketModel = new TicketModel();
+
         $this->dokumenHasilModel = new DokumenHasilModel();
+    }
+
+
+    // =========================================================
+    // INDEX
+    // =========================================================
+
+    public function index()
+    {
+        return $this->dashboard();
     }
 
 
     // =========================================================
     // DASHBOARD KEMAHASISWAAN
     // =========================================================
-    public function index()
+
+    public function dashboard()
     {
-        $unitName = 'Kemahasiswaan';
+        $tickets = $this->ticketModel
+            ->orderBy('id', 'DESC')
+            ->findAll();
 
-        $query = $this->penangananTiketModel
-            ->select('
-                penanganan_tiket.id,
-                penanganan_tiket.status,
-                penanganan_tiket.created_at,
-                pengajuan_tiket.no_tiket,
-                pengajuan_tiket.nama_pemohon,
-                pengajuan_tiket.nim,
-                pengajuan_tiket.judul,
-                layanan.nama_layanan,
-                unit_layanan.nama_unit
-            ')
-            ->join(
-                'pengajuan_tiket',
-                'pengajuan_tiket.id = penanganan_tiket.tiket_id',
-                'left'
-            )
-            ->join(
-                'layanan',
-                'layanan.id = pengajuan_tiket.layanan_id',
-                'left'
-            )
-            ->join(
-                'kategori_layanan',
-                'kategori_layanan.id = layanan.kategori_id',
-                'left'
-            )
-            ->join(
-                'unit_layanan',
-                'unit_layanan.id = kategori_layanan.unit_id',
-                'left'
-            )
-            ->where('unit_layanan.nama_unit', $unitName)
-            ->orderBy('penanganan_tiket.id', 'DESC');
 
-        $tiket = $query->findAll();
+        // =====================================================
+        // STATISTIK
+        // =====================================================
 
-        $data = [
-            'title'    => 'Dashboard Kemahasiswaan',
-            'total'    => count($tiket),
-            'menunggu' => 0,
-            'diproses' => 0,
-            'selesai'  => 0,
-            'tiket'    => $tiket,
-        ];
+        $menunggu = 0;
 
-        foreach ($tiket as $item) {
+        $diproses = 0;
 
-            if (($item['status'] ?? '') === 'Menunggu') {
-                $data['menunggu']++;
-            } elseif (($item['status'] ?? '') === 'Diproses') {
-                $data['diproses']++;
-            } elseif (($item['status'] ?? '') === 'Selesai') {
-                $data['selesai']++;
+        $selesai = 0;
+
+        $ditolak = 0;
+
+        $dibatalkan = 0;
+
+
+        foreach ($tickets as $ticket) {
+
+            $status = strtolower(
+                trim(
+                    (string) ($ticket['status'] ?? '')
+                )
+            );
+
+
+            switch ($status) {
+
+                case 'menunggu':
+
+                    $menunggu++;
+
+                    break;
+
+
+                case 'diproses':
+
+                    $diproses++;
+
+                    break;
+
+
+                case 'selesai':
+
+                    $selesai++;
+
+                    break;
+
+
+                case 'ditolak':
+
+                    $ditolak++;
+
+                    break;
+
+
+                case 'dibatalkan':
+
+                    $dibatalkan++;
+
+                    break;
             }
         }
 
-        return view('kemahasiswaan/dashboard', $data);
+
+        // =====================================================
+        // DATA VIEW
+        // =====================================================
+
+        $data = [
+
+            'title' => 'Dashboard Kemahasiswaan',
+
+            'total' => count($tickets),
+
+            'menunggu' => $menunggu,
+
+            'diproses' => $diproses,
+
+            'selesai' => $selesai,
+
+            'ditolak' => $ditolak,
+
+            'dibatalkan' => $dibatalkan,
+
+            'tiket' => $tickets,
+
+        ];
+
+
+        return view(
+            'kemahasiswaan/dashboard',
+            $data
+        );
     }
 
 
     // =========================================================
     // PROFIL KEMAHASISWAAN
     // =========================================================
+
     public function profile()
     {
-        return view('kemahasiswaan/profile', [
-            'title' => 'Profil Petugas Kemahasiswaan'
+        $session = session();
+
+
+        $data = [
+
+            'title' => 'Profil Petugas Kemahasiswaan',
+
+
+            'name' => $session->get('name')
+                ?: 'Siti Nurhaliza',
+
+
+            'nip' => $session->get('nip')
+                ?: '199001182024012003',
+
+
+            'email' => $session->get('email')
+                ?: 'siti.nurhaliza@polban.ac.id',
+
+
+            'no_hp' => $session->get('no_hp')
+                ?: '081376543210',
+
+
+            'jabatan' => $session->get('jabatan')
+                ?: 'Petugas Unit Layanan',
+
+        ];
+
+
+        return view(
+            'kemahasiswaan/profile',
+            $data
+        );
+    }
+
+
+    // =========================================================
+    // EDIT PROFIL
+    // =========================================================
+
+    public function editProfil()
+    {
+        $session = session();
+
+
+        $data = [
+
+            'title' => 'Edit Profil Petugas Kemahasiswaan',
+
+
+            'name' => $session->get('name')
+                ?: 'Siti Nurhaliza',
+
+
+            'nip' => $session->get('nip')
+                ?: '199001182024012003',
+
+
+            'email' => $session->get('email')
+                ?: 'siti.nurhaliza@polban.ac.id',
+
+
+            'no_hp' => $session->get('no_hp')
+                ?: '081376543210',
+
+
+            'jabatan' => $session->get('jabatan')
+                ?: 'Petugas Unit Layanan',
+
+        ];
+
+
+        return view(
+            'kemahasiswaan/edit-profil',
+            $data
+        );
+    }
+
+
+    // =========================================================
+    // UPDATE PROFIL
+    // =========================================================
+
+    public function updateProfil()
+    {
+        $session = session();
+
+
+        $name = trim(
+            (string) $this->request->getPost('name')
+        );
+
+
+        $nip = trim(
+            (string) $this->request->getPost('nip')
+        );
+
+
+        $email = trim(
+            (string) $this->request->getPost('email')
+        );
+
+
+        $no_hp = trim(
+            (string) $this->request->getPost('no_hp')
+        );
+
+
+        $jabatan = trim(
+            (string) $this->request->getPost('jabatan')
+        );
+
+
+        // =====================================================
+        // VALIDASI NAMA
+        // =====================================================
+
+        if ($name === '') {
+
+            return redirect()
+                ->to(
+                    base_url(
+                        'kemahasiswaan/edit-profil'
+                    )
+                )
+                ->withInput()
+                ->with(
+                    'error',
+                    'Nama Lengkap wajib diisi.'
+                );
+        }
+
+
+        // =====================================================
+        // VALIDASI NIP
+        // =====================================================
+
+        if ($nip === '') {
+
+            return redirect()
+                ->to(
+                    base_url(
+                        'kemahasiswaan/edit-profil'
+                    )
+                )
+                ->withInput()
+                ->with(
+                    'error',
+                    'NIP wajib diisi.'
+                );
+        }
+
+
+        // =====================================================
+        // VALIDASI EMAIL
+        // =====================================================
+
+        if ($email === '') {
+
+            return redirect()
+                ->to(
+                    base_url(
+                        'kemahasiswaan/edit-profil'
+                    )
+                )
+                ->withInput()
+                ->with(
+                    'error',
+                    'Email wajib diisi.'
+                );
+        }
+
+
+        if (!filter_var(
+            $email,
+            FILTER_VALIDATE_EMAIL
+        )) {
+
+            return redirect()
+                ->to(
+                    base_url(
+                        'kemahasiswaan/edit-profil'
+                    )
+                )
+                ->withInput()
+                ->with(
+                    'error',
+                    'Format email tidak valid.'
+                );
+        }
+
+
+        // =====================================================
+        // SIMPAN SESSION
+        // =====================================================
+
+        $session->set([
+
+            'name' => $name,
+
+            'nip' => $nip,
+
+            'email' => $email,
+
+            'no_hp' => $no_hp,
+
+            'jabatan' => $jabatan,
+
         ]);
+
+
+        // =====================================================
+        // KEMBALI KE PROFIL
+        // =====================================================
+
+        return redirect()
+            ->to(
+                base_url(
+                    'kemahasiswaan/profile'
+                )
+            )
+            ->with(
+                'success',
+                'Profil berhasil diperbarui.'
+            );
+    }
+
+
+    // =========================================================
+    // UPDATE PROFILE
+    // =========================================================
+
+    public function updateProfile()
+    {
+        return $this->updateProfil();
     }
 
 
     // =========================================================
     // DETAIL TIKET
     // =========================================================
+
     public function detail($id)
     {
-        $tiket = $this->penangananTiketModel
-            ->select('
-                penanganan_tiket.*,
-                pengajuan_tiket.no_tiket,
-                pengajuan_tiket.nama_pemohon,
-                pengajuan_tiket.nim,
-                pengajuan_tiket.email,
-                pengajuan_tiket.no_hp,
-                pengajuan_tiket.judul,
-                pengajuan_tiket.deskripsi,
-                layanan.nama_layanan,
-                kategori_layanan.nama_kategori,
-                unit_layanan.nama_unit
-            ')
-            ->join(
-                'pengajuan_tiket',
-                'pengajuan_tiket.id = penanganan_tiket.tiket_id',
-                'left'
-            )
-            ->join(
-                'layanan',
-                'layanan.id = pengajuan_tiket.layanan_id',
-                'left'
-            )
-            ->join(
-                'kategori_layanan',
-                'kategori_layanan.id = layanan.kategori_id',
-                'left'
-            )
-            ->join(
-                'unit_layanan',
-                'unit_layanan.id = kategori_layanan.unit_id',
-                'left'
-            )
-            ->where('penanganan_tiket.id', $id)
-            ->first();
+        $tiket = $this->ticketModel
+            ->find($id);
+
 
         if (!$tiket) {
+
             return redirect()
-                ->to('/kemahasiswaan')
-                ->with('error', 'Data tiket tidak ditemukan');
+                ->to(
+                    base_url(
+                        'kemahasiswaan/dashboard'
+                    )
+                )
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
         }
 
-        // Ambil dokumen hasil
-        // KOLOM DATABASE = penanganan_id
-        $dokumenHasil = $this->dokumenHasilModel
-            ->where('penanganan_id', $id)
-            ->findAll();
+
+        // =====================================================
+        // DOKUMEN HASIL
+        // =====================================================
+
+        $dokumenHasil = [];
+
+        if ($this->dokumenHasilModel) {
+
+            $dokumenHasil = $this->dokumenHasilModel
+                ->where(
+                    'penanganan_id',
+                    $id
+                )
+                ->findAll();
+        }
+
 
         $tiket['dokumen_hasil'] = $dokumenHasil;
+
 
         return view(
             'kemahasiswaan/detail',
             [
                 'title' => 'Detail Tiket Kemahasiswaan',
-                'tiket' => $tiket
+
+                'tiket' => $tiket,
             ]
         );
     }
@@ -166,187 +444,371 @@ class Kemahasiswaan extends BaseController
     // =========================================================
     // HALAMAN PROSES
     // =========================================================
+
     public function proses($id)
     {
-        $tiket = $this->penangananTiketModel
-            ->select('
-                penanganan_tiket.*,
-                pengajuan_tiket.no_tiket,
-                pengajuan_tiket.nama_pemohon,
-                pengajuan_tiket.nim,
-                pengajuan_tiket.email,
-                pengajuan_tiket.no_hp,
-                pengajuan_tiket.judul,
-                pengajuan_tiket.deskripsi,
-                layanan.nama_layanan,
-                kategori_layanan.nama_kategori,
-                unit_layanan.nama_unit
-            ')
-            ->join(
-                'pengajuan_tiket',
-                'pengajuan_tiket.id = penanganan_tiket.tiket_id',
-                'left'
-            )
-            ->join(
-                'layanan',
-                'layanan.id = pengajuan_tiket.layanan_id',
-                'left'
-            )
-            ->join(
-                'kategori_layanan',
-                'kategori_layanan.id = layanan.kategori_id',
-                'left'
-            )
-            ->join(
-                'unit_layanan',
-                'unit_layanan.id = kategori_layanan.unit_id',
-                'left'
-            )
-            ->where('penanganan_tiket.id', $id)
-            ->first();
+        $tiket = $this->ticketModel
+            ->find($id);
+
 
         if (!$tiket) {
+
             return redirect()
-                ->to('/kemahasiswaan')
-                ->with('error', 'Data tiket tidak ditemukan');
+                ->to(
+                    base_url(
+                        'kemahasiswaan/dashboard'
+                    )
+                )
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
         }
 
-        // Ambil dokumen sebelumnya
-        $dokumenHasil = $this->dokumenHasilModel
-            ->where('penanganan_id', $id)
-            ->findAll();
+
+        // =====================================================
+        // DOKUMEN SEBELUMNYA
+        // =====================================================
+
+        $dokumenHasil = [];
+
+        if ($this->dokumenHasilModel) {
+
+            $dokumenHasil = $this->dokumenHasilModel
+                ->where(
+                    'penanganan_id',
+                    $id
+                )
+                ->findAll();
+        }
+
 
         $tiket['dokumen_hasil'] = $dokumenHasil;
+
 
         return view(
             'kemahasiswaan/proses',
             [
                 'title' => 'Proses Tiket Kemahasiswaan',
-                'tiket' => $tiket
+
+                'tiket' => $tiket,
             ]
         );
     }
 
 
     // =========================================================
-    // UPDATE PROSES + UPLOAD DOKUMEN
+    // UPDATE PROSES TIKET
     // =========================================================
+
     public function updateProses($id)
     {
-        $tiket = $this->penangananTiketModel->find($id);
+        $tiket = $this->ticketModel
+            ->find($id);
+
 
         if (!$tiket) {
+
             return redirect()
                 ->back()
-                ->with('error', 'Data tiket tidak ditemukan');
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
         }
 
-        $status = $this->request->getPost('status');
-        $catatan = $this->request->getPost('catatan');
 
-        // Validasi status
+        // =====================================================
+        // AMBIL FORM
+        // =====================================================
+
+        $status = trim(
+            (string) $this->request
+                ->getPost('status')
+        );
+
+
+        $catatan = trim(
+            (string) $this->request
+                ->getPost('catatan')
+        );
+
+
+        // =====================================================
+        // STATUS YANG DIIZINKAN
+        // =====================================================
+
         $statusDiizinkan = [
+
             'Menunggu',
+
             'Diproses',
-            'Selesai'
+
+            'Selesai',
+
+            'Ditolak',
+
+            'Dibatalkan',
+
         ];
 
-        if (!in_array($status, $statusDiizinkan, true)) {
+
+        if (!in_array(
+            $status,
+            $statusDiizinkan,
+            true
+        )) {
+
             return redirect()
                 ->back()
-                ->with('error', 'Status tiket tidak valid.');
+                ->with(
+                    'error',
+                    'Status tiket tidak valid.'
+                );
         }
 
-        // Update data penanganan
+
+        // =====================================================
+        // DATA UPDATE
+        // =====================================================
+
         $updateData = [
-            'status'  => $status,
-            'catatan' => $catatan
+
+            'status' => $status,
+
         ];
 
-        $this->penangananTiketModel->update($id, $updateData);
+
+        // =====================================================
+        // CATATAN
+        // =====================================================
+
+        if ($catatan !== '') {
+
+            $updateData['admin_note'] = $catatan;
+        }
 
 
         // =====================================================
-        // UPLOAD DOKUMEN
+        // WAKTU STATUS
         // =====================================================
 
-        $files = $this->request->getFileMultiple('file_hasil');
+        $now = date(
+            'Y-m-d H:i:s'
+        );
+
+
+        switch (
+            strtolower($status)
+        ) {
+
+            case 'diproses':
+
+                $updateData['processed_at'] = $now;
+
+                break;
+
+
+            case 'selesai':
+
+                $updateData['completed_at'] = $now;
+
+                break;
+
+
+            case 'ditolak':
+
+                $updateData['rejected_at'] = $now;
+
+                break;
+
+
+            case 'dibatalkan':
+
+                $updateData['cancelled_at'] = $now;
+
+                break;
+        }
+
+
+        // =====================================================
+        // UPDATE TICKET
+        // =====================================================
+
+        $this->ticketModel
+            ->update(
+                $id,
+                $updateData
+            );
+
+
+        // =====================================================
+        // UPLOAD DOKUMEN HASIL
+        // =====================================================
+
+        $files = $this->request
+            ->getFileMultiple(
+                'file_hasil'
+            );
+
+
+        if ($files === null) {
+
+            $files = [];
+        }
+
+
+        if (!is_array($files)) {
+
+            $files = [$files];
+        }
+
 
         if (!empty($files)) {
 
-            $uploadPath = FCPATH . 'uploads/hasil/';
+            $uploadPath =
+                FCPATH .
+                'uploads/hasil/';
 
-            // Buat folder jika belum ada
+
+            // =================================================
+            // BUAT FOLDER
+            // =================================================
+
             if (!is_dir($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
+
+                mkdir(
+                    $uploadPath,
+                    0777,
+                    true
+                );
             }
+
 
             foreach ($files as $file) {
 
-                // Skip jika tidak ada file
-                if (!$file || !$file->isValid()) {
+                // =============================================
+                // FILE TIDAK VALID
+                // =============================================
+
+                if (
+                    !$file ||
+                    !$file->isValid() ||
+                    $file->hasMoved()
+                ) {
+
                     continue;
                 }
 
-                // Validasi ukuran maksimal 5 MB
-                if ($file->getSize() > 5 * 1024 * 1024) {
+
+                // =============================================
+                // MAKSIMAL 5 MB
+                // =============================================
+
+                if (
+                    $file->getSize()
+                    > 5 * 1024 * 1024
+                ) {
 
                     return redirect()
                         ->back()
                         ->with(
                             'error',
+
                             'File "' .
                             $file->getName() .
                             '" melebihi ukuran maksimal 5 MB.'
                         );
                 }
 
-                // Validasi ekstensi
+
+                // =============================================
+                // EKSTENSI
+                // =============================================
+
                 $extension = strtolower(
                     $file->getClientExtension()
                 );
 
+
                 $allowedExtensions = [
+
                     'pdf',
+
                     'jpg',
+
                     'jpeg',
-                    'png'
+
+                    'png',
+
                 ];
 
-                if (!in_array($extension, $allowedExtensions, true)) {
+
+                if (!in_array(
+                    $extension,
+                    $allowedExtensions,
+                    true
+                )) {
 
                     return redirect()
                         ->back()
                         ->with(
                             'error',
+
                             'Format file "' .
                             $file->getName() .
                             '" tidak diperbolehkan.'
                         );
                 }
 
-                // Nama file baru
-                $newName = $file->getRandomName();
 
-                // Pindahkan file
-                if ($file->move($uploadPath, $newName)) {
+                // =============================================
+                // NAMA FILE
+                // =============================================
 
-                    // Simpan ke tabel dokumen_hasil
-                    //
-                    // KOLOM DATABASE:
-                    // penanganan_id
-                    // nama_file
+                $newName =
+                    $file->getRandomName();
 
-                    $this->dokumenHasilModel->insert([
-                        'penanganan_id' => $id,
-                        'nama_file'     => $newName
-                    ]);
+
+                // =============================================
+                // PINDAHKAN FILE
+                // =============================================
+
+                if (
+                    $file->move(
+                        $uploadPath,
+                        $newName
+                    )
+                ) {
+
+                    // =========================================
+                    // SIMPAN DATABASE
+                    // =========================================
+
+                    $this->dokumenHasilModel
+                        ->insert([
+
+                            'penanganan_id' => $id,
+
+                            'nama_file' => $newName,
+
+                        ]);
                 }
             }
         }
 
+
+        // =====================================================
+        // SELESAI
+        // =====================================================
+
         return redirect()
-            ->to('/kemahasiswaan/detail/' . $id)
+            ->to(
+                base_url(
+                    'kemahasiswaan/detail/' .
+                    $id
+                )
+            )
             ->with(
                 'success',
                 'Proses tiket berhasil disimpan.'
@@ -355,13 +817,17 @@ class Kemahasiswaan extends BaseController
 
 
     // =========================================================
-    // HAPUS DOKUMEN HASIL
+    // HAPUS DOKUMEN
     // =========================================================
+
     public function hapusDokumen($id)
     {
-        $dokumen = $this->dokumenHasilModel->find($id);
+        $dokumen = $this->dokumenHasilModel
+            ->find($id);
+
 
         if (!$dokumen) {
+
             return redirect()
                 ->back()
                 ->with(
@@ -370,23 +836,46 @@ class Kemahasiswaan extends BaseController
                 );
         }
 
-        // Hapus file fisik
-        $filePath = FCPATH .
+
+        // =====================================================
+        // HAPUS FILE
+        // =====================================================
+
+        $filePath =
+            FCPATH .
             'uploads/hasil/' .
             $dokumen['nama_file'];
 
+
         if (is_file($filePath)) {
+
             unlink($filePath);
         }
 
-        // Simpan ID penanganan sebelum data dihapus
-        $penangananId = $dokumen['penanganan_id'];
 
-        // Hapus record database
-        $this->dokumenHasilModel->delete($id);
+        // =====================================================
+        // ID PENANGANAN
+        // =====================================================
+
+        $penangananId =
+            $dokumen['penanganan_id'];
+
+
+        // =====================================================
+        // HAPUS DATABASE
+        // =====================================================
+
+        $this->dokumenHasilModel
+            ->delete($id);
+
 
         return redirect()
-            ->to('/kemahasiswaan/proses/' . $penangananId)
+            ->to(
+                base_url(
+                    'kemahasiswaan/proses/' .
+                    $penangananId
+                )
+            )
             ->with(
                 'success',
                 'Dokumen berhasil dihapus.'
@@ -397,22 +886,36 @@ class Kemahasiswaan extends BaseController
     // =========================================================
     // KIRIM KE PETUGAS ULT
     // =========================================================
+
     public function kirim($id)
     {
-        $tiket = $this->penangananTiketModel->find($id);
+        $tiket = $this->ticketModel
+            ->find($id);
+
 
         if (!$tiket) {
+
             return redirect()
                 ->back()
                 ->with(
                     'error',
-                    'Data tiket tidak ditemukan'
+                    'Data tiket tidak ditemukan.'
                 );
         }
 
-        if (
-            (string) ($tiket['status'] ?? '') !== 'Selesai'
-        ) {
+
+        $status = strtolower(
+            trim(
+                (string) (
+                    $tiket['status']
+                    ?? ''
+                )
+            )
+        );
+
+
+        if ($status !== 'selesai') {
+
             return redirect()
                 ->back()
                 ->with(
@@ -421,15 +924,34 @@ class Kemahasiswaan extends BaseController
                 );
         }
 
-        $this->penangananTiketModel->update(
-            $id,
-            [
-                'status' => 'Diproses'
-            ]
-        );
+
+        // =====================================================
+        // KIRIM KE ULT
+        // =====================================================
+
+        $this->ticketModel
+            ->update(
+                $id,
+                [
+
+                    'status' => 'Diproses',
+
+                    'processed_at' =>
+                        date(
+                            'Y-m-d H:i:s'
+                        ),
+
+                ]
+            );
+
 
         return redirect()
-            ->to('/kemahasiswaan/detail/' . $id)
+            ->to(
+                base_url(
+                    'kemahasiswaan/detail/' .
+                    $id
+                )
+            )
             ->with(
                 'success',
                 'Tiket berhasil dikirim ke Petugas ULT.'
@@ -440,30 +962,44 @@ class Kemahasiswaan extends BaseController
     // =========================================================
     // KIRIM KE PEMOHON
     // =========================================================
+
     public function kirimKePemohon($id)
     {
-        $tiket = $this->penangananTiketModel->find($id);
+        $tiket = $this->ticketModel
+            ->find($id);
+
 
         if (!$tiket) {
+
             return redirect()
                 ->back()
                 ->with(
                     'error',
-                    'Data tiket tidak ditemukan'
+                    'Data tiket tidak ditemukan.'
                 );
         }
 
+
         $status = strtolower(
-            (string) ($tiket['status'] ?? '')
+            trim(
+                (string) (
+                    $tiket['status']
+                    ?? ''
+                )
+            )
         );
 
-        if (
-            !in_array(
-                $status,
-                ['selesai', 'diproses'],
-                true
-            )
-        ) {
+
+        if (!in_array(
+            $status,
+            [
+                'selesai',
+
+                'diproses'
+            ],
+            true
+        )) {
+
             return redirect()
                 ->back()
                 ->with(
@@ -472,15 +1008,34 @@ class Kemahasiswaan extends BaseController
                 );
         }
 
-        $this->penangananTiketModel->update(
-            $id,
-            [
-                'status' => 'Selesai'
-            ]
-        );
+
+        // =====================================================
+        // UPDATE SELESAI
+        // =====================================================
+
+        $this->ticketModel
+            ->update(
+                $id,
+                [
+
+                    'status' => 'Selesai',
+
+                    'completed_at' =>
+                        date(
+                            'Y-m-d H:i:s'
+                        ),
+
+                ]
+            );
+
 
         return redirect()
-            ->to('/kemahasiswaan/detail/' . $id)
+            ->to(
+                base_url(
+                    'kemahasiswaan/detail/' .
+                    $id
+                )
+            )
             ->with(
                 'success',
                 'Tiket berhasil dikirim ke pemohon.'

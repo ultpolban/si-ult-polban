@@ -43,15 +43,16 @@ $noHpPetugas  = session()->get('no_hp') ?: '081298765432';
                     Profil Petugas Akademik
                 </h5>
 
-                <a href="<?= base_url('unit_layanan/profile/edit') ?>"
-                   class="btn btn-sm text-white"
-                   style="background-color:#ff7f00;">
+<button type="button"
+        class="btn btn-sm text-white"
+        style="background-color:#ff7f00;"
+        data-bs-toggle="modal"
+        data-bs-target="#modalEditProfil">
 
-                    <i class="fas fa-edit me-1"></i>
-                    Edit Profil
+    <i class="fas fa-edit me-1"></i>
+    Edit Profil
 
-                </a>
-
+</button>
             </div>
 
         </div>
@@ -387,6 +388,219 @@ $noHpPetugas  = session()->get('no_hp') ?: '081298765432';
                 </div>
 
             </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ========================================================= -->
+<!-- MODAL EDIT PROFIL AKADEMIK -->
+<!-- ========================================================= -->
+
+<div class="modal fade"
+     id="modalEditProfil"
+     tabindex="-1"
+     aria-labelledby="modalEditProfilLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
+
+            <!-- HEADER -->
+            <div class="modal-header text-white"
+                 style="background-color:#293582;">
+
+                <h5 class="modal-title"
+                    id="modalEditProfilLabel">
+
+                    <i class="fas fa-user-edit me-2"></i>
+
+                    Edit Profil Petugas Akademik
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+
+            <!-- FORM -->
+            <form action="<?= base_url('unit-layanan/profile/update') ?>"
+                  method="post">
+
+                <?= csrf_field() ?>
+
+                <div class="modal-body p-4">
+
+                    <div class="row">
+
+                        <!-- NAMA -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                <i class="fas fa-user text-primary me-2"></i>
+
+                                Nama Lengkap
+
+                            </label>
+
+                            <input type="text"
+                                   name="name"
+                                   class="form-control"
+                                   value="<?= esc($namaPetugas) ?>"
+                                   placeholder="Masukkan nama lengkap"
+                                   required>
+
+                        </div>
+
+
+                        <!-- NIP -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                <i class="fas fa-id-card text-primary me-2"></i>
+
+                                NIP
+
+                            </label>
+
+                            <input type="text"
+                                   name="nip"
+                                   class="form-control"
+                                   value="<?= esc($nipPetugas) ?>"
+                                   placeholder="Masukkan NIP"
+                                   required>
+
+                        </div>
+
+
+                        <!-- EMAIL -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                <i class="fas fa-envelope text-primary me-2"></i>
+
+                                Email
+
+                            </label>
+
+                            <input type="email"
+                                   name="email"
+                                   class="form-control"
+                                   value="<?= esc($emailPetugas) ?>"
+                                   placeholder="Masukkan email"
+                                   required>
+
+                        </div>
+
+
+                        <!-- NO HP -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                <i class="fas fa-phone text-primary me-2"></i>
+
+                                Nomor HP
+
+                            </label>
+
+                            <input type="text"
+                                   name="no_hp"
+                                   class="form-control"
+                                   value="<?= esc($noHpPetugas) ?>"
+                                   placeholder="Masukkan nomor HP">
+
+                        </div>
+
+
+                        <!-- JABATAN -->
+                        <div class="col-md-12 mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                <i class="fas fa-briefcase text-primary me-2"></i>
+
+                                Jabatan
+
+                            </label>
+
+                            <input type="text"
+                                   name="jabatan"
+                                   class="form-control"
+                                   value="<?= esc($jabatan) ?>"
+                                   placeholder="Masukkan jabatan">
+
+                        </div>
+
+
+                        <!-- UNIT -->
+                        <div class="col-md-12 mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                <i class="fas fa-building text-primary me-2"></i>
+
+                                Unit Layanan
+
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="Akademik"
+                                   readonly>
+
+                            <small class="text-muted">
+
+                                <i class="fas fa-info-circle me-1"></i>
+
+                                Unit layanan tidak dapat diubah.
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FOOTER -->
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+
+                        <i class="fas fa-times me-1"></i>
+
+                        Batal
+
+                    </button>
+
+
+                    <button type="submit"
+                            class="btn text-white"
+                            style="background-color:#293582;">
+
+                        <i class="fas fa-save me-1"></i>
+
+                        Simpan Perubahan
+
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
 

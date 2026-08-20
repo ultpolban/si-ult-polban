@@ -1,6 +1,5 @@
 <?php
 // Ambil jumlah tiket yang berstatus 'Submitted' (menunggu verifikasi) sebagai simulasi notifikasi baru
-// Jika menggunakan data dummy yang sudah kita gabungkan, kita bisa hitung langsung atau lewat variabel view.
 $notifCount = 0;
 $latestNotifs = [];
 
@@ -19,24 +18,27 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
 
 <!-- Custom CSS Notifikasi Ultra Professional & Interactive Level Dewa -->
 <style>
-/* Reset & Base Dropdown Animation dengan Efek Kaca Premium (Glassmorphism Pro Max) */
+/* Reset & Base Dropdown Animation dengan Efek Kaca Premium */
 .dropdown-notifications .dropdown-menu {
-    width: 400px;
-    border-radius: 20px !important;
+    width: 380px !important;
+    max-width: 90vw !important;
+    border-radius: 16px !important;
     border: 1px solid rgba(255, 255, 255, 0.4) !important;
     background: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(20px) saturate(200%);
     -webkit-backdrop-filter: blur(20px) saturate(200%);
-    box-shadow: 0 25px 50px -12px rgba(26, 35, 126, 0.35), 0 0 30px rgba(79, 70, 229, 0.1) !important;
+    box-shadow: 0 20px 40px -10px rgba(26, 35, 126, 0.25) !important;
     transform-origin: top right;
-    animation: notifScaleIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: notifScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
+    padding: 0 !important;
+    margin-top: 12px !important;
 }
 
 @keyframes notifScaleIn {
     0% {
         opacity: 0;
-        transform: scale(0.8) translateY(-16px);
+        transform: scale(0.9) translateY(-10px);
     }
     100% {
         opacity: 1;
@@ -44,52 +46,51 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
     }
 }
 
-/* Bell Icon & Hover Physics level dewa */
+/* Bell Icon & Hover Physics */
 .notif-bell-wrapper {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, rgba(26, 35, 126, 0.08) 0%, rgba(79, 70, 229, 0.12) 100%);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6);
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
 }
 
-.dropdown-notifications:hover .notif-bell-wrapper {
-    background: linear-gradient(135deg, rgba(26, 35, 126, 0.15) 0%, rgba(79, 70, 229, 0.22) 100%);
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(26, 35, 126, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+.dropdown-notifications:hover .notif-bell-wrapper,
+.dropdown-notifications.show .notif-bell-wrapper {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
 }
 
 .notif-bell-icon {
-    color: #1a237e;
-    font-size: 1.35rem;
-    transition: transform 0.4s ease;
+    color: #ffffff;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
 }
 
 .dropdown-notifications:hover .notif-bell-icon {
-    animation: bellJingle 0.8s ease-in-out infinite alternate;
+    animation: bellJingle 0.7s ease-in-out infinite alternate;
 }
 
 @keyframes bellJingle {
     0% { transform: rotate(0deg); }
-    20% { transform: rotate(18deg); }
-    40% { transform: rotate(-18deg); }
-    60% { transform: rotate(12deg); }
-    80% { transform: rotate(-6deg); }
+    20% { transform: rotate(15deg); }
+    40% { transform: rotate(-15deg); }
+    60% { transform: rotate(10deg); }
+    80% { transform: rotate(-5deg); }
     100% { transform: rotate(0deg); }
 }
 
-/* Glowing Pulse & Animated Badge Super Estetik */
+/* Glowing Pulse & Animated Badge */
 .bell-pulse-ring {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 10px;
-    height: 10px;
+    top: 4px;
+    right: 4px;
+    width: 8px;
+    height: 8px;
     background-color: #ff3547;
     border-radius: 50%;
     z-index: 1;
@@ -109,178 +110,137 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
 
 @keyframes pulseRing {
     0% { transform: scale(0.4); opacity: 0.9; }
-    80% { transform: scale(2.2); opacity: 0; }
-    100% { transform: scale(2.6); opacity: 0; }
+    80% { transform: scale(2); opacity: 0; }
+    100% { transform: scale(2.4); opacity: 0; }
 }
 
 .notif-badge-count {
-    font-size: 0.68rem;
-    font-weight: 900;
-    padding: 0.3em 0.6em;
-    background: linear-gradient(135deg, #ff3547 0%, #ff6b6b 50%, #c82333 100%);
-    box-shadow: 0 4px 15px rgba(255, 53, 71, 0.5);
-    border: 2px solid #ffffff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 0.25em 0.55em;
+    background: #ff3547;
+    border: 2px solid #1a237e;
     border-radius: 50rem;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.dropdown-notifications:hover .notif-badge-count {
-    transform: scale(1.2) rotate(8deg);
-}
-
-/* Premium Header Gradient Cyber/Deep Blue Level Dewa */
+/* Premium Header Gradient */
 .notif-header {
-    background: linear-gradient(135deg, #090d38 0%, #1a237e 50%, #3949ab 100%);
-    padding: 18px 22px;
+    background: linear-gradient(135deg, #090d38 0%, #1a237e 100%);
+    padding: 16px 20px;
     position: relative;
-    overflow: hidden;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
 }
 
-.notif-header::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 65%);
-    pointer-events: none;
-    animation: headerGlowPulse 6s ease-in-out infinite alternate;
-}
-
-@keyframes headerGlowPulse {
-    0% { transform: translate(-10px, -10px); }
-    100% { transform: translate(10px, 10px); }
-}
-
-/* Filter Tab Pills Interaktif Modern */
+/* Filter Tab Pills */
 .notif-filter-btn {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    padding: 5px 14px;
-    border-radius: 25px;
-    background: rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.25s ease;
     cursor: pointer;
-    outline: none !important;
 }
 
 .notif-filter-btn:hover {
-    background: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.2);
     color: #ffffff;
-    transform: translateY(-1px);
 }
 
 .notif-filter-btn.active {
     background: #ffffff;
     color: #1a237e;
     font-weight: 800;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     border-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Mark Read Action Button Elegan */
+/* Mark Read Action Button */
 .btn-mark-read {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.15);
-    padding: 5px 12px;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    padding: 4px 10px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(5px);
+    transition: all 0.25s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-mark-read:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.25);
     color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* Notification Items & Micro-interactions Kelas Berat */
+/* Notification Items */
 .notif-item {
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    border-left: 5px solid transparent;
+    transition: all 0.25s ease;
+    border-left: 4px solid transparent;
     text-decoration: none !important;
-    position: relative;
     background: #ffffff;
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .notif-item.unread {
-    background: linear-gradient(90deg, rgba(26, 35, 126, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
+    background: rgba(26, 35, 126, 0.03);
     border-left-color: #1a237e;
 }
 
 .notif-item:hover {
-    background-color: rgba(26, 35, 126, 0.08) !important;
-    transform: translateX(6px);
-    box-shadow: 0 4px 15px rgba(26, 35, 126, 0.06);
+    background-color: rgba(26, 35, 126, 0.06) !important;
 }
 
 .notif-avatar {
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
     background: linear-gradient(135deg, #1a237e 0%, #4f46e5 100%);
     color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
-    font-size: 1rem;
+    font-size: 0.9rem;
     flex-shrink: 0;
-    box-shadow: 0 6px 15px rgba(26, 35, 126, 0.3);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.notif-item:hover .notif-avatar {
-    transform: scale(1.12) rotate(-5deg);
+    box-shadow: 0 4px 10px rgba(26, 35, 126, 0.2);
 }
 
 .notif-badge-ticket {
-    background: linear-gradient(135deg, rgba(26, 35, 126, 0.08) 0%, rgba(79, 70, 229, 0.12) 100%);
+    background: rgba(26, 35, 126, 0.06);
     color: #1a237e;
-    font-weight: 800;
-    font-size: 0.72rem;
-    padding: 4px 10px;
-    border-radius: 8px;
-    border: 1px solid rgba(26, 35, 126, 0.15);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    font-weight: 700;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(26, 35, 126, 0.1);
 }
 
 .notif-time {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     color: #64748b;
     font-weight: 600;
 }
 
 .notif-indicator-dot {
-    width: 9px;
-    height: 9px;
-    background: linear-gradient(135deg, #1a237e 0%, #4f46e5 100%);
+    width: 8px;
+    height: 8px;
+    background: #1a237e;
     border-radius: 50%;
     display: inline-block;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    box-shadow: 0 0 8px rgba(26, 35, 126, 0.5);
+    transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
-/* Custom Scrollbar Super Halus */
+/* Custom Scrollbar */
 .notif-scroll {
-    max-height: 350px;
+    max-height: 320px;
     overflow-y: auto;
     scroll-behavior: smooth;
 }
 
 .notif-scroll::-webkit-scrollbar {
-    width: 7px;
+    width: 5px;
 }
 
 .notif-scroll::-webkit-scrollbar-track {
@@ -292,70 +252,42 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
     border-radius: 10px;
 }
 
-.notif-scroll::-webkit-scrollbar-thumb:hover {
-    background: #1a237e;
-}
-
-/* Empty State Container Estetik */
+/* Empty State */
 .notif-empty-state {
-    padding: 40px 20px;
+    padding: 35px 20px;
     text-align: center;
 }
 
 .notif-empty-icon {
-    width: 65px;
-    height: 65px;
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    width: 55px;
+    height: 55px;
+    background: #f1f5f9;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     color: #94a3b8;
-    font-size: 1.6rem;
-    margin-bottom: 14px;
-    animation: floatAnim 3.5s ease-in-out infinite;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    font-size: 1.4rem;
+    margin-bottom: 12px;
 }
 
-@keyframes floatAnim {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-}
-
-/* Footer Accent Berkelas */
-.notif-footer {
-    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-    transition: all 0.3s ease;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-}
-
+/* Footer Accent */
 .notif-footer-link {
     color: #1a237e;
-    font-weight: 800;
-    font-size: 0.85rem;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    transition: color 0.2s ease;
 }
 
-.notif-footer-link i {
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.notif-footer:hover .notif-footer-link {
+.notif-footer-link:hover {
     color: #4f46e5;
-}
-
-.notif-footer:hover .notif-footer-link i {
-    transform: translateX(6px);
+    text-decoration: none;
 }
 </style>
 
 <!-- Dropdown Notifikasi Navbar -->
 <li class="nav-item dropdown dropdown-notifications mx-2">
-    <a class="nav-link text-dark position-relative px-2 d-flex align-items-center" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Notifikasi Tiket">
+    <a class="nav-link position-relative px-2 d-flex align-items-center" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Notifikasi Tiket">
         <div class="notif-bell-wrapper">
             <i class="fas fa-bell notif-bell-icon"></i>
             
@@ -369,17 +301,17 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
         </div>
     </a>
 
-    <div class="dropdown-menu dropdown-menu-right border-0 py-0 mt-2" aria-labelledby="notificationDropdown">
+    <div class="dropdown-menu dropdown-menu-right border-0 py-0 shadow-lg" aria-labelledby="notificationDropdown">
         
         <!-- Header Dropdown -->
         <div class="notif-header text-white">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="font-weight-bold mb-0 text-white d-flex align-items-center" style="font-size: 1rem; letter-spacing: 0.4px;">
-                    <i class="fas fa-layer-group mr-2" style="color: #c7d2fe;"></i> Notifikasi Tiket
+                <h6 class="font-weight-bold mb-0 text-white d-flex align-items-center" style="font-size: 0.9rem;">
+                    <i class="fas fa-bell mr-2" style="color: #c7d2fe;"></i> Notifikasi Tiket
                 </h6>
                 <?php if ($notifCount > 0): ?>
                     <span class="btn-mark-read" id="btnMarkAllRead" onclick="markAllNotificationsAsRead(event)" title="Tandai semua telah dibaca">
-                        <i class="fas fa-check-double mr-1"></i> Dibaca
+                        <i class="fas fa-check-double mr-1"></i> Dibaca Semua
                     </span>
                 <?php endif; ?>
             </div>
@@ -391,7 +323,7 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
                         Baru <span id="unreadFilterBadge">(<?= $notifCount ?>)</span>
                     </button>
                 </div>
-                <span class="badge badge-light text-primary font-weight-bold px-2 py-1" id="notifHeaderCount" style="border-radius: 10px; font-size: 0.75rem; background: #ffffff; color: #1a237e !important; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                <span class="badge badge-light text-primary font-weight-bold px-2 py-1" id="notifHeaderCount" style="border-radius: 8px; font-size: 0.7rem; background: #ffffff; color: #1a237e !important;">
                     <?= $notifCount ?> Belum Dibaca
                 </span>
             </div>
@@ -406,7 +338,7 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
                         $inisial = strtoupper(substr($namaPemohon, 0, 1));
                     ?>
                     <a href="<?= base_url('petugas/detail/' . ($notif['id'] ?? 1)) ?>" 
-                       class="list-group-item list-group-item-action p-3 border-bottom notif-item unread" 
+                       class="list-group-item list-group-item-action p-3 notif-item unread" 
                        data-index="<?= $index ?>"
                        onclick="markSingleAsRead(this)">
                         <div class="d-flex align-items-start">
@@ -425,7 +357,7 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
                                         <span class="notif-indicator-dot" title="Belum dibaca"></span>
                                     </div>
                                 </div>
-                                <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.45;">
+                                <p class="mb-0 text-dark" style="font-size: 0.82rem; line-height: 1.4;">
                                     <strong><?= $namaPemohon ?></strong> mengajukan 
                                     <span class="text-primary font-weight-semibold"><?= esc($notif['layanan'] ?? 'Layanan') ?></span>
                                 </p>
@@ -438,124 +370,79 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
                     <div class="notif-empty-icon">
                         <i class="fas fa-bell-slash"></i>
                     </div>
-                    <p class="mb-1 font-weight-bold text-dark" style="font-size: 0.9rem;">Tidak Ada Notifikasi Baru</p>
-                    <small class="text-muted d-block" style="font-size: 0.78rem;">Semua tiket masuk saat ini telah ditinjau dengan baik.</small>
+                    <p class="mb-1 font-weight-bold text-dark" style="font-size: 0.85rem;">Tidak Ada Notifikasi Baru</p>
+                    <small class="text-muted d-block" style="font-size: 0.75rem;">Semua tiket masuk saat ini telah ditinjau.</small>
                 </div>
             <?php endif; ?>
         </div>
 
         <!-- Footer Dropdown -->
-        <div class="p-3 text-center notif-footer border-top">
-            <a href="<?= base_url('petugas/tiket') ?>" class="notif-footer-link text-decoration-none w-100">
-                Lihat Semua Data Tiket <i class="fas fa-arrow-right ml-2"></i>
+        <div class="p-2.5 text-center bg-light border-top">
+            <a href="<?= base_url('petugas/tiket') ?>" class="notif-footer-link d-block py-1">
+                Lihat Semua Data Tiket <i class="fas fa-arrow-right ml-1"></i>
             </a>
         </div>
     </div>
 </li>
 
-<!-- Super Interactive Engine JavaScript Level Dewa Mentok -->
+<!-- JavaScript Interaktif -->
 <script>
-// Web Audio API Sound Generator Pro (Efek Suara Audio Modern Dinamis Tanpa File External)
 function playNotificationChime() {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (!AudioContext) return;
         const ctx = new AudioContext();
-        
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(659.25, ctx.currentTime); // E5
-        osc.frequency.exponentialRampToValueAtTime(987.77, ctx.currentTime + 0.18); // B5
+        osc.frequency.setValueAtTime(659.25, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(987.77, ctx.currentTime + 0.15);
         
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
         
         osc.connect(gain);
         gain.connect(ctx.destination);
         
         osc.start();
-        osc.stop(ctx.currentTime + 0.3);
-    } catch(e) {
-        // Fallback jika browser memblokir autoplay audio secara otomatis
-    }
+        osc.stop(ctx.currentTime + 0.25);
+    } catch(e) {}
 }
 
-// Sparkle/Confetti/Particle Effect Premium Level Dewa saat Klik Tandai Dibaca
-function triggerSparkles(element) {
-    const rect = element.getBoundingClientRect();
-    const colors = ['#1a237e', '#4f46e5', '#ff3547', '#3b82f6', '#10b981'];
-    for (let i = 0; i < 12; i++) {
-        const particle = document.createElement('div');
-        particle.style.position = 'fixed';
-        particle.style.left = (rect.left + rect.width / 2) + 'px';
-        particle.style.top = (rect.top + rect.height / 2) + 'px';
-        particle.style.width = (Math.random() * 6 + 4) + 'px';
-        particle.style.height = particle.style.width;
-        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        particle.style.borderRadius = '50%';
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '99999';
-        
-        document.body.appendChild(particle);
-        
-        const destinationX = (Math.random() - 0.5) * 120;
-        const destinationY = (Math.random() - 0.5) * 120;
-        
-        particle.animate([
-            { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-            { transform: `translate(${destinationX}px, ${destinationY}px) scale(0)`, opacity: 0 }
-        ], {
-            duration: 800,
-            easing: 'cubic-bezier(0,0,0.2,1)'
-        }).onfinish = () => particle.remove();
-    }
-}
-
-// Tandai Satu Notifikasi Dibaca dengan Animasi Smooth Ripple
 function markSingleAsRead(item) {
     if (item.classList.contains('unread')) {
         item.classList.remove('unread');
-        item.style.background = '#ffffff';
         const dot = item.querySelector('.notif-indicator-dot');
         if (dot) {
             dot.style.transform = 'scale(0)';
             dot.style.opacity = '0';
         }
-        
         updateUnreadCounts();
     }
 }
 
-// Tandai Semua Notifikasi Dibaca dengan Staggered Wave Efek Keren
 function markAllNotificationsAsRead(e) {
-    if (e) {
-        e.stopPropagation();
-        triggerSparkles(e.currentTarget);
-    }
-
+    if (e) e.stopPropagation();
     playNotificationChime();
 
     const items = document.querySelectorAll('.notif-item.unread');
     items.forEach((item, idx) => {
         setTimeout(() => {
             item.classList.remove('unread');
-            item.style.background = '#ffffff';
             const dot = item.querySelector('.notif-indicator-dot');
             if (dot) {
                 dot.style.transform = 'scale(0)';
                 dot.style.opacity = '0';
             }
-        }, idx * 60); // Staggered Animation Delay
+        }, idx * 40);
     });
 
     setTimeout(() => {
         updateUnreadCounts(true);
-    }, items.length * 60 + 120);
+    }, items.length * 40 + 100);
 }
 
-// Update State & Counter secara Realtime & Interaktif Dinamis
 function updateUnreadCounts(allRead = false) {
     const unreadItems = document.querySelectorAll('.notif-item.unread');
     const count = allRead ? 0 : unreadItems.length;
@@ -569,15 +456,14 @@ function updateUnreadCounts(allRead = false) {
     if (count === 0) {
         if (badge) {
             badge.style.transform = 'scale(0)';
-            setTimeout(() => badge.style.display = 'none', 250);
+            setTimeout(() => badge.style.display = 'none', 200);
         }
         if (pulse) pulse.style.display = 'none';
         if (headerCount) headerCount.innerText = '0 Belum Dibaca';
         if (unreadFilterBadge) unreadFilterBadge.innerText = '(0)';
         if (btnMarkRead) {
             btnMarkRead.style.opacity = '0';
-            btnMarkRead.style.transform = 'scale(0.8)';
-            setTimeout(() => btnMarkRead.style.display = 'none', 250);
+            setTimeout(() => btnMarkRead.style.display = 'none', 200);
         }
     } else {
         if (badge) badge.innerText = count;
@@ -586,7 +472,6 @@ function updateUnreadCounts(allRead = false) {
     }
 }
 
-// Filter Tab Switcher dengan Transisi Halus Level Tinggi
 function filterNotif(type, btn, e) {
     if (e) e.stopPropagation();
 

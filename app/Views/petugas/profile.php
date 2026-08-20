@@ -4,37 +4,39 @@
 
 <style>
     /* =========================================================
-       PROFILE PETUGAS ULT POLBAN - OFFICIAL DASHBOARD THEME (DEWA EDITION)
+       PROFILE PETUGAS ULT POLBAN - TOY STORY EDITION & PRO UI
        ========================================================= */
 
     :root {
-        /* Palette Resmi Dashboard ULT POLBAN */
-        --ult-navy-deep: #0f172a;       /* Dark Slate / Slate 900 */
-        --ult-navy-card: #1e293b;       /* Slate 800 */
-        --ult-primary: #1e40af;         /* POLBAN Blue / Blue 800 */
-        --ult-primary-light: #2563eb;   /* Vivid Blue / Blue 600 */
-        --ult-accent-blue: #0284c7;     /* Ocean Cyan / Sky 600 */
-        --ult-cyan: #06b6d4;            /* Cyan 500 */
-        --ult-amber: #d97706;           /* Amber / Gold POLBAN */
+        --ult-navy-deep: #0f172a;       
+        --ult-navy-card: #1e293b;       
+        --ult-primary: #1e40af;         
+        --ult-primary-light: #2563eb;   
+        --ult-accent-blue: #0284c7;     
+        --ult-cyan: #06b6d4;            
+        --ult-amber: #d97706;           
         --ult-amber-glow: rgba(217, 119, 6, 0.25);
-        --ult-green: #059669;           /* Emerald 600 */
+        --ult-green: #059669;           
         --ult-green-glow: rgba(5, 150, 105, 0.25);
-        --ult-bg: #f8fafc;              /* Slate 50 Neutral BG */
+        --ult-bg: #f8fafc;              
         --ult-card-bg: #ffffff;
         --ult-text-dark: #0f172a;
         --ult-text-muted: #64748b;
         --ult-border: #e2e8f0;
         --ult-border-hover: #cbd5e1;
         
-        /* Glassmorphism Ultra & Shadow Tokens */
-        --ult-glass-bg: rgba(255, 255, 255, 0.72);
+        --ult-glass-bg: rgba(255, 255, 255, 0.78);
         --ult-glass-border: rgba(255, 255, 255, 0.6);
         --ult-shadow-xl: 0 25px 50px -12px rgba(15, 23, 42, 0.08), 0 10px 20px -8px rgba(15, 23, 42, 0.04);
         --ult-shadow-glow: 0 12px 36px rgba(30, 64, 175, 0.18);
         --ult-shadow-amber: 0 10px 25px rgba(217, 119, 6, 0.2);
+        
+        --theme-char-bg: linear-gradient(135deg, #3b82f6, #1e40af);
+        --theme-badge-bg: #eff6ff;
+        --theme-badge-text: #1d4ed8;
     }
 
-    /* --- PILIHAN TEMA FILM & NORMAL --- */
+    /* --- TEMA KARAKTER FILM --- */
     body.theme-spiderman {
         --ult-navy-deep: #1a0505;
         --ult-primary: #dc2626;
@@ -42,8 +44,11 @@
         --ult-cyan: #3b82f6;
         --ult-amber: #f59e0b;
         --ult-bg: #fff1f2;
-        --ult-glass-bg: rgba(255, 241, 242, 0.85);
-        --ult-shadow-xl: 0 25px 50px -12px rgba(220, 38, 38, 0.15);
+        --ult-glass-bg: rgba(255, 241, 242, 0.88);
+        --ult-shadow-xl: 0 25px 50px -12px rgba(220, 38, 38, 0.2);
+        --theme-char-bg: linear-gradient(135deg, #dc2626, #991b1b);
+        --theme-badge-bg: #fee2e2;
+        --theme-badge-text: #b91c1c;
     }
 
     body.theme-mcqueen {
@@ -53,19 +58,25 @@
         --ult-cyan: #facc15;
         --ult-amber: #ea580c;
         --ult-bg: #fff1f2;
-        --ult-glass-bg: rgba(255, 242, 242, 0.88);
-        --ult-shadow-xl: 0 25px 50px -12px rgba(185, 28, 28, 0.2);
+        --ult-glass-bg: rgba(255, 242, 242, 0.9);
+        --ult-shadow-xl: 0 25px 50px -12px rgba(185, 28, 28, 0.22);
+        --theme-char-bg: linear-gradient(135deg, #ea580c, #b91c1c);
+        --theme-badge-bg: #ffedd5;
+        --theme-badge-text: #c2410c;
     }
 
-    body.theme-up {
-        --ult-navy-deep: #0c4a6e;
-        --ult-primary: #0284c7;
-        --ult-primary-light: #38bdf8;
-        --ult-cyan: #34d399;
-        --ult-amber: #fbbf24;
-        --ult-bg: #f0f9ff;
-        --ult-glass-bg: rgba(240, 249, 255, 0.85);
-        --ult-shadow-xl: 0 25px 50px -12px rgba(2, 132, 199, 0.15);
+    body.theme-toystory {
+        --ult-navy-deep: #1e3a8a;
+        --ult-primary: #2563eb;
+        --ult-primary-light: #3b82f6;
+        --ult-cyan: #f59e0b;
+        --ult-amber: #e11d48;
+        --ult-bg: #eff6ff;
+        --ult-glass-bg: rgba(239, 246, 255, 0.9);
+        --ult-shadow-xl: 0 25px 50px -12px rgba(37, 99, 235, 0.2);
+        --theme-char-bg: linear-gradient(135deg, #2563eb, #dc2626);
+        --theme-badge-bg: #dbeafe;
+        --theme-badge-text: #1e40af;
     }
 
     body.theme-monster {
@@ -75,8 +86,11 @@
         --ult-cyan: #84cc16;
         --ult-amber: #10b981;
         --ult-bg: #f0fdf4;
-        --ult-glass-bg: rgba(240, 253, 244, 0.85);
-        --ult-shadow-xl: 0 25px 50px -12px rgba(13, 148, 136, 0.15);
+        --ult-glass-bg: rgba(240, 253, 244, 0.88);
+        --ult-shadow-xl: 0 25px 50px -12px rgba(13, 148, 136, 0.18);
+        --theme-char-bg: linear-gradient(135deg, #10b981, #047857);
+        --theme-badge-bg: #d1fae5;
+        --theme-badge-text: #047857;
     }
 
     body.theme-elemental {
@@ -86,8 +100,11 @@
         --ult-cyan: #0284c7;
         --ult-amber: #fb923c;
         --ult-bg: #fff7ed;
-        --ult-glass-bg: rgba(255, 247, 237, 0.88);
-        --ult-shadow-xl: 0 25px 50px -12px rgba(194, 65, 12, 0.18);
+        --ult-glass-bg: rgba(255, 247, 237, 0.9);
+        --ult-shadow-xl: 0 25px 50px -12px rgba(194, 65, 12, 0.2);
+        --theme-char-bg: linear-gradient(135deg, #f97316, #c2410c);
+        --theme-badge-bg: #ffedd5;
+        --theme-badge-text: #c2410c;
     }
 
     .petugas-profile {
@@ -100,7 +117,6 @@
         transition: background 0.5s ease;
     }
 
-    /* BACKGROUND GLOW DECORATIVE ELEMENTS */
     .petugas-profile::before,
     .petugas-profile::after {
         content: '';
@@ -112,6 +128,7 @@
         pointer-events: none;
         z-index: 0;
         opacity: 0.45;
+        transition: background 0.5s ease;
     }
 
     .petugas-profile::before {
@@ -132,7 +149,6 @@
         z-index: 1;
     }
 
-    /* HEADER PAGE WITH ELEGANT ACCENT */
     .profile-page-header {
         display: flex;
         justify-content: space-between;
@@ -196,6 +212,7 @@
         background: linear-gradient(135deg, var(--ult-navy-deep) 0%, var(--ult-primary) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        transition: all 0.4s ease;
     }
 
     .profile-title-wrap p {
@@ -205,7 +222,21 @@
         font-weight: 500;
     }
 
-    /* BUTTON ACTION PROFESSIONAL WITH RIPPLE */
+    .theme-character-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        background: var(--theme-badge-bg);
+        color: var(--theme-badge-text);
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        transition: all 0.4s ease;
+    }
+
     .profile-edit-main-btn {
         border: 0;
         padding: 14px 28px;
@@ -247,11 +278,6 @@
         color: #ffffff;
     }
 
-    .profile-edit-main-btn:active {
-        transform: translateY(-1px) scale(0.98);
-    }
-
-    /* MAIN CARD GLASSMORPHISM & TILT TARGET */
     .profile-main-card {
         background: var(--ult-glass-bg);
         backdrop-filter: blur(20px);
@@ -262,11 +288,7 @@
         box-shadow: var(--ult-shadow-xl);
         position: relative;
         transform-style: preserve-3d;
-        transition: transform 0.15s ease-out, box-shadow 0.4s ease;
-    }
-
-    .profile-main-card:hover {
-        box-shadow: 0 35px 70px -15px rgba(15, 23, 42, 0.12), var(--ult-shadow-glow);
+        transition: transform 0.15s ease-out, box-shadow 0.4s ease, background 0.5s ease;
     }
 
     .profile-card-header {
@@ -278,6 +300,7 @@
         align-items: center;
         position: relative;
         overflow: hidden;
+        transition: background 0.5s ease;
     }
 
     .profile-card-header-bg-glow {
@@ -319,15 +342,13 @@
         padding: 42px;
     }
 
-    /* PROFILE TOP LAYOUT */
     .profile-top {
         display: grid;
-        grid-template-columns: 320px 1fr;
+        grid-template-columns: 340px 1fr;
         gap: 42px;
         align-items: stretch;
     }
 
-    /* PHOTO SECTION WITH GLASSMORPHISM CARD */
     .profile-photo-section {
         display: flex;
         flex-direction: column;
@@ -340,6 +361,20 @@
         border-radius: 24px;
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.8);
+        overflow: hidden;
+    }
+
+    .theme-char-banner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 85px;
+        background: var(--theme-char-bg);
+        opacity: 0.12;
+        border-radius: 24px 24px 0 0;
+        z-index: 0;
+        transition: background 0.5s ease;
     }
 
     .profile-photo-wrapper {
@@ -347,6 +382,7 @@
         width: 176px;
         height: 176px;
         margin-bottom: 24px;
+        z-index: 2;
     }
 
     .profile-photo-ring {
@@ -376,10 +412,6 @@
         z-index: 2;
         background: #ffffff;
         transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .profile-photo:hover {
-        transform: scale(1.04);
     }
 
     .profile-photo-empty {
@@ -436,6 +468,7 @@
         letter-spacing: -0.5px;
         word-break: break-word;
         transition: all 0.3s ease;
+        z-index: 2;
     }
 
     .profile-role {
@@ -448,6 +481,7 @@
         align-items: center;
         justify-content: center;
         gap: 6px;
+        z-index: 2;
     }
 
     .profile-status {
@@ -463,6 +497,7 @@
         font-size: 12.5px;
         font-weight: 700;
         box-shadow: 0 4px 14px var(--ult-green-glow);
+        z-index: 2;
     }
 
     .status-dot {
@@ -486,9 +521,32 @@
         font-size: 12px;
         text-align: center;
         font-weight: 500;
+        z-index: 2;
     }
 
-    /* DATA SECTION */
+    .theme-char-preview {
+        margin-top: 18px;
+        width: 100%;
+        padding: 10px 14px;
+        background: rgba(255,255,255,0.7);
+        border-radius: 14px;
+        border: 1px solid var(--ult-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--ult-navy-deep);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        z-index: 2;
+    }
+
+    .theme-char-preview i {
+        font-size: 16px;
+        color: var(--ult-primary-light);
+    }
+
     .profile-data-section {
         padding: 4px 0;
     }
@@ -511,6 +569,7 @@
         justify-content: center;
         font-size: 18px;
         box-shadow: 0 6px 16px rgba(37, 99, 235, 0.1);
+        transition: background 0.5s ease, color 0.5s ease;
     }
 
     .section-heading h4 {
@@ -531,7 +590,7 @@
         padding: 20px 24px;
         border: 1px solid var(--ult-border);
         border-radius: 18px;
-        background: rgba(248, 250, 252, 0.8);
+        background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(8px);
         transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         position: relative;
@@ -585,6 +644,7 @@
     .data-label i {
         color: var(--ult-primary-light);
         font-size: 14px;
+        transition: color 0.5s ease;
     }
 
     .data-copy-badge {
@@ -614,14 +674,12 @@
         z-index: 2;
     }
 
-    /* DIVIDER ELEGAN */
     .profile-divider {
         height: 1px;
         background: linear-gradient(90deg, rgba(226,232,240,0) 0%, rgba(226,232,240,1) 20%, rgba(226,232,240,1) 80%, rgba(226,232,240,0) 100%);
         margin: 40px 0;
     }
 
-    /* INFO CARDS HIGH-END */
     .profile-info-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -647,7 +705,7 @@
         width: 4px;
         height: 100%;
         background: var(--ult-primary);
-        transition: width 0.3s ease;
+        transition: width 0.3s ease, background 0.5s ease;
     }
 
     .info-card.orange::before { background: var(--ult-amber); }
@@ -677,10 +735,6 @@
         transition: transform 0.4s ease;
     }
 
-    .info-card:hover .info-icon {
-        transform: scale(1.1) rotate(6deg);
-    }
-
     .info-card.orange .info-icon {
         background: #fff7ed;
         color: var(--ult-amber);
@@ -704,193 +758,213 @@
         font-weight: 800;
     }
 
-    /* MODAL ENHANCEMENT GLASSMORPHISM & THEME CARDS SEPERTI FOTO KE 2 */
+    /* =========================================================
+       ULTRA REDESIGNED EDIT PROFIL MODAL (Keren, Profesional, Norak-Free)
+       ========================================================= */
+    .profile-modal {
+        z-index: 1060;
+    }
+
+    .profile-modal .modal-dialog {
+        max-width: 900px;
+        width: calc(100% - 32px);
+    }
+
     .profile-modal .modal-content {
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 28px;
+        border-radius: 32px;
         overflow: hidden;
-        box-shadow: 0 35px 80px rgba(15, 23, 42, 0.35);
-        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.3);
+        background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
     }
 
     .profile-modal .modal-header {
-        border: 0;
-        padding: 24px 32px;
-        background: linear-gradient(135deg, var(--ult-navy-deep) 0%, var(--ult-primary) 100%);
+        padding: 30px 40px;
+        background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+        border-bottom: 3px solid #3b82f6;
         color: #ffffff;
         position: relative;
-        overflow: hidden;
-    }
-
-    .profile-modal .modal-header::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--ult-cyan), var(--ult-amber), var(--ult-primary-light));
     }
 
     .profile-modal .modal-title {
+        color: #ffffff;
+        font-size: 22px;
         font-weight: 800;
-        font-size: 20px;
         letter-spacing: -0.4px;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
     }
 
-    .profile-modal .btn-close {
-        filter: brightness(0) invert(1);
-        opacity: 0.85;
-        transition: all 0.25s ease;
-    }
-
-    .profile-modal .btn-close:hover {
-        opacity: 1;
-        transform: rotate(90deg) scale(1.1);
+    .profile-modal .modal-header small {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 13px;
+        margin-top: 4px;
+        display: block;
     }
 
     .profile-modal .modal-body {
-        padding: 32px;
-        max-height: 75vh;
+        padding: 36px 40px;
+        background: #ffffff;
+        max-height: calc(100vh - 220px);
         overflow-y: auto;
     }
 
+    .profile-modal .modal-body::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .profile-modal .modal-body::-webkit-scrollbar-track {
+        background: #f8fafc;
+        border-radius: 20px;
+    }
+
+    .profile-modal .modal-body::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 20px;
+    }
+
     .profile-modal .form-label {
-        color: var(--ult-navy-deep);
+        color: #1e293b;
         font-weight: 700;
-        font-size: 12.5px;
+        font-size: 13.5px;
         margin-bottom: 8px;
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
     }
 
     .profile-modal .form-label i {
-        color: var(--ult-primary-light);
+        color: #2563eb !important;
     }
 
-    .profile-modal .form-control {
-        border: 1.5px solid var(--ult-border);
-        border-radius: 14px;
-        padding: 12px 16px;
-        min-height: 48px;
-        font-size: 13.5px;
-        transition: all 0.3s ease;
+    .profile-modal .form-control,
+    .profile-modal .form-select {
         background: #f8fafc;
-        color: var(--ult-text-dark);
+        border: 1.5px solid #e2e8f0;
+        color: #0f172a;
+        min-height: 54px;
+        border-radius: 16px;
         font-weight: 600;
+        font-size: 14px;
+        padding: 12px 18px;
+        transition: all 0.3s ease;
     }
 
-    .profile-modal .form-control:focus {
-        border-color: var(--ult-primary-light);
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
+    .profile-modal .form-control:focus,
+    .profile-modal .form-select:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
         background: #ffffff;
     }
 
     .profile-modal .form-control:disabled {
-        background-color: #f1f5f9;
+        background: #f1f5f9;
         color: #64748b;
-        opacity: 1;
     }
 
-    /* THEME CARDS GRID SEPERTI FOTO KE-2 */
-    .theme-cards-container {
+    /* GRID PILIHAN TEMA PROFESIONAL (Normal & Toy Story, dll) */
+    .theme-options-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin-top: 6px;
+        gap: 14px;
+        margin-top: 8px;
     }
 
-    .theme-card-option {
-        border: 2px solid var(--ult-border);
-        border-radius: 16px;
-        padding: 14px 10px;
-        text-align: center;
-        cursor: pointer;
-        background: #ffffff;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        position: relative;
+    .theme-option-card {
+        min-height: 84px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 8px;
+        justify-content: center;
+        border: 2px solid #e2e8f0;
+        background: #ffffff;
+        border-radius: 16px;
+        cursor: pointer;
+        padding: 12px;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .theme-card-option i {
+    .theme-option-card:hover {
+        border-color: #93c5fd;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+    }
+
+    .theme-option-card.active {
+        border-color: #2563eb;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        box-shadow: 0 10px 24px rgba(37, 99, 235, 0.15);
+    }
+
+    .theme-option-card i {
         font-size: 22px;
-        color: var(--ult-text-muted);
-        transition: transform 0.3s ease, color 0.3s ease;
+        margin-bottom: 6px;
+        color: #64748b;
+        transition: color 0.3s ease;
     }
 
-    .theme-card-option span {
+    .theme-option-card.active i {
+        color: #2563eb;
+    }
+
+    .theme-option-card span {
         font-size: 12px;
         font-weight: 700;
-        color: var(--ult-text-dark);
+        color: #1e293b;
+        transition: color 0.3s ease;
     }
 
-    .theme-card-option:hover {
-        border-color: var(--ult-primary-light);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(30, 64, 175, 0.08);
+    .theme-option-card.active span {
+        color: #1e40af;
     }
 
-    .theme-card-option:hover i {
-        transform: scale(1.15);
-        color: var(--ult-primary-light);
-    }
-
-    .theme-card-option.active {
-        border-color: var(--ult-primary);
-        background: linear-gradient(135deg, rgba(37, 99, 235, 0.04) 0%, rgba(6, 182, 212, 0.08) 100%);
-        box-shadow: 0 8px 22px rgba(30, 64, 175, 0.15);
-    }
-
-    .theme-card-option.active i,
-    .theme-card-option.active span {
-        color: var(--ult-primary);
-    }
-
-    .btn-profile-save {
-        border: 0;
-        border-radius: 14px;
-        background: linear-gradient(135deg, var(--ult-primary-light) 0%, var(--ult-primary) 100%);
+    .profile-modal .btn-profile-save {
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
         color: #ffffff;
-        padding: 12px 28px;
+        min-height: 52px;
+        border-radius: 16px;
+        padding: 14px 32px;
         font-weight: 800;
-        font-size: 13.5px;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: 0 10px 24px rgba(30, 64, 175, 0.28);
+        border: 0;
         cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        position: relative;
-        overflow: hidden;
+        box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
+        transition: all 0.3s ease;
     }
 
-    .btn-profile-save:hover:not(:disabled) {
-        transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 16px 32px rgba(30, 64, 175, 0.4);
+    .profile-modal .btn-profile-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 28px rgba(37, 99, 235, 0.35);
         color: #ffffff;
     }
 
-    /* TOMBOL SIMPAN KETIKA DISABLED (TIDAK ADA PERUBAHAN) */
-    .btn-profile-save:disabled,
-    .btn-profile-save.disabled {
-        background: #cbd5e1 !important;
-        color: #64748b !important;
-        cursor: not-allowed !important;
-        box-shadow: none !important;
-        transform: none !important;
-        opacity: 0.7;
+    .profile-modal .btn-light {
+        min-height: 52px;
+        border-radius: 16px !important;
+        font-weight: 700;
+        color: #475569;
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1 !important;
     }
 
-    /* TOAST NOTIFICATION SYSTEM APPLE macOS/iOS SPRING ANIMATION */
+    .profile-modal .btn-close {
+        width: 38px;
+        height: 38px;
+        background-color: rgba(255,255,255,0.15);
+        background-size: 14px;
+        border-radius: 12px;
+        opacity: 1;
+        filter: brightness(0) invert(1);
+        transition: all 0.2s ease;
+    }
+
+    .profile-modal .btn-close:hover {
+        background-color: rgba(255,255,255,0.3);
+        transform: scale(1.05);
+    }
+
+    /* TOAST NOTIFICATION */
     .profile-toast-wrapper {
         position: fixed;
         right: 32px;
@@ -987,7 +1061,6 @@
         line-height: 1.4;
     }
 
-    /* RIPPLE EFFECT CANVAS */
     .ripple-effect {
         position: absolute;
         border-radius: 50%;
@@ -1004,7 +1077,6 @@
         }
     }
 
-    /* STAGGERED ENTRANCE ANIMATIONS */
     .stagger-item {
         opacity: 0;
         transform: translateY(24px);
@@ -1016,24 +1088,20 @@
         transform: translateY(0);
     }
 
-    /* RESPONSIVE DESIGN */
     @media (max-width: 1024px) {
         .profile-top {
             grid-template-columns: 1fr;
             gap: 32px;
         }
-
         .profile-photo-section {
             border-right: 0;
             border-bottom: 1px dashed var(--ult-border);
             padding-bottom: 36px;
         }
-
         .profile-info-grid {
             grid-template-columns: repeat(2, 1fr);
         }
-
-        .theme-cards-container {
+        .theme-options-grid {
             grid-template-columns: repeat(2, 1fr);
         }
     }
@@ -1042,45 +1110,57 @@
         .petugas-profile {
             padding: 20px 16px 48px;
         }
-
         .profile-page-header {
             align-items: flex-start;
             flex-direction: column;
         }
-
         .profile-edit-main-btn {
             width: 100%;
             justify-content: center;
         }
-
         .profile-title-wrap h1 {
             font-size: 26px;
         }
-
         .profile-card-body {
             padding: 24px 18px;
         }
-
         .data-grid,
         .profile-info-grid,
-        .theme-cards-container {
+        .theme-options-grid {
             grid-template-columns: 1fr;
         }
-
         .profile-card-header {
             padding: 22px 18px;
         }
-
         .profile-toast-wrapper {
             right: 16px;
             left: 16px;
             bottom: 20px;
         }
-
         .profile-toast {
             max-width: 100%;
             min-width: 100%;
         }
+    }
+
+    body.profile-modal-open {
+        overflow: hidden;
+    }
+
+    .profile-modal.profile-modal-fallback {
+        display: none;
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background: rgba(15, 23, 42, 0.55);
+        z-index: 99999;
+    }
+
+    .profile-modal.profile-modal-fallback.show {
+        display: block;
     }
 </style>
 
@@ -1088,15 +1168,16 @@
 
     <!-- HEADER PAGE -->
     <div class="profile-page-header stagger-item">
-
         <div class="profile-title-wrap">
             <div class="profile-title-icon-wrapper">
                 <div class="profile-title-icon">
                     <i class="fas fa-user-shield"></i>
                 </div>
             </div>
-
             <div>
+                <div class="theme-character-badge" id="themeHeaderBadge">
+                    <i class="fas fa-film"></i> <span id="themeBadgeText">Official Dashboard Theme</span>
+                </div>
                 <h1>Profil Petugas</h1>
                 <p>Kelola dan tinjau identitas resmi petugas Unit Layanan Terpadu Polban.</p>
             </div>
@@ -1105,19 +1186,17 @@
         <button
             type="button"
             class="profile-edit-main-btn ripple-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#modalEditProfile"
+            id="openEditModalBtn"
+            data-toggle="modal"
+            data-target="#modalEditProfile"
         >
             <i class="fas fa-pen"></i>
             <span>Edit Profil</span>
         </button>
-
     </div>
-
 
     <!-- CARD UTAMA -->
     <div class="profile-main-card stagger-item" id="tiltCard">
-
         <div class="profile-card-header">
             <div class="profile-card-header-bg-glow"></div>
             <div>
@@ -1127,27 +1206,21 @@
                 </h3>
                 <small>Data terverifikasi pada sistem Unit Layanan Terpadu POLBAN</small>
             </div>
-
             <i class="fas fa-shield-alt fs-2 opacity-50"></i>
         </div>
 
-
         <div class="profile-card-body">
-
             <div class="profile-top">
-
                 <!-- FOTO SECTION -->
                 <div class="profile-photo-section stagger-item">
-
+                    <div class="theme-char-banner"></div>
                     <div class="profile-photo-wrapper">
                         <div class="profile-photo-ring"></div>
-
                         <div id="photoContainer">
                             <div class="profile-photo-empty">
                                 <i class="fas fa-user-tie"></i>
                             </div>
                         </div>
-
                         <label
                             for="photoInput"
                             class="photo-upload-button ripple-btn"
@@ -1155,20 +1228,15 @@
                         >
                             <i class="fas fa-camera"></i>
                         </label>
-
                         <input
                             type="file"
                             id="photoInput"
                             class="photo-upload-input"
                             accept="image/png,image/jpeg,image/jpg,image/webp"
                         >
-
                     </div>
 
-                    <h2
-                        class="profile-name"
-                        id="displayName"
-                    >
+                    <h2 class="profile-name" id="displayName">
                         <?= esc(session()->get('name') ?? 'Petugas ULT') ?>
                     </h2>
 
@@ -1182,16 +1250,18 @@
                         Akun Aktif & Terverifikasi
                     </div>
 
+                    <div class="theme-char-preview" id="themeCharInfoBox">
+                        <i class="fas fa-star" id="themeCharIcon"></i>
+                        <span id="themeCharText">Tema Normal / Standar</span>
+                    </div>
+
                     <div class="photo-help">
                         Format JPG, PNG, WEBP · Maks. 2 MB
                     </div>
-
                 </div>
-
 
                 <!-- DATA UTAMA -->
                 <div class="profile-data-section">
-
                     <div class="section-heading stagger-item">
                         <div class="section-heading-icon">
                             <i class="fas fa-address-card"></i>
@@ -1200,7 +1270,6 @@
                     </div>
 
                     <div class="data-grid">
-
                         <div class="data-item stagger-item" onclick="copyToClipboard('displayNameData', 'Nama Lengkap')">
                             <div class="data-label">
                                 <div class="data-label-left">
@@ -1209,15 +1278,10 @@
                                 </div>
                                 <span class="data-copy-badge"><i class="fas fa-copy me-1"></i>Salin</span>
                             </div>
-
-                            <div
-                                class="data-value"
-                                id="displayNameData"
-                            >
+                            <div class="data-value" id="displayNameData">
                                 <?= esc(session()->get('name') ?? 'Petugas ULT') ?>
                             </div>
                         </div>
-
 
                         <div class="data-item stagger-item" onclick="copyToClipboard('displayId', 'ID Petugas')">
                             <div class="data-label">
@@ -1227,15 +1291,10 @@
                                 </div>
                                 <span class="data-copy-badge"><i class="fas fa-copy me-1"></i>Salin</span>
                             </div>
-
-                            <div
-                                class="data-value"
-                                id="displayId"
-                            >
+                            <div class="data-value" id="displayId">
                                 <?= esc(session()->get('user_id') ?? '-') ?>
                             </div>
                         </div>
-
 
                         <div class="data-item stagger-item" onclick="copyToClipboard('displayEmail', 'Email')">
                             <div class="data-label">
@@ -1245,15 +1304,10 @@
                                 </div>
                                 <span class="data-copy-badge"><i class="fas fa-copy me-1"></i>Salin</span>
                             </div>
-
-                            <div
-                                class="data-value"
-                                id="displayEmail"
-                            >
+                            <div class="data-value" id="displayEmail">
                                 <?= esc(session()->get('email') ?? '-') ?>
                             </div>
                         </div>
-
 
                         <div class="data-item stagger-item" onclick="copyToClipboard('displayPhone', 'Nomor HP')">
                             <div class="data-label">
@@ -1263,15 +1317,10 @@
                                 </div>
                                 <span class="data-copy-badge"><i class="fas fa-copy me-1"></i>Salin</span>
                             </div>
-
-                            <div
-                                class="data-value"
-                                id="displayPhone"
-                            >
+                            <div class="data-value" id="displayPhone">
                                 -
                             </div>
                         </div>
-
 
                         <div class="data-item stagger-item">
                             <div class="data-label">
@@ -1280,15 +1329,10 @@
                                     Jabatan
                                 </div>
                             </div>
-
-                            <div
-                                class="data-value"
-                                id="displayPosition"
-                            >
+                            <div class="data-value" id="displayPosition">
                                 Petugas ULT
                             </div>
                         </div>
-
 
                         <div class="data-item stagger-item">
                             <div class="data-label">
@@ -1297,26 +1341,16 @@
                                     Unit / Departemen
                                 </div>
                             </div>
-
-                            <div
-                                class="data-value"
-                                id="displayUnit"
-                            >
+                            <div class="data-value" id="displayUnit">
                                 Unit Layanan Terpadu
                             </div>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
 
             <div class="profile-divider stagger-item"></div>
 
-
-            <!-- INFORMASI KEPEGAWAIAN -->
             <div class="section-heading stagger-item">
                 <div class="section-heading-icon">
                     <i class="fas fa-shield-alt"></i>
@@ -1324,110 +1358,59 @@
                 <h4>Otoritas Kepegawaian</h4>
             </div>
 
-
             <div class="profile-info-grid">
-
                 <div class="info-card stagger-item">
                     <div class="info-icon">
                         <i class="fas fa-user-shield"></i>
                     </div>
-
-                    <div class="info-title">
-                        Role Access
-                    </div>
-
-                    <div class="info-value">
-                        Petugas ULT
-                    </div>
+                    <div class="info-title">Role Access</div>
+                    <div class="info-value">Petugas ULT</div>
                 </div>
-
 
                 <div class="info-card orange stagger-item">
                     <div class="info-icon">
                         <i class="fas fa-headset"></i>
                     </div>
-
-                    <div class="info-title">
-                        Tugas Utama
-                    </div>
-
-                    <div class="info-value">
-                        Pengelolaan Tiket & Aduan
-                    </div>
+                    <div class="info-title">Tugas Utama</div>
+                    <div class="info-value">Pengelolaan Tiket & Aduan</div>
                 </div>
-
 
                 <div class="info-card green stagger-item">
                     <div class="info-icon">
                         <i class="fas fa-check-circle"></i>
                     </div>
-
-                    <div class="info-title">
-                        Status Sistem
-                    </div>
-
-                    <div class="info-value">
-                        Aktif Beroperasi
-                    </div>
+                    <div class="info-title">Status Sistem</div>
+                    <div class="info-value">Aktif Beroperasi</div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
-
 <!-- =========================================================
-     MODAL EDIT PROFILE DEWA (SEPERTI FOTO KE-2)
+     MODAL EDIT PROFILE (TOY STORY THEME & NORMAL VERSION)
      ========================================================= -->
-
-<div
-    class="modal fade profile-modal"
-    id="modalEditProfile"
-    tabindex="-1"
-    aria-hidden="true"
->
+<div class="modal fade profile-modal" id="modalEditProfile" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-
         <div class="modal-content">
-
             <div class="modal-header">
-
                 <div>
                     <h5 class="modal-title">
-                        <i class="fas fa-user-edit"></i>
+                        <i class="fas fa-user-edit me-2"></i>
                         Edit Informasi Profil & Karakter Tema
                     </h5>
-
-                    <small class="opacity-80">
-                        Pembaruan data petugas dan kustomisasi karakter film interaktif
-                    </small>
+                    <small>Pembaruan data petugas dan kustomisasi karakter film interaktif</small>
                 </div>
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                ></button>
-
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-
             <div class="modal-body">
-
                 <form id="profileEditForm">
-
                     <div class="row g-3">
-
                         <div class="col-md-6">
-
                             <label class="form-label">
-                                <i class="fas fa-user"></i> Nama Lengkap
+                                <i class="fas fa-user text-primary"></i> Nama Lengkap
                             </label>
-
                             <input
                                 type="text"
                                 class="form-control"
@@ -1435,16 +1418,12 @@
                                 value="<?= esc(session()->get('name') ?? 'Petugas ULT') ?>"
                                 required
                             >
-
                         </div>
 
-
                         <div class="col-md-6">
-
                             <label class="form-label">
-                                <i class="fas fa-envelope"></i> Email Official
+                                <i class="fas fa-envelope text-primary"></i> Email Official
                             </label>
-
                             <input
                                 type="email"
                                 class="form-control"
@@ -1452,195 +1431,165 @@
                                 value="<?= esc(session()->get('email') ?? '') ?>"
                                 required
                             >
-
                         </div>
 
-
                         <div class="col-md-6">
-
                             <label class="form-label">
-                                <i class="fas fa-id-badge"></i> ID Petugas (System Locked)
+                                <i class="fas fa-id-badge text-primary"></i> ID Petugas (System Locked)
                             </label>
-
                             <input
                                 type="text"
                                 class="form-control"
                                 value="<?= esc(session()->get('user_id') ?? '-') ?>"
                                 disabled
                             >
-
                         </div>
 
-
                         <div class="col-md-6">
-
                             <label class="form-label">
-                                <i class="fas fa-phone-alt"></i> Nomor WhatsApp / HP
+                                <i class="fas fa-phone text-primary"></i> Nomor WhatsApp / HP
                             </label>
-
                             <input
                                 type="text"
                                 class="form-control"
                                 id="editPhone"
                                 placeholder="Contoh: 081234567890"
                             >
-
                         </div>
 
-
                         <div class="col-md-6">
-
                             <label class="form-label">
-                                <i class="fas fa-briefcase"></i> Jabatan
+                                <i class="fas fa-briefcase text-primary"></i> Jabatan
                             </label>
-
                             <input
                                 type="text"
                                 class="form-control"
                                 id="editPosition"
                                 value="Petugas ULT"
                             >
-
                         </div>
 
-
                         <div class="col-md-6">
-
                             <label class="form-label">
-                                <i class="fas fa-building"></i> Unit / Departemen
+                                <i class="fas fa-building text-primary"></i> Unit / Departemen
                             </label>
-
                             <input
                                 type="text"
                                 class="form-control"
                                 id="editUnit"
                                 value="Unit Layanan Terpadu"
                             >
-
                         </div>
 
-
+                        <!-- PILIHAN TEMA (NORMAL & TOY STORY) -->
                         <div class="col-12">
                             <label class="form-label">
-                                <i class="fas fa-palette"></i> Pilih Tema Karakter Film Favorit
+                                <i class="fas fa-palette text-primary"></i> Pilih Tema Karakter Film Favorit
                             </label>
+                            
+                            <select class="form-select d-none" id="themeSelector">
+                                <option value="normal">Normal</option>
+                                <option value="spiderman">Spider-Man</option>
+                                <option value="mcqueen">Lightning McQueen</option>
+                                <option value="toystory">Toy Story</option>
+                                <option value="monster">Monsters Inc</option>
+                                <option value="elemental">Elemental</option>
+                            </select>
 
-                            <input type="hidden" id="themeSelector" value="normal">
-
-                            <div class="theme-cards-container">
-                                <div class="theme-card-option active" data-theme="normal">
+                            <div class="theme-options-grid">
+                                <div class="theme-option-card" data-theme="normal">
                                     <i class="fas fa-shield-alt"></i>
-                                    <span>Normal Pro</span>
+                                    <span>Normal</span>
                                 </div>
-                                <div class="theme-card-option" data-theme="spiderman">
+                                <div class="theme-option-card" data-theme="spiderman">
                                     <i class="fas fa-spider"></i>
                                     <span>Spider-Man</span>
                                 </div>
-                                <div class="theme-card-option" data-theme="mcqueen">
+                                <div class="theme-option-card" data-theme="mcqueen">
                                     <i class="fas fa-car-side"></i>
                                     <span>McQueen</span>
                                 </div>
-                                <div class="theme-card-option" data-theme="up">
-                                    <i class="fas fa-house-user"></i>
-                                    <span>UP Movie</span>
+                                <div class="theme-option-card" data-theme="toystory">
+                                    <i class="fas fa-hat-cowboy"></i>
+                                    <span>Toy Story</span>
                                 </div>
-                                <div class="theme-card-option" data-theme="monster">
+                                <div class="theme-option-card" data-theme="monster">
                                     <i class="fas fa-ghost"></i>
                                     <span>Monsters Inc</span>
                                 </div>
-                                <div class="theme-card-option" data-theme="elemental">
-                                    <i class="fas fa-fire-alt"></i>
+                                <div class="theme-option-card" data-theme="elemental">
+                                    <i class="fas fa-fire"></i>
                                     <span>Elemental</span>
                                 </div>
                             </div>
                         </div>
 
-
                         <div class="col-12">
-
                             <label class="form-label">
-                                <i class="fas fa-camera"></i> Unggah Foto Profil Baru
+                                <i class="fas fa-camera text-primary"></i> Unggah Foto Profil Baru
                             </label>
-
                             <input
                                 type="file"
                                 class="form-control"
                                 id="modalPhotoInput"
                                 accept="image/png,image/jpeg,image/jpg,image/webp"
                             >
-
                         </div>
-
                     </div>
 
-
                     <div class="d-flex justify-content-end gap-3 mt-4">
-
                         <button
                             type="button"
                             class="btn btn-light border px-4 fw-bold ripple-btn"
-                            style="border-radius:14px;"
                             data-bs-dismiss="modal"
                         >
                             Batal
                         </button>
-
                         <button
                             type="submit"
                             class="btn-profile-save ripple-btn"
-                            id="btnSaveProfile"
-                            disabled
                         >
                             <i class="fas fa-save me-1"></i>
                             Simpan Perubahan
                         </button>
-
                     </div>
-
                 </form>
-
             </div>
-
         </div>
-
     </div>
 </div>
 
-
-<!-- TOAST CONTAINER NOTIFIKASI DEWA -->
+<!-- TOAST CONTAINER -->
 <div class="profile-toast-wrapper">
     <div class="profile-toast" id="profileToast">
         <div class="profile-toast-icon" id="profileToastIcon">
             <i class="fas fa-check-circle"></i>
         </div>
-
         <div class="profile-toast-content">
             <span class="profile-toast-title" id="profileToastTitle">SI ULT POLBAN</span>
-            <span class="profile-toast-message" id="profileToastText">
-                Profil berhasil diperbarui.
-            </span>
+            <span class="profile-toast-message" id="profileToastText">Profil berhasil diperbarui.</span>
         </div>
-
         <div class="profile-toast-progress" id="profileToastProgress"></div>
     </div>
 </div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-
-    const STORAGE_KEY = 'si_ult_petugas_profile_v2';
-    const THEME_KEY = 'si_ult_petugas_theme';
+    const STORAGE_KEY = 'si_ult_petugas_profile_v3';
+    const THEME_KEY = 'si_ult_petugas_theme_v3';
 
     const editForm = document.getElementById('profileEditForm');
     const themeSelector = document.getElementById('themeSelector');
-    const themeCardOptions = document.querySelectorAll('.theme-card-option');
-    const btnSaveProfile = document.getElementById('btnSaveProfile');
+    const themeCards = document.querySelectorAll('.theme-option-card');
+
+    const themeHeaderBadge = document.getElementById('themeHeaderBadge');
+    const themeBadgeText = document.getElementById('themeBadgeText');
+    const themeCharInfoBox = document.getElementById('themeCharInfoBox');
+    const themeCharIcon = document.getElementById('themeCharIcon');
+    const themeCharText = document.getElementById('themeCharText');
 
     const photoInput = document.getElementById('photoInput');
     const modalPhotoInput = document.getElementById('modalPhotoInput');
-
     const photoContainer = document.getElementById('photoContainer');
 
     const displayName = document.getElementById('displayName');
@@ -1665,260 +1614,97 @@ document.addEventListener('DOMContentLoaded', function () {
     let toastTimer = null;
     const TOAST_DURATION = 3800;
 
-    /* =========================================================
-       FUNGSI TEMA DINAMIS & INTERACTIVE CARDS
-       ========================================================= */
+    const openEditModalBtn = document.getElementById('openEditModalBtn');
+    const modalElement = document.getElementById('modalEditProfile');
+
+    if (openEditModalBtn) {
+        openEditModalBtn.setAttribute('type', 'button');
+        openEditModalBtn.setAttribute('data-toggle', 'modal');
+        openEditModalBtn.setAttribute('data-target', '#modalEditProfile');
+        openEditModalBtn.removeAttribute('data-bs-toggle');
+        openEditModalBtn.removeAttribute('data-bs-target');
+
+        openEditModalBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (!modalElement) return;
+
+            if (window.jQuery && typeof jQuery.fn.modal === 'function') {
+                $('#modalEditProfile').modal({ backdrop: true, keyboard: true, focus: true, show: true });
+            } else {
+                modalElement.classList.add('show');
+                modalElement.style.display = 'block';
+                document.body.classList.add('modal-open');
+            }
+        });
+    }
+
+    function closeProfileEditModal() {
+        if (!modalElement) return;
+        if (window.jQuery && typeof jQuery.fn.modal === 'function') {
+            $('#modalEditProfile').modal('hide');
+            return;
+        }
+        modalElement.classList.remove('show');
+        modalElement.style.display = 'none';
+        document.body.classList.remove('modal-open');
+    }
+
+    if (modalElement) {
+        modalElement.querySelectorAll('[data-dismiss="modal"], [data-bs-dismiss="modal"]').forEach(btn => {
+            btn.addEventListener('click', e => { e.preventDefault(); closeProfileEditModal(); });
+        });
+        modalElement.addEventListener('click', e => { if (e.target === modalElement) closeProfileEditModal(); });
+    }
+
+    const themeDetails = {
+        normal: { name: 'Official Dashboard Theme', icon: 'fas fa-shield-alt', text: 'Tema Standar ULT POLBAN Profesional' },
+        spiderman: { name: 'Spider-Man Edition', icon: 'fas fa-spider', text: 'Karakter: Spider-Man (Friendly Neighborhood)' },
+        mcqueen: { name: 'Lightning McQueen Edition', icon: 'fas fa-car-side', text: 'Karakter: Lightning McQueen (Ka-Chow!)' },
+        toystory: { name: 'Toy Story Edition', icon: 'fas fa-hat-cowboy', text: 'Karakter: Woody, Buzz & Friends (To Infinity and Beyond!)' },
+        monster: { name: 'Monsters Inc Edition', icon: 'fas fa-ghost', text: 'Karakter: Sulley & Mike (We Scare Because We Care)' },
+        elemental: { name: 'Elemental Edition', icon: 'fas fa-fire', text: 'Karakter: Ember & Wade (Fire & Water Elements)' }
+    };
+
     function applyTheme(themeName) {
-        document.body.classList.remove('theme-spiderman', 'theme-mcqueen', 'theme-up', 'theme-monster', 'theme-elemental');
+        document.body.classList.remove('theme-spiderman', 'theme-mcqueen', 'theme-toystory', 'theme-monster', 'theme-elemental');
         if (themeName && themeName !== 'normal') {
             document.body.classList.add(`theme-${themeName}`);
         }
-        if (themeSelector) {
-            themeSelector.value = themeName;
-        }
+        if (themeSelector) themeSelector.value = themeName;
 
-        themeCardOptions.forEach(card => {
+        themeCards.forEach(card => {
             if (card.getAttribute('data-theme') === themeName) {
                 card.classList.add('active');
             } else {
                 card.classList.remove('active');
             }
         });
+
+        const detail = themeDetails[themeName] || themeDetails['normal'];
+        if (themeBadgeText) themeBadgeText.textContent = detail.name;
+        if (themeCharIcon) themeCharIcon.className = detail.icon;
+        if (themeCharText) themeCharText.textContent = detail.text;
     }
 
-    const savedTheme = localStorage.getItem(THEME_KEY) || 'normal';
-    applyTheme(savedTheme);
+    applyTheme(localStorage.getItem(THEME_KEY) || 'normal');
 
-
-    /* =========================================================
-       LOAD DATA PROFIL DARI STORAGE & INITIAL BASELINE CHECK
-       ========================================================= */
-    let savedData = {};
-
-    try {
-        savedData = JSON.parse(
-            localStorage.getItem(STORAGE_KEY) || '{}'
-        );
-    } catch (error) {
-        savedData = {};
-    }
-
-    function applySavedData() {
-        if (savedData.name) {
-            displayName.textContent = savedData.name;
-            displayNameData.textContent = savedData.name;
-            editName.value = savedData.name;
-        }
-
-        if (savedData.email) {
-            displayEmail.textContent = savedData.email;
-            editEmail.value = savedData.email;
-        }
-
-        if (savedData.phone) {
-            displayPhone.textContent = savedData.phone;
-            editPhone.value = savedData.phone;
-        }
-
-        if (savedData.position) {
-            displayPosition.textContent = savedData.position;
-            editPosition.value = savedData.position;
-        }
-
-        if (savedData.unit) {
-            displayUnit.textContent = savedData.unit;
-            editUnit.value = savedData.unit;
-        }
-
-        if (savedData.photo) {
-            showPhoto(savedData.photo);
-        }
-    }
-
-    applySavedData();
-
-    // Baseline untuk mendeteksi perubahan form
-    const initialFormState = {
-        name: editName.value,
-        email: editEmail.value,
-        phone: editPhone.value,
-        position: editPosition.value,
-        unit: editUnit.value,
-        theme: savedTheme,
-        photo: savedData.photo || ''
-    };
-
-    function checkFormChanges() {
-        const currentState = {
-            name: editName.value.trim(),
-            email: editEmail.value.trim(),
-            phone: editPhone.value.trim(),
-            position: editPosition.value.trim(),
-            unit: editUnit.value.trim(),
-            theme: themeSelector ? themeSelector.value : 'normal',
-            photo: savedData.photo || ''
-        };
-
-        const isChanged = 
-            currentState.name !== initialFormState.name ||
-            currentState.email !== initialFormState.email ||
-            currentState.phone !== initialFormState.phone ||
-            currentState.position !== initialFormState.position ||
-            currentState.unit !== initialFormState.unit ||
-            currentState.theme !== initialFormState.theme ||
-            currentState.photo !== initialFormState.photo;
-
-        if (isChanged) {
-            btnSaveProfile.removeAttribute('disabled');
-            btnSaveProfile.classList.remove('disabled');
-        } else {
-            btnSaveProfile.setAttribute('disabled', 'true');
-            btnSaveProfile.classList.add('disabled');
-        }
-    }
-
-    // Event listener untuk memantau perubahan input form real-time
-    [editName, editEmail, editPhone, editPosition, editUnit].forEach(input => {
-        if (input) {
-            input.addEventListener('input', checkFormChanges);
-            input.addEventListener('change', checkFormChanges);
-        }
-    });
-
-    themeCardOptions.forEach(card => {
-        card.addEventListener('click', function() {
-            const selectedTheme = this.getAttribute('data-theme');
-            applyTheme(selectedTheme);
-            checkFormChanges();
+    themeCards.forEach(card => {
+        card.addEventListener('click', function () {
+            applyTheme(this.getAttribute('data-theme'));
         });
     });
 
-    // Reset state saat modal ditutup agar tombol kembali disabled
-    const modalElement = document.getElementById('modalEditProfile');
-    modalElement.addEventListener('hidden.bs.modal', function () {
-        editName.value = savedData.name || initialFormState.name;
-        editEmail.value = savedData.email || initialFormState.email;
-        editPhone.value = savedData.phone || initialFormState.phone;
-        editPosition.value = savedData.position || initialFormState.position;
-        editUnit.value = savedData.unit || initialFormState.unit;
-        applyTheme(localStorage.getItem(THEME_KEY) || 'normal');
-        btnSaveProfile.setAttribute('disabled', 'true');
-        btnSaveProfile.classList.add('disabled');
+    document.querySelectorAll('.stagger-item').forEach((item, index) => {
+        setTimeout(() => item.classList.add('stagger-show'), 80 * index);
     });
 
-
-    /* =========================================================
-       1. STAGGERED ENTRANCE ANIMATION (DEWA LEVEL)
-       ========================================================= */
-    const staggerItems = document.querySelectorAll('.stagger-item');
-    staggerItems.forEach((item, index) => {
-        setTimeout(() => {
-            item.classList.add('stagger-show');
-        }, 80 * index);
-    });
-
-    /* =========================================================
-       2. 3D TILT EFFECT FOR PROFILE CARD (DEWA LEVEL)
-       ========================================================= */
-    const tiltCard = document.getElementById('tiltCard');
-    if (tiltCard && window.innerWidth > 992) {
-        tiltCard.addEventListener('mousemove', (e) => {
-            const rect = tiltCard.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = ((y - centerY) / centerY) * -4.5;
-            const rotateY = ((x - centerX) / centerX) * 4.5;
-
-            tiltCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.005, 1.005, 1.005)`;
-        });
-
-        tiltCard.addEventListener('mouseleave', () => {
-            tiltCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-        });
-    }
-
-    /* =========================================================
-       3. RIPPLE CLICK EFFECT ON BUTTONS (DEWA LEVEL)
-       ========================================================= */
-    document.querySelectorAll('.ripple-btn, .profile-edit-main-btn, .btn-profile-save').forEach(btn => {
-        btn.addEventListener('click', function (e) {
-            if (this.hasAttribute('disabled') || this.classList.contains('disabled')) return;
-            const circle = document.createElement('span');
-            const diameter = Math.max(this.clientWidth, this.clientHeight);
-            const radius = diameter / 2;
-            
-            const rect = this.getBoundingClientRect();
-            circle.style.width = circle.style.height = `${diameter}px`;
-            circle.style.left = `${e.clientX - rect.left - radius}px`;
-            circle.style.top = `${e.clientY - rect.top - radius}px`;
-            circle.classList.add('ripple-effect');
-
-            const existingRipple = this.querySelector('.ripple-effect');
-            if (existingRipple) {
-                existingRipple.remove();
-            }
-
-            this.appendChild(circle);
-        });
-    });
-
-    /* =========================================================
-       4. AUDIO FEEDBACK SYSTEM (WEB AUDIO API HIGH-PRECISION)
-       ========================================================= */
-    function playAudioFeedback(type = 'success') {
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-
-            if (type === 'success') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
-                gain.gain.setValueAtTime(0.08, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
-                osc.start(ctx.currentTime);
-                osc.stop(ctx.currentTime + 0.25);
-            } else if (type === 'copy') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(783.99, ctx.currentTime);
-                gain.gain.setValueAtTime(0.05, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
-                osc.start(ctx.currentTime);
-                osc.stop(ctx.currentTime + 0.12);
-            } else {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(220, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.2);
-                gain.gain.setValueAtTime(0.09, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
-                osc.start(ctx.currentTime);
-                osc.stop(ctx.currentTime + 0.2);
-            }
-        } catch (e) {}
-    }
-
-
-    /* =========================================================
-       5. SYSTEM NOTIFIKASI TOAST macOS/iOS SPRING ANIMATION
-       ========================================================= */
     function showToast(message, type = 'success', title = 'Pemberitahuan') {
-        if (toastTimer) {
-            clearTimeout(toastTimer);
-        }
-
-        playAudioFeedback(type);
+        if (!toast || !toastText) return;
+        if (toastTimer) clearTimeout(toastTimer);
 
         toastText.textContent = message;
         toastTitle.textContent = title;
-
         toast.classList.remove('toast-success', 'toast-error');
         toastProgress.style.transition = 'none';
         toastProgress.style.width = '100%';
@@ -1932,198 +1718,131 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         toast.classList.add('show');
-
         setTimeout(() => {
             toastProgress.style.transition = `width ${TOAST_DURATION}ms linear`;
             toastProgress.style.width = '0%';
         }, 50);
 
-        toastTimer = setTimeout(function () {
-            toast.classList.remove('show');
-        }, TOAST_DURATION);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), TOAST_DURATION);
     }
 
-
-    /* =========================================================
-       COPY TO CLIPBOARD INTERACTIVE WITH ANIMATION
-       ========================================================= */
-    window.copyToClipboard = function(elementId, labelName) {
+    window.copyToClipboard = function (elementId, labelName) {
         const element = document.getElementById(elementId);
         if (!element) return;
-
         const textToCopy = element.textContent.trim();
-        if (textToCopy === '' || textToCopy === '-') return;
+        if (!textToCopy || textToCopy === '-') return;
 
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            playAudioFeedback('copy');
-            
-            const parentItem = element.closest('.data-item');
-            if (parentItem) {
-                parentItem.style.transform = 'scale(0.96)';
-                setTimeout(() => {
-                    parentItem.style.transform = '';
-                }, 180);
-            }
-
-            showToast(`${labelName} berhasil disalin ke clipboard!`, 'success', 'Salin Teks');
-        }).catch(() => {
-            showToast(`Gagal menyalin ${labelName}.`, 'error', 'Peringatan');
-        });
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast(`${labelName} berhasil disalin ke clipboard!`, 'success', 'Salin Teks');
+            }).catch(() => {
+                showToast(`Gagal menyalin ${labelName}.`, 'error', 'Peringatan');
+            });
+        }
     };
 
+    let savedData = {};
+    try {
+        savedData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    } catch (e) { savedData = {}; }
 
-    /* =========================================================
-       EFEK VISUAL TAMPILAN FOTO DEWA
-       ========================================================= */
+    function applySavedData() {
+        if (savedData.name && displayName && displayNameData && editName) {
+            displayName.textContent = savedData.name;
+            displayNameData.textContent = savedData.name;
+            editName.value = savedData.name;
+        }
+        if (savedData.email && displayEmail && editEmail) {
+            displayEmail.textContent = savedData.email;
+            editEmail.value = savedData.email;
+        }
+        if (savedData.phone && displayPhone && editPhone) {
+            displayPhone.textContent = savedData.phone;
+            editPhone.value = savedData.phone;
+        }
+        if (savedData.position && displayPosition && editPosition) {
+            displayPosition.textContent = savedData.position;
+            editPosition.value = savedData.position;
+        }
+        if (savedData.unit && displayUnit && editUnit) {
+            displayUnit.textContent = savedData.unit;
+            editUnit.value = savedData.unit;
+        }
+        if (savedData.photo && photoContainer) {
+            showPhoto(savedData.photo);
+        }
+    }
+    applySavedData();
+
     function showPhoto(imageSource) {
+        if (!photoContainer) return;
         photoContainer.innerHTML = '';
-
         const image = document.createElement('img');
         image.src = imageSource;
         image.className = 'profile-photo';
         image.alt = 'Foto Profil Petugas';
-
-        image.style.opacity = '0';
-        image.style.transform = 'scale(0.8) rotate(-8deg)';
-
         photoContainer.appendChild(image);
-
-        requestAnimationFrame(() => {
-            image.style.transition = 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            image.style.opacity = '1';
-            image.style.transform = 'scale(1) rotate(0deg)';
-        });
     }
 
-
-    /* =========================================================
-       BACA & VALIDASI INPUT FOTO
-       ========================================================= */
     function processPhoto(file) {
         if (!file) return;
-
-        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-
-        if (!allowedTypes.includes(file.type)) {
-            showToast('Format foto harus berformat JPG, PNG, atau WEBP.', 'error', 'Format Salah');
+        if (!['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.type)) {
+            showToast('Format foto harus JPG, PNG, atau WEBP.', 'error', 'Format Salah');
             return;
         }
-
         if (file.size > 2 * 1024 * 1024) {
-            showToast('Ukuran berkas foto maksimal 2 MB.', 'error', 'Berkas Terlalu Besar');
+            showToast('Ukuran berkas maksimal 2 MB.', 'error', 'Berkas Terlalu Besar');
             return;
         }
-
         const reader = new FileReader();
         reader.onload = function (event) {
-            const imageSource = event.target.result;
-            savedData.photo = imageSource;
-
+            savedData.photo = event.target.result;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(savedData));
-            showPhoto(imageSource);
-            checkFormChanges();
-            showToast('Foto profil baru siap disimpan!', 'success', 'Foto Dipilih');
+            showPhoto(savedData.photo);
+            showToast('Foto profil berhasil diperbarui!', 'success', 'Foto Disimpan');
         };
         reader.readAsDataURL(file);
     }
 
-    photoInput.addEventListener('change', function () {
-        processPhoto(this.files[0]);
-    });
+    if (photoInput) photoInput.addEventListener('change', function () { processPhoto(this.files[0]); });
+    if (modalPhotoInput) modalPhotoInput.addEventListener('change', function () { processPhoto(this.files[0]); });
 
-    modalPhotoInput.addEventListener('change', function () {
-        processPhoto(this.files[0]);
-    });
+    if (editForm) {
+        editForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const name = editName.value.trim();
+            const email = editEmail.value.trim();
+            const phone = editPhone.value.trim();
+            const position = editPosition.value.trim();
+            const unit = editUnit.value.trim();
+            const selectedTheme = themeSelector ? themeSelector.value : 'normal';
 
+            if (!name || !email) {
+                showToast('Nama dan Email wajib diisi.', 'error', 'Validasi Gagal');
+                return;
+            }
 
-    /* =========================================================
-       SUBMIT FORM EDIT PROFIL INTERAKTIF & TUTUP MODAL OTOMATIS
-       ========================================================= */
-    editForm.addEventListener('submit', function (event) {
-        event.preventDefault();
+            savedData.name = name;
+            savedData.email = email;
+            savedData.phone = phone || '-';
+            savedData.position = position || 'Petugas ULT';
+            savedData.unit = unit || 'Unit Layanan Terpadu';
 
-        const name = editName.value.trim();
-        const email = editEmail.value.trim();
-        const phone = editPhone.value.trim();
-        const position = editPosition.value.trim();
-        const unit = editUnit.value.trim();
-        const selectedTheme = themeSelector ? themeSelector.value : 'normal';
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedData));
+            localStorage.setItem(THEME_KEY, selectedTheme);
+            applyTheme(selectedTheme);
 
-        if (!name) {
-            showToast('Nama lengkap wajib diisi.', 'error', 'Validasi Gagal');
-            editName.focus();
-            return;
-        }
+            if (displayName) displayName.textContent = name;
+            if (displayNameData) displayNameData.textContent = name;
+            if (displayEmail) displayEmail.textContent = email;
+            if (displayPhone) displayPhone.textContent = phone || '-';
+            if (displayPosition) displayPosition.textContent = position || 'Petugas ULT';
+            if (displayUnit) displayUnit.textContent = unit || 'Unit Layanan Terpadu';
 
-        if (!email) {
-            showToast('Alamat email wajib diisi.', 'error', 'Validasi Gagal');
-            editEmail.focus();
-            return;
-        }
-
-        // Simpan Data
-        savedData.name = name;
-        savedData.email = email;
-        savedData.phone = phone || '-';
-        savedData.position = position || 'Petugas ULT';
-        savedData.unit = unit || 'Unit Layanan Terpadu';
-
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedData));
-        localStorage.setItem(THEME_KEY, selectedTheme);
-        applyTheme(selectedTheme);
-
-        // Perbarui baseline awal setelah simpan
-        initialFormState.name = name;
-        initialFormState.email = email;
-        initialFormState.phone = phone || '-';
-        initialFormState.position = position || 'Petugas ULT';
-        initialFormState.unit = unit || 'Unit Layanan Terpadu';
-        initialFormState.theme = selectedTheme;
-        initialFormState.photo = savedData.photo || '';
-
-        const elementsToAnimate = [displayName, displayNameData, displayEmail, displayPhone, displayPosition, displayUnit];
-        elementsToAnimate.forEach(el => {
-            el.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(-6px)';
+            closeProfileEditModal();
+            showToast('Profil petugas & tema karakter berhasil diperbarui secara permanen.', 'success', 'Pembaruan Disimpan');
         });
-
-        setTimeout(() => {
-            displayName.textContent = name;
-            displayNameData.textContent = name;
-            displayEmail.textContent = email;
-            displayPhone.textContent = phone || '-';
-            displayPosition.textContent = position || 'Petugas ULT';
-            displayUnit.textContent = unit || 'Unit Layanan Terpadu';
-
-            elementsToAnimate.forEach(el => {
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
-            });
-        }, 280);
-
-        // LANGSUNG TUTUP MODAL EDIT PROFIL SECARA PROGRAMATIK
-        let modalInstance = bootstrap.Modal.getInstance(modalElement);
-        if (!modalInstance) {
-            modalInstance = new bootstrap.Modal(modalElement);
-        }
-        modalInstance.hide();
-
-        // Bersihkan Backdrop Bootstrap sepenuhnya agar kembali ke halaman utama profil dengan mulus
-        setTimeout(() => {
-            document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
-            document.body.classList.remove('modal-open');
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
-        }, 350);
-
-        // Kunci kembali tombol simpan karena sudah disimpan
-        btnSaveProfile.setAttribute('disabled', 'true');
-        btnSaveProfile.classList.add('disabled');
-
-        showToast('Profil petugas berhasil diperbarui dan halaman ditutup.', 'success', 'Perubahan Disimpan');
-    });
-
+    }
 });
 </script>
 

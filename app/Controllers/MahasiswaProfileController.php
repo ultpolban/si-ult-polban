@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UserProfileModel;
+use App\Models\UserModel;
 
 class MahasiswaProfileController extends BaseController
 {
@@ -174,32 +175,32 @@ class MahasiswaProfileController extends BaseController
                 // DATA PRIBADI
                 // -----------------------------------------
                 'nama' =>
-                    $profile['nama']
+                $profile['nama']
                     ?? $profile['student_name']
                     ?? '-',
 
                 'nim' =>
-                    $profile['nim']
+                $profile['nim']
                     ?? '-',
 
                 'nik' =>
-                    $profile['nik']
+                $profile['nik']
                     ?? '-',
 
                 'email' =>
-                    $profile['email']
+                $profile['email']
                     ?? '-',
 
                 'no_hp' =>
-                    $profile['no_hp']
+                $profile['no_hp']
                     ?? '-',
 
                 'alamat' =>
-                    $profile['alamat']
+                $profile['alamat']
                     ?? '-',
 
                 'foto' =>
-                    $profile['foto']
+                $profile['foto']
                     ?? null,
 
 
@@ -207,35 +208,35 @@ class MahasiswaProfileController extends BaseController
                 // DATA AKADEMIK
                 // -----------------------------------------
                 'prodi' =>
-                    $profile['prodi']
+                $profile['prodi']
                     ?? '-',
 
                 'jurusan' =>
-                    $profile['jurusan']
+                $profile['jurusan']
                     ?? '-',
 
                 'semester' =>
-                    $profile['semester']
+                $profile['semester']
                     ?? '-',
 
                 'angkatan' =>
-                    $profile['angkatan']
+                $profile['angkatan']
                     ?? '-',
 
                 'nama_kelas' =>
-                    $profile['nama_kelas']
+                $profile['nama_kelas']
                     ?? '-',
 
                 'kode_kelas' =>
-                    $profile['kode_kelas']
+                $profile['kode_kelas']
                     ?? '-',
 
                 'study_program_id' =>
-                    $profile['study_program_id']
+                $profile['study_program_id']
                     ?? null,
 
                 'class_id' =>
-                    $profile['class_id']
+                $profile['class_id']
                     ?? null,
 
 
@@ -307,71 +308,71 @@ class MahasiswaProfileController extends BaseController
             'profile' => [
 
                 'id' =>
-                    $profile['id']
+                $profile['id']
                     ?? null,
 
                 'user_id' =>
-                    $profile['user_id']
+                $profile['user_id']
                     ?? null,
 
                 // DATA PRIBADI
                 'nama' =>
-                    $profile['nama']
+                $profile['nama']
                     ?? $profile['student_name']
                     ?? '',
 
                 'nim' =>
-                    $profile['nim']
+                $profile['nim']
                     ?? '',
 
                 'nik' =>
-                    $profile['nik']
+                $profile['nik']
                     ?? '',
 
                 'email' =>
-                    $profile['email']
+                $profile['email']
                     ?? '',
 
                 'no_hp' =>
-                    $profile['no_hp']
+                $profile['no_hp']
                     ?? '',
 
                 'alamat' =>
-                    $profile['alamat']
+                $profile['alamat']
                     ?? '',
 
                 'foto' =>
-                    $profile['foto']
+                $profile['foto']
                     ?? null,
 
 
                 // DATA AKADEMIK
                 'prodi' =>
-                    $profile['prodi']
+                $profile['prodi']
                     ?? '',
 
                 'jurusan' =>
-                    $profile['jurusan']
+                $profile['jurusan']
                     ?? '',
 
                 'semester' =>
-                    $profile['semester']
+                $profile['semester']
                     ?? '',
 
                 'angkatan' =>
-                    $profile['angkatan']
+                $profile['angkatan']
                     ?? '',
 
                 'study_program_id' =>
-                    $profile['study_program_id']
+                $profile['study_program_id']
                     ?? null,
 
                 'class_id' =>
-                    $profile['class_id']
+                $profile['class_id']
                     ?? null,
 
                 'nama_kelas' =>
-                    $profile['nama_kelas']
+                $profile['nama_kelas']
                     ?? '',
             ]
         ];
@@ -458,9 +459,7 @@ class MahasiswaProfileController extends BaseController
         );
 
 
-        // =================================================
         // VALIDASI DATA PRIBADI
-        // =================================================
 
         if (
             empty($nama) ||
@@ -478,10 +477,7 @@ class MahasiswaProfileController extends BaseController
                 );
         }
 
-
-        // =================================================
         // VALIDASI EMAIL
-        // =================================================
 
         if (
             !filter_var(
@@ -499,10 +495,7 @@ class MahasiswaProfileController extends BaseController
                 );
         }
 
-
-        // =================================================
-        // VALIDASI AKADEMIK
-        // =================================================
+        // VALIDASI AKADEMIK=
 
         if (
             empty($prodi) ||
@@ -521,9 +514,7 @@ class MahasiswaProfileController extends BaseController
         }
 
 
-        // =================================================
         // VALIDASI SEMESTER
-        // =================================================
 
         if (
             !is_numeric($semester) ||
@@ -540,10 +531,7 @@ class MahasiswaProfileController extends BaseController
                 );
         }
 
-
-        // =================================================
         // VALIDASI ANGKATAN
-        // =================================================
 
         if (
             !is_numeric($angkatan) ||
@@ -560,17 +548,12 @@ class MahasiswaProfileController extends BaseController
                 );
         }
 
-
-        // =================================================
         // CONNECT DATABASE
-        // =================================================
 
         $db = \Config\Database::connect();
 
 
-        // =================================================
         // CARI JURUSAN
-        // =================================================
 
         $department = $db
             ->table('master_departments')
@@ -594,16 +577,13 @@ class MahasiswaProfileController extends BaseController
                 ->with(
                     'error',
                     'Jurusan "' .
-                    $jurusan .
-                    '" tidak ditemukan di database.'
+                        $jurusan .
+                        '" tidak ditemukan di database.'
                 );
         }
 
-
-        // =================================================
         // CARI PROGRAM STUDI
         // SESUAI DENGAN JURUSAN
-        // =================================================
 
         $studyProgram = $db
             ->table('master_study_programs')
@@ -631,22 +611,19 @@ class MahasiswaProfileController extends BaseController
                 ->with(
                     'error',
                     'Program Studi "' .
-                    $prodi .
-                    '" tidak ditemukan pada jurusan "' .
-                    $jurusan .
-                    '".'
+                        $prodi .
+                        '" tidak ditemukan pada jurusan "' .
+                        $jurusan .
+                        '".'
                 );
         }
 
-
-        // =================================================
         // CARI KELAS
         //
         // Berdasarkan:
         // - study_program_id
         // - semester / level
         // - angkatan / entry_year
-        // =================================================
 
         $class = $db
             ->table('master_classes')
@@ -678,9 +655,7 @@ class MahasiswaProfileController extends BaseController
             ->getRowArray();
 
 
-        // =================================================
         // KELAS TIDAK DITEMUKAN
-        // =================================================
         if (!$class) {
 
             return redirect()
@@ -689,48 +664,42 @@ class MahasiswaProfileController extends BaseController
                 ->with(
                     'error',
                     'Kelas untuk Program Studi "' .
-                    $prodi .
-                    '", Semester ' .
-                    $semester .
-                    ', Angkatan ' .
-                    $angkatan .
-                    ' belum tersedia di database.'
+                        $prodi .
+                        '", Semester ' .
+                        $semester .
+                        ', Angkatan ' .
+                        $angkatan .
+                        ' belum tersedia di database.'
                 );
         }
 
-
-        // =================================================
         // DATA USER_PROFILE YANG DIUPDATE
-        // =================================================
 
         $updateData = [
 
             'name' =>
-                $nama,
+            $nama,
 
             'email' =>
-                $email,
+            $email,
 
             'phone' =>
-                $noHp,
+            $noHp,
 
             'address' =>
-                $alamat,
+            $alamat,
 
             'study_program_id' =>
-                $studyProgram['id'],
+            $studyProgram['id'],
 
             'class_id' =>
-                $class['id'],
+            $class['id'],
 
             'updated_at' =>
-                date('Y-m-d H:i:s')
+            date('Y-m-d H:i:s')
         ];
 
-
-        // =================================================
         // UPLOAD FOTO
-        // =================================================
 
         $foto = $this->request->getFile(
             'foto'
@@ -743,10 +712,8 @@ class MahasiswaProfileController extends BaseController
             !$foto->hasMoved()
         ) {
 
-            // ---------------------------------------------
             // VALIDASI UKURAN
             // Maksimal 2 MB
-            // ---------------------------------------------
             if (
                 $foto->getSize()
                 > 2 * 1024 * 1024
@@ -761,10 +728,7 @@ class MahasiswaProfileController extends BaseController
                     );
             }
 
-
-            // ---------------------------------------------
             // VALIDASI EXTENSION
-            // ---------------------------------------------
             $allowedExtensions = [
 
                 'jpg',
@@ -774,11 +738,9 @@ class MahasiswaProfileController extends BaseController
 
             ];
 
-
             $extension = strtolower(
                 $foto->getExtension()
             );
-
 
             if (
                 !in_array(
@@ -797,10 +759,7 @@ class MahasiswaProfileController extends BaseController
                     );
             }
 
-
-            // ---------------------------------------------
             // FOLDER UPLOAD
-            // ---------------------------------------------
 
             $uploadPath =
                 FCPATH .
@@ -830,17 +789,11 @@ class MahasiswaProfileController extends BaseController
                         );
                 }
             }
-
-
-            // ---------------------------------------------
             // HAPUS FOTO LAMA
-            // ---------------------------------------------
 
             if (
-                !empty(
-                    $profile['foto']
-                    ?? null
-                )
+                !empty($profile['foto']
+                    ?? null)
             ) {
 
                 $oldPhotoPath =
@@ -861,26 +814,18 @@ class MahasiswaProfileController extends BaseController
                 }
             }
 
-
-            // ---------------------------------------------
             // NAMA FOTO BARU
-            // ---------------------------------------------
 
             $newPhotoName =
                 $foto->getRandomName();
 
-
-            // ---------------------------------------------
             // PINDAHKAN FOTO
-            // ---------------------------------------------
-
             try {
 
                 $foto->move(
                     $uploadPath,
                     $newPhotoName
                 );
-
             } catch (\Throwable $e) {
 
                 return redirect()
@@ -892,31 +837,75 @@ class MahasiswaProfileController extends BaseController
                     );
             }
 
-
-            // ---------------------------------------------
             // SIMPAN NAMA FOTO KE DATABASE
-            // ---------------------------------------------
+
+            $updateData['photo'] = $newPhotoName;
+
+            // SIMPAN NAMA FOTO KE DATABASE
 
             $updateData['photo'] =
                 $newPhotoName;
         }
 
-
-        // =================================================
+        // =====================================================
         // UPDATE DATABASE
-        // =================================================
+        // =====================================================
 
-        $model = new UserProfileModel();
+        $userModel = new UserModel();
+        $profileModel = new UserProfileModel();
 
+        $db->transStart();
 
         try {
 
-            $model->update(
+            // =================================================
+            // UPDATE TABEL USERS
+            // =================================================
+
+            $userModel->update(
+                $userId,
+                [
+                    'full_name'    => $nama,
+                    'email'        => $email,
+                    'phone_number' => $noHp,
+                    'updated_at'   => date('Y-m-d H:i:s'),
+
+                    // Kalau upload foto baru,
+                    // simpan juga ke users.profile_photo
+                    'profile_photo' =>
+                    $updateData['photo']
+                        ?? ($profile['foto'] ?? null),
+                ]
+            );
+
+
+            // =================================================
+            // UPDATE TABEL USER_PROFILES
+            // =================================================
+
+            $profileModel->update(
                 $profile['id'],
                 $updateData
             );
 
+
+            // =================================================
+            // SELESAIKAN TRANSAKSI
+            // =================================================
+
+            $db->transComplete();
+
+
+            if ($db->transStatus() === false) {
+
+                throw new \RuntimeException(
+                    'Gagal memperbarui data profil.'
+                );
+            }
         } catch (\Throwable $e) {
+
+            // Kalau transaksi gagal, database akan rollback
+            $db->transRollback();
 
             return redirect()
                 ->back()
@@ -926,21 +915,5 @@ class MahasiswaProfileController extends BaseController
                     'Data profil gagal diperbarui.'
                 );
         }
-
-
-        // =================================================
-        // SELESAI
-        // =================================================
-
-        return redirect()
-            ->to(
-                base_url(
-                    'mahasiswa/profile'
-                )
-            )
-            ->with(
-                'success',
-                'Profil mahasiswa berhasil diperbarui.'
-            );
     }
 }

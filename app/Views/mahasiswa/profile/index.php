@@ -14,9 +14,15 @@
         $profile['nim']
         ?? '-';
 
-    $nik =
-        $profile['nik']
-        ?? '-';
+$nik =
+    $profile['nik']
+    ?? '-';
+
+$jenisKelamin =
+    $profile['jenis_kelamin']
+    ?? '-';
+
+$email =
 
     $email =
         $profile['email']
@@ -586,6 +592,40 @@
                                 </div>
 
                             </div>
+
+                            <!-- JENIS KELAMIN -->
+
+<div class="row mb-3">
+
+    <div
+        class="
+            col-sm-4
+            font-weight-bold
+        "
+    >
+
+        <i
+            class="
+                fas
+                fa-venus-mars
+                text-primary
+                mr-2
+            "
+        ></i>
+
+        Jenis Kelamin
+
+    </div>
+
+    <div class="col-sm-8">
+
+        <?= esc(
+            $jenisKelamin
+        ) ?>
+
+    </div>
+
+</div>
 
 
                             <!-- EMAIL -->

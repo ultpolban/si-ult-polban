@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class ServiceModel extends Model
 {
-    protected $table = 'services';
+    protected $table = 'master_services';
 
     protected $primaryKey = 'id';
 

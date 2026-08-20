@@ -19,32 +19,46 @@ class ServiceController extends BaseController
     }
 
     // Menampilkan layanan kategori Keuangan
-    public function keuangan()
-    {
-        $model = new ServiceModel();
-
-        $data['services'] = $model
-            ->where('category_id', 1)
-            ->findAll();
-
-        return view('services/keuangan', $data);
-    }
-
-    // Menampilkan layanan kategori Akademik
-    public function akademik()
-    {
-        $model = new ServiceModel();
-
-        $data['services'] = $model
-            ->where('category_id', 2)
-            ->findAll();
-
-        return view('services/akademik', $data);
-    }
-
-    public function upa()
+  
+public function keuangan()
 {
-    return view('services/upa');
+    $model = new ServiceModel();
+
+    $data['title'] = 'Layanan Keuangan';
+
+    $data['services'] = $model
+        ->where('service_unit_id', 3)
+        ->where('is_active', 1)
+        ->findAll();
+
+    return view('services/keuangan', $data);
+}
+
+// Menampilkan layanan kategori Akademik
+public function akademik()
+{
+    $model = new ServiceModel();
+
+    $data['title'] = 'Layanan Akademik';
+
+    $data['services'] = $model
+        ->where('service_unit_id', 2)
+        ->where('is_active', 1)
+        ->findAll();
+
+    return view('services/akademik', $data);
+}
+public function upa()
+{
+    $db = \Config\Database::connect();
+
+    $data['units'] = $db->table('master_service_units')
+        ->where('code', 'UPT')
+        ->where('is_active', 1)
+        ->get()
+        ->getResultArray();
+
+    return view('services/upa', $data);
 }
 
     public function detail($id)
@@ -74,21 +88,18 @@ class ServiceController extends BaseController
     return view('services/detail', $data);
 }
 
+
 public function kemahasiswaan()
 {
-    $serviceModel = new \App\Models\ServiceModel();
+    $model = new ServiceModel();
 
     $data['title'] = 'Layanan Kemahasiswaan';
 
-    $data['services'] = $serviceModel
-        ->where('category_id', 3)
+    $data['services'] = $model
+        ->where('service_unit_id', 4)
         ->where('is_active', 1)
         ->findAll();
 
     return view('services/kemahasiswaan', $data);
 }
-
-
-
-    
 }

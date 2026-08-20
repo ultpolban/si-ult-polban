@@ -6,7 +6,7 @@
     <div class="card shadow border-0">
 
         <div class="card-header text-white" style="background:#082B63;">
-            <h3 class="mb-0"><?= esc($service['service_name']) ?></h3>
+           <h3 class="mb-0"><?= esc($service['name']) ?></h3>
         </div>
 
         <div class="card-body">
@@ -22,48 +22,43 @@
             <h5 class="fw-bold">Estimasi Penyelesaian</h5>
 
             <p>
-                <?= esc($service['sla_hours']) ?> Jam
+                <?= esc($service['service_hours']) ?> Jam
             </p>
 
             <hr>
 
-            <h5 class="fw-bold mb-3">Persyaratan</h5>
+           <h5 class="fw-bold">Estimasi Penyelesaian</h5>
 
-            <?php if(!empty($requirements)): ?>
+<p>
+    <?= esc($service['service_hours']) ?> Jam
+</p>
 
-                <ul class="list-group mb-4">
+<hr>
 
-                    <?php foreach($requirements as $requirement): ?>
+<h5 class="fw-bold mb-3">Persyaratan</h5>
 
-                        <li class="list-group-item">
+<?php if(!empty($requirements)): ?>
 
-                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+    <ul class="list-group mb-4">
 
-                            <?= esc($requirement['requirement']) ?>
+        <?php foreach($requirements as $requirement): ?>
 
-                        </li>
+            <li class="list-group-item">
+                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                <?= esc($requirement['requirement']) ?>
+            </li>
 
-                    <?php endforeach; ?>
+        <?php endforeach; ?>
 
-                </ul>
+    </ul>
 
-            <?php else: ?>
+<?php else: ?>
 
-                <div class="alert alert-warning">
+    <div class="alert alert-warning">
+        Belum ada persyaratan.
+    </div>
 
-                    Belum ada persyaratan.
-
-                </div>
-
-            <?php endif; ?>
-
-            <div class="d-flex justify-content-between">
-
-                <a href="<?= previous_url() ?>" class="btn btn-secondary">
-
-                    Kembali
-
-                </a>
+<?php endif; ?>
 
                <button type="button"
         class="btn btn-ajukan"

@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class VisitorModel extends Model
 {
-    protected $table            = 'visitor_logs';
-    protected $primaryKey       = 'id';
+    protected $table = 'visitor_logs';
+    protected $primaryKey = 'id';
 
     protected $allowedFields = [
         'visitor_ip',

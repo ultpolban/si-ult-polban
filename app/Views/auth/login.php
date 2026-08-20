@@ -212,18 +212,6 @@
 
                 </form>
 
-                <div class="text-center mt-4">
-
-                    Belum punya akun?
-
-                    <a href="<?= base_url('register') ?>" class="text-decoration-none">
-
-                        Daftar di sini
-
-                    </a>
-
-                </div>
-
             </div>
 
         </div>

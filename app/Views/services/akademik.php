@@ -21,7 +21,7 @@
                         <div class="card-body">
 
                             <h5 class="fw-bold">
-                                <?= esc($service['service_name']); ?>
+                              <?= esc($service['name']); ?>
                             </h5>
 
                             <p class="text-muted">
@@ -30,7 +30,7 @@
 
                             <p class="small text-secondary">
                                 <strong>Estimasi Layanan:</strong>
-                                <?= esc($service['sla_hours']); ?> Jam
+                                <?= esc($service['service_hours']); ?>
                             </p>
 <a href="<?= base_url('layanan/detail/'.$service['id']) ?>"
    class="btn btn-ajukan w-100">

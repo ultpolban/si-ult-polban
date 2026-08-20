@@ -21,7 +21,7 @@
                         <div class="card-body">
 
                             <h5 class="fw-bold">
-                                <?= esc($service['service_name']); ?>
+                                    <?= esc($service['name']); ?>
                             </h5>
 
                             <p class="text-muted">
@@ -30,7 +30,7 @@
 
                             <small class="text-secondary">
                                 Estimasi :
-                                <?= esc($service['sla_hours']); ?> Jam
+                                <?= esc($service['service_hours']); ?> Jam
                             </small>
 
                             <br><br>

@@ -120,6 +120,9 @@
     border-radius: 14px;
     background: #fff;
     box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    position: relative;
+    z-index: 100 !important;
+    overflow: visible !important;
 }
 
 .ticket-filter-card .card-body {
@@ -188,6 +191,74 @@
     background: #545b62;
     color: #fff;
     transform: translateY(-1px);
+}
+
+/* Tombol Export Laporan Green */
+.btn-export-green {
+    background-color: #198754;
+    border-color: #198754;
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 8px;
+    height: 44px;
+    padding: 0 20px;
+    transition: all 0.25s ease-in-out;
+}
+.btn-export-green:hover {
+    background-color: #146c43;
+    border-color: #13653f;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.35);
+    transform: translateY(-1px);
+}
+
+.export-action-group {
+    position: relative;
+    z-index: 105 !important;
+}
+
+.export-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.export-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    min-width: 210px;
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 6px 0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+    z-index: 9999 !important;
+}
+
+.export-menu.show {
+    display: block !important;
+}
+
+.export-menu .dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 11px 15px;
+    color: #212529;
+    font-size: 0.9rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease;
+}
+
+.export-menu .dropdown-item:hover {
+    background-color: #f5f7fa;
+}
+
+.export-menu .dropdown-item i {
+    width: 22px;
+    text-align: center;
 }
 
 /* =========================
@@ -563,7 +634,7 @@
 |--------------------------------------------------------------------------
 | Data dari controller tetap dipakai.
 | Data dummy ditambahkan agar tabel memiliki banyak data untuk
-| mengetes pagination per halaman[cite: 1].
+| mengetes pagination per halaman[cite: 9].
 */
 
 $realTickets = !empty($tiket_list) && is_array($tiket_list)
@@ -1088,7 +1159,7 @@ function ticketPageUrl($page, $queryParams = [])
 
 
 <!-- =========================
-     FILTER
+     FILTER & EXPORT
 ========================= -->
 
 <div class="card ticket-filter-card mb-4 reveal-item">
@@ -1103,7 +1174,7 @@ function ticketPageUrl($page, $queryParams = [])
 
             <div class="row g-2 align-items-center">
 
-                <div class="col-xl-4 col-lg-3 col-md-12">
+                <div class="col-xl-3 col-lg-3 col-md-12">
 
                     <div class="input-group ticket-input-group">
 
@@ -1116,7 +1187,7 @@ function ticketPageUrl($page, $queryParams = [])
                             name="search"
                             id="ticketSearch"
                             class="form-control ticket-input"
-                            placeholder="Cari No Tiket, Nama, NIK, Layanan..."
+                            placeholder="Cari No Tiket, Nama, NIK..."
                             value="<?= esc($searchValue) ?>"
                         >
 
@@ -1125,7 +1196,7 @@ function ticketPageUrl($page, $queryParams = [])
                 </div>
 
 
-                <div class="col-xl-3 col-lg-3 col-md-4">
+                <div class="col-xl-2 col-lg-2 col-md-4">
 
                     <select
                         name="status"
@@ -1199,7 +1270,7 @@ function ticketPageUrl($page, $queryParams = [])
                 </div>
 
                 <!-- INPUT JUMLAH TAMPILAN PER HALAMAN -->
-                <div class="col-xl-1 col-lg-2 col-md-4">
+                <div class="col-xl-1 col-lg-1 col-md-4">
                     <input
                         type="number"
                         name="limit"
@@ -1212,7 +1283,7 @@ function ticketPageUrl($page, $queryParams = [])
                 </div>
 
 
-                <div class="col-xl-2 col-lg-2 col-md-12">
+                <div class="col-xl-2 col-lg-2 col-md-6">
 
                     <div class="d-flex gap-2">
 
@@ -1240,6 +1311,28 @@ function ticketPageUrl($page, $queryParams = [])
 
                     </div>
 
+                </div>
+
+                <!-- TOMBOL EXPORT LAPORAN -->
+                <div class="col-xl-2 col-lg-2 col-md-6 export-action-group">
+                    <div class="export-dropdown">
+                        <button type="button" class="btn btn-export-green w-100 d-flex align-items-center justify-content-center" id="dropdownExport" onclick="toggleExportMenu(event)">
+                            <i class="fas fa-download mr-2"></i>
+                            Export Laporan
+                            <i class="fas fa-chevron-down ml-2"></i>
+                        </button>
+                        <div class="export-menu" id="exportMenu">
+                            <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/excel') ?>">
+                                <i class="fas fa-file-excel mr-2" style="color:#0B8F4D;"></i> Export Excel
+                            </a>
+                            <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/pdf') ?>">
+                                <i class="fas fa-file-pdf mr-2" style="color:#D93025;"></i> Export PDF
+                            </a>
+                            <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/csv') ?>">
+                                <i class="fas fa-file-csv mr-2" style="color:#005BAC;"></i> Export CSV
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -1756,6 +1849,23 @@ function ticketPageUrl($page, $queryParams = [])
 
 
 <script>
+function toggleExportMenu(event) {
+    event.stopPropagation();
+    const menu = document.getElementById('exportMenu');
+    if (menu) {
+        menu.classList.toggle('show');
+    }
+}
+
+// Menutup dropdown jika pengguna mengklik di luar area tombol/menu
+document.addEventListener('click', function(event) {
+    const dropdown = document.querySelector('.export-dropdown');
+    const menu = document.getElementById('exportMenu');
+
+    if (dropdown && menu && !dropdown.contains(event.target)) {
+        menu.classList.remove('show');
+    }
+});
 
 document.addEventListener("DOMContentLoaded", function () {
 

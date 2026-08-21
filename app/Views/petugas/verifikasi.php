@@ -232,6 +232,74 @@
         box-shadow: 0 4px 10px rgba(26,35,126,.25);
     }
 
+    /* Tombol Export Laporan Green (Mengikuti halaman Data Tiket) */
+    .btn-export-green {
+        background-color: #198754;
+        border-color: #198754;
+        color: #ffffff;
+        font-weight: 700;
+        border-radius: 8px;
+        height: 44px;
+        padding: 0 20px;
+        transition: all 0.25s ease-in-out;
+    }
+    .btn-export-green:hover {
+        background-color: #146c43;
+        border-color: #13653f;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.35);
+        transform: translateY(-1px);
+    }
+
+    .export-action-group {
+        position: relative;
+        z-index: 105 !important;
+    }
+
+    .export-dropdown {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .export-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: calc(100% + 8px);
+        min-width: 210px;
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 6px 0;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+        z-index: 9999 !important;
+    }
+
+    .export-menu.show {
+        display: block !important;
+    }
+
+    .export-menu .dropdown-item {
+        display: flex;
+        align-items: center;
+        padding: 11px 15px;
+        color: #212529;
+        font-size: 0.9rem;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background-color 0.2s ease;
+    }
+
+    .export-menu .dropdown-item:hover {
+        background-color: #f5f7fa;
+    }
+
+    .export-menu .dropdown-item i {
+        width: 22px;
+        text-align: center;
+    }
+
     /* =========================================================
        VERIFICATION CHECKLIST
     ========================================================= */
@@ -437,27 +505,51 @@
             </p>
         </div>
 
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-transparent p-0 m-0">
+        <div class="d-flex align-items-center gap-2">
+            <!-- TOMBOL EXPORT LAPORAN -->
+            <div class="export-action-group mr-3">
+                <div class="export-dropdown">
+                    <button type="button" class="btn btn-export-green d-flex align-items-center justify-content-center" id="dropdownExport" onclick="toggleExportMenu(event)">
+                        <i class="fas fa-download mr-2"></i>
+                        Export Laporan
+                        <i class="fas fa-chevron-down ml-2"></i>
+                    </button>
+                    <div class="export-menu" id="exportMenu">
+                        <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/excel') ?>">
+                            <i class="fas fa-file-excel mr-2" style="color:#0B8F4D;"></i> Export Excel
+                        </a>
+                        <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/pdf') ?>">
+                            <i class="fas fa-file-pdf mr-2" style="color:#D93025;"></i> Export PDF
+                        </a>
+                        <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/csv') ?>">
+                            <i class="fas fa-file-csv mr-2" style="color:#005BAC;"></i> Export CSV
+                        </a>
+                    </div>
+                </div>
+            </div>
 
-                <li class="breadcrumb-item">
-                    <a href="<?= base_url('petugas/dashboard') ?>">
-                        Dashboard
-                    </a>
-                </li>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent p-0 m-0">
 
-                <li class="breadcrumb-item">
-                    <a href="<?= base_url('petugas/tiket') ?>">
-                        Data Tiket
-                    </a>
-                </li>
+                    <li class="breadcrumb-item">
+                        <a href="<?= base_url('petugas/dashboard') ?>">
+                            Dashboard
+                        </a>
+                    </li>
 
-                <li class="breadcrumb-item active" aria-current="page">
-                    Verifikasi
-                </li>
+                    <li class="breadcrumb-item">
+                        <a href="<?= base_url('petugas/tiket') ?>">
+                            Data Tiket
+                        </a>
+                    </li>
 
-            </ol>
-        </nav>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        Verifikasi
+                    </li>
+
+                </ol>
+            </nav>
+        </div>
 
     </div>
 
@@ -1023,6 +1115,24 @@
 
 
 <script>
+function toggleExportMenu(event) {
+    event.stopPropagation();
+    const menu = document.getElementById('exportMenu');
+    if (menu) {
+        menu.classList.toggle('show');
+    }
+}
+
+// Menutup dropdown jika pengguna mengklik di luar area tombol/menu
+document.addEventListener('click', function(event) {
+    const dropdown = document.querySelector('.export-dropdown');
+    const menu = document.getElementById('exportMenu');
+
+    if (dropdown && menu && !dropdown.contains(event.target)) {
+        menu.classList.remove('show');
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function () {
 
     /* =====================================================

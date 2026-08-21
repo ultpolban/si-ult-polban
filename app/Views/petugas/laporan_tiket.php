@@ -1,5 +1,4 @@
 <?= $this->extend('layouts/template') ?>
-
 <?= $this->section('content') ?>
 
 <style>
@@ -15,28 +14,23 @@
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
     }
 
-   /* WARNA KARTU SAMA DENGAN DASHBOARD UTAMA */
-
-.bg-card-navy {
-    background-color: #1a237e !important;
-    color: #ffffff !important;
-}
-
-.bg-card-orange {
-    background-color: #ff8c00 !important;
-    color: #ffffff !important;
-}
-
-.bg-card-yellow {
-    background-color: #f4c400 !important;
-    color: #ffffff !important;
-}
-
-.bg-card-green {
-    background-color: #198754 !important;
-    color: #ffffff !important;
-}
-
+    /* WARNA KARTU SAMA DENGAN DASHBOARD UTAMA */
+    .bg-card-navy {
+        background-color: #1a237e !important;
+        color: #ffffff !important;
+    }
+    .bg-card-orange {
+        background-color: #ff8c00 !important;
+        color: #ffffff !important;
+    }
+    .bg-card-yellow {
+        background-color: #f4c400 !important;
+        color: #ffffff !important;
+    }
+    .bg-card-green {
+        background-color: #198754 !important;
+        color: #ffffff !important;
+    }
 
     /* Circle Icon Container */
     .icon-circle-bg {
@@ -76,7 +70,7 @@
         box-shadow: 0 4px 12px rgba(255, 140, 0, 0.35);
         transform: translateY(-1px);
     }
-    
+
     .btn-reset-grey {
         background-color: #6c757d;
         border-color: #6c757d;
@@ -142,82 +136,66 @@
         background-color: #f8f9ff !important;
     }
 
-.filter-action-group {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
+    .filter-action-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
 
-/* Card filter harus berada di atas tabel */
-.filter-card {
-    position: relative;
-    z-index: 9999 !important;
-    overflow: visible !important;
-}
+    .filter-card {
+        position: relative;
+        z-index: 100 !important;
+        overflow: visible !important;
+    }
 
-/* Area export */
-.export-action-group {
-    position: relative;
-    z-index: 99999 !important;
-    padding-left: 15px;
-}
+    .export-action-group {
+        position: relative;
+        z-index: 105 !important;
+        padding-left: 15px;
+    }
 
-/* Dropdown export */
-.export-dropdown {
-    position: relative;
-    display: inline-block;
-    z-index: 999999 !important;
-}
+    .export-dropdown {
+        position: relative;
+        display: inline-block;
+    }
 
-/* Menu Excel / PDF / CSV */
-.export-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: calc(100% + 8px);
-    min-width: 210px;
+    .export-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: calc(100% + 8px);
+        min-width: 210px;
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 6px 0;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+        z-index: 9999 !important;
+    }
 
-    background: #ffffff;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
+    .export-menu.show {
+        display: block !important;
+    }
 
-    padding: 6px 0;
+    .export-menu .dropdown-item {
+        display: flex;
+        align-items: center;
+        padding: 11px 15px;
+        color: #212529;
+        font-size: 0.9rem;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background-color 0.2s ease;
+    }
 
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+    .export-menu .dropdown-item:hover {
+        background-color: #f5f7fa;
+    }
 
-    z-index: 9999999 !important;
-}
-
-.export-menu.show {
-    display: block !important;
-}
-
-.export-menu .dropdown-item {
-    display: flex;
-    align-items: center;
-
-    padding: 11px 15px;
-
-    color: #212529;
-    font-size: 0.9rem;
-    text-decoration: none;
-
-    white-space: nowrap;
-
-    transition: background-color 0.2s ease;
-}
-
-.export-menu .dropdown-item:hover {
-    background-color: #f5f7fa;
-}
-
-.export-menu .dropdown-item i {
-    width: 22px;
-    text-align: center;
-}
-
-
-
+    .export-menu .dropdown-item i {
+        width: 22px;
+        text-align: center;
+    }
 </style>
 
 <div class="container-fluid px-4 py-4">
@@ -235,8 +213,8 @@
         </nav>
     </div>
 
+    <!-- Statistik Cards -->
     <div class="row g-3 mb-4">
-        
         <div class="col-md-3 col-sm-6">
             <div class="card stat-mini-card bg-card-navy shadow-sm p-3">
                 <div class="d-flex align-items-center justify-content-between">
@@ -292,15 +270,13 @@
                 </div>
             </div>
         </div>
-
     </div>
 
-    <div class="card filter-card shadow-sm border-0 mb-4"
-     style="border-radius: 12px; background: #ffffff; overflow: visible !important;">
+    <!-- Filter & Export Section -->
+    <div class="card filter-card shadow-sm border-0 mb-4" style="border-radius: 12px; background: #ffffff;">
         <div class="card-body p-3">
             <form action="" method="GET">
                 <div class="row g-2 align-items-center">
-                    
                     <div class="col-md-4 col-12">
                         <div class="input-group">
                             <span class="input-group-text bg-white border-end-0 text-muted ps-3" style="border-color: #ced4da; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
@@ -328,59 +304,38 @@
                             <i class="fas fa-filter"></i>
                             <span>Filter</span>
                         </button>
-
                         <a href="<?= current_url() ?>" class="btn btn-reset-grey" title="Reset Filter">
                             <i class="fas fa-undo" style="font-size: 0.95rem;"></i>
                         </a>
                     </div>
 
-                   <div class="col-md col-12 text-md-end mt-2 mt-md-0 export-action-group">
-                     <div class="export-dropdown">
-
-    <button type="button"
-            class="btn btn-export-green"
-            id="dropdownExport"
-            onclick="toggleExportMenu()">
-
-        <i class="fas fa-download me-2"></i>
-        Export Laporan
-        <i class="fas fa-chevron-down ms-2"></i>
-
-    </button>
-
-    <div class="export-menu" id="exportMenu">
-
-        <a class="dropdown-item"
-           href="<?= base_url('petugas/laporan/export/excel') ?>">
-            <i class="fas fa-file-excel me-2" style="color:#0B8F4D;"></i>
-            Export Excel
-        </a>
-
-        <a class="dropdown-item"
-           href="<?= base_url('petugas/laporan/export/pdf') ?>">
-            <i class="fas fa-file-pdf me-2" style="color:#D93025;"></i>
-            Export PDF
-        </a>
-
-        <a class="dropdown-item"
-           href="<?= base_url('petugas/laporan/export/csv') ?>">
-            <i class="fas fa-file-csv me-2" style="color:#005BAC;"></i>
-            Export CSV
-        </a>
-
-    </div>
-
-</div>
-
-</div>
+                    <div class="col-md col-12 text-md-end mt-2 mt-md-0 export-action-group">
+                        <div class="export-dropdown">
+                            <button type="button" class="btn btn-export-green" id="dropdownExport" onclick="toggleExportMenu(event)">
+                                <i class="fas fa-download me-2"></i>
+                                Export Laporan
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </button>
+                            <div class="export-menu" id="exportMenu">
+                                <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/excel') ?>">
+                                    <i class="fas fa-file-excel me-2" style="color:#0B8F4D;"></i> Export Excel
+                                </a>
+                                <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/pdf') ?>">
+                                    <i class="fas fa-file-pdf me-2" style="color:#D93025;"></i> Export PDF
+                                </a>
+                                <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/csv') ?>">
+                                    <i class="fas fa-file-csv me-2" style="color:#005BAC;"></i> Export CSV
+                                </a>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; overflow: visible !important;">
+    <!-- Tabel Data Laporan -->
+    <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
         <div class="card-header text-white py-3 px-4 d-flex justify-content-between align-items-center" style="background-color: #1a237e;">
             <div class="d-flex align-items-center gap-2">
                 <i class="fas fa-list-alt fs-5 me-2"></i>
@@ -412,8 +367,8 @@
                                 <tr class="text-center">
                                     <td class="font-weight-bold text-muted"><?= $no++ ?></td>
                                     <td>
-                                        <a href="<?= base_url('petugas/tiket/detail/' . $row['no_tiket']) ?>" class="text-primary font-weight-bold text-decoration-none">
-                                            <?= esc($row['no_tiket']) ?>
+                                        <a href="<?= base_url('petugas/tiket/detail/' . ($row['id'] ?? 1)) ?>" class="text-primary font-weight-bold text-decoration-none">
+                                            <?= esc($row['nomor_tiket'] ?? $row['no_tiket']) ?>
                                         </a>
                                     </td>
                                     <td class="text-start font-weight-semibold text-dark"><?= esc($row['nama_pemohon']) ?></td>
@@ -472,57 +427,22 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const mainCards = document.querySelectorAll('.card');
-        mainCards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(12px)';
-            card.style.transition = `all 0.35s ease-out ${index * 0.08}s`;
-            
-            setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 50);
-        });
-
-        const btnExport = document.getElementById('btnExport');
-        if (btnExport) {
-            btnExport.addEventListener('click', function (e) {
-                const originalHTML = this.innerHTML;
-                this.innerHTML = `<i class="fas fa-spinner fa-spin me-1"></i> <span>Mengekspor...</span>`;
-                this.style.pointerEvents = 'none';
-
-                setTimeout(() => {
-                    this.innerHTML = originalHTML;
-                    this.style.pointerEvents = 'auto';
-                }, 2500);
-            });
-        }
-    });
-</script>
-
-<script>
-function toggleExportMenu() {
+function toggleExportMenu(event) {
+    event.stopPropagation();
     const menu = document.getElementById('exportMenu');
-
     if (menu) {
         menu.classList.toggle('show');
     }
 }
 
+// Menutup dropdown jika pengguna mengklik di luar area tombol/menu
 document.addEventListener('click', function(event) {
-
     const dropdown = document.querySelector('.export-dropdown');
     const menu = document.getElementById('exportMenu');
 
-    if (!dropdown || !menu) {
-        return;
-    }
-
-    if (!dropdown.contains(event.target)) {
+    if (dropdown && menu && !dropdown.contains(event.target)) {
         menu.classList.remove('show');
     }
-
 });
 </script>
 

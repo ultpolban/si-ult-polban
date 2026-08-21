@@ -10,20 +10,10 @@ class PetugasController extends BaseController
      * ============================================================
      * DATA TIKET
      * ============================================================
-     * Semua halaman memakai sumber data yang sama.
-     * Jadi tiket dummy juga bisa:
-     * - Detail
-     * - Verifikasi
-     * - Disposisi
      */
     private function getAllTiket()
     {
         return [
-
-            // =====================================================
-            // 3 TIKET AWAL
-            // =====================================================
-
             [
                 'id' => 1,
                 'nomor_tiket' => 'ULT-20260720-0001',
@@ -41,7 +31,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234567890',
                 'deskripsi' => 'Saya mengajukan Surat Aktif Kuliah untuk keperluan beasiswa.'
             ],
-
             [
                 'id' => 2,
                 'nomor_tiket' => 'ULT-20260721-0002',
@@ -59,7 +48,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081298765432',
                 'deskripsi' => 'Mengajukan bantuan pembayaran UKT semester ganjil.'
             ],
-
             [
                 'id' => 3,
                 'nomor_tiket' => 'ULT-20260722-0003',
@@ -77,11 +65,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081377788899',
                 'deskripsi' => 'Mengajukan beasiswa prestasi akademik.'
             ],
-
-            // =====================================================
-            // DATA DUMMY
-            // =====================================================
-
             [
                 'id' => 4,
                 'nomor_tiket' => 'ULT-20260808-0015',
@@ -99,7 +82,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560004',
                 'deskripsi' => 'Pengajuan surat aktif kuliah.'
             ],
-
             [
                 'id' => 5,
                 'nomor_tiket' => 'ULT-20260808-0014',
@@ -117,7 +99,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560005',
                 'deskripsi' => 'Pengajuan bantuan UKT.'
             ],
-
             [
                 'id' => 6,
                 'nomor_tiket' => 'ULT-20260808-0013',
@@ -135,7 +116,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560006',
                 'deskripsi' => 'Pengajuan beasiswa prestasi.'
             ],
-
             [
                 'id' => 7,
                 'nomor_tiket' => 'ULT-20260807-0012',
@@ -153,7 +133,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560007',
                 'deskripsi' => 'Pengajuan surat keterangan lulus.'
             ],
-
             [
                 'id' => 8,
                 'nomor_tiket' => 'ULT-20260807-0011',
@@ -171,7 +150,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560008',
                 'deskripsi' => 'Pengajuan cuti akademik.'
             ],
-
             [
                 'id' => 9,
                 'nomor_tiket' => 'ULT-20260807-0010',
@@ -189,7 +167,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560009',
                 'deskripsi' => 'Pengajuan beasiswa prestasi.'
             ],
-
             [
                 'id' => 10,
                 'nomor_tiket' => 'ULT-20260807-0009',
@@ -207,7 +184,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560010',
                 'deskripsi' => 'Permohonan legalisir ijazah.'
             ],
-
             [
                 'id' => 11,
                 'nomor_tiket' => 'ULT-20260807-0008',
@@ -225,7 +201,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560011',
                 'deskripsi' => 'Pengajuan keringanan UKT.'
             ],
-
             [
                 'id' => 12,
                 'nomor_tiket' => 'ULT-20260807-0007',
@@ -243,7 +218,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560012',
                 'deskripsi' => 'Pengajuan surat pengantar PKL.'
             ],
-
             [
                 'id' => 13,
                 'nomor_tiket' => 'ULT-20260807-0006',
@@ -261,7 +235,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560013',
                 'deskripsi' => 'Permohonan pindah kelas.'
             ],
-
             [
                 'id' => 14,
                 'nomor_tiket' => 'ULT-20260806-0005',
@@ -279,7 +252,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560014',
                 'deskripsi' => 'Pengajuan layanan konseling akademik.'
             ],
-
             [
                 'id' => 15,
                 'nomor_tiket' => 'ULT-20260806-0004',
@@ -297,7 +269,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560015',
                 'deskripsi' => 'Permohonan penggantian KTM yang hilang.'
             ],
-
             [
                 'id' => 16,
                 'nomor_tiket' => 'ULT-20260806-0003',
@@ -315,7 +286,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560016',
                 'deskripsi' => 'Pengajuan surat rekomendasi.'
             ],
-
             [
                 'id' => 17,
                 'nomor_tiket' => 'ULT-20260806-0002',
@@ -333,7 +303,6 @@ class PetugasController extends BaseController
                 'no_hp' => '081234560017',
                 'deskripsi' => 'Pengajuan bantuan beasiswa.'
             ],
-
             [
                 'id' => 18,
                 'nomor_tiket' => 'ULT-20260806-0001',
@@ -354,18 +323,10 @@ class PetugasController extends BaseController
         ];
     }
 
-    // ============================================================
-    // DASHBOARD
-    // ============================================================
-
     public function dashboard()
     {
         return view('petugas/dashboard');
     }
-
-    // ============================================================
-    // DATA TIKET
-    // ============================================================
 
     public function tiket()
     {
@@ -373,10 +334,6 @@ class PetugasController extends BaseController
             'tiket_list' => $this->getAllTiket()
         ]);
     }
-
-    // ============================================================
-    // DETAIL
-    // ============================================================
 
     public function detail($id = null)
     {
@@ -388,10 +345,6 @@ class PetugasController extends BaseController
         ]);
     }
 
-    // ============================================================
-    // VERIFIKASI
-    // ============================================================
-
     public function verifikasi($id = null)
     {
         $tiket = $this->findTiket($id);
@@ -402,23 +355,12 @@ class PetugasController extends BaseController
         ]);
     }
 
-    // ============================================================
-    // SIMPAN VERIFIKASI
-    // ============================================================
-
     public function simpanVerifikasi($id = null)
     {
-        $statusVerifikasi = $this->request->getPost('status_verifikasi');
-        $catatan = $this->request->getPost('catatan');
-
         return redirect()
             ->to(base_url('petugas/tiket'))
             ->with('success', 'Verifikasi tiket berhasil disimpan!');
     }
-
-    // ============================================================
-    // DISPOSISI
-    // ============================================================
 
     public function disposisi($id = null)
     {
@@ -430,24 +372,12 @@ class PetugasController extends BaseController
         ]);
     }
 
-    // ============================================================
-    // KIRIM DISPOSISI
-    // ============================================================
-
     public function kirimDisposisi($id = null)
     {
-        $unitTujuan = $this->request->getPost('unit_tujuan');
-        $prioritas = $this->request->getPost('prioritas');
-        $targetSla = $this->request->getPost('target_sla');
-
         return redirect()
             ->to(base_url('petugas/tiket'))
             ->with('success', 'Disposisi tiket berhasil dikirim!');
     }
-
-    // ============================================================
-    // CARI TIKET BERDASARKAN ID
-    // ============================================================
 
     private function findTiket($id)
     {
@@ -461,10 +391,6 @@ class PetugasController extends BaseController
 
         throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
     }
-
-    // ============================================================
-    // MENU LAIN
-    // ============================================================
 
     public function laporanTamu()
     {
@@ -488,29 +414,37 @@ class PetugasController extends BaseController
 
     public function detail_tamu($id)
     {
+        $tiket = $this->findTiket($id);
         return view('petugas/detail_tamu', [
-            'id' => $id
+            'id' => $id,
+            'tiket' => $tiket
         ]);
     }
 
     public function verifikasi_tamu($id)
     {
+        $tiket = $this->findTiket($id);
         return view('petugas/verifikasi_tamu', [
-            'id' => $id
+            'id' => $id,
+            'tiket' => $tiket
         ]);
     }
 
     public function disposisi_tamu($id)
     {
+        $tiket = $this->findTiket($id);
         return view('petugas/disposisi_tamu', [
-            'id' => $id
+            'id' => $id,
+            'tiket' => $tiket
         ]);
     }
 
     public function edit_tamu($id)
     {
+        $tiket = $this->findTiket($id);
         return view('petugas/edit_tamu', [
-            'id' => $id
+            'id' => $id,
+            'tiket' => $tiket
         ]);
     }
 
@@ -522,8 +456,41 @@ class PetugasController extends BaseController
     }
 
     public function profile()
-{
-    return view('petugas/profile');
-}
+    {
+        return view('petugas/profile');
+    }
 
+    public function exportExcel()
+    {
+        return redirect()->back()->with('message', 'Fitur Export Excel belum diimplementasikan.');
+    }
+
+    public function exportPdf()
+    {
+        return redirect()->back()->with('message', 'Fitur Export PDF belum diimplementasikan.');
+    }
+
+    public function exportCsv()
+    {
+        return redirect()->back()->with('message', 'Fitur Export CSV belum diimplementasikan.');
+    }
+
+    public function logAktivitas()
+    {
+        return $this->log_aktivitas();
+    }
+
+    public function log_aktivitas()
+    {
+        $data = [
+            'title'    => 'Log Aktivitas Petugas',
+            'search'   => $this->request->getGet('search'),
+            'status'   => $this->request->getGet('status'),
+            'kategori' => $this->request->getGet('kategori'),
+            'limit'    => $this->request->getGet('limit') ?? 10,
+            'log_list' => []
+        ];
+
+        return view('petugas/log_aktivitas', $data);
+    }
 }

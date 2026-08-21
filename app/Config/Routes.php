@@ -7,37 +7,36 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // ======================================
-// PUBLIC
+// PUBLIC & AUTH
 // ======================================
 $routes->get('/', 'AuthController::login');
-
-// ======================================
-// AUTH
-// ======================================
-$routes->get('/login', 'AuthController::login');$routes->post('/login', 'AuthController::authenticate');
-
-$routes->get('/register', 'AuthController::register');$routes->post('/register', 'AuthController::storeRegister');
-
+$routes->get('/login', 'AuthController::login');
+$routes->post('/login', 'AuthController::authenticate');
+$routes->get('/register', 'AuthController::register');
+$routes->post('/register', 'AuthController::storeRegister');
 $routes->get('/logout', 'AuthController::logout');
 
 // ======================================
 // USER MANAGEMENT
 // ======================================
-$routes->group('users', ['filter' => 'role'], function ($routes) {$routes->get('/', 'UserController::index');
-    $routes->get('create', 'UserController::create');$routes->post('store', 'UserController::store');
-
-    $routes->get('edit/(:num)', 'UserController::edit/$1');$routes->post('update/(:num)', 'UserController::update/$1');
-
+$routes->group('users', ['filter' => 'role'], function ($routes) {
+    $routes->get('/', 'UserController::index');
+    $routes->get('create', 'UserController::create');
+    $routes->post('store', 'UserController::store');
+    $routes->get('edit/(:num)', 'UserController::edit/$1');
+    $routes->post('update/(:num)', 'UserController::update/$1');
     $routes->get('delete/(:num)', 'UserController::delete/$1');
 });
 
 // ======================================
 // DASHBOARD PEMOHON
 // ======================================
-$routes->group('dashboard', ['filter' => 'auth'], function ($routes) {$routes->get('/', 'Dashboard::index');
-
-    $routes->get('layanan', 'Dashboard::layanan');$routes->get('tiket', 'Dashboard::tiket');
-    $routes->get('detail', 'Dashboard::detail');$routes->get('profile', 'Dashboard::profile');
+$routes->group('dashboard', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'Dashboard::index');
+    $routes->get('layanan', 'Dashboard::layanan');
+    $routes->get('tiket', 'Dashboard::tiket');
+    $routes->get('detail', 'Dashboard::detail');
+    $routes->get('profile', 'Dashboard::profile');
 });
 
 /*
@@ -46,59 +45,58 @@ $routes->group('dashboard', ['filter' => 'auth'], function ($routes) {$routes->g
 |--------------------------------------------------------------------------
 */
 $routes->group('petugas', function($routes){
-    $routes->get('/', 'PetugasController::dashboard');$routes->get('dashboard', 'PetugasController::dashboard');
-    $routes->get('tiket', 'PetugasController::tiket');$routes->get('detail/(:num)', 'PetugasController::detail/$1');
+    $routes->get('/', 'PetugasController::dashboard');
+    $routes->get('dashboard', 'PetugasController::dashboard');
+    $routes->get('tiket', 'PetugasController::tiket');
+    $routes->get('detail/(:num)', 'PetugasController::detail/$1');
 
-    // Default route tanpa ID (opsional: menampilkan list atau tiket pertama)
-    $routes->get('verifikasi', 'PetugasController::verifikasi');$routes->get('disposisi', 'PetugasController::disposisi');
-
-    // Route Verifikasi dengan ID & Form Action
+    // Verifikasi
+    $routes->get('verifikasi', 'PetugasController::verifikasi');
     $routes->get('verifikasi/(:num)', 'PetugasController::verifikasi/$1');
-    $routes->post('verifikasi/simpan', 'PetugasController::simpanVerifikasi');$routes->post('verifikasi/simpan/(:num)', 'PetugasController::simpanVerifikasi/$1');
+    $routes->post('verifikasi/simpan', 'PetugasController::simpanVerifikasi');
+    $routes->post('verifikasi/simpan/(:num)', 'PetugasController::simpanVerifikasi/$1');
 
-   // Route Disposisi dengan ID & Form Action
-$routes->get('disposisi/(:num)', 'PetugasController::disposisi/$1');
-$routes->post('disposisi/kirim', 'PetugasController::kirimDisposisi');
-$routes->post('disposisi/kirim/(:num)', 'PetugasController::kirimDisposisi/$1');
+    // Disposisi
+    $routes->get('disposisi', 'PetugasController::disposisi');
+    $routes->get('disposisi/(:num)', 'PetugasController::disposisi/$1');
+    $routes->post('disposisi/kirim', 'PetugasController::kirimDisposisi');
+    $routes->post('disposisi/kirim/(:num)', 'PetugasController::kirimDisposisi/$1');
 
-// PROFILE PETUGAS
-$routes->get('profile', 'PetugasController::profile');
-});
+    // Laporan & Tracking & Log
+    $routes->get('laporan-tamu', 'PetugasController::laporanTamu');
+    $routes->get('statistik-tiket', 'PetugasController::statistikTiket');
+    $routes->get('laporan-tiket', 'PetugasController::laporanTiket');
+    $routes->get('tracking-tiket', 'PetugasController::trackingTiket');
+    $routes->get('log-aktivitas', 'PetugasController::log_aktivitas');
+    $routes->get('log_aktivitas', 'PetugasController::log_aktivitas');
 
-/*
-|--------------------------------------------------------------------------
-| UNIT TUJUAN
-|--------------------------------------------------------------------------
-*/
-$routes->group('unit', function($routes){$routes->get('/', 'UnitController::dashboard');
-    $routes->get('dashboard', 'UnitController::dashboard');$routes->get('detail/(:num)', 'UnitController::detail/$1');$routes->get('update-status/(:num)', 'UnitController::updateStatus/$1');
-});
+    // Export
+    $routes->get('laporan/export/excel', 'PetugasController::exportExcel');
+    $routes->get('laporan/export/pdf', 'PetugasController::exportPdf');
+    $routes->get('laporan/export/csv', 'PetugasController::exportCsv');
 
-// Admin
-$routes->get('/admin', 'AdminController::index');
-
-// Pimpinan
-$routes->get('/pimpinan', 'PimpinanController::index');
-
-$routes->get('petugas/laporan-tamu', 'PetugasController::laporanTamu');
-$routes->get('petugas/statistik-tiket', 'PetugasController::statistikTiket');
-$routes->get('petugas/laporan-tiket', 'PetugasController::laporanTiket');
-$routes->get('petugas/tracking-tiket', 'PetugasController::trackingTiket');
-
-
-$routes->get('petugas/laporan/export/excel', 'PetugasController::exportExcel');
-$routes->get('petugas/laporan/export/pdf', 'PetugasController::exportPdf');
-$routes->get('petugas/laporan/export/csv', 'PetugasController::exportCsv');
-
-$routes->group('guest-report', function($routes) {
-    $routes->get('/', 'GuestReportController::index');$routes->get('create', 'GuestReportController::create');
-    $routes->post('store', 'GuestReportController::store');    
-    // 5 Rute Aksi Tiket$routes->get('detail/(:segment)', 'GuestReportController::detail/$1');$routes->get('verify/(:segment)', 'GuestReportController::verify/$1');$routes->post('update-status/(:segment)', 'GuestReportController::updateStatus/$1');$routes->get('disposition/(:segment)', 'GuestReportController::disposition/$1');$routes->post('save-disposition/(:segment)', 'GuestReportController::saveDisposition/$1');$routes->get('edit/(:segment)', 'GuestReportController::edit/$1');$routes->post('update/(:segment)', 'GuestReportController::update/$1');$routes->get('delete/(:segment)', 'GuestReportController::delete/$1');
-    $routes->group('petugas', function($routes) {
+    // Aksi Tamu
     $routes->get('detail-tamu/(:num)', 'PetugasController::detail_tamu/$1');
     $routes->get('verifikasi-tamu/(:num)', 'PetugasController::verifikasi_tamu/$1');
     $routes->get('disposisi-tamu/(:num)', 'PetugasController::disposisi_tamu/$1');
     $routes->get('edit-tamu/(:num)', 'PetugasController::edit_tamu/$1');
     $routes->get('delete-tamu/(:num)', 'PetugasController::delete_tamu/$1');
+
+    // Profile Petugas
+    $routes->get('profile', 'PetugasController::profile');
 });
+
+/*
+|--------------------------------------------------------------------------
+| UNIT TUJUAN, ADMIN, & PIMPINAN
+|--------------------------------------------------------------------------
+*/
+$routes->group('unit', function($routes){
+    $routes->get('/', 'UnitController::dashboard');
+    $routes->get('dashboard', 'UnitController::dashboard');
+    $routes->get('detail/(:num)', 'UnitController::detail/$1');
+    $routes->get('update-status/(:num)', 'UnitController::updateStatus/$1');
 });
+
+$routes->get('/admin', 'AdminController::index');
+$routes->get('/pimpinan', 'PimpinanController::index');

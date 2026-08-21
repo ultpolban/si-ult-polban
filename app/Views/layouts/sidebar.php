@@ -207,11 +207,21 @@
                     </a>
                 </li>
 
+            
+
                 <!-- Tracking Tiket -->
                 <li class="nav-item">
                     <a href="<?= base_url('petugas/tracking-tiket') ?>" class="nav-link <?= url_is('petugas/tracking-tiket*') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-route"></i>
                         <p>Tracking Tiket</p>
+                    </a>
+                </li>
+
+                    <!-- Log Aktivitas Petugas (MENU BARU) -->
+                <li class="nav-item">
+                    <a href="<?= base_url('petugas/log-aktivitas') ?>" class="nav-link <?= url_is('petugas/log-aktivitas*') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-history text-info"></i>
+                        <p>Log Aktivitas</p>
                     </a>
                 </li>
 

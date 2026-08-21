@@ -688,9 +688,9 @@
                 <div class="text-muted fw-semibold" style="font-size: 0.85rem;">
                     Total Data: <span id="totalDataBadge" class="badge bg-primary text-white fs-6 ms-1 px-2 py-1" style="border-radius: 8px;">8 Tiket</span>
                 </div>
-                <button class="btn btn-primary px-3 rounded-3 fw-bold d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambahTamu" style="background: linear-gradient(135deg, #1a237e 0%, #283593 100%); border: none; height: 40px; font-size: 0.88rem;">
-                    <i class="fas fa-plus"></i> Tambah Laporan
-                </button>
+                <button class="btn btn-primary px-3 rounded-3 fw-bold d-flex align-items-center gap-2 shadow-sm" data-toggle="modal" data-target="#modalTambahTamu" style="...">
+    <i class="fas fa-plus"></i> Tambah Laporan
+</button>
             </div>
         </div>
 
@@ -722,7 +722,16 @@
                         ];
                         foreach ($dummy as $i => $d):
                         ?>
-                            <tr class="text-center tamu-row" data-notiket="<?= $d[0] ?>" data-nama="<?= strtolower($d[1]) ?>" data-layanan="<?= $d[2] ?>" data-status="<?= $d[3] ?>">
+                            <tr class="text-center tamu-row"
+                                data-notiket="<?= esc($d[0]) ?>"
+                                data-nama="<?= esc($d[1]) ?>"
+                                data-layanan="<?= esc($d[2]) ?>"
+                                data-status="<?= esc($d[3]) ?>"
+                                data-email="<?= esc($d[5]) ?>"
+                                data-hp="<?= esc($d[6]) ?>"
+                                data-instansi="<?= esc($d[7]) ?>"
+                                data-tanggal="<?= esc($d[4]) ?>"
+                                data-deskripsi="<?= esc($d[8]) ?>">
                                 <td class="fw-bold text-muted row-number"><?= $i + 1 ?></td>
                                 <td class="text-start fw-bold text-primary cell-notiket" title="Klik untuk menyalin nomor tiket" onclick="copyNoTiket(this, '<?= $d[0] ?>')"><?= $d[0] ?></td>
                                 <td class="text-start fw-semibold text-dark cell-nama"><?= $d[1] ?></td>
@@ -735,20 +744,20 @@
                                 <td class="text-muted fw-medium cell-tanggal" style="font-size: 0.83rem;"><?= $d[4] ?></td>
                                 <td>
                                     <div class="d-flex justify-content-center gap-1">
-                                        <button class="btn-action btn-action-view btn-detail-tamu" title="Detail Tiket" data-bs-toggle="modal" data-bs-target="#modalDetailTamu" data-notiket="<?= $d[0] ?>" data-nama="<?= $d[1] ?>" data-layanan="<?= $d[2] ?>" data-status="<?= $d[3] ?>" data-tanggal="<?= $d[4] ?>" data-email="<?= $d[5] ?>" data-hp="<?= $d[6] ?>" data-instansi="<?= $d[7] ?>" data-deskripsi="<?= $d[8] ?>">
+                                        <button type="button" class="btn-action btn-action-view btn-detail-tamu" title="Detail Tiket" data-bs-toggle="modal" data-bs-target="#modalDetailTamu" data-toggle="modal" data-target="#modalDetailTamu" data-notiket="<?= esc($d[0]) ?>" data-nama="<?= esc($d[1]) ?>" data-layanan="<?= esc($d[2]) ?>" data-status="<?= esc($d[3]) ?>" data-email="<?= esc($d[5]) ?>" data-hp="<?= esc($d[6]) ?>" data-instansi="<?= esc($d[7]) ?>" data-tanggal="<?= esc($d[4]) ?>" data-deskripsi="<?= esc($d[8]) ?>">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button class="btn-action btn-action-edit btn-verifikasi-tamu" title="Verifikasi Tiket" data-bs-toggle="modal" data-bs-target="#modalVerifikasiTamu" data-notiket="<?= $d[0] ?>" data-nama="<?= $d[1] ?>" data-layanan="<?= $d[2] ?>" data-status="<?= $d[3] ?>" data-email="<?= $d[5] ?>" data-hp="<?= $d[6] ?>" data-instansi="<?= $d[7] ?>">
+                                        <button type="button" class="btn-action btn-action-edit btn-verifikasi-tamu" title="Verifikasi Tiket" data-bs-toggle="modal" data-bs-target="#modalVerifikasiTamu" data-toggle="modal" data-target="#modalVerifikasiTamu" data-notiket="<?= esc($d[0]) ?>" data-status="<?= esc($d[3]) ?>">
                                             <i class="fas fa-user-check"></i>
                                         </button>
-                                        <button class="btn-action btn-action-forward btn-disposisi-tamu" title="Disposisi Tiket" data-bs-toggle="modal" data-bs-target="#modalDisposisiTamu" data-notiket="<?= $d[0] ?>" data-nama="<?= $d[1] ?>" data-layanan="<?= $d[2] ?>" data-status="<?= $d[3] ?>" data-email="<?= $d[5] ?>" data-hp="<?= $d[6] ?>" data-instansi="<?= $d[7] ?>" data-tanggal="<?= $d[4] ?>">
+                                        <button type="button" class="btn-action btn-action-forward btn-disposisi-tamu" title="Disposisi Tiket" data-bs-toggle="modal" data-bs-target="#modalDisposisiTamu" data-toggle="modal" data-target="#modalDisposisiTamu" data-notiket="<?= esc($d[0]) ?>">
                                             <i class="fas fa-share"></i>
                                         </button>
-                                        <button class="btn-action btn-action-amber btn-edit-tamu" title="Edit Tiket" data-bs-toggle="modal" data-bs-target="#modalEditTiket" data-notiket="<?= $d[0] ?>" data-nama="<?= $d[1] ?>" data-layanan="<?= $d[2] ?>" data-status="<?= $d[3] ?>" data-email="<?= $d[5] ?>" data-hp="<?= $d[6] ?>" data-instansi="<?= $d[7] ?>" data-deskripsi="<?= $d[8] ?>">
+                                        <button type="button" class="btn-action btn-action-amber btn-edit-tamu" title="Edit Tiket" data-bs-toggle="modal" data-bs-target="#modalEditTiket" data-toggle="modal" data-target="#modalEditTiket" data-notiket="<?= esc($d[0]) ?>" data-nama="<?= esc($d[1]) ?>" data-layanan="<?= esc($d[2]) ?>" data-email="<?= esc($d[5]) ?>" data-hp="<?= esc($d[6]) ?>" data-instansi="<?= esc($d[7]) ?>" data-deskripsi="<?= esc($d[8]) ?>">
                                             <i class="fas fa-pen"></i>
                                         </button>
-                                        <button class="btn-action btn-action-delete btn-delete-tamu" title="Hapus Tiket" data-bs-toggle="modal" data-bs-target="#modalDeleteTiket" data-notiket="<?= $d[0] ?>" data-nama="<?= $d[1] ?>">
-                                            <i class="fas fa-trash"></i>
+                                        <button type="button" class="btn-action btn-action-delete btn-delete-tamu" title="Hapus Tiket" data-bs-toggle="modal" data-bs-target="#modalDeleteTiket" data-toggle="modal" data-target="#modalDeleteTiket" data-notiket="<?= esc($d[0]) ?>" data-nama="<?= esc($d[1]) ?>">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -1226,6 +1235,27 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         // ======================================================================
+        // MODAL COMPATIBILITY HELPER
+        // ======================================================================
+        // Bootstrap 5 menggunakan data-bs-toggle/data-bs-target. Jika template
+        // masih memakai Bootstrap 4, fallback jQuery tetap dipertahankan.
+        document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const target = this.getAttribute('data-bs-target');
+                if (!target) return;
+
+                if (window.bootstrap && bootstrap.Modal) {
+                    const modalEl = document.querySelector(target);
+                    if (modalEl) {
+                        bootstrap.Modal.getOrCreateInstance(modalEl).show();
+                    }
+                } else if (window.jQuery && typeof window.jQuery.fn.modal === 'function') {
+                    window.jQuery(target).modal('show');
+                }
+            });
+        });
+
+        // ======================================================================
         // DYNAMIC FORM BUILDER UNTUK TAMBAH LAPORAN TAMU
         // ======================================================================
         const jenisPemohonSelect = document.getElementById('addJenisPemohon');
@@ -1352,6 +1382,22 @@
                 dynamicContainer.innerHTML = htmlContent;
             });
         }
+
+        // ======================================================================
+        // FALLBACK CLOSE UNTUK X / BATAL / TUTUP MODAL
+        // ======================================================================
+        document.querySelectorAll('.modal [data-bs-dismiss="modal"]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const modalEl = this.closest('.modal');
+                if (!modalEl) return;
+
+                if (window.bootstrap && bootstrap.Modal) {
+                    bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+                } else if (window.jQuery && typeof window.jQuery.fn.modal === 'function') {
+                    window.jQuery(modalEl).modal('hide');
+                }
+            });
+        });
 
         // ======================================================================
         // RESET MODAL TAMBAH LAPORAN KETIKA DITUTUP (HIDDEN / CANCEL / CLOSE)
@@ -1549,6 +1595,11 @@
                 showToast('Filter Direset', 'Semua kriteria filter telah dikosongkan.', 'info');
             });
         }
+    });
+    // Tambahan pengaman agar modal terpanggil otomatis di Bootstrap 4
+    $(document).on('click', '[data-toggle="modal"]', function() {
+        let targetModal = $(this).attr('data-target');
+        $(targetModal).modal('show');
     });
 </script>
 

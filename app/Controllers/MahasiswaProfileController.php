@@ -14,7 +14,6 @@ class MahasiswaProfileController extends BaseController
     {
         $userId = session()->get('user_id');
 
-        // Alternatif jika project menggunakan session user
         if (!$userId) {
             $user = session()->get('user');
 
@@ -46,7 +45,6 @@ class MahasiswaProfileController extends BaseController
             up.position,
 
             up.nim,
-            up.nik,
 
             up.name AS nama,
             up.email,
@@ -70,7 +68,6 @@ class MahasiswaProfileController extends BaseController
 
             md.name AS jurusan,
             md.code AS kode_jurusan
-
         ');
 
         // =================================================
@@ -130,9 +127,6 @@ class MahasiswaProfileController extends BaseController
     {
         $userId = $this->getUserId();
 
-        // =================================================
-        // BELUM LOGIN
-        // =================================================
         if (!$userId) {
             return redirect()
                 ->to('/login')
@@ -142,16 +136,8 @@ class MahasiswaProfileController extends BaseController
                 );
         }
 
-
-        // =================================================
-        // AMBIL PROFILE
-        // =================================================
         $profile = $this->getProfile($userId);
 
-
-        // =================================================
-        // PROFILE TIDAK DITEMUKAN
-        // =================================================
         if (!$profile) {
             return redirect()
                 ->back()
@@ -161,19 +147,12 @@ class MahasiswaProfileController extends BaseController
                 );
         }
 
-
-        // =================================================
-        // DATA UNTUK VIEW
-        // =================================================
         $data = [
-
             'title' => 'Profil Mahasiswa',
 
             'profile' => [
 
-                // -----------------------------------------
                 // DATA PRIBADI
-                // -----------------------------------------
                 'nama' =>
                 $profile['nama']
                     ?? $profile['student_name']
@@ -181,10 +160,6 @@ class MahasiswaProfileController extends BaseController
 
                 'nim' =>
                 $profile['nim']
-                    ?? '-',
-
-                'nik' =>
-                $profile['nik']
                     ?? '-',
 
                 'email' =>
@@ -204,9 +179,7 @@ class MahasiswaProfileController extends BaseController
                     ?? null,
 
 
-                // -----------------------------------------
                 // DATA AKADEMIK
-                // -----------------------------------------
                 'prodi' =>
                 $profile['prodi']
                     ?? '-',
@@ -240,15 +213,11 @@ class MahasiswaProfileController extends BaseController
                     ?? null,
 
 
-                // -----------------------------------------
-                // SEMENTARA
-                // -----------------------------------------
                 'fakultas' => '-',
 
                 'status' => 'Aktif'
             ]
         ];
-
 
         return view(
             'mahasiswa/profile/index',
@@ -264,10 +233,6 @@ class MahasiswaProfileController extends BaseController
     {
         $userId = $this->getUserId();
 
-
-        // =================================================
-        // BELUM LOGIN
-        // =================================================
         if (!$userId) {
             return redirect()
                 ->to('/login')
@@ -277,12 +242,7 @@ class MahasiswaProfileController extends BaseController
                 );
         }
 
-
-        // =================================================
-        // AMBIL DATA TERBARU DARI DATABASE
-        // =================================================
         $profile = $this->getProfile($userId);
-
 
         if (!$profile) {
             return redirect()
@@ -297,12 +257,7 @@ class MahasiswaProfileController extends BaseController
                 );
         }
 
-
-        // =================================================
-        // DATA UNTUK FORM EDIT
-        // =================================================
         $data = [
-
             'title' => 'Edit Profil Mahasiswa',
 
             'profile' => [
@@ -315,6 +270,7 @@ class MahasiswaProfileController extends BaseController
                 $profile['user_id']
                     ?? null,
 
+
                 // DATA PRIBADI
                 'nama' =>
                 $profile['nama']
@@ -323,10 +279,6 @@ class MahasiswaProfileController extends BaseController
 
                 'nim' =>
                 $profile['nim']
-                    ?? '',
-
-                'nik' =>
-                $profile['nik']
                     ?? '',
 
                 'email' =>
@@ -377,7 +329,6 @@ class MahasiswaProfileController extends BaseController
             ]
         ];
 
-
         return view(
             'mahasiswa/profile/edit',
             $data
@@ -385,16 +336,13 @@ class MahasiswaProfileController extends BaseController
     }
 
 
-    // =====================================================
-    // UPDATE PROFILE
-    // =====================================================
     public function update()
     {
-        // =================================================
-        // AMBIL USER LOGIN
-        // =================================================
-        $userId = $this->getUserId();
+        // =====================================================
+        // 1. AMBIL USER LOGIN
+        // =====================================================
 
+        $userId = $this->getUserId();
 
         if (!$userId) {
             return redirect()
@@ -406,11 +354,11 @@ class MahasiswaProfileController extends BaseController
         }
 
 
-        // =================================================
-        // AMBIL PROFILE LAMA
-        // =================================================
-        $profile = $this->getProfile($userId);
+        // =====================================================
+        // 2. AMBIL PROFILE LAMA
+        // =====================================================
 
+        $profile = $this->getProfile($userId);
 
         if (!$profile) {
             return redirect()
@@ -422,9 +370,9 @@ class MahasiswaProfileController extends BaseController
         }
 
 
-        // =================================================
-        // AMBIL DATA DARI FORM
-        // =================================================
+        // =====================================================
+        // 3. AMBIL DATA DARI FORM
+        // =====================================================
 
         $nama = trim(
             (string) $this->request->getPost('nama')
@@ -442,24 +390,10 @@ class MahasiswaProfileController extends BaseController
             (string) $this->request->getPost('alamat')
         );
 
-        $prodi = trim(
-            (string) $this->request->getPost('prodi')
-        );
 
-        $jurusan = trim(
-            (string) $this->request->getPost('jurusan')
-        );
-
-        $semester = $this->request->getPost(
-            'semester'
-        );
-
-        $angkatan = $this->request->getPost(
-            'angkatan'
-        );
-
-
-        // VALIDASI DATA PRIBADI
+        // =====================================================
+        // 4. VALIDASI DATA PRIBADI
+        // =====================================================
 
         if (
             empty($nama) ||
@@ -467,7 +401,6 @@ class MahasiswaProfileController extends BaseController
             empty($noHp) ||
             empty($alamat)
         ) {
-
             return redirect()
                 ->back()
                 ->withInput()
@@ -477,7 +410,10 @@ class MahasiswaProfileController extends BaseController
                 );
         }
 
-        // VALIDASI EMAIL
+
+        // =====================================================
+        // 5. VALIDASI EMAIL
+        // =====================================================
 
         if (
             !filter_var(
@@ -485,7 +421,6 @@ class MahasiswaProfileController extends BaseController
                 FILTER_VALIDATE_EMAIL
             )
         ) {
-
             return redirect()
                 ->back()
                 ->withInput()
@@ -495,188 +430,12 @@ class MahasiswaProfileController extends BaseController
                 );
         }
 
-        // VALIDASI AKADEMIK=
 
-        if (
-            empty($prodi) ||
-            empty($jurusan) ||
-            empty($semester) ||
-            empty($angkatan)
-        ) {
+        // =====================================================
+        // 6. DATA UNTUK USER_PROFILES
+        // =====================================================
 
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Data program studi, jurusan, semester, dan angkatan wajib diisi.'
-                );
-        }
-
-
-        // VALIDASI SEMESTER
-
-        if (
-            !is_numeric($semester) ||
-            (int) $semester < 1 ||
-            (int) $semester > 14
-        ) {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Semester harus berada antara 1 sampai 14.'
-                );
-        }
-
-        // VALIDASI ANGKATAN
-
-        if (
-            !is_numeric($angkatan) ||
-            (int) $angkatan < 2000 ||
-            (int) $angkatan > 2100
-        ) {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Angkatan tidak valid.'
-                );
-        }
-
-        // CONNECT DATABASE
-
-        $db = \Config\Database::connect();
-
-
-        // CARI JURUSAN
-
-        $department = $db
-            ->table('master_departments')
-            ->where(
-                'name',
-                $jurusan
-            )
-            ->where(
-                'deleted_at',
-                null
-            )
-            ->get()
-            ->getRowArray();
-
-
-        if (!$department) {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Jurusan "' .
-                        $jurusan .
-                        '" tidak ditemukan di database.'
-                );
-        }
-
-        // CARI PROGRAM STUDI
-        // SESUAI DENGAN JURUSAN
-
-        $studyProgram = $db
-            ->table('master_study_programs')
-            ->where(
-                'name',
-                $prodi
-            )
-            ->where(
-                'department_id',
-                $department['id']
-            )
-            ->where(
-                'deleted_at',
-                null
-            )
-            ->get()
-            ->getRowArray();
-
-
-        if (!$studyProgram) {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Program Studi "' .
-                        $prodi .
-                        '" tidak ditemukan pada jurusan "' .
-                        $jurusan .
-                        '".'
-                );
-        }
-
-        // CARI KELAS
-        //
-        // Berdasarkan:
-        // - study_program_id
-        // - semester / level
-        // - angkatan / entry_year
-
-        $class = $db
-            ->table('master_classes')
-            ->where(
-                'study_program_id',
-                $studyProgram['id']
-            )
-            ->where(
-                'level',
-                (int) $semester
-            )
-            ->where(
-                'entry_year',
-                (int) $angkatan
-            )
-            ->where(
-                'is_active',
-                1
-            )
-            ->where(
-                'deleted_at',
-                null
-            )
-            ->orderBy(
-                'id',
-                'ASC'
-            )
-            ->get()
-            ->getRowArray();
-
-
-        // KELAS TIDAK DITEMUKAN
-        if (!$class) {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Kelas untuk Program Studi "' .
-                        $prodi .
-                        '", Semester ' .
-                        $semester .
-                        ', Angkatan ' .
-                        $angkatan .
-                        ' belum tersedia di database.'
-                );
-        }
-
-        // DATA USER_PROFILE YANG DIUPDATE
-
-        $updateData = [
-
+        $updateProfileData = [
             'name' =>
             $nama,
 
@@ -689,22 +448,18 @@ class MahasiswaProfileController extends BaseController
             'address' =>
             $alamat,
 
-            'study_program_id' =>
-            $studyProgram['id'],
-
-            'class_id' =>
-            $class['id'],
-
             'updated_at' =>
             date('Y-m-d H:i:s')
         ];
 
-        // UPLOAD FOTO
 
-        $foto = $this->request->getFile(
-            'foto'
-        );
+        // =====================================================
+        // 7. UPLOAD FOTO
+        // =====================================================
 
+        $foto = $this->request->getFile('foto');
+
+        $newPhotoName = null;
 
         if (
             $foto &&
@@ -712,13 +467,14 @@ class MahasiswaProfileController extends BaseController
             !$foto->hasMoved()
         ) {
 
+            // -------------------------------------------------
             // VALIDASI UKURAN
-            // Maksimal 2 MB
+            // -------------------------------------------------
+
             if (
                 $foto->getSize()
                 > 2 * 1024 * 1024
             ) {
-
                 return redirect()
                     ->back()
                     ->withInput()
@@ -728,14 +484,16 @@ class MahasiswaProfileController extends BaseController
                     );
             }
 
-            // VALIDASI EXTENSION
-            $allowedExtensions = [
 
+            // -------------------------------------------------
+            // VALIDASI EXTENSION
+            // -------------------------------------------------
+
+            $allowedExtensions = [
                 'jpg',
                 'jpeg',
                 'png',
                 'webp'
-
             ];
 
             $extension = strtolower(
@@ -749,7 +507,6 @@ class MahasiswaProfileController extends BaseController
                     true
                 )
             ) {
-
                 return redirect()
                     ->back()
                     ->withInput()
@@ -759,18 +516,16 @@ class MahasiswaProfileController extends BaseController
                     );
             }
 
+
+            // -------------------------------------------------
             // FOLDER UPLOAD
+            // -------------------------------------------------
 
             $uploadPath =
                 FCPATH .
                 'uploads/profile';
 
-
-            if (
-                !is_dir(
-                    $uploadPath
-                )
-            ) {
+            if (!is_dir($uploadPath)) {
 
                 if (
                     !mkdir(
@@ -779,7 +534,6 @@ class MahasiswaProfileController extends BaseController
                         true
                     )
                 ) {
-
                     return redirect()
                         ->back()
                         ->withInput()
@@ -789,37 +543,20 @@ class MahasiswaProfileController extends BaseController
                         );
                 }
             }
-            // HAPUS FOTO LAMA
-
-            if (
-                !empty($profile['foto']
-                    ?? null)
-            ) {
-
-                $oldPhotoPath =
-                    $uploadPath .
-                    DIRECTORY_SEPARATOR .
-                    $profile['foto'];
 
 
-                if (
-                    is_file(
-                        $oldPhotoPath
-                    )
-                ) {
-
-                    unlink(
-                        $oldPhotoPath
-                    );
-                }
-            }
-
-            // NAMA FOTO BARU
+            // -------------------------------------------------
+            // BUAT NAMA FOTO BARU
+            // -------------------------------------------------
 
             $newPhotoName =
                 $foto->getRandomName();
 
+
+            // -------------------------------------------------
             // PINDAHKAN FOTO
+            // -------------------------------------------------
+
             try {
 
                 $foto->move(
@@ -833,87 +570,300 @@ class MahasiswaProfileController extends BaseController
                     ->withInput()
                     ->with(
                         'error',
-                        'Foto gagal diupload.'
+                        'Foto gagal diupload: ' .
+                            $e->getMessage()
                     );
             }
 
-            // SIMPAN NAMA FOTO KE DATABASE
 
-            $updateData['photo'] = $newPhotoName;
+            // -------------------------------------------------
+            // MASUKKAN FOTO KE USER_PROFILES
+            // -------------------------------------------------
 
-            // SIMPAN NAMA FOTO KE DATABASE
-
-            $updateData['photo'] =
+            $updateProfileData['photo'] =
                 $newPhotoName;
         }
 
+
         // =====================================================
-        // UPDATE DATABASE
+        // 8. CONNECT DATABASE
         // =====================================================
 
-        $userModel = new UserModel();
-        $profileModel = new UserProfileModel();
-
-        $db->transStart();
-
-        try {
-
-            // =================================================
-            // UPDATE TABEL USERS
-            // =================================================
-
-            $userModel->update(
-                $userId,
-                [
-                    'full_name'    => $nama,
-                    'email'        => $email,
-                    'phone_number' => $noHp,
-                    'updated_at'   => date('Y-m-d H:i:s'),
-
-                    // Kalau upload foto baru,
-                    // simpan juga ke users.profile_photo
-                    'profile_photo' =>
-                    $updateData['photo']
-                        ?? ($profile['foto'] ?? null),
-                ]
-            );
+        $db = \Config\Database::connect();
 
 
-            // =================================================
-            // UPDATE TABEL USER_PROFILES
-            // =================================================
+        // =====================================================
+        // 9. MODEL
+        // =====================================================
 
-            $profileModel->update(
-                $profile['id'],
-                $updateData
-            );
+        $userModel =
+            new UserModel();
 
-
-            // =================================================
-            // SELESAIKAN TRANSAKSI
-            // =================================================
-
-            $db->transComplete();
+        $profileModel =
+            new UserProfileModel();
 
 
-            if ($db->transStatus() === false) {
+        // =====================================================
+        // 10. CEK EMAIL DI TABEL USERS
+        // =====================================================
+        //
+        // Email milik user sendiri tetap boleh digunakan.
+        // Yang ditolak hanya email milik user lain.
+        //
 
-                throw new \RuntimeException(
-                    'Gagal memperbarui data profil.'
-                );
+        $existingUser = $db
+            ->table('users')
+            ->where(
+                'email',
+                $email
+            )
+            ->where(
+                'id !=',
+                $userId
+            )
+            ->where(
+                'deleted_at',
+                null
+            )
+            ->get()
+            ->getRowArray();
+
+
+        if ($existingUser) {
+
+            // Kalau tadi sudah upload foto baru,
+            // hapus karena update database dibatalkan.
+
+            if ($newPhotoName !== null) {
+
+                $newPhotoPath =
+                    FCPATH .
+                    'uploads/profile' .
+                    DIRECTORY_SEPARATOR .
+                    $newPhotoName;
+
+                if (
+                    is_file($newPhotoPath)
+                ) {
+                    unlink($newPhotoPath);
+                }
             }
-        } catch (\Throwable $e) {
-
-            // Kalau transaksi gagal, database akan rollback
-            $db->transRollback();
 
             return redirect()
                 ->back()
                 ->withInput()
                 ->with(
                     'error',
-                    'Data profil gagal diperbarui.'
+                    'Email tersebut sudah digunakan oleh akun lain.'
                 );
         }
+
+
+        // =====================================================
+        // 11. MULAI TRANSAKSI
+        // =====================================================
+
+        $db->transBegin();
+
+
+        try {
+
+            // =================================================
+            // 12. DATA UNTUK TABEL USERS
+            // =================================================
+
+            $userUpdateData = [
+
+                'full_name' =>
+                $nama,
+
+                'email' =>
+                $email,
+
+                'phone_number' =>
+                $noHp,
+
+                'updated_at' =>
+                date('Y-m-d H:i:s')
+            ];
+
+
+            // -------------------------------------------------
+            // FOTO UNTUK TABEL USERS
+            // -------------------------------------------------
+
+            if ($newPhotoName !== null) {
+
+                $userUpdateData['profile_photo'] =
+                    $newPhotoName;
+            } elseif (
+                !empty($profile['foto']
+                    ?? null)
+            ) {
+
+                $userUpdateData['profile_photo'] =
+                    $profile['foto'];
+            }
+
+
+            // =================================================
+            // 13. UPDATE TABEL USERS
+            // =================================================
+
+            $userModel->skipValidation(true);
+
+            $userUpdated =
+                $userModel->update(
+                    $userId,
+                    $userUpdateData
+                );
+
+
+            if ($userUpdated === false) {
+
+                $errors =
+                    $userModel->errors();
+
+                $errorMessage =
+                    !empty($errors)
+                    ? implode(
+                        ', ',
+                        $errors
+                    )
+                    : 'Update tabel users gagal.';
+
+                throw new \RuntimeException(
+                    $errorMessage
+                );
+            }
+
+
+            // =================================================
+            // 14. UPDATE TABEL USER_PROFILES
+            // =================================================
+
+            $profileUpdated =
+                $profileModel->update(
+                    $profile['id'],
+                    $updateProfileData
+                );
+
+
+            if ($profileUpdated === false) {
+
+                $errors =
+                    $profileModel->errors();
+
+                $errorMessage =
+                    !empty($errors)
+                    ? implode(
+                        ', ',
+                        $errors
+                    )
+                    : 'Update tabel user_profiles gagal.';
+
+                throw new \RuntimeException(
+                    $errorMessage
+                );
+            }
+
+
+            // =================================================
+            // 15. CEK TRANSAKSI
+            // =================================================
+
+            if (
+                !$db->transStatus()
+            ) {
+
+                throw new \RuntimeException(
+                    'Transaksi database gagal.'
+                );
+            }
+
+
+            // =================================================
+            // 16. COMMIT
+            // =================================================
+
+            $db->transCommit();
+        } catch (\Throwable $e) {
+
+            // =================================================
+            // ROLLBACK
+            // =================================================
+
+            $db->transRollback();
+
+
+            // =================================================
+            // HAPUS FOTO BARU JIKA GAGAL
+            // =================================================
+
+            if ($newPhotoName !== null) {
+
+                $newPhotoPath =
+                    FCPATH .
+                    'uploads/profile' .
+                    DIRECTORY_SEPARATOR .
+                    $newPhotoName;
+
+                if (
+                    is_file($newPhotoPath)
+                ) {
+                    unlink($newPhotoPath);
+                }
+            }
+
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Gagal memperbarui profil: ' .
+                        $e->getMessage()
+                );
+        }
+
+
+        // =====================================================
+        // 17. HAPUS FOTO LAMA
+        // =====================================================
+
+        if (
+            $newPhotoName !== null &&
+            !empty($profile['foto']
+                ?? null)
+        ) {
+
+            $oldPhotoPath =
+                FCPATH .
+                'uploads/profile' .
+                DIRECTORY_SEPARATOR .
+                $profile['foto'];
+
+            if (
+                is_file($oldPhotoPath)
+            ) {
+                unlink($oldPhotoPath);
+            }
+        }
+
+
+        // =====================================================
+        // 18. BERHASIL
+        // =====================================================
+
+        return redirect()
+            ->to(
+                base_url(
+                    'mahasiswa/profile'
+                )
+            )
+            ->with(
+                'success',
+                'Profil mahasiswa berhasil diperbarui.'
+            );
     }
 }

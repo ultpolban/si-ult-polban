@@ -523,42 +523,6 @@ $email =
 
                             </div>
 
-
-                            <!-- NIK -->
-
-                            <div class="row mb-3">
-
-                                <div
-                                    class="
-                                        col-sm-4
-                                        font-weight-bold
-                                    "
-                                >
-
-                                    <i
-                                        class="
-                                            fas
-                                            fa-address-card
-                                            text-primary
-                                            mr-2
-                                        "
-                                    ></i>
-
-                                    NIK
-
-                                </div>
-
-                                <div class="col-sm-8">
-
-                                    <?= esc(
-                                        $nik
-                                    ) ?>
-
-                                </div>
-
-                            </div>
-
-
                             <!-- NIM -->
 
                             <div class="row mb-3">

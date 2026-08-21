@@ -3,11 +3,7 @@
 <?= $this->include('layouts/sidebar_mahasiswa'); ?>
 
 <?php
-
-$profile =
-    $profile
-    ?? [];
-
+$profile = $profile ?? [];
 ?>
 
 <div class="content-wrapper">
@@ -15,7 +11,6 @@ $profile =
     <!-- =====================================================
          HEADER
     ====================================================== -->
-
     <section class="content-header">
 
         <div class="container-fluid">
@@ -28,16 +23,13 @@ $profile =
                         style="
                             color:#0b3d91;
                             font-weight:700;
-                        "
-                    >
-
+                        ">
                         <i
                             class="
                                 fas
                                 fa-user-edit
                                 mr-2
-                            "
-                        ></i>
+                            "></i>
 
                         Edit Profil Mahasiswa
 
@@ -55,7 +47,6 @@ $profile =
     <!-- =====================================================
          CONTENT
     ====================================================== -->
-
     <section class="content">
 
         <div class="container-fluid">
@@ -66,18 +57,13 @@ $profile =
                     class="
                         col-xl-9
                         col-lg-10
-                    "
-                >
-
+                    ">
 
                     <!-- =================================================
                          ALERT ERROR
                     ================================================== -->
-
                     <?php if (
-                        session()->getFlashdata(
-                            'error'
-                        )
+                        session()->getFlashdata('error')
                     ): ?>
 
                         <div
@@ -87,31 +73,63 @@ $profile =
                                 alert-dismissible
                                 fade
                                 show
-                            "
-                        >
+                            ">
 
                             <i
                                 class="
                                     fas
                                     fa-exclamation-circle
                                     mr-2
-                                "
-                            ></i>
+                                "></i>
 
                             <?= esc(
-                                session()->getFlashdata(
-                                    'error'
-                                )
+                                session()->getFlashdata('error')
                             ) ?>
 
                             <button
                                 type="button"
                                 class="close"
-                                data-dismiss="alert"
-                            >
-
+                                data-dismiss="alert">
                                 &times;
+                            </button>
 
+                        </div>
+
+                    <?php endif; ?>
+
+
+                    <!-- =================================================
+                         ALERT SUCCESS
+                    ================================================== -->
+                    <?php if (
+                        session()->getFlashdata('success')
+                    ): ?>
+
+                        <div
+                            class="
+                                alert
+                                alert-success
+                                alert-dismissible
+                                fade
+                                show
+                            ">
+
+                            <i
+                                class="
+                                    fas
+                                    fa-check-circle
+                                    mr-2
+                                "></i>
+
+                            <?= esc(
+                                session()->getFlashdata('success')
+                            ) ?>
+
+                            <button
+                                type="button"
+                                class="close"
+                                data-dismiss="alert">
+                                &times;
                             </button>
 
                         </div>
@@ -122,14 +140,12 @@ $profile =
                     <!-- =================================================
                          FORM
                     ================================================== -->
-
                     <form
                         action="<?= base_url(
-                            'mahasiswa/profile/update'
-                        ) ?>"
+                                    'mahasiswa/profile/update'
+                                ) ?>"
                         method="post"
-                        enctype="multipart/form-data"
-                    >
+                        enctype="multipart/form-data">
 
                         <?= csrf_field() ?>
 
@@ -143,31 +159,25 @@ $profile =
                                 border-radius:15px;
                                 border-top:
                                     5px solid #0b3d91;
-                            "
-                        >
-
+                            ">
 
                             <!-- CARD HEADER -->
-
                             <div
                                 class="card-header"
                                 style="
                                     background:#0b3d91;
                                     color:white;
-                                "
-                            >
+                                ">
 
                                 <h3
-                                    class="card-title"
-                                >
+                                    class="card-title">
 
                                     <i
                                         class="
                                             fas
                                             fa-user-edit
                                             mr-2
-                                        "
-                                    ></i>
+                                        "></i>
 
                                     Edit Informasi Profil
 
@@ -177,7 +187,6 @@ $profile =
 
 
                             <!-- CARD BODY -->
-
                             <div class="card-body">
 
 
@@ -189,22 +198,19 @@ $profile =
                                     class="
                                         text-center
                                         mb-4
-                                    "
-                                >
+                                    ">
 
                                     <?php if (
-                                        !empty(
-                                            $profile['foto']
-                                            ?? null
-                                        )
+                                        !empty($profile['foto']
+                                            ?? null)
                                     ): ?>
 
                                         <img
                                             id="previewFoto"
                                             src="<?= base_url(
-                                                'uploads/profile/' .
-                                                $profile['foto']
-                                            ) ?>"
+                                                        'uploads/profile/' .
+                                                            $profile['foto']
+                                                    ) ?>"
                                             alt="Foto Profil"
                                             style="
                                                 width:170px;
@@ -212,8 +218,7 @@ $profile =
                                                 object-fit:cover;
                                                 border-radius:50%;
                                                 border:5px solid #0b3d91;
-                                            "
-                                        >
+                                            ">
 
                                     <?php else: ?>
 
@@ -230,15 +235,13 @@ $profile =
                                                 justify-content:center;
                                                 color:white;
                                                 font-size:70px;
-                                            "
-                                        >
+                                            ">
 
                                             <i
                                                 class="
                                                     fas
                                                     fa-user-graduate
-                                                "
-                                            ></i>
+                                                "></i>
 
                                         </div>
 
@@ -253,31 +256,26 @@ $profile =
                                                 object-fit:cover;
                                                 border-radius:50%;
                                                 border:5px solid #0b3d91;
-                                            "
-                                        >
+                                            ">
 
                                     <?php endif; ?>
 
 
-                                    <div
-                                        class="mt-3"
-                                    >
+                                    <div class="mt-3">
 
                                         <label
                                             for="foto"
                                             class="
                                                 btn
                                                 btn-primary
-                                            "
-                                        >
+                                            ">
 
                                             <i
                                                 class="
                                                     fas
                                                     fa-camera
                                                     mr-1
-                                                "
-                                            ></i>
+                                                "></i>
 
                                             Pilih Foto Profil
 
@@ -287,16 +285,8 @@ $profile =
                                             type="file"
                                             name="foto"
                                             id="foto"
-                                            accept="
-                                                .jpg,
-                                                .jpeg,
-                                                .png,
-                                                .webp
-                                            "
-                                            style="
-                                                display:none;
-                                            "
-                                        >
+                                            accept=".jpg,.jpeg,.png,.webp"
+                                            style="display:none;">
 
                                     </div>
 
@@ -306,8 +296,7 @@ $profile =
                                             text-muted
                                             d-block
                                             mt-2
-                                        "
-                                    >
+                                        ">
 
                                         Format:
                                         JPG, JPEG, PNG, WEBP.
@@ -332,16 +321,14 @@ $profile =
                                     style="
                                         color:#0b3d91;
                                         font-weight:700;
-                                    "
-                                >
+                                    ">
 
                                     <i
                                         class="
                                             fas
                                             fa-user
                                             mr-2
-                                        "
-                                    ></i>
+                                        "></i>
 
                                     Data Pribadi
 
@@ -352,31 +339,24 @@ $profile =
                                     class="
                                         row
                                         mt-4
-                                    "
-                                >
+                                    ">
 
 
                                     <!-- NAMA -->
-
                                     <div
                                         class="
                                             col-md-6
                                             mb-3
-                                        "
-                                    >
+                                        ">
 
                                         <label
                                             for="nama"
-                                            class="font-weight-bold"
-                                        >
+                                            class="font-weight-bold">
 
                                             Nama Lengkap
 
                                             <span
-                                                class="
-                                                    text-danger
-                                                "
-                                            >
+                                                class="text-danger">
                                                 *
                                             </span>
 
@@ -388,108 +368,61 @@ $profile =
                                             id="nama"
                                             class="form-control"
                                             value="<?= esc(
-                                                $profile['nama']
-                                                ?? ''
-                                            ) ?>"
-                                            required
-                                        >
-
-                                    </div>
-
-
-                                    <!-- NIK -->
-
-                                    <div
-                                        class="
-                                            col-md-6
-                                            mb-3
-                                        "
-                                    >
-
-                                        <label
-                                            for="nik"
-                                            class="font-weight-bold"
-                                        >
-
-                                            NIK
-
-                                            <span
-                                                class="
-                                                    text-danger
-                                                "
-                                            >
-                                                *
-                                            </span>
-
-                                        </label>
-
-<input
-type="text"
-class="form-control bg-light"
-value="<?= esc($profile['nik']) ?>"
-readonly>
-
-                                        <small
-                                            class="
-                                                text-muted
-                                            "
-                                        >
-
-                                            NIK harus terdiri dari
-                                            16 digit angka.
-
-                                        </small>
+                                                        $profile['nama']
+                                                            ?? ''
+                                                    ) ?>"
+                                            required>
 
                                     </div>
 
 
                                     <!-- NIM -->
-
                                     <div
                                         class="
                                             col-md-6
                                             mb-3
-                                        "
-                                    >
+                                        ">
 
                                         <label
-                                            class="font-weight-bold"
-                                        >
-
+                                            class="font-weight-bold">
                                             NIM
-
                                         </label>
 
-<input
-type="text"
-class="form-control bg-light"
-value="<?= esc($profile['nim']) ?>"
-readonly>
+                                        <input
+                                            type="text"
+                                            class="
+                                                form-control
+                                                bg-light
+                                            "
+                                            value="<?= esc(
+                                                        $profile['nim']
+                                                            ?? ''
+                                                    ) ?>"
+                                            readonly>
+
+                                        <small
+                                            class="text-muted">
+                                            NIM tidak dapat diubah.
+                                        </small>
 
                                     </div>
 
 
                                     <!-- EMAIL -->
-
                                     <div
                                         class="
                                             col-md-6
                                             mb-3
-                                        "
-                                    >
+                                        ">
 
                                         <label
                                             for="email"
-                                            class="font-weight-bold"
-                                        >
+                                            class="font-weight-bold">
 
                                             Email
 
                                             <span
-                                                class="
-                                                    text-danger
-                                                "
-                                            >
+                                                class="text-danger">
                                                 *
                                             </span>
 
@@ -501,36 +434,29 @@ readonly>
                                             id="email"
                                             class="form-control"
                                             value="<?= esc(
-                                                $profile['email']
-                                                ?? ''
-                                            ) ?>"
-                                            required
-                                        >
+                                                        $profile['email']
+                                                            ?? ''
+                                                    ) ?>"
+                                            required>
 
                                     </div>
 
 
                                     <!-- NOMOR HP -->
-
                                     <div
                                         class="
                                             col-md-6
                                             mb-3
-                                        "
-                                    >
+                                        ">
 
                                         <label
                                             for="no_hp"
-                                            class="font-weight-bold"
-                                        >
+                                            class="font-weight-bold">
 
                                             Nomor HP
 
                                             <span
-                                                class="
-                                                    text-danger
-                                                "
-                                            >
+                                                class="text-danger">
                                                 *
                                             </span>
 
@@ -542,36 +468,29 @@ readonly>
                                             id="no_hp"
                                             class="form-control"
                                             value="<?= esc(
-                                                $profile['no_hp']
-                                                ?? ''
-                                            ) ?>"
-                                            required
-                                        >
+                                                        $profile['no_hp']
+                                                            ?? ''
+                                                    ) ?>"
+                                            required>
 
                                     </div>
 
 
                                     <!-- ALAMAT -->
-
                                     <div
                                         class="
                                             col-md-12
                                             mb-3
-                                        "
-                                    >
+                                        ">
 
                                         <label
                                             for="alamat"
-                                            class="font-weight-bold"
-                                        >
+                                            class="font-weight-bold">
 
                                             Alamat
 
                                             <span
-                                                class="
-                                                    text-danger
-                                                "
-                                            >
+                                                class="text-danger">
                                                 *
                                             </span>
 
@@ -582,20 +501,17 @@ readonly>
                                             id="alamat"
                                             rows="4"
                                             class="form-control"
-                                            required
-                                        ><?= esc(
-                                            $profile['alamat']
-                                            ?? ''
-                                        ) ?></textarea>
+                                            required><?= esc(
+                                                            $profile['alamat']
+                                                                ?? ''
+                                                        ) ?></textarea>
 
                                     </div>
 
                                 </div>
 
 
-                                <hr
-                                    class="my-4"
-                                >
+                                <hr class="my-4">
 
 
                                 <!-- =================================================
@@ -606,16 +522,14 @@ readonly>
                                     style="
                                         color:#0b3d91;
                                         font-weight:700;
-                                    "
-                                >
+                                    ">
 
                                     <i
                                         class="
                                             fas
                                             fa-graduation-cap
                                             mr-2
-                                        "
-                                    ></i>
+                                        "></i>
 
                                     Informasi Akademik
 
@@ -626,138 +540,146 @@ readonly>
                                     class="
                                         row
                                         mt-4
-                                    "
-                                >
+                                    ">
 
 
                                     <!-- PROGRAM STUDI -->
-
                                     <div
                                         class="
                                             col-md-6
                                             mb-3
-                                        "
-                                    >
+                                        ">
 
                                         <label
-                                            class="font-weight-bold"
-                                        >
-
+                                            class="font-weight-bold">
                                             Program Studi
-
                                         </label>
 
-<input
-    type="text"
-    name="prodi"
-    id="prodi"
-    class="form-control"
-    value="<?= esc(
-        $profile['prodi']
-        ?? ''
-    ) ?>"
-    required
->
+                                        <input
+                                            type="text"
+                                            class="
+                                                form-control
+                                                bg-light
+                                            "
+                                            value="<?= esc(
+                                                        $profile['prodi']
+                                                            ?? ''
+                                                    ) ?>"
+                                            readonly>
+
+                                        <small
+                                            class="text-muted">
+                                            Data akademik tidak dapat
+                                            diubah melalui halaman ini.
+                                        </small>
 
                                     </div>
 
 
                                     <!-- JURUSAN -->
-
                                     <div
                                         class="
                                             col-md-6
                                             mb-3
-                                        "
-                                    >
+                                        ">
 
                                         <label
-                                            class="font-weight-bold"
-                                        >
-
+                                            class="font-weight-bold">
                                             Jurusan
-
                                         </label>
 
-<input
-    type="text"
-    name="jurusan"
-    id="jurusan"
-    class="form-control"
-    value="<?= esc(
-        $profile['jurusan']
-        ?? ''
-    ) ?>"
-    required
->
+                                        <input
+                                            type="text"
+                                            class="
+                                                form-control
+                                                bg-light
+                                            "
+                                            value="<?= esc(
+                                                        $profile['jurusan']
+                                                            ?? ''
+                                                    ) ?>"
+                                            readonly>
 
                                     </div>
 
 
                                     <!-- SEMESTER -->
-
                                     <div
                                         class="
                                             col-md-3
                                             mb-3
-                                        "
-                                    >
+                                        ">
 
                                         <label
-                                            class="font-weight-bold"
-                                        >
-
+                                            class="font-weight-bold">
                                             Semester
-
                                         </label>
 
-<input
-    type="number"
-    name="semester"
-    id="semester"
-    class="form-control"
-    value="<?= esc(
-        $profile['semester']
-        ?? ''
-    ) ?>"
-    min="1"
-    max="14"
-    required
->
+                                        <input
+                                            type="text"
+                                            class="
+                                                form-control
+                                                bg-light
+                                            "
+                                            value="<?= esc(
+                                                        $profile['semester']
+                                                            ?? ''
+                                                    ) ?>"
+                                            readonly>
 
                                     </div>
 
 
                                     <!-- ANGKATAN -->
-
                                     <div
                                         class="
                                             col-md-3
                                             mb-3
-                                        "
-                                    >
+                                        ">
 
                                         <label
-                                            class="font-weight-bold"
-                                        >
-
+                                            class="font-weight-bold">
                                             Angkatan
-
                                         </label>
 
-<input
-    type="number"
-    name="angkatan"
-    id="angkatan"
-    class="form-control"
-    value="<?= esc(
-        $profile['angkatan']
-        ?? ''
-    ) ?>"
-    min="2000"
-    max="2100"
-    required
->
+                                        <input
+                                            type="text"
+                                            class="
+                                                form-control
+                                                bg-light
+                                            "
+                                            value="<?= esc(
+                                                        $profile['angkatan']
+                                                            ?? ''
+                                                    ) ?>"
+                                            readonly>
+
+                                    </div>
+
+
+                                    <!-- KELAS -->
+                                    <div
+                                        class="
+                                            col-md-6
+                                            mb-3
+                                        ">
+
+                                        <label
+                                            class="font-weight-bold">
+                                            Kelas
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            class="
+                                                form-control
+                                                bg-light
+                                            "
+                                            value="<?= esc(
+                                                        $profile['nama_kelas']
+                                                            ?? ''
+                                                    ) ?>"
+                                            readonly>
 
                                     </div>
 
@@ -775,26 +697,23 @@ readonly>
                                     card-footer
                                     d-flex
                                     justify-content-between
-                                "
-                            >
+                                ">
 
                                 <a
                                     href="<?= base_url(
-                                        'mahasiswa/profile'
-                                    ) ?>"
+                                                'mahasiswa/profile'
+                                            ) ?>"
                                     class="
                                         btn
                                         btn-secondary
-                                    "
-                                >
+                                    ">
 
                                     <i
                                         class="
                                             fas
                                             fa-arrow-left
                                             mr-1
-                                        "
-                                    ></i>
+                                        "></i>
 
                                     Kembali
 
@@ -806,16 +725,14 @@ readonly>
                                     class="
                                         btn
                                         btn-success
-                                    "
-                                >
+                                    ">
 
                                     <i
                                         class="
                                             fas
                                             fa-save
                                             mr-1
-                                        "
-                                    ></i>
+                                        "></i>
 
                                     Simpan Perubahan
 
@@ -843,64 +760,56 @@ readonly>
 ====================================================== -->
 
 <script>
+    document
+        .getElementById('foto')
+        .addEventListener(
+            'change',
+            function(event) {
 
-document
-    .getElementById('foto')
-    .addEventListener(
-        'change',
-        function(event) {
+                const file =
+                    event.target.files[0];
 
-            const file =
-                event.target.files[0];
+                if (!file) {
+                    return;
+                }
 
-            if (!file) {
+                const reader =
+                    new FileReader();
 
-                return;
+                reader.onload =
+                    function(e) {
 
-            }
-
-            const reader =
-                new FileReader();
-
-            reader.onload =
-                function(e) {
-
-                    const preview =
-                        document
+                        const preview =
+                            document
                             .getElementById(
                                 'previewFoto'
                             );
 
-                    const defaultIcon =
-                        document
+                        const defaultIcon =
+                            document
                             .getElementById(
                                 'previewDefault'
                             );
 
-                    preview.src =
-                        e.target.result;
+                        preview.src =
+                            e.target.result;
 
-                    preview.style.display =
-                        'block';
+                        preview.style.display =
+                            'block';
 
-                    if (
-                        defaultIcon
-                    ) {
+                        if (defaultIcon) {
 
-                        defaultIcon.style.display =
-                            'none';
+                            defaultIcon.style.display =
+                                'none';
 
-                    }
+                        }
 
-                };
+                    };
 
-            reader.readAsDataURL(
-                file
-            );
+                reader.readAsDataURL(file);
 
-        }
-    );
-
+            }
+        );
 </script>
 
 

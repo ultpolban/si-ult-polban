@@ -17,7 +17,10 @@ class VerificationController extends BaseController
     }
 
     /**
-     * Halaman verifikasi tiket
+     * ============================================================
+     * HALAMAN VERIFIKASI
+     * Hanya menampilkan tiket yang masih SUBMITTED
+     * ============================================================
      */
     public function index()
     {
@@ -29,7 +32,9 @@ class VerificationController extends BaseController
     }
 
     /**
-     * Detail tiket
+     * ============================================================
+     * DETAIL TIKET
+     * ============================================================
      */
     public function detail($id)
     {
@@ -41,13 +46,10 @@ class VerificationController extends BaseController
                 ->with('error', 'Data tiket tidak ditemukan.');
         }
 
-        /*
-         * Data pemohon
-         */
+        // Data pemohon
         $profile = null;
 
         if (!empty($ticket['user_profile_id'])) {
-
             $profile = $this->db
                 ->table('user_profiles')
                 ->where('id', $ticket['user_profile_id'])
@@ -55,13 +57,10 @@ class VerificationController extends BaseController
                 ->getRowArray();
         }
 
-        /*
-         * Data unit layanan
-         */
+        // Data unit layanan
         $unit = null;
 
         if (!empty($ticket['service_unit_id'])) {
-
             $unit = $this->db
                 ->table('master_service_units')
                 ->where('id', $ticket['service_unit_id'])
@@ -69,13 +68,10 @@ class VerificationController extends BaseController
                 ->getRowArray();
         }
 
-        /*
-         * Komentar
-         */
+        // Komentar
         $comments = [];
 
         if ($this->db->tableExists('ticket_comments')) {
-
             $comments = $this->db
                 ->table('ticket_comments')
                 ->where('ticket_id', $id)
@@ -84,13 +80,10 @@ class VerificationController extends BaseController
                 ->getResultArray();
         }
 
-        /*
-         * Log tiket
-         */
+        // Log tiket
         $logs = [];
 
         if ($this->db->tableExists('ticket_logs')) {
-
             $logs = $this->db
                 ->table('ticket_logs')
                 ->where('ticket_id', $id)
@@ -109,10 +102,29 @@ class VerificationController extends BaseController
     }
 
     /**
-     * Verifikasi tiket
+     * Alias process
+     */
+    public function process($id)
+    {
+        return $this->detail($id);
+    }
+
+    /**
+     * ============================================================
+     * VERIFIKASI TIKET
+     *
+     * submitted
+     *     ↓
+     * verified
+     *     ↓
+     * masuk antrean DISPOSISI
+     *
+     * TIDAK langsung dikirim ke unit.
+     * ============================================================
      */
     public function verify($id)
     {
+        // Pastikan tiket ada
         $ticket = $this->ticketModel->find($id);
 
         if (!$ticket) {
@@ -121,43 +133,82 @@ class VerificationController extends BaseController
                 ->with('error', 'Tiket tidak ditemukan.');
         }
 
-        $status = strtolower(trim($ticket['status'] ?? ''));
-
-        if ($status !== 'submitted') {
-
+        // Pastikan hanya tiket submitted yang boleh diverifikasi
+        if (($ticket['status'] ?? '') !== 'submitted') {
             return redirect()
                 ->to('/verification')
                 ->with(
                     'error',
-                    'Tiket tidak dapat diverifikasi karena statusnya bukan submitted.'
+                    'Tiket ini tidak dapat diverifikasi karena statusnya sudah berubah.'
                 );
         }
 
-        $updated = $this->ticketModel->update($id, [
+        $now = date('Y-m-d H:i:s');
+
+        // Ambil user yang melakukan verifikasi
+        $userId = session()->get('user_id');
+
+        $updateData = [
             'status'      => 'verified',
-            'verified_at' => date('Y-m-d H:i:s')
-        ]);
+            'verified_at' => $now
+        ];
 
-        if (!$updated) {
+        /*
+         * Jika kolom verified_by memang tersedia,
+         * simpan ID petugas yang melakukan verifikasi.
+         */
+        $ticketFields = $this->db->getFieldNames('tickets');
 
-            return redirect()
-                ->to('/verification')
-                ->with('error', 'Gagal memperbarui status tiket.');
+        if (
+            in_array('verified_by', $ticketFields) &&
+            !empty($userId)
+        ) {
+            $updateData['verified_by'] = $userId;
         }
 
+        // Update tiket
+        $updated = $this->ticketModel->update($id, $updateData);
+
+        if (!$updated) {
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal memverifikasi tiket.');
+        }
+
+        // Simpan log
         $this->addTicketLog(
             $id,
             'verified',
-            'Tiket berhasil diverifikasi oleh Petugas ULT.'
+            'Tiket telah diverifikasi oleh Petugas ULT dan masuk ke antrean disposisi.'
         );
 
+        /*
+         * Setelah diverifikasi:
+         *
+         * VERIFIED
+         *    ↓
+         * DISPOSISI
+         *
+         * BUKAN langsung ke unit.
+         */
         return redirect()
-            ->to('/verification')
-            ->with('success', 'Tiket berhasil diverifikasi.');
+            ->to('/disposition')
+            ->with(
+                'success',
+                'Tiket berhasil diverifikasi dan masuk ke antrean disposisi.'
+            );
     }
 
     /**
-     * Need Revision
+     * ============================================================
+     * KEMBALIKAN TIKET UNTUK REVISI
+     *
+     * submitted
+     *     ↓
+     * need_revision
+     *     ↓
+     * pemohon memperbaiki
+     * ============================================================
      */
     public function revision($id)
     {
@@ -169,12 +220,20 @@ class VerificationController extends BaseController
                 ->with('error', 'Tiket tidak ditemukan.');
         }
 
+        if (($ticket['status'] ?? '') !== 'submitted') {
+            return redirect()
+                ->to('/verification')
+                ->with(
+                    'error',
+                    'Tiket ini tidak dapat dikembalikan karena statusnya sudah berubah.'
+                );
+        }
+
         $comment = trim(
             (string) $this->request->getPost('comment')
         );
 
         if ($comment === '') {
-
             return redirect()
                 ->back()
                 ->with('error', 'Alasan revisi wajib diisi.');
@@ -185,30 +244,37 @@ class VerificationController extends BaseController
         ]);
 
         if (!$updated) {
-
             return redirect()
                 ->back()
                 ->with('error', 'Gagal mengubah status tiket.');
         }
 
+        // Simpan komentar alasan revisi
         $this->addTicketComment($id, $comment);
 
+        // Simpan log
         $this->addTicketLog(
             $id,
             'need_revision',
-            $comment
+            'Tiket dikembalikan kepada pemohon untuk diperbaiki: ' . $comment
         );
 
         return redirect()
             ->to('/verification')
             ->with(
                 'success',
-                'Tiket berhasil dikembalikan untuk revisi.'
+                'Tiket berhasil dikembalikan kepada pemohon untuk diperbaiki.'
             );
     }
 
     /**
-     * Reject
+     * ============================================================
+     * TOLAK TIKET
+     *
+     * submitted
+     *     ↓
+     * rejected
+     * ============================================================
      */
     public function reject($id)
     {
@@ -220,18 +286,23 @@ class VerificationController extends BaseController
                 ->with('error', 'Tiket tidak ditemukan.');
         }
 
+        if (($ticket['status'] ?? '') !== 'submitted') {
+            return redirect()
+                ->to('/verification')
+                ->with(
+                    'error',
+                    'Tiket ini tidak dapat ditolak karena statusnya sudah berubah.'
+                );
+        }
+
         $comment = trim(
             (string) $this->request->getPost('comment')
         );
 
         if ($comment === '') {
-
             return redirect()
                 ->back()
-                ->with(
-                    'error',
-                    'Alasan penolakan wajib diisi.'
-                );
+                ->with('error', 'Alasan penolakan wajib diisi.');
         }
 
         $updated = $this->ticketModel->update($id, [
@@ -239,21 +310,19 @@ class VerificationController extends BaseController
         ]);
 
         if (!$updated) {
-
             return redirect()
                 ->back()
-                ->with(
-                    'error',
-                    'Gagal mengubah status tiket.'
-                );
+                ->with('error', 'Gagal mengubah status tiket.');
         }
 
+        // Simpan alasan penolakan
         $this->addTicketComment($id, $comment);
 
+        // Simpan log
         $this->addTicketLog(
             $id,
             'rejected',
-            $comment
+            'Tiket ditolak: ' . $comment
         );
 
         return redirect()
@@ -265,7 +334,9 @@ class VerificationController extends BaseController
     }
 
     /**
-     * Simpan komentar ke ticket_comments
+     * ============================================================
+     * SIMPAN KOMENTAR
+     * ============================================================
      */
     private function addTicketComment($ticketId, $comment)
     {
@@ -289,6 +360,14 @@ class VerificationController extends BaseController
             $data['message'] = $comment;
         }
 
+        if (in_array('user_id', $fields)) {
+            $userId = session()->get('user_id');
+
+            if (!empty($userId)) {
+                $data['user_id'] = $userId;
+            }
+        }
+
         if (in_array('created_at', $fields)) {
             $data['created_at'] = date('Y-m-d H:i:s');
         }
@@ -301,7 +380,9 @@ class VerificationController extends BaseController
     }
 
     /**
-     * Simpan log tiket
+     * ============================================================
+     * SIMPAN LOG TIKET
+     * ============================================================
      */
     private function addTicketLog(
         $ticketId,
@@ -318,6 +399,14 @@ class VerificationController extends BaseController
 
         if (in_array('ticket_id', $fields)) {
             $data['ticket_id'] = $ticketId;
+        }
+
+        if (in_array('user_id', $fields)) {
+            $userId = session()->get('user_id');
+
+            if (!empty($userId)) {
+                $data['user_id'] = $userId;
+            }
         }
 
         if (in_array('status', $fields)) {

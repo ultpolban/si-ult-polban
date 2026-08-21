@@ -3,126 +3,130 @@
 namespace App\Controllers;
 
 use App\Models\TicketModel;
+use App\Models\TicketLogModel;
 
 class DispositionController extends BaseController
 {
     protected $ticketModel;
+    protected $db;
 
     public function __construct()
     {
         $this->ticketModel = new TicketModel();
+        $this->db = \Config\Database::connect();
     }
 
-    // Daftar tiket yang sudah diverifikasi
+    /**
+     * Menampilkan tiket yang sudah diverifikasi
+     */
     public function index()
     {
-        $data['tickets'] = $this->ticketModel
-            ->where('status', 'Verified')
+        // Ambil semua tiket dengan status verified
+        // Tidak peduli huruf besar/kecil
+        $tickets = $this->ticketModel
+            ->where("LOWER(status) = 'verified'", null, false)
+            ->orderBy('verified_at', 'DESC')
             ->findAll();
 
-        return view('disposition/index', $data);
-    }
-
-    // Detail disposisi
-    public function detail($id)
-    {
-        $ticketModel = new TicketModel();
-
-        $ticket = $ticketModel->find($id);
-
-        if (!$ticket) {
-            return redirect()->to('/disposition')
-                ->with('error', 'Tiket tidak ditemukan.');
-        }
-
-        // Field tambahan yang tampil mengikuti JENIS PEMOHON pada form pengajuan.
-        // Field yang kosong tidak akan ditampilkan.
-        $fieldGroups = [
-            'Mahasiswa' => [
-                'program_studi' => 'Program Studi',
-                'jurusan'      => 'Jurusan',
-                'angkatan'     => 'Angkatan',
-            ],
-            'Dosen' => [
-                'fakultas'      => 'Fakultas',
-                'jabatan_dosen' => 'Jabatan Dosen',
-            ],
-            'Tendik' => [
-                'unit_kerja'     => 'Unit Kerja',
-                'jabatan_tendik' => 'Jabatan Tendik',
-            ],
-            'Orang Tua' => [
-                'nama_mahasiswa' => 'Nama Mahasiswa',
-                'nim_mahasiswa'  => 'NIM Mahasiswa',
-                'hubungan'       => 'Hubungan dengan Mahasiswa',
-            ],
-            'Alumni' => [
-                'prodi_alumni' => 'Program Studi',
-                'tahun_lulus'  => 'Tahun Lulus',
-            ],
-            'Mitra' => [
-                'instansi'      => 'Nama Instansi',
-                'pic'           => 'Nama PIC',
-                'jabatan_mitra' => 'Jabatan',
-            ],
-            'Public' => [
-                'instansi_public' => 'Instansi',
-                'alamat_public'   => 'Alamat',
-            ],
-            'Masyarakat' => [
-                'alamat'    => 'Alamat',
-                'pekerjaan' => 'Pekerjaan',
-            ],
-        ];
-
-        $applicantType = trim((string) ($ticket['applicant_type'] ?? ''));
-        $dynamicFields = [];
-
-        if (isset($fieldGroups[$applicantType])) {
-            foreach ($fieldGroups[$applicantType] as $key => $label) {
-                if (isset($ticket[$key]) && trim((string) $ticket[$key]) !== '') {
-                    $dynamicFields[] = [
-                        'label' => $label,
-                        'value' => $ticket[$key],
-                    ];
-                }
-            }
-        }
-
-        return view('disposition/detail', [
-            'ticket'       => $ticket,
-            'dynamicFields'=> $dynamicFields,
+        return view('disposition/index', [
+            'tickets' => $tickets
         ]);
     }
 
-    // Alias route agar link lama tidak error
+    /**
+     * Detail tiket untuk disposisi
+     */
+    public function detail($id = null)
+    {
+        if (!$id) {
+            return redirect()
+                ->to(base_url('disposition'))
+                ->with('error', 'ID tiket tidak ditemukan.');
+        }
+
+        $ticket = $this->ticketModel->find($id);
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('disposition'))
+                ->with('error', 'Tiket tidak ditemukan.');
+        }
+
+        // Cek status tanpa memperhatikan huruf besar/kecil
+        if (strtolower(trim($ticket['status'] ?? '')) !== 'verified') {
+            return redirect()
+                ->to(base_url('disposition'))
+                ->with('error', 'Tiket belum berstatus verified.');
+        }
+
+        return view('disposition/detail', [
+            'ticket' => $ticket
+        ]);
+    }
+
+    /**
+     * Alias route lama
+     */
     public function create($id)
     {
         return $this->detail($id);
     }
 
-    // Proses kirim ke unit
-    public function process($id)
+    /**
+     * Proses disposisi
+     */
+    public function process($id = null)
     {
-        $ticketModel = new TicketModel();
+        if (!$id) {
+            return redirect()
+                ->to(base_url('disposition'))
+                ->with('error', 'ID tiket tidak ditemukan.');
+        }
 
-        $ticket = $ticketModel->find($id);
+        $ticket = $this->ticketModel->find($id);
 
         if (!$ticket) {
-            return redirect()->back()
+            return redirect()
+                ->to(base_url('disposition'))
                 ->with('error', 'Tiket tidak ditemukan.');
         }
 
-        // Unit tujuan (dari normalisasi field assigned_to)
-        $unitTujuan = $ticket['assigned_unit'];
+        // Pastikan tiket memang sudah diverifikasi
+        if (strtolower(trim($ticket['status'] ?? '')) !== 'verified') {
+            return redirect()
+                ->to(base_url('disposition'))
+                ->with('error', 'Tiket belum berstatus verified.');
+        }
 
-        // Apenas atualizar o status para Assigned
-        // assigned_to já foi definido durante verificação
-        $ticketModel->update($id, [
-            'status' => 'Assigned',
+        $now = date('Y-m-d H:i:s');
+
+        /*
+         * Setelah didisposisikan:
+         * verified -> Assigned
+         */
+        $updated = $this->ticketModel->update($id, [
+            'status'     => 'Assigned',
+            'updated_at' => $now
         ]);
 
-        return redirect()->to('/disposition')
-            ->with('success', 'Tiket berhasil didisposisikan ke unit ' . $unitTujuan);
+        if (!$updated) {
+            return redirect()
+                ->to(base_url('disposition'))
+                ->with('error', 'Gagal mengubah status tiket.');
+        }
+
+        // Simpan log aktivitas
+        $logModel = new TicketLogModel();
+
+        $logModel->insert([
+            'ticket_id'  => $id,
+            'activity'   => 'Tiket didisposisikan ke unit tujuan.',
+            'user_name'  => session('name') ?? 'Petugas ULT',
+            'created_at' => $now
+        ]);
+
+        return redirect()
+            ->to(base_url('disposition'))
+            ->with('success', 'Tiket berhasil didisposisikan ke unit tujuan.');
     }
 }

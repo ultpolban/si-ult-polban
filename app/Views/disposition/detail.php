@@ -26,162 +26,95 @@
 <!-- isi halaman -->
 <div class="content-header">
     <div class="container-fluid">
-
-        <h1 class="mb-2">
-            Disposisi Tiket
-        </h1>
-
+        <h1 class="mb-2">Disposisi Tiket</h1>
         <p class="text-muted">
             Teruskan tiket permohonan ke Unit Tujuan yang sesuai untuk diproses lebih lanjut.
         </p>
-
     </div>
 </div>
 
 <div class="container-fluid">
 
     <div class="row">
-
         <div class="col-md-3">
-
             <div class="small-box bg-primary">
-
                 <div class="inner">
-
                     <h5>Nomor Tiket</h5>
-
                     <h4><?= esc($ticket['ticket_number'] ?? '-') ?></h4>
-
                 </div>
-
                 <div class="icon">
                     <i class="fas fa-ticket-alt"></i>
                 </div>
-
             </div>
-
         </div>
 
         <div class="col-md-3">
-
             <div class="small-box bg-success">
-
                 <div class="inner">
-
                     <h5>Status Tiket</h5>
-
                     <h4><?= esc($ticket['status'] ?? 'Unknown') ?></h4>
-
                 </div>
-
                 <div class="icon">
                     <i class="fas fa-check-circle"></i>
                 </div>
-
             </div>
-
         </div>
 
         <div class="col-md-3">
-
             <div class="small-box bg-warning">
-
                 <div class="inner">
-
                     <h5>Prioritas</h5>
-
                     <h4><?= esc($ticket['priority'] ?? '-') ?></h4>
-
                 </div>
-
                 <div class="icon">
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
-
             </div>
-
         </div>
 
         <div class="col-md-3">
-
             <div class="small-box bg-info">
-
                 <div class="inner">
-
                     <h5>Kategori</h5>
-
                     <h4><?= esc($ticket['service_name'] ?? '-') ?></h4>
-
                 </div>
-
                 <div class="icon">
                     <i class="fas fa-university"></i>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
+    <!-- Informasi Tiket -->
     <div class="card">
-
         <div class="card-header">
-
             <h3 class="card-title">
-
-                <i class="fas fa-info-circle"></i>
-
-                Informasi Tiket
-
+                <i class="fas fa-info-circle"></i> Informasi Tiket
             </h3>
-
         </div>
-
         <div class="card-body">
-
             <div class="row">
-
                 <div class="col-md-4">
-
                     <strong>Tanggal Pengajuan</strong>
-
                     <p><?= !empty($ticket['submitted_at']) ? date('d F Y', strtotime($ticket['submitted_at'])) : '-' ?></p>
-
                 </div>
-
                 <div class="col-md-4">
-
                     <strong>Tanggal Verifikasi</strong>
-
                     <p><?= !empty($ticket['verified_at']) ? date('d F Y', strtotime($ticket['verified_at'])) : '-' ?></p>
-
                 </div>
-
                 <div class="col-md-4">
-
                     <strong>Prioritas</strong>
-
                     <p><?= esc($ticket['priority'] ?? '-') ?></p>
-
                 </div>
-
             </div>
 
             <hr>
 
             <label>Progress Tiket</label>
-
             <div class="progress">
-
-                <div class="progress-bar bg-success"
-
-                    style="width:60%">
-
+                <div class="progress-bar bg-success" style="width:60%">
                     Verified (60%)
-
                 </div>
-
             </div>
 
             <br>
@@ -191,32 +124,26 @@
                     <th width="250">Nomor Tiket</th>
                     <td><?= esc($ticket['ticket_number'] ?? '-') ?></td>
                 </tr>
-
                 <tr>
                     <th>Nama Pemohon</th>
                     <td><?= esc($ticket['applicant_name'] ?? '-') ?></td>
                 </tr>
-
                 <tr>
                     <th>Jenis Pemohon</th>
                     <td><?= esc($ticket['applicant_type'] ?? '-') ?></td>
                 </tr>
-
                 <tr>
                     <th>NIM / NIP / NIK</th>
                     <td><?= esc($ticket['nim'] ?? '-') ?></td>
                 </tr>
-
                 <tr>
                     <th>Email</th>
                     <td><?= esc($ticket['email'] ?? '-') ?></td>
                 </tr>
-
                 <tr>
                     <th>No. HP</th>
                     <td><?= esc($ticket['phone'] ?? '-') ?></td>
                 </tr>
-
                 <tr>
                     <th>Layanan</th>
                     <td><?= esc($ticket['service_name'] ?? '-') ?></td>
@@ -226,7 +153,6 @@
                     <tr class="table-primary">
                         <th colspan="2">Data Formulir Sesuai Jenis Pemohon</th>
                     </tr>
-
                     <?php foreach ($dynamicFields as $field): ?>
                         <tr>
                             <th><?= esc($field['label']) ?></th>
@@ -239,12 +165,10 @@
                     <th>Judul Tiket</th>
                     <td><?= esc($ticket['ticket_title'] ?? '-') ?></td>
                 </tr>
-
                 <tr>
                     <th>Deskripsi</th>
                     <td><?= nl2br(esc($ticket['ticket_description'] ?? '-')) ?></td>
                 </tr>
-
                 <tr>
                     <th>Status</th>
                     <td>
@@ -254,216 +178,100 @@
                     </td>
                 </tr>
             </table>
-
         </div>
-
     </div>
 
+    <!-- Form Disposisi -->
     <form action="<?= base_url('disposition/process/' . $ticket['id']) ?>" method="post">
-
+        <?= csrf_field() ?>
         <div class="card card-warning">
-
             <div class="card-header">
                 <h3 class="card-title">
-                    <i class="fas fa-share-square"></i>
-                    Form Disposisi
+                    <i class="fas fa-share-square"></i> Form Disposisi
                 </h3>
             </div>
 
             <div class="card-body">
-
+                <!-- Unit Tujuan (Dapat Dipilih) -->
                 <div class="form-group">
                     <label>Unit Tujuan <span class="text-danger">*</span></label>
-
-                    <div class="form-group">
-
-                        <input type="text"
-                            class="form-control"
-                            value="<?= esc($ticket['assigned_unit'] ?? '-') ?>"
-                            readonly>
-
-                        <input type="hidden"
-                            name="assigned_unit"
-                            value="<?= esc($ticket['assigned_unit'] ?? '') ?>">
-
-                        <small class="text-muted">
-                            Unit tujuan ditentukan otomatis berdasarkan tiket.
-                        </small>
-                    </div>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label>Prioritas</label>
-
-                    <select name="priority" class="form-control">
-
-                        <option value="Low">Low</option>
-
-                        <option value="Medium">Medium</option>
-
-                        <option value="High">High</option>
-
+                    <select name="assigned_unit" class="form-control" required>
+                        <option value="" disabled selected>-- Pilih Unit Tujuan --</option>
+                        <option value="Akademik" <?= ($ticket['assigned_unit'] ?? '') == 'Akademik' ? 'selected' : '' ?>>Akademik</option>
+                        <option value="Keuangan" <?= ($ticket['assigned_unit'] ?? '') == 'Keuangan' ? 'selected' : '' ?>>Keuangan</option>
+                        <option value="Kemahasiswaan" <?= ($ticket['assigned_unit'] ?? '') == 'Kemahasiswaan' ? 'selected' : '' ?>>Kemahasiswaan</option>
+                        <option value="IT / PUSKOM" <?= ($ticket['assigned_unit'] ?? '') == 'IT / PUSKOM' ? 'selected' : '' ?>>IT / PUSKOM</option>
+                        <option value="Humas & Kerjasama" <?= ($ticket['assigned_unit'] ?? '') == 'Humas & Kerjasama' ? 'selected' : '' ?>>Humas & Kerjasama</option>
                     </select>
-
+                    <small class="text-muted">Pilih unit kerja yang bertugas menyelesaikan permohonan ini.</small>
                 </div>
 
                 <div class="form-group">
+                    <label>Prioritas</label>
+                    <select name="priority" class="form-control">
+                        <option value="Low" <?= ($ticket['priority'] ?? '') == 'Low' ? 'selected' : '' ?>>Low</option>
+                        <option value="Medium" <?= ($ticket['priority'] ?? '') == 'Medium' ? 'selected' : '' ?>>Medium</option>
+                        <option value="High" <?= ($ticket['priority'] ?? '') == 'High' ? 'selected' : '' ?>>High</option>
+                    </select>
+                </div>
 
+                <div class="form-group">
                     <label>Target Penyelesaian (SLA)</label>
-
-                    <input
-                        type="date"
-                        name="sla_date"
-                        class="form-control"
-                        required>
-
+                    <input type="date" name="sla_date" class="form-control" value="<?= esc($ticket['sla_date'] ?? date('Y-m-d')) ?>" required>
                 </div>
 
                 <div class="form-group">
-
                     <label>Catatan Disposisi</label>
-
-                    <textarea
-                        name="disposition_note"
-                        rows="5"
-                        class="form-control"
-                        placeholder="Masukkan instruksi kepada unit tujuan..."></textarea>
-
+                    <textarea name="disposition_note" rows="5" class="form-control" placeholder="Masukkan instruksi kepada unit tujuan..."></textarea>
                 </div>
-
             </div>
 
             <div class="card-footer text-right">
-
-                <a href="<?= base_url('verification/detail/' . $ticket['id']) ?>"
-                    class="btn btn-secondary">
-
-                    <i class="fas fa-arrow-left"></i>
-
-                    Kembali
-
+                <a href="<?= base_url('verification/detail/' . $ticket['id']) ?>" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Kembali
                 </a>
-
                 <button type="submit" class="btn btn-warning">
-
-                    <i class="fas fa-paper-plane"></i>
-
-                    Kirim Disposisi ke unit
-
+                    <i class="fas fa-paper-plane"></i> Kirim Disposisi ke unit
                 </button>
-
             </div>
-
         </div>
-
     </form>
 
+    <!-- Riwayat Disposisi -->
     <div class="card">
-
         <div class="card-header">
-
             <h3 class="card-title">
-
-                <i class="fas fa-history text-primary"></i>
-
-                Riwayat Disposisi
-
+                <i class="fas fa-history text-primary"></i> Riwayat Disposisi
             </h3>
-
         </div>
-
         <div class="card-body p-0">
-
             <table class="table table-bordered">
-
                 <thead class="bg-primary">
-
                     <tr>
-
-                        <th width="220">
-
-                            Waktu
-
-                        </th>
-
-                        <th>
-
-                            Aktivitas
-
-                        </th>
-
+                        <th width="220">Waktu</th>
+                        <th>Aktivitas</th>
                     </tr>
-
                 </thead>
-
                 <tbody>
-
                     <tr>
-
-                        <td>
-
-                            <?= !empty($ticket['submitted_at']) ? date('d M Y H:i', strtotime($ticket['submitted_at'])) : '-' ?>
-
-                        </td>
-
-                        <td>
-
-                            Pengajuan dibuat oleh Pemohon
-
-                        </td>
-
+                        <td><?= !empty($ticket['submitted_at']) ? date('d M Y H:i', strtotime($ticket['submitted_at'])) : '-' ?></td>
+                        <td>Pengajuan dibuat oleh Pemohon</td>
                     </tr>
-
                     <tr>
-
-                        <td>
-
-                            <?= !empty($ticket['verified_at'])
-                                ? date('d M Y H:i', strtotime($ticket['verified_at']))
-                                : '-' ?>
-
-                        </td>
-
-                        <td>
-
-                            Diverifikasi oleh Petugas ULT
-
-                        </td>
-
+                        <td><?= !empty($ticket['verified_at']) ? date('d M Y H:i', strtotime($ticket['verified_at'])) : '-' ?></td>
+                        <td>Diverifikasi oleh Petugas ULT</td>
                     </tr>
-
-                    <?php if (!empty($ticket['assigned_unit'])): ?>
-
+                    <?php if (!empty($ticket['assigned_unit']) && $ticket['assigned_unit'] !== '-'): ?>
                         <tr>
-
-                            <td>
-
-                                <?= date('d M Y H:i') ?>
-
-                            </td>
-
-                            <td>
-
-                                Didisposisikan ke
-
-                                <b><?= esc($ticket['assigned_unit']) ?></b>
-
-                            </td>
-
+                            <td><?= !empty($ticket['dispatched_at']) ? date('d M Y H:i', strtotime($ticket['dispatched_at'])) : date('d M Y H:i') ?></td>
+                            <td>Didisposisikan ke <b><?= esc($ticket['assigned_unit']) ?></b></td>
                         </tr>
-
                     <?php endif; ?>
-
                 </tbody>
-
             </table>
-
         </div>
-
     </div>
-</div>
 
+</div>
 
 <?= $this->endSection() ?>

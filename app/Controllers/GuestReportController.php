@@ -1165,48 +1165,36 @@ class GuestReportController extends BaseController
     }
 
 
-    // =========================================================
-    // DELETE
-    // =========================================================
-
-    public function delete($id)
-    {
-        $ticket =
-            $this->ticketModel->find($id);
-
-
-        if (!$ticket) {
-
-            throw PageNotFoundException
-                ::forPageNotFound();
-        }
-
-
-        if (
-            !empty($ticket['attachment']) &&
-            file_exists(
-                FCPATH .
-                'uploads/' .
-                $ticket['attachment']
-            )
-        ) {
-
-            unlink(
-                FCPATH .
-                'uploads/' .
-                $ticket['attachment']
-            );
-        }
-
-
-        $this->ticketModel->delete($id);
-
-
-        return redirect()
-            ->to('/guest-report')
-            ->with(
-                'success',
-                'Data berhasil dihapus.'
-            );
+   public function delete($id = null)
+{
+    if (!$id) {
+        return redirect()->to(base_url('guest-report'))
+            ->with('error', 'ID tiket tidak ditemukan.');
     }
+
+    $ticket = $this->ticketModel->find($id);
+
+    if (!$ticket) {
+        return redirect()->to(base_url('guest-report'))
+            ->with('error', 'Data tiket dengan ID ' . $id . ' tidak ditemukan.');
+    }
+
+    // Hapus attachment jika ada
+    if (!empty($ticket['attachment'])) {
+        $filePath = WRITEPATH . 'uploads/' . $ticket['attachment'];
+
+        if (is_file($filePath)) {
+            unlink($filePath);
+        }
+    }
+
+    // Hapus tiket
+    if ($this->ticketModel->delete($id)) {
+        return redirect()->to(base_url('guest-report'))
+            ->with('success', 'Laporan tamu berhasil dihapus.');
+    }
+
+    return redirect()->to(base_url('guest-report'))
+        ->with('error', 'Gagal menghapus laporan tamu.');
+}
 }

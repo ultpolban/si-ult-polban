@@ -101,6 +101,14 @@
                         </a>
                     </li>
 
+                    <!-- Log Aktivitas (DITAMBAHKAN DI SINI) -->
+                    <li class="nav-item">
+                        <a href="<?= base_url('log-aktivitas') ?>" class="nav-link <?= uri_string() == 'log-aktivitas' ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-history"></i>
+                            <p>Log Aktivitas</p>
+                        </a>
+                    </li>
+
                 <?php endif; ?>
 
                 <!-- Logout -->

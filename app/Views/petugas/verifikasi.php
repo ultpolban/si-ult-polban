@@ -493,11 +493,10 @@
     ====================================================== -->
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
+<div>
             <h1 class="h3 page-title mb-1">
                 <i class="fas fa-user-check mr-2"></i>
-                Verifikasi Tiket
+                Verifikasi Tiket Permohonan
             </h1>
 
             <p class="text-muted mb-0">

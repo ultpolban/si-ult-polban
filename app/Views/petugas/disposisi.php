@@ -388,10 +388,10 @@
     <!-- =====================================================
          HEADER
          ===================================================== -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 disposisi-page-title mb-1">
-                Disposisi Tiket
+                Disposisi Tiket Permohonan
             </h1>
 
             <p class="disposisi-page-subtitle mb-0">

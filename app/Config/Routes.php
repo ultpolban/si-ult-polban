@@ -48,19 +48,24 @@ $routes->group('petugas', function($routes){
     $routes->get('/', 'PetugasController::dashboard');
     $routes->get('dashboard', 'PetugasController::dashboard');
     $routes->get('tiket', 'PetugasController::tiket');
+    $routes->get('tiket/detail/(:num)', 'PetugasController::detail/$1');
     $routes->get('detail/(:num)', 'PetugasController::detail/$1');
 
-    // Verifikasi
+    // Verifikasi (GET & POST)
     $routes->get('verifikasi', 'PetugasController::verifikasi');
     $routes->get('verifikasi/(:num)', 'PetugasController::verifikasi/$1');
+    $routes->get('tiket/verifikasi/(:num)', 'PetugasController::verifikasi/$1');
     $routes->post('verifikasi/simpan', 'PetugasController::simpanVerifikasi');
     $routes->post('verifikasi/simpan/(:num)', 'PetugasController::simpanVerifikasi/$1');
+    $routes->post('verifikasi/(:num)', 'PetugasController::simpanVerifikasi/$1');
 
-    // Disposisi
+    // Disposisi (GET & POST)
     $routes->get('disposisi', 'PetugasController::disposisi');
     $routes->get('disposisi/(:num)', 'PetugasController::disposisi/$1');
+    $routes->get('tiket/disposisi/(:num)', 'PetugasController::disposisi/$1');
     $routes->post('disposisi/kirim', 'PetugasController::kirimDisposisi');
     $routes->post('disposisi/kirim/(:num)', 'PetugasController::kirimDisposisi/$1');
+    $routes->post('disposisi/(:num)', 'PetugasController::kirimDisposisi/$1');
 
     // Laporan & Tracking & Log
     $routes->get('laporan-tamu', 'PetugasController::laporanTamu');
@@ -70,17 +75,20 @@ $routes->group('petugas', function($routes){
     $routes->get('log-aktivitas', 'PetugasController::log_aktivitas');
     $routes->get('log_aktivitas', 'PetugasController::log_aktivitas');
 
+    // Endpoint API Response AJAX Statistik (Periode Filter)
+    $routes->get('api/statistik-data', 'PetugasController::apiStatistikData');
+
     // Export
     $routes->get('laporan/export/excel', 'PetugasController::exportExcel');
     $routes->get('laporan/export/pdf', 'PetugasController::exportPdf');
     $routes->get('laporan/export/csv', 'PetugasController::exportCsv');
 
-    // Aksi Tamu
+    // Aksi Tamu (Gunakan POST/DELETE untuk aksi hapus/simpan)
     $routes->get('detail-tamu/(:num)', 'PetugasController::detail_tamu/$1');
     $routes->get('verifikasi-tamu/(:num)', 'PetugasController::verifikasi_tamu/$1');
     $routes->get('disposisi-tamu/(:num)', 'PetugasController::disposisi_tamu/$1');
     $routes->get('edit-tamu/(:num)', 'PetugasController::edit_tamu/$1');
-    $routes->get('delete-tamu/(:num)', 'PetugasController::delete_tamu/$1');
+    $routes->match(['get', 'post'], 'delete-tamu/(:num)', 'PetugasController::delete_tamu/$1');
 
     // Profile Petugas
     $routes->get('profile', 'PetugasController::profile');
@@ -95,7 +103,7 @@ $routes->group('unit', function($routes){
     $routes->get('/', 'UnitController::dashboard');
     $routes->get('dashboard', 'UnitController::dashboard');
     $routes->get('detail/(:num)', 'UnitController::detail/$1');
-    $routes->get('update-status/(:num)', 'UnitController::updateStatus/$1');
+    $routes->match(['get', 'post'], 'update-status/(:num)', 'UnitController::updateStatus/$1');
 });
 
 $routes->get('/admin', 'AdminController::index');

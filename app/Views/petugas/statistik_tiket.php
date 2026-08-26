@@ -3,472 +3,373 @@
 <?= $this->section('content') ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* ==========================================================================
-   SI-ULT POLBAN - STATISTIK TIKET (ULTIMATE ELITE EDITION)
-   Designed with precision, depth, vibrant gradients, and sophisticated layout.
-========================================================================== */
+    body, .container-fluid {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        background-color: #f8fafc;
+        color: #1e293b;
+    }
 
-:root {
-    --primary-navy: #0f172a;
-    --accent-blue: #2563eb;
-    --accent-indigo: #4f46e5;
-    --success-emerald: #059669;
-    --warning-amber: #d97706;
-    --danger-rose: #e11d48;
-    --surface-bg: #f8fafc;
-    --card-surface: #ffffff;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --border-subtle: rgba(226, 232, 240, 0.8);
-}
+    /* Modern Glassmorphism Filter Section */
+    .card-filter-header {
+        border-radius: 20px;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        background: #ffffff;
+        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+    }
 
-body {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-}
+    /* Refined Custom Select Dropdown (Foto 2 & 3 Modernized) */
+    .filter-dropdown-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+    }
 
-.statistik-page-wrapper {
-    background-color: var(--surface-bg);
-    min-height: 100vh;
-    padding: 1.75rem 1.25rem 3.5rem 1.25rem;
-    animation: pageEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+    .select-ultra {
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: #ffffff;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 12px;
+        padding: 0.55rem 2.5rem 0.55rem 2.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #1e293b;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
 
-/* ==========================================================================
-   PAGE HEADER
-========================================================================== */
+    .select-ultra:hover {
+        border-color: #94a3b8;
+        background-color: #f8fafc;
+    }
 
-.page-header-container {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    border: 1px solid var(--border-subtle);
-    border-radius: 20px;
-    padding: 1.75rem 2rem;
-    box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03);
-    position: relative;
-    overflow: hidden;
-}
+    .select-ultra:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
 
-.page-header-container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 250px;
-    height: 100%;
-    background: radial-gradient(circle, rgba(37,99,235,0.04) 0%, transparent 70%);
-    pointer-events: none;
-}
+    .filter-icon-left {
+        position: absolute;
+        left: 14px;
+        color: #64748b;
+        pointer-events: none;
+        font-size: 0.9rem;
+    }
 
-.main-title {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: var(--primary-navy);
-    letter-spacing: -0.03em;
-}
+    .filter-icon-right {
+        position: absolute;
+        right: 14px;
+        color: #64748b;
+        pointer-events: none;
+        font-size: 0.8rem;
+        transition: transform 0.2s ease;
+    }
 
-.main-subtitle {
-    font-size: 0.95rem;
-    color: var(--text-secondary);
-    font-weight: 500;
-}
+    .select-ultra:focus ~ .filter-icon-right {
+        transform: rotate(180deg);
+        color: #2563eb;
+    }
 
-.badge-system-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: #ecfdf5;
-    border: 1px solid #a7f3d0;
-    color: #065f46;
-    border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 700;
-}
+    /* Custom Date Pickers Styling */
+    .input-date-ultra {
+        border: 1.5px solid #cbd5e1;
+        border-radius: 12px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #334155;
+        outline: none;
+        transition: all 0.2s ease;
+    }
 
-/* ==========================================================================
-   VIBRANT GRADIENT STAT CARDS (Sangat Mewah & Tidak Polos)
-========================================================================== */
+    .input-date-ultra:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
 
-.stat-card-vibrant {
-    position: relative;
-    border-radius: 20px;
-    padding: 1.5rem;
-    color: #ffffff;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
+    .btn-apply-filter {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 0.85rem;
+        border-radius: 12px;
+        padding: 0.55rem 1.25rem;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        transition: all 0.2s ease;
+    }
 
-.stat-card-vibrant:hover {
-    transform: translateY(-6px) scale(1.01);
-    box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.18), 0 10px 15px -5px rgba(0, 0, 0, 0.1);
-}
+    .btn-apply-filter:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+    }
 
-/* Gradasi Warna Unik Masing-masing Kartu Statistik */
-.card-grad-navy {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-}
-.card-grad-amber {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-}
-.card-grad-blue {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-}
-.card-grad-indigo {
-    background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
-}
-.card-grad-emerald {
-    background: linear-gradient(135deg, #10b981 0%, #047857 100%);
-}
-.card-grad-orange {
-    background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
-}
-.card-grad-rose {
-    background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);
-}
+    /* Cards Styling */
+    .stat-tamu-card {
+        border-radius: 18px;
+        border: none;
+        color: #ffffff;
+        transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
 
-/* Ornamen Geometris Transparan di Belakang Kartu */
-.stat-card-vibrant::before {
-    content: '';
-    position: absolute;
-    width: 140px;
-    height: 140px;
-    right: -30px;
-    bottom: -40px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 50%;
-    pointer-events: none;
-    transition: transform 0.5s ease;
-}
+    .stat-tamu-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -30%;
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 50%;
+        z-index: -1;
+        transition: transform 0.5s ease;
+    }
 
-.stat-card-vibrant:hover::before {
-    transform: scale(1.2) rotate(15deg);
-}
+    .stat-tamu-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15) !important;
+    }
 
-.stat-card-vibrant::after {
-    content: '';
-    position: absolute;
-    top: -50px;
-    right: -20px;
-    width: 100px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 30%;
-    transform: rotate(45deg);
-    pointer-events: none;
-}
+    .stat-tamu-card:hover::before {
+        transform: scale(1.25);
+    }
 
-.stat-meta-label {
-    font-size: 0.75rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    opacity: 0.85;
-}
+    .bg-tamu-navy { background: linear-gradient(135deg, #1a237e 0%, #283593 100%) !important; }
+    .bg-tamu-orange { background: linear-gradient(135deg, #ff8c00 0%, #f57c00 100%) !important; }
+    .bg-tamu-yellow { background: linear-gradient(135deg, #f4c400 0%, #fb8c00 100%) !important; }
+    .bg-tamu-blue { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important; }
+    .bg-tamu-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
+    .bg-tamu-amber { background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important; }
+    .bg-tamu-red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; }
 
-.stat-meta-value {
-    font-size: 2.25rem;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    margin-top: 0.5rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+    .icon-tamu-circle {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.22);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.35rem;
+    }
 
-.stat-icon-circle {
-    width: 54px;
-    height: 54px;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.35rem;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4);
-    flex-shrink: 0;
-    transition: transform 0.3s ease;
-}
+    .card-ultra {
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+        background: #ffffff;
+    }
 
-.stat-card-vibrant:hover .stat-icon-circle {
-    transform: scale(1.1) rotate(-5deg);
-}
+    .progress-track-elite {
+        background: #e2e8f0;
+        height: 14px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
 
-/* ==========================================================================
-   SECTION CONTAINERS (CONTENT CARDS)
-========================================================================== */
+    .progress-fill-elite {
+        background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        height: 100%;
+        border-radius: 8px;
+        transition: width 0.8s ease-in-out;
+    }
 
-.analytic-card-box {
-    background: var(--card-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 20px;
-    box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03);
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
+    .chart-wrapper-box { position: relative; width: 100%; height: 320px; }
 
-.analytic-card-box:hover {
-    box-shadow: 0 12px 30px -4px rgba(15, 23, 42, 0.07);
-    border-color: #cbd5e1;
-}
+    /* Timeline Section (Foto 1) */
+    .timeline-tracking { position: relative; padding-left: 28px; }
+    .timeline-tracking::before {
+        content: '';
+        position: absolute;
+        left: 9px;
+        top: 8px;
+        bottom: 8px;
+        width: 2px;
+        background: #e2e8f0;
+    }
+    .timeline-item { position: relative; margin-bottom: 22px; }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot {
+        position: absolute;
+        left: -28px;
+        top: 2px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 4px solid #1a237e;
+    }
+    .timeline-dot.success { border-color: #10b981; }
+    .timeline-dot.warning { border-color: #ff8c00; }
+    .timeline-dot.info { border-color: #0284c7; }
 
-.analytic-card-header {
-    padding: 1.5rem 1.75rem;
-    border-bottom: 1px solid var(--border-subtle);
-    background: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.analytic-card-title {
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.analytic-card-title i {
-    color: var(--accent-blue);
-    font-size: 1.2rem;
-}
-
-/* ==========================================================================
-   PROGRESS BAR SECTION
-========================================================================== */
-
-.progress-track-elite {
-    background: #e2e8f0;
-    height: 16px;
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);
-}
-
-.progress-fill-elite {
-    background: linear-gradient(90deg, #059669 0%, #10b981 50%, #34d399 100%);
-    height: 100%;
-    border-radius: 8px;
-    position: relative;
-    transition: width 1.5s cubic-bezier(0.1, 1, 0.1, 1);
-}
-
-.progress-fill-elite::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    animation: shimmerEffect 2s infinite;
-}
-
-@keyframes shimmerEffect {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-}
-
-/* ==========================================================================
-   CHARTS BOX
-========================================================================== */
-
-.chart-wrapper-box {
-    position: relative;
-    width: 100%;
-    height: 330px;
-}
-
-.chart-wrapper-box-doughnut {
-    position: relative;
-    width: 100%;
-    height: 330px;
-}
-
-/* ==========================================================================
-   REVEAL & ENTRANCE ANIMATIONS
-========================================================================== */
-
-.stagger-reveal {
-    opacity: 0;
-    transform: translateY(15px);
-    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.stagger-reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-@keyframes pageEntrance {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 768px) {
-    .statistik-page-wrapper { padding: 1rem 0.5rem; }
-    .stat-meta-value { font-size: 1.85rem; }
-    .chart-wrapper-box, .chart-wrapper-box-doughnut { height: 280px; }
-}
+    .badge-status-ult {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 6px;
+    }
+    .badge-ult-navy { background-color: #eef2ff; color: #1a237e; border: 1px solid #c7d2fe; }
+    .badge-ult-green { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+    .badge-ult-orange { background-color: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
 </style>
 
-<div class="statistik-page-wrapper container-fluid">
+<div class="container-fluid px-4 py-4">
 
-    <div class="page-header-container d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 stagger-reveal">
-        <div class="mb-3 mb-md-0">
-            <h1 class="main-title mb-1">
-                <i class="fas fa-chart-line text-primary mr-2"></i> Statistik & Analitik Tiket
-            </h1>
-            <p class="page-header-subtitle mb-0">
-                Pantau ringkasan metrik performa, sebaran status, dan progres penyelesaian layanan bantuan mahasiswa secara real-time.
-            </p>
-        </div>
-        <div>
-            <span class="badge-system-status shadow-sm">
-                <i class="fas fa-shield-alt"></i> Sistem Operasional Aktif
-            </span>
+    <!-- HEADER & FILTER DENGAN TAMPILAN ELEGAN -->
+    <div class="card card-filter-header p-4 mb-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <h3 class="fw-bold text-dark mb-1" style="letter-spacing: -0.5px;">Statistik & Analitik Tiket</h3>
+                <p class="text-muted small mb-0">Pantau pergerakan data tiket layanan bantuan ULT secara real-time dan akurat.</p>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="filter-dropdown-wrapper">
+                    <i class="fas fa-filter filter-icon-left"></i>
+                    <select id="filterPeriode" class="select-ultra">
+                        <option value="semua">Semua Periode</option>
+                        <option value="hari">Hari Ini</option>
+                        <option value="minggu">Minggu Ini</option>
+                        <option value="bulan" selected>Bulan Ini</option>
+                        <option value="tahun">Tahun Ini</option>
+                        <option value="custom">Filter Tanggal Manual</option>
+                    </select>
+                    <i class="fas fa-chevron-down filter-icon-right"></i>
+                </div>
+                
+                <div id="customDateContainer" class="d-none align-items-center gap-2">
+                    <input type="date" id="startDate" class="input-date-ultra" value="<?= date('Y-m-01') ?>">
+                    <span class="text-muted small fw-bold">s/d</span>
+                    <input type="date" id="endDate" class="input-date-ultra" value="<?= date('Y-m-d') ?>">
+                    <button type="button" id="btnTerapkanTanggal" class="btn btn-apply-filter">
+                        <i class="fas fa-check me-1"></i> Terapkan
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- 7 KOTAK STATISTIK DENGAN INTEGRASI COUNTER ID -->
     <div class="row g-3 mb-3">
-        <div class="col-xl-3 col-sm-6">
-            <div class="stat-card-vibrant card-grad-navy stagger-reveal">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-navy p-3 shadow-sm">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="stat-meta-label">Total Tiket Masuk</div>
-                        <div class="stat-meta-value counter-anim" data-target="<?= $total_tiket ?? 13 ?>">0</div>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Total Tiket Masuk</span>
+                        <h2 class="fw-extrabold mb-0 text-white mt-1 counter" id="cnt-total" data-target="<?= $total_tiket ?? 13 ?>"><?= $total_tiket ?? 13 ?></h2>
                     </div>
-                    <div class="stat-icon-circle">
-                        <i class="fas fa-layer-group"></i>
-                    </div>
+                    <div class="icon-tamu-circle text-white"><i class="fas fa-users"></i></div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-sm-6">
-            <div class="stat-card-vibrant card-grad-amber stagger-reveal">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-orange p-3 shadow-sm">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="stat-meta-label">Menunggu Verifikasi</div>
-                        <div class="stat-meta-value counter-anim" data-target="<?= $submitted ?? 5 ?>">0</div>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Menunggu Verifikasi</span>
+                        <h2 class="fw-extrabold mb-0 text-white mt-1 counter" id="cnt-submitted" data-target="<?= $submitted ?? 5 ?>"><?= $submitted ?? 5 ?></h2>
                     </div>
-                    <div class="stat-icon-circle">
-                        <i class="fas fa-clock"></i>
-                    </div>
+                    <div class="icon-tamu-circle text-white"><i class="fas fa-paper-plane"></i></div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-sm-6">
-            <div class="stat-card-vibrant card-grad-blue stagger-reveal">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-yellow p-3 shadow-sm">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="stat-meta-label">Terverifikasi</div>
-                        <div class="stat-meta-value counter-anim" data-target="<?= $assigned ?? 3 ?>">0</div>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Terverifikasi</span>
+                        <h2 class="fw-extrabold mb-0 text-white mt-1 counter" id="cnt-assigned" data-target="<?= $assigned ?? 3 ?>"><?= $assigned ?? 3 ?></h2>
                     </div>
-                    <div class="stat-icon-circle">
-                        <i class="fas fa-clipboard-check"></i>
-                    </div>
+                    <div class="icon-tamu-circle text-white"><i class="fas fa-clipboard-check"></i></div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-sm-6">
-            <div class="stat-card-vibrant card-grad-indigo stagger-reveal">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-blue p-3 shadow-sm">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="stat-meta-label">Sedang Diproses</div>
-                        <div class="stat-meta-value counter-anim" data-target="<?= $in_progress ?? 0 ?>">0</div>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Sedang Diproses</span>
+                        <h2 class="fw-extrabold mb-0 text-white mt-1 counter" id="cnt-in-progress" data-target="<?= $in_progress ?? 2 ?>"><?= $in_progress ?? 2 ?></h2>
                     </div>
-                    <div class="stat-icon-circle">
-                        <i class="fas fa-spinner"></i>
-                    </div>
+                    <div class="icon-tamu-circle text-white"><i class="fas fa-spinner"></i></div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-xl-4 col-sm-4">
-            <div class="stat-card-vibrant card-grad-emerald stagger-reveal">
+        <div class="col-xl-4 col-md-4">
+            <div class="card stat-tamu-card bg-tamu-green p-3 shadow-sm">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="stat-meta-label">Tiket Selesai</div>
-                        <div class="stat-meta-value counter-anim" data-target="<?= $completed ?? 0 ?>">0</div>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Tiket Selesai</span>
+                        <h2 class="fw-extrabold mb-0 text-white mt-1 counter" id="cnt-completed" data-target="<?= $completed ?? 2 ?>"><?= $completed ?? 2 ?></h2>
                     </div>
-                    <div class="stat-icon-circle">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
+                    <div class="icon-tamu-circle text-white"><i class="fas fa-check-circle"></i></div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-4 col-sm-4">
-            <div class="stat-card-vibrant card-grad-orange stagger-reveal">
+        <div class="col-xl-4 col-md-4">
+            <div class="card stat-tamu-card bg-tamu-amber p-3 shadow-sm">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="stat-meta-label">Perlu Perbaikan</div>
-                        <div class="stat-meta-value counter-anim" data-target="<?= $need_revision ?? 2 ?>">0</div>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Perlu Perbaikan</span>
+                        <h2 class="fw-extrabold mb-0 text-white mt-1 counter" id="cnt-revision" data-target="<?= $need_revision ?? 1 ?>"><?= $need_revision ?? 1 ?></h2>
                     </div>
-                    <div class="stat-icon-circle">
-                        <i class="fas fa-edit"></i>
-                    </div>
+                    <div class="icon-tamu-circle text-white"><i class="fas fa-edit"></i></div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-4 col-sm-4">
-            <div class="stat-card-vibrant card-grad-rose stagger-reveal">
+        <div class="col-xl-4 col-md-4">
+            <div class="card stat-tamu-card bg-tamu-red p-3 shadow-sm">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="stat-meta-label">Tiket Ditolak</div>
-                        <div class="stat-meta-value counter-anim" data-target="<?= $rejected ?? 1 ?>">0</div>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Tiket Ditolak</span>
+                        <h2 class="fw-extrabold mb-0 text-white mt-1 counter" id="cnt-rejected" data-target="<?= $rejected ?? 0 ?>"><?= $rejected ?? 0 ?></h2>
                     </div>
-                    <div class="stat-icon-circle">
-                        <i class="fas fa-ban"></i>
-                    </div>
+                    <div class="icon-tamu-circle text-white"><i class="fas fa-ban"></i></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="analytic-card-box mb-4 stagger-reveal">
-        <div class="analytic-card-header">
-            <div class="analytic-card-title">
-                <i class="fas fa-tasks"></i> Tingkat Efisiensi & Penyelesaian Tiket
-            </div>
-            <span class="badge bg-success text-white px-3 py-2 rounded-pill font-weight-bold" style="font-size: 0.75rem;">
-                70% Efektif
-            </span>
+    <!-- PROGRESS EFISIENSI -->
+    <div class="card card-ultra p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold text-dark" style="font-size: 0.95rem;">Tingkat Efisiensi & Penyelesaian Tiket ULT</span>
+            <span class="fw-bold text-success" id="text-efisiensi">75% Efektif</span>
         </div>
-        <div class="p-4">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="font-weight-bold text-dark" style="font-size: 0.9rem;">Rasio Tiket Diproses & Selesai vs Total Permintaan</span>
-                <span class="font-weight-bold text-success">70%</span>
-            </div>
-            <div class="progress-track-elite mb-3">
-                <div class="progress-fill-elite" style="width: 70%;"></div>
-            </div>
-            <p class="text-muted mb-0" style="font-size: 0.85rem;">
-                <i class="fas fa-info-circle text-primary mr-1"></i> Performa waktu tanggap unit layanan berada dalam batas SLA standar yang sangat optimal.
-            </p>
+        <div class="progress-track-elite mb-2">
+            <div class="progress-fill-elite" id="bar-efisiensi" style="width: 75%;"></div>
         </div>
+        <small class="text-muted"><i class="fas fa-info-circle text-primary me-1"></i> Data dihitung berdasarkan perbandingan tiket selesai & diproses terhadap total tiket masuk.</small>
     </div>
 
-    <div class="row g-4">
+    <!-- GRAFIK STATISTIK -->
+    <div class="row g-4 mb-4">
         <div class="col-lg-8">
-            <div class="analytic-card-box h-100 stagger-reveal">
-                <div class="analytic-card-header">
-                    <div class="analytic-card-title">
-                        <i class="fas fa-chart-bar"></i> Distribusi Kategori Status Tiket
-                    </div>
-                    <span class="text-muted" style="font-size: 0.8rem;">Statistik Keseluruhan</span>
+            <div class="card card-ultra h-100">
+                <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-chart-bar text-primary me-2"></i>Distribusi Kategori Status Tiket</h6>
+                    <small class="text-muted">Grafik Utama</small>
                 </div>
-                <div class="p-4">
+                <div class="card-body p-4">
                     <div class="chart-wrapper-box">
                         <canvas id="mainBarChart"></canvas>
                     </div>
@@ -477,16 +378,40 @@ body {
         </div>
 
         <div class="col-lg-4">
-            <div class="analytic-card-box h-100 stagger-reveal">
-                <div class="analytic-card-header">
-                    <div class="analytic-card-title">
-                        <i class="fas fa-chart-pie"></i> Proporsi Status
-                    </div>
-                    <span class="text-muted" style="font-size: 0.8rem;">Persentase</span>
+            <div class="card card-ultra h-100">
+                <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-chart-pie text-primary me-2"></i>Proporsi Status Tiket</h6>
+                    <small class="text-muted">Persentase</small>
                 </div>
-                <div class="p-4">
-                    <div class="chart-wrapper-box-doughnut">
+                <div class="card-body p-4">
+                    <div class="chart-wrapper-box">
                         <canvas id="mainDoughnutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TIMELINE TRACKING (FOTO 1 DENGAN UPDATE DINAMIS) -->
+    <div class="card card-ultra">
+        <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+            <h6 class="fw-bold text-dark mb-0">
+                <i class="fas fa-stream text-primary me-2"></i> Tracking & Aktivitas Terakhir Dashboard Petugas ULT
+            </h6>
+            <span class="badge bg-primary text-white rounded-pill px-3 py-1">Real-Time Sync</span>
+        </div>
+        <div class="card-body p-4">
+            <div class="timeline-tracking" id="timelineContainer">
+                <div class="timeline-item">
+                    <div class="timeline-dot success"></div>
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <h6 class="fw-bold text-dark mb-0">ULT-20260806074739865 - Asep (Pengajuan Rekapitulasi UKT)</h6>
+                        <span class="text-muted small">06-08-2026 07:47</span>
+                    </div>
+                    <p class="text-muted small mb-2">Diselesaikan dan diverifikasi oleh Petugas ULT Keuangan.</p>
+                    <div>
+                        <span class="badge-status-ult badge-ult-green">Status: Verified / Selesai</span>
+                        <span class="badge-status-ult badge-ult-navy ms-1">Disposisi: Bagian Keuangan</span>
                     </div>
                 </div>
             </div>
@@ -497,161 +422,181 @@ body {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-
-    // 1. Staggered Reveal Animation Handler
-    const revealElements = document.querySelectorAll('.stagger-reveal');
-    revealElements.forEach(function (el, index) {
-        setTimeout(function () {
-            el.classList.add('is-visible');
-        }, index * 90);
-    });
-
-    // 2. Smooth Number Counter Animation
-    const counters = document.querySelectorAll('.counter-anim');
-    counters.forEach(function (counter) {
-        const target = parseInt(counter.getAttribute('data-target')) || 0;
-        const duration = 1400; // ms
-        const stepTime = 20;
-        const steps = duration / stepTime;
-        const increment = target / steps;
-        let current = 0;
-
-        const timer = setInterval(function () {
-            current += increment;
-            if (current >= target) {
-                counter.innerText = target;
-                clearInterval(timer);
-            } else {
-                counter.innerText = Math.round(current);
-            }
-        }, stepTime);
-    });
-
-    // 3. Dataset Configuration from Backend PHP Variables
-    const dataValues = [
-        <?= $submitted ?? 5 ?>,
-        <?= $assigned ?? 3 ?>,
-        <?= $in_progress ?? 0 ?>,
-        <?= $completed ?? 0 ?>,
-        <?= $need_revision ?? 2 ?>,
-        <?= $rejected ?? 1 ?>
-    ];
+    let barChart, doughnutChart;
 
     const labelsArray = ['Submitted', 'Assigned', 'In Progress', 'Completed', 'Need Revision', 'Rejected'];
-    
-    // Professional Harmonized Palette matched with the elite card gradients
-    const colorPalette = [
-        '#f59e0b', // Amber (Submitted)
-        '#3b82f6', // Blue (Assigned)
-        '#6366f1', // Indigo (In Progress)
-        '#10b981', // Emerald (Completed)
-        '#ea580c', // Orange (Need Revision)
-        '#f43f5e'  // Rose (Rejected)
-    ];
+    const colorPalette = ['#ff8c00', '#f4c400', '#0284c7', '#10b981', '#d97706', '#ef4444'];
 
-    // Global Chart.js Defaults for Clean Look
     Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
-    Chart.defaults.font.size = 12;
     Chart.defaults.color = '#64748b';
 
-    // 4. Bar Chart Render
-    const barCtx = document.getElementById('mainBarChart');
-    if (barCtx) {
-        new Chart(barCtx.getContext('2d'), {
+    // 1. Inisialisasi Chart
+    function initCharts(initialData) {
+        const barCtx = document.getElementById('mainBarChart').getContext('2d');
+        barChart = new Chart(barCtx, {
             type: 'bar',
             data: {
                 labels: labelsArray,
                 datasets: [{
                     label: 'Jumlah Tiket',
-                    data: dataValues,
+                    data: initialData,
                     backgroundColor: colorPalette,
-                    borderRadius: 10,
-                    borderSkipped: false,
-                    barPercentage: 0.58,
-                    categoryPercentage: 0.72
+                    borderRadius: 8,
+                    barPercentage: 0.55
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: '#0f172a',
-                        titleFont: { size: 13, weight: 'bold' },
-                        bodyFont: { size: 13 },
-                        padding: 12,
-                        cornerRadius: 10,
-                        callbacks: {
-                            label: function (context) {
-                                return ' Jumlah: ' + context.raw + ' Tiket Layanan';
-                            }
-                        }
-                    }
-                },
+                plugins: { legend: { display: false } },
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { precision: 0, stepSize: 1 },
-                        grid: { color: '#f1f5f9', drawBorder: false }
-                    },
-                    x: {
-                        grid: { display: false, drawBorder: false }
-                    }
+                    y: { beginAtZero: true, ticks: { precision: 0 } },
+                    x: { grid: { display: false } }
                 }
             }
         });
-    }
 
-    // 5. Doughnut Chart Render
-    const doughnutCtx = document.getElementById('mainDoughnutChart');
-    if (doughnutCtx) {
-        new Chart(doughnutCtx.getContext('2d'), {
+        const doughnutCtx = document.getElementById('mainDoughnutChart').getContext('2d');
+        doughnutChart = new Chart(doughnutCtx, {
             type: 'doughnut',
             data: {
                 labels: labelsArray,
                 datasets: [{
-                    data: dataValues,
+                    data: initialData,
                     backgroundColor: colorPalette,
-                    borderWidth: 4,
-                    borderColor: '#ffffff',
-                    hoverOffset: 8
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 cutout: '70%',
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: 10,
-                            boxHeight: 10,
-                            padding: 14,
-                            usePointStyle: true,
-                            pointStyle: 'circle',
-                            font: { size: 11, weight: '600' }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: '#0f172a',
-                        padding: 12,
-                        cornerRadius: 10,
-                        callbacks: {
-                            label: function (context) {
-                                const val = context.raw;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
-                                return ' ' + context.label + ': ' + val + ' tiket (' + pct + '%)';
-                            }
-                        }
-                    }
-                }
+                plugins: { legend: { position: 'bottom' } }
             }
         });
     }
 
+    // 2. Animate Counter Dynamic
+    function animateCounter(elementId, targetValue) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        let start = parseInt(el.innerText) || 0;
+        let duration = 500;
+        let startTime = null;
+
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            let progress = Math.min((timestamp - startTime) / duration, 1);
+            el.innerText = Math.floor(progress * (targetValue - start) + start);
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            } else {
+                el.innerText = targetValue;
+            }
+        }
+        window.requestAnimationFrame(step);
+    }
+
+    // 3. Update UI Function
+    function updateDashboardUI(data) {
+        animateCounter('cnt-total', data.total_tiket);
+        animateCounter('cnt-submitted', data.submitted);
+        animateCounter('cnt-assigned', data.assigned);
+        animateCounter('cnt-in-progress', data.in_progress);
+        animateCounter('cnt-completed', data.completed);
+        animateCounter('cnt-revision', data.need_revision);
+        animateCounter('cnt-rejected', data.rejected);
+
+        // Update Efisiensi Bar
+        document.getElementById('text-efisiensi').innerText = `${data.efisiensi}% Efektif`;
+        document.getElementById('bar-efisiensi').style.width = `${data.efisiensi}%`;
+
+        // Update Charts
+        const updatedArray = [
+            data.submitted,
+            data.assigned,
+            data.in_progress,
+            data.completed,
+            data.need_revision,
+            data.rejected
+        ];
+
+        barChart.data.datasets[0].data = updatedArray;
+        barChart.update();
+
+        doughnutChart.data.datasets[0].data = updatedArray;
+        doughnutChart.update();
+
+        // Update Timeline Tracking
+        if (data.timeline && data.timeline.length > 0) {
+            let timelineHtml = '';
+            data.timeline.forEach(item => {
+                timelineHtml += `
+                    <div class="timeline-item">
+                        <div class="timeline-dot ${item.dot_class}"></div>
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <h6 class="fw-bold text-dark mb-0">${item.kode} - ${item.pemohon} (${item.layanan})</h6>
+                            <span class="text-muted small">${item.waktu}</span>
+                        </div>
+                        <p class="text-muted small mb-2">${item.detail}</p>
+                        <div>
+                            <span class="badge-status-ult ${item.status_class}">Status: ${item.status}</span>
+                            <span class="badge-status-ult badge-ult-navy ms-1">Disposisi: ${item.disposisi}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('timelineContainer').innerHTML = timelineHtml;
+        }
+    }
+
+    // 4. Fetch Data via AJAX
+    function fetchFilteredData() {
+        const periode = document.getElementById('filterPeriode').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+
+        const url = `<?= base_url('petugas/api/statistik-data') ?>?periode=${periode}&start_date=${startDate}&end_date=${endDate}`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === 'success') {
+                    updateDashboardUI(res.data);
+                }
+            })
+            .catch(err => console.error("Error fetching data:", err));
+    }
+
+    // Event Listener Dropdown
+    const filterPeriode = document.getElementById('filterPeriode');
+    const customDateContainer = document.getElementById('customDateContainer');
+
+    filterPeriode.addEventListener('change', function () {
+        if (this.value === 'custom') {
+            customDateContainer.classList.remove('d-none');
+            customDateContainer.classList.add('d-flex');
+        } else {
+            customDateContainer.classList.remove('d-flex');
+            customDateContainer.classList.add('d-none');
+            fetchFilteredData();
+        }
+    });
+
+    document.getElementById('btnTerapkanTanggal').addEventListener('click', function () {
+        fetchFilteredData();
+    });
+
+    // Inisialisasi awal
+    initCharts([
+        <?= $submitted ?? 5 ?>,
+        <?= $assigned ?? 3 ?>,
+        <?= $in_progress ?? 2 ?>,
+        <?= $completed ?? 2 ?>,
+        <?= $need_revision ?? 1 ?>,
+        <?= $rejected ?? 0 ?>
+    ]);
 });
 </script>
 

@@ -1,199 +1,112 @@
-<!-- ========================================================================= -->
-<!-- SIDEBAR UTAMA - SI-ULT POLBAN (COSMIC-TIER ENTERPRISE EDITION)            -->
-<!-- ========================================================================= -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: linear-gradient(180deg, #0d1242 0%, #1a237e 40%, #090d38 100%); border-right: 1px solid rgba(255,255,255,0.08); transition: width 0.3s ease-in-out;">
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
 
-    <!-- Brand Logo Sidebar Interaktif -->
-    <a href="<?= base_url('petugas') ?>"
-       class="brand-link text-center py-3.5 text-decoration-none"
-       style="background: rgba(0, 0, 0, 0.3); border-bottom: 1px solid rgba(255, 255, 255, 0.12);">
+    <!-- Brand Logo -->
+    <a href="<?= base_url('petugas') ?>" class="brand-link py-3 text-decoration-none d-flex align-items-center" style="background: rgba(0, 0, 0, 0.25); border-bottom: 1px solid rgba(255, 255, 255, 0.12);">
+        <img src="<?= base_url('assets/img/logo-polban.png') ?>"
+             alt="POLBAN Logo"
+             class="brand-image img-circle elevation-3 ml-3"
+             style="opacity: .95; max-height: 34px; width: 34px; object-fit: contain;">
 
-        <div class="d-inline-flex align-items-center justify-content-center">
-            <img src="<?= base_url('assets/img/logo-polban.png') ?>"
-                 alt="POLBAN Logo"
-                 class="brand-image img-circle elevation-3 mr-2"
-                 style="opacity: .95; float: none; max-height: 38px; width: 38px; object-fit: contain;">
-
-            <span class="brand-text font-weight-bold text-white" style="font-size: 1.12rem; letter-spacing: 0.8px; text-shadow: 0 2px 5px rgba(0,0,0,0.4);">
-                SI-ULT POLBAN
-            </span>
-        </div>
+        <span class="brand-text font-weight-bold text-white ml-2" style="font-size: 1.1rem; letter-spacing: 0.5px;">
+            SI-ULT POLBAN
+        </span>
     </a>
 
-    <!-- Sidebar Wrapper Container dengan Penyesuaian Padding Kanan -->
-    <div class="sidebar" style="overflow-x: hidden; padding-left: 14px; padding-right: 14px; padding-top: 16px; padding-bottom: 16px;">
+    <!-- Sidebar Wrapper -->
+    <div class="sidebar px-2 pt-2">
 
-        <!-- Panel Info User / Petugas -->
-        <div class="user-panel mt-1 pb-3 mb-3 d-flex align-items-center" style="border-bottom: 1px solid rgba(255, 255, 255, 0.12);">
+        <!-- User Panel -->
+        <div class="user-panel mt-2 pb-3 mb-3 d-flex align-items-center" style="border-bottom: 1px solid rgba(255, 255, 255, 0.12);">
             <div class="image position-relative">
                 <img src="https://ui-avatars.com/api/?name=Petugas+ULT&background=4f46e5&color=fff"
-                     class="img-circle elevation-2" alt="Avatar Petugas" style="width: 42px; height: 42px; object-fit: cover;">
-                <span class="position-absolute bottom-0 right-0 p-1 bg-success border border-white rounded-circle" style="width: 11px; height: 11px; bottom: 0; right: 0;"></span>
+                     class="img-circle elevation-2" alt="Avatar Petugas" style="width: 40px; height: 40px; object-fit: cover;">
+                <span class="position-absolute bg-success border border-white rounded-circle" style="width: 10px; height: 10px; bottom: 0; right: 0;"></span>
             </div>
-            <div class="info ml-2.5">
-                <a href="<?= base_url('petugas/profile') ?>" class="d-block text-white font-weight-bold text-decoration-none" style="font-size: 0.94rem; letter-spacing: 0.3px;">
+            <div class="info ml-2">
+                <a href="<?= base_url('petugas/profile') ?>" class="d-block text-white font-weight-bold text-decoration-none" style="font-size: 0.92rem;">
                     Petugas ULT
                 </a>
-                <span class="d-block text-muted d-flex align-items-center mt-0.5" style="font-size: 0.74rem; color: #a5b4fc !important;">
-                    <i class="fas fa-shield-alt text-warning mr-1" style="font-size: 0.65rem;"></i> Authorized Operator
+                <span class="d-block text-muted" style="font-size: 0.73rem; color: #a5b4fc !important;">
+                    <i class="fas fa-shield-alt text-warning mr-1"></i> Authorized Operator
                 </span>
             </div>
         </div>
 
         <!-- Sidebar Navigation Menu -->
-        <nav class="mt-2" style="width: 100%;">
-            <ul class="nav nav-pills nav-sidebar flex-column"
-                data-widget="treeview"
-                role="menu"
-                style="gap: 6px; width: 100%;">
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-                <!-- KODE CSS CUSTOM SIDEBAR (JARAK AMAN KANAN & WARNA ORANYE AKTIF) -->
-                <style>
-                /* Memastikan elemen ul & nav mengisi lebar dengan aman dari scrollbar */
-                .sidebar {
-                    box-sizing: border-box;
-                }
-                .nav-sidebar .nav-item {
-                    width: 100%;
-                }
-                .nav-sidebar .nav-item .nav-link {
-                    border-radius: 12px !important;
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    color: rgba(255, 255, 255, 0.82);
-                    padding: 11px 14px;
-                    border: 1px solid transparent;
-                    display: flex;
-                    align-items: center;
-                    width: 100%;
-                    box-sizing: border-box;
-                }
-                .nav-sidebar .nav-item .nav-link p {
-                    margin: 0;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    flex-grow: 1;
-                }
-                .nav-sidebar .nav-item .nav-link:hover {
-                    background-color: rgba(255, 255, 255, 0.08);
-                    color: #ffffff;
-                    transform: translateX(3px);
-                    border-color: rgba(255, 255, 255, 0.1);
-                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-                }
-                /* Warna Menu Aktif: Oranye Elegan */
-                .nav-sidebar .nav-item .nav-link.active {
-                    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
-                    color: #ffffff !important;
-                    box-shadow: 0 6px 18px rgba(245, 158, 11, 0.4);
-                    font-weight: 700;
-                    border-color: rgba(255, 255, 255, 0.25);
-                }
-                .nav-sidebar .nav-item .nav-link .nav-icon {
-                    font-size: 1.05rem;
-                    margin-right: 12px;
-                    color: #c7d2fe;
-                    transition: all 0.3s ease;
-                    min-width: 20px;
-                    text-align: center;
-                }
-                .nav-sidebar .nav-item .nav-link.active .nav-icon {
-                    color: #ffffff;
-                    transform: scale(1.1);
-                }
-                .cosmic-sidebar-header {
-                    font-size: 0.68rem;
-                    text-transform: uppercase;
-                    letter-spacing: 1.5px;
-                    color: #94a3b8;
-                    padding: 14px 8px 6px 8px;
-                    font-weight: 800;
-                }
-                .sidebar-dynamic-badge {
-                    font-size: 0.7rem;
-                    font-weight: 800;
-                    padding: 0.3em 0.6em;
-                    border-radius: 6px;
-                    margin-left: 8px;
-                    flex-shrink: 0;
-                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-                }
-                /* Styling Scrollbar Sidebar agar Berjarak Jauh dari Menu */
-                .sidebar::-webkit-scrollbar {
-                    width: 5px;
-                }
-                .sidebar::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-                .sidebar::-webkit-scrollbar-thumb {
-                    background: rgba(255, 255, 255, 0.25);
-                    border-radius: 10px;
-                }
-                .sidebar::-webkit-scrollbar-thumb:hover {
-                    background: rgba(255, 255, 255, 0.45);
-                }
-                </style>
-
-                <!-- Menu Utama: Dashboard -->
+                <!-- Dashboard -->
                 <li class="nav-item">
-                    <a href="<?= base_url('petugas') ?>" class="nav-link <?= url_is('petugas') ? 'active' : '' ?>">
+                    <a href="<?= base_url('petugas') ?>" class="nav-link <?= url_is('petugas') ? 'active' : '' ?>" title="Dashboard Utama">
                         <i class="nav-icon fas fa-home"></i>
                         <p>Dashboard Utama</p>
                     </a>
                 </li>
 
-                <!-- Menu Utama: Profil -->
+                <!-- Profil -->
                 <li class="nav-item">
-                    <a href="<?= base_url('petugas/profile') ?>" class="nav-link <?= url_is('petugas/profile*') ? 'active' : '' ?>">
+                    <a href="<?= base_url('petugas/profile') ?>" class="nav-link <?= url_is('petugas/profile*') ? 'active' : '' ?>" title="Profil Petugas">
                         <i class="nav-icon fas fa-user-cog"></i>
                         <p>Profil Petugas</p>
                     </a>
                 </li>
 
-                <!-- Header Section: Manajemen Tiket -->
-                <li class="nav-header cosmic-sidebar-header">Manajemen Tiket ULT</li>
+                <!-- Header: Manajemen Tiket -->
+                <li class="nav-header text-uppercase font-weight-bold text-muted" style="font-size: 0.68rem; letter-spacing: 1px; padding: 12px 10px 4px 10px;">
+                    Manajemen Tiket ULT
+                </li>
 
                 <!-- Data Tiket -->
                 <li class="nav-item">
-                    <a href="<?= base_url('petugas/tiket') ?>" class="nav-link <?= (url_is('petugas/tiket*') && !isset($_GET['status'])) ? 'active' : '' ?>">
+                    <a href="<?= base_url('petugas/tiket') ?>" class="nav-link <?= (url_is('petugas/tiket*') && !isset($_GET['status'])) ? 'active' : '' ?>" title="Data Tiket">
                         <i class="nav-icon fas fa-ticket-alt"></i>
-                        <p>Data Tiket</p>
-                        <span class="badge badge-light text-primary sidebar-dynamic-badge" id="sidebar-badge-tiket">0</span>
+                        <p>
+                            Data Tiket
+                            <span class="badge badge-light text-dark right font-weight-bold" id="sidebar-badge-tiket">0</span>
+                        </p>
                     </a>
                 </li>
 
                 <!-- Verifikasi Tiket -->
                 <li class="nav-item">
-                    <a href="<?= base_url('petugas/tiket?status=Submitted') ?>" class="nav-link <?= (isset($_GET['status']) && $_GET['status'] == 'Submitted') ? 'active' : '' ?>">
+                    <a href="<?= base_url('petugas/tiket?status=Submitted') ?>" class="nav-link <?= (isset($_GET['status']) && $_GET['status'] == 'Submitted') ? 'active' : '' ?>" title="Verifikasi Tiket">
                         <i class="nav-icon fas fa-user-check"></i>
-                        <p>Verifikasi Tiket</p>
-                        <span class="badge sidebar-dynamic-badge" id="sidebar-badge-verifikasi" style="background-color: #fbbf24; color: #1e293b !important;">0</span>
+                        <p>
+                            Verifikasi Tiket
+                            <span class="badge badge-warning right font-weight-bold" id="sidebar-badge-verifikasi">0</span>
+                        </p>
                     </a>
                 </li>
 
                 <!-- Disposisi Tiket -->
                 <li class="nav-item">
-                    <a href="<?= base_url('petugas/tiket?status=Verified') ?>" class="nav-link <?= (isset($_GET['status']) && $_GET['status'] == 'Verified') ? 'active' : '' ?>">
+                    <a href="<?= base_url('petugas/tiket?status=Verified') ?>" class="nav-link <?= (isset($_GET['status']) && $_GET['status'] == 'Verified') ? 'active' : '' ?>" title="Disposisi Tiket">
                         <i class="nav-icon fas fa-share-square"></i>
-                        <p>Disposisi Tiket</p>
-                        <span class="badge text-white sidebar-dynamic-badge" id="sidebar-badge-disposisi" style="background-color: #0ea5e9;">0</span>
+                        <p>
+                            Disposisi Tiket
+                            <span class="badge badge-info right font-weight-bold" id="sidebar-badge-disposisi">0</span>
+                        </p>
                     </a>
                 </li>
 
-                <!-- Header Section: Laporan & Statistik -->
-                <li class="nav-header cosmic-sidebar-header">Laporan & Analitik</li>
+                <!-- Header: Laporan & Analitik -->
+                <li class="nav-header text-uppercase font-weight-bold text-muted" style="font-size: 0.68rem; letter-spacing: 1px; padding: 12px 10px 4px 10px;">
+                    Laporan & Analitik
+                </li>
 
                 <!-- Laporan Tamu -->
                 <li class="nav-item">
-                    <a href="<?= base_url('petugas/laporan-tamu') ?>" class="nav-link <?= url_is('petugas/laporan-tamu*') ? 'active' : '' ?>">
+                    <a href="<?= base_url('petugas/laporan-tamu') ?>" class="nav-link <?= url_is('petugas/laporan-tamu*') ? 'active' : '' ?>" title="Laporan Tamu ULT">
                         <i class="nav-icon fas fa-users"></i>
                         <p>Laporan Tamu ULT</p>
                     </a>
                 </li>
 
-                <!-- Statistik Tiket -->
+                <!-- Statistik Layanan -->
                 <li class="nav-item">
-                    <a href="<?= base_url('petugas/statistik-tiket') ?>" class="nav-link <?= url_is('petugas/statistik-tiket*') ? 'active' : '' ?>">
+                    <a href="<?= base_url('petugas/statistik-tiket') ?>" class="nav-link <?= url_is('petugas/statistik-tiket*') ? 'active' : '' ?>" title="Statistik Layanan">
                         <i class="nav-icon fas fa-chart-pie"></i>
                         <p>Statistik Layanan</p>
                     </a>
@@ -201,33 +114,31 @@
 
                 <!-- Laporan Tiket -->
                 <li class="nav-item">
-                    <a href="<?= base_url('petugas/laporan-tiket') ?>" class="nav-link <?= url_is('petugas/laporan-tiket*') ? 'active' : '' ?>">
+                    <a href="<?= base_url('petugas/laporan-tiket') ?>" class="nav-link <?= url_is('petugas/laporan-tiket*') ? 'active' : '' ?>" title="Laporan Tiket">
                         <i class="nav-icon fas fa-file-invoice"></i>
                         <p>Laporan Tiket</p>
                     </a>
                 </li>
 
-            
-
                 <!-- Tracking Tiket -->
                 <li class="nav-item">
-                    <a href="<?= base_url('petugas/tracking-tiket') ?>" class="nav-link <?= url_is('petugas/tracking-tiket*') ? 'active' : '' ?>">
+                    <a href="<?= base_url('petugas/tracking-tiket') ?>" class="nav-link <?= url_is('petugas/tracking-tiket*') ? 'active' : '' ?>" title="Tracking Tiket">
                         <i class="nav-icon fas fa-route"></i>
                         <p>Tracking Tiket</p>
                     </a>
                 </li>
 
-                    <!-- Log Aktivitas Petugas (MENU BARU) -->
+                <!-- Log Aktivitas -->
                 <li class="nav-item">
-                    <a href="<?= base_url('petugas/log-aktivitas') ?>" class="nav-link <?= url_is('petugas/log-aktivitas*') ? 'active' : '' ?>">
+                    <a href="<?= base_url('petugas/log-aktivitas') ?>" class="nav-link <?= url_is('petugas/log-aktivitas*') ? 'active' : '' ?>" title="Log Aktivitas">
                         <i class="nav-icon fas fa-history text-info"></i>
                         <p>Log Aktivitas</p>
                     </a>
                 </li>
 
-                <!-- Tombol Keluar Sistem Khusus -->
-                <li class="nav-item mt-4 mb-3">
-                    <a href="<?= base_url('logout') ?>" class="nav-link text-white" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); transition: all 0.3s ease;" onmouseover="this.style.background='rgba(239,68,68,0.3)'" onmouseout="this.style.background='rgba(239,68,68,0.15)'">
+                <!-- Logout -->
+                <li class="nav-item mt-3 mb-4">
+                    <a href="<?= base_url('logout') ?>" class="nav-link" title="Keluar Aplikasi" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3);">
                         <i class="nav-icon fas fa-sign-out-alt text-danger"></i>
                         <p class="font-weight-bold text-danger">Keluar Aplikasi</p>
                     </a>
@@ -238,7 +149,7 @@
     </div>
 </aside>
 
-<!-- JAVASCRIPT DINAMIS PENGISI BADGE SIDEBAR OTOMATIS -->
+<!-- JAVASCRIPT BADGE DYNAMIC -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     setTimeout(() => {

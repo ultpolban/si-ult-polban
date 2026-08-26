@@ -6,624 +6,729 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-    /* ==========================================================================
-       1. GLOBAL & TYPOGRAPHY
-       ========================================================================== */
-    body,
-    .container-fluid {
-        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-        color: #2c3e50;
-    }
+:root {
+    --polban-navy: #1a237e;
+    --polban-blue: #005bac;
+    --polban-orange: #ff8c00;
+    --polban-yellow: #f4c400;
+    --polban-green: #198754;
+    --soft-bg: #f4f6f9;
+    --text-dark: #263238;
+    --text-muted: #6c757d;
+}
 
-    ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-    }
+/* ==========================================================================
+   1. GLOBAL & PAGE
+   ========================================================================== */
+body,
+.container-fluid {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    color: var(--text-dark);
+}
 
-    ::-webkit-scrollbar-track {
-        background: #f1f5f9;
-    }
+.ticket-page {
+    animation: pageFadeIn .45s ease;
+}
 
-    ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 10px;
-    }
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
 
-    ::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
-    }
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
 
-    /* ==========================================================================
-       2. STATISTIC CARDS
-       ========================================================================== */
-    .stat-tamu-card {
-        border-radius: 18px;
-        border: none;
-        color: #ffffff;
-        transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
-    }
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
 
-    .stat-tamu-card::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -30%;
-        width: 180px;
-        height: 180px;
-        background: rgba(255, 255, 255, 0.12);
-        border-radius: 50%;
-        z-index: -1;
-        transition: transform 0.5s ease;
-    }
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
 
-    .stat-tamu-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15) !important;
-    }
+/* ==========================================================================
+   2. STATISTIC CARDS (PERSISI DATA TIKET)
+   ========================================================================== */
+.stat-tamu-card {
+    border-radius: 18px;
+    border: none;
+    color: #ffffff;
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
 
-    .stat-tamu-card:hover::before {
-        transform: scale(1.25);
-    }
+.stat-tamu-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 180px;
+    height: 180px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    z-index: -1;
+    transition: transform 0.5s ease;
+}
 
-    .bg-tamu-navy {
-        background: linear-gradient(135deg, #1a237e 0%, #283593 100%) !important;
-    }
+.stat-tamu-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15) !important;
+}
 
-    .bg-tamu-orange {
-        background: linear-gradient(135deg, #ff8c00 0%, #f57c00 100%) !important;
-    }
+.stat-tamu-card:hover::before {
+    transform: scale(1.25);
+}
 
-    .bg-tamu-yellow {
-        background: linear-gradient(135deg, #f4c400 0%, #fb8c00 100%) !important;
-    }
+.bg-tamu-navy {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 100%) !important;
+}
 
-    .bg-tamu-green {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-    }
+.bg-tamu-orange {
+    background: linear-gradient(135deg, #ff8c00 0%, #f57c00 100%) !important;
+}
 
-    .icon-tamu-circle {
-        width: 54px;
-        height: 54px;
-        border-radius: 14px;
-        background: rgba(255, 255, 255, 0.22);
-        backdrop-filter: blur(8px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.4rem;
-        box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
-    }
+.bg-tamu-yellow {
+    background: linear-gradient(135deg, #f4c400 0%, #fb8c00 100%) !important;
+}
 
-    /* ==========================================================================
-       3. CARD & TABEL UTAMA
-       ========================================================================== */
-    .card-ultra {
-        border-radius: 20px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
-        background: #ffffff;
-    }
+.bg-tamu-green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+}
 
-    .table-ultra {
-        margin-bottom: 0;
-        border-collapse: separate;
-        border-spacing: 0;
-    }
+.icon-tamu-circle {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
+}
 
-    .table-ultra thead th {
-        background-color: #f8fafc;
-        color: #475569;
-        font-weight: 700;
-        font-size: 0.82rem;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        padding: 16px 18px;
-        border-bottom: 2px solid #e2e8f0;
-        vertical-align: middle;
-    }
+/* ==========================================================================
+   3. FILTER & TOOLBAR (DISAMAKAN DENGAN STYLE TIKET)
+   ========================================================================== */
+.ticket-filter-card {
+    border: 0;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    position: relative;
+    z-index: 100 !important;
+    overflow: visible !important;
+}
 
-    .table-ultra tbody td {
-        padding: 14px 18px;
-        vertical-align: middle;
-        font-size: 0.88rem;
-        border-bottom: 1px solid #f1f5f9;
-        transition: background-color 0.2s ease;
-    }
+.ticket-filter-card .card-body {
+    padding: 18px;
+}
 
-    .table-ultra tbody tr:hover td {
-        background-color: #f8fafc;
-    }
+.ticket-input-group {
+    height: 44px;
+}
 
-    /* Klikable Nomor Tiket (Hanya Copy Saja) */
-    .cell-notiket {
-        cursor: pointer;
-        transition: all 0.2s ease;
-        position: relative;
-    }
+.ticket-input-group .input-group-text {
+    background: #fff;
+    border-right: 0;
+    color: var(--polban-navy);
+}
 
-    .cell-notiket:hover {
-        color: #ff8c00 !important;
-        text-decoration: underline;
-    }
+.ticket-input {
+    height: 44px;
+    border-left: 0;
+    font-size: .9rem;
+}
 
-    .cell-notiket::after {
-        content: '\f0c5';
-        font-family: 'Font Awesome 6 Free';
-        font-weight: 900;
-        font-size: 0.7rem;
-        margin-left: 6px;
+.ticket-input:focus,
+.ticket-select:focus {
+    border-color: var(--polban-navy);
+    box-shadow: 0 0 0 .18rem rgba(26,35,126,.12);
+}
+
+.ticket-select {
+    height: 44px;
+    border-radius: 8px;
+    font-size: .9rem;
+}
+
+.btn-ticket-filter {
+    height: 44px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--polban-navy);
+    color: #fff;
+    font-weight: 700;
+    transition: .25s ease;
+}
+
+.btn-ticket-filter:hover {
+    background: #11185f;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(26,35,126,.25);
+}
+
+.btn-ticket-reset {
+    height: 44px;
+    width: 46px;
+    border-radius: 8px;
+    background: #6c757d;
+    color: #fff;
+    border: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: .25s ease;
+}
+
+.btn-ticket-reset:hover {
+    background: #545b62;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   4. TABEL STYLE PERSISI TIKET.PHP
+   ========================================================================== */
+.ticket-table-card {
+    border: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0,0,0,.07);
+}
+
+.ticket-table-header {
+    background: #fff;
+    padding: 18px 20px;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.ticket-table-title {
+    color: var(--text-dark);
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+
+.ticket-table-title i {
+    color: var(--polban-blue);
+}
+
+.ticket-table {
+    margin-bottom: 0;
+}
+
+.ticket-table thead {
+    background: var(--polban-navy) !important;
+}
+
+.ticket-table thead th {
+    color: #ffffff !important;
+    background-color: var(--polban-navy) !important;
+    border: 0;
+    font-size: .83rem;
+    font-weight: 700;
+    padding: 14px 12px;
+    white-space: nowrap;
+}
+
+.ticket-table tbody td {
+    padding: 15px 12px;
+    vertical-align: middle;
+    border-color: #edf0f4;
+    font-size: .9rem;
+}
+
+.ticket-table tbody tr {
+    transition: .2s ease;
+}
+
+.ticket-table tbody tr:hover {
+    background-color: #f8f9ff;
+}
+
+.cell-notiket,
+.ticket-number {
+    color: var(--polban-blue);
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.cell-notiket:hover,
+.ticket-number:hover {
+    color: var(--polban-navy);
+    text-decoration: underline;
+}
+
+.ticket-name {
+    font-weight: 700;
+    color: #263238;
+}
+
+.ticket-category {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #f5f7fa;
+    border: 1px solid #dee2e6;
+    color: #344054;
+    font-size: .76rem;
+    font-weight: 700;
+}
+
+/* Status Badge Tiket Style */
+.ticket-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: .76rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.status-submitted {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-verified {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.status-disposisi {
+    background: #cff4fc;
+    color: #055160;
+}
+
+.ticket-date {
+    color: #59636e;
+    font-size: .82rem;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   5. ACTION BUTTONS (DESAIN SAMA DENGAN TIKET.PHP)
+   ========================================================================== */
+.ticket-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.ticket-action {
+    width: 34px;
+    height: 34px;
+    border-radius: 7px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff !important;
+    border: 0;
+    text-decoration: none !important;
+    transition: .2s ease;
+    font-size: 0.85rem;
+}
+
+.ticket-action:hover {
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,.15);
+}
+
+.action-detail { background: #17a2b8; }
+.action-verify { background: var(--polban-green); }
+.action-disposition { background: var(--polban-orange); }
+.action-edit { background: #d97706; }
+.action-delete { background: #dc2626; }
+
+/* ==========================================================================
+   6. MODAL STYLING
+   ========================================================================== */
+.modal-content-ultra {
+    border-radius: 22px;
+    border: none;
+    overflow: hidden;
+    box-shadow: 0 25px 60px -15px rgba(26, 35, 126, 0.3);
+}
+
+.modal-header-ultra {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+    padding: 22px 30px;
+    border: none;
+}
+
+.modal-icon-badge {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    margin-right: 16px;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.modal-footer-ultra {
+    background-color: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    padding: 18px 30px;
+}
+
+.btn-modal-cancel {
+    background-color: #e2e8f0;
+    color: #475569;
+    font-weight: 700;
+    border-radius: 12px;
+    padding: 10px 22px;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.btn-modal-cancel:hover {
+    background-color: #cbd5e1;
+    color: #1e293b;
+}
+
+.btn-modal-submit {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 12px;
+    padding: 10px 26px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(26, 35, 126, 0.3);
+    transition: all 0.2s ease;
+}
+
+.btn-modal-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(26, 35, 126, 0.4);
+}
+
+.offline-form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.84rem;
+    font-weight: 800;
+    color: #334155;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.offline-form-label .required {
+    color: #ef4444;
+}
+
+.offline-input-group {
+    position: relative;
+}
+
+.offline-input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    z-index: 5;
+    pointer-events: none;
+    font-size: 1rem;
+}
+
+.offline-input,
+.offline-select,
+.offline-textarea {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #334155;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    font-size: 0.92rem;
+}
+
+.offline-input {
+    height: 50px;
+    padding: 10px 16px 10px 46px !important;
+}
+
+.offline-select {
+    height: 50px;
+    padding: 10px 42px 10px 46px !important;
+}
+
+.offline-textarea {
+    min-height: 130px;
+    resize: vertical;
+    padding: 14px 16px !important;
+    line-height: 1.6;
+}
+
+.offline-input::placeholder,
+.offline-textarea::placeholder {
+    color: #94a3b8;
+}
+
+.offline-input:focus,
+.offline-select:focus,
+.offline-textarea:focus {
+    border-color: #283593;
+    box-shadow: 0 0 0 4px rgba(40, 53, 147, 0.15);
+    outline: none;
+    background-color: #fff;
+}
+
+.offline-info-box {
+    background: linear-gradient(135deg, #eef4ff 0%, #e5edff 100%);
+    border-left: 5px solid #1a237e;
+    border-radius: 12px;
+    padding: 15px 18px;
+    color: #1a237e;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(26, 35, 126, 0.05);
+}
+
+.offline-file-box {
+    border: 2px dashed #cbd5e1;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: all 0.2s ease;
+}
+
+.offline-file-box:hover {
+    border-color: #283593;
+    background: #f1f5f9;
+}
+
+.offline-file-box input[type="file"] {
+    width: 100%;
+    font-size: 0.88rem;
+    color: #475569;
+}
+
+.offline-modal-body {
+    padding: 28px 32px !important;
+}
+
+.offline-modal-footer {
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    padding: 18px 32px;
+}
+
+.offline-btn-save {
+    background: linear-gradient(135deg, #ff8c00 0%, #f57c00 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 11px 26px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(245, 124, 0, 0.3);
+    transition: all 0.25s ease;
+}
+
+.offline-btn-save:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(245, 124, 0, 0.4);
+}
+
+.offline-btn-cancel {
+    background: #ffffff;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 11px 26px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.offline-btn-cancel:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+/* ==========================================================================
+   7. FLOATING TOAST NOTIFICATION
+   ========================================================================== */
+#toastContainer {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.custom-toast {
+    background: #ffffff;
+    color: #1e293b;
+    padding: 16px 20px;
+    border-radius: 14px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 320px;
+    max-width: 420px;
+    pointer-events: auto;
+    transform: translateX(120%);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-left: 5px solid #283593;
+}
+
+.custom-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.custom-toast.success {
+    border-left-color: #10b981;
+}
+
+.custom-toast.success .toast-icon-wrapper {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.custom-toast.danger {
+    border-left-color: #dc2626;
+}
+
+.custom-toast.danger .toast-icon-wrapper {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.custom-toast.info {
+    border-left-color: #2563eb;
+}
+
+.custom-toast.info .toast-icon-wrapper {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.custom-toast.warning {
+    border-left-color: #ff8c00;
+}
+
+.custom-toast.warning .toast-icon-wrapper {
+    background: #fffbeb;
+    color: #f57c00;
+}
+
+.toast-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.toast-content-area {
+    flex-grow: 1;
+}
+
+.toast-title {
+    font-weight: 800;
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+    color: #0f172a;
+}
+
+.toast-message {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   ANIMATIONS & RESPONSIVE
+   ========================================================================== */
+@keyframes pageFadeIn {
+    from {
         opacity: 0;
-        transition: opacity 0.2s ease;
-        color: #ff8c00;
+        transform: translateY(8px);
     }
-
-    .cell-notiket:hover::after {
+    to {
         opacity: 1;
+        transform: translateY(0);
     }
+}
 
-    /* Badges */
-    .badge-status {
-        padding: 6px 14px;
-        border-radius: 30px;
-        font-weight: 700;
-        font-size: 0.75rem;
-        letter-spacing: 0.3px;
-        display: inline-block;
-    }
+.reveal-item {
+    opacity: 0;
+    transform: translateY(12px);
+}
 
-    .badge-verified {
-        background-color: #d1fae5;
-        color: #065f46;
-        border: 1px solid #a7f3d0;
-    }
+.reveal-item.show {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all .4s ease;
+}
 
-    .badge-assigned {
-        background-color: #fef3c7;
-        color: #92400e;
-        border: 1px solid #fde68a;
-    }
-
-    .badge-submitted {
-        background-color: #e0f2fe;
-        color: #075985;
-        border: 1px solid #bae6fd;
-    }
-
-    .badge-layanan-tag {
-        background-color: #f1f5f9;
-        color: #334155;
-        font-weight: 600;
-        font-size: 0.8rem;
-        padding: 5px 12px;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-    }
-
-    /* Action Buttons */
-    .btn-action {
-        width: 34px;
-        height: 34px;
-        padding: 0;
-        border-radius: 10px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.88rem;
-        transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
-        border: none;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
-    }
-
-    .btn-action:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
-    }
-
-    .btn-action-view {
-        background-color: #eff6ff;
-        color: #2563eb;
-    }
-
-    .btn-action-view:hover {
-        background-color: #2563eb;
-        color: #ffffff;
-    }
-
-    .btn-action-edit {
-        background-color: #f0fdf4;
-        color: #16a34a;
-    }
-
-    .btn-action-edit:hover {
-        background-color: #16a34a;
-        color: #ffffff;
-    }
-
-    .btn-action-forward {
-        background-color: #faf5ff;
-        color: #9333ea;
-    }
-
-    .btn-action-forward:hover {
-        background-color: #9333ea;
-        color: #ffffff;
-    }
-
-    .btn-action-amber {
-        background-color: #fffbeb;
-        color: #d97706;
-    }
-
-    .btn-action-amber:hover {
-        background-color: #d97706;
-        color: #ffffff;
-    }
-
-    .btn-action-delete {
-        background-color: #fef2f2;
-        color: #dc2626;
-    }
-
-    .btn-action-delete:hover {
-        background-color: #dc2626;
-        color: #ffffff;
-    }
-
-    /* ==========================================================================
-       4. MODALS STYLING (PROFESSIONAL & CLEAN)
-       ========================================================================== */
-    .modal-content-ultra {
-        border-radius: 22px;
-        border: none;
-        overflow: hidden;
-        box-shadow: 0 25px 60px -15px rgba(26, 35, 126, 0.3);
-    }
-
-    .modal-header-ultra {
-        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
-        padding: 22px 30px;
-        border: none;
-    }
-
-    .modal-icon-badge {
-        width: 48px;
-        height: 48px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.35rem;
-        margin-right: 16px;
-        box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
-    }
-
-    .modal-footer-ultra {
-        background-color: #f8fafc;
-        border-top: 1px solid #e2e8f0;
-        padding: 18px 30px;
-    }
-
-    .btn-modal-cancel {
-        background-color: #e2e8f0;
-        color: #475569;
-        font-weight: 700;
-        border-radius: 12px;
-        padding: 10px 22px;
-        border: none;
-        transition: all 0.2s ease;
-    }
-
-    .btn-modal-cancel:hover {
-        background-color: #cbd5e1;
-        color: #1e293b;
-    }
-
-    .btn-modal-submit {
-        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
-        color: #ffffff;
-        font-weight: 700;
-        border-radius: 12px;
-        padding: 10px 26px;
-        border: none;
-        box-shadow: 0 4px 15px rgba(26, 35, 126, 0.3);
-        transition: all 0.2s ease;
-    }
-
-    .btn-modal-submit:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(26, 35, 126, 0.4);
-    }
-
-    /* =========================================================
-       FORM TAMBAH LAPORAN OFFLINE - STYLE BACKEND
-       ========================================================= */
-    .offline-form-label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 0.84rem;
-        font-weight: 800;
-        color: #334155;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
-    }
-
-    .offline-form-label .required {
-        color: #ef4444;
-    }
-
-    .offline-input-group {
-        position: relative;
-    }
-
-    .offline-input-icon {
-        position: absolute;
-        left: 16px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #64748b;
-        z-index: 5;
-        pointer-events: none;
-        font-size: 1rem;
-    }
-
-    .offline-input,
-    .offline-select,
-    .offline-textarea {
-        width: 100%;
-        border: 1px solid #cbd5e1;
-        background: #ffffff;
-        color: #334155;
-        border-radius: 12px;
-        transition: all 0.25s ease;
-        font-size: 0.92rem;
-    }
-
-    .offline-input {
-        height: 50px;
-        padding: 10px 16px 10px 46px !important;
-    }
-
-    .offline-select {
-        height: 50px;
-        padding: 10px 42px 10px 46px !important;
-    }
-
-    .offline-textarea {
-        min-height: 130px;
-        resize: vertical;
-        padding: 14px 16px !important;
-        line-height: 1.6;
-    }
-
-    .offline-input::placeholder,
-    .offline-textarea::placeholder {
-        color: #94a3b8;
-    }
-
-    .offline-input:focus,
-    .offline-select:focus,
-    .offline-textarea:focus {
-        border-color: #283593;
-        box-shadow: 0 0 0 4px rgba(40, 53, 147, 0.15);
-        outline: none;
-        background-color: #fff;
-    }
-
-    .offline-info-box {
-        background: linear-gradient(135deg, #eef4ff 0%, #e5edff 100%);
-        border-left: 5px solid #1a237e;
-        border-radius: 12px;
-        padding: 15px 18px;
-        color: #1a237e;
-        font-size: 0.9rem;
-        margin-bottom: 24px;
-        font-weight: 500;
-        box-shadow: 0 2px 8px rgba(26, 35, 126, 0.05);
-    }
-
-    .offline-file-box {
-        border: 2px dashed #cbd5e1;
-        background: #f8fafc;
-        border-radius: 12px;
-        padding: 14px 16px;
-        transition: all 0.2s ease;
-    }
-
-    .offline-file-box:hover {
-        border-color: #283593;
-        background: #f1f5f9;
-    }
-
-    .offline-file-box input[type="file"] {
-        width: 100%;
-        font-size: 0.88rem;
-        color: #475569;
-    }
-
+@media (max-width: 767px) {
     .offline-modal-body {
-        padding: 28px 32px !important;
+        padding: 20px !important;
     }
 
     .offline-modal-footer {
-        background: #f8fafc;
-        border-top: 1px solid #e2e8f0;
-        padding: 18px 32px;
+        padding: 15px 20px;
     }
 
-    .offline-btn-save {
-        background: linear-gradient(135deg, #ff8c00 0%, #f57c00 100%);
-        color: #ffffff;
-        border: none;
-        border-radius: 12px;
-        padding: 11px 26px;
-        font-weight: 700;
-        box-shadow: 0 6px 18px rgba(245, 124, 0, 0.3);
-        transition: all 0.25s ease;
-    }
-
-    .offline-btn-save:hover {
-        color: #ffffff;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 22px rgba(245, 124, 0, 0.4);
-    }
-
-    .offline-btn-cancel {
-        background: #ffffff;
-        color: #475569;
-        border: 1px solid #cbd5e1;
-        border-radius: 12px;
-        padding: 11px 26px;
-        font-weight: 700;
-        transition: all 0.2s ease;
-    }
-
-    .offline-btn-cancel:hover {
-        background: #f1f5f9;
-        color: #1e293b;
-    }
-
-    /* ==========================================================================
-       5. FLOATING TOAST NOTIFICATION (MANTAP & PROFESIONAL)
-       ========================================================================== */
     #toastContainer {
-        position: fixed;
-        top: 25px;
-        right: 25px;
-        z-index: 9999;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        pointer-events: none;
+        top: 15px;
+        right: 15px;
+        left: 15px;
     }
 
     .custom-toast {
-        background: #ffffff;
-        color: #1e293b;
-        padding: 16px 20px;
-        border-radius: 14px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.08);
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        min-width: 320px;
-        max-width: 420px;
-        pointer-events: auto;
-        transform: translateX(120%);
-        opacity: 0;
-        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        border-left: 5px solid #283593;
+        min-width: auto;
+        max-width: 100%;
     }
-
-    .custom-toast.show {
-        transform: translateX(0);
-        opacity: 1;
-    }
-
-    .custom-toast.success {
-        border-left-color: #10b981;
-    }
-
-    .custom-toast.success .toast-icon-wrapper {
-        background: #d1fae5;
-        color: #059669;
-    }
-
-    .custom-toast.danger {
-        border-left-color: #dc2626;
-    }
-
-    .custom-toast.danger .toast-icon-wrapper {
-        background: #fef2f2;
-        color: #dc2626;
-    }
-
-    .custom-toast.info {
-        border-left-color: #2563eb;
-    }
-
-    .custom-toast.info .toast-icon-wrapper {
-        background: #eff6ff;
-        color: #2563eb;
-    }
-
-    .custom-toast.warning {
-        border-left-color: #ff8c00;
-    }
-
-    .custom-toast.warning .toast-icon-wrapper {
-        background: #fffbeb;
-        color: #f57c00;
-    }
-
-    .toast-icon-wrapper {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        flex-shrink: 0;
-    }
-
-    .toast-content-area {
-        flex-grow: 1;
-    }
-
-    .toast-title {
-        font-weight: 800;
-        font-size: 0.9rem;
-        margin-bottom: 2px;
-        color: #0f172a;
-    }
-
-    .toast-message {
-        font-size: 0.82rem;
-        color: #64748b;
-        margin: 0;
-        line-height: 1.4;
-    }
-
-    @media (max-width: 767px) {
-        .offline-modal-body {
-            padding: 20px !important;
-        }
-
-        .offline-modal-footer {
-            padding: 15px 20px;
-        }
-
-        #toastContainer {
-            top: 15px;
-            right: 15px;
-            left: 15px;
-        }
-
-        .custom-toast {
-            min-width: auto;
-            max-width: 100%;
-        }
-    }
+}
 </style>
 
 <div id="toastContainer"></div>
 
-<div class="container-fluid px-4 py-4">
+<div class="container-fluid px-4 py-4 ticket-page">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="letter-spacing: -0.5px;">Laporan Tamu & Tiket</h3>
-            <p class="text-muted small mb-0">Kelola dan pantau seluruh data riwayat kunjungan tamu serta status tiket layanan dengan sistem terintegrasi.</p>
+            <h1 class="fw-bold mb-1" style="color: var(--polban-navy); letter-spacing: -0.4px; font-size:1.75rem;">Laporan Tamu & Tiket</h1>
+            <p class="text-muted small mb-0" style="font-size: 0.95rem;">Kelola dan pantau seluruh data riwayat kunjungan tamu serta status tiket layanan dengan sistem terintegrasi.</p>
         </div>
     </div>
 
+    <!-- STATISTIC CARDS -->
     <div class="row g-3 mb-4">
         <div class="col-xl-3 col-md-6">
-            <div class="card stat-tamu-card bg-tamu-navy p-3 shadow-sm">
+            <div class="card stat-tamu-card bg-tamu-navy p-3 shadow-sm reveal-item">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Total Tamu</span>
@@ -634,7 +739,7 @@
             </div>
         </div>
         <div class="col-xl-3 col-md-6">
-            <div class="card stat-tamu-card bg-tamu-orange p-3 shadow-sm">
+            <div class="card stat-tamu-card bg-tamu-orange p-3 shadow-sm reveal-item">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Submitted</span>
@@ -645,7 +750,7 @@
             </div>
         </div>
         <div class="col-xl-3 col-md-6">
-            <div class="card stat-tamu-card bg-tamu-yellow p-3 shadow-sm">
+            <div class="card stat-tamu-card bg-tamu-yellow p-3 shadow-sm reveal-item">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Assigned / Diproses</span>
@@ -656,7 +761,7 @@
             </div>
         </div>
         <div class="col-xl-3 col-md-6">
-            <div class="card stat-tamu-card bg-tamu-green p-3 shadow-sm">
+            <div class="card stat-tamu-card bg-tamu-green p-3 shadow-sm reveal-item">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Verified / Selesai</span>
@@ -668,44 +773,60 @@
         </div>
     </div>
 
-    <div class="card card-ultra">
-
-        <div class="card-header bg-white py-3 px-4 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-3" style="border-top-left-radius: 20px; border-top-right-radius: 20px;">
-            <div class="d-flex align-items-center gap-2 flex-wrap">
-                <div class="position-relative" style="min-width: 260px;">
-                    <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                    <input type="text" id="quickSearchInput" class="form-control ps-5 rounded-3 border-slate" placeholder="Cari nomor tiket / nama..." style="font-size: 0.88rem; height: 40px;">
+    <!-- TOOLBAR / FILTER CARD (STYLE DARI TIKET.PHP) -->
+    <div class="card ticket-filter-card mb-4 reveal-item">
+        <div class="card-body">
+            <div class="row g-2 align-items-center justify-content-between">
+                <div class="col-xl-8 col-lg-8 col-md-12">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <div class="input-group ticket-input-group flex-grow-1" style="min-width: 240px; max-width: 360px;">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" id="quickSearchInput" class="form-control ticket-input" placeholder="Cari nomor tiket / nama..." style="font-size: 0.88rem;">
+                        </div>
+                        <button class="btn btn-ticket-filter px-3 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalCariTiket">
+                            <i class="fas fa-filter"></i> Filter & Cari
+                        </button>
+                        <button id="btnKembaliTabel" class="btn btn-ticket-reset d-none" title="Kembali / Reset Filter">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </div>
                 </div>
-                <button class="btn btn-outline-primary px-3 rounded-3 fw-bold d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalCariTiket" style="height: 40px; font-size: 0.88rem;">
-                    <i class="fas fa-filter"></i> Filter & Cari
-                </button>
-                <button id="btnKembaliTabel" class="btn btn-outline-secondary px-3 rounded-3 fw-bold d-flex align-items-center gap-2 d-none" style="height: 40px; font-size: 0.88rem;">
-                    <i class="fas fa-arrow-left"></i> Kembali
-                </button>
+
+                <div class="col-xl-4 col-lg-4 col-md-12 d-flex align-items-center justify-content-md-end gap-3 mt-2 mt-lg-0">
+                    <div class="text-muted fw-semibold" style="font-size: 0.85rem;">
+                        Total Data: <span id="totalDataBadge" class="badge bg-primary text-white fs-6 ms-1 px-2 py-1" style="border-radius: 8px;">8 Tiket</span>
+                    </div>
+                    <button class="btn btn-ticket-filter px-3 d-flex align-items-center gap-2 shadow-sm" data-toggle="modal" data-target="#modalTambahTamu" data-bs-toggle="modal" data-bs-target="#modalTambahTamu" style="background: var(--polban-orange);">
+                        <i class="fas fa-plus"></i> Tambah Laporan
+                    </button>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <div class="d-flex align-items-center gap-3">
-                <div class="text-muted fw-semibold" style="font-size: 0.85rem;">
-                    Total Data: <span id="totalDataBadge" class="badge bg-primary text-white fs-6 ms-1 px-2 py-1" style="border-radius: 8px;">8 Tiket</span>
+    <!-- TABEL ULTRACLEAN (PERSISI STYLING TIKET.PHP) -->
+    <div class="card ticket-table-card reveal-item">
+        <div class="ticket-table-header d-flex justify-content-between align-items-center">
+            <div>
+                <div class="ticket-table-title">
+                    <i class="fas fa-list-alt me-2"></i> Data Laporan Tamu & Tiket Kunjungan
                 </div>
-                <button class="btn btn-primary px-3 rounded-3 fw-bold d-flex align-items-center gap-2 shadow-sm" data-toggle="modal" data-target="#modalTambahTamu" style="...">
-    <i class="fas fa-plus"></i> Tambah Laporan
-</button>
+                <small class="text-muted">Kelola riwayat kunjungan dan status permohonan layanan</small>
             </div>
         </div>
 
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-ultra" id="tabelLaporanTamu">
+                <table class="table ticket-table align-middle" id="tabelLaporanTamu">
                     <thead>
-                        <tr class="text-center">
-                            <th style="width: 50px;">No</th>
-                            <th class="text-start">Nomor Tiket <small class="text-muted fw-normal" style="font-size: 0.7rem;">(Klik untuk salin)</small></th>
-                            <th class="text-start">Nama Pemohon</th>
-                            <th class="text-start">Layanan</th>
-                            <th>Status</th>
+                        <tr>
+                            <th class="text-center" style="width: 50px;">No</th>
+                            <th>Nomor Tiket <small class="text-white-50 fw-normal" style="font-size: 0.7rem;">(Klik salin)</small></th>
+                            <th>Nama Pemohon</th>
+                            <th>Layanan</th>
+                            <th class="text-center">Status</th>
                             <th>Tanggal Masuk</th>
-                            <th style="width: 190px;">Aksi</th>
+                            <th class="text-center" style="width: 180px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="tamuTableBody">
@@ -722,7 +843,7 @@
                         ];
                         foreach ($dummy as $i => $d):
                         ?>
-                            <tr class="text-center tamu-row"
+                            <tr class="tamu-row"
                                 data-notiket="<?= esc($d[0]) ?>"
                                 data-nama="<?= esc($d[1]) ?>"
                                 data-layanan="<?= esc($d[2]) ?>"
@@ -732,31 +853,46 @@
                                 data-instansi="<?= esc($d[7]) ?>"
                                 data-tanggal="<?= esc($d[4]) ?>"
                                 data-deskripsi="<?= esc($d[8]) ?>">
-                                <td class="fw-bold text-muted row-number"><?= $i + 1 ?></td>
-                                <td class="text-start fw-bold text-primary cell-notiket" title="Klik untuk menyalin nomor tiket" onclick="copyNoTiket(this, '<?= $d[0] ?>')"><?= $d[0] ?></td>
-                                <td class="text-start fw-semibold text-dark cell-nama"><?= $d[1] ?></td>
-                                <td class="text-start"><span class="badge-layanan-tag cell-layanan"><?= $d[2] ?></span></td>
+                                <td class="text-center fw-bold text-muted row-number"><?= $i + 1 ?></td>
                                 <td>
-                                    <span class="badge-status cell-status <?= ($d[3] == 'Verified') ? 'badge-verified' : (($d[3] == 'Assigned') ? 'badge-assigned' : 'badge-submitted') ?>">
-                                        <?= $d[3] ?>
+                                    <span class="cell-notiket ticket-number" title="Klik untuk menyalin nomor tiket" onclick="copyNoTiket(this, '<?= $d[0] ?>')">
+                                        <?= $d[0] ?>
                                     </span>
                                 </td>
-                                <td class="text-muted fw-medium cell-tanggal" style="font-size: 0.83rem;"><?= $d[4] ?></td>
                                 <td>
-                                    <div class="d-flex justify-content-center gap-1">
-                                        <button type="button" class="btn-action btn-action-view btn-detail-tamu" title="Detail Tiket" data-bs-toggle="modal" data-bs-target="#modalDetailTamu" data-toggle="modal" data-target="#modalDetailTamu" data-notiket="<?= esc($d[0]) ?>" data-nama="<?= esc($d[1]) ?>" data-layanan="<?= esc($d[2]) ?>" data-status="<?= esc($d[3]) ?>" data-email="<?= esc($d[5]) ?>" data-hp="<?= esc($d[6]) ?>" data-instansi="<?= esc($d[7]) ?>" data-tanggal="<?= esc($d[4]) ?>" data-deskripsi="<?= esc($d[8]) ?>">
+                                    <div class="ticket-name cell-nama"><?= $d[1] ?></div>
+                                </td>
+                                <td>
+                                    <span class="ticket-category cell-layanan"><?= $d[2] ?></span>
+                                </td>
+                                <td class="text-center">
+                                    <?php
+                                        $stClass = 'status-submitted';
+                                        if ($d[3] == 'Verified') $stClass = 'status-verified';
+                                        if ($d[3] == 'Assigned') $stClass = 'status-disposisi';
+                                    ?>
+                                    <span class="ticket-status cell-status <?= $stClass ?>">
+                                        <i class="fas fa-circle" style="font-size:0.45rem;"></i> <?= $d[3] ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="ticket-date cell-tanggal"><?= $d[4] ?></div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="ticket-actions">
+                                        <button type="button" class="ticket-action action-detail btn-detail-tamu" title="Detail Tiket" data-bs-toggle="modal" data-bs-target="#modalDetailTamu" data-toggle="modal" data-target="#modalDetailTamu" data-notiket="<?= esc($d[0]) ?>" data-nama="<?= esc($d[1]) ?>" data-layanan="<?= esc($d[2]) ?>" data-status="<?= esc($d[3]) ?>" data-email="<?= esc($d[5]) ?>" data-hp="<?= esc($d[6]) ?>" data-instansi="<?= esc($d[7]) ?>" data-tanggal="<?= esc($d[4]) ?>" data-deskripsi="<?= esc($d[8]) ?>">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button type="button" class="btn-action btn-action-edit btn-verifikasi-tamu" title="Verifikasi Tiket" data-bs-toggle="modal" data-bs-target="#modalVerifikasiTamu" data-toggle="modal" data-target="#modalVerifikasiTamu" data-notiket="<?= esc($d[0]) ?>" data-status="<?= esc($d[3]) ?>">
+                                        <button type="button" class="ticket-action action-verify btn-verifikasi-tamu" title="Verifikasi Tiket" data-bs-toggle="modal" data-bs-target="#modalVerifikasiTamu" data-toggle="modal" data-target="#modalVerifikasiTamu" data-notiket="<?= esc($d[0]) ?>" data-status="<?= esc($d[3]) ?>">
                                             <i class="fas fa-user-check"></i>
                                         </button>
-                                        <button type="button" class="btn-action btn-action-forward btn-disposisi-tamu" title="Disposisi Tiket" data-bs-toggle="modal" data-bs-target="#modalDisposisiTamu" data-toggle="modal" data-target="#modalDisposisiTamu" data-notiket="<?= esc($d[0]) ?>">
+                                        <button type="button" class="ticket-action action-disposition btn-disposisi-tamu" title="Disposisi Tiket" data-bs-toggle="modal" data-bs-target="#modalDisposisiTamu" data-toggle="modal" data-target="#modalDisposisiTamu" data-notiket="<?= esc($d[0]) ?>">
                                             <i class="fas fa-share"></i>
                                         </button>
-                                        <button type="button" class="btn-action btn-action-amber btn-edit-tamu" title="Edit Tiket" data-bs-toggle="modal" data-bs-target="#modalEditTiket" data-toggle="modal" data-target="#modalEditTiket" data-notiket="<?= esc($d[0]) ?>" data-nama="<?= esc($d[1]) ?>" data-layanan="<?= esc($d[2]) ?>" data-email="<?= esc($d[5]) ?>" data-hp="<?= esc($d[6]) ?>" data-instansi="<?= esc($d[7]) ?>" data-deskripsi="<?= esc($d[8]) ?>">
+                                        <button type="button" class="ticket-action action-edit btn-edit-tamu" title="Edit Tiket" data-bs-toggle="modal" data-bs-target="#modalEditTiket" data-toggle="modal" data-target="#modalEditTiket" data-notiket="<?= esc($d[0]) ?>" data-nama="<?= esc($d[1]) ?>" data-layanan="<?= esc($d[2]) ?>" data-email="<?= esc($d[5]) ?>" data-hp="<?= esc($d[6]) ?>" data-instansi="<?= esc($d[7]) ?>" data-deskripsi="<?= esc($d[8]) ?>">
                                             <i class="fas fa-pen"></i>
                                         </button>
-                                        <button type="button" class="btn-action btn-action-delete btn-delete-tamu" title="Hapus Tiket" data-bs-toggle="modal" data-bs-target="#modalDeleteTiket" data-toggle="modal" data-target="#modalDeleteTiket" data-notiket="<?= esc($d[0]) ?>" data-nama="<?= esc($d[1]) ?>">
+                                        <button type="button" class="ticket-action action-delete btn-delete-tamu" title="Hapus Tiket" data-bs-toggle="modal" data-bs-target="#modalDeleteTiket" data-toggle="modal" data-target="#modalDeleteTiket" data-notiket="<?= esc($d[0]) ?>" data-nama="<?= esc($d[1]) ?>">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </div>
@@ -773,11 +909,11 @@
                 <p class="text-muted small">Tidak ada data laporan tamu yang cocok dengan kriteria pencarian atau filter Anda.</p>
             </div>
         </div>
-
     </div>
 
 </div>
 
+<!-- MODAL TAMBAH LAPORAN TAMU -->
 <div class="modal fade" id="modalTambahTamu" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
@@ -864,6 +1000,7 @@
     </div>
 </div>
 
+<!-- MODAL DETAIL TAMU -->
 <div class="modal fade" id="modalDetailTamu" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
@@ -890,7 +1027,7 @@
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded-3 border">
                             <span class="text-muted text-uppercase fw-bold" style="font-size: 0.72rem;">Status Tiket</span>
-                            <div class="mt-1"><span id="dispStatus" class="badge-status badge-verified">-</span></div>
+                            <div class="mt-1"><span id="dispStatus" class="ticket-status status-verified">-</span></div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -944,6 +1081,7 @@
     </div>
 </div>
 
+<!-- MODAL VERIFIKASI TAMU -->
 <div class="modal fade" id="modalVerifikasiTamu" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
@@ -987,6 +1125,7 @@
     </div>
 </div>
 
+<!-- MODAL DISPOSISI TAMU -->
 <div class="modal fade" id="modalDisposisiTamu" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
@@ -1037,6 +1176,7 @@
     </div>
 </div>
 
+<!-- MODAL EDIT TIKET -->
 <div class="modal fade" id="modalEditTiket" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
@@ -1104,6 +1244,7 @@
     </div>
 </div>
 
+<!-- MODAL DELETE TIKET -->
 <div class="modal fade" id="modalDeleteTiket" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
@@ -1132,6 +1273,7 @@
     </div>
 </div>
 
+<!-- MODAL CARI / FILTER TIKET -->
 <div class="modal fade" id="modalCariTiket" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
@@ -1223,7 +1365,7 @@
     }
 
     // ==========================================================================
-    // COPY NOMOR TIKET KE CLIPBOARD (1 KLIK - HANYA COPY SAJA TANPA AUTO-FILTER)
+    // COPY NOMOR TIKET KE CLIPBOARD
     // ==========================================================================
     function copyNoTiket(element, noTiket) {
         navigator.clipboard.writeText(noTiket).then(() => {
@@ -1234,11 +1376,16 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        // REVEAL ANIMATIONS IDENTIK DENGAN DATA TIKET
+        setTimeout(() => {
+            document.querySelectorAll('.reveal-item').forEach(item => {
+                item.classList.add('show');
+            });
+        }, 100);
+
         // ======================================================================
         // MODAL COMPATIBILITY HELPER
         // ======================================================================
-        // Bootstrap 5 menggunakan data-bs-toggle/data-bs-target. Jika template
-        // masih memakai Bootstrap 4, fallback jQuery tetap dipertahankan.
         document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 const target = this.getAttribute('data-bs-target');
@@ -1399,9 +1546,7 @@
             });
         });
 
-        // ======================================================================
-        // RESET MODAL TAMBAH LAPORAN KETIKA DITUTUP (HIDDEN / CANCEL / CLOSE)
-        // ======================================================================
+        // RESET MODAL TAMBAH LAPORAN KETIKA DITUTUP
         const modalTambahTamuEl = document.getElementById('modalTambahTamu');
         const formTambahTamuEl = document.getElementById('formTambahTamu');
 
@@ -1414,9 +1559,7 @@
             });
         }
 
-        // ======================================================================
         // KARAKTER COUNTER UNTUK DESKRIPSI
-        // ======================================================================
         const descTextarea = document.getElementById('addDeskripsi');
         const charCount = document.getElementById('charCount');
         if (descTextarea && charCount) {
@@ -1443,7 +1586,7 @@
                 const statusVal = this.getAttribute('data-status');
                 const badgeEl = document.getElementById('dispStatus');
                 badgeEl.innerText = statusVal;
-                badgeEl.className = 'badge-status ' + (statusVal === 'Verified' ? 'badge-verified' : (statusVal === 'Assigned' ? 'badge-assigned' : 'badge-submitted'));
+                badgeEl.className = 'ticket-status ' + (statusVal === 'Verified' ? 'status-verified' : (statusVal === 'Assigned' ? 'status-disposisi' : 'status-submitted'));
             });
         });
 
@@ -1479,9 +1622,7 @@
             });
         });
 
-        // ======================================================================
-        // FORM SUBMIT HANDLERS DENGAN NOTIFIKASI TOAST MANTAP
-        // ======================================================================
+        // FORM SUBMIT HANDLERS
         document.getElementById('formTambahTamu')?.addEventListener('submit', function(e) {
             e.preventDefault();
             const modalEl = document.getElementById('modalTambahTamu');
@@ -1541,7 +1682,7 @@
 
             rows.forEach(row => {
                 const notiket = row.getAttribute('data-notiket').toLowerCase();
-                const nama = row.getAttribute('data-nama');
+                const nama = row.getAttribute('data-nama').toLowerCase();
                 const layanan = row.getAttribute('data-layanan');
                 const status = row.getAttribute('data-status');
 
@@ -1596,7 +1737,7 @@
             });
         }
     });
-    // Tambahan pengaman agar modal terpanggil otomatis di Bootstrap 4
+
     $(document).on('click', '[data-toggle="modal"]', function() {
         let targetModal = $(this).attr('data-target');
         $(targetModal).modal('show');

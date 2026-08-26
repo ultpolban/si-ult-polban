@@ -1,7 +1,7 @@
 <!-- ========================================================================= -->
-<!-- NAVBAR UTAMA - SI-ULT POLBAN (COSMIC-TIER ENTERPRISE EDITION)              -->
+<!-- NAVBAR UTAMA - SI-ULT POLBAN                                              -->
 <!-- ========================================================================= -->
-<nav class="main-header navbar navbar-expand shadow-lg border-0" style="background: linear-gradient(135deg, #0d1242 0%, #1a237e 50%, #2B2E83 100%); min-height: 70px; transition: all 0.3s ease;">
+<nav class="main-header navbar navbar-expand shadow-lg border-0" style="background: #2b3990 !important; min-height: 70px; transition: all 0.3s ease;">
 
     <!-- Tombol Toggle Sidebar -->
     <ul class="navbar-nav">
@@ -49,7 +49,7 @@
         }
         ?>
 
-        <!-- STYLING CSS LEVEL DEWA DI ATAS DEWA (NAVBAR NOTIFICATION) -->
+        <!-- STYLING CSS NAVBAR NOTIFICATION -->
         <style>
         /* Dropdown Cosmic Glassmorphism */
         .cosmic-notif-dropdown .dropdown-menu {
@@ -60,7 +60,7 @@
             background: rgba(255, 255, 255, 0.98) !important;
             backdrop-filter: blur(30px) saturate(210%);
             -webkit-backdrop-filter: blur(30px) saturate(210%);
-            box-shadow: 0 30px 60px -15px rgba(13, 18, 66, 0.5), 0 0 20px rgba(79, 70, 229, 0.15) !important;
+            box-shadow: 0 30px 60px -15px rgba(43, 57, 144, 0.5), 0 0 20px rgba(79, 70, 229, 0.15) !important;
             transform-origin: top right;
             animation: cosmicDropdownIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             overflow: hidden;
@@ -150,14 +150,14 @@
             font-weight: 900;
             padding: 0.35em 0.65em;
             background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            border: 2px solid #1a237e;
+            border: 2px solid #2b3990;
             border-radius: 50rem;
             box-shadow: 0 3px 10px rgba(239, 68, 68, 0.5);
         }
 
-        /* Header Notifikasi Gradient Megah */
+        /* Header Notifikasi Warna Solid Matched */
         .cosmic-header-box {
-            background: linear-gradient(135deg, #0d1242 0%, #1a237e 60%, #312e81 100%);
+            background: #2b3990 !important;
             padding: 20px 24px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.12);
             position: relative;
@@ -195,7 +195,7 @@
 
         .cosmic-filter-tab.active {
             background: #ffffff;
-            color: #1a237e;
+            color: #2b3990;
             font-weight: 800;
             border-color: #ffffff;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -233,12 +233,12 @@
         }
 
         .cosmic-notif-item.unread {
-            background: rgba(26, 35, 126, 0.04);
-            border-left-color: #4f46e5;
+            background: rgba(43, 57, 144, 0.04);
+            border-left-color: #2b3990;
         }
 
         .cosmic-notif-item:hover {
-            background-color: rgba(79, 70, 229, 0.07) !important;
+            background-color: rgba(43, 57, 144, 0.07) !important;
             transform: translateX(3px);
         }
 
@@ -246,7 +246,7 @@
             width: 45px;
             height: 45px;
             border-radius: 15px;
-            background: linear-gradient(135deg, #1a237e 0%, #4f46e5 100%);
+            background: #2b3990;
             color: #ffffff;
             display: flex;
             align-items: center;
@@ -254,27 +254,27 @@
             font-weight: 800;
             font-size: 1rem;
             flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(26, 35, 126, 0.3);
+            box-shadow: 0 4px 15px rgba(43, 57, 144, 0.3);
         }
 
         .cosmic-ticket-pill {
-            background: rgba(79, 70, 229, 0.08);
-            color: #4f46e5;
+            background: rgba(43, 57, 144, 0.08);
+            color: #2b3990;
             font-weight: 700;
             font-size: 0.74rem;
             padding: 3px 10px;
             border-radius: 7px;
-            border: 1px solid rgba(79, 70, 229, 0.15);
+            border: 1px solid rgba(43, 57, 144, 0.15);
         }
 
         .cosmic-dot-indicator {
             width: 9px;
             height: 9px;
-            background: #4f46e5;
+            background: #2b3990;
             border-radius: 50%;
             display: inline-block;
             transition: all 0.3s ease;
-            box-shadow: 0 0 8px rgba(79, 70, 229, 0.6);
+            box-shadow: 0 0 8px rgba(43, 57, 144, 0.6);
         }
 
         .cosmic-scroll-area {
@@ -338,7 +338,7 @@
                                 Baru <span id="cosmicUnreadTabCount">(<?= $notifCount ?>)</span>
                             </button>
                         </div>
-                        <span class="badge text-primary font-weight-bold px-2.5 py-1" id="cosmicHeaderStatusCount" style="border-radius: 8px; font-size: 0.74rem; background: #ffffff; color: #1a237e !important;">
+                        <span class="badge font-weight-bold px-2.5 py-1" id="cosmicHeaderStatusCount" style="border-radius: 8px; font-size: 0.74rem; background: #ffffff; color: #2b3990 !important;">
                             <?= $notifCount ?> Belum Dibaca
                         </span>
                     </div>
@@ -374,7 +374,7 @@
                                         </div>
                                         <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.5;">
                                             <strong><?= $namaPemohon ?></strong> mengajukan permohonan 
-                                            <span class="text-primary font-weight-bold"><?= esc($notif['layanan'] ?? 'Layanan ULT Polban') ?></span>
+                                            <span class="font-weight-bold" style="color: #2b3990;"><?= esc($notif['layanan'] ?? 'Layanan ULT Polban') ?></span>
                                         </p>
                                     </div>
                                 </div>
@@ -393,14 +393,14 @@
 
                 <!-- Footer Dropdown -->
                 <div class="p-2.5 text-center bg-light border-top">
-                    <a href="<?= base_url('petugas/tiket') ?>" class="text-primary font-weight-bold d-block py-1" style="font-size: 0.84rem; text-decoration: none; transition: color 0.2s ease;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#007bff'">
+                    <a href="<?= base_url('petugas/tiket') ?>" class="font-weight-bold d-block py-1" style="font-size: 0.84rem; text-decoration: none; color: #2b3990; transition: color 0.2s ease;" onmouseover="this.style.color='#1e2766'" onmouseout="this.style.color='#2b3990'">
                         Kelola Seluruh Data Tiket Masuk <i class="fas fa-arrow-right ml-1"></i>
                     </a>
                 </div>
             </div>
         </li>
 
-        <!-- Dropdown Profil Petugas (Diperindah) -->
+        <!-- Dropdown Profil Petugas -->
         <li class="nav-item dropdown ml-2">
             <a class="nav-link text-white d-flex align-items-center px-2.5 py-1.5 rounded-pill" data-toggle="dropdown" href="#" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); transition: all 0.25s ease;">
                 <img src="https://ui-avatars.com/api/?name=Petugas+ULT&background=4f46e5&color=fff" class="img-circle elevation-1" width="34" height="34" alt="Avatar Petugas" style="object-fit: cover;">
@@ -428,9 +428,8 @@
     </ul>
 </nav>
 
-<!-- JAVASCRIPT ENGINE LEVEL DEWA - INTERAKTIVITAS MAKSIMAL -->
+<!-- JAVASCRIPT ENGINE INTERAKTIF -->
 <script>
-// Sintetis Efek Suara Audio Web API (Cosmic Chime)
 function playCosmicAudioChime() {
     try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -440,8 +439,8 @@ function playCosmicAudioChime() {
         const gain = ctx.createGain();
         
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // Nada D5
-        osc.frequency.exponentialRampToValueAtTime(880.00, ctx.currentTime + 0.2); // Nada A5
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880.00, ctx.currentTime + 0.2);
         
         gain.gain.setValueAtTime(0.12, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
@@ -456,7 +455,6 @@ function playCosmicAudioChime() {
     }
 }
 
-// Tandai Satu Notifikasi Dibaca
 function cosmicMarkSingleAsRead(item) {
     if (item.classList.contains('unread')) {
         item.classList.remove('unread');
@@ -466,13 +464,10 @@ function cosmicMarkSingleAsRead(item) {
             dot.style.opacity = '0';
         }
         cosmicUpdateCounters();
-        
-        // Sinkronisasi otomatis pengurangan badge di Sidebar secara real-time
         syncSidebarNotificationCounters();
     }
 }
 
-// Tandai Semua Notifikasi Dibaca
 function cosmicMarkAllAsRead(e) {
     if (e) e.stopPropagation();
     playCosmicAudioChime();
@@ -495,7 +490,6 @@ function cosmicMarkAllAsRead(e) {
     }, items.length * 40 + 100);
 }
 
-// Update Penghitung Counter secara Dinamis
 function cosmicUpdateCounters(allCleared = false) {
     const unreadList = document.querySelectorAll('.cosmic-notif-item.unread');
     const remainingCount = allCleared ? 0 : unreadList.length;
@@ -525,7 +519,6 @@ function cosmicUpdateCounters(allCleared = false) {
     }
 }
 
-// Filter Interaktif Notifikasi (Semua / Baru)
 function cosmicFilter(type, tabBtn, e) {
     if (e) e.stopPropagation();
 
@@ -556,7 +549,6 @@ function cosmicFilter(type, tabBtn, e) {
     }
 }
 
-// Sinkronisasi Interaktif dengan Badge Sidebar
 function syncSidebarNotificationCounters(forceZero = false) {
     const sidebarVerifBadge = document.getElementById('sidebar-badge-verifikasi');
     if (sidebarVerifBadge) {

@@ -350,13 +350,17 @@ class PetugasController extends BaseController
         $tiket = $this->findTiket($id);
 
         return view('petugas/verifikasi', [
+            'title' => 'Verifikasi Tiket Permohonan',
             'tiket' => $tiket,
-            'id' => $id
+            'id'    => $id
         ]);
     }
 
     public function simpanVerifikasi($id = null)
     {
+        // Ambil ID dari POST jika parameter $id null
+        $id = $id ?? $this->request->getPost('id');
+
         return redirect()
             ->to(base_url('petugas/tiket'))
             ->with('success', 'Verifikasi tiket berhasil disimpan!');
@@ -367,13 +371,17 @@ class PetugasController extends BaseController
         $tiket = $this->findTiket($id);
 
         return view('petugas/disposisi', [
+            'title' => 'Disposisi Tiket Permohonan',
             'tiket' => $tiket,
-            'id' => $id
+            'id'    => $id
         ]);
     }
 
     public function kirimDisposisi($id = null)
     {
+        // Ambil ID dari POST jika parameter $id null
+        $id = $id ?? $this->request->getPost('id');
+
         return redirect()
             ->to(base_url('petugas/tiket'))
             ->with('success', 'Disposisi tiket berhasil dikirim!');
@@ -381,6 +389,10 @@ class PetugasController extends BaseController
 
     private function findTiket($id)
     {
+        if ($id === null) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
         $allTiket = $this->getAllTiket();
 
         foreach ($allTiket as $tiket) {
@@ -399,7 +411,97 @@ class PetugasController extends BaseController
 
     public function statistikTiket()
     {
-        return view('petugas/statistik_tiket');
+        $dataTiket = $this->getAllTiket();
+
+        $total = count($dataTiket);
+        $submitted = count(array_filter($dataTiket, fn($t) => $t['status'] === 'Submitted'));
+        $verified = count(array_filter($dataTiket, fn($t) => $t['status'] === 'Verified'));
+        $disposisi = count(array_filter($dataTiket, fn($t) => $t['status'] === 'Disposisi'));
+        $completed = count(array_filter($dataTiket, fn($t) => $t['status'] === 'Completed'));
+        $revision = 1;
+        $rejected = count(array_filter($dataTiket, fn($t) => $t['status'] === 'Rejected'));
+
+        $data = [
+            'total_tiket'    => $total,
+            'submitted'      => $submitted,
+            'assigned'       => $verified,
+            'in_progress'    => $disposisi,
+            'completed'      => $completed,
+            'need_revision'  => $revision,
+            'rejected'       => $rejected,
+        ];
+
+        return view('petugas/statistik_tiket', $data);
+    }
+
+    /**
+     * Endpoint API AJAX Filter Periode Statistik Tiket
+     */
+    public function apiStatistikData()
+    {
+        $periode = $this->request->getGet('periode');
+
+        switch ($periode) {
+            case 'hari':
+                $total = 4; $submitted = 1; $assigned = 1; $in_progress = 1; $completed = 1; $revision = 0; $rejected = 0;
+                break;
+            case 'minggu':
+                $total = 8; $submitted = 2; $assigned = 2; $in_progress = 2; $completed = 1; $revision = 1; $rejected = 0;
+                break;
+            case 'tahun':
+                $total = 45; $submitted = 12; $assigned = 10; $in_progress = 8; $completed = 11; $revision = 2; $rejected = 2;
+                break;
+            case 'custom':
+                $total = 10; $submitted = 3; $assigned = 2; $in_progress = 2; $completed = 2; $revision = 1; $rejected = 0;
+                break;
+            case 'semua':
+                $total = 60; $submitted = 15; $assigned = 15; $in_progress = 10; $completed = 15; $revision = 3; $rejected = 2;
+                break;
+            case 'bulan':
+            default:
+                $total = 18; $submitted = 5; $assigned = 5; $in_progress = 3; $completed = 2; $revision = 1; $rejected = 2;
+                break;
+        }
+
+        $efisiensi = $total > 0 ? round((($completed + $assigned) / $total) * 100) : 0;
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data' => [
+                'total_tiket'   => $total,
+                'submitted'     => $submitted,
+                'assigned'      => $assigned,
+                'in_progress'   => $in_progress,
+                'completed'     => $completed,
+                'need_revision' => $revision,
+                'rejected'      => $rejected,
+                'efisiensi'     => $efisiensi,
+                'timeline'      => [
+                    [
+                        'kode' => 'ULT-20260808-0015',
+                        'pemohon' => 'Rian Hidayat',
+                        'layanan' => 'Surat Aktif Kuliah',
+                        'waktu' => '08-08-2026 14:30',
+                        'detail' => 'Tiket baru masuk dan sedang menunggu antrean verifikasi.',
+                        'status' => 'Submitted / Menunggu',
+                        'status_class' => 'badge-ult-orange',
+                        'dot_class' => 'warning',
+                        'disposisi' => 'Frontdesk ULT'
+                    ],
+                    [
+                        'kode' => 'ULT-20260807-0009',
+                        'pemohon' => 'Annisa Rahma',
+                        'layanan' => 'Legalisir Ijazah',
+                        'waktu' => '07-08-2026 11:45',
+                        'detail' => 'Permohonan telah diproses dan selesai diverifikasi.',
+                        'status' => 'Verified / Selesai',
+                        'status_class' => 'badge-ult-green',
+                        'dot_class' => 'success',
+                        'disposisi' => 'Bagian Akademik'
+                    ]
+                ]
+            ]
+        ]);
     }
 
     public function laporanTiket()
@@ -412,7 +514,7 @@ class PetugasController extends BaseController
         return view('petugas/tracking_tiket');
     }
 
-    public function detail_tamu($id)
+    public function detail_tamu($id = null)
     {
         $tiket = $this->findTiket($id);
         return view('petugas/detail_tamu', [
@@ -421,7 +523,7 @@ class PetugasController extends BaseController
         ]);
     }
 
-    public function verifikasi_tamu($id)
+    public function verifikasi_tamu($id = null)
     {
         $tiket = $this->findTiket($id);
         return view('petugas/verifikasi_tamu', [
@@ -430,7 +532,7 @@ class PetugasController extends BaseController
         ]);
     }
 
-    public function disposisi_tamu($id)
+    public function disposisi_tamu($id = null)
     {
         $tiket = $this->findTiket($id);
         return view('petugas/disposisi_tamu', [
@@ -439,7 +541,7 @@ class PetugasController extends BaseController
         ]);
     }
 
-    public function edit_tamu($id)
+    public function edit_tamu($id = null)
     {
         $tiket = $this->findTiket($id);
         return view('petugas/edit_tamu', [
@@ -448,7 +550,7 @@ class PetugasController extends BaseController
         ]);
     }
 
-    public function delete_tamu($id)
+    public function delete_tamu($id = null)
     {
         return redirect()
             ->back()

@@ -515,21 +515,21 @@ $profile = $profile ?? [];
 
 
                                 <!-- =================================================
-                                     INFORMASI AKADEMIK
-                                ================================================== -->
+     INFORMASI AKADEMIK
+================================================== -->
 
                                 <h4
                                     style="
-                                        color:#0b3d91;
-                                        font-weight:700;
-                                    ">
+        color:#0b3d91;
+        font-weight:700;
+    ">
 
                                     <i
                                         class="
-                                            fas
-                                            fa-graduation-cap
-                                            mr-2
-                                        "></i>
+            fas
+            fa-graduation-cap
+            mr-2
+        "></i>
 
                                     Informasi Akademik
 
@@ -538,17 +538,17 @@ $profile = $profile ?? [];
 
                                 <div
                                     class="
-                                        row
-                                        mt-4
-                                    ">
+        row
+        mt-4
+    ">
 
 
                                     <!-- PROGRAM STUDI -->
                                     <div
                                         class="
-                                            col-md-6
-                                            mb-3
-                                        ">
+            col-md-6
+            mb-3
+        ">
 
                                         <label
                                             class="font-weight-bold">
@@ -558,9 +558,9 @@ $profile = $profile ?? [];
                                         <input
                                             type="text"
                                             class="
-                                                form-control
-                                                bg-light
-                                            "
+                form-control
+                bg-light
+            "
                                             value="<?= esc(
                                                         $profile['prodi']
                                                             ?? ''
@@ -579,9 +579,9 @@ $profile = $profile ?? [];
                                     <!-- JURUSAN -->
                                     <div
                                         class="
-                                            col-md-6
-                                            mb-3
-                                        ">
+            col-md-6
+            mb-3
+        ">
 
                                         <label
                                             class="font-weight-bold">
@@ -591,65 +591,11 @@ $profile = $profile ?? [];
                                         <input
                                             type="text"
                                             class="
-                                                form-control
-                                                bg-light
-                                            "
+                form-control
+                bg-light
+            "
                                             value="<?= esc(
                                                         $profile['jurusan']
-                                                            ?? ''
-                                                    ) ?>"
-                                            readonly>
-
-                                    </div>
-
-
-                                    <!-- SEMESTER -->
-                                    <div
-                                        class="
-                                            col-md-3
-                                            mb-3
-                                        ">
-
-                                        <label
-                                            class="font-weight-bold">
-                                            Semester
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            class="
-                                                form-control
-                                                bg-light
-                                            "
-                                            value="<?= esc(
-                                                        $profile['semester']
-                                                            ?? ''
-                                                    ) ?>"
-                                            readonly>
-
-                                    </div>
-
-
-                                    <!-- ANGKATAN -->
-                                    <div
-                                        class="
-                                            col-md-3
-                                            mb-3
-                                        ">
-
-                                        <label
-                                            class="font-weight-bold">
-                                            Angkatan
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            class="
-                                                form-control
-                                                bg-light
-                                            "
-                                            value="<?= esc(
-                                                        $profile['angkatan']
                                                             ?? ''
                                                     ) ?>"
                                             readonly>
@@ -660,9 +606,9 @@ $profile = $profile ?? [];
                                     <!-- KELAS -->
                                     <div
                                         class="
-                                            col-md-6
-                                            mb-3
-                                        ">
+            col-md-6
+            mb-3
+        ">
 
                                         <label
                                             class="font-weight-bold">
@@ -672,9 +618,9 @@ $profile = $profile ?? [];
                                         <input
                                             type="text"
                                             class="
-                                                form-control
-                                                bg-light
-                                            "
+                form-control
+                bg-light
+            "
                                             value="<?= esc(
                                                         $profile['nama_kelas']
                                                             ?? ''

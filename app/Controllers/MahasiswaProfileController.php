@@ -56,12 +56,6 @@ class MahasiswaProfileController extends BaseController
             up.study_program_id,
             up.class_id,
 
-            mc.name AS nama_kelas,
-            mc.code AS kode_kelas,
-            mc.level AS semester,
-            mc.parallel_class,
-            mc.entry_year AS angkatan,
-
             msp.name AS prodi,
             msp.code AS kode_prodi,
             msp.department_id,
@@ -188,14 +182,6 @@ class MahasiswaProfileController extends BaseController
                 $profile['jurusan']
                     ?? '-',
 
-                'semester' =>
-                $profile['semester']
-                    ?? '-',
-
-                'angkatan' =>
-                $profile['angkatan']
-                    ?? '-',
-
                 'nama_kelas' =>
                 $profile['nama_kelas']
                     ?? '-',
@@ -305,14 +291,6 @@ class MahasiswaProfileController extends BaseController
 
                 'jurusan' =>
                 $profile['jurusan']
-                    ?? '',
-
-                'semester' =>
-                $profile['semester']
-                    ?? '',
-
-                'angkatan' =>
-                $profile['angkatan']
                     ?? '',
 
                 'study_program_id' =>

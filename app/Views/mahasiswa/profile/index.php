@@ -3,16 +3,16 @@
 <?= $this->include('layouts/sidebar_mahasiswa'); ?>
 
 <?php
-    // Data profile
-    $profile = $profile ?? [];
+// Data profile
+$profile = $profile ?? [];
 
-    $nama =
-        $profile['nama']
-        ?? 'Mahasiswa';
+$nama =
+    $profile['nama']
+    ?? 'Mahasiswa';
 
-    $nim =
-        $profile['nim']
-        ?? '-';
+$nim =
+    $profile['nim']
+    ?? '-';
 
 $nik =
     $profile['nik']
@@ -25,44 +25,48 @@ $jenisKelamin =
 $email =
 
     $email =
-        $profile['email']
-        ?? '-';
+    $profile['email']
+    ?? '-';
 
-    $noHp =
-        $profile['no_hp']
-        ?? '-';
+$noHp =
+    $profile['no_hp']
+    ?? '-';
 
-    $alamat =
-        $profile['alamat']
-        ?? '-';
+$alamat =
+    $profile['alamat']
+    ?? '-';
 
-    $prodi =
-        $profile['prodi']
-        ?? '-';
+$prodi =
+    $profile['prodi']
+    ?? '-';
 
-    $jurusan =
-        $profile['jurusan']
-        ?? '-';
+$jurusan =
+    $profile['jurusan']
+    ?? '-';
 
-    $fakultas =
-        $profile['fakultas']
-        ?? '-';
+$kelas =
+    $profile['nama_kelas']
+    ?? '-';
 
-    $semester =
-        $profile['semester']
-        ?? '-';
+$fakultas =
+    $profile['fakultas']
+    ?? '-';
 
-    $angkatan =
-        $profile['angkatan']
-        ?? '-';
+$semester =
+    $profile['semester']
+    ?? '-';
 
-    $status =
-        $profile['status']
-        ?? 'Aktif';
+$angkatan =
+    $profile['angkatan']
+    ?? '-';
 
-    $foto =
-        $profile['foto']
-        ?? null;
+$status =
+    $profile['status']
+    ?? 'Aktif';
+
+$foto =
+    $profile['foto']
+    ?? null;
 ?>
 
 <div class="content-wrapper">
@@ -83,8 +87,7 @@ $email =
                         style="
                             color:#0b3d91;
                             font-weight:700;
-                        "
-                    >
+                        ">
 
                         <i class="fas fa-user mr-2"></i>
 
@@ -103,9 +106,8 @@ $email =
 
                             <a
                                 href="<?= base_url(
-                                    'dashboard-mahasiswa'
-                                ) ?>"
-                            >
+                                            'dashboard-mahasiswa'
+                                        ) ?>">
 
                                 Dashboard
 
@@ -150,12 +152,10 @@ $email =
             ): ?>
 
                 <div
-                    class="alert alert-success alert-dismissible fade show"
-                >
+                    class="alert alert-success alert-dismissible fade show">
 
                     <i
-                        class="fas fa-check-circle mr-2"
-                    ></i>
+                        class="fas fa-check-circle mr-2"></i>
 
                     <?= esc(
                         session()->getFlashdata(
@@ -166,8 +166,7 @@ $email =
                     <button
                         type="button"
                         class="close"
-                        data-dismiss="alert"
-                    >
+                        data-dismiss="alert">
 
                         &times;
 
@@ -189,12 +188,10 @@ $email =
             ): ?>
 
                 <div
-                    class="alert alert-danger alert-dismissible fade show"
-                >
+                    class="alert alert-danger alert-dismissible fade show">
 
                     <i
-                        class="fas fa-exclamation-circle mr-2"
-                    ></i>
+                        class="fas fa-exclamation-circle mr-2"></i>
 
                     <?= esc(
                         session()->getFlashdata(
@@ -205,8 +202,7 @@ $email =
                     <button
                         type="button"
                         class="close"
-                        data-dismiss="alert"
-                    >
+                        data-dismiss="alert">
 
                         &times;
 
@@ -226,8 +222,7 @@ $email =
                 style="
                     border-radius:15px;
                     border-top:5px solid #0b3d91;
-                "
-            >
+                ">
 
 
                 <!-- =================================================
@@ -239,22 +234,18 @@ $email =
                     style="
                         background:#0b3d91;
                         color:white;
-                    "
-                >
+                    ">
 
                     <div
                         class="d-flex
                                justify-content-between
-                               align-items-center"
-                    >
+                               align-items-center">
 
                         <h3
-                            class="card-title"
-                        >
+                            class="card-title">
 
                             <i
-                                class="fas fa-id-card mr-2"
-                            ></i>
+                                class="fas fa-id-card mr-2"></i>
 
                             Informasi Profil Mahasiswa
 
@@ -263,19 +254,17 @@ $email =
 
                         <a
                             href="<?= base_url(
-                                'mahasiswa/profile/edit'
-                            ) ?>"
+                                        'mahasiswa/profile/edit'
+                                    ) ?>"
                             class="btn"
                             style="
                                 background:#f28c28;
                                 color:white;
                                 font-weight:600;
-                            "
-                        >
+                            ">
 
                             <i
-                                class="fas fa-edit mr-1"
-                            ></i>
+                                class="fas fa-edit mr-1"></i>
 
                             Edit Profil
 
@@ -311,29 +300,25 @@ $email =
                                 text-center
                                 mb-4
                                 mb-md-0
-                            "
-                        >
+                            ">
 
                             <div
                                 style="
                                     padding:20px;
-                                "
-                            >
+                                ">
 
 
                                 <!-- FOTO JIKA ADA -->
 
                                 <?php if (
-                                    !empty(
-                                        $foto
-                                    )
+                                    !empty($foto)
                                 ): ?>
 
                                     <img
                                         src="<?= base_url(
-                                            'uploads/profile/' .
-                                            $foto
-                                        ) ?>"
+                                                    'uploads/profile/' .
+                                                        $foto
+                                                ) ?>"
                                         alt="Foto Profil"
                                         style="
                                             width:170px;
@@ -349,8 +334,7 @@ $email =
                                                     0,
                                                     .15
                                                 );
-                                        "
-                                    >
+                                        ">
 
                                 <?php else: ?>
 
@@ -369,15 +353,13 @@ $email =
                                             justify-content:center;
                                             color:white;
                                             font-size:80px;
-                                        "
-                                    >
+                                        ">
 
                                         <i
                                             class="
                                                 fas
                                                 fa-user-graduate
-                                            "
-                                        ></i>
+                                            "></i>
 
                                     </div>
 
@@ -391,8 +373,7 @@ $email =
                                     style="
                                         color:#0b3d91;
                                         font-weight:700;
-                                    "
-                                >
+                                    ">
 
                                     <?= esc(
                                         $nama
@@ -404,16 +385,14 @@ $email =
                                 <!-- NIM -->
 
                                 <p
-                                    class="text-muted mb-3"
-                                >
+                                    class="text-muted mb-3">
 
                                     <i
                                         class="
                                             fas
                                             fa-id-card
                                             mr-1
-                                        "
-                                    ></i>
+                                        "></i>
 
                                     <?= esc(
                                         $nim
@@ -432,8 +411,7 @@ $email =
                                         padding:8px 18px;
                                         font-size:14px;
                                         border-radius:20px;
-                                    "
-                                >
+                                    ">
 
                                     <i
                                         class="
@@ -443,8 +421,7 @@ $email =
                                         "
                                         style="
                                             font-size:8px;
-                                        "
-                                    ></i>
+                                        "></i>
 
                                     <?= esc(
                                         $status
@@ -465,24 +442,21 @@ $email =
                             class="
                                 col-lg-8
                                 col-md-7
-                            "
-                        >
+                            ">
 
                             <h3
                                 style="
                                     color:#0b3d91;
                                     font-weight:700;
                                     margin-bottom:25px;
-                                "
-                            >
+                                ">
 
                                 <i
                                     class="
                                         fas
                                         fa-info-circle
                                         mr-2
-                                    "
-                                ></i>
+                                    "></i>
 
                                 Data Pribadi
 
@@ -497,8 +471,7 @@ $email =
                                     class="
                                         col-sm-4
                                         font-weight-bold
-                                    "
-                                >
+                                    ">
 
                                     <i
                                         class="
@@ -506,8 +479,7 @@ $email =
                                             fa-user
                                             text-primary
                                             mr-2
-                                        "
-                                    ></i>
+                                        "></i>
 
                                     Nama Lengkap
 
@@ -531,8 +503,7 @@ $email =
                                     class="
                                         col-sm-4
                                         font-weight-bold
-                                    "
-                                >
+                                    ">
 
                                     <i
                                         class="
@@ -540,8 +511,7 @@ $email =
                                             fa-id-card
                                             text-primary
                                             mr-2
-                                        "
-                                    ></i>
+                                        "></i>
 
                                     NIM
 
@@ -559,37 +529,35 @@ $email =
 
                             <!-- JENIS KELAMIN -->
 
-<div class="row mb-3">
+                            <div class="row mb-3">
 
-    <div
-        class="
+                                <div
+                                    class="
             col-sm-4
             font-weight-bold
-        "
-    >
+        ">
 
-        <i
-            class="
+                                    <i
+                                        class="
                 fas
                 fa-venus-mars
                 text-primary
                 mr-2
-            "
-        ></i>
+            "></i>
 
-        Jenis Kelamin
+                                    Jenis Kelamin
 
-    </div>
+                                </div>
 
-    <div class="col-sm-8">
+                                <div class="col-sm-8">
 
-        <?= esc(
-            $jenisKelamin
-        ) ?>
+                                    <?= esc(
+                                        $jenisKelamin
+                                    ) ?>
 
-    </div>
+                                </div>
 
-</div>
+                            </div>
 
 
                             <!-- EMAIL -->
@@ -600,8 +568,7 @@ $email =
                                     class="
                                         col-sm-4
                                         font-weight-bold
-                                    "
-                                >
+                                    ">
 
                                     <i
                                         class="
@@ -609,8 +576,7 @@ $email =
                                             fa-envelope
                                             text-primary
                                             mr-2
-                                        "
-                                    ></i>
+                                        "></i>
 
                                     Email
 
@@ -635,8 +601,7 @@ $email =
                                     class="
                                         col-sm-4
                                         font-weight-bold
-                                    "
-                                >
+                                    ">
 
                                     <i
                                         class="
@@ -644,8 +609,7 @@ $email =
                                             fa-phone
                                             text-primary
                                             mr-2
-                                        "
-                                    ></i>
+                                        "></i>
 
                                     Nomor HP
 
@@ -669,8 +633,7 @@ $email =
                                     class="
                                         col-sm-4
                                         font-weight-bold
-                                    "
-                                >
+                                    ">
 
                                     <i
                                         class="
@@ -678,8 +641,7 @@ $email =
                                             fa-map-marker-alt
                                             text-primary
                                             mr-2
-                                        "
-                                    ></i>
+                                        "></i>
 
                                     Alamat
 
@@ -712,16 +674,14 @@ $email =
                             color:#0b3d91;
                             font-weight:700;
                             margin-bottom:25px;
-                        "
-                    >
+                        ">
 
                         <i
                             class="
                                 fas
                                 fa-graduation-cap
                                 mr-2
-                            "
-                        ></i>
+                            "></i>
 
                         Informasi Akademik
 
@@ -731,175 +691,131 @@ $email =
                     <div class="row">
 
 
-                        <!-- PROGRAM STUDI -->
+                        <div class="row">
 
-                        <div
-                            class="
-                                col-lg-6
-                                col-md-6
-                                mb-3
-                            "
-                        >
+                            <!-- PROGRAM STUDI -->
 
                             <div
-                                style="
-                                    background:#f5f8fc;
-                                    padding:20px;
-                                    border-left:
-                                        4px solid #0b3d91;
-                                    border-radius:8px;
-                                    height:100%;
-                                "
-                            >
+                                class="
+            col-lg-4
+            col-md-6
+            mb-3
+        ">
 
-                                <small
-                                    class="text-muted"
-                                >
+                                <div
+                                    style="
+                background:#f5f8fc;
+                padding:20px;
+                border-left:
+                    4px solid #0b3d91;
+                border-radius:8px;
+                height:100%;
+            ">
 
-                                    Program Studi
+                                    <small
+                                        class="text-muted">
 
-                                </small>
+                                        Program Studi
 
-                                <h5
-                                    class="mb-0 mt-1"
-                                >
+                                    </small>
 
-                                    <?= esc(
-                                        $prodi
-                                    ) ?>
+                                    <h5
+                                        class="mb-0 mt-1">
 
-                                </h5>
+                                        <?= esc(
+                                            $prodi
+                                        ) ?>
+
+                                    </h5>
+
+                                </div>
 
                             </div>
 
-                        </div>
 
-                        <!-- JURUSAN -->
-
-                        <div
-                            class="
-                                col-lg-6
-                                col-md-6
-                                mb-3
-                            "
-                        >
+                            <!-- JURUSAN -->
 
                             <div
-                                style="
-                                    background:#f5f8fc;
-                                    padding:20px;
-                                    border-left:
-                                        4px solid #0b3d91;
-                                    border-radius:8px;
-                                    height:100%;
-                                "
-                            >
+                                class="
+            col-lg-4
+            col-md-6
+            mb-3
+        ">
 
-                                <small
-                                    class="text-muted"
-                                >
+                                <div
+                                    style="
+                background:#f5f8fc;
+                padding:20px;
+                border-left:
+                    4px solid #0b3d91;
+                border-radius:8px;
+                height:100%;
+            ">
 
-                                    Jurusan
+                                    <small
+                                        class="text-muted">
 
-                                </small>
+                                        Jurusan
 
-                                <h5
-                                    class="mb-0 mt-1"
-                                >
+                                    </small>
 
-                                    <?= esc(
-                                        $jurusan
-                                    ) ?>
+                                    <h5
+                                        class="mb-0 mt-1">
 
-                                </h5>
+                                        <?= esc(
+                                            $jurusan
+                                        ) ?>
 
-                            </div>
+                                    </h5>
 
-                        </div>
-
-
-                        <!-- SEMESTER -->
-
-                        <div
-                            class="
-                                col-lg-3
-                                col-md-6
-                                mb-3
-                            "
-                        >
-                         <div
-                                style="
-                                    background:#f5f8fc;
-                                    padding:20px;
-                                    border-left:
-                                        4px solid #f28c28;
-                                    border-radius:8px;
-                                    height:100%;
-                                "
-                            >
-                                <small
-                                    class="text-muted"
-                                >
-
-                                    Semester
-
-                                </small>
-
-                                <h5
-                                    class="mb-0 mt-1"
-                                >
-
-                                    <?= esc(
-                                        $semester
-                                    ) ?>
-
-                                </h5>
+                                </div>
 
                             </div>
 
-                        </div>
-                        <!-- ANGKATAN -->
-                        <div
-                            class="
-                                col-lg-3
-                                col-md-6
-                                mb-3
-                            "
-                        >
+
+                            <!-- KELAS -->
+
                             <div
-                                style="
-                                    background:#f5f8fc;
-                                    padding:20px;
-                                    border-left:
-                                        4px solid #f28c28;
-                                    border-radius:8px;
-                                    height:100%;
-                                "
-                            >
+                                class="
+            col-lg-4
+            col-md-6
+            mb-3
+        ">
 
-                                <small
-                                    class="text-muted"
-                                >
+                                <div
+                                    style="
+                background:#f5f8fc;
+                padding:20px;
+                border-left:
+                    4px solid #0b3d91;
+                border-radius:8px;
+                height:100%;
+            ">
 
-                                    Angkatan
+                                    <small
+                                        class="text-muted">
 
-                                </small>
+                                        Kelas
 
-                                <h5
-                                    class="mb-0 mt-1"
-                                >
+                                    </small>
 
-                                    <?= esc(
-                                        $angkatan
-                                    ) ?>
+                                    <h5
+                                        class="mb-0 mt-1">
 
-                                </h5>
+                                        <?= esc(
+                                            $kelas
+                                        ) ?>
+
+                                    </h5>
+
+                                </div>
+
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
 </div>
 <?= $this->include('layouts/footer'); ?>

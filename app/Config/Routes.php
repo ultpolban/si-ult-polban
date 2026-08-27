@@ -60,9 +60,9 @@ $routes->group('classes', ['filter' => 'auth'], function ($routes) {
 |--------------------------------------------------------------------------
 */
 
-$routes->get('register', 'AuthController::register');
+// $routes->get('register', 'AuthController::register');
 
-$routes->post('register/store', 'AuthController::storeRegister');
+// $routes->post('register/store', 'AuthController::storeRegister');
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +90,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     */
 
     $routes->get('dashboard', 'DashboardController::index');
+    $routes->get('pimpinan/dashboard', 'Admin::dashboardPimpinan', ['filter' => 'role:PIMPINAN']);
 
     /*
     |--------------------------------------------------------------------------
@@ -246,6 +247,9 @@ $routes->group('pengajuan-layanan', ['filter' => 'auth'], function ($routes) {
     $routes->get('/', 'PengajuanLayananController::index');
     $routes->get('create', 'PengajuanLayananController::create');
     $routes->post('store', 'PengajuanLayananController::store');
+    // AJAX endpoints
+    $routes->get('layanan-by-unit/(:num)', 'PengajuanLayananController::getLayananByUnit/$1');
+    $routes->get('persyaratan-by-layanan/(:num)', 'PengajuanLayananController::getPersyaratanByLayanan/$1');
 });
 
 $routes->get('verifikasi', 'VerifikasiController::index', ['filter' => 'auth']);
@@ -274,11 +278,15 @@ $routes->get('notifikasi/read/(:num)', 'NotificationController::read/$1', ['filt
 $routes->get('notifikasi/read-all', 'NotificationController::readAll', ['filter' => 'auth']);
 
 $routes->get('tiket/manajemen', 'Admin::tiket', ['filter' => 'auth']);
-$routes->get('tiket/buat', 'Admin::tiket', ['filter' => 'auth']);
+$routes->get('tiket/buat', 'Admin::buatTiket', ['filter' => 'auth']);
+$routes->post('tiket/simpan', 'Admin::simpanTiket', ['filter' => 'auth']);
+$routes->post('tiket/update/(:num)', 'Admin::updateTiket/$1', ['filter' => 'auth']);
+$routes->post('tiket/delete/(:num)', 'Admin::deleteTiket/$1', ['filter' => 'auth']);
 $routes->get('tiket/lacak', 'Admin::tracking', ['filter' => 'auth']);
 $routes->get('laporan', 'Admin::laporan', ['filter' => 'auth']);
 $routes->get('statistik', 'Admin::statistik', ['filter' => 'auth']);
 $routes->get('profil', 'ProfileController::index', ['filter' => 'auth']);
+$routes->get('profil/edit', 'ProfileController::edit', ['filter' => 'auth']);
 $routes->post('profil/update', 'ProfileController::update', ['filter' => 'auth']);
 
 // Dashboard Program Studi (AJAX-based)

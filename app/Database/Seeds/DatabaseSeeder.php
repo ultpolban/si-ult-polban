@@ -77,6 +77,7 @@ class DatabaseSeeder extends Seeder
         */
 
         $this->call(AdminSeeder::class);
+        $this->call(PimpinanSeeder::class);
 
 
 echo PHP_EOL;

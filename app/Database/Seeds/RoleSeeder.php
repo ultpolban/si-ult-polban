@@ -54,6 +54,13 @@ class RoleSeeder extends Seeder
                 'sort_order'  => 6,
             ],
 
+            [
+                'code'        => 'PIMPINAN',
+                'name'        => 'Pimpinan',
+                'description' => 'Memantau ringkasan dan kinerja layanan.',
+                'sort_order'  => 7,
+            ],
+
         ];
 
         foreach ($roles as &$role) {

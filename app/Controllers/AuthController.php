@@ -10,6 +10,7 @@ use App\Models\DepartmentModel;
 use App\Models\StudyProgramModel;
 use App\Models\WorkUnitModel;
 use App\Models\ClassModel;
+use App\Services\ActivityLogService;
 
 class AuthController extends BaseController
 {
@@ -54,17 +55,19 @@ class AuthController extends BaseController
 
             // Jenis Pemohon
             'userTypes' => $this->userTypeModel
+                ->select('master_applicant_types.*, master_applicant_types.name as type_name')
                 ->orderBy('name', 'ASC')
                 ->findAll(),
 
             // Jurusan
             'departments' => $this->departmentModel
+                ->select('master_departments.*, master_departments.name as department_name')
                 ->orderBy('name', 'ASC')
                 ->findAll(),
 
             // Program Studi
             'studyPrograms' => $this->studyProgramModel
-                ->select('master_study_programs.*, master_departments.name as department_name')
+                ->select('master_study_programs.*, master_study_programs.name as program_name, master_study_programs.degree as education_level, master_departments.name as department_name')
                 ->join(
                     'master_departments',
                     'master_departments.id = master_study_programs.department_id',
@@ -76,11 +79,13 @@ class AuthController extends BaseController
 
             // Unit Kerja
             'workUnits' => $this->workUnitModel
+                ->select('master_service_units.*, master_service_units.name as unit_name')
                 ->orderBy('name', 'ASC')
                 ->findAll(),
 
             // Kelas
             'classes' => $this->classModel
+                ->select('master_classes.*, master_classes.name as class_name')
                 ->orderBy('name', 'ASC')
                 ->findAll()
 
@@ -98,7 +103,7 @@ class AuthController extends BaseController
 
             'full_name' => 'required|min_length[3]|max_length[150]',
 
-            'email' => 'required|valid_email|is_unique[users.email]',
+            'personal_email' => 'required|valid_email|is_unique[users.email]',
 
             'password' => 'required|min_length[8]',
 
@@ -239,10 +244,14 @@ class AuthController extends BaseController
                 'required' => 'Nama lengkap wajib diisi.'
             ],
 
-            'email' => [
+            'personal_email' => [
                 'required' => 'Email pribadi wajib diisi.',
                 'valid_email' => 'Format email tidak valid.',
                 'is_unique' => 'Email sudah terdaftar.'
+            ],
+
+            'study_program_id' => [
+                'required' => 'Program studi wajib dipilih.'
             ],
 
             'password' => [
@@ -294,27 +303,30 @@ class AuthController extends BaseController
 
     private function buildUserData(string $passwordHash, ?string $photoName): array
     {
+        $applicantRole = $this->roleModel
+            ->where('code', 'PEMOHON')
+            ->first();
+
+        if (!$applicantRole) {
+            throw new \RuntimeException('Role pemohon belum tersedia.');
+        }
+
         return [
 
             // Relasi
-            'role_id'            => 5,
-            'user_type_id'       => $this->request->getPost('user_type_id'),
-
+            'role_id'            => $applicantRole['id'],
             // Data akun
             'full_name'          => trim($this->request->getPost('full_name')),
-            'email'              => trim($this->request->getPost('email')),
-            'institution_email'  => $this->request->getPost('institution_email'),
+            'email'              => trim((string) $this->request->getPost('personal_email')),
 
             // Password
             'password'           => $passwordHash,
 
             // Data pribadi
-            'phone'              => $this->request->getPost('phone'),
-            'gender'             => $this->request->getPost('gender'),
-            'address'            => $this->request->getPost('address'),
+            'phone_number'       => $this->request->getPost('phone'),
 
             // Foto
-            'photo'              => $photoName,
+            'profile_photo'      => $photoName,
 
             // Default
             'is_active'          => 1
@@ -473,8 +485,20 @@ class AuthController extends BaseController
 
         $this->setUserSession($user);
 
+        // ✅ Catat aktivitas login
+        (new ActivityLogService())->log(
+            $user['id'],
+            'login',
+            'auth',
+            ['new_data' => ['ip' => $this->request->getIPAddress(), 'role' => $user['role_name'] ?? '']]
+        );
+
+        $dashboard = ($user['role_code'] ?? '') === 'PIMPINAN'
+            ? '/pimpinan/dashboard'
+            : '/';
+
         return redirect()
-            ->to('/')
+            ->to($dashboard)
             ->with('success', 'Selamat datang ' . $user['full_name']);
     }
 
@@ -561,7 +585,36 @@ class AuthController extends BaseController
         |--------------------------------------------------------------------------
         */
 
+            $db = \Config\Database::connect();
+            $db->transBegin();
+
             $this->userModel->insert($userData);
+
+            $userId = (int) $this->userModel->getInsertID();
+
+            if ($userId <= 0) {
+                throw new \RuntimeException('Gagal membuat akun pengguna.');
+            }
+
+            $db->table('user_profiles')->insert([
+                'user_id'           => $userId,
+                'applicant_type_id' => $this->request->getPost('user_type_id') ?: null,
+                'study_program_id'  => $this->request->getPost('study_program_id') ?: null,
+                'class_id'          => $this->request->getPost('class_id') ?: null,
+                'nim'               => $this->request->getPost('nim') ?: null,
+                'nik'               => $this->request->getPost('identity_number') ?: null,
+                'name'              => $userData['full_name'],
+                'email'             => $userData['email'],
+                'phone'             => $this->request->getPost('phone') ?: null,
+                'address'           => $this->request->getPost('address') ?: null,
+                'photo'             => $photoName,
+            ]);
+
+            if ($db->transStatus() === false) {
+                throw new \RuntimeException('Gagal menyimpan data registrasi.');
+            }
+
+            $db->transCommit();
 
             return redirect()
                 ->to('/login')
@@ -570,6 +623,10 @@ class AuthController extends BaseController
                     'Registrasi berhasil. Silakan login.'
                 );
         } catch (\Throwable $e) {
+
+            if (isset($db)) {
+                $db->transRollback();
+            }
 
             return redirect()
                 ->back()
@@ -591,6 +648,7 @@ class AuthController extends BaseController
 
             'role_id'        => $user['role_id'],
             'role_name'      => $user['role_name'] ?? '',
+            'role_code'      => $user['role_code'] ?? '',
 
             'user_type_id'   => $user['applicant_type_id'] ?? null,
 
@@ -611,6 +669,16 @@ class AuthController extends BaseController
 
     public function logout()
     {
+        // ✅ Catat aktivitas logout sebelum session di-destroy
+        $userId = session()->get('user_id');
+        if ($userId) {
+            (new ActivityLogService())->log(
+                (int) $userId,
+                'logout',
+                'auth'
+            );
+        }
+
         session()->destroy();
 
         return redirect()

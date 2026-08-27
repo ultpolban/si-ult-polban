@@ -132,6 +132,7 @@
                     <select
                         id="study_program_id"
                         name="study_program_id"
+                        data-selected="<?= esc(old('study_program_id') ?? '') ?>"
                         class="form-select <?= isset($errors['study_program_id']) ? 'is-invalid' : '' ?>">
 
                         <option value="">

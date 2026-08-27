@@ -53,7 +53,7 @@
                                 <td><?= $key + 1 ?></td>
                                 <td><span class="badge bg-secondary"><?= $row['tiket'] ?></span></td>
                                 <td><?= esc($row['judul']) ?></td>
-                                <td><?= esc($row['user_id']) ?></td> <!-- Assuming we don't have user name yet, using ID -->
+                                <td><?= esc($row['pemohon_nama'] ?? 'Profil tidak ditemukan') ?></td>
                                 <td>
                                     <?php 
                                         $bg = 'bg-warning text-dark';

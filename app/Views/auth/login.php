@@ -17,6 +17,12 @@
 
             <div class="auth-left">
 
+                <div class="auth-brand">
+                    <img
+                        src="<?= base_url('assets/images/ULT POLBAN.png') ?>"
+                        alt="Logo Politeknik Negeri Bandung">
+                </div>
+
                 <div>
 
                     <span class="system-badge">
@@ -38,12 +44,6 @@
                         Politeknik Negeri Bandung
 
                     </p>
-
-                </div>
-
-                <div class="auth-icon">
-
-                    <i class="bi bi-shield-lock-fill"></i>
 
                 </div>
 
@@ -142,17 +142,7 @@
 
                 </form>
 
-                <div class="text-center mt-4">
-
-                    Belum mempunyai akun?
-
-                    <a href="<?= base_url('register') ?>">
-
-                        Daftar Sekarang
-
-                    </a>
-
-                </div>
+                
 
             </div>
 
@@ -189,3 +179,4 @@
 </body>
 
 </html>
+

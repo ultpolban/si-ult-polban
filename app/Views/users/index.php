@@ -629,7 +629,7 @@ DAFTAR USER
 
                                     </a>
 
-                                    <?php if ($user['role_name'] !== 'Administrator') : ?>
+                                    <?php if (($user['role_code'] ?? '') !== 'SUPER_ADMIN') : ?>
 
                                         <form
                                             action="<?= base_url('users/delete/' . $user['id']) ?>"
@@ -654,7 +654,7 @@ DAFTAR USER
                                         <button
                                             class="btn btn-secondary btn-sm"
                                             disabled
-                                            title="Administrator tidak dapat dihapus">
+                                            title="Super Administrator tidak dapat dihapus">
 
                                             <i class="bi bi-lock-fill"></i>
 

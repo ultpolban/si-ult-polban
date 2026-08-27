@@ -51,6 +51,28 @@ class UnitLayananController extends BaseController
 
     public function delete($id)
     {
+        $unit = $this->unitModel->find($id);
+
+        if (!$unit) {
+            return redirect()->to('/unit-layanan')->with('error', 'Unit layanan tidak ditemukan.');
+        }
+
+        $db = \Config\Database::connect();
+        $totalCategory = $db->table('master_service_categories')
+            ->where('service_unit_id', $id)
+            ->countAllResults();
+        $totalService = $db->table('master_services')
+            ->where('service_unit_id', $id)
+            ->countAllResults();
+
+        if ($totalCategory > 0 || $totalService > 0) {
+            return redirect()->to('/unit-layanan')->with(
+                'error',
+                'Unit layanan tidak dapat dihapus karena masih digunakan oleh '
+                    . $totalCategory . ' kategori dan ' . $totalService . ' layanan.'
+            );
+        }
+
         $this->unitModel->delete($id);
         return redirect()->to('/unit-layanan')->with('success', 'Unit Layanan berhasil dihapus.');
     }

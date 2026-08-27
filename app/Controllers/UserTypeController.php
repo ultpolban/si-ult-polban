@@ -251,11 +251,7 @@ class UserTypeController extends BaseController
     |--------------------------------------------------------------------------
     */
 
-        $totalUser = $this->userModel
-
-            ->where('user_type_id', $id)
-
-            ->countAllResults();
+        $totalUser = $this->userTypeModel->countUser((int) $id);
 
         if ($totalUser > 0) {
 

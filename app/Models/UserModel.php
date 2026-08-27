@@ -48,7 +48,7 @@ class UserModel extends Model
 
     protected function baseQuery()
     {
-        return $this->select('users.*, users.email as personal_email, users.phone_number as phone, users.profile_photo as photo, roles.name as role_name')
+        return $this->select('users.*, users.email as personal_email, users.phone_number as phone, users.profile_photo as photo, roles.name as role_name, roles.code as role_code')
             ->join('roles', 'roles.id = users.role_id', 'left');
     }
 
@@ -76,9 +76,12 @@ class UserModel extends Model
             ->select(
                 'users.*, users.email as personal_email, users.phone_number as phone, users.profile_photo as photo, user_profiles.nim, user_profiles.nik, user_profiles.study_program_id, user_profiles.class_id, '
                     . 'master_study_programs.name as program_name, master_study_programs.degree as degree, master_study_programs.department_id as department_id, '
-                    . 'master_departments.name as department_name, master_classes.name as class_name, NULL as unit_name'
+                    . 'master_departments.name as department_name, master_classes.name as class_name, '
+                    . 'master_applicant_types.name as type_name, user_profiles.applicant_type_id as user_type_id, '
+                    . 'user_profiles.address, NULL as unit_name'
             )
             ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
+            ->join('master_applicant_types', 'master_applicant_types.id = user_profiles.applicant_type_id', 'left')
             ->join('master_study_programs', 'master_study_programs.id = user_profiles.study_program_id', 'left')
             ->join('master_departments', 'master_departments.id = master_study_programs.department_id', 'left')
             ->join('master_classes', 'master_classes.id = user_profiles.class_id', 'left')

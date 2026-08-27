@@ -247,7 +247,21 @@ class WorkUnitController extends BaseController
                 ->with('error', 'Unit kerja tidak ditemukan.');
         }
 
-        // Backend1 tidak menyimpan work_unit_id di users.
+        $db = \Config\Database::connect();
+        $totalCategory = $db->table('master_service_categories')
+            ->where('service_unit_id', $id)
+            ->countAllResults();
+        $totalService = $db->table('master_services')
+            ->where('service_unit_id', $id)
+            ->countAllResults();
+
+        if ($totalCategory > 0 || $totalService > 0) {
+            return redirect()
+                ->to(base_url('work-units'))
+                ->with('error', 'Unit kerja tidak dapat dihapus karena masih digunakan oleh '
+                    . $totalCategory . ' kategori dan ' . $totalService . ' layanan.');
+        }
+
         $this->workUnitModel->delete($id);
 
 

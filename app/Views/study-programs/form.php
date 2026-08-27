@@ -49,7 +49,7 @@
                                     $studyProgram['department_id'] ?? ''
                                 ) == $department['id'] ? 'selected' : '' ?>>
 
-                                <?= esc($department['department_name']) ?>
+                                <?= esc($department['department_name'] ?? $department['name'] ?? '-') ?>
 
                             </option>
 
@@ -70,7 +70,7 @@
                     </label>
 
                     <select
-                        name="education_level"
+                        name="degree"
                         class="form-select">
 
                         <option value="">-- Pilih --</option>
@@ -86,8 +86,8 @@
                             <option
                                 value="<?= $level ?>"
                                 <?= old(
-                                    'education_level',
-                                    $studyProgram['education_level'] ?? ''
+                                    'degree',
+                                    $studyProgram['degree'] ?? ''
                                 ) == $level ? 'selected' : '' ?>>
 
                                 <?= $level ?>
@@ -112,11 +112,11 @@
 
                     <input
                         type="text"
-                        name="program_name"
+                        name="name"
                         class="form-control"
                         value="<?= old(
-                                    'program_name',
-                                    $studyProgram['program_name'] ?? ''
+                                    'name',
+                                    $studyProgram['name'] ?? ''
                                 ) ?>">
 
                 </div>

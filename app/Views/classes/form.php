@@ -29,11 +29,11 @@
                             value="<?= $studyProgram['id'] ?>"
                             <?= old('study_program_id', $class['study_program_id'] ?? '') == $studyProgram['id'] ? 'selected' : '' ?>>
 
-                            <?= esc($studyProgram['education_level']) ?>
+                            <?= esc($studyProgram['education_level'] ?? $studyProgram['degree'] ?? '') ?>
 
                             -
 
-                            <?= esc($studyProgram['program_name']) ?>
+                            <?= esc($studyProgram['program_name'] ?? $studyProgram['name'] ?? '') ?>
 
                         </option>
 
@@ -53,9 +53,9 @@
 
                 <input
                     type="text"
-                    name="class_name"
+                    name="name"
                     class="form-control"
-                    value="<?= old('class_name', $class['class_name'] ?? '') ?>"
+                    value="<?= old('name', $class['name'] ?? '') ?>"
                     placeholder="Contoh : 1A"
                     required>
 
@@ -70,12 +70,12 @@
                 </label>
 
                 <select
-                    name="status"
+                    name="is_active"
                     class="form-select">
 
                     <option
                         value="1"
-                        <?= old('status', $class['status'] ?? 1) == 1 ? 'selected' : '' ?>>
+                        <?= old('is_active', $class['is_active'] ?? 1) == 1 ? 'selected' : '' ?>>
 
                         Aktif
 
@@ -83,7 +83,7 @@
 
                     <option
                         value="0"
-                        <?= old('status', $class['status'] ?? 1) == 0 ? 'selected' : '' ?>>
+                        <?= old('is_active', $class['is_active'] ?? 1) == 0 ? 'selected' : '' ?>>
 
                         Nonaktif
 

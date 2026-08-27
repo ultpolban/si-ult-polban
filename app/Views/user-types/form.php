@@ -35,16 +35,16 @@
 
                 <input
                     type="text"
-                    name="type_name"
-                    class="form-control <?= session('errors.type_name') ? 'is-invalid' : '' ?>"
-                    value="<?= old('type_name', $type['type_name'] ?? '') ?>"
+                    name="name"
+                    class="form-control <?= session('errors.name') ? 'is-invalid' : '' ?>"
+                    value="<?= old('name', $type['name'] ?? '') ?>"
                     placeholder="Contoh: Mahasiswa">
 
-                <?php if (session('errors.type_name')) : ?>
+                <?php if (session('errors.name')) : ?>
 
                     <div class="invalid-feedback">
 
-                        <?= session('errors.type_name') ?>
+                        <?= session('errors.name') ?>
 
                     </div>
 

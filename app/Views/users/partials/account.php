@@ -185,9 +185,9 @@
 
                 <input
                     type="email"
-                    name="personal_email"
+                    name="email"
                     class="form-control"
-                    value="<?= old('personal_email', $user['personal_email'] ?? '') ?>"
+                    value="<?= old('email', $user['personal_email'] ?? '') ?>"
                     required>
 
             </div>

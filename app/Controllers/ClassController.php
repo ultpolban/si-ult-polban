@@ -71,6 +71,7 @@ class ClassController extends BaseController
             'title' => 'Tambah Kelas',
 
             'studyPrograms' => $this->studyProgramModel
+                ->select('master_study_programs.*, master_study_programs.degree as education_level, master_study_programs.name as program_name')
                 ->orderBy('name')
                 ->findAll(),
 
@@ -182,6 +183,7 @@ class ClassController extends BaseController
             'class' => $class,
 
             'studyPrograms' => $this->studyProgramModel
+                ->select('master_study_programs.*, master_study_programs.degree as education_level, master_study_programs.name as program_name')
                 ->orderBy('name')
                 ->findAll(),
 

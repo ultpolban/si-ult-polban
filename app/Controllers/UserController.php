@@ -20,6 +20,7 @@ class UserController extends BaseController
     protected StudyProgramModel $studyProgramModel;
     protected WorkUnitModel $workUnitModel;
     protected ClassModel $classModel;
+    protected \CodeIgniter\Database\BaseConnection $db;
 
     public function __construct()
     {
@@ -32,6 +33,7 @@ class UserController extends BaseController
         $this->studyProgramModel = new StudyProgramModel();
         $this->workUnitModel = new WorkUnitModel();
         $this->classModel = new ClassModel();
+        $this->db = \Config\Database::connect();
     }
 
     /*
@@ -181,7 +183,10 @@ class UserController extends BaseController
                 ? 'required|matches[password]'
                 : 'permit_empty|matches[password]',
 
-            'user_type_id' => 'required',
+            // NOTE: user_type_id is conditionally required only when the selected
+            // role corresponds to an applicant ("Pemohon"). The JS on the client
+            // side hides/disables this field for non-applicant roles, so server-side
+            // validation must match that behaviour.
 
             // ===============================
             // DATA PRIBADI
@@ -207,6 +212,18 @@ class UserController extends BaseController
             ]
 
         ];
+
+        $roleId = (int) $this->request->getPost('role_id');
+
+        if ($roleId) {
+            $role = $this->roleModel->find($roleId);
+            $roleName = strtolower($role['name'] ?? '');
+
+            // Make user_type_id required only when the selected role is "Pemohon".
+            if ($roleName === 'pemohon') {
+                $rules['user_type_id'] = 'required';
+            }
+        }
 
         $userType = (int) $this->request->getPost('user_type_id');
 
@@ -930,13 +947,13 @@ class UserController extends BaseController
 
         $role = $this->roleModel->find($user['role_id']);
 
-        if ($role && $role['name'] === 'Administrator') {
+        if ($role && $role['code'] === 'SUPER_ADMIN') {
 
             return redirect()
 
                 ->to(base_url('users'))
 
-                ->with('error', 'Akun Administrator tidak dapat dihapus.');
+                ->with('error', 'Akun Super Administrator tidak dapat dihapus.');
         }
 
         /*
@@ -1012,6 +1029,41 @@ class UserController extends BaseController
             );
         }
 
+        // Profil pengguna bersifat opsional. Pastikan view tetap aman untuk
+        // akun yang belum melengkapi data profilnya.
+        $user = array_merge([
+            'type_name'           => '-',
+            'user_type_id'        => 0,
+            'gender'              => null,
+            'birth_place'         => null,
+            'birth_date'          => null,
+            'phone'               => null,
+            'address'             => null,
+            'institution_email'   => null,
+            'nim'                 => null,
+            'nip'                 => null,
+            'nidn'                => null,
+            'department_name'     => null,
+            'education_level'     => null,
+            'program_name'        => null,
+            'class_name'          => null,
+            'angkatan'            => null,
+            'entry_year'          => null,
+            'student_status'      => null,
+            'unit_name'           => null,
+            'academic_position'   => null,
+            'functional_position' => null,
+            'employee_status'     => null,
+            'graduation_year'     => null,
+            'student_name'        => null,
+            'student_nim'         => null,
+            'relationship'        => null,
+            'institution_name'    => null,
+            'institution_type'    => null,
+            'position'            => null,
+            'job_title'           => null,
+        ], $user);
+
         return view('users/show', [
 
             'title' => 'Detail User',
@@ -1032,7 +1084,9 @@ class UserController extends BaseController
         }
 
         // Administrator tidak boleh dinonaktifkan
-        if ($user['role_id'] == 1) {
+        $role = $this->roleModel->find($user['role_id']);
+
+        if ($role && $role['code'] === 'SUPER_ADMIN') {
 
             return redirect()->to('/users')
                 ->with('error', 'Administrator tidak dapat diubah statusnya.');

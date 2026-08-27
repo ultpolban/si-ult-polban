@@ -179,11 +179,38 @@
 
             if (!department || !study) return;
 
-            department.addEventListener('change', function() {
+            function populatePrograms(data) {
+
+                const selectedProgramId = study.dataset.selected || '';
+
+                study.innerHTML = '<option value="">Pilih Program Studi</option>';
+
+                data.forEach(function(item) {
+
+                    let option = document.createElement('option');
+
+                    option.value = item.id;
+
+                    const educationLevel = item.education_level ?? item.degree ?? '';
+                    const programName = item.program_name ?? item.name ?? '';
+
+                    option.text = [educationLevel, programName]
+                        .filter(Boolean)
+                        .join(' - ');
+
+                    option.selected = String(item.id) === String(selectedProgramId);
+
+                    study.appendChild(option);
+
+                });
+
+            }
+
+            function fetchPrograms() {
 
                 study.innerHTML = '<option>Memuat...</option>';
 
-                if (this.value === '') {
+                if (department.value === '') {
 
                     study.innerHTML = '<option value="">Pilih Program Studi</option>';
 
@@ -191,29 +218,41 @@
 
                 }
 
-                fetch("<?= base_url('study-programs/by-department') ?>/" + this.value)
+                fetch("<?= base_url('study-programs/by-department') ?>/" + department.value)
 
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Gagal memuat program studi.');
+                        }
+
+                        return response.json();
+                    })
 
                     .then(data => {
+                        if (!Array.isArray(data)) {
+                            throw new Error('Format data program studi tidak valid.');
+                        }
 
-                        study.innerHTML = '<option value="">Pilih Program Studi</option>';
+                        populatePrograms(data);
+                    })
 
-                        data.forEach(function(item) {
-
-                            let option = document.createElement('option');
-
-                            option.value = item.id;
-
-                            option.text = item.education_level + ' - ' + item.program_name;
-
-                            study.appendChild(option);
-
-                        });
-
+                    .catch(() => {
+                        study.innerHTML = '<option value="">Program studi tidak dapat dimuat</option>';
                     });
 
+            }
+
+            department.addEventListener('change', function() {
+
+                study.dataset.selected = '';
+
+                fetchPrograms();
+
             });
+
+            if (department.value !== '') {
+                fetchPrograms();
+            }
 
         }
 

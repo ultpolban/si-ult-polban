@@ -38,6 +38,7 @@
                         <th>Tiket</th>
                         <th>Judul</th>
                         <th>Layanan</th>
+                        <th>Prioritas</th>
                         <th>Status</th>
                         <th>Tanggal</th>
                         <th>Aksi</th>
@@ -46,26 +47,41 @@
                 <tbody>
                     <?php if (empty($pengajuan)) : ?>
                         <tr>
-                            <td colspan="7" class="text-center py-4 text-muted">
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox fs-3 d-block mb-2"></i>
                                 Belum ada pengajuan.
                             </td>
                         </tr>
                     <?php else : ?>
                         <?php foreach ($pengajuan as $key => $row) : ?>
+                            <?php
+                                // Status badge
+                                $status = $row['status'] ?? 'submitted';
+                                $statusMap = [
+                                    'submitted'   => ['label' => 'Menunggu',  'class' => 'bg-warning text-dark'],
+                                    'in_progress' => ['label' => 'Diproses',  'class' => 'bg-info text-dark'],
+                                    'completed'   => ['label' => 'Selesai',   'class' => 'bg-success'],
+                                    'rejected'    => ['label' => 'Ditolak',   'class' => 'bg-danger'],
+                                    'cancelled'   => ['label' => 'Dibatalkan','class' => 'bg-secondary'],
+                                ];
+                                $statusInfo = $statusMap[$status] ?? ['label' => ucfirst($status), 'class' => 'bg-secondary'];
+
+                                // Prioritas badge
+                                $priority = $row['priority'] ?? 'normal';
+                                $priorityMap = [
+                                    'normal' => ['label' => 'Normal',   'class' => 'bg-secondary'],
+                                    'high'   => ['label' => 'Penting',  'class' => 'bg-warning text-dark'],
+                                    'urgent' => ['label' => 'Mendesak', 'class' => 'bg-danger'],
+                                ];
+                                $priorityInfo = $priorityMap[$priority] ?? ['label' => ucfirst($priority), 'class' => 'bg-secondary'];
+                            ?>
                             <tr>
                                 <td><?= $key + 1 ?></td>
-                                <td><span class="badge bg-secondary"><?= $row['tiket'] ?></span></td>
-                                <td><?= esc($row['judul']) ?></td>
-                                <td><?= esc($row['layanan_id']) ?></td>
-                                <td>
-                                    <?php 
-                                        $bg = 'bg-warning text-dark';
-                                        if ($row['status'] == 'Selesai') $bg = 'bg-success';
-                                        if ($row['status'] == 'Ditolak') $bg = 'bg-danger';
-                                        if ($row['status'] == 'Proses') $bg = 'bg-info text-dark';
-                                    ?>
-                                    <span class="badge <?= $bg ?>"><?= $row['status'] ?></span>
-                                </td>
+                                <td><span class="badge bg-dark font-monospace"><?= esc($row['ticket_number']) ?></span></td>
+                                <td><?= esc($row['title']) ?></td>
+                                <td><?= esc($row['layanan_nama'] ?? '-') ?></td>
+                                <td><span class="badge <?= $priorityInfo['class'] ?>"><?= $priorityInfo['label'] ?></span></td>
+                                <td><span class="badge <?= $statusInfo['class'] ?>"><?= $statusInfo['label'] ?></span></td>
                                 <td><?= date('d M Y', strtotime($row['created_at'])) ?></td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>

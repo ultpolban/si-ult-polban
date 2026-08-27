@@ -242,11 +242,7 @@ class StudyProgramController extends BaseController
                 ->with('error', 'Program Studi tidak ditemukan.');
         }
 
-        $totalUser = $this->userModel
-
-            ->where('study_program_id', $id)
-
-            ->countAllResults();
+        $totalUser = $this->studyProgramModel->countUser((int) $id);
 
         if ($totalUser > 0) {
 
@@ -275,6 +271,8 @@ class StudyProgramController extends BaseController
     public function byDepartment($departmentId)
     {
         $studyPrograms = $this->studyProgramModel
+
+            ->select('master_study_programs.id, master_study_programs.degree as education_level, master_study_programs.name as program_name')
 
             ->where('department_id', $departmentId)
 

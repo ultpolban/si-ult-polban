@@ -36,15 +36,15 @@
 
                     <input
                         type="text"
-                        name="unit_code"
-                        class="form-control <?= session('errors.unit_code') ? 'is-invalid' : '' ?>"
-                        value="<?= old('unit_code', $workUnit['unit_code'] ?? '') ?>">
+                        name="code"
+                        class="form-control <?= session('errors.code') ? 'is-invalid' : '' ?>"
+                        value="<?= old('code', $workUnit['code'] ?? '') ?>">
 
-                    <?php if (session('errors.unit_code')) : ?>
+                    <?php if (session('errors.code')) : ?>
 
                         <div class="invalid-feedback">
 
-                            <?= session('errors.unit_code') ?>
+                            <?= session('errors.code') ?>
 
                         </div>
 
@@ -64,15 +64,15 @@
 
                     <input
                         type="text"
-                        name="unit_name"
-                        class="form-control <?= session('errors.unit_name') ? 'is-invalid' : '' ?>"
-                        value="<?= old('unit_name', $workUnit['unit_name'] ?? '') ?>">
+                        name="name"
+                        class="form-control <?= session('errors.name') ? 'is-invalid' : '' ?>"
+                        value="<?= old('name', $workUnit['name'] ?? '') ?>">
 
-                    <?php if (session('errors.unit_name')) : ?>
+                    <?php if (session('errors.name')) : ?>
 
                         <div class="invalid-feedback">
 
-                            <?= session('errors.unit_name') ?>
+                            <?= session('errors.name') ?>
 
                         </div>
 

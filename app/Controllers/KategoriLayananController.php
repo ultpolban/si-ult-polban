@@ -57,6 +57,24 @@ class KategoriLayananController extends BaseController
 
     public function delete($id)
     {
+        $category = $this->kategoriModel->find($id);
+
+        if (!$category) {
+            return redirect()->to('/kategori-layanan')->with('error', 'Kategori layanan tidak ditemukan.');
+        }
+
+        $totalService = \Config\Database::connect()
+            ->table('master_services')
+            ->where('service_category_id', $id)
+            ->countAllResults();
+
+        if ($totalService > 0) {
+            return redirect()->to('/kategori-layanan')->with(
+                'error',
+                'Kategori layanan tidak dapat dihapus karena masih digunakan oleh ' . $totalService . ' layanan.'
+            );
+        }
+
         $this->kategoriModel->delete($id);
         return redirect()->to('/kategori-layanan')->with('success', 'Kategori Layanan berhasil dihapus.');
     }

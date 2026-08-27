@@ -24,9 +24,11 @@ class RoleFilter implements FilterInterface
         }
 
         // Cek apakah role diizinkan
-        $allowedRoles = array_map('intval', $arguments);
+        $roleCode = (string) session()->get('role_code');
+        $allowedRoles = array_map('strval', $arguments);
 
-        if (!in_array((int) $roleId, $allowedRoles)) {
+        if (!in_array((string) $roleId, $allowedRoles, true)
+            && !in_array($roleCode, $allowedRoles, true)) {
 
             return redirect()
                 ->to('/dashboard')

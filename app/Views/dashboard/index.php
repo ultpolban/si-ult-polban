@@ -216,35 +216,77 @@
             </div>
 
             <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-6">
-                        <a href="<?= base_url('users') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 py-3 rounded-4 text-decoration-none">
-                            <i class="bi bi-people-fill fs-3"></i>
+                <div class="row g-2 quick-menu-grid">
+                    <div class="col-4">
+                        <a href="<?= base_url('users') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 rounded-4 text-decoration-none">
+                            <i class="bi bi-people-fill"></i>
                             <span>User</span>
                         </a>
                     </div>
-                    <div class="col-6">
-                        <a href="<?= base_url('roles') ?>" class="qm-btn qm-btn-orange d-flex flex-column align-items-center justify-content-center w-100 py-3 rounded-4 text-decoration-none">
-                            <i class="bi bi-person-badge-fill fs-3"></i>
+                    <div class="col-4">
+                        <a href="<?= base_url('roles') ?>" class="qm-btn qm-btn-orange d-flex flex-column align-items-center justify-content-center w-100 rounded-4 text-decoration-none">
+                            <i class="bi bi-person-badge-fill"></i>
                             <span>Role</span>
                         </a>
                     </div>
-                    <div class="col-6">
-                        <a href="<?= base_url('departments') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 py-3 rounded-4 text-decoration-none">
-                            <i class="bi bi-diagram-3-fill fs-3"></i>
+                    <div class="col-4">
+                        <a href="<?= base_url('permissions') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 rounded-4 text-decoration-none">
+                            <i class="bi bi-key-fill"></i>
+                            <span>Izin</span>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <a href="<?= base_url('user-types') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 rounded-4 text-decoration-none">
+                            <i class="bi bi-person-vcard-fill"></i>
+                            <span>Jenis</span>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <a href="<?= base_url('departments') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 rounded-4 text-decoration-none">
+                            <i class="bi bi-diagram-3-fill"></i>
                             <span>Jurusan</span>
                         </a>
                     </div>
-                    <div class="col-6">
-                        <a href="<?= base_url('study-programs') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 py-3 rounded-4 text-decoration-none">
-                            <i class="bi bi-mortarboard-fill fs-3"></i>
+                    <div class="col-4">
+                        <a href="<?= base_url('study-programs') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 rounded-4 text-decoration-none">
+                            <i class="bi bi-mortarboard-fill"></i>
                             <span>Prodi</span>
                         </a>
                     </div>
-                    <div class="col-12">
-                        <a href="<?= base_url('work-units') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 py-3 rounded-4 text-decoration-none">
-                            <i class="bi bi-building-fill fs-3"></i>
+                    <div class="col-4">
+                        <a href="<?= base_url('classes') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 rounded-4 text-decoration-none">
+                            <i class="bi bi-journal-bookmark-fill"></i>
+                            <span>Kelas</span>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <a href="<?= base_url('work-units') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 rounded-4 text-decoration-none">
+                            <i class="bi bi-building-fill-gear"></i>
                             <span>Unit Kerja</span>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <a href="<?= base_url('unit-layanan') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 rounded-4 text-decoration-none">
+                            <i class="bi bi-building-fill"></i>
+                            <span>Unit Layanan</span>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <a href="<?= base_url('kategori-layanan') ?>" class="qm-btn qm-btn-orange d-flex flex-column align-items-center justify-content-center w-100 rounded-4 text-decoration-none">
+                            <i class="bi bi-tags-fill"></i>
+                            <span>Kategori</span>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <a href="<?= base_url('layanan') ?>" class="qm-btn qm-btn-blue d-flex flex-column align-items-center justify-content-center w-100 rounded-4 text-decoration-none">
+                            <i class="bi bi-clipboard-check"></i>
+                            <span>Layanan</span>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <a href="<?= base_url('tiket/manajemen') ?>" class="qm-btn qm-btn-orange d-flex flex-column align-items-center justify-content-center w-100 rounded-4 text-decoration-none">
+                            <i class="bi bi-ticket-perforated-fill"></i>
+                            <span>Tiket</span>
                         </a>
                     </div>
                 </div>
@@ -252,10 +294,16 @@
                     .qm-btn {
                         background: #fff;
                         transition: all 0.3s ease;
-                        gap: 8px;
-                        font-size: 0.85rem;
+                        min-height: 72px;
+                        gap: 5px;
+                        font-size: 0.72rem;
                         font-weight: 600;
                         color: #1F2937;
+                        text-align: center;
+                        line-height: 1.15;
+                    }
+                    .qm-btn i {
+                        font-size: 1.35rem;
                     }
                     .qm-btn-blue {
                         border: 1.5px solid rgba(41, 53, 130, 0.35);
@@ -295,6 +343,9 @@
                             0 0 0 1.5px rgba(255, 127, 0, 0.40),
                             0 0 24px rgba(255, 127, 0, 0.30),
                             0 0 48px rgba(255, 127, 0, 0.14);
+                    }
+                    @media (max-width: 420px) {
+                        .quick-menu-grid .col-4 { width: 50%; }
                     }
                 </style>
             </div>

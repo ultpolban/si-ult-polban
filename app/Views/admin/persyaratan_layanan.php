@@ -79,7 +79,16 @@
                                 </td>
                                 <td class="pe-4 text-center">
                                     <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-info text-white" title="View"><i class="bi bi-eye"></i></button>
+                                        <button type="button" class="btn btn-info text-white btn-view"
+                                            data-layanan="<?= esc($row['layanan_nama'] ?? '-') ?>"
+                                            data-persyaratan="<?= esc($row['persyaratan'] ?? $row['name'] ?? '-') ?>"
+                                            data-tipe="<?= esc($row['tipe_file'] ?? $row['file_type'] ?? '-') ?>"
+                                            data-ukuran="<?= esc($row['ukuran'] ?? $row['max_file_size'] ?? 0) ?> KB"
+                                            data-wajib="<?= esc($row['wajib'] ?? (($row['is_required'] ?? 0) ? 'Wajib' : 'Opsional')) ?>"
+                                            data-status="<?= esc($row['status'] ?? (($row['is_active'] ?? 0) ? 'Aktif' : 'Nonaktif')) ?>"
+                                            title="View" data-bs-toggle="modal" data-bs-target="#modalView">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
                                         <button type="button" class="btn btn-warning text-dark btn-edit"
                                             data-id="<?= $row['id'] ?>"
                                             data-layanan="<?= $row['layanan_id'] ?>"
@@ -99,6 +108,28 @@
                     <?php endif; ?>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Detail -->
+<div class="modal fade" id="modalView" tabindex="-1" aria-labelledby="modalViewLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalViewLabel">Detail Persyaratan Layanan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Layanan</dt><dd class="col-sm-8" id="view_layanan">-</dd>
+                    <dt class="col-sm-4">Persyaratan</dt><dd class="col-sm-8" id="view_persyaratan">-</dd>
+                    <dt class="col-sm-4">Tipe File</dt><dd class="col-sm-8" id="view_tipe">-</dd>
+                    <dt class="col-sm-4">Ukuran Maks.</dt><dd class="col-sm-8" id="view_ukuran">-</dd>
+                    <dt class="col-sm-4">Ketentuan</dt><dd class="col-sm-8" id="view_wajib">-</dd>
+                    <dt class="col-sm-4">Status</dt><dd class="col-sm-8" id="view_status">-</dd>
+                </dl>
+            </div>
         </div>
     </div>
 </div>
@@ -215,6 +246,15 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const viewButtons = document.querySelectorAll('.btn-view');
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            ['layanan', 'persyaratan', 'tipe', 'ukuran', 'wajib', 'status'].forEach(field => {
+                document.getElementById('view_' + field).textContent = this.dataset[field] || '-';
+            });
+        });
+    });
+
     const editButtons = document.querySelectorAll('.btn-edit');
     editButtons.forEach(button => {
         button.addEventListener('click', function() {

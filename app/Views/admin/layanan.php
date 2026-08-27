@@ -81,7 +81,17 @@
                                 </td>
                                 <td class="pe-4 text-center">
                                     <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-info text-white" title="View"><i class="bi bi-eye"></i></button>
+                                        <button type="button" class="btn btn-info text-white btn-view"
+                                            data-unit="<?= esc($row['unit_nama'] ?? '-') ?>"
+                                            data-kategori="<?= esc($row['kategori_nama'] ?? '-') ?>"
+                                            data-kode="<?= esc($row['kode'] ?? $row['code'] ?? '-') ?>"
+                                            data-nama="<?= esc($row['nama'] ?? $row['name'] ?? '-') ?>"
+                                            data-sla="<?= esc($row['sla'] ?? $row['service_hours'] ?? 0) ?> Jam"
+                                            data-online="<?= esc($row['online'] ?? (($row['is_online'] ?? 0) ? 'Online' : 'Offline')) ?>"
+                                            data-status="<?= esc($row['status'] ?? (($row['is_active'] ?? 0) ? 'Aktif' : 'Nonaktif')) ?>"
+                                            title="View" data-bs-toggle="modal" data-bs-target="#modalView">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
                                         <button type="button" class="btn btn-warning text-dark btn-edit"
                                             data-id="<?= $row['id'] ?>"
                                             data-unit="<?= $row['unit_layanan_id'] ?>"
@@ -102,6 +112,29 @@
                     <?php endif; ?>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Detail -->
+<div class="modal fade" id="modalView" tabindex="-1" aria-labelledby="modalViewLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalViewLabel">Detail Layanan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Unit</dt><dd class="col-sm-8" id="view_unit">-</dd>
+                    <dt class="col-sm-4">Kategori</dt><dd class="col-sm-8" id="view_kategori">-</dd>
+                    <dt class="col-sm-4">Kode</dt><dd class="col-sm-8" id="view_kode">-</dd>
+                    <dt class="col-sm-4">Nama</dt><dd class="col-sm-8" id="view_nama">-</dd>
+                    <dt class="col-sm-4">SLA</dt><dd class="col-sm-8" id="view_sla">-</dd>
+                    <dt class="col-sm-4">Tipe</dt><dd class="col-sm-8" id="view_online">-</dd>
+                    <dt class="col-sm-4">Status</dt><dd class="col-sm-8" id="view_status">-</dd>
+                </dl>
+            </div>
         </div>
     </div>
 </div>
@@ -236,6 +269,15 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const viewButtons = document.querySelectorAll('.btn-view');
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            ['unit', 'kategori', 'kode', 'nama', 'sla', 'online', 'status'].forEach(field => {
+                document.getElementById('view_' + field).textContent = this.dataset[field] || '-';
+            });
+        });
+    });
+
     const editButtons = document.querySelectorAll('.btn-edit');
     editButtons.forEach(button => {
         button.addEventListener('click', function() {

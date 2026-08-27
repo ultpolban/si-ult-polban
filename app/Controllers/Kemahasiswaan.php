@@ -11,7 +11,6 @@ class Kemahasiswaan extends BaseController
     protected $ticketModel;
     protected $dokumenHasilModel;
 
-
     // =========================================================
     // CONSTRUCTOR
     // =========================================================
@@ -19,7 +18,6 @@ class Kemahasiswaan extends BaseController
     public function __construct()
     {
         $this->ticketModel = new TicketModel();
-
         $this->dokumenHasilModel = new DokumenHasilModel();
     }
 
@@ -35,7 +33,113 @@ class Kemahasiswaan extends BaseController
 
 
     // =========================================================
-    // DASHBOARD KEMAHASISWAAN
+    // HELPER STATUS
+    // =========================================================
+
+    private function statusTampilan($status)
+    {
+        $status = strtolower(trim((string) $status));
+
+        $mapping = [
+
+            // MENUNGGU
+            'draft'        => 'Menunggu',
+            'submitted'    => 'Menunggu',
+            'menunggu'     => 'Menunggu',
+
+            // DIPROSES
+            'verification' => 'Diproses',
+            'processing'   => 'Diproses',
+            'in_progress'  => 'Diproses',
+            'diproses'     => 'Diproses',
+
+            // SELESAI
+            'completed'    => 'Selesai',
+            'complete'     => 'Selesai',
+            'selesai'      => 'Selesai',
+
+            // DITOLAK
+            'rejected'     => 'Ditolak',
+            'ditolak'      => 'Ditolak',
+
+            // DIBATALKAN
+            'cancelled'    => 'Dibatalkan',
+            'canceled'     => 'Dibatalkan',
+            'dibatalkan'   => 'Dibatalkan',
+
+            // REVISI
+            'revision'     => 'Revisi',
+            'revisi'       => 'Revisi',
+        ];
+
+        return $mapping[$status] ?? ucfirst($status);
+    }
+
+
+    // =========================================================
+    // CARI STATUS ENUM DATABASE
+    // =========================================================
+
+    private function cariStatusDatabase(array $candidates)
+    {
+        $db = \Config\Database::connect();
+
+        $result = $db
+            ->query("SHOW COLUMNS FROM tickets LIKE 'status'")
+            ->getRowArray();
+
+        if (!$result) {
+            return null;
+        }
+
+        $columnType = $result['Type'] ?? '';
+
+        $enumValues = [];
+
+        if (
+            preg_match(
+                "/^enum\\((.*)\\)$/i",
+                $columnType,
+                $matches
+            )
+        ) {
+
+            preg_match_all(
+                "/'((?:[^'\\\\]|\\\\.)*)'/",
+                $matches[1],
+                $enumMatches
+            );
+
+            if (!empty($enumMatches[1])) {
+
+                foreach ($enumMatches[1] as $value) {
+
+                    $enumValues[] = stripslashes($value);
+                }
+            }
+        }
+
+        foreach ($candidates as $candidate) {
+
+            foreach ($enumValues as $enumValue) {
+
+                if (
+                    strtolower(trim($enumValue))
+                    ===
+                    strtolower(trim($candidate))
+                ) {
+
+                    return $enumValue;
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+    // =========================================================
+    // DASHBOARD
     // =========================================================
 
     public function dashboard()
@@ -44,33 +148,62 @@ class Kemahasiswaan extends BaseController
             ->orderBy('id', 'DESC')
             ->findAll();
 
-
-        // =====================================================
-        // STATISTIK
-        // =====================================================
-
-        $menunggu = 0;
-
-        $diproses = 0;
-
-        $selesai = 0;
-
-        $ditolak = 0;
-
+        $menunggu   = 0;
+        $diproses   = 0;
+        $selesai    = 0;
+        $ditolak    = 0;
         $dibatalkan = 0;
 
+        foreach ($tickets as &$ticket) {
 
-        foreach ($tickets as $ticket) {
+            // =================================================
+            // SIMPAN STATUS ASLI DATABASE
+            // =================================================
 
-            $status = strtolower(
+            $statusAsli = strtolower(
                 trim(
                     (string) ($ticket['status'] ?? '')
                 )
             );
 
+            $ticket['status_asli'] = $statusAsli;
 
-            switch ($status) {
 
+            // =================================================
+            // TERJEMAHKAN STATUS KE BAHASA INDONESIA
+            // =================================================
+
+            $statusIndonesia =
+                $this->statusTampilan($statusAsli);
+
+            $ticket['status_tampilan'] =
+                $statusIndonesia;
+
+
+            // =================================================
+            // INI YANG PENTING
+            //
+            // Status yang dikirim ke dashboard sekarang
+            // sudah Bahasa Indonesia.
+            //
+            // completed  -> Selesai
+            // processing -> Diproses
+            // submitted  -> Menunggu
+            // =================================================
+
+            $ticket['status'] =
+                $statusIndonesia;
+
+
+            // =================================================
+            // HITUNG STATUS
+            // MENGGUNAKAN STATUS ASLI DATABASE
+            // =================================================
+
+            switch ($statusAsli) {
+
+                case 'draft':
+                case 'submitted':
                 case 'menunggu':
 
                     $menunggu++;
@@ -78,6 +211,9 @@ class Kemahasiswaan extends BaseController
                     break;
 
 
+                case 'verification':
+                case 'processing':
+                case 'in_progress':
                 case 'diproses':
 
                     $diproses++;
@@ -85,6 +221,8 @@ class Kemahasiswaan extends BaseController
                     break;
 
 
+                case 'completed':
+                case 'complete':
                 case 'selesai':
 
                     $selesai++;
@@ -92,6 +230,7 @@ class Kemahasiswaan extends BaseController
                     break;
 
 
+                case 'rejected':
                 case 'ditolak':
 
                     $ditolak++;
@@ -99,6 +238,8 @@ class Kemahasiswaan extends BaseController
                     break;
 
 
+                case 'cancelled':
+                case 'canceled':
                 case 'dibatalkan':
 
                     $dibatalkan++;
@@ -107,29 +248,38 @@ class Kemahasiswaan extends BaseController
             }
         }
 
+        unset($ticket);
+
 
         // =====================================================
-        // DATA VIEW
+        // DATA DASHBOARD
         // =====================================================
 
         $data = [
 
-            'title' => 'Dashboard Kemahasiswaan',
+            'title' =>
+                'Dashboard Kemahasiswaan',
 
-            'total' => count($tickets),
+            'total' =>
+                count($tickets),
 
-            'menunggu' => $menunggu,
+            'menunggu' =>
+                $menunggu,
 
-            'diproses' => $diproses,
+            'diproses' =>
+                $diproses,
 
-            'selesai' => $selesai,
+            'selesai' =>
+                $selesai,
 
-            'ditolak' => $ditolak,
+            'ditolak' =>
+                $ditolak,
 
-            'dibatalkan' => $dibatalkan,
+            'dibatalkan' =>
+                $dibatalkan,
 
-            'tiket' => $tickets,
-
+            'tiket' =>
+                $tickets,
         ];
 
 
@@ -141,40 +291,38 @@ class Kemahasiswaan extends BaseController
 
 
     // =========================================================
-    // PROFIL KEMAHASISWAAN
+    // PROFILE
     // =========================================================
 
     public function profile()
     {
         $session = session();
 
-
         $data = [
 
-            'title' => 'Profil Petugas Kemahasiswaan',
+            'title' =>
+                'Profil Petugas Kemahasiswaan',
 
-
-            'name' => $session->get('name')
+            'name' =>
+                $session->get('name')
                 ?: 'Siti Nurhaliza',
 
-
-            'nip' => $session->get('nip')
+            'nip' =>
+                $session->get('nip')
                 ?: '199001182024012003',
 
-
-            'email' => $session->get('email')
+            'email' =>
+                $session->get('email')
                 ?: 'siti.nurhaliza@polban.ac.id',
 
-
-            'no_hp' => $session->get('no_hp')
+            'no_hp' =>
+                $session->get('no_hp')
                 ?: '081376543210',
 
-
-            'jabatan' => $session->get('jabatan')
+            'jabatan' =>
+                $session->get('jabatan')
                 ?: 'Petugas Unit Layanan',
-
         ];
-
 
         return view(
             'kemahasiswaan/profile',
@@ -184,40 +332,38 @@ class Kemahasiswaan extends BaseController
 
 
     // =========================================================
-    // EDIT PROFIL
+    // EDIT PROFILE
     // =========================================================
 
     public function editProfil()
     {
         $session = session();
 
-
         $data = [
 
-            'title' => 'Edit Profil Petugas Kemahasiswaan',
+            'title' =>
+                'Edit Profil Petugas Kemahasiswaan',
 
-
-            'name' => $session->get('name')
+            'name' =>
+                $session->get('name')
                 ?: 'Siti Nurhaliza',
 
-
-            'nip' => $session->get('nip')
+            'nip' =>
+                $session->get('nip')
                 ?: '199001182024012003',
 
-
-            'email' => $session->get('email')
+            'email' =>
+                $session->get('email')
                 ?: 'siti.nurhaliza@polban.ac.id',
 
-
-            'no_hp' => $session->get('no_hp')
+            'no_hp' =>
+                $session->get('no_hp')
                 ?: '081376543210',
 
-
-            'jabatan' => $session->get('jabatan')
+            'jabatan' =>
+                $session->get('jabatan')
                 ?: 'Petugas Unit Layanan',
-
         ];
-
 
         return view(
             'kemahasiswaan/edit-profil',
@@ -227,42 +373,33 @@ class Kemahasiswaan extends BaseController
 
 
     // =========================================================
-    // UPDATE PROFIL
+    // UPDATE PROFILE
     // =========================================================
 
     public function updateProfil()
     {
         $session = session();
 
-
         $name = trim(
             (string) $this->request->getPost('name')
         );
-
 
         $nip = trim(
             (string) $this->request->getPost('nip')
         );
 
-
         $email = trim(
             (string) $this->request->getPost('email')
         );
-
 
         $no_hp = trim(
             (string) $this->request->getPost('no_hp')
         );
 
-
         $jabatan = trim(
             (string) $this->request->getPost('jabatan')
         );
 
-
-        // =====================================================
-        // VALIDASI NAMA
-        // =====================================================
 
         if ($name === '') {
 
@@ -280,10 +417,6 @@ class Kemahasiswaan extends BaseController
         }
 
 
-        // =====================================================
-        // VALIDASI NIP
-        // =====================================================
-
         if ($nip === '') {
 
             return redirect()
@@ -299,10 +432,6 @@ class Kemahasiswaan extends BaseController
                 );
         }
 
-
-        // =====================================================
-        // VALIDASI EMAIL
-        // =====================================================
 
         if ($email === '') {
 
@@ -320,10 +449,7 @@ class Kemahasiswaan extends BaseController
         }
 
 
-        if (!filter_var(
-            $email,
-            FILTER_VALIDATE_EMAIL
-        )) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
             return redirect()
                 ->to(
@@ -339,28 +465,24 @@ class Kemahasiswaan extends BaseController
         }
 
 
-        // =====================================================
-        // SIMPAN SESSION
-        // =====================================================
-
         $session->set([
 
-            'name' => $name,
+            'name' =>
+                $name,
 
-            'nip' => $nip,
+            'nip' =>
+                $nip,
 
-            'email' => $email,
+            'email' =>
+                $email,
 
-            'no_hp' => $no_hp,
+            'no_hp' =>
+                $no_hp,
 
-            'jabatan' => $jabatan,
-
+            'jabatan' =>
+                $jabatan,
         ]);
 
-
-        // =====================================================
-        // KEMBALI KE PROFIL
-        // =====================================================
 
         return redirect()
             ->to(
@@ -376,7 +498,7 @@ class Kemahasiswaan extends BaseController
 
 
     // =========================================================
-    // UPDATE PROFILE
+    // UPDATE PROFILE ALIAS
     // =========================================================
 
     public function updateProfile()
@@ -392,7 +514,41 @@ class Kemahasiswaan extends BaseController
     public function detail($id)
     {
         $tiket = $this->ticketModel
-            ->find($id);
+
+            ->select(
+                'tickets.*,
+                 tickets.ticket_number AS no_tiket,
+                 tickets.title AS judul,
+                 tickets.description AS deskripsi,
+                 master_services.name AS nama_layanan,
+                 master_service_categories.name AS nama_kategori,
+                 master_service_units.name AS nama_unit'
+            )
+
+            ->join(
+                'master_services',
+                'master_services.id = tickets.service_id',
+                'left'
+            )
+
+            ->join(
+                'master_service_categories',
+                'master_service_categories.id = master_services.service_category_id',
+                'left'
+            )
+
+            ->join(
+                'master_service_units',
+                'master_service_units.id = master_services.service_unit_id',
+                'left'
+            )
+
+            ->where(
+                'tickets.id',
+                $id
+            )
+
+            ->first();
 
 
         if (!$tiket) {
@@ -408,47 +564,139 @@ class Kemahasiswaan extends BaseController
                     'Data tiket tidak ditemukan.'
                 );
         }
+
+
+        // =====================================================
+        // STATUS
+        // =====================================================
+
+        $statusAsli =
+            $tiket['status'] ?? '';
+
+        $tiket['status_asli'] =
+            $statusAsli;
+
+        $tiket['status_tampilan'] =
+            $this->statusTampilan(
+                $statusAsli
+            );
 
 
         // =====================================================
         // DOKUMEN HASIL
         // =====================================================
 
-        $dokumenHasil = [];
-
-        if ($this->dokumenHasilModel) {
-
-            $dokumenHasil = $this->dokumenHasilModel
+        $dokumenHasil =
+            $this->dokumenHasilModel
                 ->where(
                     'penanganan_id',
                     $id
                 )
                 ->findAll();
+
+
+        if (!is_array($dokumenHasil)) {
+
+            $dokumenHasil = [];
         }
 
 
-        $tiket['dokumen_hasil'] = $dokumenHasil;
+        $tiket['dokumen_hasil'] =
+            $dokumenHasil;
+
+
+        // =====================================================
+        // DESKRIPSI
+        // =====================================================
+
+        if (
+            !isset($tiket['deskripsi']) ||
+            $tiket['deskripsi'] === null ||
+            $tiket['deskripsi'] === ''
+        ) {
+
+            $tiket['deskripsi'] = '-';
+        }
+
+
+        // =====================================================
+        // CATATAN
+        // =====================================================
+
+        if (
+            !isset($tiket['admin_note']) ||
+            $tiket['admin_note'] === null
+        ) {
+
+            $tiket['admin_note'] = '';
+        }
+
+
+        if (
+            !isset($tiket['catatan']) ||
+            $tiket['catatan'] === null
+        ) {
+
+            $tiket['catatan'] =
+                $tiket['admin_note'];
+        }
 
 
         return view(
             'kemahasiswaan/detail',
             [
-                'title' => 'Detail Tiket Kemahasiswaan',
+                'title' =>
+                    'Detail Tiket Kemahasiswaan',
 
-                'tiket' => $tiket,
+                'tiket' =>
+                    $tiket,
             ]
         );
     }
 
 
     // =========================================================
-    // HALAMAN PROSES
+    // PROSES TIKET
     // =========================================================
 
     public function proses($id)
     {
         $tiket = $this->ticketModel
-            ->find($id);
+
+            ->select(
+                'tickets.*,
+                 tickets.ticket_number AS no_tiket,
+                 tickets.title AS judul,
+                 tickets.description AS deskripsi,
+                 master_services.name AS nama_layanan,
+                 master_service_categories.name AS nama_kategori,
+                 master_service_units.name AS nama_unit'
+            )
+
+            ->join(
+                'master_services',
+                'master_services.id = tickets.service_id',
+                'left'
+            )
+
+            ->join(
+                'master_service_categories',
+                'master_service_categories.id = master_services.service_category_id',
+                'left'
+            )
+
+            ->join(
+                'master_service_units',
+                'master_service_units.id = master_services.service_unit_id',
+                'left'
+            )
+
+            ->where(
+                'tickets.id',
+                $id
+            )
+
+            ->first();
 
 
         if (!$tiket) {
@@ -467,31 +715,80 @@ class Kemahasiswaan extends BaseController
 
 
         // =====================================================
-        // DOKUMEN SEBELUMNYA
+        // STATUS
         // =====================================================
 
-        $dokumenHasil = [];
+        $statusAsli =
+            $tiket['status'] ?? '';
 
-        if ($this->dokumenHasilModel) {
+        $tiket['status_asli'] =
+            $statusAsli;
 
-            $dokumenHasil = $this->dokumenHasilModel
+        $tiket['status_tampilan'] =
+            $this->statusTampilan(
+                $statusAsli
+            );
+
+
+        // =====================================================
+        // DOKUMEN HASIL
+        // =====================================================
+
+        $dokumenHasil =
+            $this->dokumenHasilModel
                 ->where(
                     'penanganan_id',
                     $id
                 )
                 ->findAll();
+
+
+        if (!is_array($dokumenHasil)) {
+
+            $dokumenHasil = [];
         }
 
 
-        $tiket['dokumen_hasil'] = $dokumenHasil;
+        $tiket['dokumen_hasil'] =
+            $dokumenHasil;
+
+
+        // =====================================================
+        // DESKRIPSI
+        // =====================================================
+
+        if (
+            !isset($tiket['deskripsi']) ||
+            $tiket['deskripsi'] === null ||
+            $tiket['deskripsi'] === ''
+        ) {
+
+            $tiket['deskripsi'] = '-';
+        }
+
+
+        // =====================================================
+        // CATATAN
+        // =====================================================
+
+        if (
+            !isset($tiket['catatan']) ||
+            $tiket['catatan'] === null
+        ) {
+
+            $tiket['catatan'] =
+                $tiket['admin_note'] ?? '';
+        }
 
 
         return view(
             'kemahasiswaan/proses',
             [
-                'title' => 'Proses Tiket Kemahasiswaan',
+                'title' =>
+                    'Proses Tiket Kemahasiswaan',
 
-                'tiket' => $tiket,
+                'tiket' =>
+                    $tiket,
             ]
         );
     }
@@ -503,8 +800,18 @@ class Kemahasiswaan extends BaseController
 
     public function updateProses($id)
     {
-        $tiket = $this->ticketModel
-            ->find($id);
+        $db = \Config\Database::connect();
+
+
+        // =====================================================
+        // CARI TIKET
+        // =====================================================
+
+        $tiket = $db
+            ->table('tickets')
+            ->where('id', $id)
+            ->get()
+            ->getRowArray();
 
 
         if (!$tiket) {
@@ -522,48 +829,93 @@ class Kemahasiswaan extends BaseController
         // AMBIL FORM
         // =====================================================
 
-        $status = trim(
-            (string) $this->request
-                ->getPost('status')
+        $statusForm = strtolower(
+            trim(
+                (string) $this->request->getPost('status')
+            )
         );
 
 
         $catatan = trim(
-            (string) $this->request
-                ->getPost('catatan')
+            (string) $this->request->getPost('catatan')
         );
 
 
         // =====================================================
-        // STATUS YANG DIIZINKAN
+        // MAPPING STATUS
         // =====================================================
 
-        $statusDiizinkan = [
+        $mapping = [
 
-            'Menunggu',
+            'menunggu' => [
 
-            'Diproses',
+                'submitted',
+                'menunggu',
+                'draft'
+            ],
 
-            'Selesai',
+            'diproses' => [
 
-            'Ditolak',
+                'processing',
+                'verification',
+                'in_progress',
+                'diproses'
+            ],
 
-            'Dibatalkan',
+            'selesai' => [
 
+                'completed',
+                'complete',
+                'selesai'
+            ],
+
+            'ditolak' => [
+
+                'rejected',
+                'ditolak'
+            ],
+
+            'dibatalkan' => [
+
+                'cancelled',
+                'canceled',
+                'dibatalkan'
+            ],
         ];
 
 
-        if (!in_array(
-            $status,
-            $statusDiizinkan,
-            true
-        )) {
+        if (!isset($mapping[$statusForm])) {
 
             return redirect()
                 ->back()
+                ->withInput()
                 ->with(
                     'error',
                     'Status tiket tidak valid.'
+                );
+        }
+
+
+        // =====================================================
+        // CARI ENUM DATABASE
+        // =====================================================
+
+        $statusDatabase =
+            $this->cariStatusDatabase(
+                $mapping[$statusForm]
+            );
+
+
+        if ($statusDatabase === null) {
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Status "' .
+                    $statusForm .
+                    '" tidak tersedia pada ENUM database.'
                 );
         }
 
@@ -574,82 +926,176 @@ class Kemahasiswaan extends BaseController
 
         $updateData = [
 
-            'status' => $status,
+            'status' =>
+                $statusDatabase,
 
+            'admin_note' =>
+                $catatan,
         ];
 
 
-        // =====================================================
-        // CATATAN
-        // =====================================================
-
-        if ($catatan !== '') {
-
-            $updateData['admin_note'] = $catatan;
-        }
+        $now =
+            date('Y-m-d H:i:s');
 
 
-        // =====================================================
-        // WAKTU STATUS
-        // =====================================================
-
-        $now = date(
-            'Y-m-d H:i:s'
-        );
-
-
-        switch (
-            strtolower($status)
-        ) {
+        switch ($statusForm) {
 
             case 'diproses':
 
-                $updateData['processed_at'] = $now;
+                $updateData['processed_at'] =
+                    $now;
 
                 break;
 
 
             case 'selesai':
 
-                $updateData['completed_at'] = $now;
+                $updateData['completed_at'] =
+                    $now;
 
                 break;
 
 
             case 'ditolak':
 
-                $updateData['rejected_at'] = $now;
+                $updateData['rejected_at'] =
+                    $now;
 
                 break;
 
 
             case 'dibatalkan':
 
-                $updateData['cancelled_at'] = $now;
+                $updateData['cancelled_at'] =
+                    $now;
 
                 break;
         }
 
 
         // =====================================================
-        // UPDATE TICKET
+        // UPDATE DATABASE
         // =====================================================
 
-        $this->ticketModel
-            ->update(
-                $id,
-                $updateData
+        try {
+
+            $builder =
+                $db->table('tickets');
+
+
+            $builder
+                ->where(
+                    'id',
+                    $id
+                )
+                ->update(
+                    $updateData
+                );
+
+
+            $error =
+                $db->error();
+
+
+            if (!empty($error['code'])) {
+
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Database gagal memperbarui status: ' .
+                        ($error['message'] ?? 'Unknown error')
+                    );
+            }
+
+        } catch (\Throwable $e) {
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Gagal menyimpan status: ' .
+                    $e->getMessage()
+                );
+        }
+
+
+        // =====================================================
+        // CEK DATABASE
+        // =====================================================
+
+        $cekTiket =
+            $db
+                ->table('tickets')
+                ->select(
+                    'id, status, admin_note'
+                )
+                ->where(
+                    'id',
+                    $id
+                )
+                ->get()
+                ->getRowArray();
+
+
+        if (!$cekTiket) {
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Tiket tidak ditemukan setelah update.'
+                );
+        }
+
+
+        $statusSekarang =
+            strtolower(
+                trim(
+                    (string) (
+                        $cekTiket['status'] ?? ''
+                    )
+                )
             );
+
+
+        $statusTarget =
+            strtolower(
+                trim(
+                    $statusDatabase
+                )
+            );
+
+
+        if (
+            $statusSekarang
+            !==
+            $statusTarget
+        ) {
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Status gagal disimpan. Database berisi: ' .
+                    ($cekTiket['status'] ?? '')
+                );
+        }
 
 
         // =====================================================
         // UPLOAD DOKUMEN HASIL
         // =====================================================
 
-        $files = $this->request
-            ->getFileMultiple(
-                'file_hasil'
-            );
+        $files =
+            $this->request
+                ->getFileMultiple(
+                    'file_hasil'
+                );
 
 
         if ($files === null) {
@@ -671,10 +1117,6 @@ class Kemahasiswaan extends BaseController
                 'uploads/hasil/';
 
 
-            // =================================================
-            // BUAT FOLDER
-            // =================================================
-
             if (!is_dir($uploadPath)) {
 
                 mkdir(
@@ -687,10 +1129,6 @@ class Kemahasiswaan extends BaseController
 
             foreach ($files as $file) {
 
-                // =============================================
-                // FILE TIDAK VALID
-                // =============================================
-
                 if (
                     !$file ||
                     !$file->isValid() ||
@@ -701,20 +1139,20 @@ class Kemahasiswaan extends BaseController
                 }
 
 
-                // =============================================
+                // =================================================
                 // MAKSIMAL 5 MB
-                // =============================================
+                // =================================================
 
                 if (
                     $file->getSize()
-                    > 5 * 1024 * 1024
+                    >
+                    5 * 1024 * 1024
                 ) {
 
                     return redirect()
                         ->back()
                         ->with(
                             'error',
-
                             'File "' .
                             $file->getName() .
                             '" melebihi ukuran maksimal 5 MB.'
@@ -722,39 +1160,38 @@ class Kemahasiswaan extends BaseController
                 }
 
 
-                // =============================================
-                // EKSTENSI
-                // =============================================
+                // =================================================
+                // EXTENSION
+                // =================================================
 
-                $extension = strtolower(
-                    $file->getClientExtension()
-                );
+                $extension =
+                    strtolower(
+                        $file->getClientExtension()
+                    );
 
 
                 $allowedExtensions = [
 
                     'pdf',
-
                     'jpg',
-
                     'jpeg',
-
                     'png',
 
                 ];
 
 
-                if (!in_array(
-                    $extension,
-                    $allowedExtensions,
-                    true
-                )) {
+                if (
+                    !in_array(
+                        $extension,
+                        $allowedExtensions,
+                        true
+                    )
+                ) {
 
                     return redirect()
                         ->back()
                         ->with(
                             'error',
-
                             'Format file "' .
                             $file->getName() .
                             '" tidak diperbolehkan.'
@@ -762,17 +1199,17 @@ class Kemahasiswaan extends BaseController
                 }
 
 
-                // =============================================
+                // =================================================
                 // NAMA FILE
-                // =============================================
+                // =================================================
 
                 $newName =
                     $file->getRandomName();
 
 
-                // =============================================
+                // =================================================
                 // PINDAHKAN FILE
-                // =============================================
+                // =================================================
 
                 if (
                     $file->move(
@@ -781,17 +1218,33 @@ class Kemahasiswaan extends BaseController
                     )
                 ) {
 
-                    // =========================================
-                    // SIMPAN DATABASE
-                    // =========================================
-
                     $this->dokumenHasilModel
                         ->insert([
 
-                            'penanganan_id' => $id,
+                            'penanganan_id' =>
+                                $id,
 
-                            'nama_file' => $newName,
+                            'nama_file' =>
+                                $newName,
 
+                            'nama_asli' =>
+                                $file->getClientName(),
+
+                            'ukuran_file' =>
+                                $file->getSize(),
+
+                            'tipe_file' =>
+                                $file->getClientMimeType(),
+
+                            'created_at' =>
+                                date(
+                                    'Y-m-d H:i:s'
+                                ),
+
+                            'updated_at' =>
+                                date(
+                                    'Y-m-d H:i:s'
+                                ),
                         ]);
                 }
             }
@@ -799,7 +1252,7 @@ class Kemahasiswaan extends BaseController
 
 
         // =====================================================
-        // SELESAI
+        // REDIRECT DETAIL
         // =====================================================
 
         return redirect()
@@ -811,7 +1264,10 @@ class Kemahasiswaan extends BaseController
             )
             ->with(
                 'success',
-                'Proses tiket berhasil disimpan.'
+                'Proses tiket berhasil disimpan. Status tiket sekarang: ' .
+                $this->statusTampilan(
+                    $statusDatabase
+                )
             );
     }
 
@@ -822,8 +1278,9 @@ class Kemahasiswaan extends BaseController
 
     public function hapusDokumen($id)
     {
-        $dokumen = $this->dokumenHasilModel
-            ->find($id);
+        $dokumen =
+            $this->dokumenHasilModel
+                ->find($id);
 
 
         if (!$dokumen) {
@@ -837,10 +1294,6 @@ class Kemahasiswaan extends BaseController
         }
 
 
-        // =====================================================
-        // HAPUS FILE
-        // =====================================================
-
         $filePath =
             FCPATH .
             'uploads/hasil/' .
@@ -853,17 +1306,9 @@ class Kemahasiswaan extends BaseController
         }
 
 
-        // =====================================================
-        // ID PENANGANAN
-        // =====================================================
-
         $penangananId =
             $dokumen['penanganan_id'];
 
-
-        // =====================================================
-        // HAPUS DATABASE
-        // =====================================================
 
         $this->dokumenHasilModel
             ->delete($id);
@@ -889,8 +1334,19 @@ class Kemahasiswaan extends BaseController
 
     public function kirim($id)
     {
-        $tiket = $this->ticketModel
-            ->find($id);
+        $db =
+            \Config\Database::connect();
+
+
+        $tiket =
+            $db
+                ->table('tickets')
+                ->where(
+                    'id',
+                    $id
+                )
+                ->get()
+                ->getRowArray();
 
 
         if (!$tiket) {
@@ -904,17 +1360,35 @@ class Kemahasiswaan extends BaseController
         }
 
 
-        $status = strtolower(
-            trim(
-                (string) (
-                    $tiket['status']
-                    ?? ''
+        // =====================================================
+        // STATUS ASLI DATABASE
+        // =====================================================
+
+        $statusSekarang =
+            strtolower(
+                trim(
+                    (string) (
+                        $tiket['status'] ?? ''
+                    )
                 )
+            );
+
+
+        // =====================================================
+        // HANYA DARI SELESAI
+        // =====================================================
+
+        if (
+            !in_array(
+                $statusSekarang,
+                [
+                    'completed',
+                    'complete',
+                    'selesai'
+                ],
+                true
             )
-        );
-
-
-        if ($status !== 'selesai') {
+        ) {
 
             return redirect()
                 ->back()
@@ -926,23 +1400,45 @@ class Kemahasiswaan extends BaseController
 
 
         // =====================================================
-        // KIRIM KE ULT
+        // CARI STATUS DIPROSES
         // =====================================================
 
-        $this->ticketModel
-            ->update(
-                $id,
-                [
+        $statusDiproses =
+            $this->cariStatusDatabase([
+                'processing',
+                'verification',
+                'in_progress',
+                'diproses'
+            ]);
 
-                    'status' => 'Diproses',
 
-                    'processed_at' =>
-                        date(
-                            'Y-m-d H:i:s'
-                        ),
+        if ($statusDiproses === null) {
 
-                ]
-            );
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Status Diproses tidak tersedia pada ENUM database.'
+                );
+        }
+
+
+        $db
+            ->table('tickets')
+            ->where(
+                'id',
+                $id
+            )
+            ->update([
+
+                'status' =>
+                    $statusDiproses,
+
+                'processed_at' =>
+                    date(
+                        'Y-m-d H:i:s'
+                    ),
+            ]);
 
 
         return redirect()
@@ -965,8 +1461,19 @@ class Kemahasiswaan extends BaseController
 
     public function kirimKePemohon($id)
     {
-        $tiket = $this->ticketModel
-            ->find($id);
+        $db =
+            \Config\Database::connect();
+
+
+        $tiket =
+            $db
+                ->table('tickets')
+                ->where(
+                    'id',
+                    $id
+                )
+                ->get()
+                ->getRowArray();
 
 
         if (!$tiket) {
@@ -980,53 +1487,84 @@ class Kemahasiswaan extends BaseController
         }
 
 
-        $status = strtolower(
-            trim(
-                (string) (
-                    $tiket['status']
-                    ?? ''
+        // =====================================================
+        // STATUS ASLI DATABASE
+        // =====================================================
+
+        $statusSekarang =
+            strtolower(
+                trim(
+                    (string) (
+                        $tiket['status'] ?? ''
+                    )
                 )
+            );
+
+
+        if (
+            !in_array(
+                $statusSekarang,
+                [
+                    'completed',
+                    'complete',
+                    'selesai',
+                    'processing',
+                    'verification',
+                    'in_progress',
+                    'diproses'
+                ],
+                true
             )
-        );
-
-
-        if (!in_array(
-            $status,
-            [
-                'selesai',
-
-                'diproses'
-            ],
-            true
-        )) {
+        ) {
 
             return redirect()
                 ->back()
                 ->with(
                     'error',
-                    'Tiket hanya bisa dikirim ke pemohon setelah status Selesai atau Diproses.'
+                    'Tiket belum dapat dikirim ke pemohon.'
                 );
         }
 
 
         // =====================================================
-        // UPDATE SELESAI
+        // CARI STATUS SELESAI
         // =====================================================
 
-        $this->ticketModel
-            ->update(
-                $id,
-                [
+        $statusSelesai =
+            $this->cariStatusDatabase([
+                'completed',
+                'complete',
+                'selesai'
+            ]);
 
-                    'status' => 'Selesai',
 
-                    'completed_at' =>
-                        date(
-                            'Y-m-d H:i:s'
-                        ),
+        if ($statusSelesai === null) {
 
-                ]
-            );
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Status Selesai tidak tersedia pada ENUM database.'
+                );
+        }
+
+
+        $db
+            ->table('tickets')
+            ->where(
+                'id',
+                $id
+            )
+            ->update([
+
+                'status' =>
+                    $statusSelesai,
+
+                'completed_at' =>
+                    date(
+                        'Y-m-d H:i:s'
+                    ),
+            ]);
 
 
         return redirect()

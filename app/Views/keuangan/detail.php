@@ -6,419 +6,617 @@
 
 <meta charset="UTF-8">
 
-<title><?= $title ?? 'Detail Tiket' ?></title>
+<title><?= esc($title ?? 'Detail Tiket') ?></title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+>
 
 <style>
 
-body{
-    background:#f8f9fa;
+body {
+    background: #f8f9fa;
 }
 
-.card{
-    border-radius:12px;
+.card {
+    border-radius: 12px;
 }
 
-label{
-    color:#293582;
-    margin-bottom:5px;
+label {
+    color: #293582;
+    margin-bottom: 5px;
 }
 
-p{
-    margin-bottom:15px;
+p {
+    margin-bottom: 15px;
 }
 
-.btn-primary{
-    background:#293582;
-    border:none;
+.btn-primary {
+    background: #293582;
+    border: none;
 }
 
-.btn-primary:hover{
-    background:#ff7f00;
+.btn-primary:hover {
+    background: #ff7f00;
 }
 
 </style>
 
 </head>
 
+
 <body>
+
 
 <div class="container mt-4">
 
 
 <h3 class="mb-4">
+
     Detail Pengajuan Tiket
+
 </h3>
 
-<?php if(session()->getFlashdata('success')): ?>
+
+<!-- ========================================================= -->
+<!-- FLASH MESSAGE -->
+<!-- ========================================================= -->
+
+
+<?php if (session()->getFlashdata('success')): ?>
 
     <div class="alert alert-success">
-        <?= session()->getFlashdata('success') ?>
+
+        <?= esc(session()->getFlashdata('success')) ?>
+
     </div>
 
 <?php endif; ?>
 
-<?php if(session()->getFlashdata('error')): ?>
+
+<?php if (session()->getFlashdata('error')): ?>
 
     <div class="alert alert-danger">
-        <?= session()->getFlashdata('error') ?>
+
+        <?= esc(session()->getFlashdata('error')) ?>
+
     </div>
 
 <?php endif; ?>
+
+
+<!-- ========================================================= -->
+<!-- CARD -->
+<!-- ========================================================= -->
 
 
 <div class="card shadow">
 
-    <div class="card-body">
+<div class="card-body">
 
-        <h5 class="mb-3">
-            Informasi Tiket
-        </h5>
 
+<h5 class="mb-3">
 
-        <!-- NOMOR TIKET -->
-        <div class="mb-3">
+    Informasi Tiket
 
-            <label class="fw-bold">
-                Nomor Tiket
-            </label>
+</h5>
 
-            <p>
-                <?= esc($tiket['no_tiket'] ?? 'Nomor tiket belum tersedia') ?>
-            </p>
 
-        </div>
+<!-- NOMOR TIKET -->
 
+<div class="mb-3">
 
-        <!-- TANGGAL -->
-        <div class="mb-3">
+    <label class="fw-bold">
 
-            <label class="fw-bold">
-                Tanggal Pengajuan
-            </label>
+        Nomor Tiket
 
-            <p>
-                <?= esc($tiket['created_at'] ?? 'Tanggal belum tersedia') ?>
-            </p>
+    </label>
 
-        </div>
+    <p>
 
+        <?= esc(
+            $tiket['no_tiket']
+            ?? $tiket['ticket_number']
+            ?? 'Nomor tiket belum tersedia'
+        ) ?>
 
-        <!-- NAMA PEMOHON -->
-        <div class="mb-3">
+    </p>
 
-            <label class="fw-bold">
-                Nama Pemohon
-            </label>
+</div>
 
-            <p>
-                <?= esc($tiket['nama_pemohon'] ?? 'Nama pemohon belum tersedia') ?>
-            </p>
 
-        </div>
+<!-- TANGGAL -->
 
+<div class="mb-3">
 
-        <!-- NIK -->
-        <div class="mb-3">
+    <label class="fw-bold">
 
-            <label class="fw-bold">
-                NIK
-            </label>
+        Tanggal Pengajuan
 
-            <p>
-                <?= !empty($tiket['nik'])
-                    ? esc($tiket['nik'])
-                    : 'NIK belum tersedia' ?>
-            </p>
+    </label>
 
-        </div>
+    <p>
 
+        <?php if (!empty($tiket['created_at'])): ?>
 
-        <!-- UNIT LAYANAN -->
-        <div class="mb-3">
+            <?= date(
+                'd-m-Y H:i',
+                strtotime($tiket['created_at'])
+            ) ?>
 
-            <label class="fw-bold">
-                Unit Layanan
-            </label>
+        <?php else: ?>
 
-            <p>
-                <?= esc($tiket['nama_unit'] ?? 'Unit layanan belum tersedia') ?>
-            </p>
+            Tanggal belum tersedia
 
-        </div>
+        <?php endif; ?>
 
+    </p>
 
+</div>
 
 
+<!-- NAMA PEMOHON -->
 
-        <!-- JENIS LAYANAN -->
-        <div class="mb-3">
+<div class="mb-3">
 
-            <label class="fw-bold">
-                Jenis Layanan
-            </label>
+    <label class="fw-bold">
 
-            <p>
-                <?= esc($tiket['nama_layanan'] ?? 'Jenis layanan belum tersedia') ?>
-            </p>
+        Nama Pemohon
 
-        </div>
+    </label>
 
+    <p>
 
-        <!-- DESKRIPSI -->
-        <div class="mb-3">
+        <?= esc(
+            $tiket['nama_pemohon']
+            ?? $tiket['applicant_name']
+            ?? 'Nama pemohon belum tersedia'
+        ) ?>
 
-            <label class="fw-bold">
-                Deskripsi Pengajuan
-            </label>
+    </p>
 
-            <div class="border rounded p-3 bg-light">
+</div>
 
-                <?= nl2br(esc($tiket['deskripsi'] ?? 'Deskripsi belum tersedia')) ?>
 
-            </div>
+<!-- NIK -->
 
-        </div>
+<div class="mb-3">
 
+    <label class="fw-bold">
 
-        <!-- ====================================== -->
-        <!-- DOKUMEN DARI PEMOHON -->
-        <!-- ====================================== -->
+        NIK
 
-        <hr>
+    </label>
 
-        <h5 class="mb-3">
-            Dokumen dari Pemohon
-        </h5>
+    <p>
 
+        <?= esc(
+            $tiket['nik']
+            ?? $tiket['nim']
+            ?? 'NIK belum tersedia'
+        ) ?>
 
-        <div class="mb-3">
+    </p>
 
-            <label class="fw-bold">
-                File Pendukung
-            </label>
+</div>
 
-            <br>
 
-            <?php
-            $filePendukung = $tiket['file_pendukung'] ?? null;
-            ?>
+<!-- UNIT LAYANAN -->
 
+<div class="mb-3">
 
-            <?php if(!empty($filePendukung)): ?>
+    <label class="fw-bold">
 
-                <?php
-                /*
-                 * Jika file_pendukung hanya menyimpan satu nama file
-                 */
-                ?>
+        Unit Layanan
 
-                <a href="<?= base_url('uploads/pendukung/' . $filePendukung) ?>"
-                   target="_blank"
-                   class="btn btn-info text-white mt-2">
+    </label>
 
-                    Lihat Dokumen Pemohon
+    <p>
 
-                </a>
+        <?= esc(
+            $tiket['nama_unit']
+            ?? 'Unit layanan belum tersedia'
+        ) ?>
 
-                <div class="mt-2">
+    </p>
 
-                    <small class="text-muted">
-                        <?= esc($filePendukung) ?>
-                    </small>
+</div>
 
-                </div>
 
-            <?php else: ?>
+<!-- JENIS LAYANAN -->
 
-                <p class="text-muted mt-2">
-                    Pemohon belum mengupload file.
-                </p>
+<div class="mb-3">
 
-            <?php endif; ?>
+    <label class="fw-bold">
 
-        </div>
+        Jenis Layanan
 
+    </label>
 
-        <!-- ====================================== -->
-        <!-- STATUS -->
-        <!-- ====================================== -->
+    <p>
 
-        <hr>
+        <?= esc(
+            $tiket['nama_layanan']
+            ?? 'Jenis layanan belum tersedia'
+        ) ?>
 
-        <h5 class="mb-3">
-            Status Tiket
-        </h5>
+    </p>
 
+</div>
 
-        <div class="mb-3">
 
-            <label class="fw-bold">
-                Status
-            </label>
+<!-- DESKRIPSI -->
 
-            <p>
+<div class="mb-3">
 
-                <?php if(($tiket['status'] ?? '') == "Selesai"): ?>
+    <label class="fw-bold">
 
-                    <span class="badge bg-success">
-                        Selesai
-                    </span>
+        Deskripsi Pengajuan
 
-                <?php elseif(($tiket['status'] ?? '') == "Diproses"): ?>
+    </label>
 
-                    <span class="badge bg-warning text-dark">
-                        Diproses
-                    </span>
+    <div class="border rounded p-3 bg-light">
 
-                <?php elseif(($tiket['status'] ?? '') == "Ditolak"): ?>
-
-                    <span class="badge bg-danger">
-                        Ditolak
-                    </span>
-
-                <?php else: ?>
-
-                    <span class="badge bg-secondary">
-                        Menunggu
-                    </span>
-
-                <?php endif; ?>
-
-            </p>
-
-        </div>
-
-
-        <!-- ====================================== -->
-        <!-- HASIL PENANGANAN -->
-        <!-- ====================================== -->
-
-        <hr>
-
-        <h5 class="mb-3">
-            Hasil Penanganan
-        </h5>
-
-
-        <!-- CATATAN -->
-        <div class="mb-3">
-
-            <label class="fw-bold">
-                Catatan Petugas Layanan
-            </label>
-
-            <div class="border rounded p-3 bg-light">
-
-                <?= nl2br(esc($tiket['catatan'] ?? 'Belum ada catatan')) ?>
-
-            </div>
-
-        </div>
-
-
-        <!-- ====================================== -->
-        <!-- DOKUMEN HASIL PETUGAS -->
-        <!-- ====================================== -->
-
-        <div class="mb-3">
-
-            <label class="fw-bold">
-                Dokumen Hasil
-            </label>
-
-            <br>
-
-
-            <?php
-            $files = $tiket['dokumen_hasil'] ?? [];
-            ?>
-
-
-            <?php if(!empty($files)): ?>
-
-                <?php foreach($files as $file): ?>
-
-                    <a href="<?= base_url('uploads/hasil/' . $file['nama_file']) ?>"
-                       target="_blank"
-                       class="btn btn-success mt-2 me-2">
-
-                        <?= esc($file['nama_file']) ?>
-
-                    </a>
-
-                <?php endforeach; ?>
-
-            <?php else: ?>
-
-                <p class="text-muted mt-2">
-                    Belum ada dokumen hasil.
-                </p>
-
-            <?php endif; ?>
-
-        </div>
-
-
-        <!-- ====================================== -->
-        <!-- TOMBOL AKSI -->
-        <!-- ====================================== -->
-
-        <hr>
-
-        <div class="mt-4">
-
-            <!-- PROSES TIKET -->
-            <a href="<?= base_url('keuangan/proses/' . $tiket['id']) ?>"
-               class="btn btn-primary">
-
-                Proses Tiket
-
-            </a>
-
-
-            <!-- KIRIM -->
-            <?php if(($tiket['status'] ?? '') === 'Selesai'): ?>
-
-                <a href="<?= base_url('keuangan/kirim/' . $tiket['id']) ?>"
-                   class="btn btn-warning ms-2"
-                   onclick="return confirm('Kirim tiket ini ke Petugas ULT?')">
-
-                    Kirim ke Petugas ULT
-
-                </a>
-
-
-                <!-- KIRIM KE PEMOHON -->
-                <a href="<?= base_url('keuangan/kirim-pemohon/' . $tiket['id']) ?>"
-                   class="btn btn-success ms-2"
-                   onclick="return confirm('Kirim tiket ini ke pemohon?')">
-
-                    Kirim ke Pemohon
-
-                </a>
-
-            <?php endif; ?>
-
-
-            <!-- KEMBALI -->
-            <a href="<?= base_url('keuangan') ?>"
-               class="btn btn-secondary ms-2">
-
-                Kembali
-
-            </a>
-
-        </div>
-
+        <?= nl2br(
+            esc(
+                $tiket['deskripsi']
+                ?? 'Deskripsi belum tersedia'
+            )
+        ) ?>
 
     </div>
 
 </div>
 
 
+<!-- ========================================================= -->
+<!-- DOKUMEN PEMOHON -->
+<!-- ========================================================= -->
+
+<hr>
+
+
+<h5 class="mb-3">
+
+    Dokumen dari Pemohon
+
+</h5>
+
+
+<div class="mb-3">
+
+    <label class="fw-bold">
+
+        File Pendukung
+
+    </label>
+
+    <br>
+
+
+    <?php
+
+    $filePendukung =
+        $tiket['file_pendukung']
+        ?? null;
+
+    ?>
+
+
+    <?php if (!empty($filePendukung)): ?>
+
+        <a
+            href="<?= base_url('uploads/pendukung/' . $filePendukung) ?>"
+            target="_blank"
+            class="btn btn-info text-white mt-2"
+        >
+
+            Lihat Dokumen Pemohon
+
+        </a>
+
+
+        <div class="mt-2">
+
+            <small class="text-muted">
+
+                <?= esc($filePendukung) ?>
+
+            </small>
+
+        </div>
+
+    <?php else: ?>
+
+        <p class="text-muted mt-2">
+
+            Pemohon belum mengupload file.
+
+        </p>
+
+    <?php endif; ?>
+
 </div>
+
+
+<!-- ========================================================= -->
+<!-- STATUS -->
+<!-- ========================================================= -->
+
+<hr>
+
+
+<h5 class="mb-3">
+
+    Status Tiket
+
+</h5>
+
+
+<div class="mb-3">
+
+    <label class="fw-bold">
+
+        Status
+
+    </label>
+
+
+    <p>
+
+
+        <?php
+
+        $status =
+            $tiket['status_tampilan']
+            ?? $tiket['status']
+            ?? 'Menunggu';
+
+
+        $statusLower =
+            strtolower(
+                trim(
+                    (string) $status
+                )
+            );
+
+        ?>
+
+
+        <?php if ($statusLower === 'selesai'): ?>
+
+
+            <span class="badge bg-success">
+
+                Selesai
+
+            </span>
+
+
+        <?php elseif ($statusLower === 'diproses'): ?>
+
+
+            <span class="badge bg-warning text-dark">
+
+                Diproses
+
+            </span>
+
+
+        <?php elseif ($statusLower === 'ditolak'): ?>
+
+
+            <span class="badge bg-danger">
+
+                Ditolak
+
+            </span>
+
+
+        <?php elseif ($statusLower === 'dibatalkan'): ?>
+
+
+            <span class="badge bg-dark">
+
+                Dibatalkan
+
+            </span>
+
+
+        <?php else: ?>
+
+
+            <span class="badge bg-secondary">
+
+                Menunggu
+
+            </span>
+
+
+        <?php endif; ?>
+
+
+    </p>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- HASIL PENANGANAN -->
+<!-- ========================================================= -->
+
+<hr>
+
+
+<h5 class="mb-3">
+
+    Hasil Penanganan
+
+</h5>
+
+
+<!-- CATATAN -->
+
+<div class="mb-3">
+
+    <label class="fw-bold">
+
+        Catatan Petugas Layanan
+
+    </label>
+
+
+    <div class="border rounded p-3 bg-light">
+
+        <?= nl2br(
+            esc(
+                $tiket['catatan']
+                ?? $tiket['admin_note']
+                ?? 'Belum ada catatan'
+            )
+        ) ?>
+
+    </div>
+
+</div>
+
+
+<!-- DOKUMEN HASIL -->
+
+<div class="mb-3">
+
+    <label class="fw-bold">
+
+        Dokumen Hasil
+
+    </label>
+
+    <br>
+
+
+    <?php
+
+    $files =
+        $tiket['dokumen_hasil']
+        ?? [];
+
+    ?>
+
+
+    <?php if (!empty($files)): ?>
+
+
+        <?php foreach ($files as $file): ?>
+
+
+            <a
+                href="<?= base_url('uploads/hasil/' . $file['nama_file']) ?>"
+                target="_blank"
+                class="btn btn-success mt-2 me-2"
+            >
+
+                <?= esc(
+                    $file['nama_asli']
+                    ?? $file['nama_file']
+                ) ?>
+
+            </a>
+
+
+        <?php endforeach; ?>
+
+
+    <?php else: ?>
+
+
+        <p class="text-muted mt-2">
+
+            Belum ada dokumen hasil.
+
+        </p>
+
+
+    <?php endif; ?>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- TOMBOL -->
+<!-- ========================================================= -->
+
+<hr>
+
+
+<div class="mt-4">
+
+
+    <!-- PROSES -->
+
+    <a
+        href="<?= base_url('keuangan/proses/' . $tiket['id']) ?>"
+        class="btn btn-primary"
+    >
+
+        Proses Tiket
+
+    </a>
+
+
+    <!-- KIRIM KE PETUGAS ULT -->
+
+    <?php if ($statusLower === 'selesai'): ?>
+
+
+        <a
+            href="<?= base_url('keuangan/kirim/' . $tiket['id']) ?>"
+            class="btn btn-warning ms-2"
+            onclick="return confirm('Kirim tiket ini ke Petugas ULT?')"
+        >
+
+            Kirim ke Petugas ULT
+
+        </a>
+
+
+        <!-- KIRIM KE PEMOHON -->
+
+        <a
+            href="<?= base_url('keuangan/kirim-pemohon/' . $tiket['id']) ?>"
+            class="btn btn-success ms-2"
+            onclick="return confirm('Kirim tiket ini ke pemohon?')"
+        >
+
+            Kirim ke Pemohon
+
+        </a>
+
+
+    <?php endif; ?>
+
+
+    <!-- KEMBALI -->
+
+    <a
+        href="<?= base_url('keuangan/dashboard') ?>"
+        class="btn btn-secondary ms-2"
+    >
+
+        Kembali
+
+    </a>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
 
 </body>
 

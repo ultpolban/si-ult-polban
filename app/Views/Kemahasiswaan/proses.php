@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 
@@ -93,7 +92,33 @@
                     <input
                         type="text"
                         class="form-control"
-                        value="<?= esc($tiket['no_tiket'] ?? '-') ?>"
+                        value="<?= esc(
+                            $tiket['ticket_number']
+                            ?? $tiket['no_tiket']
+                            ?? '-'
+                        ) ?>"
+                        readonly>
+
+                </div>
+
+
+                <!-- PEMOHON -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-bold">
+                        Nama Pemohon
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="<?= esc(
+                            $tiket['pemohon']
+                            ?? $tiket['student_name']
+                            ?? $tiket['name']
+                            ?? '-'
+                        ) ?>"
                         readonly>
 
                 </div>
@@ -110,7 +135,11 @@
                     <input
                         type="text"
                         class="form-control"
-                        value="<?= esc($tiket['nama_unit'] ?? '-') ?>"
+                        value="<?= esc(
+                            $tiket['nama_unit']
+                            ?? $tiket['unit_name']
+                            ?? '-'
+                        ) ?>"
                         readonly>
 
                 </div>
@@ -127,7 +156,11 @@
                     <input
                         type="text"
                         class="form-control"
-                        value="<?= esc($tiket['nama_kategori'] ?? '-') ?>"
+                        value="<?= esc(
+                            $tiket['nama_kategori']
+                            ?? $tiket['category_name']
+                            ?? '-'
+                        ) ?>"
                         readonly>
 
                 </div>
@@ -144,7 +177,12 @@
                     <input
                         type="text"
                         class="form-control"
-                        value="<?= esc($tiket['nama_layanan'] ?? '-') ?>"
+                        value="<?= esc(
+                            $tiket['nama_layanan']
+                            ?? $tiket['service_name']
+                            ?? $tiket['layanan']
+                            ?? '-'
+                        ) ?>"
                         readonly>
 
                 </div>
@@ -161,7 +199,11 @@
                     <input
                         type="text"
                         class="form-control"
-                        value="<?= esc($tiket['judul'] ?? '-') ?>"
+                        value="<?= esc(
+                            $tiket['title']
+                            ?? $tiket['judul']
+                            ?? '-'
+                        ) ?>"
                         readonly>
 
                 </div>
@@ -178,7 +220,11 @@
                     <textarea
                         class="form-control"
                         rows="4"
-                        readonly><?= esc($tiket['deskripsi'] ?? '-') ?></textarea>
+                        readonly><?= esc(
+                            $tiket['description']
+                            ?? $tiket['deskripsi']
+                            ?? '-'
+                        ) ?></textarea>
 
                 </div>
 
@@ -190,20 +236,29 @@
 
                 <div class="mb-3">
 
-                    <label class="form-label fw-bold">
+                    <label
+                        for="status"
+                        class="form-label fw-bold">
+
                         Status Tiket
+
                     </label>
 
 
                     <select
                         name="status"
+                        id="status"
                         class="form-select"
                         required>
 
 
                         <option
                             value="Menunggu"
-                            <?= ($tiket['status'] ?? '') == 'Menunggu'
+                            <?= strtolower(
+                                trim(
+                                    (string) ($tiket['status'] ?? '')
+                                )
+                            ) === 'menunggu'
                                 ? 'selected'
                                 : '' ?>>
 
@@ -214,7 +269,11 @@
 
                         <option
                             value="Diproses"
-                            <?= ($tiket['status'] ?? '') == 'Diproses'
+                            <?= strtolower(
+                                trim(
+                                    (string) ($tiket['status'] ?? '')
+                                )
+                            ) === 'diproses'
                                 ? 'selected'
                                 : '' ?>>
 
@@ -225,7 +284,11 @@
 
                         <option
                             value="Selesai"
-                            <?= ($tiket['status'] ?? '') == 'Selesai'
+                            <?= strtolower(
+                                trim(
+                                    (string) ($tiket['status'] ?? '')
+                                )
+                            ) === 'selesai'
                                 ? 'selected'
                                 : '' ?>>
 
@@ -251,7 +314,11 @@
                     <textarea
                         name="catatan"
                         class="form-control"
-                        rows="4"><?= esc($tiket['catatan'] ?? '') ?></textarea>
+                        rows="4"><?= esc(
+                            $tiket['admin_note']
+                            ?? $tiket['catatan']
+                            ?? ''
+                        ) ?></textarea>
 
                 </div>
 
@@ -400,7 +467,6 @@
 
 <script>
 
-
 let inputFile =
     document.getElementById('file_hasil');
 
@@ -421,14 +487,12 @@ inputFile.addEventListener(
     'change',
     function () {
 
-
         let fileBaru =
             Array.from(this.files);
 
 
         fileBaru.forEach(
             function (file) {
-
 
                 /*
                 |--------------------------------------------------------------------------
@@ -471,8 +535,9 @@ inputFile.addEventListener(
 
 
                 if (
-                    !formatDiizinkan
-                        .includes(ekstensi)
+                    !formatDiizinkan.includes(
+                        ekstensi
+                    )
                 ) {
 
                     alert(
@@ -519,7 +584,6 @@ function tampilkanFile()
     daftarFile.forEach(
         function (file, index) {
 
-
             listFile.innerHTML += `
 
                 <div
@@ -542,7 +606,6 @@ function tampilkanFile()
                         ×
 
                     </button>
-
 
                 </div>
 
@@ -594,10 +657,39 @@ function hapusFile(index)
 }
 
 
+/*
+|--------------------------------------------------------------------------
+| CEK FORM SEBELUM DIKIRIM
+|--------------------------------------------------------------------------
+|
+| Ini memastikan nilai status yang dikirim
+| benar-benar berasal dari select.
+|--------------------------------------------------------------------------
+*/
+
+document.querySelector('form').addEventListener(
+    'submit',
+    function (event) {
+
+        let status =
+            document.getElementById('status').value;
+
+
+        if (!status) {
+
+            event.preventDefault();
+
+            alert('Silakan pilih status tiket.');
+
+            return false;
+        }
+
+    }
+);
+
 </script>
 
 
 </body>
 
 </html>
-

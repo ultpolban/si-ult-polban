@@ -2,6 +2,10 @@
 
 <?= $this->section('content') ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
     /* Global Card & Smooth Transition */
     .dashboard-card {
@@ -47,52 +51,114 @@
         filter: brightness(1.05);
     }
 
-    /* Form Filter Controls */
-    .form-filter-card {
-        border-radius: 12px !important;
+    /* Modern Glassmorphism Filter Section & Select */
+    .card-filter-header {
+        border-radius: 20px;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        background: #ffffff;
+        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+    }
+
+    .filter-dropdown-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .select-ultra {
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: #ffffff;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 12px;
+        padding: 0.55rem 2.5rem 0.55rem 2.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #1e293b;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .select-ultra:hover {
+        border-color: #94a3b8;
+        background-color: #f8fafc;
+    }
+
+    .select-ultra:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .filter-icon-left {
+        position: absolute;
+        left: 14px;
+        color: #64748b;
+        pointer-events: none;
+        font-size: 0.9rem;
+    }
+
+    .filter-icon-right {
+        position: absolute;
+        right: 14px;
+        color: #64748b;
+        pointer-events: none;
+        font-size: 0.8rem;
+        transition: transform 0.2s ease;
+    }
+
+    .select-ultra:focus ~ .filter-icon-right {
+        transform: rotate(180deg);
+        color: #2563eb;
+    }
+
+    .input-date-ultra {
+        border: 1.5px solid #cbd5e1;
+        border-radius: 12px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #334155;
+        outline: none;
+        transition: all 0.2s ease;
+    }
+
+    .input-date-ultra:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .btn-apply-filter {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 0.85rem;
+        border-radius: 12px;
+        padding: 0.55rem 1.25rem;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        transition: all 0.2s ease;
+    }
+
+    .btn-apply-filter:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+    }
+
+    .card-ultra {
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
         background: #ffffff;
     }
-    .custom-select-dashboard, .custom-input-dashboard {
-        border-radius: 8px !important;
-        border: 1px solid #ced4da;
-        height: 42px;
-        font-size: 0.9rem;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    .custom-select-dashboard:focus, .custom-input-dashboard:focus {
-        border-color: #1a237e;
-        box-shadow: 0 0 0 0.2rem rgba(26, 35, 126, 0.15);
-    }
 
-    /* Custom Table Header & Rows */
-    .table-header-navy {
-        background-color: #1a237e !important;
-        color: #ffffff;
-    }
-    .table-hover-custom tbody tr {
-        transition: background-color 0.2s ease;
-    }
-    .table-hover-custom tbody tr:hover {
-        background-color: #f8f9ff !important;
-    }
-
-    /* Timeline Indicator untuk Aktivitas Terbaru */
-    .activity-timeline {
-        position: relative;
-        padding-left: 10px;
-    }
-    .activity-item {
-        border-radius: 10px;
-        transition: background-color 0.2s ease;
-        background: #fdfdfd;
-    }
-    .activity-item:hover {
-        background-color: #f4f6ff;
-    }
+    .chart-wrapper-box { position: relative; width: 100%; height: 320px; }
 </style>
 
 <div class="container-fluid px-4 py-4">
 
+    <!-- HEADER TITLE & BREADCRUMB -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 font-weight-bold text-dark mb-1" style="color: #1a237e !important;">Dashboard Petugas ULT</h1>
@@ -106,6 +172,7 @@
         </nav>
     </div>
 
+    <!-- 4 STAT CARDS KERTAS UTAMA DASHBOARD -->
     <div class="row mb-4">
         
         <div class="col-xl-3 col-md-6 mb-3 mb-xl-0">
@@ -137,7 +204,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between p-3">
                     <div>
                         <span class="badge badge-light text-dark font-weight-bold px-3 py-1 mb-2 stat-badge-number counter-value" data-target="20">0</span>
-                        <h6 class="mb-0 font-weight-bold text-white">Diproses Unit</h6>
+                        <h6 class="mb-0 font-weight-bold text-white">Dipproses Unit</h6>
                     </div>
                     <i class="fas fa-spinner fa-2x stat-card-icon"></i>
                 </div>
@@ -158,6 +225,7 @@
 
     </div>
 
+    <!-- QUICK ACTION SECTION -->
     <div class="card border-0 shadow-sm mb-4 dashboard-card">
         <div class="card-header text-white border-0 py-2 px-3" style="background-color: #1a237e; border-top-left-radius: 12px; border-top-right-radius: 12px;">
             <h6 class="font-weight-bold mb-0">
@@ -201,252 +269,66 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm mb-4 dashboard-card form-filter-card">
-        <div class="card-body p-3">
-            <h6 class="font-weight-bold mb-3" style="color: #1a237e;"><i class="fas fa-filter mr-2"></i>Filter Tiket</h6>
-            <form id="formCari" method="GET" action="<?= base_url('petugas/dashboard') ?>">
-                <div class="form-row align-items-end">
-                    
-                    <div class="form-group col-md-3 mb-md-0">
-                        <label class="small text-muted font-weight-bold">Status</label>
-                        <select name="status" class="form-control custom-select custom-select-dashboard">
-                            <option value="">Semua Status</option>
-                            <option value="Submitted">Submitted</option>
-                            <option value="Verified">Verified</option>
-                            <option value="Diproses">Diproses</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group col-md-3 mb-md-0">
-                        <label class="small text-muted font-weight-bold">Kategori</label>
-                        <select name="kategori" class="form-control custom-select custom-select-dashboard">
-                            <option value="">Semua Kategori</option>
-                            <option value="Akademik">Akademik</option>
-                            <option value="Keuangan">Keuangan</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group col-md-2 mb-md-0">
-                        <label class="small text-muted font-weight-bold">Prioritas</label>
-                        <select name="prioritas" class="form-control custom-select custom-select-dashboard">
-                            <option value="">Semua Prioritas</option>
-                            <option value="High">High</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Low">Low</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group col-md-2 mb-md-0">
-                        <label class="small text-muted font-weight-bold">Unit Tujuan</label>
-                        <select name="unit" class="form-control custom-select custom-select-dashboard">
-                            <option value="">Semua Unit</option>
-                            <option value="ULT">ULT</option>
-                            <option value="Akademik">Akademik</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group col-md-2 mb-md-0">
-                        <button type="submit" class="btn btn-primary btn-block font-weight-bold btn-quick-action" style="background-color: #1a237e; height: 42px;">
-                            <i class="fas fa-search mr-1"></i> Cari
-                        </button>
-                    </div>
-
-                </div>
-
-                <div class="form-row mt-3">
-                    <div class="form-group col-md-12 mb-0">
-                        <label class="small text-muted font-weight-bold">Pencarian Keyword</label>
-                        <input type="text" name="q" class="form-control custom-input-dashboard" placeholder="Cari Nama / NIM / Nomor Tiket...">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="card border-0 shadow-sm mb-4 dashboard-card overflow-hidden">
-        <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center py-3 px-4">
-            <h5 class="font-weight-bold mb-0 text-dark">
-                <i class="fas fa-inbox text-primary mr-2"></i>Antrian Tiket Terbaru
-            </h5>
-            <a href="<?= base_url('petugas/tiket') ?>" class="btn btn-outline-primary btn-sm rounded-pill px-3 font-weight-semibold">
-                <i class="fas fa-list mr-1"></i>Lihat Semua
-            </a>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table table-hover table-hover-custom align-middle mb-0">
-                <thead class="table-header-navy">
-                    <tr>
-                        <th class="border-0 px-4 py-3">No Tiket</th>
-                        <th class="border-0 py-3">Mahasiswa</th>
-                        <th class="border-0 py-3">Layanan</th>
-                        <th class="border-0 py-3">Prioritas</th>
-                        <th class="border-0 py-3">Status</th>
-                        <th class="border-0 py-3">Tanggal</th>
-                        <th class="border-0 text-center py-3" width="120">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="font-weight-bold text-primary px-4">ULT-001</td>
-                        <td class="font-weight-semibold text-dark">Rafi Putra</td>
-                        <td>Surat Aktif Kuliah</td>
-                        <td><span class="badge badge-danger px-2 py-1 font-weight-semibold">High</span></td>
-                        <td><span class="badge badge-warning text-white px-2 py-1 font-weight-semibold">Menunggu Verifikasi</span></td>
-                        <td class="text-muted">20 Juli 2026</td>
-                        <td class="text-center">
-                            <a href="<?= base_url('petugas/detail/1') ?>" class="btn btn-info btn-sm rounded-circle mr-1 shadow-sm" title="Detail">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="<?= base_url('petugas/verifikasi/1') ?>" class="btn btn-success btn-sm rounded-circle shadow-sm" title="Verifikasi">
-                                <i class="fas fa-check"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold text-primary px-4">ULT-002</td>
-                        <td class="font-weight-semibold text-dark">Siti Nurhaliza</td>
-                        <td>Legalisir Ijazah</td>
-                        <td><span class="badge badge-warning text-white px-2 py-1 font-weight-semibold">Medium</span></td>
-                        <td><span class="badge badge-success px-2 py-1 font-weight-semibold">Terverifikasi</span></td>
-                        <td class="text-muted">20 Juli 2026</td>
-                        <td class="text-center">
-                            <a href="<?= base_url('petugas/detail/2') ?>" class="btn btn-info btn-sm rounded-circle mr-1 shadow-sm" title="Detail">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="<?= base_url('petugas/disposisi/2') ?>" class="btn btn-primary btn-sm rounded-circle shadow-sm" title="Disposisi">
-                                <i class="fas fa-share"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold text-primary px-4">ULT-003</td>
-                        <td class="font-weight-semibold text-dark">Andi Saputra</td>
-                        <td>Surat Keterangan Lulus</td>
-                        <td><span class="badge badge-secondary px-2 py-1 font-weight-semibold">Low</span></td>
-                        <td><span class="badge badge-info px-2 py-1 font-weight-semibold">Diproses Unit</span></td>
-                        <td class="text-muted">19 Juli 2026</td>
-                        <td class="text-center">
-                            <a href="<?= base_url('petugas/detail/3') ?>" class="btn btn-info btn-sm rounded-circle shadow-sm" title="Detail">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="row">
-        
-        <div class="col-lg-6 mb-4">
-            <div class="card border-0 shadow-sm h-100 dashboard-card overflow-hidden">
-                <div class="card-header bg-white border-0 py-3 px-4">
-                    <h5 class="font-weight-bold mb-0 text-dark">
-                        <i class="fas fa-exclamation-triangle text-danger mr-2"></i>Tiket Prioritas Tinggi
-                    </h5>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover table-hover-custom align-middle mb-0">
-                        <thead class="table-header-navy">
-                            <tr>
-                                <th class="border-0 px-4 py-3">No Tiket</th>
-                                <th class="border-0 py-3">Mahasiswa</th>
-                                <th class="border-0 py-3">Layanan</th>
-                                <th class="border-0 py-3">SLA</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="font-weight-bold text-primary px-4">ULT-004</td>
-                                <td class="font-weight-semibold text-dark">Rafi Putra</td>
-                                <td>Surat Aktif Kuliah</td>
-                                <td><span class="badge badge-danger px-2 py-1 font-weight-semibold">1 Hari</span></td>
-                            </tr>
-                            <tr>
-                                <td class="font-weight-bold text-primary px-4">ULT-005</td>
-                                <td class="font-weight-semibold text-dark">Siti Nurhaliza</td>
-                                <td>Legalisir</td>
-                                <td><span class="badge badge-danger px-2 py-1 font-weight-semibold">Hari Ini</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+    <!-- FILTER PERIODE & TANGGAL MANUAL STATISTIK TIKET -->
+    <div class="card card-filter-header p-4 mb-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <h3 class="fw-bold text-dark mb-1" style="letter-spacing: -0.5px;">Statistik & Analitik Tiket</h3>
+                <p class="text-muted small mb-0">Pantau pergerakan data tiket layanan bantuan ULT secara real-time dan akurat.</p>
             </div>
-        </div>
-
-        <div class="col-lg-6 mb-4">
-            <div class="card border-0 shadow-sm h-100 dashboard-card overflow-hidden">
-                <div class="card-header bg-white border-0 py-3 px-4">
-                    <h5 class="font-weight-bold mb-0 text-dark">
-                        <i class="fas fa-clock text-warning mr-2"></i>Monitoring SLA
-                    </h5>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover table-hover-custom align-middle mb-0">
-                        <thead class="table-header-navy">
-                            <tr>
-                                <th class="border-0 px-4 py-3">Status SLA</th>
-                                <th class="border-0 py-3">Jumlah</th>
-                                <th class="border-0 py-3">Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="px-4"><span class="badge badge-success px-2 py-1 font-weight-semibold">Aman</span></td>
-                                <td class="font-weight-bold text-dark">96</td>
-                                <td class="text-muted">Masih dalam batas SLA</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4"><span class="badge badge-warning text-white px-2 py-1 font-weight-semibold">Mendekati Deadline</span></td>
-                                <td class="font-weight-bold text-dark">14</td>
-                                <td class="text-muted">&lt; 24 Jam</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4"><span class="badge badge-danger px-2 py-1 font-weight-semibold">Melewati SLA</span></td>
-                                <td class="font-weight-bold text-dark">3</td>
-                                <td class="text-muted">Harus segera diproses</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="card border-0 shadow-sm dashboard-card overflow-hidden">
-        <div class="card-header text-white border-0 py-3 px-4" style="background-color: #007bff;">
-            <h5 class="font-weight-bold mb-0">
-                <i class="fas fa-history mr-2"></i>Aktivitas Terbaru
-            </h5>
-        </div>
-        <div class="card-body p-4 activity-timeline">
-            <span class="badge badge-primary px-3 py-1 mb-3 shadow-sm" style="font-size: 0.85rem; border-radius: 6px;">20 Juli 2026</span>
             
-            <div class="media mb-3 p-3 border rounded activity-item shadow-sm">
-                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3 p-2" style="width: 48px; height: 48px; border: 1px solid #e0e0e0;">
-                    <i class="fas fa-file-alt fa-lg text-primary"></i>
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="filter-dropdown-wrapper">
+                    <i class="fas fa-filter filter-icon-left"></i>
+                    <select id="filterPeriode" class="select-ultra">
+                        <option value="semua">Semua Periode</option>
+                        <option value="hari">Hari Ini</option>
+                        <option value="minggu">Minggu Ini</option>
+                        <option value="bulan" selected>Bulan Ini</option>
+                        <option value="tahun">Tahun Ini</option>
+                        <option value="custom">Filter Tanggal Manual</option>
+                    </select>
+                    <i class="fas fa-chevron-down filter-icon-right"></i>
                 </div>
-                <div class="media-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="font-weight-bold mb-1 text-dark">Pengajuan Baru</h6>
-                        <small class="text-muted"><i class="fas fa-clock mr-1"></i>08:15</small>
-                    </div>
-                    <p class="mb-0 text-muted"><strong class="text-dark">Rafi Putra</strong> mengajukan Surat Aktif Kuliah.</p>
+                
+                <div id="customDateContainer" class="d-none align-items-center gap-2">
+                    <input type="date" id="startDate" class="input-date-ultra" value="<?= date('Y-m-01') ?>">
+                    <span class="text-muted small fw-bold">s/d</span>
+                    <input type="date" id="endDate" class="input-date-ultra" value="<?= date('Y-m-d') ?>">
+                    <button type="button" id="btnTerapkanTanggal" class="btn btn-apply-filter">
+                        <i class="fas fa-check me-1"></i> Terapkan
+                    </button>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="media p-3 border rounded activity-item shadow-sm">
-                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3 p-2" style="width: 48px; height: 48px; border: 1px solid #e0e0e0;">
-                    <i class="fas fa-check-circle fa-lg text-success"></i>
+    <!-- GRAFIK STATISTIK -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="card card-ultra h-100">
+                <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-chart-bar text-primary me-2"></i>Distribusi Kategori Status Tiket</h6>
+                    <small class="text-muted">Grafik Utama</small>
                 </div>
-                <div class="media-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="font-weight-bold mb-1 text-dark">Tiket Diverifikasi</h6>
-                        <small class="text-muted"><i class="fas fa-clock mr-1"></i>09:00</small>
+                <div class="card-body p-4">
+                    <div class="chart-wrapper-box">
+                        <canvas id="mainBarChart"></canvas>
                     </div>
-                    <p class="mb-0 text-muted">Tiket <strong class="text-primary">ULT-001</strong> berhasil diverifikasi.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card card-ultra h-100">
+                <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-chart-pie text-primary me-2"></i>Proporsi Status Tiket</h6>
+                    <small class="text-muted">Persentase</small>
+                </div>
+                <div class="card-body p-4">
+                    <div class="chart-wrapper-box">
+                        <canvas id="mainDoughnutChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -457,7 +339,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         
-        // 1. Animasi Counter Angka Berjalan (Number Count-Up Animation)
+        // 1. Animasi Counter Angka Berjalan (Original Dashboard)
         const counters = document.querySelectorAll('.counter-value');
         counters.forEach(counter => {
             const target = +counter.getAttribute('data-target');
@@ -490,6 +372,139 @@
                 card.style.transform = 'translateY(0)';
             }, 50);
         });
+
+        // 3. Script Grafik Chart JS
+        let barChart, doughnutChart;
+
+        const labelsArray = ['Submitted', 'Assigned', 'In Progress', 'Completed', 'Need Revision', 'Rejected'];
+        const colorPalette = ['#ff8c00', '#f4c400', '#0284c7', '#10b981', '#d97706', '#ef4444'];
+
+        if (typeof Chart !== 'undefined') {
+            Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+            Chart.defaults.color = '#64748b';
+        }
+
+        function initCharts(initialData) {
+            const barCanvas = document.getElementById('mainBarChart');
+            if (barCanvas) {
+                const barCtx = barCanvas.getContext('2d');
+                barChart = new Chart(barCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labelsArray,
+                        datasets: [{
+                            label: 'Jumlah Tiket',
+                            data: initialData,
+                            backgroundColor: colorPalette,
+                            borderRadius: 8,
+                            barPercentage: 0.55
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { precision: 0 } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            const doughnutCanvas = document.getElementById('mainDoughnutChart');
+            if (doughnutCanvas) {
+                const doughnutCtx = doughnutCanvas.getContext('2d');
+                doughnutChart = new Chart(doughnutCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labelsArray,
+                        datasets: [{
+                            data: initialData,
+                            backgroundColor: colorPalette,
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '70%',
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+        }
+
+        function updateDashboardUI(data) {
+            const updatedArray = [
+                data.submitted,
+                data.assigned,
+                data.in_progress,
+                data.completed,
+                data.need_revision,
+                data.rejected
+            ];
+
+            if (barChart) {
+                barChart.data.datasets[0].data = updatedArray;
+                barChart.update();
+            }
+
+            if (doughnutChart) {
+                doughnutChart.data.datasets[0].data = updatedArray;
+                doughnutChart.update();
+            }
+        }
+
+        function fetchFilteredData() {
+            const periode = document.getElementById('filterPeriode').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            const url = `<?= base_url('petugas/api/statistik-data') ?>?periode=${periode}&start_date=${startDate}&end_date=${endDate}`;
+
+            fetch(url)
+                .then(res => res.json())
+                .then(res => {
+                    if (res.status === 'success') {
+                        updateDashboardUI(res.data);
+                    }
+                })
+                .catch(err => console.error("Error fetching data:", err));
+        }
+
+        const filterPeriode = document.getElementById('filterPeriode');
+        const customDateContainer = document.getElementById('customDateContainer');
+
+        if (filterPeriode && customDateContainer) {
+            filterPeriode.addEventListener('change', function () {
+                if (this.value === 'custom') {
+                    customDateContainer.classList.remove('d-none');
+                    customDateContainer.classList.add('d-flex');
+                } else {
+                    customDateContainer.classList.remove('d-flex');
+                    customDateContainer.classList.add('d-none');
+                    fetchFilteredData();
+                }
+            });
+        }
+
+        const btnTerapkanTanggal = document.getElementById('btnTerapkanTanggal');
+        if (btnTerapkanTanggal) {
+            btnTerapkanTanggal.addEventListener('click', function () {
+                fetchFilteredData();
+            });
+        }
+
+        initCharts([
+            <?= $submitted ?? 5 ?>,
+            <?= $assigned ?? 3 ?>,
+            <?= $in_progress ?? 2 ?>,
+            <?= $completed ?? 2 ?>,
+            <?= $need_revision ?? 1 ?>,
+            <?= $rejected ?? 0 ?>
+        ]);
 
     });
 </script>

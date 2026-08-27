@@ -193,6 +193,49 @@ body,
     transform: translateY(-1px);
 }
 
+/* STYLE TOMBOL EXPORT LAPORAN */
+.btn-export-laporan {
+    height: 44px;
+    background-color: #15803d;
+    color: #ffffff;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    padding: 0 16px;
+    transition: all 0.25s ease;
+}
+
+.btn-export-laporan:hover,
+.btn-export-laporan:focus {
+    background-color: #166534;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(21, 128, 61, 0.3);
+}
+
+.export-dropdown-menu {
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    min-width: 180px;
+}
+
+.export-dropdown-menu .dropdown-item {
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+}
+
+.export-dropdown-menu .dropdown-item:hover {
+    background-color: #f1f5f9;
+}
+
 /* ==========================================================================
    4. TABEL STYLE PERSISI TIKET.PHP
    ========================================================================== */
@@ -777,7 +820,7 @@ body,
     <div class="card ticket-filter-card mb-4 reveal-item">
         <div class="card-body">
             <div class="row g-2 align-items-center justify-content-between">
-                <div class="col-xl-8 col-lg-8 col-md-12">
+                <div class="col-xl-6 col-lg-6 col-md-12">
                     <div class="d-flex align-items-center gap-2 flex-wrap">
                         <div class="input-group ticket-input-group flex-grow-1" style="min-width: 240px; max-width: 360px;">
                             <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -792,10 +835,36 @@ body,
                     </div>
                 </div>
 
-                <div class="col-xl-4 col-lg-4 col-md-12 d-flex align-items-center justify-content-md-end gap-3 mt-2 mt-lg-0">
-                    <div class="text-muted fw-semibold" style="font-size: 0.85rem;">
+                <div class="col-xl-6 col-lg-6 col-md-12 d-flex align-items-center justify-content-md-end gap-2 flex-wrap mt-2 mt-lg-0">
+                    <div class="text-muted fw-semibold me-2" style="font-size: 0.85rem;">
                         Total Data: <span id="totalDataBadge" class="badge bg-primary text-white fs-6 ms-1 px-2 py-1" style="border-radius: 8px;">8 Tiket</span>
                     </div>
+
+                    <!-- TOMBOL EXPORT LAPORAN -->
+                    <div class="dropdown">
+                        <button class="btn btn-export-laporan d-flex align-items-center gap-2 shadow-sm dropdown-toggle" type="button" id="dropdownExportLaporan" data-bs-toggle="dropdown" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-download"></i>
+                            <span>Export Laporan</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end export-dropdown-menu" aria-labelledby="dropdownExportLaporan">
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-file-excel text-success"></i> Export Excel
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-file-pdf text-danger"></i> Export PDF
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-file-csv text-primary"></i> Export CSV
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                     <button class="btn btn-ticket-filter px-3 d-flex align-items-center gap-2 shadow-sm" data-toggle="modal" data-target="#modalTambahTamu" data-bs-toggle="modal" data-bs-target="#modalTambahTamu" style="background: var(--polban-orange);">
                         <i class="fas fa-plus"></i> Tambah Laporan
                     </button>

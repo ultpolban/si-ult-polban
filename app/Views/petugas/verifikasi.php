@@ -2,11 +2,25 @@
 
 <?= $this->section('content') ?>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-    /* =========================================================
-       VERIFIKASI TIKET
-       Tema mengikuti halaman Data Tiket
-    ========================================================= */
+    :root {
+        --polban-navy: #1a237e;
+        --polban-blue: #005bac;
+        --polban-orange: #ff8c00;
+        --polban-yellow: #f4c400;
+        --polban-green: #10b981;
+        --soft-bg: #f4f6f9;
+        --text-dark: #263238;
+        --text-muted: #6c757d;
+    }
+
+    body, .container-fluid {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        color: var(--text-dark);
+    }
 
     .verification-page {
         animation: pageFadeIn .35s ease-out;
@@ -25,115 +39,112 @@
 
     /* Header */
     .page-title {
-        color: #1a237e;
-        font-weight: 700;
-        letter-spacing: -0.3px;
+        color: var(--polban-navy);
+        font-weight: 800;
+        letter-spacing: -0.4px;
     }
 
     .breadcrumb-item a {
-        color: #0d6efd;
+        color: var(--polban-blue);
         text-decoration: none;
     }
 
     /* =========================================================
-       SUMMARY CARD
+       SUMMARY CARD (PERSIS SEPERTI FOTO)
     ========================================================= */
-
-    .summary-card {
+    .stat-tamu-card {
+        border-radius: 18px;
         border: none;
-        border-radius: 10px;
+        color: #ffffff;
+        transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
         overflow: hidden;
-        min-height: 105px;
-        transition: all .25s ease;
+        z-index: 1;
     }
 
-    .summary-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0,0,0,.12) !important;
-    }
-
-    .summary-navy {
-        background: #1a237e;
-        color: #fff;
-    }
-
-    .summary-orange {
-        background: #ff8c00;
-        color: #fff;
-    }
-
-    .summary-blue {
-        background: #17a2b8;
-        color: #fff;
-    }
-
-    .summary-green {
-        background: #198754;
-        color: #fff;
-    }
-
-    .summary-icon {
-        width: 44px;
-        height: 44px;
+    .stat-tamu-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -30%;
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, 0.12);
         border-radius: 50%;
+        z-index: -1;
+        transition: transform 0.5s ease;
+    }
+
+    .stat-tamu-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .stat-tamu-card:hover::before {
+        transform: scale(1.25);
+    }
+
+    .bg-tamu-navy {
+        background: linear-gradient(135deg, #1b2e85 0%, #283593 100%) !important;
+    }
+
+    .bg-tamu-orange {
+        background: linear-gradient(135deg, #ff7a00 0%, #ff8c00 100%) !important;
+    }
+
+    .bg-tamu-yellow {
+        background: linear-gradient(135deg, #ffb300 0%, #f4c400 100%) !important;
+    }
+
+    .bg-tamu-green {
+        background: linear-gradient(135deg, #00a86b 0%, #10b981 100%) !important;
+    }
+
+    .icon-tamu-circle {
+        width: 54px;
+        height: 54px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.22);
+        backdrop-filter: blur(8px);
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(255,255,255,.18);
-        flex-shrink: 0;
-    }
-
-    .summary-label {
-        font-size: .74rem;
-        text-transform: uppercase;
-        font-weight: 700;
-        opacity: .78;
-        margin-bottom: 4px;
-    }
-
-    .summary-value {
-        font-size: 1rem;
-        font-weight: 700;
-        margin: 0;
+        font-size: 1.4rem;
+        box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
     }
 
     /* =========================================================
-       GENERAL CARD
+       GENERAL CARD & DETAILS
     ========================================================= */
-
     .professional-card {
         border: none;
-        border-radius: 10px;
-        box-shadow: 0 3px 12px rgba(0,0,0,.06);
+        border-radius: 14px;
+        box-shadow: 0 4px 18px rgba(0,0,0,.06);
         overflow: hidden;
         transition: box-shadow .25s ease;
     }
 
     .professional-card:hover {
-        box-shadow: 0 6px 18px rgba(0,0,0,.08);
+        box-shadow: 0 6px 20px rgba(0,0,0,.08);
     }
 
     .card-title-custom {
         font-size: 1.05rem;
-        font-weight: 700;
-        color: #212529;
+        font-weight: 800;
+        color: var(--text-dark);
         margin: 0;
     }
 
     .card-title-custom i {
-        color: #1a237e;
+        color: var(--polban-navy);
     }
-
-    /* =========================================================
-       INFO DATA
-    ========================================================= */
 
     .info-item {
         height: 100%;
         padding: 15px 16px;
         background: #f8f9fa;
         border: 1px solid #e9ecef;
-        border-radius: 9px;
+        border-radius: 10px;
         transition: all .2s ease;
     }
 
@@ -145,37 +156,33 @@
 
     .info-label {
         display: block;
-        color: #6c757d;
+        color: var(--text-muted);
         font-size: .78rem;
         font-weight: 600;
         margin-bottom: 5px;
     }
 
     .info-label i {
-        color: #1a237e;
+        color: var(--polban-navy);
         width: 17px;
     }
 
     .info-value {
         display: block;
-        color: #212529;
+        color: var(--text-dark);
         font-size: .94rem;
         font-weight: 700;
         word-break: break-word;
     }
 
     .ticket-number {
-        color: #0d6efd;
+        color: var(--polban-blue);
     }
 
-    /* =========================================================
-       LAMPIRAN
-    ========================================================= */
-
     .attachment-box {
-        border: 1px dashed #cfd4da;
-        background: #f8f9fa;
-        border-radius: 10px;
+        border: 2px dashed #cbd5e1;
+        background: #f8fafc;
+        border-radius: 12px;
         padding: 22px;
         display: flex;
         align-items: center;
@@ -186,13 +193,13 @@
 
     .attachment-box:hover {
         background: #f8f9ff;
-        border-color: #1a237e;
+        border-color: var(--polban-navy);
     }
 
     .attachment-icon {
         width: 48px;
         height: 48px;
-        border-radius: 10px;
+        border-radius: 12px;
         background: #fff0f0;
         color: #dc3545;
         display: flex;
@@ -202,27 +209,14 @@
         flex-shrink: 0;
     }
 
-    .attachment-title {
-        font-weight: 700;
-        color: #212529;
-        margin-bottom: 3px;
-    }
-
-    .attachment-info {
-        font-size: .82rem;
-        color: #6c757d;
-        margin: 0;
-    }
-
     .btn-view-file {
-        background: #1a237e;
+        background: var(--polban-navy);
         border: none;
         color: #fff;
         border-radius: 8px;
-        padding: 9px 16px;
-        font-weight: 600;
+        padding: 9px 18px;
+        font-weight: 700;
         transition: all .2s ease;
-        white-space: nowrap;
     }
 
     .btn-view-file:hover {
@@ -232,82 +226,11 @@
         box-shadow: 0 4px 10px rgba(26,35,126,.25);
     }
 
-    /* Tombol Export Laporan Green (Mengikuti halaman Data Tiket) */
-    .btn-export-green {
-        background-color: #198754;
-        border-color: #198754;
-        color: #ffffff;
-        font-weight: 700;
-        border-radius: 8px;
-        height: 44px;
-        padding: 0 20px;
-        transition: all 0.25s ease-in-out;
-    }
-    .btn-export-green:hover {
-        background-color: #146c43;
-        border-color: #13653f;
-        color: #ffffff;
-        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.35);
-        transform: translateY(-1px);
-    }
-
-    .export-action-group {
-        position: relative;
-        z-index: 105 !important;
-    }
-
-    .export-dropdown {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-    }
-
-    .export-menu {
-        display: none;
-        position: absolute;
-        right: 0;
-        top: calc(100% + 8px);
-        min-width: 210px;
-        background: #ffffff;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        padding: 6px 0;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
-        z-index: 9999 !important;
-    }
-
-    .export-menu.show {
-        display: block !important;
-    }
-
-    .export-menu .dropdown-item {
-        display: flex;
-        align-items: center;
-        padding: 11px 15px;
-        color: #212529;
-        font-size: 0.9rem;
-        text-decoration: none;
-        white-space: nowrap;
-        transition: background-color 0.2s ease;
-    }
-
-    .export-menu .dropdown-item:hover {
-        background-color: #f5f7fa;
-    }
-
-    .export-menu .dropdown-item i {
-        width: 22px;
-        text-align: center;
-    }
-
-    /* =========================================================
-       VERIFICATION CHECKLIST
-    ========================================================= */
-
+    /* Checklist & Progress */
     .verification-header {
-        background: #1a237e;
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
         color: #fff;
-        padding: 15px 20px;
+        padding: 16px 20px;
     }
 
     .checklist-box {
@@ -342,7 +265,7 @@
         width: 19px;
         height: 19px;
         margin-right: 12px;
-        accent-color: #198754;
+        accent-color: #10b981;
         cursor: pointer;
         flex-shrink: 0;
     }
@@ -354,7 +277,7 @@
     }
 
     .check-item.checked .check-icon {
-        color: #198754;
+        color: #10b981;
     }
 
     .check-text {
@@ -363,15 +286,11 @@
         font-size: .9rem;
     }
 
-    /* =========================================================
-       PROGRESS CHECKLIST
-    ========================================================= */
-
     .verification-progress {
         background: #f8f9fa;
         border: 1px solid #e9ecef;
-        border-radius: 9px;
-        padding: 13px 15px;
+        border-radius: 10px;
+        padding: 14px 16px;
     }
 
     .progress {
@@ -382,37 +301,28 @@
     }
 
     .progress-bar {
-        background: #198754;
+        background: #10b981;
         transition: width .3s ease;
     }
 
-    .progress-text {
-        font-size: .8rem;
-        font-weight: 700;
-        color: #6c757d;
-    }
-
-    /* =========================================================
-       FORM
-    ========================================================= */
-
+    /* Form Inputs */
     .form-label-custom {
         font-size: .88rem;
         font-weight: 700;
-        color: #212529;
+        color: var(--text-dark);
         margin-bottom: 7px;
     }
 
     .custom-form-control {
-        border: 1px solid #ced4da;
-        border-radius: 8px;
-        min-height: 42px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        min-height: 44px;
         font-size: .9rem;
         transition: all .2s ease;
     }
 
     .custom-form-control:focus {
-        border-color: #1a237e;
+        border-color: var(--polban-navy);
         box-shadow: 0 0 0 .2rem rgba(26,35,126,.12);
     }
 
@@ -421,25 +331,21 @@
         resize: vertical;
     }
 
-    /* =========================================================
-       BUTTON
-    ========================================================= */
-
     .btn-save-verification {
-        background: #198754;
+        background: #10b981;
         border: none;
         color: #fff;
         border-radius: 8px;
-        padding: 10px 20px;
+        padding: 10px 22px;
         font-weight: 700;
         transition: all .2s ease;
     }
 
     .btn-save-verification:hover {
-        background: #146c43;
+        background: #059669;
         color: #fff;
         transform: translateY(-1px);
-        box-shadow: 0 5px 12px rgba(25,135,84,.25);
+        box-shadow: 0 5px 12px rgba(16,185,129,.25);
     }
 
     .btn-cancel {
@@ -447,7 +353,7 @@
         border: none;
         color: #fff;
         border-radius: 8px;
-        padding: 10px 20px;
+        padding: 10px 22px;
         font-weight: 700;
         transition: all .2s ease;
     }
@@ -457,12 +363,7 @@
         color: #fff;
     }
 
-    /* =========================================================
-       RESPONSIVE
-    ========================================================= */
-
     @media (max-width: 767px) {
-
         .attachment-box {
             flex-direction: column;
             align-items: flex-start;
@@ -485,658 +386,273 @@
     }
 </style>
 
-
 <div class="container-fluid px-4 py-4 verification-page">
 
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
-
+    <!-- HEADER -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-<div>
+        <div>
             <h1 class="h3 page-title mb-1">
-                <i class="fas fa-user-check mr-2"></i>
-                Verifikasi Tiket Permohonan
+                <i class="fas fa-user-check me-2"></i> Verifikasi Tiket Permohonan
             </h1>
-
             <p class="text-muted mb-0">
                 Periksa kelengkapan data dan dokumen sebelum tiket diproses.
             </p>
         </div>
 
         <div class="d-flex align-items-center gap-2">
-            <!-- TOMBOL EXPORT LAPORAN -->
-            <div class="export-action-group mr-3">
-                <div class="export-dropdown">
-                    <button type="button" class="btn btn-export-green d-flex align-items-center justify-content-center" id="dropdownExport" onclick="toggleExportMenu(event)">
-                        <i class="fas fa-download mr-2"></i>
-                        Export Laporan
-                        <i class="fas fa-chevron-down ml-2"></i>
-                    </button>
-                    <div class="export-menu" id="exportMenu">
-                        <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/excel') ?>">
-                            <i class="fas fa-file-excel mr-2" style="color:#0B8F4D;"></i> Export Excel
-                        </a>
-                        <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/pdf') ?>">
-                            <i class="fas fa-file-pdf mr-2" style="color:#D93025;"></i> Export PDF
-                        </a>
-                        <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/csv') ?>">
-                            <i class="fas fa-file-csv mr-2" style="color:#005BAC;"></i> Export CSV
-                        </a>
-                    </div>
-                </div>
-            </div>
-
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb bg-transparent p-0 m-0">
-
-                    <li class="breadcrumb-item">
-                        <a href="<?= base_url('petugas/dashboard') ?>">
-                            Dashboard
-                        </a>
-                    </li>
-
-                    <li class="breadcrumb-item">
-                        <a href="<?= base_url('petugas/tiket') ?>">
-                            Data Tiket
-                        </a>
-                    </li>
-
-                    <li class="breadcrumb-item active" aria-current="page">
-                        Verifikasi
-                    </li>
-
+                    <li class="breadcrumb-item"><a href="<?= base_url('petugas/dashboard') ?>">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url('petugas/tiket') ?>">Data Tiket</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Verifikasi</li>
                 </ol>
             </nav>
         </div>
-
     </div>
 
-
-    <!-- =====================================================
-         RINGKASAN TIKET
-    ====================================================== -->
-
-    <div class="row mb-4">
-
-        <!-- No Tiket -->
-        <div class="col-xl-3 col-md-6 mb-3">
-
-            <div class="card summary-card summary-navy shadow-sm">
-
-                <div class="card-body d-flex align-items-center justify-content-between p-3">
-
+    <!-- SUMMARY CARDS (PERSIS KOTAK FOTO) -->
+    <div class="row g-3 mb-4">
+        <!-- TOTAL TAMU / TOTAL -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-navy p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="summary-label">
-                            No Tiket
-                        </div>
-
-                        <p class="summary-value">
-                            <?= esc($tiket['nomor_tiket'] ?? 'ULT-20260720-0001') ?>
-                        </p>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">TOTAL TAMU</span>
+                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
+                            <?= esc($stats['total'] ?? '8') ?>
+                        </h4>
                     </div>
-
-                    <div class="summary-icon">
-                        <i class="fas fa-ticket-alt"></i>
+                    <div class="icon-tamu-circle text-white">
+                        <i class="fas fa-users"></i>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-
-        <!-- Pemohon -->
-        <div class="col-xl-3 col-md-6 mb-3">
-
-            <div class="card summary-card summary-orange shadow-sm">
-
-                <div class="card-body d-flex align-items-center justify-content-between p-3">
-
+        <!-- SUBMITTED -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-orange p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="summary-label">
-                            Pemohon
-                        </div>
-
-                        <p class="summary-value">
-                            <?= esc($tiket['nama_pemohon'] ?? 'Rafi Putra') ?>
-                        </p>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">SUBMITTED</span>
+                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
+                            <?= esc($stats['submitted'] ?? '1') ?>
+                        </h4>
                     </div>
-
-                    <div class="summary-icon">
-                        <i class="fas fa-user"></i>
+                    <div class="icon-tamu-circle text-white">
+                        <i class="fas fa-paper-plane"></i>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-
-        <!-- Layanan -->
-        <div class="col-xl-3 col-md-6 mb-3">
-
-            <div class="card summary-card summary-blue shadow-sm">
-
-                <div class="card-body d-flex align-items-center justify-content-between p-3">
-
+        <!-- ASSIGNED / DIPROSES -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-yellow p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="summary-label">
-                            Layanan
-                        </div>
-
-                        <p class="summary-value">
-                            <?= esc($tiket['layanan'] ?? 'Surat Aktif Kuliah') ?>
-                        </p>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">ASSIGNED / DIPROSES</span>
+                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
+                            <?= esc($stats['assigned'] ?? '5') ?>
+                        </h4>
                     </div>
-
-                    <div class="summary-icon">
-                        <i class="fas fa-concierge-bell"></i>
+                    <div class="icon-tamu-circle text-white">
+                        <i class="fas fa-spinner"></i>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-
-        <!-- Status -->
-        <div class="col-xl-3 col-md-6 mb-3">
-
-            <div class="card summary-card summary-green shadow-sm">
-
-                <div class="card-body d-flex align-items-center justify-content-between p-3">
-
+        <!-- VERIFIED / SELESAI -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-green p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="summary-label">
-                            Status
-                        </div>
-
-                        <p class="summary-value" id="summaryStatus">
-                            <?= esc($tiket['status'] ?? 'Submitted') ?>
-                        </p>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">VERIFIED / SELESAI</span>
+                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
+                            <?= esc($stats['verified'] ?? '2') ?>
+                        </h4>
                     </div>
-
-                    <div class="summary-icon">
-                        <i class="fas fa-clock"></i>
+                    <div class="icon-tamu-circle text-white">
+                        <i class="fas fa-check-circle"></i>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
-
-    <!-- =====================================================
-         INFORMASI PERMOHONAN
-    ====================================================== -->
-
+    <!-- INFORMASI PERMOHONAN -->
     <div class="card professional-card mb-4">
-
         <div class="card-header bg-white border-0 py-3 px-4">
-
             <h5 class="card-title-custom">
-                <i class="fas fa-id-card mr-2"></i>
-                Informasi Permohonan
+                <i class="fas fa-id-card me-2"></i> Informasi Permohonan
             </h5>
-
         </div>
-
         <div class="card-body px-4 pb-4">
-
-            <div class="row">
-
-                <div class="col-lg-4 col-md-6 mb-3">
+            <div class="row g-3">
+                <div class="col-lg-4 col-md-6">
                     <div class="info-item">
-
-                        <span class="info-label">
-                            <i class="fas fa-ticket-alt"></i>
-                            Nomor Tiket
-                        </span>
-
-                        <span class="info-value ticket-number">
-                            <?= esc($tiket['nomor_tiket'] ?? 'ULT-20260720-0001') ?>
-                        </span>
-
+                        <span class="info-label"><i class="fas fa-ticket-alt"></i> Nomor Tiket</span>
+                        <span class="info-value ticket-number"><?= esc($tiket['nomor_tiket'] ?? 'ULT-20260808-0015') ?></span>
                     </div>
                 </div>
-
-
-                <div class="col-lg-4 col-md-6 mb-3">
+                <div class="col-lg-4 col-md-6">
                     <div class="info-item">
-
-                        <span class="info-label">
-                            <i class="fas fa-user"></i>
-                            Nama Pemohon
-                        </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['nama_pemohon'] ?? 'Rafi Putra') ?>
-                        </span>
-
+                        <span class="info-label"><i class="fas fa-user"></i> Nama Pemohon</span>
+                        <span class="info-value"><?= esc($tiket['nama_pemohon'] ?? 'Rian Hidayat') ?></span>
                     </div>
                 </div>
-
-
-                <div class="col-lg-4 col-md-6 mb-3">
+                <div class="col-lg-4 col-md-6">
                     <div class="info-item">
-
-                        <span class="info-label">
-                            <i class="fas fa-id-badge"></i>
-                            NIM
-                        </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['nim'] ?? '231511001') ?>
-                        </span>
-
+                        <span class="info-label"><i class="fas fa-id-badge"></i> NIM</span>
+                        <span class="info-value"><?= esc($tiket['nim'] ?? '231511001') ?></span>
                     </div>
                 </div>
-
-
-                <div class="col-lg-4 col-md-6 mb-3">
+                <div class="col-lg-4 col-md-6">
                     <div class="info-item">
-
-                        <span class="info-label">
-                            <i class="fas fa-concierge-bell"></i>
-                            Jenis Layanan
-                        </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['layanan'] ?? 'Surat Aktif Kuliah') ?>
-                        </span>
-
+                        <span class="info-label"><i class="fas fa-concierge-bell"></i> Jenis Layanan</span>
+                        <span class="info-value"><?= esc($tiket['layanan'] ?? 'Surat Aktif Kuliah') ?></span>
                     </div>
                 </div>
-
-
-                <div class="col-lg-4 col-md-6 mb-3">
+                <div class="col-lg-4 col-md-6">
                     <div class="info-item">
-
-                        <span class="info-label">
-                            <i class="fas fa-layer-group"></i>
-                            Kategori
-                        </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['kategori'] ?? 'Akademik') ?>
-                        </span>
-
+                        <span class="info-label"><i class="fas fa-layer-group"></i> Kategori</span>
+                        <span class="info-value"><?= esc($tiket['kategori'] ?? 'Akademik') ?></span>
                     </div>
                 </div>
-
-
-                <div class="col-lg-4 col-md-6 mb-3">
+                <div class="col-lg-4 col-md-6">
                     <div class="info-item">
-
-                        <span class="info-label">
-                            <i class="fas fa-exclamation-circle"></i>
-                            Prioritas
-                        </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['prioritas'] ?? 'High') ?>
-                        </span>
-
+                        <span class="info-label"><i class="fas fa-exclamation-circle"></i> Prioritas</span>
+                        <span class="info-value"><?= esc($tiket['prioritas'] ?? 'High') ?></span>
                     </div>
                 </div>
-
-
-                <div class="col-lg-4 col-md-6 mb-3">
+                <div class="col-lg-4 col-md-6">
                     <div class="info-item">
-
-                        <span class="info-label">
-                            <i class="fas fa-envelope"></i>
-                            Email
-                        </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['email'] ?? 'rafi@student.polban.ac.id') ?>
-                        </span>
-
+                        <span class="info-label"><i class="fas fa-envelope"></i> Email</span>
+                        <span class="info-value"><?= esc($tiket['email'] ?? 'rian@student.polban.ac.id') ?></span>
                     </div>
                 </div>
-
-
-                <div class="col-lg-4 col-md-6 mb-3">
+                <div class="col-lg-4 col-md-6">
                     <div class="info-item">
-
-                        <span class="info-label">
-                            <i class="fas fa-phone"></i>
-                            No HP
-                        </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['no_hp'] ?? '081234567890') ?>
-                        </span>
-
+                        <span class="info-label"><i class="fas fa-phone"></i> No HP</span>
+                        <span class="info-value"><?= esc($tiket['no_hp'] ?? '081234567890') ?></span>
                     </div>
                 </div>
-
-
-                <div class="col-lg-4 col-md-6 mb-3">
+                <div class="col-lg-4 col-md-6">
                     <div class="info-item">
-
-                        <span class="info-label">
-                            <i class="far fa-calendar-alt"></i>
-                            Tanggal Pengajuan
-                        </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['tanggal'] ?? '17 Juli 2026') ?>
-                        </span>
-
+                        <span class="info-label"><i class="far fa-calendar-alt"></i> Tanggal Pengajuan</span>
+                        <span class="info-value"><?= esc($tiket['tanggal'] ?? '17 Juli 2026') ?></span>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
-
-    <!-- =====================================================
-         LAMPIRAN
-    ====================================================== -->
-
+    <!-- LAMPIRAN -->
     <div class="card professional-card mb-4">
-
         <div class="card-header bg-white border-0 py-3 px-4">
-
             <h5 class="card-title-custom">
-                <i class="fas fa-paperclip mr-2"></i>
-                Lampiran Pemohon
+                <i class="fas fa-paperclip me-2"></i> Lampiran Pemohon
             </h5>
-
         </div>
-
         <div class="card-body px-4 pb-4">
-
             <div class="attachment-box">
-
                 <div class="d-flex align-items-center">
-
-                    <div class="attachment-icon mr-3">
+                    <div class="attachment-icon me-3">
                         <i class="fas fa-file-pdf"></i>
                     </div>
-
                     <div>
-                        <div class="attachment-title">
-                            Dokumen Persyaratan
-                        </div>
-
-                        <p class="attachment-info">
-                            File lampiran yang dikirim oleh pemohon.
-                        </p>
+                        <div class="attachment-title fw-bold">Dokumen Persyaratan</div>
+                        <p class="attachment-info mb-0">File lampiran yang dikirim oleh pemohon.</p>
                     </div>
-
                 </div>
-
-                <a href="<?= base_url('uploads/' . ($tiket['lampiran'] ?? 'sample.pdf')) ?>"
-                   target="_blank"
-                   class="btn btn-view-file">
-
-                    <i class="fas fa-eye mr-1"></i>
-                    Lihat Lampiran
-
+                <a href="<?= base_url('uploads/' . ($tiket['lampiran'] ?? 'sample.pdf')) ?>" target="_blank" class="btn btn-view-file">
+                    <i class="fas fa-eye me-1"></i> Lihat Lampiran
                 </a>
-
             </div>
-
         </div>
-
     </div>
 
-
-    <!-- =====================================================
-         FORM VERIFIKASI
-    ====================================================== -->
-
+    <!-- FORM VERIFIKASI -->
     <div class="card professional-card mb-4">
-
         <div class="verification-header">
-
-            <h5 class="mb-0 font-weight-bold">
-                <i class="fas fa-check-double mr-2"></i>
-                Verifikasi Tiket
-            </h5>
-
+            <h5 class="mb-0 fw-bold"><i class="fas fa-check-double me-2"></i> Verifikasi Tiket</h5>
         </div>
-
         <div class="card-body p-4">
-
-            <form
-                id="verificationForm"
-                action="<?= base_url('petugas/verifikasi/simpan' . (isset($tiket['id']) ? '/'.$tiket['id'] : '')) ?>"
-                method="POST">
-
+            <form id="verificationForm" action="<?= base_url('petugas/verifikasi/simpan' . (isset($tiket['id']) ? '/'.$tiket['id'] : '')) ?>" method="POST">
                 <?= csrf_field() ?>
 
-
-                <!-- Checklist -->
-
                 <div class="d-flex justify-content-between align-items-center mb-3">
-
-                    <h6 class="font-weight-bold text-dark mb-0">
-                        Checklist Kelengkapan
-                    </h6>
-
-                    <span class="badge badge-light border px-3 py-2"
-                          id="checkCount">
-                        0 / 3 lengkap
-                    </span>
-
+                    <h6 class="fw-bold text-dark mb-0">Checklist Kelengkapan</h6>
+                    <span class="badge bg-light text-dark border px-3 py-2" id="checkCount">0 / 3 lengkap</span>
                 </div>
-
 
                 <div class="checklist-box mb-3">
-
                     <label class="check-item" data-check-item>
-
-                        <input
-                            type="checkbox"
-                            class="check-input verification-check"
-                            id="checkMahasiswa"
-                            name="check_mahasiswa"
-                            value="1">
-
+                        <input type="checkbox" class="check-input verification-check" id="checkMahasiswa" name="check_mahasiswa" value="1">
                         <i class="fas fa-user-check check-icon"></i>
-
-                        <span class="check-text">
-                            Data Mahasiswa Sesuai
-                        </span>
-
+                        <span class="check-text">Data Mahasiswa Sesuai</span>
                     </label>
 
-
                     <label class="check-item" data-check-item>
-
-                        <input
-                            type="checkbox"
-                            class="check-input verification-check"
-                            id="checkLampiran"
-                            name="check_lampiran"
-                            value="1">
-
-                        <i class="fas fa-file-check check-icon"></i>
-
-                        <span class="check-text">
-                            Lampiran Lengkap
-                        </span>
-
+                        <input type="checkbox" class="check-input verification-check" id="checkLampiran" name="check_lampiran" value="1">
+                        <i class="fas fa-file-circle-check check-icon"></i>
+                        <span class="check-text">Lampiran Lengkap</span>
                     </label>
 
-
                     <label class="check-item" data-check-item>
-
-                        <input
-                            type="checkbox"
-                            class="check-input verification-check"
-                            id="checkPersyaratan"
-                            name="check_persyaratan"
-                            value="1">
-
+                        <input type="checkbox" class="check-input verification-check" id="checkPersyaratan" name="check_persyaratan" value="1">
                         <i class="fas fa-clipboard-check check-icon"></i>
-
-                        <span class="check-text">
-                            Persyaratan Sudah Sesuai
-                        </span>
-
+                        <span class="check-text">Persyaratan Sudah Sesuai</span>
                     </label>
-
                 </div>
-
-
-                <!-- Progress -->
 
                 <div class="verification-progress mb-4">
-
                     <div class="d-flex justify-content-between mb-2">
-
-                        <span class="progress-text">
-                            Kelengkapan Verifikasi
-                        </span>
-
-                        <span class="progress-text" id="progressPercent">
-                            0%
-                        </span>
-
+                        <span class="progress-text font-weight-bold">Kelengkapan Verifikasi</span>
+                        <span class="progress-text font-weight-bold" id="progressPercent">0%</span>
                     </div>
-
                     <div class="progress">
-
-                        <div
-                            id="verificationProgress"
-                            class="progress-bar"
-                            role="progressbar"
-                            style="width: 0%;">
-
-                        </div>
-
+                        <div id="verificationProgress" class="progress-bar" role="progressbar" style="width: 0%;"></div>
                     </div>
-
                 </div>
-
 
                 <div class="row">
-
-                    <!-- Status -->
-
+                    <!-- STATUS DROPDOWN -->
                     <div class="col-md-6 mb-4">
-
-                        <label class="form-label-custom">
-                            Status Verifikasi
-                        </label>
-
-                        <select
-                            name="status_verifikasi"
-                            id="statusVerifikasi"
-                            class="form-control custom-form-control"
-                            required>
-
-                            <option value="" selected disabled>
-                                Pilih Keputusan...
-                            </option>
-
-                            <option value="Verified">
-                                Disetujui / Terverifikasi
-                            </option>
-
-                            <option value="Rejected">
-                                Ditolak / Perlu Perbaikan
-                            </option>
-
+                        <label class="form-label-custom">Status Verifikasi</label>
+                        <select name="status_verifikasi" id="statusVerifikasi" class="form-select custom-form-control" required>
+                            <option value="" selected disabled>Pilih Keputusan...</option>
+                            <option value="Verified">Disetujui / Terverifikasi</option>
+                            <option value="Need Revision">Perlu Perbaikan / Need Revision</option>
+                            <option value="Rejected">Ditolak</option>
                         </select>
-
                     </div>
 
-
-                    <!-- Catatan -->
-
+                    <!-- CATATAN -->
                     <div class="col-md-6 mb-4">
-
-                        <label class="form-label-custom">
-                            Catatan Petugas
-                        </label>
-
-                        <textarea
-                            name="catatan"
-                            id="catatanVerifikasi"
-                            class="form-control custom-form-control"
-                            rows="4"
-                            placeholder="Tambahkan catatan atau alasan verifikasi..."></textarea>
-
+                        <label class="form-label-custom">Catatan Petugas</label>
+                        <textarea name="catatan" id="catatanVerifikasi" class="form-control custom-form-control" rows="4" placeholder="Tambahkan catatan atau alasan verifikasi..."></textarea>
                     </div>
-
                 </div>
 
-
-                <!-- BUTTON -->
-
+                <!-- BUTTONS -->
                 <div class="d-flex justify-content-end action-buttons">
-
-                    <a
-                        href="<?= base_url('petugas/tiket') ?>"
-                        class="btn btn-cancel mr-2">
-
-                        <i class="fas fa-arrow-left mr-1"></i>
-                        Batal
-
+                    <a href="<?= base_url('petugas/tiket') ?>" class="btn btn-cancel me-2">
+                        <i class="fas fa-arrow-left me-1"></i> Batal
                     </a>
-
-
-                    <button
-                        type="submit"
-                        id="btnSubmitVerification"
-                        class="btn btn-save-verification">
-
-                        <i class="fas fa-save mr-1"></i>
-                        Simpan Verifikasi
-
+                    <button type="submit" id="btnSubmitVerification" class="btn btn-save-verification">
+                        <i class="fas fa-save me-1"></i> Simpan Verifikasi
                     </button>
-
                 </div>
-
             </form>
-
         </div>
-
     </div>
 
 </div>
 
-
 <script>
-function toggleExportMenu(event) {
-    event.stopPropagation();
-    const menu = document.getElementById('exportMenu');
-    if (menu) {
-        menu.classList.toggle('show');
-    }
-}
-
-// Menutup dropdown jika pengguna mengklik di luar area tombol/menu
-document.addEventListener('click', function(event) {
-    const dropdown = document.querySelector('.export-dropdown');
-    const menu = document.getElementById('exportMenu');
-
-    if (dropdown && menu && !dropdown.contains(event.target)) {
-        menu.classList.remove('show');
-    }
-});
-
 document.addEventListener('DOMContentLoaded', function () {
-
-    /* =====================================================
-       CHECKLIST PROGRESS
-    ====================================================== */
 
     const checks = document.querySelectorAll('.verification-check');
     const checkItems = document.querySelectorAll('[data-check-item]');
@@ -1145,104 +661,58 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkCount = document.getElementById('checkCount');
 
     function updateChecklist() {
-
         let checked = 0;
-
         checks.forEach(function (checkbox, index) {
-
             const item = checkItems[index];
-
             if (checkbox.checked) {
-
                 checked++;
-
-                if (item) {
-                    item.classList.add('checked');
-                }
-
+                if (item) item.classList.add('checked');
             } else {
-
-                if (item) {
-                    item.classList.remove('checked');
-                }
-
+                if (item) item.classList.remove('checked');
             }
-
         });
 
         const total = checks.length;
-
-        const percent = total > 0
-            ? Math.round((checked / total) * 100)
-            : 0;
+        const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
 
         progressBar.style.width = percent + '%';
         progressPercent.textContent = percent + '%';
         checkCount.textContent = checked + ' / ' + total + ' lengkap';
-
     }
 
     checks.forEach(function (checkbox) {
-
         checkbox.addEventListener('change', updateChecklist);
-
     });
 
     updateChecklist();
-
-
-    /* =====================================================
-       FORM SUBMIT LOADING
-    ====================================================== */
 
     const form = document.getElementById('verificationForm');
     const submitButton = document.getElementById('btnSubmitVerification');
 
     if (form && submitButton) {
-
         form.addEventListener('submit', function () {
-
             submitButton.disabled = true;
-
-            submitButton.innerHTML =
-                '<i class="fas fa-spinner fa-spin mr-1"></i> Menyimpan...';
-
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Menyimpan...';
         });
-
     }
-
-
-    /* =====================================================
-       STATUS VERIFIKASI
-    ====================================================== */
 
     const statusSelect = document.getElementById('statusVerifikasi');
     const noteField = document.getElementById('catatanVerifikasi');
 
     if (statusSelect && noteField) {
-
         statusSelect.addEventListener('change', function () {
-
-            if (this.value === 'Rejected') {
-
-                noteField.placeholder =
-                    'Jelaskan alasan penolakan atau dokumen yang perlu diperbaiki...';
-
+            if (this.value === 'Need Revision') {
+                noteField.placeholder = 'Jelaskan poin-poin dokumen atau data yang perlu diperbaiki oleh pemohon...';
                 noteField.focus();
-
+            } else if (this.value === 'Rejected') {
+                noteField.placeholder = 'Jelaskan alasan penolakan permohonan...';
+                noteField.focus();
             } else {
-
-                noteField.placeholder =
-                    'Tambahkan catatan atau alasan verifikasi...';
-
+                noteField.placeholder = 'Tambahkan catatan atau alasan verifikasi...';
             }
-
         });
-
     }
-
 });
 </script>
-
 
 <?= $this->endSection() ?>

@@ -2,10 +2,12 @@
 
 <?= $this->section('content') ?>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
     /* =========================================================
        DETAIL TIKET - STYLE SISTEM ULT POLBAN
-       Mengikuti tema Dashboard & Data Tiket
     ========================================================= */
 
     :root {
@@ -18,6 +20,10 @@
         --ult-border: #e4e7ec;
         --ult-text: #263238;
         --ult-muted: #6c757d;
+    }
+
+    body, .container-fluid {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     }
 
     /* =========================
@@ -44,88 +50,69 @@
         text-decoration: none;
     }
 
-    /* =========================
-       SUMMARY CARDS
-    ========================= */
+    /* =========================================================
+       SUMMARY CARDS (DISAMAKAN DENGAN FOTO HASIL REVISI)
+    ========================================================= */
 
-    .summary-card {
+    .stat-tamu-card {
+        border-radius: 18px;
         border: none;
-        border-radius: 12px;
-        min-height: 125px;
+        color: #ffffff;
+        transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
         overflow: hidden;
-        position: relative;
-        transition:
-            transform 0.25s ease,
-            box-shadow 0.25s ease;
-    }
-
-    .summary-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14) !important;
-    }
-
-    .summary-card .card-body {
-        padding: 20px;
-        position: relative;
-        z-index: 2;
-    }
-
-    .summary-label {
-        font-size: 0.74rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-        opacity: 0.8;
-        margin-bottom: 6px;
-    }
-
-    .summary-value {
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin: 0;
-        word-break: break-word;
-    }
-
-    .summary-icon {
-        position: absolute;
-        right: 18px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 52px;
-        height: 52px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
         z-index: 1;
     }
 
-    .summary-blue {
-        background: var(--ult-blue);
-        color: #fff;
+    .stat-tamu-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -30%;
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 50%;
+        z-index: -1;
+        transition: transform 0.5s ease;
     }
 
-    .summary-orange {
-        background: var(--ult-orange);
-        color: #fff;
+    .stat-tamu-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15) !important;
     }
 
-    .summary-navy {
-        background: var(--ult-navy);
-        color: #fff;
+    .stat-tamu-card:hover::before {
+        transform: scale(1.25);
     }
 
-    .summary-green {
-        background: var(--ult-green);
-        color: #fff;
+    .bg-tamu-navy {
+        background: linear-gradient(135deg, #1b2e85 0%, #283593 100%) !important;
     }
 
-    .summary-blue .summary-icon,
-    .summary-orange .summary-icon,
-    .summary-navy .summary-icon,
-    .summary-green .summary-icon {
-        background: rgba(255, 255, 255, 0.20);
+    .bg-tamu-orange {
+        background: linear-gradient(135deg, #ff7a00 0%, #ff8c00 100%) !important;
+    }
+
+    .bg-tamu-yellow {
+        background: linear-gradient(135deg, #ffb300 0%, #f4c400 100%) !important;
+    }
+
+    .bg-tamu-green {
+        background: linear-gradient(135deg, #00a86b 0%, #10b981 100%) !important;
+    }
+
+    .icon-tamu-circle {
+        width: 54px;
+        height: 54px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.22);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
     }
 
     /* =========================
@@ -474,11 +461,6 @@
             width: 100%;
         }
 
-        .summary-icon {
-            width: 44px;
-            height: 44px;
-        }
-
         .timeline::before {
             left: 25px;
         }
@@ -507,7 +489,6 @@
             transform 0.45s ease;
     }
 </style>
-
 
 <div class="container-fluid px-4 py-4">
 
@@ -554,114 +535,77 @@
 
 
     <!-- =====================================================
-         SUMMARY CARDS
+         SUMMARY CARDS (PERSIS DENGAN HAFALAN TAMPILAN FOTO)
     ====================================================== -->
 
     <div class="row g-3 mb-4">
-
-        <!-- NO TIKET -->
+        <!-- TOTAL TAMU -->
         <div class="col-xl-3 col-md-6 detail-animate">
-
-            <div class="card summary-card summary-blue shadow-sm">
-
-                <div class="card-body">
-
-                    <div class="summary-label">
-                        Nomor Tiket
+            <div class="card stat-tamu-card bg-tamu-navy p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">TOTAL TAMU</span>
+                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
+                            <?= esc($stats['total'] ?? '8') ?>
+                        </h4>
                     </div>
-
-                    <p class="summary-value">
-                        <?= esc($tiket['nomor_tiket'] ?? 'ULT-001') ?>
-                    </p>
-
-                    <div class="summary-icon">
-                        <i class="fas fa-ticket-alt"></i>
+                    <div class="icon-tamu-circle text-white">
+                        <i class="fas fa-users"></i>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-
-        <!-- PRIORITAS -->
+        <!-- SUBMITTED -->
         <div class="col-xl-3 col-md-6 detail-animate">
-
-            <div class="card summary-card summary-orange shadow-sm">
-
-                <div class="card-body">
-
-                    <div class="summary-label">
-                        Prioritas
+            <div class="card stat-tamu-card bg-tamu-orange p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">SUBMITTED</span>
+                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
+                            <?= esc($stats['submitted'] ?? '1') ?>
+                        </h4>
                     </div>
-
-                    <p class="summary-value">
-                        <?= esc($tiket['prioritas'] ?? 'High') ?>
-                    </p>
-
-                    <div class="summary-icon">
-                        <i class="fas fa-flag"></i>
+                    <div class="icon-tamu-circle text-white">
+                        <i class="fas fa-paper-plane"></i>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-
-        <!-- UNIT -->
+        <!-- ASSIGNED / DIPROSES -->
         <div class="col-xl-3 col-md-6 detail-animate">
-
-            <div class="card summary-card summary-navy shadow-sm">
-
-                <div class="card-body">
-
-                    <div class="summary-label">
-                        Unit Tujuan
+            <div class="card stat-tamu-card bg-tamu-yellow p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">ASSIGNED / DIPROSES</span>
+                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
+                            <?= esc($stats['assigned'] ?? '5') ?>
+                        </h4>
                     </div>
-
-                    <p class="summary-value">
-                        <?= esc($tiket['kategori'] ?? 'Akademik') ?>
-                    </p>
-
-                    <div class="summary-icon">
-                        <i class="fas fa-building"></i>
+                    <div class="icon-tamu-circle text-white">
+                        <i class="fas fa-spinner"></i>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-
-        <!-- STATUS -->
+        <!-- VERIFIED / SELESAI -->
         <div class="col-xl-3 col-md-6 detail-animate">
-
-            <div class="card summary-card summary-green shadow-sm">
-
-                <div class="card-body">
-
-                    <div class="summary-label">
-                        Status
+            <div class="card stat-tamu-card bg-tamu-green p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">VERIFIED / SELESAI</span>
+                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
+                            <?= esc($stats['verified'] ?? '2') ?>
+                        </h4>
                     </div>
-
-                    <p class="summary-value">
-                        <?= esc($tiket['status'] ?? 'Submitted') ?>
-                    </p>
-
-                    <div class="summary-icon">
+                    <div class="icon-tamu-circle text-white">
                         <i class="fas fa-check-circle"></i>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
 
@@ -1109,10 +1053,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* =========================================
-       ANIMASI ELEMENT SAAT HALAMAN DIBUKA
-    ========================================= */
-
+    /* ANIMASI ELEMENT SAAT HALAMAN DIBUKA */
     const animatedElements = document.querySelectorAll('.detail-animate');
 
     animatedElements.forEach(function (element, index) {
@@ -1124,10 +1065,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    /* =========================================
-       COPY NOMOR TIKET
-    ========================================= */
-
+    /* COPY NOMOR TIKET */
     const copyButton = document.getElementById('copyTicketBtn');
     const ticketNumber = document.getElementById('ticketNumber');
 
@@ -1164,22 +1102,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
     }
-
-
-    /* =========================================
-       HOVER EFFECT SUMMARY CARD
-    ========================================= */
-
-    const summaryCards =
-        document.querySelectorAll('.summary-card');
-
-    summaryCards.forEach(function (card) {
-
-        card.addEventListener('mouseenter', function () {
-            card.style.cursor = 'default';
-        });
-
-    });
 
 });
 </script>

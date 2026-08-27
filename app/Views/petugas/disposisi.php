@@ -2,6 +2,9 @@
 
 <?= $this->section('content') ?>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
     /* =====================================================
        DISPOSISI TIKET
@@ -16,6 +19,10 @@
         --polban-info: #17a2b8;
         --soft-bg: #f8f9fc;
         --border-soft: #e8ebf0;
+    }
+
+    body, .container-fluid {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     }
 
     /* Page Header */
@@ -43,72 +50,69 @@
         box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
     }
 
-    /* Summary Cards */
-    .summary-card {
-        border: 0;
-        border-radius: 12px;
-        min-height: 105px;
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-        transition: all 0.25s ease;
+    /* =========================================================
+       SUMMARY CARDS (DISAMAKAN DENGAN FOTO HASIL REVISI)
+    ========================================================= */
+
+    .stat-tamu-card {
+        border-radius: 18px;
+        border: none;
+        color: #ffffff;
+        transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
         overflow: hidden;
-        position: relative;
+        z-index: 1;
     }
 
-    .summary-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-    }
-
-    .summary-card::after {
-        content: "";
+    .stat-tamu-card::before {
+        content: '';
         position: absolute;
-        width: 90px;
-        height: 90px;
+        top: -50%;
+        right: -30%;
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, 0.12);
         border-radius: 50%;
-        right: -25px;
-        top: -25px;
-        background: rgba(255, 255, 255, 0.08);
+        z-index: -1;
+        transition: transform 0.5s ease;
     }
 
-    .summary-blue {
-        background: var(--polban-blue);
+    .stat-tamu-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15) !important;
     }
 
-    .summary-green {
-        background: var(--polban-green);
+    .stat-tamu-card:hover::before {
+        transform: scale(1.25);
     }
 
-    .summary-orange {
-        background: var(--polban-orange);
+    .bg-tamu-navy {
+        background: linear-gradient(135deg, #1b2e85 0%, #283593 100%) !important;
     }
 
-    .summary-info {
-        background: var(--polban-info);
+    .bg-tamu-orange {
+        background: linear-gradient(135deg, #ff7a00 0%, #ff8c00 100%) !important;
     }
 
-    .summary-label {
-        font-size: 0.76rem;
-        opacity: 0.82;
-        font-weight: 600;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
+    .bg-tamu-yellow {
+        background: linear-gradient(135deg, #ffb300 0%, #f4c400 100%) !important;
     }
 
-    .summary-value {
-        font-size: 1rem;
-        font-weight: 700;
-        margin: 0;
-        position: relative;
-        z-index: 2;
+    .bg-tamu-green {
+        background: linear-gradient(135deg, #00a86b 0%, #10b981 100%) !important;
     }
 
-    .summary-icon {
-        font-size: 1.8rem;
-        opacity: 0.45;
-        position: relative;
-        z-index: 2;
+    .icon-tamu-circle {
+        width: 54px;
+        height: 54px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.22);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
     }
 
     /* Card Header */
@@ -375,10 +379,6 @@
             padding-left: 8px;
             padding-right: 12px;
         }
-
-        .summary-value {
-            font-size: 0.9rem;
-        }
     }
 </style>
 
@@ -388,7 +388,7 @@
     <!-- =====================================================
          HEADER
          ===================================================== -->
-<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 disposisi-page-title mb-1">
                 Disposisi Tiket Permohonan
@@ -422,97 +422,76 @@
 
 
     <!-- =====================================================
-         SUMMARY
+         SUMMARY CARDS (PERSIS DENGAN HAFALAN TAMPILAN FOTO)
          ===================================================== -->
-    <div class="row mb-4">
-
-        <!-- Nomor Tiket -->
-        <div class="col-xl-3 col-md-6 mb-3">
-            <div class="summary-card summary-blue">
-                <div class="card-body d-flex justify-content-between align-items-center p-3">
-
+    <div class="row g-3 mb-4">
+        <!-- TOTAL TAMU -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-navy p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="summary-label">
-                            Nomor Tiket
-                        </div>
-
-                        <p class="summary-value">
-                            <?= esc($tiket['nomor_tiket'] ?? 'ULT-20260720-0001') ?>
-                        </p>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">TOTAL TAMU</span>
+                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
+                            <?= esc($stats['total'] ?? '8') ?>
+                        </h4>
                     </div>
-
-                    <i class="fas fa-ticket-alt summary-icon"></i>
-
+                    <div class="icon-tamu-circle text-white">
+                        <i class="fas fa-users"></i>
+                    </div>
                 </div>
             </div>
         </div>
 
-
-        <!-- Status -->
-        <div class="col-xl-3 col-md-6 mb-3">
-            <div class="summary-card summary-green">
-                <div class="card-body d-flex justify-content-between align-items-center p-3">
-
+        <!-- SUBMITTED -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-orange p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="summary-label">
-                            Status Tiket
-                        </div>
-
-                        <p class="summary-value">
-                            <?= esc($tiket['status'] ?? 'Verified') ?>
-                        </p>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">SUBMITTED</span>
+                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
+                            <?= esc($stats['submitted'] ?? '1') ?>
+                        </h4>
                     </div>
-
-                    <i class="fas fa-check-circle summary-icon"></i>
-
+                    <div class="icon-tamu-circle text-white">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
                 </div>
             </div>
         </div>
 
-
-        <!-- Prioritas -->
-        <div class="col-xl-3 col-md-6 mb-3">
-            <div class="summary-card summary-orange">
-                <div class="card-body d-flex justify-content-between align-items-center p-3">
-
+        <!-- ASSIGNED / DIPROSES -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-yellow p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="summary-label">
-                            Prioritas Tiket
-                        </div>
-
-                        <p class="summary-value">
-                            <?= esc($tiket['prioritas'] ?? 'High') ?>
-                        </p>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">ASSIGNED / DIPROSES</span>
+                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
+                            <?= esc($stats['assigned'] ?? '5') ?>
+                        </h4>
                     </div>
-
-                    <i class="fas fa-exclamation-triangle summary-icon"></i>
-
+                    <div class="icon-tamu-circle text-white">
+                        <i class="fas fa-spinner"></i>
+                    </div>
                 </div>
             </div>
         </div>
 
-
-        <!-- Kategori -->
-        <div class="col-xl-3 col-md-6 mb-3">
-            <div class="summary-card summary-info">
-                <div class="card-body d-flex justify-content-between align-items-center p-3">
-
+        <!-- VERIFIED / SELESAI -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-green p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="summary-label">
-                            Kategori
-                        </div>
-
-                        <p class="summary-value">
-                            <?= esc($tiket['kategori'] ?? 'Akademik') ?>
-                        </p>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">VERIFIED / SELESAI</span>
+                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
+                            <?= esc($stats['verified'] ?? '2') ?>
+                        </h4>
                     </div>
-
-                    <i class="fas fa-university summary-icon"></i>
-
+                    <div class="icon-tamu-circle text-white">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 
 
@@ -538,7 +517,7 @@
                     <div class="info-mini-card">
 
                         <span class="info-label">
-                            <i class="fas fa-calendar-plus mr-1"></i>
+                            <i class="fas fa-calendar-plus me-1"></i>
                             Tanggal Pengajuan
                         </span>
 
@@ -554,7 +533,7 @@
                     <div class="info-mini-card">
 
                         <span class="info-label">
-                            <i class="fas fa-user-check mr-1"></i>
+                            <i class="fas fa-user-check me-1"></i>
                             Tanggal Verifikasi
                         </span>
 
@@ -570,7 +549,7 @@
                     <div class="info-mini-card">
 
                         <span class="info-label">
-                            <i class="fas fa-flag mr-1"></i>
+                            <i class="fas fa-flag me-1"></i>
                             Prioritas
                         </span>
 
@@ -589,12 +568,12 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-2">
 
-                    <span class="font-weight-bold text-dark">
-                        <i class="fas fa-tasks text-primary mr-1"></i>
+                    <span class="fw-bold text-dark">
+                        <i class="fas fa-tasks text-primary me-1"></i>
                         Progress Tiket
                     </span>
 
-                    <span class="badge badge-success px-2 py-1">
+                    <span class="badge bg-success px-2 py-1">
                         Verified
                     </span>
 
@@ -646,7 +625,7 @@
                                 Nama Pemohon
                             </th>
 
-                            <td class="font-weight-bold">
+                            <td class="fw-bold">
                                 <?= esc($tiket['nama_pemohon'] ?? 'Rafi Putra') ?>
                             </td>
                         </tr>
@@ -681,7 +660,7 @@
 
                             <td>
 
-                                <span class="badge badge-success px-3 py-2">
+                                <span class="badge bg-success px-3 py-2">
                                     <?= esc($tiket['status'] ?? 'Verified') ?>
                                 </span>
 
@@ -736,7 +715,7 @@
                     <select
                         name="unit_tujuan"
                         id="unit_tujuan"
-                        class="form-control disposisi-form-control"
+                        class="form-select disposisi-form-control"
                         required
                     >
 
@@ -776,7 +755,7 @@
                     <select
                         name="prioritas"
                         id="prioritas"
-                        class="form-control disposisi-form-control"
+                        class="form-select disposisi-form-control"
                         required
                     >
 
@@ -820,7 +799,7 @@
 
                     <div class="sla-info">
 
-                        <i class="fas fa-info-circle mr-1"></i>
+                        <i class="fas fa-info-circle me-1"></i>
 
                         Hari ini:
                         <strong><?= date('d F Y') ?></strong>
@@ -841,9 +820,9 @@
 
                     <a
                         href="<?= base_url('petugas/tiket') ?>"
-                        class="btn btn-secondary btn-back px-4 mr-2"
+                        class="btn btn-secondary btn-back px-4 me-2"
                     >
-                        <i class="fas fa-arrow-left mr-1"></i>
+                        <i class="fas fa-arrow-left me-1"></i>
                         Kembali
                     </a>
 
@@ -852,7 +831,7 @@
                         id="btnKirimDisposisi"
                         class="btn btn-polban-orange px-4"
                     >
-                        <i class="fas fa-paper-plane mr-1"></i>
+                        <i class="fas fa-paper-plane me-1"></i>
                         Kirim Disposisi
                     </button>
 
@@ -889,12 +868,12 @@
                     <tr>
 
                         <th width="230">
-                            <i class="fas fa-clock mr-1"></i>
+                            <i class="fas fa-clock me-1"></i>
                             Waktu
                         </th>
 
                         <th>
-                            <i class="fas fa-tasks mr-1"></i>
+                            <i class="fas fa-tasks me-1"></i>
                             Aktivitas
                         </th>
 
@@ -911,7 +890,7 @@
                             20 Juli 2026 08:20
                         </td>
 
-                        <td class="font-weight-bold">
+                        <td class="fw-bold">
 
                             <span class="history-dot"></span>
 
@@ -928,7 +907,7 @@
                             20 Juli 2026 09:10
                         </td>
 
-                        <td class="font-weight-bold">
+                        <td class="fw-bold">
 
                             <span
                                 class="history-dot"
@@ -948,7 +927,7 @@
                             <?= date('d F Y H:i') ?>
                         </td>
 
-                        <td class="font-weight-bold">
+                        <td class="fw-bold">
 
                             <span
                                 class="history-dot"
@@ -976,14 +955,10 @@
      JAVASCRIPT
      ===================================================== -->
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* -----------------------------------------------------
-       Animasi halaman
-       ----------------------------------------------------- */
-
-    const cards = document.querySelectorAll('.disposisi-card, .summary-card');
+    /* Animasi Halaman */
+    const cards = document.querySelectorAll('.disposisi-card, .stat-tamu-card');
 
     cards.forEach(function (card, index) {
 
@@ -1001,10 +976,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    /* -----------------------------------------------------
-       Progress animation
-       ----------------------------------------------------- */
-
+    /* Progress animation */
     const progress = document.getElementById('disposisiProgress');
 
     if (progress) {
@@ -1020,10 +992,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    /* -----------------------------------------------------
-       Form Disposisi
-       ----------------------------------------------------- */
-
+    /* Form Disposisi */
     const form = document.getElementById('formDisposisi');
     const unit = document.getElementById('unit_tujuan');
     const targetSla = document.getElementById('target_sla');
@@ -1033,96 +1002,55 @@ document.addEventListener('DOMContentLoaded', function () {
 
         form.addEventListener('submit', function (event) {
 
-            /* Cek Unit Tujuan */
-
             if (!unit.value) {
-
                 event.preventDefault();
-
                 unit.focus();
-
                 unit.style.borderColor = '#dc3545';
-
                 alert('Silakan pilih Unit Tujuan terlebih dahulu.');
-
                 return;
-
             }
-
-
-            /* Cek Target SLA */
 
             if (!targetSla.value) {
-
                 event.preventDefault();
-
                 targetSla.focus();
-
                 targetSla.style.borderColor = '#dc3545';
-
                 alert('Silakan tentukan Target Penyelesaian / SLA.');
-
                 return;
-
             }
 
-
-            /* Konfirmasi */
-
-            const unitText =
-                unit.options[unit.selectedIndex].text;
-
+            const unitText = unit.options[unit.selectedIndex].text;
             const konfirmasi = confirm(
                 'Kirim tiket ini ke ' +
                 unitText +
                 '?\n\nPastikan Unit Tujuan dan Target SLA sudah benar.'
             );
 
-
             if (!konfirmasi) {
-
                 event.preventDefault();
-
                 return;
-
             }
 
-
-            /* Loading button */
-
             button.disabled = true;
-
             button.innerHTML =
-                '<i class="fas fa-spinner fa-spin mr-1"></i> Mengirim...';
+                '<i class="fas fa-spinner fa-spin me-1"></i> Mengirim...';
 
         });
 
     }
 
-
-    /* -----------------------------------------------------
-       Reset border ketika input dipilih
-       ----------------------------------------------------- */
-
     if (unit) {
-
         unit.addEventListener('change', function () {
             unit.style.borderColor = '';
         });
-
     }
 
-
     if (targetSla) {
-
         targetSla.addEventListener('change', function () {
             targetSla.style.borderColor = '';
         });
-
     }
 
 });
-
 </script>
 
 

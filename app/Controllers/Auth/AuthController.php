@@ -4,16 +4,24 @@ namespace App\Controllers\Auth;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
+use App\Services\ActivityLogService;
+use App\Services\MfaService;
 
 class AuthController extends BaseController
 {
     protected UserModel $userModel;
 
+    protected MfaService $mfaService;
+
+    protected ActivityLogService $activityLogService;
+
     public function __construct()
     {
         helper(['form']);
 
-        $this->userModel = new UserModel();
+        $this->userModel          = new UserModel();
+        $this->mfaService         = new MfaService();
+        $this->activityLogService = service('activityLogService');
     }
 
     /**
@@ -25,157 +33,269 @@ class AuthController extends BaseController
             return redirect()->to('/dashboard-mahasiswa');
         }
 
+        // Kembali ke halaman login dianggap membatalkan
+        // proses MFA yang belum selesai.
+        session()->remove('login_pending');
+
         return view('auth/login', [
-            'title' => 'Login'
+            'title' => 'Login',
         ]);
     }
 
     /**
-     * Proses Login
+     * Proses Login (Step 1: validasi kredensial)
      */
- public function authenticate()
-{
-    $email = trim((string) $this->request->getPost('email'));
-    $password = (string) $this->request->getPost('password');
+    public function authenticate()
+    {
+        if (session()->get('isLoggedIn')) {
+            return redirect()->to('/dashboard-mahasiswa');
+        }
 
-    if ($email === '' || $password === '') {
-        return redirect()->back()
-            ->withInput()
-            ->with('error', 'Email dan Password wajib diisi.');
+        $email    = trim((string) $this->request->getPost('email'));
+        $password = (string) $this->request->getPost('password');
+
+        if ($email === '' || $password === '') {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Email dan Password wajib diisi.');
+        }
+
+        $user = $this->userModel
+            ->where('email', $email)
+            ->where('is_active', 1)
+            ->first();
+
+        if (!$user) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Email tidak ditemukan.');
+        }
+
+        if (!password_verify($password, $user['password'])) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Password salah.');
+        }
+
+        // Reset pending MFA dari percobaan login sebelumnya.
+        session()->remove('login_pending');
+
+        // =====================================================
+        // MFA: user wajib verifikasi kode terlebih dahulu
+        // =====================================================
+        if ($this->requiresMfa($user)) {
+            session()->set('login_pending', [
+                'user_id'   => (int) $user['id'],
+                'full_name' => $user['full_name'] ?? '',
+                'email'     => $user['email'] ?? '',
+            ]);
+
+            return redirect()->to('/login/mfa');
+        }
+
+        // =====================================================
+        // Tanpa MFA: langsung login
+        // =====================================================
+        return $this->completeLogin($user);
     }
 
-    $user = $this->userModel
-        ->where('email', $email)
-        ->where('is_active', 1)
-        ->first();
+    /**
+     * Halaman Verifikasi Dua Langkah
+     * Step 2: masukkan kode MFA
+     */
+    public function mfa()
+    {
+        if (session()->get('isLoggedIn')) {
+            return redirect()->to('/dashboard-mahasiswa');
+        }
 
-    if (!$user) {
-        return redirect()->back()
-            ->withInput()
-            ->with('error', 'Email tidak ditemukan.');
+        $pending = session()->get('login_pending');
+
+        if (!$pending || empty($pending['user_id'])) {
+            return redirect()->to('/login')
+                ->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        if (!$this->validPendingUser((int) $pending['user_id'])) {
+            session()->remove('login_pending');
+
+            return redirect()->to('/login')
+                ->with('error', 'Sesi verifikasi tidak valid. Silakan login ulang.');
+        }
+
+        return view('auth/login_mfa', [
+            'title'   => 'Verifikasi Dua Langkah',
+            'account' => $pending,
+        ]);
     }
 
-    if (!password_verify($password, $user['password'])) {
-        return redirect()->back()
-            ->withInput()
-            ->with('error', 'Password salah.');
-    }
+    /**
+     * Proses Verifikasi MFA
+     * Step 3: validasi kode, lalu login
+     */
+    public function verifyMfa()
+    {
+        if (session()->get('isLoggedIn')) {
+            return redirect()->to('/dashboard-mahasiswa');
+        }
 
-    // ==========================================
-    // UPDATE LAST LOGIN
-    // ==========================================
+        $pending = session()->get('login_pending');
 
-    $this->userModel->updateLastLogin((int) $user['id']);
+        if (!$pending || empty($pending['user_id'])) {
+            return redirect()->to('/login')
+                ->with('error', 'Silakan login terlebih dahulu.');
+        }
 
-    // ==========================================
-    // AMBIL ROLE
-    // ==========================================
+        $user = $this->userModel->find((int) $pending['user_id']);
 
-    $role = db_connect()
-        ->table('roles')
-        ->where('id', $user['role_id'])
-        ->get()
-        ->getRowArray();
+        if (!$user || !$this->validPendingUser((int) $pending['user_id'])) {
+            session()->remove('login_pending');
 
-    // ==========================================
-    // SET SESSION
-    // ==========================================
+            return redirect()->to('/login')
+                ->with('error', 'Sesi verifikasi tidak valid. Silakan login ulang.');
+        }
 
-    session()->set([
-        'user_id'    => (int) $user['id'],
-        'role_id'    => (int) $user['role_id'],
-        'full_name'  => $user['full_name'],
-        'email'      => $user['email'],
-        'role_name'  => $role['name'] ?? '',
-        'isLoggedIn' => true,
-        'user'       => $user,
-    ]);
+        $code = trim((string) $this->request->getPost('mfa_code'));
 
-    // ==========================================
-    // TENTUKAN DASHBOARD
-    // BERDASARKAN JENIS PEMOHON
-    // ==========================================
+        if ($code === '') {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Kode MFA wajib diisi.');
+        }
 
-    $dashboardUrl = $this->getDashboardUrl((int) $user['id']);
+        $verified   = false;
+        $isRecovery = false;
 
-    if (!$dashboardUrl) {
+        // Coba verifikasi menggunakan TOTP.
+        if ($this->mfaService->verifyCode((int) $user['id'], $code)) {
+            $verified = true;
+        }
 
-        session()->destroy();
+        // Jika TOTP gagal, coba recovery code.
+        elseif ($this->mfaService->verifyRecoveryCode((int) $user['id'], $code)) {
+            $verified   = true;
+            $isRecovery = true;
+        }
 
-        return redirect()
-            ->to('/login')
-            ->with(
-                'error',
-                'Jenis pemohon akun belum terdaftar dengan benar.'
+        if (!$verified) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Kode MFA tidak valid. Silakan coba lagi.');
+        }
+
+        // Recovery code hanya boleh digunakan satu kali.
+        if ($isRecovery) {
+            $this->mfaService->consumeRecoveryCode(
+                (int) $user['id'],
+                $code
             );
+        }
+
+        // MFA selesai.
+        session()->remove('login_pending');
+
+        return $this->completeLogin($user);
     }
 
-    return redirect()->to($dashboardUrl);
-}
+    /**
+     * Selesaikan login:
+     * - update last_login
+     * - isi session
+     * - catat activity log
+     * - redirect ke dashboard mahasiswa
+     */
+    protected function completeLogin(array $user)
+    {
+        $this->userModel->update($user['id'], [
+            'last_login' => date('Y-m-d H:i:s'),
+        ]);
+
+        $role = db_connect()
+            ->table('roles')
+            ->where('id', $user['role_id'])
+            ->get()
+            ->getRowArray();
+
+        session()->set([
+            'user_id'    => $user['id'],
+            'role_id'    => $user['role_id'],
+            'role_code'  => $role['code'] ?? '',
+            'full_name'  => $user['full_name'],
+            'email'      => $user['email'],
+            'role_name'  => $role['name'] ?? '',
+            'isLoggedIn' => true,
+            'user'       => $user,
+        ]);
+
+        session()->remove('login_pending');
+
+        // Catat aktivitas login.
+        $this->activityLogService->storeLog([
+            'action'       => 'LOGIN',
+            'module'       => 'auth',
+            'reference_id' => (int) $user['id'],
+            'user_id'      => (int) $user['id'],
+            'ip_address'   => $this->request->getIPAddress(),
+            'user_agent'   => $this->request->getUserAgent()->getAgentString(),
+        ]);
+
+        // =====================================================
+        // SEMENTARA FOKUS MAHASISWA
+        // =====================================================
+        return redirect()->to('/dashboard-mahasiswa');
+    }
+
+    /**
+     * Apakah user perlu menjalani MFA saat login?
+     */
+    protected function requiresMfa(array $user): bool
+    {
+        return (int) ($user['mfa_enabled'] ?? 0) === 1
+            && !empty($user['mfa_secret']);
+    }
+
+    /**
+     * Validasi user yang sedang dalam proses verifikasi MFA.
+     */
+    protected function validPendingUser(int $userId): bool
+    {
+        $user = $this->userModel->find($userId);
+
+        return $user
+            && (int) $user['is_active'] === 1
+            && $this->requiresMfa($user);
+    }
+
+    /**
+     * Halaman akses ditolak
+     */
+    public function unauthorized()
+    {
+        return view('errors/unauthorized', [
+            'title' => 'Akses Ditolak',
+        ]);
+    }
 
     /**
      * Logout
      */
     public function logout()
     {
+        $userId = (int) session()->get('user_id');
+
+        if ($userId > 0) {
+            $this->activityLogService->storeLog([
+                'action'       => 'LOGOUT',
+                'module'       => 'auth',
+                'reference_id' => $userId,
+                'user_id'      => $userId,
+                'ip_address'   => $this->request->getIPAddress(),
+                'user_agent'   => $this->request->getUserAgent()->getAgentString(),
+            ]);
+        }
+
         session()->destroy();
 
         return redirect()->to('/login');
     }
-
-    /**
- * Tentukan dashboard berdasarkan jenis pemohon
- */
-private function getDashboardUrl(int $userId): ?string
-{
-    $db = \Config\Database::connect();
-
-    $profile = $db->table('user_profiles up')
-        ->select('
-            up.applicant_type_id,
-            mat.code AS applicant_code
-        ')
-        ->join(
-            'master_applicant_types mat',
-            'mat.id = up.applicant_type_id',
-            'left'
-        )
-        ->where('up.user_id', $userId)
-        ->where('up.deleted_at', null)
-        ->get()
-        ->getRowArray();
-
-    if (!$profile) {
-        return null;
-    }
-
-    $code = strtoupper(trim($profile['applicant_code'] ?? ''));
-
-    switch ($code) {
-
-        case 'MHS':
-            return '/dashboard-mahasiswa';
-
-        case 'DOSEN':
-            return '/dosen/dashboard';
-
-        case 'TENDIK':
-            return '/dashboard-tendik';
-
-        case 'WALI':
-            return '/dashboard-orangtua';
-
-        case 'MITRA':
-            return '/dashboard-mitra';
-
-        case 'UMUM':
-            return '/dashboard-umum';
-
-        case 'ALUMNI':
-            return '/dashboard-alumni';
-
-        default:
-            return null;
-    }
-}
 }

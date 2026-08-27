@@ -18,137 +18,227 @@ class MahasiswaController extends BaseController
         $this->profileModel = new UserProfileModel();
     }
 
-    // ==========================================
+    // =====================================================
     // DASHBOARD MAHASISWA
-    // ==========================================
-   public function dashboard()
-{
     // =====================================================
-    // 1. AMBIL DATA USER DARI SESSION
-    // =====================================================
+    public function dashboard()
+    {
+        // =====================================================
+        // 1. CEK LOGIN
+        // =====================================================
 
-    $sessionUser = session()->get('user') ?? [];
-
-    $user = [
-        'nama'     => $sessionUser['nama'] ?? 'Mahasiswa',
-        'nim'      => $sessionUser['nim'] ?? '-',
-        'prodi'    => $sessionUser['prodi'] ?? '-',
-        'jurusan'  => $sessionUser['jurusan'] ?? '-',
-        'semester' => $sessionUser['semester'] ?? '-',
-        'angkatan' => $sessionUser['angkatan'] ?? '-',
-        'status'   => $sessionUser['status'] ?? 'Aktif',
-    ];
-
-
-    // =====================================================
-    // 2. AMBIL USER PROFILE ID
-    // =====================================================
-
-    $userProfileId = session()->get('user_profile_id');
-
-
-    // =====================================================
-    // FALLBACK:
-    // JIKA user_profile_id BELUM ADA DI SESSION
-    // =====================================================
-
-    if (empty($userProfileId)) {
-
-        $userId = session()->get('user_id');
-
-        if (!empty($userId)) {
-
-            $userProfileModel = new \App\Models\UserProfileModel();
-
-            $profile = $userProfileModel
-                ->where('user_id', $userId)
-                ->first();
-
-            if ($profile) {
-
-                $userProfileId = $profile['id'];
-
-            }
+        if (! session()->get('isLoggedIn')) {
+            return redirect()
+                ->to('/login')
+                ->with('error', 'Silakan login terlebih dahulu.');
         }
-    }
 
+        $userId = (int) session()->get('user_id');
 
-    // =====================================================
-    // 3. AMBIL TIKET DARI DATABASE
-    // =====================================================
+        if ($userId <= 0) {
+            session()->destroy();
 
-    $tickets = [];
+            return redirect()
+                ->to('/login')
+                ->with('error', 'Sesi login tidak valid.');
+        }
 
-    if (!empty($userProfileId)) {
+        // =====================================================
+        // 2. AMBIL DATA USER
+        // =====================================================
 
-        $db = \Config\Database::connect();
+        $user = $this->userModel->find($userId);
 
-        $tickets = $db->table('service_requests sr')
-            ->select('
-                sr.id,
-                sr.ticket_number,
-                sr.user_profile_id,
-                sr.service_id,
-                sr.title,
-                sr.description,
-                sr.status,
-                sr.priority,
-                sr.submitted_at,
-                sr.created_at,
-                sr.updated_at,
-                ms.name AS service_name
-            ')
-            ->join(
-                'master_services ms',
-                'ms.id = sr.service_id',
-                'left'
-            )
-            ->where(
-                'sr.user_profile_id',
-                $userProfileId
-            )
-            ->where(
-                'sr.deleted_at IS NULL',
-                null,
-                false
-            )
-            ->orderBy(
-                'sr.created_at',
-                'DESC'
-            )
-            ->get()
-            ->getResultArray();
-    }
+        if (! $user) {
+            session()->destroy();
 
+            return redirect()
+                ->to('/login')
+                ->with('error', 'Data pengguna tidak ditemukan.');
+        }
 
-    // =====================================================
-    // 4. HITUNG STATISTIK
-    // =====================================================
+        // Pastikan akun aktif
+        if ((int) ($user['is_active'] ?? 0) !== 1) {
+            session()->destroy();
 
-    $total = count($tickets);
+            return redirect()
+                ->to('/login')
+                ->with('error', 'Akun Anda tidak aktif.');
+        }
 
-    $diproses = 0;
+        // =====================================================
+        // 3. AMBIL PROFILE USER
+        // =====================================================
 
-    $revisi = 0;
+        $profile = $this->profileModel
+            ->getComplete()
+            ->where('user_profiles.user_id', $userId)
+            ->first();
 
-    $selesai = 0;
+        if (! $profile) {
+            return redirect()
+                ->to('/login')
+                ->with(
+                    'error',
+                    'Profil mahasiswa tidak ditemukan.'
+                );
+        }
 
+        // =====================================================
+        // 4. VALIDASI JENIS PEMOHON
+        // =====================================================
 
-    foreach ($tickets as $ticket) {
-
-        $status = strtolower(
-            trim(
-                $ticket['status'] ?? ''
-            )
+        $applicantTypeId = (int) (
+            $profile['applicant_type_id'] ?? 0
         );
 
+        $applicantType = null;
 
-        // ================================================
-        // SEDANG DIPROSES
-        // ================================================
+        if ($applicantTypeId > 0) {
+            $applicantType = db_connect()
+                ->table('master_applicant_types')
+                ->select('id, code, name')
+                ->where('id', $applicantTypeId)
+                ->where('is_active', 1)
+                ->get()
+                ->getRowArray();
+        }
 
-        if (
+        /*
+         * Kita izinkan beberapa kemungkinan kode mahasiswa
+         * supaya tidak error hanya karena penamaan kode berbeda
+         * di database.
+         */
+        $applicantCode = strtoupper(
+            trim((string) ($applicantType['code'] ?? ''))
+        );
+
+        $applicantName = strtolower(
+            trim((string) ($applicantType['name'] ?? ''))
+        );
+
+        $isMahasiswa =
             in_array(
+                $applicantCode,
+                ['MHS', 'MAHASISWA'],
+                true
+            )
+            ||
+            str_contains(
+                $applicantName,
+                'mahasiswa'
+            );
+
+        if (! $isMahasiswa) {
+            return redirect()
+                ->to('/login')
+                ->with(
+                    'error',
+                    'Akun ini bukan pemohon mahasiswa.'
+                );
+        }
+
+        // =====================================================
+        // 5. DATA MAHASISWA
+        // =====================================================
+
+        $mahasiswa = [
+            'id' => $userId,
+
+            'nama' =>
+                $user['full_name']
+                ?? $profile['name']
+                ?? '-',
+
+            'nim' =>
+                $profile['nim']
+                ?? '-',
+
+            'prodi' =>
+                $profile['study_program_name']
+                ?? '-',
+
+            'jurusan' =>
+                $profile['department_name']
+                ?? '-',
+
+            'status' =>
+                ((int) ($user['is_active'] ?? 0) === 1)
+                    ? 'Aktif'
+                    : 'Tidak Aktif',
+        ];
+
+        // =====================================================
+        // 6. USER PROFILE ID
+        // =====================================================
+
+        $userProfileId = (int) (
+            $profile['id'] ?? 0
+        );
+
+        // =====================================================
+        // 7. AMBIL TIKET MAHASISWA
+        // =====================================================
+
+        $tickets = [];
+
+        if ($userProfileId > 0) {
+            $db = db_connect();
+
+            $tickets = $db
+                ->table('service_requests sr')
+                ->select('
+                    sr.id,
+                    sr.ticket_number,
+                    sr.user_profile_id,
+                    sr.service_id,
+                    sr.title,
+                    sr.description,
+                    sr.status,
+                    sr.priority,
+                    sr.submitted_at,
+                    sr.created_at,
+                    sr.updated_at,
+                    ms.name AS service_name
+                ')
+                ->join(
+                    'master_services ms',
+                    'ms.id = sr.service_id',
+                    'left'
+                )
+                ->where(
+                    'sr.user_profile_id',
+                    $userProfileId
+                )
+                ->where(
+                    'sr.deleted_at IS NULL',
+                    null,
+                    false
+                )
+                ->orderBy(
+                    'sr.created_at',
+                    'DESC'
+                )
+                ->get()
+                ->getResultArray();
+        }
+
+        // =====================================================
+        // 8. HITUNG STATISTIK
+        // =====================================================
+
+        $total    = count($tickets);
+        $diproses = 0;
+        $revisi   = 0;
+        $selesai  = 0;
+
+        foreach ($tickets as $ticket) {
+            $status = strtolower(
+                trim((string) ($ticket['status'] ?? ''))
+            );
+
+            // Sedang diproses
+            if (in_array(
                 $status,
                 [
                     'submitted',
@@ -160,220 +250,141 @@ class MahasiswaController extends BaseController
                     'diproses',
                 ],
                 true
-            )
-        ) {
+            )) {
+                $diproses++;
+            }
 
-            $diproses++;
-        }
-
-
-        // ================================================
-        // PERLU REVISI
-        // ================================================
-
-        if (
-            in_array(
+            // Perlu revisi
+            if (in_array(
                 $status,
                 [
                     'revision',
                     'revisi',
                 ],
                 true
-            )
-        ) {
+            )) {
+                $revisi++;
+            }
 
-            $revisi++;
-        }
-
-
-        // ================================================
-        // SELESAI
-        // ================================================
-
-        if (
-            in_array(
+            // Selesai
+            if (in_array(
                 $status,
                 [
                     'completed',
                     'selesai',
                 ],
                 true
-            )
-        ) {
-
-            $selesai++;
+            )) {
+                $selesai++;
+            }
         }
-    }
 
+        // =====================================================
+        // 9. RIWAYAT PENGAJUAN
+        // =====================================================
 
-    // =====================================================
-    // 5. STATISTIK DASHBOARD
-    // =====================================================
+        $riwayat = [];
 
-    $statistik = [
+        foreach ($tickets as $ticket) {
+            $status = strtolower(
+                trim((string) ($ticket['status'] ?? ''))
+            );
 
-        'total' => $total,
+            if (in_array(
+                $status,
+                [
+                    'completed',
+                    'selesai',
+                ],
+                true
+            )) {
+                $riwayat[] = [
+                    'id' =>
+                        $ticket['id'],
 
-        'diproses' => $diproses,
+                    'nomor' =>
+                        $ticket['ticket_number']
+                        ?? '-',
 
-        'revisi' => $revisi,
+                    'layanan' =>
+                        $ticket['service_name']
+                        ?? '-',
 
-        'selesai' => $selesai,
+                    'unit_layanan' =>
+                        '-',
 
-        'notifikasi' => 0,
+                    'created_at' =>
+                        $ticket['created_at']
+                        ?? $ticket['submitted_at']
+                        ?? null,
 
-    ];
+                    'status' =>
+                        $ticket['status']
+                        ?? 'completed',
+                ];
+            }
+        }
 
+        // =====================================================
+        // 10. DRAFT
+        // =====================================================
 
-    // =====================================================
-    // 6. RIWAYAT PENGAJUAN
-    // =====================================================
-    // Hanya tiket yang sudah selesai.
-    // Ini sesuai dengan view dashboard kamu sekarang.
+        /*
+         * Untuk sementara draft masih mengambil dari session.
+         * Nanti kita pindahkan ke database.
+         */
+        $drafts = session()->get(
+            'mahasiswa_drafts'
+        ) ?? [];
 
-    $riwayat = [];
+        // =====================================================
+        // 11. DATA UNTUK VIEW
+        // =====================================================
 
+        $data = [
+            'title' =>
+                'Dashboard Mahasiswa',
 
-    foreach ($tickets as $ticket) {
+            'user' =>
+                $mahasiswa,
 
-        $status = strtolower(
-            trim(
-                $ticket['status'] ?? ''
-            )
+            'mahasiswa' =>
+                $mahasiswa,
+
+            'statistik' => [
+                'total' =>
+                    $total,
+
+                'diproses' =>
+                    $diproses,
+
+                'revisi' =>
+                    $revisi,
+
+                'selesai' =>
+                    $selesai,
+
+                'notifikasi' =>
+                    0,
+            ],
+
+            'tickets' =>
+                $tickets,
+
+            'riwayat' =>
+                $riwayat,
+
+            'drafts' =>
+                $drafts,
+        ];
+
+        // =====================================================
+        // 12. TAMPILKAN DASHBOARD
+        // =====================================================
+
+        return view(
+            'mahasiswa/dashboard',
+            $data
         );
-
-
-        if (
-            in_array(
-                $status,
-                [
-                    'completed',
-                    'selesai',
-                ],
-                true
-            )
-        ) {
-
-            $riwayat[] = [
-
-                'id' => $ticket['id'],
-
-                'nomor' =>
-                    $ticket['ticket_number']
-                    ?? '-',
-
-                'layanan' =>
-                    $ticket['service_name']
-                    ?? '-',
-
-                'unit_layanan' =>
-                    '-',
-
-                'created_at' =>
-                    $ticket['created_at']
-                    ?? $ticket['submitted_at']
-                    ?? null,
-
-                'status' =>
-                    $ticket['status']
-                    ?? 'completed',
-
-            ];
-        }
     }
-
-
-    // =====================================================
-    // 7. AMBIL DATA DRAFT
-    // =====================================================
-    // Untuk sementara tetap menggunakan session.
-    // Nanti kita sambungkan ke database pada step berikutnya.
-
-    $drafts = session()->get(
-        'mahasiswa_drafts'
-    ) ?? [];
-
-
-    // =====================================================
-    // 8. DATA DASHBOARD
-    // =====================================================
-
-    $data = [
-
-        'title' =>
-            'Dashboard Mahasiswa',
-
-        'user' =>
-            $user,
-
-        'statistik' =>
-            $statistik,
-
-        'tickets' =>
-            $tickets,
-
-        'riwayat' =>
-            $riwayat,
-
-        'drafts' =>
-            $drafts,
-
-
-        // =================================================
-        // JADWAL
-        // =================================================
-
-        'jadwal' => [
-
-            [
-                'judul' =>
-                    'Batas Pengajuan Beasiswa',
-
-                'tanggal' =>
-                    '25 Juli 2026',
-            ],
-
-            [
-                'judul' =>
-                    'Pengambilan Surat',
-
-                'tanggal' =>
-                    '28 Juli 2026',
-            ],
-
-        ],
-
-
-        // =================================================
-        // AKADEMIK
-        // =================================================
-
-        'akademik' => [
-
-            'ipk' =>
-                '3.71',
-
-            'sks' =>
-                98,
-
-            'status' =>
-                'Aktif',
-
-            'dosen' =>
-                'Dr. Budi Santoso',
-
-        ],
-
-    ];
-
-
-    // =====================================================
-    // 9. TAMPILKAN DASHBOARD
-    // =====================================================
-
-    return view(
-        'mahasiswa/dashboard',
-        $data
-    );
-}
 }

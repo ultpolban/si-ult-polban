@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/adminlte/css/app.css') ?>">
 
 </head>
 
@@ -56,6 +56,18 @@
 
                         </p>
 
+                        <div class="mt-3 alert alert-light border small">
+
+                            <i class="fas fa-shield-hot me-2"></i>
+
+                            Setelah mendaftar, pindai kode QR MFA
+
+                            di aplikasi authenticator lalu masukkan
+
+                            kode verifikasi untuk mengaktifkan akun.
+
+                        </div>
+
                     </div>
 
                     <div class="auth-icon">
@@ -68,10 +80,9 @@
 
                 <!-- Right -->
                 <div class="auth-right">
-
                     <div class="text-center mb-4">
 
-                        <img src="<?= base_url('assets/images/logo.svg') ?>"
+                        <img src="<?= base_url('assets/adminlte/img/logo.png') ?>"
                             alt="Logo"
                             width="64">
 
@@ -93,15 +104,19 @@
 
                     <?php endif; ?>
 
-                    <?php if (session()->getFlashdata('success')) : ?>
+                    <?php if (session()->getFlashdata('errors')) : ?>
 
-                        <div class="alert alert-success">
+                        <?php foreach (session()->getFlashdata('errors') as $error) : ?>
 
-                            <i class="fas fa-check-circle me-2"></i>
+                            <div class="alert alert-danger py-2">
 
-                            <?= esc(session()->getFlashdata('success')) ?>
+                                <i class="fas fa-exclamation-circle me-2"></i>
 
-                        </div>
+                                <?= esc($error) ?>
+
+                            </div>
+
+                        <?php endforeach; ?>
 
                     <?php endif; ?>
 
@@ -128,11 +143,11 @@
 
                                 <option value="">-- Pilih Jenis Pemohon --</option>
 
-                                <?php foreach ($applicantTypes as $at): ?>
+                                <?php foreach ($applicantTypes as $at) : ?>
 
                                     <option value="<?= $at['id'] ?>"
                                         data-code="<?= esc($at['code']) ?>"
-                                        <?= old('applicant_type_id') == $at['id'] ? 'selected' : '' ?>>
+                                        <?= (string) old('applicant_type_id') === (string) $at['id'] ? 'selected' : '' ?>>
 
                                         <?= esc($at['name']) ?>
 
@@ -144,13 +159,14 @@
 
                         </div>
 
-<div id="dynamicFields">
+                        <!-- Step 2: Form dinamis per jenis pemohon -->
+                        <div id="dynamicFields">
 
-    <p class="text-muted text-center py-3">
-        Pilih jenis pemohon terlebih dahulu.
-    </p>
+                            <div class="text-muted text-center py-3">
+                            Pilih jenis pemohon terlebih dahulu.
+                            </div>
 
-</div>
+                        </div>
 
                         <button
                             type="submit"
@@ -181,97 +197,50 @@
                     </div>
 
                 </div>
-
             </div>
 
         </div>
 
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-<script>
-$(document).ready(function () {
+    <script>
+        $(function() {
 
-    const fieldsUrl = "<?= base_url('register/fields') ?>";
+            const fieldsUrl = "<?= base_url('register/fields') ?>";
 
-    function loadApplicantFields() {
+            const $dynamicFields = $('#dynamicFields');
+            const $applicantType = $('#applicantType');
 
-        const applicantTypeId = $('#applicantType').val();
+            function loadFields(id) {
 
-        console.log('Applicant Type ID:', applicantTypeId);
-        console.log(
-            'Request URL:',
-            fieldsUrl + '/' + applicantTypeId
-        );
+                if (!id) {
+                    $dynamicFields.html(
+                        '<p class="text-muted text-center py-3">Pilih jenis pemohon terlebih dahulu.</p>'
+                    );
+                    return;
+                }
 
-        if (!applicantTypeId) {
+                $.get(fieldsUrl + '/' + id, function(res) {
 
-            $('#dynamicFields').html(
-                '<p class="text-muted text-center py-3">' +
-                'Pilih jenis pemohon terlebih dahulu.' +
-                '</p>'
-            );
+                    if (res) {
+                        $dynamicFields.html(res);
+                    }
 
-            return;
-        }
+                });
 
-        $.ajax({
-
-            url: fieldsUrl + '/' + applicantTypeId,
-
-            type: 'GET',
-
-            success: function (response) {
-
-                console.log('Response fields:', response);
-
-                $('#dynamicFields').html(response);
-
-            },
-
-            error: function (xhr) {
-
-                console.error(
-                    'Gagal mengambil field.'
-                );
-
-                console.error(
-                    'Status:',
-                    xhr.status
-                );
-
-                console.error(
-                    'Response:',
-                    xhr.responseText
-                );
-
-                $('#dynamicFields').html(
-                    '<div class="alert alert-danger">' +
-                    'Gagal memuat form jenis pemohon.' +
-                    '</div>'
-                );
             }
 
+            $applicantType.on('change', function() {
+                loadFields($(this).val());
+            });
+
         });
-    }
-
-
-    // Ketika dropdown berubah
-    $('#applicantType').on('change', function () {
-
-        loadApplicantFields();
-
-    });
-
-
-    // Ketika halaman pertama kali dibuka
-    loadApplicantFields();
-
-});
-</script>
+    </script>
 
 </body>
+
 </html>

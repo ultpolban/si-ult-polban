@@ -29,13 +29,18 @@ class UserModel extends BaseModel
         'full_name',
         'identity_number',
         'phone_number',
+        'gender',
         'email',
         'password',
         'profile_photo',
         'is_active',
         'last_login',
         'remember_token',
-        'email_verified_at'
+        'email_verified_at',
+        'mfa_enabled',
+        'mfa_secret',
+        'mfa_recovery_codes',
+        'mfa_confirmed_at'
     ];
 
     protected $validationRules = [
@@ -47,6 +52,8 @@ class UserModel extends BaseModel
         'identity_number' => 'permit_empty|max_length[30]',
 
         'phone_number' => 'permit_empty|max_length[20]',
+
+        'gender' => 'permit_empty|in_list[L,P]',
 
         'email' => 'required|valid_email|max_length[150]|is_unique[users.email,id,{id}]',
 

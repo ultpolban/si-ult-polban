@@ -7,7 +7,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><?= esc($title ?? 'Login') ?> - SI ULT POLBAN</title>
+    <title><?= esc($title ?? 'Verifikasi Dua Langkah') ?> - SI ULT POLBAN</title>
 
     <link rel="icon" href="<?= base_url('assets/img/favicon.svg') ?>">
 
@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <link rel="stylesheet" href="<?= base_url('assets/adminlte/css/app.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
 
 </head>
 
@@ -34,27 +34,27 @@
 
                         <span class="system-badge">
 
-                            <i class="fas fa-star me-1"></i>
+                            <i class="fas fa-shield-halved me-1"></i>
 
-                            Layanan Terpadu
+                            Keamanan Berlapis
 
                         </span>
 
                         <h1>
 
-                            Sistem Informasi<br>
+                            Verifikasi<br>
 
-                            Layanan Terpadu<br>
+                            Dua Langkah<br>
 
-                            POLBAN
+                            (MFA)
 
                         </h1>
 
                         <p>
 
-                            Satu pintu untuk seluruh layanan akademik,
+                            Lindungi akun Anda dengan kode sekali pakai
 
-                            administrasi, dan kemahasiswaan.
+                            dari aplikasi authenticator atau kode pemulihan.
 
                         </p>
 
@@ -62,7 +62,7 @@
 
                     <div class="auth-icon">
 
-                        <i class="fas fa-graduation-cap"></i>
+                        <i class="fas fa-shield-halved"></i>
 
                     </div>
 
@@ -73,13 +73,21 @@
 
                     <div class="text-center mb-4">
 
-                        <img src="<?= base_url('assets/adminlte/img/logo.png') ?>"
+                        <img src="<?= base_url('assets/images/logo.svg') ?>"
+
                             alt="Logo"
+
                             width="72">
 
-                        <h2 class="mt-3 mb-1">Selamat Datang</h2>
+                        <h2 class="mt-3 mb-1">Verifikasi Dua Langkah</h2>
 
-                        <p>Silakan login untuk melanjutkan</p>
+                        <p class="text-muted mb-0">
+
+                            <?= esc($account['full_name'] ?? '') ?> -
+
+                            <?= esc($account['email'] ?? '') ?>
+
+                        </p>
 
                     </div>
 
@@ -95,7 +103,8 @@
 
                     <?php endif; ?>
 
-                    <form action="<?= base_url('login') ?>"
+                    <form action="<?= base_url('login/mfa/verify') ?>"
+
                         method="post">
 
                         <?= csrf_field(); ?>
@@ -104,7 +113,7 @@
 
                             <label class="form-label">
 
-                                Email / NIM / NIP
+                                Kode MFA / Kode Pemulihan
 
                             </label>
 
@@ -112,43 +121,30 @@
 
                                 <span class="input-group-text">
 
-                                    <i class="fas fa-envelope"></i>
+                                    <i class="fas fa-key"></i>
 
                                 </span>
 
                                 <input
+
                                     type="text"
-                                    name="email"
-                                    class="form-control"
-                                    placeholder="Masukkan email atau NIM"
-                                    value="<?= old('email') ?>"
-                                    required>
 
-                            </div>
+                                    name="mfa_code"
 
-                        </div>
+                                    class="form-control text-center font-monospace"
 
-                        <div class="mb-4">
+                                    placeholder="Masukkan 6 digit kode"
 
-                            <label class="form-label">
+                                    inputmode="text"
 
-                                Password
+                                    maxlength="20"
 
-                            </label>
+                                    autocomplete="one-time-code"
 
-                            <div class="input-group">
+                                    autofocus
 
-                                <span class="input-group-text">
+                                    value="<?= esc(old('mfa_code')) ?>"
 
-                                    <i class="fas fa-lock"></i>
-
-                                </span>
-
-                                <input
-                                    type="password"
-                                    name="password"
-                                    class="form-control"
-                                    placeholder="Masukkan password"
                                     required>
 
                             </div>
@@ -156,12 +152,14 @@
                         </div>
 
                         <button
+
                             type="submit"
+
                             class="btn btn-primary w-100">
 
-                            <i class="fas fa-sign-in-alt me-2"></i>
+                            <i class="fas fa-shield-halved me-2"></i>
 
-                            Login
+                            Verifikasi &amp; Masuk
 
                         </button>
 
@@ -169,17 +167,17 @@
 
                     <div class="text-center mt-3">
 
-                        <small>
+                        <a href="<?= base_url('login') ?>">
 
-                            Belum punya akun?
+                            <small>
 
-                            <a href="<?= base_url('register') ?>">
+                                <i class="fas fa-arrow-left me-1"></i>
 
-                                Daftar sebagai pemohon
+                                Kembali ke Login
 
-                            </a>
+                            </small>
 
-                        </small>
+                        </a>
 
                     </div>
 

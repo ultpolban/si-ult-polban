@@ -17,7 +17,7 @@ $applicantCode = strtoupper($applicantCode ?? 'UMUM');
 <!-- =========================================================
      MAHASISWA
      ========================================================= -->
-<?php if ($applicantCode === 'MAHASISWA'): ?>
+<?php if ($applicantCode === 'MHS'): ?>
 
     <div class="mb-3">
         <label for="full_name" class="form-label">

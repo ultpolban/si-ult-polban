@@ -66,6 +66,34 @@
 
             <tr>
 
+                <th>Jenis Pemohon yang Dapat Mengakses</th>
+
+                <td>
+
+                    <?php if (!empty($allowedApplicantTypes)): ?>
+
+                        <?php foreach ($allowedApplicantTypes as $at): ?>
+
+                            <span class="badge bg-success mr-1">
+                                <?= esc($at['name'] ?? '-') ?>
+                            </span>
+
+                        <?php endforeach; ?>
+
+                    <?php else: ?>
+
+                        <span class="text-muted">
+                            Semua jenis pemohon
+                        </span>
+
+                    <?php endif; ?>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
                 <th>Estimasi Layanan</th>
 
                 <td>

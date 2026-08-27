@@ -6,6 +6,7 @@ use App\Controllers\AdminController;
 use App\Services\PermissionService;
 use App\Services\RolePermissionService;
 use App\Services\RoleService;
+use App\Constants\Permissions;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class RolePermissionController extends AdminController
@@ -36,6 +37,8 @@ class RolePermissionController extends AdminController
      */
     public function index(int $roleId)
     {
+        $this->authorize(Permissions::PERMISSION_VIEW);
+
         $role = $this->roleService->getById($roleId);
 
         if (! $role) {
@@ -77,6 +80,8 @@ class RolePermissionController extends AdminController
      */
     public function save(int $roleId)
     {
+        $this->authorize(Permissions::PERMISSION_UPDATE);
+
         $role = $this->roleService->getById($roleId);
 
         if (! $role) {
@@ -115,6 +120,8 @@ class RolePermissionController extends AdminController
      */
     public function selectAll(int $roleId)
     {
+        $this->authorize(Permissions::PERMISSION_UPDATE);
+
         $role = $this->roleService->getById($roleId);
 
         if (! $role) {
@@ -156,6 +163,8 @@ class RolePermissionController extends AdminController
      */
     public function clear(int $roleId)
     {
+        $this->authorize(Permissions::PERMISSION_UPDATE);
+
         $role = $this->roleService->getById($roleId);
 
         if (! $role) {

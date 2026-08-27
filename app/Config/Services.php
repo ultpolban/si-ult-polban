@@ -19,6 +19,7 @@ use App\Services\ServiceRequirementService;
 use App\Services\UserService;
 use App\Services\RoleService;
 use App\Services\RolePermissionService;
+use App\Services\FaqService;
 
 class Services extends BaseService
 {
@@ -245,5 +246,19 @@ class Services extends BaseService
         }
 
         return new RolePermissionService();
+    }
+/*
+    |--------------------------------------------------------------------------
+    | FAQ Service
+    |--------------------------------------------------------------------------
+    */
+
+    public static function faqService(bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('faqService');
+        }
+
+        return new FaqService();
     }
 }

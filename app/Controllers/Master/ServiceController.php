@@ -8,6 +8,8 @@ use App\Services\ServiceUnitService;
 use App\Services\ServiceCategoryService;
 use App\Validation\ServiceValidator;
 use App\Constants\Permissions;
+use App\Models\MasterApplicantTypeModel;
+use App\Models\ServiceApplicantTypeModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class ServiceController extends AdminController
@@ -57,6 +59,8 @@ class ServiceController extends AdminController
             'pageTitle'         => 'Tambah Layanan',
             'serviceUnits'      => $this->serviceUnitService->getDropdown(),
             'serviceCategories' => $this->serviceCategoryService->getDropdown(),
+            'applicantTypes'    => (new MasterApplicantTypeModel())->getActive(),
+            'selectedApplicantTypes' => [],
         ]));
     }
 
@@ -73,8 +77,14 @@ class ServiceController extends AdminController
                 ->withInput();
         }
 
-        $this->serviceService->create(
-            $this->request->getPost()
+        $post = $this->request->getPost();
+
+        $serviceId = $this->serviceService->create($post);
+
+        // Simpan mapping akses jenis pemohon
+        (new ServiceApplicantTypeModel())->replaceForService(
+            $serviceId,
+            $post['applicant_type_ids'] ?? []
         );
 
         return redirect()
@@ -99,6 +109,7 @@ class ServiceController extends AdminController
             'title'   => 'Detail Layanan',
             'pageTitle' => 'Detail Layanan',
             'service' => $service,
+            'allowedApplicantTypes' => (new ServiceApplicantTypeModel())->getByService($id),
         ]));
     }
 
@@ -121,6 +132,9 @@ class ServiceController extends AdminController
             'service'           => $service,
             'serviceUnits'      => $this->serviceUnitService->getDropdown(),
             'serviceCategories' => $this->serviceCategoryService->getDropdown(),
+            'applicantTypes'    => (new MasterApplicantTypeModel())->getActive(),
+            'selectedApplicantTypes' => (new ServiceApplicantTypeModel())
+                ->getApplicantTypeIdsForService($id),
         ]));
     }
 
@@ -137,9 +151,17 @@ class ServiceController extends AdminController
                 ->withInput();
         }
 
+        $post = $this->request->getPost();
+
         $this->serviceService->update(
             $id,
-            $this->request->getPost()
+            $post
+        );
+
+        // Perbarui mapping akses jenis pemohon
+        (new ServiceApplicantTypeModel())->replaceForService(
+            $id,
+            $post['applicant_type_ids'] ?? []
         );
 
         return redirect()

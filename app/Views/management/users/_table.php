@@ -12,6 +12,8 @@
 
                     <th>Nama</th>
 
+                    <th>Jenis Kelamin</th>
+
                     <th>Email</th>
 
                     <th>Nomor Identitas</th>
@@ -41,6 +43,14 @@
                             <td><?= $no++ ?></td>
 
                             <td><?= esc($row['full_name'] ?? '-') ?></td>
+
+                            <td>
+                                <?php if (!empty($row['gender'])) : ?>
+                                    <?= $row['gender'] === 'L' ? 'Laki-laki' : 'Perempuan' ?>
+                                <?php else : ?>
+                                    -
+                                <?php endif; ?>
+                            </td>
 
                             <td><?= esc($row['email'] ?? '-') ?></td>
 
@@ -103,7 +113,7 @@
 
                     <tr>
 
-                        <td colspan="7" class="text-center py-4">
+                        <td colspan="8" class="text-center py-4">
 
                             Tidak ada data pengguna.
 

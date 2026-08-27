@@ -59,13 +59,18 @@ class ServiceRequestController extends AdminController
 
         $profile = $this->profileModel->findByUser($userId);
 
+        $applicantTypeId = isset($profile['applicant_type_id'])
+            ? (int) $profile['applicant_type_id']
+            : null;
+
         return view('service-requests/create', $this->viewData([
             'title'      => 'Buat Pengajuan',
             'pageTitle'  => 'Buat Pengajuan',
             'breadcrumb' => ['Pengajuan Layanan', 'Buat'],
             'profile'    => $profile,
-            'services'   => $this->serviceService->getActive(),
+            'services'   => $this->serviceService->getActiveForApplicantType($applicantTypeId),
             'serviceUnits' => $this->serviceUnitService->getActive(),
+            'applicantTypeId' => $applicantTypeId,
         ]));
     }
 
@@ -79,6 +84,20 @@ class ServiceRequestController extends AdminController
         $userId = (int) ($this->user['id'] ?? session()->get('user_id'));
 
         $profile = $this->profileModel->findByUser($userId);
+
+        $applicantTypeId = isset($profile['applicant_type_id'])
+            ? (int) $profile['applicant_type_id']
+            : null;
+
+        // Filter akses berdasarkan jenis pemohon
+        $serviceId = (int) $this->request->getPost('service_id');
+
+        if (! $this->serviceService->isAllowedForApplicantType($serviceId, $applicantTypeId)) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Layanan tidak tersedia untuk jenis pemohon Anda.');
+        }
 
         $data = $this->request->getPost();
 

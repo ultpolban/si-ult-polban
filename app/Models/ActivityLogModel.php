@@ -41,11 +41,30 @@ class ActivityLogModel extends BaseModel
         return $this
             ->select("
                 activity_logs.*,
-                users.full_name
+                users.full_name,
+                roles.name AS role_name,
+                roles.code AS role_code,
+                master_applicant_types.name AS applicant_type_name,
+                master_applicant_types.code AS applicant_type_code
             ")
             ->join(
                 'users',
                 'users.id = activity_logs.user_id',
+                'left'
+            )
+            ->join(
+                'roles',
+                'roles.id = users.role_id',
+                'left'
+            )
+            ->join(
+                'user_profiles',
+                'user_profiles.user_id = users.id',
+                'left'
+            )
+            ->join(
+                'master_applicant_types',
+                'master_applicant_types.id = user_profiles.applicant_type_id',
                 'left'
             )
             ->orderBy('activity_logs.created_at', 'DESC');

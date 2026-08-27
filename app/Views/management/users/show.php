@@ -43,6 +43,22 @@
 
             <tr>
 
+                <th>Jenis Kelamin</th>
+
+                <td>
+                    <?php if (!empty($item['gender'])) : ?>
+                        <span class="badge bg-info">
+                            <?= $item['gender'] === 'L' ? 'Laki-laki' : 'Perempuan' ?>
+                        </span>
+                    <?php else : ?>
+                        -
+                    <?php endif; ?>
+                </td>
+
+            </tr>
+
+            <tr>
+
                 <th>Email</th>
 
                 <td><?= esc($item['email'] ?? '-') ?></td>

@@ -42,12 +42,20 @@ class AuthService extends BaseService
             return false;
         }
 
+        $role = db_connect()
+            ->table('roles')
+            ->where('id', $user['role_id'])
+            ->get()
+            ->getRowArray();
+
         session()->set([
             'isLoggedIn' => true,
             'user_id'    => $user['id'],
             'role_id'    => $user['role_id'],
+            'role_code'  => $role['code'] ?? '',
             'full_name'  => $user['full_name'],
             'email'      => $user['email'],
+            'role_name'  => $role['name'] ?? '',
         ]);
 
         return true;

@@ -8,6 +8,7 @@ use App\Services\ServiceService;
 use App\Services\ServiceUnitService;
 use App\Models\UserProfileModel;
 use App\Models\UserModel;
+use App\Models\ServiceApplicantTypeModel;
 use App\Constants\Permissions;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
@@ -18,6 +19,7 @@ class TicketController extends AdminController
     protected ServiceUnitService $serviceUnitService;
     protected UserProfileModel $profileModel;
     protected UserModel $userModel;
+    protected ServiceApplicantTypeModel $serviceApplicantTypeModel;
 
     public function __construct()
     {
@@ -28,6 +30,7 @@ class TicketController extends AdminController
         $this->serviceUnitService = new ServiceUnitService();
         $this->profileModel    = new UserProfileModel();
         $this->userModel       = new UserModel();
+        $this->serviceApplicantTypeModel = new ServiceApplicantTypeModel();
     }
 
     /**
@@ -85,6 +88,7 @@ class TicketController extends AdminController
             'applicants' => $applicants,
             'assignees'  => $this->userModel->getActive(),
             'ticket'     => [],
+            'serviceApplicantTypes' => $this->serviceApplicantTypeModel->findAll(),
         ]));
     }
 
@@ -98,6 +102,25 @@ class TicketController extends AdminController
         $this->authorize(Permissions::REQUEST_CREATE);
 
         $data = $this->request->getPost();
+
+        // Validasi akses layanan berdasarkan jenis pemohon yang dipilih
+        $applicantId = (int) ($data['user_profile_id'] ?? 0);
+        $serviceId   = (int) ($data['service_id'] ?? 0);
+
+        $applicantProfile = $applicantId > 0
+            ? $this->profileModel->find($applicantId)
+            : null;
+
+        $applicantTypeId = isset($applicantProfile['applicant_type_id'])
+            ? (int) $applicantProfile['applicant_type_id']
+            : null;
+
+        if (! $this->serviceService->isAllowedForApplicantType($serviceId, $applicantTypeId)) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Layanan tidak tersedia untuk jenis pemohon yang dipilih.');
+        }
 
         $this->ticketService->create($data);
 

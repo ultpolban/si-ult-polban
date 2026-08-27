@@ -278,6 +278,16 @@
             Profil
         </a>
 
+        <!-- KONTEN (FAQ) -->
+        <?php if ($can('faq.view')): ?>
+            <div class="ult-menu-header">Konten</div>
+
+            <a href="<?= site_url('faqs') ?>">
+                <i class="fas fa-question-circle"></i>
+                Manajemen FAQ
+            </a>
+        <?php endif; ?>
+
     </nav>
 
 </aside>

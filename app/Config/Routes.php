@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use CodeIgniter\Router\RouteCollection;
 
@@ -11,6 +11,9 @@ $routes->get('/', 'Auth\AuthController::index');
 $routes->get('/login', 'Auth\AuthController::index');
 
 $routes->post('/login', 'Auth\AuthController::authenticate');
+$routes->get('/login/mfa', 'Auth\\AuthController::mfa');
+
+$routes->post('/login/mfa/verify', 'Auth\\AuthController::verifyMfa');
 
 $routes->get('/logout', 'Auth\AuthController::logout');
 
@@ -18,7 +21,17 @@ $routes->get('/register', 'Auth\RegisterController::index');
 
 $routes->post('/register', 'Auth\RegisterController::store');
 
+$routes->get('/register/mfa', 'Auth\RegisterController::mfaSetup');
+
+$routes->post('/register/mfa/verify', 'Auth\RegisterController::verify');
+
 $routes->get('/register/fields/(:num)', 'Auth\RegisterController::fields/$1');
+
+
+
+
+
+$routes->get('/unauthorized', 'Auth\AuthController::unauthorized');
 
 $routes->group('', ['filter' => 'auth'], function ($routes) {
 
@@ -28,7 +41,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->post('profile/update', 'ProfileController::update');
 });
 
-$routes->group('users', ['filter' => 'auth'], function ($routes) {
+$routes->group('users', ['filter' => ['auth', 'role:SUPER_ADMIN,ADMIN_ULT']], function ($routes) {
 
     $routes->get('/', 'Management\UserController::index');
 
@@ -47,7 +60,7 @@ $routes->group('users', ['filter' => 'auth'], function ($routes) {
     $routes->post('delete/(:num)', 'Management\UserController::delete/$1');
 });
 
-$routes->group('roles', ['filter' => 'auth'], function ($routes) {
+$routes->group('roles', ['filter' => ['auth', 'role:SUPER_ADMIN,ADMIN_ULT']], function ($routes) {
 
     $routes->get('/', 'Management\RoleController::index');
 
@@ -72,7 +85,7 @@ $routes->group('roles', ['filter' => 'auth'], function ($routes) {
     $routes->post('permissions/clear/(:num)', 'Master\RolePermissionController::clear/$1');
 });
 
-$routes->group('permissions', ['filter' => 'auth'], function ($routes) {
+$routes->group('permissions', ['filter' => ['auth', 'role:SUPER_ADMIN,ADMIN_ULT']], function ($routes) {
 
     $routes->get('/', 'Management\PermissionController::index');
 
@@ -89,7 +102,7 @@ $routes->group('permissions', ['filter' => 'auth'], function ($routes) {
     $routes->get('delete/(:num)', 'Management\PermissionController::delete/$1');
 });
 
-$routes->group('master', ['filter' => 'auth'], function ($routes) {
+$routes->group('master', ['filter' => ['auth', 'role:SUPER_ADMIN,ADMIN_ULT']], function ($routes) {
 
     $routes->get('departments', 'Master\DepartmentController::index');
 
@@ -234,6 +247,27 @@ $routes->group('master', ['filter' => 'auth'], function ($routes) {
     $routes->get('service-requirements/restore/(:num)', 'Master\ServiceRequirementController::restore/$1');
 
     $routes->post('service-requirements/change-status/(:num)', 'Master\ServiceRequirementController::changeStatus/$1');
+});
+
+$routes->group('faqs', ['filter' => ['auth', 'role:SUPER_ADMIN,ADMIN_ULT']], function ($routes) {
+
+    $routes->get('/', 'Content\FaqController::index');
+
+    $routes->get('create', 'Content\FaqController::create');
+
+    $routes->post('store', 'Content\FaqController::store');
+
+    $routes->get('show/(:num)', 'Content\FaqController::show/$1');
+
+    $routes->get('edit/(:num)', 'Content\FaqController::edit/$1');
+
+    $routes->post('update/(:num)', 'Content\FaqController::update/$1');
+
+    $routes->post('delete/(:num)', 'Content\FaqController::delete/$1');
+
+    $routes->get('restore/(:num)', 'Content\FaqController::restore/$1');
+
+    $routes->post('change-status/(:num)', 'Content\FaqController::changeStatus/$1');
 });
 
 $routes->group('service-requests', ['filter' => 'auth'], function ($routes) {

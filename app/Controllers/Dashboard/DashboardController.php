@@ -6,6 +6,7 @@ use App\Controllers\AdminController;
 use App\Models\ServiceRequestModel;
 use App\Models\UserModel;
 use App\Models\MasterServiceModel;
+use App\Constants\Permissions;
 
 class DashboardController extends AdminController
 {
@@ -24,6 +25,8 @@ class DashboardController extends AdminController
 
     public function index()
     {
+        $this->authorize(Permissions::DASHBOARD);
+
         $data = [
             'title' => 'Dashboard',
 

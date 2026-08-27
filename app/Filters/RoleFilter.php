@@ -16,13 +16,34 @@ class RoleFilter implements FilterInterface
             return redirect()->to('/login');
         }
 
-        $role = $session->get('role_code');
-
         if ($arguments === null) {
             return;
         }
 
-        if (!in_array($role, $arguments)) {
+        $roleCode = $session->get('role_code');
+
+        // Fallback: ambil dari database bila role_code belum ada di session
+        if (empty($roleCode)) {
+            $roleId = (int) $session->get('role_id');
+
+            if ($roleId > 0) {
+                $role = db_connect()
+                    ->table('roles')
+                    ->select('code')
+                    ->where('id', $roleId)
+                    ->get()
+                    ->getRowArray();
+
+                $roleCode = $role['code'] ?? '';
+            }
+        }
+
+        $allowedRoles = array_map(
+            static fn ($item) => strtoupper(trim((string) $item)),
+            (array) $arguments
+        );
+
+        if (!in_array(strtoupper((string) $roleCode), $allowedRoles, true)) {
             return redirect()->to('/unauthorized');
         }
     }

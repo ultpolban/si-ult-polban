@@ -27,7 +27,7 @@ class PermissionService
             return false;
         }
 
-        // Super Admin memiliki seluruh permission
+        // Super Admin & Admin ULT memiliki seluruh permission
         $role = db_connect()
             ->table('roles')
             ->select('code')
@@ -35,7 +35,9 @@ class PermissionService
             ->get()
             ->getRowArray();
 
-        if ($role && strtoupper($role['code']) === 'SUPER_ADMIN') {
+        $roleCode = strtoupper((string) ($role['code'] ?? ''));
+
+        if ($roleCode === 'SUPER_ADMIN' || $roleCode === 'ADMIN_ULT') {
             return true;
         }
 

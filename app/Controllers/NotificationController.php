@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\AdminController;
 use App\Services\NotificationService;
+use App\Constants\Permissions;
 
 class NotificationController extends AdminController
 {
@@ -21,6 +22,8 @@ class NotificationController extends AdminController
      */
     public function index()
     {
+        $this->authorize(Permissions::NOTIFICATION_VIEW);
+
         $userId = (int) ($this->user['id'] ?? session()->get('user_id'));
 
         $notifications = $this->notificationService->getNotifications($userId);

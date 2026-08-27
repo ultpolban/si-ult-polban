@@ -64,6 +64,7 @@ class UserService extends BaseService
             'full_name'        => $data['full_name'] ?? '',
             'identity_number'  => $data['identity_number'] ?? null,
             'phone_number'     => $data['phone_number'] ?? null,
+            'gender'           => in_array($data['gender'] ?? '', ['L', 'P'], true) ? $data['gender'] : null,
             'email'            => $data['email'] ?? '',
             'password'         => $data['password'] ?? '',
             'is_active'        => isset($data['is_active']) ? 1 : 0,
@@ -102,6 +103,7 @@ class UserService extends BaseService
             'full_name'        => $data['full_name'] ?? '',
             'identity_number'  => $data['identity_number'] ?? null,
             'phone_number'     => $data['phone_number'] ?? null,
+            'gender'           => in_array($data['gender'] ?? '', ['L', 'P'], true) ? $data['gender'] : null,
             'email'            => $data['email'] ?? '',
             'is_active'        => isset($data['is_active']) ? 1 : 0,
         ];

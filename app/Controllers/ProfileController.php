@@ -71,6 +71,9 @@ class ProfileController extends AdminController
         $this->userModel->update($userId, [
             'full_name' => $fullName,
             'email'     => $email,
+            'gender'    => in_array($this->request->getPost('gender') ?? '', ['L', 'P'], true)
+                ? $this->request->getPost('gender')
+                : null,
         ]);
 
         $profileData = [

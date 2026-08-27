@@ -148,6 +148,40 @@
 
                         <div class="col-md-6 mb-3">
 
+                            <label>Jenis Kelamin</label>
+
+                            <div class="d-flex gap-4 pt-2">
+
+                                <div class="form-check">
+
+                                    <input type="radio" name="gender" id="profile_gender_l" value="L"
+                                        class="form-check-input"
+                                        <?= ($user['gender'] ?? '') === 'L' ? 'checked' : '' ?>>
+
+                                    <label for="profile_gender_l" class="form-check-label">Laki-laki</label>
+
+                                </div>
+
+                                <div class="form-check">
+
+                                    <input type="radio" name="gender" id="profile_gender_p" value="P"
+                                        class="form-check-input"
+                                        <?= ($user['gender'] ?? '') === 'P' ? 'checked' : '' ?>>
+
+                                    <label for="profile_gender_p" class="form-check-label">Perempuan</label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
                             <label>NIM</label>
 
                             <input type="text" name="nim"

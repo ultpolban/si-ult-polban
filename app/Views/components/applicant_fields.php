@@ -59,6 +59,49 @@ $selectedClass        = $getValue('class_id');
 </div>
 
 
+<!-- =========================================================
+     JENIS KELAMIN
+========================================================= -->
+
+<div class="mb-3">
+    <label class="form-label">
+        Jenis Kelamin
+    </label>
+
+    <div class="d-flex gap-4">
+        <div class="form-check">
+            <input
+                type="radio"
+                name="gender"
+                id="gender_l"
+                value="L"
+                class="form-check-input <?= validation_show_error('gender') ? 'is-invalid' : '' ?>"
+                <?= $getValue('gender') === 'L' ? 'checked' : '' ?>>
+            <label for="gender_l" class="form-check-label">
+                Laki-laki
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input
+                type="radio"
+                name="gender"
+                id="gender_p"
+                value="P"
+                class="form-check-input <?= validation_show_error('gender') ? 'is-invalid' : '' ?>"
+                <?= $getValue('gender') === 'P' ? 'checked' : '' ?>>
+            <label for="gender_p" class="form-check-label">
+                Perempuan
+            </label>
+        </div>
+    </div>
+
+    <div class="invalid-feedback">
+        <?= validation_show_error('gender') ?>
+    </div>
+</div>
+
+
 <?php if ($applicantCode === 'MHS') : ?>
 
     <!-- =====================================================

@@ -101,6 +101,70 @@
 
         <div class="row">
 
+            <div class="col-12 mb-3">
+
+                <label>Jenis Pemohon yang Dapat Mengakses Layanan</label>
+
+                <small class="d-block text-muted mb-2">
+                    Centang jenis pemohon yang <strong>BOLEH</strong> mengakses layanan ini.
+                    Kosongkan jika layanan boleh diakses semua jenis pemohon.
+                </small>
+
+                <div class="row">
+
+                    <?php
+                    $oldApplicantTypes = old('applicant_type_ids') ?? [];
+
+                    $selectedApplicantTypes = $selectedApplicantTypes ?? [];
+                    ?>
+
+                    <?php foreach (($applicantTypes ?? []) as $at): ?>
+
+                        <?php
+                        $isChecked = in_array(
+                            (string) $at['id'],
+                            array_map('strval', $oldApplicantTypes),
+                            true
+                        ) || (
+                            empty($oldApplicantTypes)
+                            && in_array((int) $at['id'], array_map('intval', $selectedApplicantTypes), true)
+                        );
+                        ?>
+
+                        <div class="col-md-4">
+
+                            <div class="form-check">
+
+                                <input
+                                    type="checkbox"
+                                    name="applicant_type_ids[]"
+                                    value="<?= $at['id'] ?>"
+                                    id="applicant_type_<?= $at['id'] ?>"
+                                    class="form-check-input"
+                                    <?= $isChecked ? 'checked' : '' ?>>
+
+                                <label
+                                    for="applicant_type_<?= $at['id'] ?>"
+                                    class="form-check-label">
+
+                                    <?= esc($at['name']) ?>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    <?php endforeach; ?>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+
             <div class="col-md-3">
 
                 <label>Estimasi (Jam)</label>

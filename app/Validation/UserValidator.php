@@ -43,6 +43,14 @@ class UserValidator
 
             ],
 
+            'gender' => [
+
+                'label' => 'Jenis Kelamin',
+
+                'rules' => 'permit_empty|in_list[L,P]',
+
+            ],
+
             'email' => [
 
                 'label' => 'Email',
@@ -196,6 +204,14 @@ class UserValidator
                 'label' => 'Nomor Telepon',
 
                 'rules' => 'permit_empty|max_length[20]',
+
+            ],
+
+            'gender' => [
+
+                'label' => 'Jenis Kelamin',
+
+                'rules' => 'permit_empty|in_list[L,P]',
 
             ],
 

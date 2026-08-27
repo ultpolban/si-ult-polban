@@ -30,6 +30,22 @@
 
             <tr>
 
+                <th>Role</th>
+
+                <td><?= esc($log['role_name'] ?? '-') ?></td>
+
+            </tr>
+
+            <tr>
+
+                <th>Jenis Pemohon</th>
+
+                <td><?= esc($log['applicant_type_name'] ?? '-') ?></td>
+
+            </tr>
+
+            <tr>
+
                 <th>Aksi</th>
 
                 <td><?= esc($log['action'] ?? '-') ?></td>

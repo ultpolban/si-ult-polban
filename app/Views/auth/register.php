@@ -56,6 +56,18 @@
 
                         </p>
 
+                        <div class="mt-3 alert alert-light border small">
+
+                            <i class="fas fa-shield-hot me-2"></i>
+
+                            Setelah mendaftar, pindai kode QR MFA
+
+                            di aplikasi authenticator lalu masukkan
+
+                            kode verifikasi untuk mengaktifkan akun.
+
+                        </div>
+
                     </div>
 
                     <div class="auth-icon">
@@ -68,8 +80,7 @@
 
                 <!-- Right -->
                 <div class="auth-right">
-
-                    <div class="text-center mb-4">
+<div class="text-center mb-4">
 
                         <img src="<?= base_url('assets/images/logo.svg') ?>"
                             alt="Logo"
@@ -93,15 +104,19 @@
 
                     <?php endif; ?>
 
-                    <?php if (session()->getFlashdata('success')) : ?>
+                    <?php if (session()->getFlashdata('errors')) : ?>
 
-                        <div class="alert alert-success">
+                        <?php foreach (session()->getFlashdata('errors') as $error) : ?>
 
-                            <i class="fas fa-check-circle me-2"></i>
+                            <div class="alert alert-danger py-2">
 
-                            <?= esc(session()->getFlashdata('success')) ?>
+                                <i class="fas fa-exclamation-circle me-2"></i>
 
-                        </div>
+                                <?= esc($error) ?>
+
+                            </div>
+
+                        <?php endforeach; ?>
 
                     <?php endif; ?>
 
@@ -128,11 +143,11 @@
 
                                 <option value="">-- Pilih Jenis Pemohon --</option>
 
-                                <?php foreach ($applicantTypes as $at): ?>
+                                <?php foreach ($applicantTypes as $at) : ?>
 
                                     <option value="<?= $at['id'] ?>"
                                         data-code="<?= esc($at['code']) ?>"
-                                        <?= old('applicant_type_id') == $at['id'] ? 'selected' : '' ?>>
+                                        <?= (string) old('applicant_type_id') === (string) $at['id'] ? 'selected' : '' ?>>
 
                                         <?= esc($at['name']) ?>
 
@@ -144,7 +159,7 @@
 
                         </div>
 
-                        <!-- Form dinamis per jenis pemohon -->
+                        <!-- Step 2: Form dinamis per jenis pemohon -->
                         <div id="dynamicFields">
 
                             <?= $this->include('auth/_register_fields') ?>
@@ -180,8 +195,7 @@
                     </div>
 
                 </div>
-
-            </div>
+</div>
 
         </div>
 
@@ -196,25 +210,30 @@
 
             const fieldsUrl = "<?= base_url('register/fields') ?>";
 
-            $('#applicantType').on('change', function() {
+            const $dynamicFields = $('#dynamicFields');
+            const $applicantType = $('#applicantType');
 
-                const id = $(this).val();
+            function loadFields(id) {
 
                 if (!id) {
-                    $('#dynamicFields').html('<p class="text-muted text-center py-3">Pilih jenis pemohon terlebih dahulu.</p>');
+                    $dynamicFields.html(
+                        '<p class="text-muted text-center py-3">Pilih jenis pemohon terlebih dahulu.</p>'
+                    );
                     return;
                 }
 
                 $.get(fieldsUrl + '/' + id, function(res) {
 
                     if (res) {
-
-                        $('#dynamicFields').html(res);
-
+                        $dynamicFields.html(res);
                     }
 
                 });
 
+            }
+
+            $applicantType.on('change', function() {
+                loadFields($(this).val());
             });
 
         });

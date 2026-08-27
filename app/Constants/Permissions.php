@@ -10,7 +10,7 @@ final class Permissions
     |--------------------------------------------------------------------------
     */
 
-    public const DASHBOARD = 'dashboard';
+    public const DASHBOARD = 'dashboard.view';
 
     /*
     |--------------------------------------------------------------------------
@@ -188,4 +188,16 @@ final class Permissions
     */
 
     public const STATISTIC_VIEW = 'statistic.view';
+
+    /*
+    |--------------------------------------------------------------------------
+    | FAQ
+    |--------------------------------------------------------------------------
+    */
+
+    public const FAQ_VIEW   = 'faq.view';
+    public const FAQ_CREATE = 'faq.create';
+    public const FAQ_UPDATE = 'faq.update';
+    public const FAQ_DELETE = 'faq.delete';
+    public const FAQ_RESTORE = 'faq.restore';
 }

@@ -53,6 +53,10 @@
 
                         <th>User</th>
 
+                        <th>Role</th>
+
+                        <th>Jenis Pemohon</th>
+
                         <th>Aksi</th>
 
                         <th>Modul</th>
@@ -71,7 +75,7 @@
 
                         <tr>
 
-                            <td colspan="6" class="text-center text-muted">
+                            <td colspan="8" class="text-center text-muted">
 
                                 Belum ada aktivitas.
 
@@ -91,7 +95,47 @@
 
                                 <td><?= esc($log['full_name'] ?? '-') ?></td>
 
-                                <td><?= esc($log['action']) ?></td>
+                                <td>
+
+                                    <?php if (!empty($log['role_name'])): ?>
+
+                                        <span class="badge bg-primary">
+
+                                            <?= esc($log['role_name']) ?>
+
+                                        </span>
+
+                                    <?php else: ?>
+
+                                        <span class="text-muted">-</span>
+
+                                    <?php endif; ?>
+
+                                </td>
+
+                                <td>
+
+                                    <?php if (!empty($log['applicant_type_name'])): ?>
+
+                                        <span class="badge bg-info text-dark">
+
+                                            <?= esc($log['applicant_type_name']) ?>
+
+                                        </span>
+
+                                    <?php else: ?>
+
+                                        <span class="text-muted">-</span>
+
+                                    <?php endif; ?>
+
+                                </td>
+
+                                <td>
+
+                                    <?= esc($log['action']) ?>
+
+                                </td>
 
                                 <td><?= esc($log['module']) ?></td>
 

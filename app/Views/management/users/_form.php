@@ -29,6 +29,7 @@ $formData['full_name'] = old('full_name', $formData['full_name'] ?? '');
 $formData['email'] = old('email', $formData['email'] ?? '');
 $formData['phone_number'] = old('phone_number', $formData['phone_number'] ?? '');
 $formData['identity_number'] = old('identity_number', $formData['identity_number'] ?? ($item['identity_number'] ?? ''));
+$formData['gender'] = old('gender', $formData['gender'] ?? ($item['gender'] ?? ''));
 $formData['nim'] = old('nim', $formData['nim'] ?? '');
 $formData['nik'] = old('nik', $formData['nik'] ?? '');
 $formData['study_program_id'] = old('study_program_id', $formData['study_program_id'] ?? '');

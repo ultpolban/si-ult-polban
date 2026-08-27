@@ -10,6 +10,12 @@ if ($selectedServiceId !== '' && !empty($services)) {
         }
     }
 }
+
+// Mapping layanan => daftar jenis pemohon yang boleh mengakses
+$serviceApplicantTypeMap = [];
+foreach (($serviceApplicantTypes ?? []) as $_sat) {
+    $serviceApplicantTypeMap[(int) $_sat['service_id']][] = (int) $_sat['applicant_type_id'];
+}
 ?>
 <div class="row">
     <div class="col-md-6 mb-3">
@@ -20,6 +26,7 @@ if ($selectedServiceId !== '' && !empty($services)) {
 
         <select
             name="user_profile_id"
+            id="user_profile_id"
             class="form-select"
             required>
 
@@ -31,6 +38,7 @@ if ($selectedServiceId !== '' && !empty($services)) {
 
                     <option
                         value="<?= esc($applicant['id']) ?>"
+                        data-applicant-type="<?= (int) ($applicant['applicant_type_id'] ?? 0) ?>"
                         <?= (
                             !empty($ticket['user_profile_id']) &&
                             $ticket['user_profile_id'] == $applicant['id']
@@ -73,7 +81,13 @@ if ($selectedServiceId !== '' && !empty($services)) {
         <select name="service_id" id="service_id" class="form-select" required>
             <option value="">Pilih Layanan</option>
             <?php foreach ($services as $service): ?>
-                <option value="<?= $service['id'] ?>" data-service-unit="<?= esc($service['service_unit_id']) ?>" <?= (!empty($ticket['service_id']) && $ticket['service_id'] == $service['id']) ? 'selected' : '' ?>><?= esc($service['name'] ?? '-') ?></option>
+                <?php
+                $allowed = implode(',', $serviceApplicantTypeMap[(int) $service['id']] ?? []);
+                ?>
+                <option value="<?= $service['id'] ?>"
+                    data-service-unit="<?= esc($service['service_unit_id']) ?>"
+                    data-applicant-types="<?= esc($allowed) ?>"
+                    <?= (!empty($ticket['service_id']) && $ticket['service_id'] == $service['id']) ? 'selected' : '' ?>><?= esc($service['name'] ?? '-') ?></option>
             <?php endforeach; ?>
         </select>
     </div>
@@ -103,18 +117,36 @@ if ($selectedServiceId !== '' && !empty($services)) {
 </div>
 <script>
 (function () {
+    var applicantSelect = document.getElementById('user_profile_id');
     var unitSelect = document.getElementById('service_unit_id');
     var serviceSelect = document.getElementById('service_id');
-    if (!unitSelect || !serviceSelect) { return; }
+    if (!applicantSelect || !unitSelect || !serviceSelect) { return; }
+
+    function getSelectedApplicantType() {
+        if (!applicantSelect || !applicantSelect.value) { return 0; }
+        var opt = applicantSelect.options[applicantSelect.selectedIndex];
+        return opt ? parseInt(opt.getAttribute('data-applicant-type') || '0', 10) : 0;
+    }
 
     function filterServices() {
         var unit = unitSelect.value;
+        var applicantType = getSelectedApplicantType();
         var options = serviceSelect.options;
         var keepSelected = false;
         for (var i = 0; i < options.length; i++) {
             var opt = options[i];
             if (!opt.value) { continue; }
-            var match = unit !== '' && opt.getAttribute('data-service-unit') === unit;
+
+            var matchUnit = unit !== '' && opt.getAttribute('data-service-unit') === unit;
+
+            var allowedTypes = (opt.getAttribute('data-applicant-types') || '').split(',')
+                .map(function (v) { return parseInt(v, 10); })
+                .filter(function (v) { return !isNaN(v); });
+
+            // Tanpa jenis pemohon terpilih / layanan tanpa mapping => tampil
+            var matchApplicant = applicantType === 0 || allowedTypes.length === 0 || allowedTypes.indexOf(applicantType) !== -1;
+
+            var match = matchUnit && matchApplicant;
             opt.style.display = match ? '' : 'none';
             if (match && opt.selected) { keepSelected = true; }
         }
@@ -123,6 +155,7 @@ if ($selectedServiceId !== '' && !empty($services)) {
         }
     }
 
+    applicantSelect.addEventListener('change', filterServices);
     unitSelect.addEventListener('change', filterServices);
 
     var selected = serviceSelect.options[serviceSelect.selectedIndex];

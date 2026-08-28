@@ -17,40 +17,18 @@
     --text-muted: #6c757d;
 }
 
-/* ==========================================================================
-   1. GLOBAL & PAGE
-   ========================================================================== */
-body,
-.container-fluid {
+body, .container-fluid {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     color: var(--text-dark);
 }
 
-.ticket-page {
-    animation: pageFadeIn .45s ease;
-}
+.ticket-page { animation: pageFadeIn .45s ease; }
 
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-
-/* ==========================================================================
-   2. STATISTIC CARDS (PERSISI DATA TIKET)
-   ========================================================================== */
 .stat-tamu-card {
     border-radius: 18px;
     border: none;
@@ -79,25 +57,12 @@ body,
     box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15) !important;
 }
 
-.stat-tamu-card:hover::before {
-    transform: scale(1.25);
-}
+.stat-tamu-card:hover::before { transform: scale(1.25); }
 
-.bg-tamu-navy {
-    background: linear-gradient(135deg, #1a237e 0%, #283593 100%) !important;
-}
-
-.bg-tamu-orange {
-    background: linear-gradient(135deg, #ff8c00 0%, #f57c00 100%) !important;
-}
-
-.bg-tamu-yellow {
-    background: linear-gradient(135deg, #f4c400 0%, #fb8c00 100%) !important;
-}
-
-.bg-tamu-green {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-}
+.bg-tamu-navy { background: linear-gradient(135deg, #1a237e 0%, #283593 100%) !important; }
+.bg-tamu-orange { background: linear-gradient(135deg, #ff8c00 0%, #f57c00 100%) !important; }
+.bg-tamu-yellow { background: linear-gradient(135deg, #f4c400 0%, #fb8c00 100%) !important; }
+.bg-tamu-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
 
 .icon-tamu-circle {
     width: 54px;
@@ -112,9 +77,6 @@ body,
     box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
 }
 
-/* ==========================================================================
-   3. FILTER & TOOLBAR (DISAMAKAN DENGAN STYLE TIKET)
-   ========================================================================== */
 .ticket-filter-card {
     border: 0;
     border-radius: 14px;
@@ -125,37 +87,17 @@ body,
     overflow: visible !important;
 }
 
-.ticket-filter-card .card-body {
-    padding: 18px;
-}
+.ticket-filter-card .card-body { padding: 18px; }
+.ticket-input-group { height: 44px; }
+.ticket-input-group .input-group-text { background: #fff; border-right: 0; color: var(--polban-navy); }
+.ticket-input { height: 44px; border-left: 0; font-size: .9rem; }
 
-.ticket-input-group {
-    height: 44px;
-}
-
-.ticket-input-group .input-group-text {
-    background: #fff;
-    border-right: 0;
-    color: var(--polban-navy);
-}
-
-.ticket-input {
-    height: 44px;
-    border-left: 0;
-    font-size: .9rem;
-}
-
-.ticket-input:focus,
-.ticket-select:focus {
+.ticket-input:focus, .ticket-select:focus {
     border-color: var(--polban-navy);
     box-shadow: 0 0 0 .18rem rgba(26,35,126,.12);
 }
 
-.ticket-select {
-    height: 44px;
-    border-radius: 8px;
-    font-size: .9rem;
-}
+.ticket-select { height: 44px; border-radius: 8px; font-size: .9rem; }
 
 .btn-ticket-filter {
     height: 44px;
@@ -187,13 +129,8 @@ body,
     transition: .25s ease;
 }
 
-.btn-ticket-reset:hover {
-    background: #545b62;
-    color: #fff;
-    transform: translateY(-1px);
-}
+.btn-ticket-reset:hover { background: #545b62; color: #fff; transform: translateY(-1px); }
 
-/* STYLE TOMBOL EXPORT LAPORAN */
 .btn-export-laporan {
     height: 44px;
     background-color: #15803d;
@@ -205,8 +142,7 @@ body,
     transition: all 0.25s ease;
 }
 
-.btn-export-laporan:hover,
-.btn-export-laporan:focus {
+.btn-export-laporan:hover, .btn-export-laporan:focus {
     background-color: #166534;
     color: #ffffff;
     box-shadow: 0 4px 12px rgba(21, 128, 61, 0.3);
@@ -232,13 +168,8 @@ body,
     transition: all 0.2s ease;
 }
 
-.export-dropdown-menu .dropdown-item:hover {
-    background-color: #f1f5f9;
-}
+.export-dropdown-menu .dropdown-item:hover { background-color: #f1f5f9; }
 
-/* ==========================================================================
-   4. TABEL STYLE PERSISI TIKET.PHP
-   ========================================================================== */
 .ticket-table-card {
     border: 0;
     border-radius: 14px;
@@ -246,29 +177,11 @@ body,
     box-shadow: 0 4px 18px rgba(0,0,0,.07);
 }
 
-.ticket-table-header {
-    background: #fff;
-    padding: 18px 20px;
-    border-bottom: 1px solid #edf0f4;
-}
-
-.ticket-table-title {
-    color: var(--text-dark);
-    font-size: 1.05rem;
-    font-weight: 800;
-}
-
-.ticket-table-title i {
-    color: var(--polban-blue);
-}
-
-.ticket-table {
-    margin-bottom: 0;
-}
-
-.ticket-table thead {
-    background: var(--polban-navy) !important;
-}
+.ticket-table-header { background: #fff; padding: 18px 20px; border-bottom: 1px solid #edf0f4; }
+.ticket-table-title { color: var(--text-dark); font-size: 1.05rem; font-weight: 800; }
+.ticket-table-title i { color: var(--polban-blue); }
+.ticket-table { margin-bottom: 0; }
+.ticket-table thead { background: var(--polban-navy) !important; }
 
 .ticket-table thead th {
     color: #ffffff !important;
@@ -287,16 +200,10 @@ body,
     font-size: .9rem;
 }
 
-.ticket-table tbody tr {
-    transition: .2s ease;
-}
+.ticket-table tbody tr { transition: .2s ease; }
+.ticket-table tbody tr:hover { background-color: #f8f9ff; }
 
-.ticket-table tbody tr:hover {
-    background-color: #f8f9ff;
-}
-
-.cell-notiket,
-.ticket-number {
+.cell-notiket, .ticket-number {
     color: var(--polban-blue);
     font-weight: 800;
     text-decoration: none;
@@ -304,16 +211,12 @@ body,
     cursor: pointer;
 }
 
-.cell-notiket:hover,
-.ticket-number:hover {
+.cell-notiket:hover, .ticket-number:hover {
     color: var(--polban-navy);
     text-decoration: underline;
 }
 
-.ticket-name {
-    font-weight: 700;
-    color: #263238;
-}
+.ticket-name { font-weight: 700; color: #263238; }
 
 .ticket-category {
     display: inline-flex;
@@ -327,7 +230,6 @@ body,
     font-weight: 700;
 }
 
-/* Status Badge Tiket Style */
 .ticket-status {
     display: inline-flex;
     align-items: center;
@@ -339,37 +241,13 @@ body,
     white-space: nowrap;
 }
 
-.status-submitted {
-    background: #fff3cd;
-    color: #856404;
-}
+.status-submitted { background: #fff3cd; color: #856404; }
+.status-verified { background: #d1e7dd; color: #0f5132; }
+.status-disposisi { background: #cff4fc; color: #055160; }
 
-.status-verified {
-    background: #d1e7dd;
-    color: #0f5132;
-}
+.ticket-date { color: #59636e; font-size: .82rem; line-height: 1.5; white-space: nowrap; }
 
-.status-disposisi {
-    background: #cff4fc;
-    color: #055160;
-}
-
-.ticket-date {
-    color: #59636e;
-    font-size: .82rem;
-    line-height: 1.5;
-    white-space: nowrap;
-}
-
-/* ==========================================================================
-   5. ACTION BUTTONS (DESAIN SAMA DENGAN TIKET.PHP)
-   ========================================================================== */
-.ticket-actions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-}
+.ticket-actions { display: flex; justify-content: center; align-items: center; gap: 6px; }
 
 .ticket-action {
     width: 34px;
@@ -397,9 +275,6 @@ body,
 .action-edit { background: #d97706; }
 .action-delete { background: #dc2626; }
 
-/* ==========================================================================
-   6. MODAL STYLING
-   ========================================================================== */
 .modal-content-ultra {
     border-radius: 22px;
     border: none;
@@ -426,6 +301,25 @@ body,
     box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
+.btn-modal-close-header {
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #ffffff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-modal-close-header:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
 .modal-footer-ultra {
     background-color: #f8fafc;
     border-top: 1px solid #e2e8f0;
@@ -442,10 +336,7 @@ body,
     transition: all 0.2s ease;
 }
 
-.btn-modal-cancel:hover {
-    background-color: #cbd5e1;
-    color: #1e293b;
-}
+.btn-modal-cancel:hover { background-color: #cbd5e1; color: #1e293b; }
 
 .btn-modal-submit {
     background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
@@ -473,13 +364,9 @@ body,
     letter-spacing: 0.3px;
 }
 
-.offline-form-label .required {
-    color: #ef4444;
-}
+.offline-form-label .required { color: #ef4444; }
 
-.offline-input-group {
-    position: relative;
-}
+.offline-input-group { position: relative; }
 
 .offline-input-icon {
     position: absolute;
@@ -492,9 +379,7 @@ body,
     font-size: 1rem;
 }
 
-.offline-input,
-.offline-select,
-.offline-textarea {
+.offline-input, .offline-select, .offline-textarea {
     width: 100%;
     border: 1px solid #cbd5e1;
     background: #ffffff;
@@ -504,15 +389,8 @@ body,
     font-size: 0.92rem;
 }
 
-.offline-input {
-    height: 50px;
-    padding: 10px 16px 10px 46px !important;
-}
-
-.offline-select {
-    height: 50px;
-    padding: 10px 42px 10px 46px !important;
-}
+.offline-input { height: 50px; padding: 10px 16px 10px 46px !important; }
+.offline-select { height: 50px; padding: 10px 42px 10px 46px !important; }
 
 .offline-textarea {
     min-height: 130px;
@@ -521,14 +399,9 @@ body,
     line-height: 1.6;
 }
 
-.offline-input::placeholder,
-.offline-textarea::placeholder {
-    color: #94a3b8;
-}
+.offline-input::placeholder, .offline-textarea::placeholder { color: #94a3b8; }
 
-.offline-input:focus,
-.offline-select:focus,
-.offline-textarea:focus {
+.offline-input:focus, .offline-select:focus, .offline-textarea:focus {
     border-color: #283593;
     box-shadow: 0 0 0 4px rgba(40, 53, 147, 0.15);
     outline: none;
@@ -555,26 +428,11 @@ body,
     transition: all 0.2s ease;
 }
 
-.offline-file-box:hover {
-    border-color: #283593;
-    background: #f1f5f9;
-}
+.offline-file-box:hover { border-color: #283593; background: #f1f5f9; }
+.offline-file-box input[type="file"] { width: 100%; font-size: 0.88rem; color: #475569; }
 
-.offline-file-box input[type="file"] {
-    width: 100%;
-    font-size: 0.88rem;
-    color: #475569;
-}
-
-.offline-modal-body {
-    padding: 28px 32px !important;
-}
-
-.offline-modal-footer {
-    background: #f8fafc;
-    border-top: 1px solid #e2e8f0;
-    padding: 18px 32px;
-}
+.offline-modal-body { padding: 28px 32px !important; }
+.offline-modal-footer { background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 18px 32px; }
 
 .offline-btn-save {
     background: linear-gradient(135deg, #ff8c00 0%, #f57c00 100%);
@@ -603,14 +461,8 @@ body,
     transition: all 0.2s ease;
 }
 
-.offline-btn-cancel:hover {
-    background: #f1f5f9;
-    color: #1e293b;
-}
+.offline-btn-cancel:hover { background: #f1f5f9; color: #1e293b; }
 
-/* ==========================================================================
-   7. FLOATING TOAST NOTIFICATION
-   ========================================================================== */
 #toastContainer {
     position: fixed;
     top: 25px;
@@ -640,46 +492,15 @@ body,
     border-left: 5px solid #283593;
 }
 
-.custom-toast.show {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-.custom-toast.success {
-    border-left-color: #10b981;
-}
-
-.custom-toast.success .toast-icon-wrapper {
-    background: #d1fae5;
-    color: #059669;
-}
-
-.custom-toast.danger {
-    border-left-color: #dc2626;
-}
-
-.custom-toast.danger .toast-icon-wrapper {
-    background: #fef2f2;
-    color: #dc2626;
-}
-
-.custom-toast.info {
-    border-left-color: #2563eb;
-}
-
-.custom-toast.info .toast-icon-wrapper {
-    background: #eff6ff;
-    color: #2563eb;
-}
-
-.custom-toast.warning {
-    border-left-color: #ff8c00;
-}
-
-.custom-toast.warning .toast-icon-wrapper {
-    background: #fffbeb;
-    color: #f57c00;
-}
+.custom-toast.show { transform: translateX(0); opacity: 1; }
+.custom-toast.success { border-left-color: #10b981; }
+.custom-toast.success .toast-icon-wrapper { background: #d1fae5; color: #059669; }
+.custom-toast.danger { border-left-color: #dc2626; }
+.custom-toast.danger .toast-icon-wrapper { background: #fef2f2; color: #dc2626; }
+.custom-toast.info { border-left-color: #2563eb; }
+.custom-toast.info .toast-icon-wrapper { background: #eff6ff; color: #2563eb; }
+.custom-toast.warning { border-left-color: #ff8c00; }
+.custom-toast.warning .toast-icon-wrapper { background: #fffbeb; color: #f57c00; }
 
 .toast-icon-wrapper {
     width: 40px;
@@ -692,68 +513,23 @@ body,
     flex-shrink: 0;
 }
 
-.toast-content-area {
-    flex-grow: 1;
-}
+.toast-content-area { flex-grow: 1; }
+.toast-title { font-weight: 800; font-size: 0.9rem; margin-bottom: 2px; color: #0f172a; }
+.toast-message { font-size: 0.82rem; color: #64748b; margin: 0; line-height: 1.4; }
 
-.toast-title {
-    font-weight: 800;
-    font-size: 0.9rem;
-    margin-bottom: 2px;
-    color: #0f172a;
-}
-
-.toast-message {
-    font-size: 0.82rem;
-    color: #64748b;
-    margin: 0;
-    line-height: 1.4;
-}
-
-/* ==========================================================================
-   ANIMATIONS & RESPONSIVE
-   ========================================================================== */
 @keyframes pageFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.reveal-item {
-    opacity: 0;
-    transform: translateY(12px);
-}
-
-.reveal-item.show {
-    opacity: 1;
-    transform: translateY(0);
-    transition: all .4s ease;
-}
+.reveal-item { opacity: 0; transform: translateY(12px); }
+.reveal-item.show { opacity: 1; transform: translateY(0); transition: all .4s ease; }
 
 @media (max-width: 767px) {
-    .offline-modal-body {
-        padding: 20px !important;
-    }
-
-    .offline-modal-footer {
-        padding: 15px 20px;
-    }
-
-    #toastContainer {
-        top: 15px;
-        right: 15px;
-        left: 15px;
-    }
-
-    .custom-toast {
-        min-width: auto;
-        max-width: 100%;
-    }
+    .offline-modal-body { padding: 20px !important; }
+    .offline-modal-footer { padding: 15px 20px; }
+    #toastContainer { top: 15px; right: 15px; left: 15px; }
+    .custom-toast { min-width: auto; max-width: 100%; }
 }
 </style>
 
@@ -816,7 +592,7 @@ body,
         </div>
     </div>
 
-    <!-- TOOLBAR / FILTER CARD (STYLE DARI TIKET.PHP) -->
+    <!-- FILTER CARD -->
     <div class="card ticket-filter-card mb-4 reveal-item">
         <div class="card-body">
             <div class="row g-2 align-items-center justify-content-between">
@@ -826,7 +602,7 @@ body,
                             <span class="input-group-text"><i class="fas fa-search"></i></span>
                             <input type="text" id="quickSearchInput" class="form-control ticket-input" placeholder="Cari nomor tiket / nama..." style="font-size: 0.88rem;">
                         </div>
-                        <button class="btn btn-ticket-filter px-3 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalCariTiket">
+                        <button class="btn btn-ticket-filter px-3 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalCariTiket" data-toggle="modal" data-target="#modalCariTiket">
                             <i class="fas fa-filter"></i> Filter & Cari
                         </button>
                         <button id="btnKembaliTabel" class="btn btn-ticket-reset d-none" title="Kembali / Reset Filter">
@@ -840,28 +616,15 @@ body,
                         Total Data: <span id="totalDataBadge" class="badge bg-primary text-white fs-6 ms-1 px-2 py-1" style="border-radius: 8px;">8 Tiket</span>
                     </div>
 
-                    <!-- TOMBOL EXPORT LAPORAN -->
                     <div class="dropdown">
                         <button class="btn btn-export-laporan d-flex align-items-center gap-2 shadow-sm dropdown-toggle" type="button" id="dropdownExportLaporan" data-bs-toggle="dropdown" data-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-download"></i>
                             <span>Export Laporan</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end export-dropdown-menu" aria-labelledby="dropdownExportLaporan">
-                            <li>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-file-excel text-success"></i> Export Excel
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-file-pdf text-danger"></i> Export PDF
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-file-csv text-primary"></i> Export CSV
-                                </a>
-                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-file-excel text-success"></i> Export Excel</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-file-pdf text-danger"></i> Export PDF</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-file-csv text-primary"></i> Export CSV</a></li>
                         </ul>
                     </div>
 
@@ -873,7 +636,7 @@ body,
         </div>
     </div>
 
-    <!-- TABEL ULTRACLEAN (PERSISI STYLING TIKET.PHP) -->
+    <!-- TABEL LAPORAN TAMU -->
     <div class="card ticket-table-card reveal-item">
         <div class="ticket-table-header d-flex justify-content-between align-items-center">
             <div>
@@ -928,12 +691,8 @@ body,
                                         <?= $d[0] ?>
                                     </span>
                                 </td>
-                                <td>
-                                    <div class="ticket-name cell-nama"><?= $d[1] ?></div>
-                                </td>
-                                <td>
-                                    <span class="ticket-category cell-layanan"><?= $d[2] ?></span>
-                                </td>
+                                <td><div class="ticket-name cell-nama"><?= $d[1] ?></div></td>
+                                <td><span class="ticket-category cell-layanan"><?= $d[2] ?></span></td>
                                 <td class="text-center">
                                     <?php
                                         $stClass = 'status-submitted';
@@ -944,9 +703,7 @@ body,
                                         <i class="fas fa-circle" style="font-size:0.45rem;"></i> <?= $d[3] ?>
                                     </span>
                                 </td>
-                                <td>
-                                    <div class="ticket-date cell-tanggal"><?= $d[4] ?></div>
-                                </td>
+                                <td><div class="ticket-date cell-tanggal"><?= $d[4] ?></div></td>
                                 <td class="text-center">
                                     <div class="ticket-actions">
                                         <button type="button" class="ticket-action action-detail btn-detail-tamu" title="Detail Tiket" data-bs-toggle="modal" data-bs-target="#modalDetailTamu" data-toggle="modal" data-target="#modalDetailTamu" data-notiket="<?= esc($d[0]) ?>" data-nama="<?= esc($d[1]) ?>" data-layanan="<?= esc($d[2]) ?>" data-status="<?= esc($d[3]) ?>" data-email="<?= esc($d[5]) ?>" data-hp="<?= esc($d[6]) ?>" data-instansi="<?= esc($d[7]) ?>" data-tanggal="<?= esc($d[4]) ?>" data-deskripsi="<?= esc($d[8]) ?>">
@@ -986,7 +743,7 @@ body,
 <div class="modal fade" id="modalTambahTamu" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
-            <div class="modal-header modal-header-ultra">
+            <div class="modal-header modal-header-ultra d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                     <div class="modal-icon-badge">
                         <i class="fas fa-user-plus text-white"></i>
@@ -996,7 +753,9 @@ body,
                         <small class="text-white-50">Catat kunjungan tamu langsung di Unit Layanan Terpadu</small>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-modal-close-header" data-bs-dismiss="modal" data-dismiss="modal" title="Tutup">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
 
             <form id="formTambahTamu" action="<?= base_url('laporantamu/store') ?>" method="POST" enctype="multipart/form-data">
@@ -1009,7 +768,7 @@ body,
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <label class="offline-form-label">Jenis Pemohon <span class="required">*</span></label>
+                            <label class="offline-form-label">JENIS PEMOHON <span class="required">*</span></label>
                             <div class="offline-input-group">
                                 <i class="fas fa-user-tag offline-input-icon"></i>
                                 <select id="addJenisPemohon" name="jenis_pemohon" class="offline-select" required>
@@ -1027,38 +786,24 @@ body,
                         </div>
 
                         <div class="col-12">
-                            <div id="dynamicFormContainer" class="row g-3">
-                            </div>
+                            <div id="dynamicFormContainer" class="row g-3"></div>
                         </div>
 
                         <div class="col-12">
                             <label class="offline-form-label">
-                                Keterangan / Deskripsi Keperluan <span class="required">*</span>
+                                KETERANGAN / DESKRIPSI KEPERLUAN <span class="required">*</span>
                             </label>
                             <textarea id="addDeskripsi" name="deskripsi" class="offline-textarea modal-input-field" placeholder="Tuliskan detail permohonan atau keperluan tamu di sini..." maxlength="500" required style="padding-left: 16px !important;"></textarea>
                             <div class="d-flex justify-content-end mt-1">
                                 <small id="charCount" class="text-muted fw-semibold" style="font-size: 0.75rem;">0 / 500 Karakter</small>
                             </div>
                         </div>
-
-                        <div class="col-12">
-                            <label class="offline-form-label">
-                                Lampiran Pendukung <span class="text-muted fw-normal">(Opsional)</span>
-                            </label>
-                            <div class="offline-file-box">
-                                <input type="file" id="addLampiran" name="lampiran" accept=".pdf,.jpg,.jpeg,.png">
-                                <div class="mt-1">
-                                    <small id="fileInfo" class="text-muted" style="font-size: 0.78rem;">Maksimal ukuran file 5MB. Format: PDF, JPG, JPEG, PNG.</small>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
 
                 <div class="modal-footer offline-modal-footer">
-                    <button type="button" class="btn offline-btn-cancel" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i> Batal
+                    <button type="button" class="btn offline-btn-cancel" data-bs-dismiss="modal" data-dismiss="modal">
+                        Batal
                     </button>
                     <button type="submit" id="submitTambahTamuBtn" class="btn offline-btn-save">
                         <i class="fas fa-save me-1"></i> Simpan Laporan
@@ -1073,7 +818,7 @@ body,
 <div class="modal fade" id="modalDetailTamu" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
-            <div class="modal-header modal-header-ultra">
+            <div class="modal-header modal-header-ultra d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                     <div class="modal-icon-badge">
                         <i class="fas fa-ticket-alt text-white"></i>
@@ -1083,7 +828,9 @@ body,
                         <small class="text-white-50">Informasi lengkap riwayat dan status permohonan</small>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-modal-close-header" data-bs-dismiss="modal" data-dismiss="modal" title="Tutup">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body p-4">
                 <div class="row g-3">
@@ -1144,7 +891,7 @@ body,
                 </div>
             </div>
             <div class="modal-footer modal-footer-ultra">
-                <button type="button" class="btn btn-modal-cancel w-100" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-modal-cancel w-100" data-bs-dismiss="modal" data-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
@@ -1154,7 +901,7 @@ body,
 <div class="modal fade" id="modalVerifikasiTamu" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
-            <div class="modal-header modal-header-ultra">
+            <div class="modal-header modal-header-ultra d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                     <div class="modal-icon-badge">
                         <i class="fas fa-user-check text-white"></i>
@@ -1164,7 +911,9 @@ body,
                         <small class="text-white-50">Perbarui status verifikasi data tamu</small>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-modal-close-header" data-bs-dismiss="modal" data-dismiss="modal" title="Tutup">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <form id="formVerifikasiTamu">
                 <div class="modal-body p-4">
@@ -1186,8 +935,8 @@ body,
                     </div>
                 </div>
                 <div class="modal-footer modal-footer-ultra">
-                    <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-modal-submit">Simpan Perubahan</button>
+                    <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-modal-submit">Verifikasi Tiket</button>
                 </div>
             </form>
         </div>
@@ -1198,7 +947,7 @@ body,
 <div class="modal fade" id="modalDisposisiTamu" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
-            <div class="modal-header modal-header-ultra">
+            <div class="modal-header modal-header-ultra d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                     <div class="modal-icon-badge">
                         <i class="fas fa-share text-white"></i>
@@ -1208,7 +957,9 @@ body,
                         <small class="text-white-50">Teruskan tiket ke unit atau bagian terkait</small>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-modal-close-header" data-bs-dismiss="modal" data-dismiss="modal" title="Tutup">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <form id="formDisposisiTamu">
                 <div class="modal-body p-4">
@@ -1237,7 +988,7 @@ body,
                     </div>
                 </div>
                 <div class="modal-footer modal-footer-ultra">
-                    <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal" data-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-modal-submit">Kirim Disposisi</button>
                 </div>
             </form>
@@ -1249,7 +1000,7 @@ body,
 <div class="modal fade" id="modalEditTiket" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
-            <div class="modal-header modal-header-ultra">
+            <div class="modal-header modal-header-ultra d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                     <div class="modal-icon-badge">
                         <i class="fas fa-pen text-white"></i>
@@ -1259,7 +1010,9 @@ body,
                         <small class="text-white-50">Perbarui informasi laporan kunjungan</small>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-modal-close-header" data-bs-dismiss="modal" data-dismiss="modal" title="Tutup">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <form id="formEditTiket">
                 <div class="modal-body offline-modal-body">
@@ -1305,8 +1058,8 @@ body,
                     </div>
                 </div>
                 <div class="modal-footer modal-footer-ultra">
-                    <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-modal-submit">Simpan Perubahan</button>
+                    <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-modal-submit">Update Tiket</button>
                 </div>
             </form>
         </div>
@@ -1317,7 +1070,7 @@ body,
 <div class="modal fade" id="modalDeleteTiket" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
-            <div class="modal-header bg-danger text-white py-3 px-4">
+            <div class="modal-header bg-danger text-white py-3 px-4 d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                     <div class="modal-icon-badge bg-white bg-opacity-25 text-white me-3">
                         <i class="fas fa-exclamation-triangle"></i>
@@ -1327,7 +1080,9 @@ body,
                         <small class="text-white-50">Tindakan ini tidak dapat dibatalkan</small>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-modal-close-header" data-bs-dismiss="modal" data-dismiss="modal" title="Tutup">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body p-4 text-center">
                 <p class="text-muted mb-2">Apakah Anda yakin ingin menghapus data laporan tamu berikut?</p>
@@ -1335,8 +1090,8 @@ body,
                 <p class="fw-semibold text-primary mb-0" id="deleteNamaSpan">-</p>
             </div>
             <div class="modal-footer modal-footer-ultra justify-content-center">
-                <button type="button" class="btn btn-modal-cancel px-4" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-danger px-4 fw-bold rounded-3 shadow-sm" id="confirmDeleteBtn" data-bs-dismiss="modal" style="padding: 10px 22px;">Ya, Hapus</button>
+                <button type="button" class="btn btn-modal-cancel px-4" data-bs-dismiss="modal" data-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger px-4 fw-bold rounded-3 shadow-sm" id="confirmDeleteBtn" style="padding: 10px 22px;">Ya, Hapus</button>
             </div>
         </div>
     </div>
@@ -1346,7 +1101,7 @@ body,
 <div class="modal fade" id="modalCariTiket" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-ultra">
-            <div class="modal-header modal-header-ultra">
+            <div class="modal-header modal-header-ultra d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                     <div class="modal-icon-badge">
                         <i class="fas fa-filter text-white"></i>
@@ -1356,7 +1111,9 @@ body,
                         <small class="text-white-50">Saring tabel berdasarkan status dan layanan</small>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-modal-close-header" data-bs-dismiss="modal" data-dismiss="modal" title="Tutup">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body p-4">
                 <div class="mb-3">
@@ -1386,16 +1143,25 @@ body,
             </div>
             <div class="modal-footer modal-footer-ultra">
                 <button type="button" class="btn btn-modal-cancel" id="resetFilterBtn">Reset</button>
-                <button type="button" class="btn btn-modal-submit" data-bs-dismiss="modal">Terapkan Filter</button>
+                <button type="button" class="btn btn-modal-submit" data-bs-dismiss="modal" data-dismiss="modal">Terapkan Filter</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // ==========================================================================
-    // UTILITY: FLOATING TOAST NOTIFICATION SYSTEM
-    // ==========================================================================
+    function closeModal(modalId) {
+        const modalEl = document.getElementById(modalId);
+        if (!modalEl) return;
+        if (window.bootstrap && bootstrap.Modal) {
+            const instance = bootstrap.Modal.getInstance(modalEl) || bootstrap.Modal.getOrCreateInstance(modalEl);
+            if (instance) instance.hide();
+        }
+        if (window.jQuery && typeof window.jQuery.fn.modal === 'function') {
+            window.jQuery('#' + modalId).modal('hide');
+        }
+    }
+
     function showToast(title, message, type = 'success') {
         const container = document.getElementById('toastContainer');
         if (!container) return;
@@ -1421,59 +1187,52 @@ body,
         container.insertAdjacentHTML('beforeend', toastHTML);
         const toastElement = document.getElementById(toastId);
 
-        setTimeout(() => {
-            toastElement.classList.add('show');
-        }, 50);
-
+        setTimeout(() => { toastElement.classList.add('show'); }, 50);
         setTimeout(() => {
             toastElement.classList.remove('show');
-            setTimeout(() => {
-                toastElement.remove();
-            }, 400);
+            setTimeout(() => { toastElement.remove(); }, 400);
         }, 3800);
     }
 
-    // ==========================================================================
-    // COPY NOMOR TIKET KE CLIPBOARD
-    // ==========================================================================
     function copyNoTiket(element, noTiket) {
         navigator.clipboard.writeText(noTiket).then(() => {
-            showToast('Nomor Tiket Disalin!', `Nomor ${noTiket} berhasil disalin ke clipboard. Silakan paste di kolom pencarian filter.`, 'success');
+            showToast('Nomor Tiket Disalin!', `Nomor ${noTiket} berhasil disalin ke clipboard.`, 'success');
         }).catch(err => {
             showToast('Gagal Menyalin', 'Terjadi kesalahan saat menyalin nomor tiket.', 'danger');
         });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        // REVEAL ANIMATIONS IDENTIK DENGAN DATA TIKET
         setTimeout(() => {
             document.querySelectorAll('.reveal-item').forEach(item => {
                 item.classList.add('show');
             });
         }, 100);
 
-        // ======================================================================
-        // MODAL COMPATIBILITY HELPER
-        // ======================================================================
-        document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function(btn) {
+        document.querySelectorAll('[data-bs-toggle="modal"], [data-toggle="modal"]').forEach(function(btn) {
             btn.addEventListener('click', function() {
-                const target = this.getAttribute('data-bs-target');
+                const target = this.getAttribute('data-bs-target') || this.getAttribute('data-target');
                 if (!target) return;
 
                 if (window.bootstrap && bootstrap.Modal) {
                     const modalEl = document.querySelector(target);
-                    if (modalEl) {
-                        bootstrap.Modal.getOrCreateInstance(modalEl).show();
-                    }
-                } else if (window.jQuery && typeof window.jQuery.fn.modal === 'function') {
+                    if (modalEl) bootstrap.Modal.getOrCreateInstance(modalEl).show();
+                }
+                if (window.jQuery && typeof window.jQuery.fn.modal === 'function') {
                     window.jQuery(target).modal('show');
                 }
             });
         });
 
-        // ======================================================================
-        // DYNAMIC FORM BUILDER UNTUK TAMBAH LAPORAN TAMU
-        // ======================================================================
+        document.querySelectorAll('[data-bs-dismiss="modal"], [data-dismiss="modal"]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const modalEl = this.closest('.modal');
+                if (!modalEl) return;
+                closeModal(modalEl.id);
+            });
+        });
+
+        // DYNAMIC FORM BUILDER
         const jenisPemohonSelect = document.getElementById('addJenisPemohon');
         const dynamicContainer = document.getElementById('dynamicFormContainer');
 
@@ -1485,162 +1244,258 @@ body,
                 if (val === 'Mahasiswa') {
                     htmlContent = `
                         <div class="col-md-6">
-                            <label class="offline-form-label">NIM <span class="required">*</span></label>
-                            <div class="offline-input-group">
-                                <i class="fas fa-id-card offline-input-icon"></i>
-                                <input type="text" name="nim" class="offline-input" placeholder="Masukkan NIM Mahasiswa" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="offline-form-label">Nama Lengkap <span class="required">*</span></label>
+                            <label class="offline-form-label">NAMA LENGKAP <span class="required">*</span></label>
                             <div class="offline-input-group">
                                 <i class="fas fa-user offline-input-icon"></i>
                                 <input type="text" name="nama" class="offline-input" placeholder="Masukkan Nama Lengkap" required>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label class="offline-form-label">Program Studi / Jurusan <span class="required">*</span></label>
-                            <div class="offline-input-group">
-                                <i class="fas fa-graduation-cap offline-input-icon"></i>
-                                <input type="text" name="prodi" class="offline-input" placeholder="Contoh: D4 Teknik Informatika" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="offline-form-label">Kelas / Angkatan <span class="required">*</span></label>
+                            <label class="offline-form-label">KELAS / ANGKATAN <span class="required">*</span></label>
                             <div class="offline-input-group">
                                 <i class="fas fa-users offline-input-icon"></i>
                                 <input type="text" name="kelas" class="offline-input" placeholder="Contoh: 3A / 2023" required>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label class="offline-form-label">No. WhatsApp / HP <span class="required">*</span></label>
-                            <div class="offline-input-group">
-                                <i class="fas fa-phone offline-input-icon"></i>
-                                <input type="text" name="hp" class="offline-input" placeholder="Contoh: 081234567890" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="offline-form-label">Email <span class="required">*</span></label>
+                            <label class="offline-form-label">EMAIL <span class="required">*</span></label>
                             <div class="offline-input-group">
                                 <i class="fas fa-envelope offline-input-icon"></i>
                                 <input type="email" name="email" class="offline-input" placeholder="email@student.polban.ac.id" required>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label class="offline-form-label">Layanan Tujuan <span class="required">*</span></label>
+                            <label class="offline-form-label">NO. WHATSAPP / HP <span class="required">*</span></label>
                             <div class="offline-input-group">
-                                <i class="fas fa-concierge-bell offline-input-icon"></i>
-                                <select name="layanan" class="offline-select" required>
-                                    <option value="" selected disabled>-- Pilih Layanan --</option>
-                                    <option value="Unit Layanan Terpadu">Unit Layanan Terpadu</option>
-                                    <option value="Bagian Akademik">Bagian Akademik</option>
-                                    <option value="Bagian Keuangan">Bagian Keuangan</option>
-                                    <option value="Bagian Kemahasiswaan">Bagian Kemahasiswaan</option>
-                                    <option value="Perpustakaan">Perpustakaan</option>
-                                    <option value="Jurusan">Jurusan</option>
-                                    <option value="UPT Teknologi Informasi dan Komunikasi">UPT Teknologi Informasi dan Komunikasi</option>
-                                    <option value="Bagian Administrasi Umum">Bagian Administrasi Umum</option>
-                                    <option value="Administrasi Umum">Administrasi Umum</option>
-                                </select>
+                                <i class="fas fa-phone offline-input-icon"></i>
+                                <input type="text" name="hp" class="offline-input" placeholder="Contoh: 081234567890" required>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <div class="card border shadow-sm rounded-3">
+                                <div class="card-header bg-primary text-white fw-bold py-2 px-3">
+                                    <i class="fas fa-list-ul me-2"></i> Pilih Layanan
+                                </div>
+                                <div class="card-body p-3">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="offline-form-label">Unit Layanan <span class="required">*</span></label>
+                                            <select id="addUnitLayanan" name="unit_layanan" class="offline-select" required style="padding-left: 16px !important;">
+                                                <option value="" selected disabled>-- Pilih Unit Layanan --</option>
+                                                <option value="Unit Layanan Terpadu">Unit Layanan Terpadu</option>
+                                                <option value="Bagian Akademik">Bagian Akademik</option>
+                                                <option value="Bagian Keuangan">Bagian Keuangan</option>
+                                                <option value="Bagian Kemahasiswaan">Bagian Kemahasiswaan</option>
+                                                <option value="Perpustakaan">Perpustakaan</option>
+                                                <option value="Jurusan">Jurusan</option>
+                                                <option value="UPT Teknologi Informasi dan Komunikasi">UPT Teknologi Informasi dan Komunikasi</option>
+                                                <option value="Bagian Administrasi Umum">Bagian Administrasi Umum</option>
+                                                <option value="Administrasi Umum">Administrasi Umum</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="offline-form-label">Jenis Layanan <span class="required">*</span></label>
+                                            <select id="addJenisLayanan" name="jenis_layanan" class="offline-select" disabled required style="padding-left: 16px !important;">
+                                                <option value="" selected disabled>-- Pilih Jenis Layanan --</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div id="persyaratanContainer" class="mt-4 d-none">
+                                        <div class="fw-bold text-dark mb-1" style="font-size: 0.92rem;">
+                                            <i class="fas fa-clipboard-list me-1"></i> Persyaratan Layanan
+                                        </div>
+                                        <p class="text-muted small mb-3">Silakan upload dokumen sesuai persyaratan layanan yang dipilih.</p>
+                                        <div id="persyaratanContent"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     `;
                 } else if (val) {
                     htmlContent = `
                         <div class="col-md-6">
-                            <label class="offline-form-label">Nama Lengkap <span class="required">*</span></label>
+                            <label class="offline-form-label">NAMA LENGKAP <span class="required">*</span></label>
                             <div class="offline-input-group">
                                 <i class="fas fa-user offline-input-icon"></i>
                                 <input type="text" name="nama" class="offline-input" placeholder="Masukkan Nama Lengkap" required>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label class="offline-form-label">Instansi / Unit Asal <span class="required">*</span></label>
+                            <label class="offline-form-label">INSTANSI / UNIT ASAL <span class="required">*</span></label>
                             <div class="offline-input-group">
                                 <i class="fas fa-building offline-input-icon"></i>
                                 <input type="text" name="instansi" class="offline-input" placeholder="Masukkan Instansi / Perusahaan" required>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label class="offline-form-label">No. WhatsApp / HP <span class="required">*</span></label>
+                            <label class="offline-form-label">NO. WHATSAPP / HP <span class="required">*</span></label>
                             <div class="offline-input-group">
                                 <i class="fas fa-phone offline-input-icon"></i>
                                 <input type="text" name="hp" class="offline-input" placeholder="Contoh: 081234567890" required>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label class="offline-form-label">Email <span class="required">*</span></label>
+                            <label class="offline-form-label">EMAIL <span class="required">*</span></label>
                             <div class="offline-input-group">
                                 <i class="fas fa-envelope offline-input-icon"></i>
                                 <input type="email" name="email" class="offline-input" placeholder="email@domain.com" required>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <label class="offline-form-label">Layanan Tujuan <span class="required">*</span></label>
-                            <div class="offline-input-group">
-                                <i class="fas fa-concierge-bell offline-input-icon"></i>
-                                <select name="layanan" class="offline-select" required>
-                                    <option value="" selected disabled>-- Pilih Layanan --</option>
-                                    <option value="Unit Layanan Terpadu">Unit Layanan Terpadu</option>
-                                    <option value="Bagian Akademik">Bagian Akademik</option>
-                                    <option value="Bagian Keuangan">Bagian Keuangan</option>
-                                    <option value="Bagian Kemahasiswaan">Bagian Kemahasiswaan</option>
-                                    <option value="Perpustakaan">Perpustakaan</option>
-                                    <option value="Jurusan">Jurusan</option>
-                                    <option value="UPT Teknologi Informasi dan Komunikasi">UPT Teknologi Informasi dan Komunikasi</option>
-                                    <option value="Bagian Administrasi Umum">Bagian Administrasi Umum</option>
-                                    <option value="Administrasi Umum">Administrasi Umum</option>
-                                </select>
+
+                        <div class="col-12 mt-3">
+                            <div class="card border shadow-sm rounded-3">
+                                <div class="card-header bg-primary text-white fw-bold py-2 px-3">
+                                    <i class="fas fa-list-ul me-2"></i> Pilih Layanan
+                                </div>
+                                <div class="card-body p-3">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="offline-form-label">Unit Layanan <span class="required">*</span></label>
+                                            <select id="addUnitLayanan" name="unit_layanan" class="offline-select" required style="padding-left: 16px !important;">
+                                                <option value="" selected disabled>-- Pilih Unit Layanan --</option>
+                                                <option value="Unit Layanan Terpadu">Unit Layanan Terpadu</option>
+                                                <option value="Bagian Akademik">Bagian Akademik</option>
+                                                <option value="Bagian Keuangan">Bagian Keuangan</option>
+                                                <option value="Bagian Kemahasiswaan">Bagian Kemahasiswaan</option>
+                                                <option value="Perpustakaan">Perpustakaan</option>
+                                                <option value="Jurusan">Jurusan</option>
+                                                <option value="UPT Teknologi Informasi dan Komunikasi">UPT Teknologi Informasi dan Komunikasi</option>
+                                                <option value="Bagian Administrasi Umum">Bagian Administrasi Umum</option>
+                                                <option value="Administrasi Umum">Administrasi Umum</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="offline-form-label">Jenis Layanan <span class="required">*</span></label>
+                                            <select id="addJenisLayanan" name="jenis_layanan" class="offline-select" disabled required style="padding-left: 16px !important;">
+                                                <option value="" selected disabled>-- Pilih Jenis Layanan --</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div id="persyaratanContainer" class="mt-4 d-none">
+                                        <div class="fw-bold text-dark mb-1" style="font-size: 0.92rem;">
+                                            <i class="fas fa-clipboard-list me-1"></i> Persyaratan Layanan
+                                        </div>
+                                        <p class="text-muted small mb-3">Silakan upload dokumen sesuai persyaratan layanan yang dipilih.</p>
+                                        <div id="persyaratanContent"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     `;
                 }
                 dynamicContainer.innerHTML = htmlContent;
+                initLayananDropdownEvents();
             });
         }
 
-        // ======================================================================
-        // FALLBACK CLOSE UNTUK X / BATAL / TUTUP MODAL
-        // ======================================================================
-        document.querySelectorAll('.modal [data-bs-dismiss="modal"]').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                const modalEl = this.closest('.modal');
-                if (!modalEl) return;
+        function initLayananDropdownEvents() {
+            const unitSelect = document.getElementById('addUnitLayanan');
+            const jenisSelect = document.getElementById('addJenisLayanan');
+            const persyaContainer = document.getElementById('persyaratanContainer');
+            const persyaContent = document.getElementById('persyaratanContent');
 
-                if (window.bootstrap && bootstrap.Modal) {
-                    bootstrap.Modal.getOrCreateInstance(modalEl).hide();
-                } else if (window.jQuery && typeof window.jQuery.fn.modal === 'function') {
-                    window.jQuery(modalEl).modal('hide');
+            if (!unitSelect || !jenisSelect) return;
+
+            unitSelect.addEventListener('change', function() {
+                const selectedUnit = this.value;
+                jenisSelect.innerHTML = '<option value="" selected disabled>-- Pilih Jenis Layanan --</option>';
+                persyaContainer.classList.add('d-none');
+                persyaContent.innerHTML = '';
+
+                if (selectedUnit === 'Administrasi Umum') {
+                    jenisSelect.disabled = false;
+                    const options = [
+                        'Layanan Surat Masuk dan Keluar',
+                        'Peminjaman Ruangan',
+                        'Peminjaman Sarana dan Prasarana'
+                    ];
+                    options.forEach(opt => {
+                        const optionEl = document.createElement('option');
+                        optionEl.value = opt;
+                        optionEl.textContent = opt;
+                        jenisSelect.appendChild(optionEl);
+                    });
+                } else {
+                    jenisSelect.disabled = true;
                 }
             });
-        });
 
-        // RESET MODAL TAMBAH LAPORAN KETIKA DITUTUP
-        const modalTambahTamuEl = document.getElementById('modalTambahTamu');
-        const formTambahTamuEl = document.getElementById('formTambahTamu');
+            jenisSelect.addEventListener('change', function() {
+                const selectedJenis = this.value;
+                persyaContent.innerHTML = '';
 
-        if (modalTambahTamuEl && formTambahTamuEl) {
-            modalTambahTamuEl.addEventListener('hidden.bs.modal', function () {
-                formTambahTamuEl.reset();
-                if (dynamicContainer) {
-                    dynamicContainer.innerHTML = '';
+                if (selectedJenis === 'Layanan Surat Masuk dan Keluar') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Draft Surat</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Draft surat yang akan diproses.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="file_draft_surat" required accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Peminjaman Ruangan') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Surat Permohonan</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Surat peminjaman ruangan.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="file_surat_permohonan" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">2. Proposal Kegiatan</span>
+                                <span class="badge bg-secondary">Opsional</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Proposal kegiatan (jika ada).</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="file_proposal_kegiatan" accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Peminjaman Sarana dan Prasarana') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Surat Permohonan</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Surat permohonan peminjaman.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="file_surat_permohonan" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else {
+                    persyaContainer.classList.add('d-none');
                 }
             });
         }
 
-        // KARAKTER COUNTER UNTUK DESKRIPSI
         const descTextarea = document.getElementById('addDeskripsi');
         const charCount = document.getElementById('charCount');
         if (descTextarea && charCount) {
             descTextarea.addEventListener('input', function() {
-                const len = this.value.length;
-                charCount.innerText = `${len} / 500 Karakter`;
+                charCount.innerText = `${this.value.length} / 500 Karakter`;
             });
         }
 
-        // ======================================================================
-        // POPULATE DATA KE MODAL DETAIL, VERIFIKASI, DISPOSISI, EDIT & DELETE
-        // ======================================================================
         document.querySelectorAll('.btn-detail-tamu').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.getElementById('dispNoTiket').innerText = this.getAttribute('data-notiket');
@@ -1691,48 +1546,39 @@ body,
             });
         });
 
-        // FORM SUBMIT HANDLERS
+        // ACTION EVENT HANDLERS
         document.getElementById('formTambahTamu')?.addEventListener('submit', function(e) {
             e.preventDefault();
-            const modalEl = document.getElementById('modalTambahTamu');
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if (modalInstance) modalInstance.hide();
-            showToast('Laporan Berhasil Disimpan!', 'Data laporan tamu (walk-in) baru berhasil ditambahkan ke sistem.', 'success');
+            closeModal('modalTambahTamu');
+            showToast('Laporan Berhasil Disimpan!', 'Data laporan tamu baru telah ditambahkan.', 'success');
             this.reset();
             if (dynamicContainer) dynamicContainer.innerHTML = '';
         });
 
         document.getElementById('formVerifikasiTamu')?.addEventListener('submit', function(e) {
             e.preventDefault();
-            const modalEl = document.getElementById('modalVerifikasiTamu');
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if (modalInstance) modalInstance.hide();
+            closeModal('modalVerifikasiTamu');
             showToast('Verifikasi Diperbarui!', 'Status verifikasi tiket tamu berhasil diperbarui.', 'success');
         });
 
         document.getElementById('formDisposisiTamu')?.addEventListener('submit', function(e) {
             e.preventDefault();
-            const modalEl = document.getElementById('modalDisposisiTamu');
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if (modalInstance) modalInstance.hide();
+            closeModal('modalDisposisiTamu');
             showToast('Disposisi Terkirim!', 'Tiket berhasil didisposisikan ke unit tujuan terkait.', 'success');
         });
 
         document.getElementById('formEditTiket')?.addEventListener('submit', function(e) {
             e.preventDefault();
-            const modalEl = document.getElementById('modalEditTiket');
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if (modalInstance) modalInstance.hide();
+            closeModal('modalEditTiket');
             showToast('Perubahan Disimpan!', 'Data tiket tamu berhasil diperbarui.', 'success');
         });
 
         document.getElementById('confirmDeleteBtn')?.addEventListener('click', function() {
+            closeModal('modalDeleteTiket');
             showToast('Tiket Dihapus', 'Data laporan tamu berhasil dihapus dari sistem.', 'danger');
         });
 
-        // ======================================================================
         // LIVE SEARCH & FILTER TABLE SYSTEM
-        // ======================================================================
         const searchInput = document.getElementById('quickSearchInput');
         const filterStatusModal = document.getElementById('filterStatusModal');
         const filterLayananModal = document.getElementById('filterLayananModal');
@@ -1769,16 +1615,11 @@ body,
                 }
             });
 
-            if (totalDataBadge) {
-                totalDataBadge.innerText = `${visibleCount} Tiket`;
-            }
+            if (totalDataBadge) totalDataBadge.innerText = `${visibleCount} Tiket`;
 
             if (emptyState) {
-                if (visibleCount === 0) {
-                    emptyState.classList.remove('d-none');
-                } else {
-                    emptyState.classList.add('d-none');
-                }
+                if (visibleCount === 0) emptyState.classList.remove('d-none');
+                else emptyState.classList.add('d-none');
             }
         }
 
@@ -1805,11 +1646,6 @@ body,
                 showToast('Filter Direset', 'Semua kriteria filter telah dikosongkan.', 'info');
             });
         }
-    });
-
-    $(document).on('click', '[data-toggle="modal"]', function() {
-        let targetModal = $(this).attr('data-target');
-        $(targetModal).modal('show');
     });
 </script>
 

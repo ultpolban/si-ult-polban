@@ -859,15 +859,22 @@ function ticketPageUrl($page, $queryParams = []) {
                                 </td>
                                 <td class="text-center">
                                     <div class="ticket-actions">
+                                        <!-- AKSI DETAIL KAN SELALU ADA -->
                                         <a href="<?= base_url('petugas/tiket/detail/' . esc($ticket['id'] ?? $ticket['nomor_tiket'])) ?>" class="ticket-action action-detail" title="Detail Tiket">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="<?= base_url('petugas/tiket/verifikasi/' . esc($ticket['id'] ?? $ticket['nomor_tiket'])) ?>" class="ticket-action action-verify" title="Verifikasi Tiket">
-                                            <i class="fas fa-user-check"></i>
-                                        </a>
-                                        <a href="<?= base_url('petugas/tiket/disposisi/' . esc($ticket['id'] ?? $ticket['nomor_tiket'])) ?>" class="ticket-action action-disposition" title="Disposisi Tiket">
-                                            <i class="fas fa-share"></i>
-                                        </a>
+
+                                        <?php if ($st === 'submitted'): ?>
+                                            <!-- BELUM DIVERIFIKASI -> AKSI VERIFIKASI -->
+                                            <a href="<?= base_url('petugas/tiket/verifikasi/' . esc($ticket['id'] ?? $ticket['nomor_tiket'])) ?>" class="ticket-action action-verify" title="Verifikasi Tiket">
+                                                <i class="fas fa-user-check"></i>
+                                            </a>
+                                        <?php elseif ($st === 'verified'): ?>
+                                            <!-- SUDAH DIVERIFIKASI -> AKSI DISPOSISI -->
+                                            <a href="<?= base_url('petugas/tiket/disposisi/' . esc($ticket['id'] ?? $ticket['nomor_tiket'])) ?>" class="ticket-action action-disposition" title="Disposisi Tiket">
+                                                <i class="fas fa-share"></i>
+                                            </a>
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>

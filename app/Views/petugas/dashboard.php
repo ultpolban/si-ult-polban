@@ -2,317 +2,400 @@
 
 <?= $this->section('content') ?>
 
+<!-- CDN Dependency -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-    /* Global Card & Smooth Transition */
-    .dashboard-card {
-        border-radius: 12px !important;
-        border: none !important;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
+:root {
+    --polban-navy: #1a237e;
+    --polban-blue: #005bac;
+    --polban-orange: #ff8c00;
+    --polban-yellow: #f4c400;
+    --polban-green: #10b981;
+    --soft-bg: #f4f6f9;
+    --text-dark: #263238;
+    --text-muted: #6c757d;
+}
 
-    /* Stat Cards Hover & Dynamic Design */
-    .stat-card-modern {
-        border-radius: 12px !important;
-        position: relative;
-        overflow: hidden;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-    .stat-card-modern:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
-    }
-    .stat-card-icon {
-        opacity: 0.25;
-        transition: opacity 0.25s ease, transform 0.25s ease;
-    }
-    .stat-card-modern:hover .stat-card-icon {
-        opacity: 0.45;
-        transform: scale(1.1);
-    }
-    .stat-badge-number {
-        font-size: 1.1rem !important;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--soft-bg);
+}
 
-    /* Quick Action Button Styling */
-    .btn-quick-action {
-        border-radius: 10px !important;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        border: none !important;
-    }
-    .btn-quick-action:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2) !important;
-        filter: brightness(1.05);
-    }
+.dashboard-page {
+    animation: pageFadeIn .45s ease;
+}
 
-    /* Modern Glassmorphism Filter Section & Select */
-    .card-filter-header {
-        border-radius: 20px;
-        border: 1px solid rgba(226, 232, 240, 0.8);
-        background: #ffffff;
-        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
-    }
+.dashboard-title {
+    color: var(--polban-navy);
+    font-weight: 800;
+    letter-spacing: -.4px;
+}
 
-    .filter-dropdown-wrapper {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-    }
+.dashboard-subtitle {
+    color: #718096;
+    font-size: .95rem;
+}
 
-    .select-ultra {
-        appearance: none;
-        -webkit-appearance: none;
-        background-color: #ffffff;
-        border: 1.5px solid #cbd5e1;
-        border-radius: 12px;
-        padding: 0.55rem 2.5rem 0.55rem 2.5rem;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: #1e293b;
-        cursor: pointer;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    }
+.dashboard-breadcrumb {
+    font-size: .9rem;
+}
 
-    .select-ultra:hover {
-        border-color: #94a3b8;
-        background-color: #f8fafc;
-    }
+.dashboard-breadcrumb a {
+    color: var(--polban-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
 
-    .select-ultra:focus {
-        outline: none;
-        border-color: #2563eb;
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-    }
+/* =========================================================
+   4 KOTAK STATISTIK ULTIMATE (EFEK PERSIS HALAMAN DATA TIKET)
+   ========================================================= */
+.stat-tamu-card {
+    border-radius: 18px;
+    border: none;
+    color: #ffffff;
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
 
-    .filter-icon-left {
-        position: absolute;
-        left: 14px;
-        color: #64748b;
-        pointer-events: none;
-        font-size: 0.9rem;
-    }
+.stat-tamu-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 180px;
+    height: 180px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    z-index: -1;
+    transition: transform 0.5s ease;
+}
 
-    .filter-icon-right {
-        position: absolute;
-        right: 14px;
-        color: #64748b;
-        pointer-events: none;
-        font-size: 0.8rem;
-        transition: transform 0.2s ease;
-    }
+.stat-tamu-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15) !important;
+}
 
-    .select-ultra:focus ~ .filter-icon-right {
-        transform: rotate(180deg);
-        color: #2563eb;
-    }
+.stat-tamu-card:hover::before {
+    transform: scale(1.25);
+}
 
-    .input-date-ultra {
-        border: 1.5px solid #cbd5e1;
-        border-radius: 12px;
-        padding: 0.5rem 0.75rem;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #334155;
-        outline: none;
-        transition: all 0.2s ease;
-    }
+.bg-tamu-navy {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 100%) !important;
+}
 
-    .input-date-ultra:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-    }
+.bg-tamu-orange {
+    background: linear-gradient(135deg, #ff8c00 0%, #f57c00 100%) !important;
+}
 
-    .btn-apply-filter {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        border: none;
-        color: #ffffff;
-        font-weight: 600;
-        font-size: 0.85rem;
-        border-radius: 12px;
-        padding: 0.55rem 1.25rem;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-        transition: all 0.2s ease;
-    }
+.bg-tamu-green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+}
 
-    .btn-apply-filter:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
-    }
+.bg-tamu-yellow {
+    background: linear-gradient(135deg, #f4c400 0%, #fb8c00 100%) !important;
+}
 
-    .card-ultra {
-        border-radius: 20px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
-        background: #ffffff;
-    }
+.icon-tamu-circle {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
+}
 
-    .chart-wrapper-box { position: relative; width: 100%; height: 320px; }
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* =========================================================
+   QUICK ACTIONS & CARDS SYSTEM
+   ========================================================= */
+.quick-action-card {
+    border-radius: 14px;
+    border: none;
+    background: #ffffff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .06);
+    overflow: hidden;
+}
+
+.quick-action-header {
+    background: var(--polban-navy);
+    color: #fff;
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.btn-quick-action {
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 12px 16px;
+    border: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+
+.btn-quick-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================================================
+   FILTER BAR & INPUT CONTROL
+   ========================================================= */
+.ticket-filter-card {
+    border: 0;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .06);
+}
+
+.ticket-select, .ticket-input {
+    height: 44px;
+    border-radius: 8px;
+    font-size: .9rem;
+    border: 1px solid #ced4da;
+}
+
+.ticket-select:focus, .ticket-input:focus {
+    border-color: var(--polban-navy);
+    box-shadow: 0 0 0 .18rem rgba(26, 35, 126, .12);
+}
+
+.btn-apply-filter {
+    height: 44px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--polban-navy);
+    color: #fff;
+    font-weight: 700;
+    transition: .25s ease;
+    padding: 0 20px;
+}
+
+.btn-apply-filter:hover {
+    background: #11185f;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(26, 35, 126, .25);
+}
+
+/* =========================================================
+   CHARTS & CONTAINER
+   ========================================================= */
+.ticket-table-card {
+    border: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .07);
+    background: #fff;
+}
+
+.ticket-table-header {
+    background: #fff;
+    padding: 18px 20px;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.ticket-table-title {
+    color: var(--text-dark);
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+
+.chart-box {
+    position: relative;
+    width: 100%;
+    height: 320px;
+}
+
+/* =========================================================
+   ANIMASI ENTRANCE & KEYFRAMES
+   ========================================================= */
+@keyframes pageFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal-item {
+    opacity: 0;
+    transform: translateY(12px);
+}
+
+.reveal-item.show {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all .4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
 </style>
 
-<div class="container-fluid px-4 py-4">
-
-    <!-- HEADER TITLE & BREADCRUMB -->
+<div class="container-fluid px-4 py-4 dashboard-page">
+    <!-- HEADER & BREADCRUMB -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 font-weight-bold text-dark mb-1" style="color: #1a237e !important;">Dashboard Petugas ULT</h1>
-            <p class="text-muted mb-0">Kelola tiket layanan mahasiswa Politeknik Negeri Bandung.</p>
+            <h1 class="dashboard-title mb-1" style="font-size:1.75rem;">
+                Dashboard Petugas
+            </h1>
+            <p class="dashboard-subtitle mb-0">
+                Ringkasan statistik & aktivitas permohonan layanan mahasiswa ULT.
+            </p>
         </div>
-        <nav aria-label="breadcrumb">
+        <nav aria-label="breadcrumb" class="dashboard-breadcrumb">
             <ol class="breadcrumb bg-transparent p-0 m-0">
-                <li class="breadcrumb-item"><a href="<?= base_url('petugas/dashboard') ?>" class="text-primary text-decoration-none">Dashboard</a></li>
-                <li class="breadcrumb-item active text-muted" aria-current="page">Home</li>
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active text-muted">Statistik Utama</li>
             </ol>
         </nav>
     </div>
 
-    <!-- 4 STAT CARDS KERTAS UTAMA DASHBOARD -->
-    <div class="row mb-4">
-        
-        <div class="col-xl-3 col-md-6 mb-3 mb-xl-0">
-            <div class="card border-0 text-white shadow-sm h-100 stat-card-modern" style="background-color: #1a237e;">
-                <div class="card-body d-flex align-items-center justify-content-between p-3">
+    <!-- 4 KOTAK STATISTIK SAMA DENGAN HALAMAN DATA TIKET -->
+    <div class="row g-3 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-navy p-3 shadow-sm reveal-item">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="badge badge-light text-primary font-weight-bold px-3 py-1 mb-2 stat-badge-number counter-value" data-target="120">0</span>
-                        <h6 class="mb-0 font-weight-bold">Tiket Masuk</h6>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Total Tiket</span>
+                        <h2 class="stat-number text-white mt-1 mb-0 counter-value" data-target="<?= $jumlahTiket ?? 21 ?>">0</h2>
                     </div>
-                    <i class="fas fa-envelope fa-2x stat-card-icon"></i>
+                    <div class="icon-tamu-circle text-white"><i class="fas fa-ticket-alt"></i></div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-3 mb-xl-0">
-            <div class="card border-0 text-white shadow-sm h-100 stat-card-modern" style="background-color: #ff8c00;">
-                <div class="card-body d-flex align-items-center justify-content-between p-3">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-orange p-3 shadow-sm reveal-item">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="badge badge-light text-warning font-weight-bold px-3 py-1 mb-2 stat-badge-number counter-value" data-target="95">0</span>
-                        <h6 class="mb-0 font-weight-bold">Diverifikasi</h6>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Menunggu Verifikasi</span>
+                        <h2 class="stat-number text-white mt-1 mb-0 counter-value" data-target="<?= $jumlahSubmitted ?? 6 ?>">0</h2>
                     </div>
-                    <i class="fas fa-check-circle fa-2x stat-card-icon"></i>
+                    <div class="icon-tamu-circle text-white"><i class="fas fa-clock"></i></div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-3 mb-xl-0">
-            <div class="card border-0 text-white shadow-sm h-100 stat-card-modern" style="background-color: #f1c40f;">
-                <div class="card-body d-flex align-items-center justify-content-between p-3">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-green p-3 shadow-sm reveal-item">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="badge badge-light text-dark font-weight-bold px-3 py-1 mb-2 stat-badge-number counter-value" data-target="20">0</span>
-                        <h6 class="mb-0 font-weight-bold text-white">Dipproses Unit</h6>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Terverifikasi</span>
+                        <h2 class="stat-number text-white mt-1 mb-0 counter-value" data-target="<?= $jumlahVerified ?? 7 ?>">0</h2>
                     </div>
-                    <i class="fas fa-spinner fa-2x stat-card-icon"></i>
+                    <div class="icon-tamu-circle text-white"><i class="fas fa-user-check"></i></div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-3 mb-xl-0">
-            <div class="card border-0 text-white shadow-sm h-100 stat-card-modern" style="background-color: #107c41;">
-                <div class="card-body d-flex align-items-center justify-content-between p-3">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-yellow p-3 shadow-sm reveal-item">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="badge badge-light text-success font-weight-bold px-3 py-1 mb-2 stat-badge-number counter-value" data-target="5">0</span>
-                        <h6 class="mb-0 font-weight-bold">Terlambat SLA</h6>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Diproses / Disposisi</span>
+                        <h2 class="stat-number text-white mt-1 mb-0 counter-value" data-target="<?= $jumlahDisposisi ?? 5 ?>">0</h2>
                     </div>
-                    <i class="fas fa-clock fa-2x stat-card-icon"></i>
+                    <div class="icon-tamu-circle text-white"><i class="fas fa-cogs"></i></div>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- QUICK ACTION SECTION -->
-    <div class="card border-0 shadow-sm mb-4 dashboard-card">
-        <div class="card-header text-white border-0 py-2 px-3" style="background-color: #1a237e; border-top-left-radius: 12px; border-top-right-radius: 12px;">
-            <h6 class="font-weight-bold mb-0">
-                <i class="fas fa-bolt mr-2"></i>Quick Action
-            </h6>
+    <!-- QUICK ACTION BUTTONS -->
+    <div class="quick-action-card mb-4 reveal-item">
+        <div class="quick-action-header d-flex align-items-center">
+            <i class="fas fa-bolt text-warning me-2"></i> Akses Cepat Petugas
         </div>
-        <div class="card-body p-3">
-            <div class="row">
-                <div class="col-md-3 mb-2 mb-md-0">
-                    <a href="<?= base_url('petugas/tiket') ?>"
-                       class="btn btn-block text-white font-weight-bold py-3 shadow-sm d-flex align-items-center justify-content-center btn-quick-action"
-                       style="background:#ff8c00;">
-                        <i class="fas fa-ticket-alt fa-2x mr-3"></i>
-                        Data Tiket
-                    </a>
-                </div>
-                <div class="col-md-3 mb-2 mb-md-0">
-                    <a href="<?= base_url('petugas/tiket?status=Submitted') ?>"
-                       class="btn btn-block text-white font-weight-bold py-3 shadow-sm d-flex align-items-center justify-content-center btn-quick-action"
-                       style="background:#107c41;">
-                        <i class="fas fa-user-check fa-2x mr-3"></i>
-                        Verifikasi
-                    </a>
-                </div>
-                <div class="col-md-3 mb-2 mb-md-0">
-                    <a href="<?= base_url('petugas/tiket?status=Verified') ?>"
-                       class="btn btn-block text-white font-weight-bold py-3 shadow-sm d-flex align-items-center justify-content-center btn-quick-action"
-                       style="background:#f1c40f;">
-                        <i class="fas fa-share-square fa-2x mr-3"></i>
-                        Disposisi
+        <div class="p-3">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <a href="<?= base_url('petugas/tiket') ?>" class="btn-quick-action bg-tamu-navy">
+                        <i class="fas fa-list-alt"></i> Semua Data Tiket
                     </a>
                 </div>
                 <div class="col-md-3">
-                    <a href="javascript:location.reload()" 
-                       class="btn btn-block text-white font-weight-bold py-3 shadow-sm d-flex align-items-center justify-content-center btn-quick-action" 
-                       style="background-color: #343a40;">
-                        <i class="fas fa-sync-alt fa-2x mr-3"></i> Refresh
+                    <a href="<?= base_url('petugas/tiket?status=Submitted') ?>" class="btn-quick-action bg-tamu-orange">
+                        <i class="fas fa-user-clock"></i> Verifikasi Tiket
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="<?= base_url('petugas/tiket?status=Verified') ?>" class="btn-quick-action bg-tamu-yellow">
+                        <i class="fas fa-share"></i> Disposisi Layanan
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="javascript:void(0)" id="btnRefreshData" class="btn-quick-action" style="background: #475569;">
+                        <i class="fas fa-sync-alt" id="refreshIcon"></i> Refresh Statistik
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- FILTER PERIODE & TANGGAL MANUAL STATISTIK TIKET -->
-    <div class="card card-filter-header p-4 mb-4">
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-            <div>
-                <h3 class="fw-bold text-dark mb-1" style="letter-spacing: -0.5px;">Statistik & Analitik Tiket</h3>
-                <p class="text-muted small mb-0">Pantau pergerakan data tiket layanan bantuan ULT secara real-time dan akurat.</p>
-            </div>
-            
-            <div class="d-flex align-items-center gap-3 flex-wrap">
-                <div class="filter-dropdown-wrapper">
-                    <i class="fas fa-filter filter-icon-left"></i>
-                    <select id="filterPeriode" class="select-ultra">
-                        <option value="semua">Semua Periode</option>
-                        <option value="hari">Hari Ini</option>
-                        <option value="minggu">Minggu Ini</option>
-                        <option value="bulan" selected>Bulan Ini</option>
-                        <option value="tahun">Tahun Ini</option>
-                        <option value="custom">Filter Tanggal Manual</option>
-                    </select>
-                    <i class="fas fa-chevron-down filter-icon-right"></i>
+    <!-- OPSI FILTER STATISTIK -->
+    <div class="card ticket-filter-card mb-4 reveal-item">
+        <div class="card-body p-3">
+            <div class="row g-3 align-items-center justify-content-between">
+                <div class="col-md-4">
+                    <h5 class="fw-bold text-dark mb-0 d-flex align-items-center">
+                        <i class="fas fa-chart-line text-primary me-2"></i> Analitik & Grafik Tiket
+                    </h5>
+                    <small class="text-muted">Pantau persebaran status dan tren permohonan</small>
                 </div>
                 
-                <div id="customDateContainer" class="d-none align-items-center gap-2">
-                    <input type="date" id="startDate" class="input-date-ultra" value="<?= date('Y-m-01') ?>">
-                    <span class="text-muted small fw-bold">s/d</span>
-                    <input type="date" id="endDate" class="input-date-ultra" value="<?= date('Y-m-d') ?>">
-                    <button type="button" id="btnTerapkanTanggal" class="btn btn-apply-filter">
-                        <i class="fas fa-check me-1"></i> Terapkan
-                    </button>
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center justify-content-md-end gap-2 flex-wrap">
+                        <select id="filterPeriode" class="form-select ticket-select" style="width: auto; min-width: 170px;">
+                            <option value="semua">Semua Periode</option>
+                            <option value="hari">Hari Ini</option>
+                            <option value="minggu">Minggu Ini</option>
+                            <option value="bulan" selected>Bulan Ini</option>
+                            <option value="tahun">Tahun Ini</option>
+                            <option value="custom">Manual (Custom Tanggal)</option>
+                        </select>
+
+                        <div id="customDateBox" class="d-none align-items-center gap-2">
+                            <input type="date" id="startDate" class="form-control ticket-input" value="<?= date('Y-m-01') ?>">
+                            <span class="text-muted fw-bold">s/d</span>
+                            <input type="date" id="endDate" class="form-control ticket-input" value="<?= date('Y-m-d') ?>">
+                            <button type="button" id="btnApplyDate" class="btn btn-apply-filter">
+                                Terapkan
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- GRAFIK STATISTIK -->
+    <!-- GRAFIK DUA COLUMN (BAR & DOUGHNUT) -->
     <div class="row g-4 mb-4">
         <div class="col-lg-8">
-            <div class="card card-ultra h-100">
-                <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
-                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-chart-bar text-primary me-2"></i>Distribusi Kategori Status Tiket</h6>
-                    <small class="text-muted">Grafik Utama</small>
+            <div class="card ticket-table-card h-100 reveal-item">
+                <div class="ticket-table-header d-flex justify-content-between align-items-center">
+                    <div class="ticket-table-title">
+                        <i class="fas fa-chart-bar text-primary me-2"></i> Distribusi Status Tiket
+                    </div>
+                    <span class="badge bg-light text-dark border">Bar Chart</span>
                 </div>
-                <div class="card-body p-4">
-                    <div class="chart-wrapper-box">
+                <div class="p-4">
+                    <div class="chart-box">
                         <canvas id="mainBarChart"></canvas>
                     </div>
                 </div>
@@ -320,193 +403,210 @@
         </div>
 
         <div class="col-lg-4">
-            <div class="card card-ultra h-100">
-                <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
-                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-chart-pie text-primary me-2"></i>Proporsi Status Tiket</h6>
-                    <small class="text-muted">Persentase</small>
+            <div class="card ticket-table-card h-100 reveal-item">
+                <div class="ticket-table-header d-flex justify-content-between align-items-center">
+                    <div class="ticket-table-title">
+                        <i class="fas fa-chart-pie text-primary me-2"></i> Proporsi Persentase
+                    </div>
+                    <span class="badge bg-light text-dark border">Donut Chart</span>
                 </div>
-                <div class="card-body p-4">
-                    <div class="chart-wrapper-box">
+                <div class="p-4">
+                    <div class="chart-box">
                         <canvas id="mainDoughnutChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        
-        // 1. Animasi Counter Angka Berjalan (Original Dashboard)
+document.addEventListener("DOMContentLoaded", function () {
+    // 1. ANIMASI SAMA SEPERTI TIKET.PHP: ENTRANCE STAGGERED REVEAL
+    const reveals = document.querySelectorAll('.reveal-item');
+    reveals.forEach((el, index) => {
+        setTimeout(() => {
+            el.classList.add('show');
+        }, index * 80);
+    });
+
+    // 2. ANIMASI COUNTER ANGKA BERJALAN INTERAKTIF
+    function runCounters() {
         const counters = document.querySelectorAll('.counter-value');
         counters.forEach(counter => {
             const target = +counter.getAttribute('data-target');
             const duration = 1000;
-            const stepTime = 25;
-            const steps = duration / stepTime;
-            const increment = target / steps;
-            let current = 0;
+            const startTime = performance.now();
 
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
+            function updateCounter(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                const progress = Math.min(elapsedTime / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                
+                counter.innerText = Math.floor(easeOut * target);
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                } else {
                     counter.innerText = target;
-                    clearInterval(timer);
-                } else {
-                    counter.innerText = Math.ceil(current);
                 }
-            }, stepTime);
+            }
+            requestAnimationFrame(updateCounter);
         });
+    }
+    runCounters();
 
-        // 2. Fade In Effect Saat Halaman Dimuat
-        const cards = document.querySelectorAll('.dashboard-card, .stat-card-modern');
-        cards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(10px)';
-            card.style.transition = `all 0.3s ease-out ${index * 0.05}s`;
-            
-            setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 50);
-        });
+    // 3. INISIALISASI CHART.JS PRO LEVEL
+    let barChart, doughnutChart;
+    const labels = ['Submitted', 'Verified', 'Disposisi', 'In Progress', 'Completed', 'Rejected'];
+    const colors = ['#ff8c00', '#10b981', '#f4c400', '#1a237e', '#059669', '#dc2626'];
 
-        // 3. Script Grafik Chart JS
-        let barChart, doughnutChart;
+    if (typeof Chart !== 'undefined') {
+        Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+        Chart.defaults.color = '#59636e';
+    }
 
-        const labelsArray = ['Submitted', 'Assigned', 'In Progress', 'Completed', 'Need Revision', 'Rejected'];
-        const colorPalette = ['#ff8c00', '#f4c400', '#0284c7', '#10b981', '#d97706', '#ef4444'];
-
-        if (typeof Chart !== 'undefined') {
-            Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
-            Chart.defaults.color = '#64748b';
-        }
-
-        function initCharts(initialData) {
-            const barCanvas = document.getElementById('mainBarChart');
-            if (barCanvas) {
-                const barCtx = barCanvas.getContext('2d');
-                barChart = new Chart(barCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: labelsArray,
-                        datasets: [{
-                            label: 'Jumlah Tiket',
-                            data: initialData,
-                            backgroundColor: colorPalette,
-                            borderRadius: 8,
-                            barPercentage: 0.55
-                        }]
+    function initCharts(dataValues) {
+        // Bar Chart
+        const ctxBar = document.getElementById('mainBarChart');
+        if (ctxBar) {
+            barChart = new Chart(ctxBar.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Jumlah Tiket',
+                        data: dataValues,
+                        backgroundColor: colors,
+                        borderRadius: 8,
+                        barPercentage: 0.55
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 1000, easing: 'easeOutQuart' },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { backgroundColor: '#1a237e', padding: 10, borderRadius: 8 }
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true, ticks: { precision: 0 } },
-                            x: { grid: { display: false } }
-                        }
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#edf0f4' } },
+                        x: { grid: { display: false } }
                     }
-                });
-            }
-
-            const doughnutCanvas = document.getElementById('mainDoughnutChart');
-            if (doughnutCanvas) {
-                const doughnutCtx = doughnutCanvas.getContext('2d');
-                doughnutChart = new Chart(doughnutCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: labelsArray,
-                        datasets: [{
-                            data: initialData,
-                            backgroundColor: colorPalette,
-                            borderWidth: 2,
-                            borderColor: '#ffffff'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '70%',
-                        plugins: { legend: { position: 'bottom' } }
-                    }
-                });
-            }
-        }
-
-        function updateDashboardUI(data) {
-            const updatedArray = [
-                data.submitted,
-                data.assigned,
-                data.in_progress,
-                data.completed,
-                data.need_revision,
-                data.rejected
-            ];
-
-            if (barChart) {
-                barChart.data.datasets[0].data = updatedArray;
-                barChart.update();
-            }
-
-            if (doughnutChart) {
-                doughnutChart.data.datasets[0].data = updatedArray;
-                doughnutChart.update();
-            }
-        }
-
-        function fetchFilteredData() {
-            const periode = document.getElementById('filterPeriode').value;
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-
-            const url = `<?= base_url('petugas/api/statistik-data') ?>?periode=${periode}&start_date=${startDate}&end_date=${endDate}`;
-
-            fetch(url)
-                .then(res => res.json())
-                .then(res => {
-                    if (res.status === 'success') {
-                        updateDashboardUI(res.data);
-                    }
-                })
-                .catch(err => console.error("Error fetching data:", err));
-        }
-
-        const filterPeriode = document.getElementById('filterPeriode');
-        const customDateContainer = document.getElementById('customDateContainer');
-
-        if (filterPeriode && customDateContainer) {
-            filterPeriode.addEventListener('change', function () {
-                if (this.value === 'custom') {
-                    customDateContainer.classList.remove('d-none');
-                    customDateContainer.classList.add('d-flex');
-                } else {
-                    customDateContainer.classList.remove('d-flex');
-                    customDateContainer.classList.add('d-none');
-                    fetchFilteredData();
                 }
             });
         }
 
-        const btnTerapkanTanggal = document.getElementById('btnTerapkanTanggal');
-        if (btnTerapkanTanggal) {
-            btnTerapkanTanggal.addEventListener('click', function () {
-                fetchFilteredData();
+        // Doughnut Chart
+        const ctxDoughnut = document.getElementById('mainDoughnutChart');
+        if (ctxDoughnut) {
+            doughnutChart = new Chart(ctxDoughnut.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataValues,
+                        backgroundColor: colors,
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15 } },
+                        tooltip: { backgroundColor: '#1a237e', padding: 10, borderRadius: 8 }
+                    }
+                }
             });
         }
+    }
 
-        initCharts([
-            <?= $submitted ?? 5 ?>,
-            <?= $assigned ?? 3 ?>,
-            <?= $in_progress ?? 2 ?>,
-            <?= $completed ?? 2 ?>,
-            <?= $need_revision ?? 1 ?>,
-            <?= $rejected ?? 0 ?>
-        ]);
+    // 4. MENGUPDATE DATA STATISTIK SECARA DINAMIS (INTERAKTIF LEVEL DEWA)
+    function updateCharts(newData) {
+        if (barChart) {
+            barChart.data.datasets[0].data = newData;
+            barChart.update();
+        }
+        if (doughnutChart) {
+            doughnutChart.data.datasets[0].data = newData;
+            doughnutChart.update();
+        }
+    }
 
-    });
+    function fetchFilteredStatistik() {
+        const periode = document.getElementById('filterPeriode').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        const refreshIcon = document.getElementById('refreshIcon');
+
+        if (refreshIcon) refreshIcon.classList.add('fa-spin');
+
+        const url = `<?= base_url('petugas/api/statistik-data') ?>?periode=${periode}&start_date=${startDate}&end_date=${endDate}`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === 'success') {
+                    const d = res.data;
+                    updateCharts([
+                        d.submitted ?? 0,
+                        d.verified ?? 0,
+                        d.disposisi ?? 0,
+                        d.in_progress ?? 0,
+                        d.completed ?? 0,
+                        d.rejected ?? 0
+                    ]);
+                }
+            })
+            .catch(err => console.error("Error fetching stats:", err))
+            .finally(() => {
+                if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+            });
+    }
+
+    // Event Control
+    const filterPeriode = document.getElementById('filterPeriode');
+    const customDateBox = document.getElementById('customDateBox');
+
+    if (filterPeriode) {
+        filterPeriode.addEventListener('change', function () {
+            if (this.value === 'custom') {
+                customDateBox.classList.remove('d-none');
+                customDateBox.classList.add('d-flex');
+            } else {
+                customDateBox.classList.remove('d-flex');
+                customDateBox.classList.add('d-none');
+                fetchFilteredStatistik();
+            }
+        });
+    }
+
+    const btnApplyDate = document.getElementById('btnApplyDate');
+    if (btnApplyDate) {
+        btnApplyDate.addEventListener('click', fetchFilteredStatistik);
+    }
+
+    const btnRefreshData = document.getElementById('btnRefreshData');
+    if (btnRefreshData) {
+        btnRefreshData.addEventListener('click', function() {
+            fetchFilteredStatistik();
+            runCounters();
+        });
+    }
+
+    // Initial Load Chart dengan Data Default PHP
+    initCharts([
+        <?= $jumlahSubmitted ?? 6 ?>,
+        <?= $jumlahVerified ?? 7 ?>,
+        <?= $jumlahDisposisi ?? 5 ?>,
+        2, 1, 0
+    ]);
+});
 </script>
 
 <?= $this->endSection() ?>

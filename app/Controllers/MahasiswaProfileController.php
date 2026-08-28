@@ -29,89 +29,91 @@ class MahasiswaProfileController extends BaseController
     // =====================================================
     // AMBIL DATA PROFILE DARI DATABASE
     // =====================================================
-    private function getProfile($userId)
-    {
-        $db = \Config\Database::connect();
+private function getProfile($userId)
+{
+    $db = \Config\Database::connect();
 
-        $builder = $db->table('user_profiles up');
+    $builder = $db->table('user_profiles up');
 
-        $builder->select('
-            up.id,
-            up.user_id,
-            up.applicant_type_id,
+    $builder->select('
+        up.id,
+        up.user_id,
+        up.applicant_type_id,
 
-            up.student_name,
-            up.institution_name,
-            up.position,
+        up.student_name,
+        up.institution_name,
+        up.position,
 
-            up.nim,
+        up.nim,
 
-            up.name AS nama,
-            up.email,
+        up.name AS nama,
+        up.email,
 
-            up.phone AS no_hp,
-            up.address AS alamat,
-            up.photo AS foto,
+        COALESCE(up.gender, u.gender) AS jenis_kelamin,
 
-            up.study_program_id,
-            up.class_id,
+        up.phone AS no_hp,
+        up.address AS alamat,
+        up.photo AS foto,
 
-            msp.name AS prodi,
-            msp.code AS kode_prodi,
-            msp.department_id,
+        up.study_program_id,
+        up.class_id,
 
-            md.name AS jurusan,
-            md.code AS kode_jurusan
-        ');
+        msp.name AS prodi,
+        msp.code AS kode_prodi,
+        msp.department_id,
 
-        // =================================================
-        // RELASI CLASS
-        // =================================================
-        $builder->join(
-            'master_classes mc',
-            'mc.id = up.class_id
-             AND mc.deleted_at IS NULL',
-            'left'
-        );
+        md.name AS jurusan,
+        md.code AS kode_jurusan,
 
-        // =================================================
-        // RELASI PROGRAM STUDI
-        // =================================================
-        $builder->join(
-            'master_study_programs msp',
-            'msp.id = up.study_program_id
-             AND msp.deleted_at IS NULL',
-            'left'
-        );
+        mc.name AS nama_kelas,
+        mc.code AS kode_kelas
+    ');
 
-        // =================================================
-        // RELASI JURUSAN
-        // =================================================
-        $builder->join(
-            'master_departments md',
-            'md.id = msp.department_id
-             AND md.deleted_at IS NULL',
-            'left'
-        );
+    // USER
+    $builder->join(
+        'users u',
+        'u.id = up.user_id',
+        'left'
+    );
 
-        // =================================================
-        // USER YANG LOGIN
-        // =================================================
-        $builder->where(
-            'up.user_id',
-            $userId
-        );
+    // CLASS
+    $builder->join(
+        'master_classes mc',
+        'mc.id = up.class_id
+         AND mc.deleted_at IS NULL',
+        'left'
+    );
 
-        // Jangan ambil profile yang dihapus
-        $builder->where(
-            'up.deleted_at',
-            null
-        );
+    // PROGRAM STUDI
+    $builder->join(
+        'master_study_programs msp',
+        'msp.id = up.study_program_id
+         AND msp.deleted_at IS NULL',
+        'left'
+    );
 
-        return $builder
-            ->get()
-            ->getRowArray();
-    }
+    // JURUSAN
+    $builder->join(
+        'master_departments md',
+        'md.id = msp.department_id
+         AND md.deleted_at IS NULL',
+        'left'
+    );
+
+    $builder->where(
+        'up.user_id',
+        $userId
+    );
+
+    $builder->where(
+        'up.deleted_at',
+        null
+    );
+
+    return $builder
+        ->get()
+        ->getRowArray();
+}
 
 
     // =====================================================
@@ -160,6 +162,10 @@ class MahasiswaProfileController extends BaseController
                 $profile['email']
                     ?? '-',
 
+                'jenis_kelamin' =>
+                $profile['jenis_kelamin']
+                ?? '-',
+
                 'no_hp' =>
                 $profile['no_hp']
                     ?? '-',
@@ -197,11 +203,6 @@ class MahasiswaProfileController extends BaseController
                 'class_id' =>
                 $profile['class_id']
                     ?? null,
-
-
-                'fakultas' => '-',
-
-                'status' => 'Aktif'
             ]
         ];
 
@@ -261,6 +262,10 @@ class MahasiswaProfileController extends BaseController
                 'nama' =>
                 $profile['nama']
                     ?? $profile['student_name']
+                    ?? '',
+
+                'jenis_kelamin' =>
+                $profile['jenis_kelamin']
                     ?? '',
 
                 'nim' =>
@@ -347,26 +352,25 @@ class MahasiswaProfileController extends BaseController
                 );
         }
 
+// =====================================================
+// 3. AMBIL DATA DARI FORM
+// =====================================================
 
-        // =====================================================
-        // 3. AMBIL DATA DARI FORM
-        // =====================================================
+$nama = trim(
+    (string) $this->request->getPost('nama')
+);
 
-        $nama = trim(
-            (string) $this->request->getPost('nama')
-        );
+$email = trim(
+    (string) $this->request->getPost('email')
+);
 
-        $email = trim(
-            (string) $this->request->getPost('email')
-        );
+$noHp = trim(
+    (string) $this->request->getPost('no_hp')
+);
 
-        $noHp = trim(
-            (string) $this->request->getPost('no_hp')
-        );
-
-        $alamat = trim(
-            (string) $this->request->getPost('alamat')
-        );
+$alamat = trim(
+    (string) $this->request->getPost('alamat')
+);
 
 
         // =====================================================
@@ -413,22 +417,22 @@ class MahasiswaProfileController extends BaseController
         // 6. DATA UNTUK USER_PROFILES
         // =====================================================
 
-        $updateProfileData = [
-            'name' =>
-            $nama,
+$updateProfileData = [
+    'name' =>
+    $nama,
 
-            'email' =>
-            $email,
+    'email' =>
+    $email,
 
-            'phone' =>
-            $noHp,
+    'phone' =>
+    $noHp,
 
-            'address' =>
-            $alamat,
+    'address' =>
+    $alamat,
 
-            'updated_at' =>
-            date('Y-m-d H:i:s')
-        ];
+    'updated_at' =>
+    date('Y-m-d H:i:s')
+];
 
 
         // =====================================================
@@ -650,20 +654,19 @@ class MahasiswaProfileController extends BaseController
             // 12. DATA UNTUK TABEL USERS
             // =================================================
 
-            $userUpdateData = [
+$userUpdateData = [
+    'full_name' =>
+    $nama,
 
-                'full_name' =>
-                $nama,
+    'email' =>
+    $email,
 
-                'email' =>
-                $email,
+    'phone_number' =>
+    $noHp,
 
-                'phone_number' =>
-                $noHp,
-
-                'updated_at' =>
-                date('Y-m-d H:i:s')
-            ];
+    'updated_at' =>
+    date('Y-m-d H:i:s')
+];
 
 
             // -------------------------------------------------

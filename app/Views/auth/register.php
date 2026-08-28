@@ -162,9 +162,7 @@
                         <!-- Step 2: Form dinamis per jenis pemohon -->
                         <div id="dynamicFields">
 
-                            <div class="text-muted text-center py-3">
-                            Pilih jenis pemohon terlebih dahulu.
-                            </div>
+                            <?= $this->include('auth/_register_fields') ?>
 
                         </div>
 

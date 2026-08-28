@@ -441,6 +441,26 @@ $profile = $profile ?? [];
 
                                     </div>
 
+<div class="mb-3">
+    <label class="form-label">
+        Jenis Kelamin
+    </label>
+
+    <input
+        type="text"
+        class="form-control"
+        value="<?= ($profile['jenis_kelamin'] ?? '') === 'L'
+            ? 'Laki-laki'
+            : (($profile['jenis_kelamin'] ?? '') === 'P'
+                ? 'Perempuan'
+                : '-') ?>"
+        readonly
+    >
+
+    <small class="text-muted">
+        Jenis kelamin tidak dapat diubah melalui halaman ini.
+    </small>
+</div>
 
                                     <!-- NOMOR HP -->
                                     <div

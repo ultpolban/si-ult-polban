@@ -24,37 +24,23 @@ class UserProfileModel extends BaseModel
 
     protected $deletedField = 'deleted_at';
 
-    protected $allowedFields = [
-
-        'user_id',
-
-        'applicant_type_id',
-
-        'study_program_id',
-
-        'class_id',
-
-        'nim',
-
-        'nik',
-
-        'student_name',
-
-        'institution_name',
-
-        'position',
-
-        'name',
-
-        'email',
-
-        'phone',
-
-        'address',
-
-        'photo',
-
-    ];
+protected $allowedFields = [
+    'user_id',
+    'applicant_type_id',
+    'study_program_id',
+    'class_id',
+    'nim',
+    'nik',
+    'student_name',
+    'institution_name',
+    'position',
+    'name',
+    'gender',
+    'email',
+    'phone',
+    'address',
+    'photo',
+];
 
     protected $validationRules = [
 

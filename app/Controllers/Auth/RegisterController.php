@@ -64,26 +64,26 @@ class RegisterController extends BaseController
     /**
      * Form dinamis berdasarkan jenis pemohon (AJAX)
      */
-public function fields(int $applicantTypeId)
-{
-    $applicantType = $this->applicantTypeModel->find($applicantTypeId);
+    public function fields(int $applicantTypeId)
+    {
+        $applicantType = $this->applicantTypeModel->find($applicantTypeId);
 
-    if (! $applicantType) {
-        return $this->response->setBody(
-            '<p class="text-muted text-center py-3">Jenis pemohon tidak ditemukan.</p>'
-        );
+        if (! $applicantType) {
+            return $this->response->setBody(
+                '<p class="text-muted text-center py-3">Jenis pemohon tidak ditemukan.</p>'
+            );
+        }
+
+        $data = [
+            'applicantCode' => strtoupper($applicantType['code'] ?? ''),
+            'applicantType' => $applicantType,
+            'studyPrograms' => $this->studyProgramModel->getActive(),
+            'classes'       => $this->classModel->getActive(),
+            'data'          => [],
+        ];
+
+        return view('auth/_register_fields', $data);
     }
-
-    $data = [
-        'applicantCode' => strtoupper($applicantType['code'] ?? ''),
-        'applicantType' => $applicantType,
-        'studyPrograms' => $this->studyProgramModel->getActive(),
-        'classes'       => $this->classModel->getActive(),
-        'data'          => [],
-    ];
-
-    return view('components/applicant_fields', $data);
-}
 
     /**
      * Proses Registrasi (step 1: create pending account)
@@ -147,7 +147,7 @@ public function fields(int $applicantTypeId)
                 ->withInput()
                 ->with('error', 'Gagal proses registrasi. Silakan coba lagi.');
         }
-// Simpan profile pemohon
+        // Simpan profile pemohon
         $this->saveProfile((int) $userId, $data);
 
         // Setup MFA: simpan secret + recovery codes, aktifasi hanya setelah verifikasi
@@ -249,7 +249,11 @@ public function fields(int $applicantTypeId)
             'institution_name'  => $this->nullable($data['institution_name'] ?? null),
             'position'          => $this->nullable($data['position'] ?? null),
             'name'              => $data['full_name'] ?? '',
+            'gender'            => in_array($data['gender'] ?? '', ['L', 'P'], true)
+                ? $data['gender']
+                : null,
             'email'             => $this->nullable($data['email'] ?? null),
+            'gender' => in_array($data['gender'] ?? '', ['L', 'P'], true) ? $data['gender'] : null,
             'phone'             => $this->nullable($data['phone_number'] ?? null),
             'address'           => $this->nullable($data['address'] ?? null),
         ]);

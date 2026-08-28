@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/adminlte/css/app.css') ?>">
 
 </head>
 
@@ -73,7 +73,7 @@
 
                     <div class="text-center mb-4">
 
-                        <img src="<?= base_url('assets/images/logo.svg') ?>"
+                        <img src="<?= base_url('assets/adminlte/img/logo.png') ?>"
 
                             alt="Logo"
 

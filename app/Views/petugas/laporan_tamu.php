@@ -1279,7 +1279,7 @@ body, .container-fluid {
                                 </div>
                                 <div class="card-body p-3">
                                     <div class="row g-3">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <label class="offline-form-label">Unit Layanan <span class="required">*</span></label>
                                             <select id="addUnitLayanan" name="unit_layanan" class="offline-select" required style="padding-left: 16px !important;">
                                                 <option value="" selected disabled>-- Pilih Unit Layanan --</option>
@@ -1294,7 +1294,21 @@ body, .container-fluid {
                                                 <option value="Administrasi Umum">Administrasi Umum</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4" id="wrapperJurusan" style="display: none;">
+                                            <label class="offline-form-label">Jurusan <span class="required">*</span></label>
+                                            <select id="addJurusan" name="jurusan" class="offline-select" style="padding-left: 16px !important;">
+                                                <option value="" selected disabled>-- Pilih Jurusan --</option>
+                                                <option value="Teknik Komputer dan Informatika">Teknik Komputer dan Informatika</option>
+                                                <option value="Teknik Elektro">Teknik Elektro</option>
+                                                <option value="Teknik Mesin">Teknik Mesin</option>
+                                                <option value="Teknik Sipil">Teknik Sipil</option>
+                                                <option value="Teknik Kimia">Teknik Kimia</option>
+                                                <option value="Akuntansi">Akuntansi</option>
+                                                <option value="Administrasi Niaga">Administrasi Niaga</option>
+                                                <option value="Bahasa Inggris">Bahasa Inggris</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4" id="wrapperJenisLayananCol">
                                             <label class="offline-form-label">Jenis Layanan <span class="required">*</span></label>
                                             <select id="addJenisLayanan" name="jenis_layanan" class="offline-select" disabled required style="padding-left: 16px !important;">
                                                 <option value="" selected disabled>-- Pilih Jenis Layanan --</option>
@@ -1351,7 +1365,7 @@ body, .container-fluid {
                                 </div>
                                 <div class="card-body p-3">
                                     <div class="row g-3">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <label class="offline-form-label">Unit Layanan <span class="required">*</span></label>
                                             <select id="addUnitLayanan" name="unit_layanan" class="offline-select" required style="padding-left: 16px !important;">
                                                 <option value="" selected disabled>-- Pilih Unit Layanan --</option>
@@ -1366,7 +1380,21 @@ body, .container-fluid {
                                                 <option value="Administrasi Umum">Administrasi Umum</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4" id="wrapperJurusan" style="display: none;">
+                                            <label class="offline-form-label">Jurusan <span class="required">*</span></label>
+                                            <select id="addJurusan" name="jurusan" class="offline-select" style="padding-left: 16px !important;">
+                                                <option value="" selected disabled>-- Pilih Jurusan --</option>
+                                                <option value="Teknik Komputer dan Informatika">Teknik Komputer dan Informatika</option>
+                                                <option value="Teknik Elektro">Teknik Elektro</option>
+                                                <option value="Teknik Mesin">Teknik Mesin</option>
+                                                <option value="Teknik Sipil">Teknik Sipil</option>
+                                                <option value="Teknik Kimia">Teknik Kimia</option>
+                                                <option value="Akuntansi">Akuntansi</option>
+                                                <option value="Administrasi Niaga">Administrasi Niaga</option>
+                                                <option value="Bahasa Inggris">Bahasa Inggris</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4" id="wrapperJenisLayananCol">
                                             <label class="offline-form-label">Jenis Layanan <span class="required">*</span></label>
                                             <select id="addJenisLayanan" name="jenis_layanan" class="offline-select" disabled required style="padding-left: 16px !important;">
                                                 <option value="" selected disabled>-- Pilih Jenis Layanan --</option>
@@ -1393,6 +1421,9 @@ body, .container-fluid {
 
         function initLayananDropdownEvents() {
             const unitSelect = document.getElementById('addUnitLayanan');
+            const wrapperJurusan = document.getElementById('wrapperJurusan');
+            const wrapperJenisLayananCol = document.getElementById('wrapperJenisLayananCol');
+            const jurusanSelect = document.getElementById('addJurusan');
             const jenisSelect = document.getElementById('addJenisLayanan');
             const persyaContainer = document.getElementById('persyaratanContainer');
             const persyaContent = document.getElementById('persyaratanContent');
@@ -1405,12 +1436,134 @@ body, .container-fluid {
                 persyaContainer.classList.add('d-none');
                 persyaContent.innerHTML = '';
 
-                if (selectedUnit === 'Administrasi Umum') {
+                // Handle Jurusan option visibility
+                if (selectedUnit === 'Jurusan') {
+                    if (wrapperJurusan) wrapperJurusan.style.display = 'block';
+                    if (jurusanSelect) jurusanSelect.required = true;
+                    if (wrapperJenisLayananCol) {
+                        wrapperJenisLayananCol.className = 'col-md-4';
+                    }
+                } else {
+                    if (wrapperJurusan) {
+                        wrapperJurusan.style.display = 'none';
+                        if (jurusanSelect) {
+                            jurusanSelect.required = false;
+                            jurusanSelect.value = '';
+                        }
+                    }
+                    if (wrapperJenisLayananCol) {
+                        wrapperJenisLayananCol.className = 'col-md-6';
+                    }
+                }
+
+                if (selectedUnit === 'Bagian Keuangan') {
+                    jenisSelect.disabled = false;
+                    const options = [
+                        'Pengajuan Keringanan UKT',
+                        'Pengembalian Dana / Refund UKT',
+                        'Surat Keterangan Bebas Tanggungan Keuangan',
+                        'Klarifikasi / Konsultasi Pembayaran UKT',
+                        'Permohonan Rincian Pembayaran Biaya Kuliah',
+                        'Validasi Bukti Pembayaran / Slip Ganda',
+                        'Layanan Keuangan Lainnya'
+                    ];
+                    options.forEach(opt => {
+                        const optionEl = document.createElement('option');
+                        optionEl.value = opt;
+                        optionEl.textContent = opt;
+                        jenisSelect.appendChild(optionEl);
+                    });
+                } else if (selectedUnit === 'Bagian Kemahasiswaan') {
+                    jenisSelect.disabled = false;
+                    const options = [
+                        'Surat Rekomendasi Beasiswa',
+                        'Persetujuan Kegiatan Organisasi Mahasiswa',
+                        'Surat Keterangan Berkelakuan Baik',
+                        'Surat Rekomendasi Lomba/Kompetisi',
+                        'Pengajuan Bantuan Biaya Pendidikan',
+                        'Klaim Asuransi Kecelakaan Mahasiswa',
+                        'Surat Keterangan Bebas Kompen/Pustaka',
+                        'Legalisasi SK/Sertifikat Prestasi'
+                    ];
+                    options.forEach(opt => {
+                        const optionEl = document.createElement('option');
+                        optionEl.value = opt;
+                        optionEl.textContent = opt;
+                        jenisSelect.appendChild(optionEl);
+                    });
+                } else if (selectedUnit === 'Bagian Akademik') {
+                    jenisSelect.disabled = false;
+                    const options = [
+                        'Surat Keterangan Mahasiswa',
+                        'Surat Keterangan Aktif Kuliah',
+                        'Permohonan Daftar Nilai',
+                        'Pengunduran Diri Mahasiswa',
+                        'Pendaftaran Wisuda',
+                        'Legalisasi Transkrip Nilai',
+                        'Legalisasi Ijazah',
+                        'Aktif Kembali Setelah Cuti',
+                        'Administrasi Yudisium'
+                    ];
+                    options.forEach(opt => {
+                        const optionEl = document.createElement('option');
+                        optionEl.value = opt;
+                        optionEl.textContent = opt;
+                        jenisSelect.appendChild(optionEl);
+                    });
+                } else if (selectedUnit === 'Administrasi Umum') {
                     jenisSelect.disabled = false;
                     const options = [
                         'Layanan Surat Masuk dan Keluar',
                         'Peminjaman Ruangan',
                         'Peminjaman Sarana dan Prasarana'
+                    ];
+                    options.forEach(opt => {
+                        const optionEl = document.createElement('option');
+                        optionEl.value = opt;
+                        optionEl.textContent = opt;
+                        jenisSelect.appendChild(optionEl);
+                    });
+                } else if (selectedUnit === 'UPT Teknologi Informasi dan Komunikasi') {
+                    jenisSelect.disabled = false;
+                    const options = [
+                        'Reset Password Akun Mahasiswa',
+                        'Perubahan Data Akun',
+                        'Layanan Helpdesk TI',
+                        'Aktivasi Email Institusi',
+                        'Aktivasi Akun Mahasiswa',
+                        'Akses WiFi Kampus'
+                    ];
+                    options.forEach(opt => {
+                        const optionEl = document.createElement('option');
+                        optionEl.value = opt;
+                        optionEl.textContent = opt;
+                        jenisSelect.appendChild(optionEl);
+                    });
+                } else if (selectedUnit === 'Perpustakaan') {
+                    jenisSelect.disabled = false;
+                    const options = [
+                        'Usulan Pengadaan Buku',
+                        'Penggantian Kartu Perpustakaan',
+                        'Pendaftaran Anggota Perpustakaan',
+                        'Pembayaran Denda Perpustakaan'
+                    ];
+                    options.forEach(opt => {
+                        const optionEl = document.createElement('option');
+                        optionEl.value = opt;
+                        optionEl.textContent = opt;
+                        jenisSelect.appendChild(optionEl);
+                    });
+                } else if (selectedUnit === 'Jurusan') {
+                    jenisSelect.disabled = false;
+                    const options = [
+                        'Surat Keterangan Aktif Kuliah',
+                        'Pengajuan Cuti Akademik',
+                        'Permohonan Legalisir Ijazah/Transkrip',
+                        'Konsultasi Akademik / Perwalian',
+                        'Pengajuan Surat Pengantar Penelitian / PKL',
+                        'Surat Keterangan Bebas Laboratorium / Bengkel',
+                        'Pengambilan Ijazah / Transkrip',
+                        'Layanan Administrasi Jurusan Lainnya'
                     ];
                     options.forEach(opt => {
                         const optionEl = document.createElement('option');
@@ -1427,7 +1580,395 @@ body, .container-fluid {
                 const selectedJenis = this.value;
                 persyaContent.innerHTML = '';
 
-                if (selectedJenis === 'Layanan Surat Masuk dan Keluar') {
+                if (selectedJenis === 'Pengajuan Keringanan UKT') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Surat Permohonan Keringanan UKT (Bermaterai)</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Surat permohonan resmi yang ditandatangani di atas meterai.</small>
+                            <div class="offline-file-box mb-2">
+                                <input type="file" name="syarat_surat_permohonan" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted d-block mb-1" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">2. Slip Gaji / Surat Keterangan Penghasilan Orang Tua</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Bukti slip gaji terbaru atau surat keterangan penghasilan dari kelurahan.</small>
+                            <div class="offline-file-box mb-2">
+                                <input type="file" name="syarat_slip_gaji" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted d-block mb-1" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">3. Foto Rumah Tempat Tinggal (Tampak Depan & Ruang Keluarga)</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Foto kondisi rumah pemohon saat ini.</small>
+                            <div class="offline-file-box mb-2">
+                                <input type="file" name="syarat_foto_rumah" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted d-block mb-1" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">4. Rekening Listrik / PBB Bulan Terakhir</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Bukti pembayaran tagihan listrik atau PBB.</small>
+                            <div class="offline-file-box mb-2">
+                                <input type="file" name="syarat_rekening_listrik" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted d-block mb-1" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">5. Kartu Tanda Mahasiswa (KTM) / Kartu Keluarga</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Scan KTM atau Kartu Keluarga (KK).</small>
+                            <div class="offline-file-box mb-2">
+                                <input type="file" name="syarat_ktm_kk" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted d-block mb-1" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Pengembalian Dana / Refund UKT') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Bukti Pembayaran Ganda / Berlebih</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Lampiran bukti transaksi pembayaran.</small>
+                            <div class="offline-file-box mb-2">
+                                <input type="file" name="syarat_bukti_bayar" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">2. Buku Rekening atas Nama Mahasiswa</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Scan halaman depan buku rekening.</small>
+                            <div class="offline-file-box mb-2">
+                                <input type="file" name="syarat_rekening" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Surat Keterangan Bebas Tanggungan Keuangan') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Kartu Tanda Mahasiswa (KTM)</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Scan KTM aktif.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_ktm" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Klarifikasi / Konsultasi Pembayaran UKT') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Bukti Transaksi Bank</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Bukti transaksi kendala pembayaran.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_transaksi" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Permohonan Rincian Pembayaran Biaya Kuliah') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Kartu Tanda Mahasiswa (KTM)</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Scan KTM.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_ktm" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Validasi Bukti Pembayaran / Slip Ganda') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Bukti Transfer / Pembayaran Bank</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Struk atau bukti pembayaran valid.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_bukti_transfer" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Layanan Keuangan Lainnya') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Dokumen Pendukung Keperluan Keuangan</span>
+                                <span class="badge bg-secondary">Opsional</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Upload dokumen pendukung terkait.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_pendukung" accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Surat Rekomendasi Beasiswa') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Surat Permohonan</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Permohonan surat rekomendasi.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_surat_permohonan" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted mt-1 d-block" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Persetujuan Kegiatan Organisasi Mahasiswa') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Proposal Kegiatan</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Proposal kegiatan organisasi.</small>
+                            <div class="offline-file-box mb-2">
+                                <input type="file" name="syarat_proposal" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted d-block mb-1" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">2. Susunan Panitia</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Daftar panitia kegiatan.</small>
+                            <div class="offline-file-box mb-2">
+                                <input type="file" name="syarat_susunan_panitia" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted d-block mb-1" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Surat Keterangan Berkelakuan Baik') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Surat Pengantar dari Jurusan</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Surat pengantar resmi.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_pengantar_jurusan" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Surat Rekomendasi Lomba/Kompetisi') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Proposal/Brosur Lomba</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Informasi kegiatan perlombaan.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_brosur_lomba" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Pengajuan Bantuan Biaya Pendidikan') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Surat Permohonan Bantuan</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Surat permohonan resmi.</small>
+                            <div class="offline-file-box mb-2">
+                                <input type="file" name="syarat_surat_permohonan" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">2. Slip Pendapatan Orang Tua</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Bukti penghasilan orang tua.</small>
+                            <div class="offline-file-box mb-2">
+                                <input type="file" name="syarat_slip_gaji" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Klaim Asuransi Kecelakaan Mahasiswa') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Surat Keterangan Kecelakaan</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Surat keterangan dari rumah sakit/kepolisian.</small>
+                            <div class="offline-file-box mb-2">
+                                <input type="file" name="syarat_ket_kecelakaan" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Surat Keterangan Bebas Kompen/Pustaka') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Bukti Bebas Pustaka/Kompen</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Lampiran bukti valid.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_bebas_kompen" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Legalisasi SK/Sertifikat Prestasi') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Scan Sertifikat Asli</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Sertifikat atau SK prestasi.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_sertifikat" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Surat Keterangan Mahasiswa') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. KTM</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Scan KTM.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_ktm" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">2. KRS</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">KRS aktif.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_krs" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Surat Keterangan Aktif Kuliah') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. KTM</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Scan KTM.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_ktm" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">2. KRS Semester Berjalan</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Scan KRS.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_krs" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Permohonan Daftar Nilai') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. KTM</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Scan KTM.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_ktm" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Legalisasi Transkrip Nilai') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Scan Transkrip</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Transkrip nilai.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_transkrip" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Legalisasi Ijazah') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Scan Ijazah</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Ijazah asli.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_ijazah" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">2. KTP</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-2">Identitas.</small>
+                            <div class="offline-file-box">
+                                <input type="file" name="syarat_ktp" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Layanan Surat Masuk dan Keluar') {
                     persyaContainer.classList.remove('d-none');
                     persyaContent.innerHTML = `
                         <div class="mb-3">
@@ -1482,6 +2023,304 @@ body, .container-fluid {
                             <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
                         </div>
                     `;
+                } else if (selectedJenis === 'Reset Password Akun Mahasiswa') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. KTM</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Scan KTM.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="file_ktm" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Perubahan Data Akun') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. KTP / KTM</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Identitas pemohon.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="file_identitas" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Layanan Helpdesk TI') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Screenshot Kendala</span>
+                                <span class="badge bg-secondary">Opsional</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Screenshot error (opsional).</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="file_screenshot" accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Aktivasi Email Institusi' || selectedJenis === 'Aktivasi Akun Mahasiswa' || selectedJenis === 'Akses WiFi Kampus') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. KTM</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Scan KTM.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="file_ktm" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Usulan Pengadaan Buku') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Form Usulan Buku</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Form usulan pengadaan buku.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="file_usulan_buku" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Penggantian Kartu Perpustakaan') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Surat Kehilangan (Jika Hilang)</span>
+                                <span class="badge bg-secondary">Opsional</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Surat kehilangan dari kepolisian (opsional jika hilang).</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="file_surat_kehilangan" accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">2. KTM</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Scan KTM.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="file_ktm" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Pendaftaran Anggota Perpustakaan') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. KTM</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Scan KTM.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="file_ktm" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Pembayaran Denda Perpustakaan') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Bukti Pembayaran</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Upload bukti pembayaran denda.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="file_bukti_pembayaran" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Pengajuan Cuti Akademik') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Surat Permohonan Cuti Akademik (Bermaterai)</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Surat permohonan cuti dari mahasiswa diketahui Orang Tua/Wali.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_surat_permohonan_cuti" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">2. Surat Persetujuan Dosen Wali & Ketua Jurusan</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Form rekomendasi persetujuan cuti.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_persetujuan_dosen_wali" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">3. Transkrip Nilai / Kartu Hasil Studi (KHS) Terakhir</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Scan KHS semester sebelumnya.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_khs_terakhir" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">4. Bukti Lunas Pembayaran Administrasi/SPP Berjalan</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Slip pembayaran kewajiban keuangan.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_lunas_spp" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Konsultasi Akademik / Perwalian') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Kartu Tanda Mahasiswa (KTM) / Kartu Rencana Studi (KRS)</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Scan KTM atau KRS aktif.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_ktm_krs" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Pengajuan Surat Pengantar Penelitian / PKL') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Surat Balasan / Permohonan dari Instansi / Perusahaan Tujuan</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Surat resmi tempat PKL/penelitian.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_surat_instansi" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">2. Proposal Singkat / Rencana Kegiatan PKL / Penelitian</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Outline atau proposal penelitian/PKL.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_proposal_pkl" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">3. Kartu Tanda Mahasiswa (KTM) / Transkrip Sementara</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Scan identitas atau transkrip.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_ktm_transkrip" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Surat Keterangan Bebas Laboratorium / Bengkel') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Kartu Tanda Mahasiswa (KTM) / Bukti Penyerahan Alat</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Scan KTM dan bukti bebas lab.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_ktm_lab" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Pengambilan Ijazah / Transkrip') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Kartu Tanda Mahasiswa (KTM) / Kartu Identitas (KTP)</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Scan KTP atau KTM.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_ktp_ktm" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">2. Bukti Bebas Pustaka / Kompensasi / Tanggungan Jurusan</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Surat keterangan bebas tanggungan.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_bebas_tanggungan" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">3. Kuesioner Tracer Study yang Telah Diisi</span>
+                                <span class="badge bg-danger">Wajib</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Bukti selesai mengisi tracer study.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_tracer_study" required accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
+                } else if (selectedJenis === 'Layanan Administrasi Jurusan Lainnya') {
+                    persyaContainer.classList.remove('d-none');
+                    persyaContent.innerHTML = `
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 0.88rem;">1. Kartu Tanda Mahasiswa (KTM) / Dokumen Pendukung Lainnya</span>
+                                <span class="badge bg-secondary">Opsional</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">Upload dokumen pendukung keperluan jurusan.</small>
+                            <div class="offline-file-box mb-1">
+                                <input type="file" name="syarat_pendukung_jurusan" accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                            <small class="text-muted" style="font-size:0.75rem;">Format: PDF / JPG / JPEG / PNG</small>
+                        </div>
+                    `;
                 } else {
                     persyaContainer.classList.add('d-none');
                 }
@@ -1501,151 +2340,14 @@ body, .container-fluid {
                 document.getElementById('dispNoTiket').innerText = this.getAttribute('data-notiket');
                 document.getElementById('dispNama').innerText = this.getAttribute('data-nama');
                 document.getElementById('dispLayanan').innerText = this.getAttribute('data-layanan');
+                document.getElementById('dispStatus').innerText = this.getAttribute('data-status');
                 document.getElementById('dispEmail').innerText = this.getAttribute('data-email');
                 document.getElementById('dispHp').innerText = this.getAttribute('data-hp');
                 document.getElementById('dispInstansi').innerText = this.getAttribute('data-instansi');
                 document.getElementById('dispTanggal').innerText = this.getAttribute('data-tanggal');
                 document.getElementById('dispDeskripsi').innerText = this.getAttribute('data-deskripsi');
-
-                const statusVal = this.getAttribute('data-status');
-                const badgeEl = document.getElementById('dispStatus');
-                badgeEl.innerText = statusVal;
-                badgeEl.className = 'ticket-status ' + (statusVal === 'Verified' ? 'status-verified' : (statusVal === 'Assigned' ? 'status-disposisi' : 'status-submitted'));
             });
         });
-
-        document.querySelectorAll('.btn-verifikasi-tamu').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.getElementById('verifNoTiket').value = this.getAttribute('data-notiket');
-                document.getElementById('verifStatusSelect').value = this.getAttribute('data-status');
-            });
-        });
-
-        document.querySelectorAll('.btn-disposisi-tamu').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.getElementById('dispNoTiketField').value = this.getAttribute('data-notiket');
-            });
-        });
-
-        document.querySelectorAll('.btn-edit-tamu').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.getElementById('editNoTiket').value = this.getAttribute('data-notiket');
-                document.getElementById('editNama').value = this.getAttribute('data-nama');
-                document.getElementById('editEmail').value = this.getAttribute('data-email');
-                document.getElementById('editHp').value = this.getAttribute('data-hp');
-                document.getElementById('editInstansi').value = this.getAttribute('data-instansi');
-                document.getElementById('editLayanan').value = this.getAttribute('data-layanan');
-                document.getElementById('editDeskripsi').value = this.getAttribute('data-deskripsi');
-            });
-        });
-
-        document.querySelectorAll('.btn-delete-tamu').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.getElementById('deleteNoTiketSpan').innerText = this.getAttribute('data-notiket');
-                document.getElementById('deleteNamaSpan').innerText = this.getAttribute('data-nama');
-            });
-        });
-
-        // ACTION EVENT HANDLERS
-        document.getElementById('formTambahTamu')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            closeModal('modalTambahTamu');
-            showToast('Laporan Berhasil Disimpan!', 'Data laporan tamu baru telah ditambahkan.', 'success');
-            this.reset();
-            if (dynamicContainer) dynamicContainer.innerHTML = '';
-        });
-
-        document.getElementById('formVerifikasiTamu')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            closeModal('modalVerifikasiTamu');
-            showToast('Verifikasi Diperbarui!', 'Status verifikasi tiket tamu berhasil diperbarui.', 'success');
-        });
-
-        document.getElementById('formDisposisiTamu')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            closeModal('modalDisposisiTamu');
-            showToast('Disposisi Terkirim!', 'Tiket berhasil didisposisikan ke unit tujuan terkait.', 'success');
-        });
-
-        document.getElementById('formEditTiket')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            closeModal('modalEditTiket');
-            showToast('Perubahan Disimpan!', 'Data tiket tamu berhasil diperbarui.', 'success');
-        });
-
-        document.getElementById('confirmDeleteBtn')?.addEventListener('click', function() {
-            closeModal('modalDeleteTiket');
-            showToast('Tiket Dihapus', 'Data laporan tamu berhasil dihapus dari sistem.', 'danger');
-        });
-
-        // LIVE SEARCH & FILTER TABLE SYSTEM
-        const searchInput = document.getElementById('quickSearchInput');
-        const filterStatusModal = document.getElementById('filterStatusModal');
-        const filterLayananModal = document.getElementById('filterLayananModal');
-        const btnKembaliTabel = document.getElementById('btnKembaliTabel');
-        const resetFilterBtn = document.getElementById('resetFilterBtn');
-        const rows = document.querySelectorAll('.tamu-row');
-        const emptyState = document.getElementById('tabelEmptyState');
-        const totalDataBadge = document.getElementById('totalDataBadge');
-
-        function filterTable() {
-            const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
-            const statusVal = filterStatusModal ? filterStatusModal.value : '';
-            const layananVal = filterLayananModal ? filterLayananModal.value : '';
-
-            let visibleCount = 0;
-
-            rows.forEach(row => {
-                const notiket = row.getAttribute('data-notiket').toLowerCase();
-                const nama = row.getAttribute('data-nama').toLowerCase();
-                const layanan = row.getAttribute('data-layanan');
-                const status = row.getAttribute('data-status');
-
-                const matchSearch = (notiket.includes(query) || nama.includes(query));
-                const matchStatus = (statusVal === '' || status === statusVal);
-                const matchLayanan = (layananVal === '' || layanan === layananVal);
-
-                if (matchSearch && matchStatus && matchLayanan) {
-                    row.style.display = '';
-                    visibleCount++;
-                    const numCell = row.querySelector('.row-number');
-                    if (numCell) numCell.innerText = visibleCount;
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-
-            if (totalDataBadge) totalDataBadge.innerText = `${visibleCount} Tiket`;
-
-            if (emptyState) {
-                if (visibleCount === 0) emptyState.classList.remove('d-none');
-                else emptyState.classList.add('d-none');
-            }
-        }
-
-        if (searchInput) searchInput.addEventListener('input', filterTable);
-        if (filterStatusModal) filterStatusModal.addEventListener('change', filterTable);
-        if (filterLayananModal) filterLayananModal.addEventListener('change', filterTable);
-
-        if (btnKembaliTabel) {
-            btnKembaliTabel.addEventListener('click', function() {
-                if (searchInput) searchInput.value = '';
-                if (filterStatusModal) filterStatusModal.value = '';
-                if (filterLayananModal) filterLayananModal.value = '';
-                filterTable();
-                showToast('Kembali ke Halaman Utama', 'Menampilkan seluruh data laporan tamu awal.', 'info');
-            });
-        }
-
-        if (resetFilterBtn) {
-            resetFilterBtn.addEventListener('click', function() {
-                if (filterStatusModal) filterStatusModal.value = '';
-                if (filterLayananModal) filterLayananModal.value = '';
-                if (searchInput) searchInput.value = '';
-                filterTable();
-                showToast('Filter Direset', 'Semua kriteria filter telah dikosongkan.', 'info');
-            });
-        }
     });
 </script>
 

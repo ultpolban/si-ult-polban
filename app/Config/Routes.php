@@ -7,9 +7,11 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 
-// =====================================================
-// UNIT LAYANAN
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| UNIT LAYANAN UMUM
+|--------------------------------------------------------------------------
+*/
 
 $routes->get(
     'unit-layanan',
@@ -26,13 +28,14 @@ $routes->get(
     'UnitLayanan::profile'
 );
 
-// =====================================================
-// UPDATE PROFIL PETUGAS UNIT LAYANAN
-// =====================================================
-
 $routes->post(
     'unit-layanan/profile/update',
     'UnitLayanan::updateProfile'
+);
+
+$routes->get(
+    'unit-layanan/data-tiket',
+    'UnitLayanan::dataTiket'
 );
 
 $routes->get(
@@ -75,191 +78,316 @@ $routes->get(
     'UnitLayanan::riwayat'
 );
 
-
-// =====================================================
-// HAPUS FILE HASIL
-// =====================================================
-
-$routes->get(
-    'unit-layanan/hapus-file/(:num)/(:num)',
-    'UnitLayanan::hapusFile/$1/$2'
-);
-
 $routes->get(
     'unit-layanan/hapus-dokumen/(:num)',
     'UnitLayanan::hapusDokumen/$1'
 );
 
 
-// =====================================================
-// KEMAHASISWAAN
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| AKADEMIK
+|--------------------------------------------------------------------------
+*/
 
 $routes->get(
-    'kemahasiswaan',
-    'Kemahasiswaan::index'
+    'akademik',
+    'UnitLayanan::akademik'
 );
 
 $routes->get(
-    'kemahasiswaan/dashboard',
-    'Kemahasiswaan::index'
+    'akademik/dashboard',
+    'UnitLayanan::akademik'
 );
 
-$routes->get(
-    'kemahasiswaan/profile',
-    'Kemahasiswaan::profile'
-);
 
-// =====================================================
-// EDIT & UPDATE PROFIL PETUGAS KEMAHASISWAAN
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| PROFILE AKADEMIK
+|--------------------------------------------------------------------------
+*/
 
 $routes->get(
-    'kemahasiswaan/profile/edit',
-    'Kemahasiswaan::editProfil'
+    'akademik/profile',
+    'UnitLayanan::profile'
 );
 
 $routes->post(
-    'kemahasiswaan/profile/update',
-    'Kemahasiswaan::updateProfil'
+    'akademik/profile/update',
+    'UnitLayanan::updateProfile'
 );
 
-// Alternatif URL update profil
+
+/*
+|--------------------------------------------------------------------------
+| STATISTIK AKADEMIK
+|--------------------------------------------------------------------------
+*/
+
+$routes->get(
+    'akademik/statistik',
+    'UnitLayanan::statistik'
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| DATA TIKET AKADEMIK
+|--------------------------------------------------------------------------
+*/
+
+$routes->get(
+    'akademik/data-tiket',
+    'UnitLayanan::dataTiketAkademik'
+);
+
+$routes->get(
+    'akademik/detail/(:num)',
+    'UnitLayanan::detailAkademik/$1'
+);
+
+$routes->get(
+    'akademik/proses/(:num)',
+    'UnitLayanan::proses/$1'
+);
+
 $routes->post(
-    'kemahasiswaan/update-profil',
-    'Kemahasiswaan::updateProfil'
+    'akademik/updateProses/(:num)',
+    'UnitLayanan::updateProses/$1'
 );
 
 $routes->get(
-    'kemahasiswaan/detail/(:num)',
-    'Kemahasiswaan::detail/$1'
-);
-
-$routes->get(
-    'kemahasiswaan/proses/(:num)',
-    'Kemahasiswaan::proses/$1'
+    'akademik/upload/(:num)',
+    'UnitLayanan::upload/$1'
 );
 
 $routes->post(
-    'kemahasiswaan/updateProses/(:num)',
-    'Kemahasiswaan::updateProses/$1'
+    'akademik/simpanUpload/(:num)',
+    'UnitLayanan::simpanUpload/$1'
 );
 
 $routes->get(
-    'kemahasiswaan/kirim/(:num)',
-    'Kemahasiswaan::kirim/$1'
+    'akademik/kirim/(:num)',
+    'UnitLayanan::kirim/$1'
 );
 
 $routes->get(
-    'kemahasiswaan/kirim-pemohon/(:num)',
-    'Kemahasiswaan::kirimKePemohon/$1'
+    'akademik/kirim-pemohon/(:num)',
+    'UnitLayanan::kirimKePemohon/$1'
 );
 
 $routes->get(
-    'kemahasiswaan/hapus-dokumen/(:num)',
-    'Kemahasiswaan::hapusDokumen/$1'
+    'akademik/riwayat',
+    'UnitLayanan::riwayat'
+);
+
+$routes->get(
+    'akademik/hapus-dokumen/(:num)',
+    'UnitLayanan::hapusDokumen/$1'
 );
 
 
-// =====================================================
-// KEUANGAN
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| KEUANGAN
+|--------------------------------------------------------------------------
+*/
 
-// Dashboard
 $routes->get(
     'keuangan',
-    'Keuangan::index'
+    'UnitLayanan::keuangan'
 );
 
 $routes->get(
     'keuangan/dashboard',
-    'Keuangan::dashboard'
+    'UnitLayanan::keuangan'
 );
 
 
-// =====================================================
-// PROFIL PETUGAS KEUANGAN
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| PROFILE KEUANGAN
+|--------------------------------------------------------------------------
+*/
 
 $routes->get(
     'keuangan/profile',
-    'Keuangan::profil'
+    'UnitLayanan::profile'
 );
 
-// Halaman edit profil
-$routes->get(
-    'keuangan/edit-profil',
-    'Keuangan::editProfil'
-);
-
-// Proses update profil
-$routes->post(
-    'keuangan/update-profil',
-    'Keuangan::updateProfil'
-);
-
-// Alternatif URL update profil
 $routes->post(
     'keuangan/profile/update',
-    'Keuangan::updateProfil'
+    'UnitLayanan::updateProfile'
 );
 
 
-// =====================================================
-// DETAIL TIKET
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| STATISTIK KEUANGAN
+|--------------------------------------------------------------------------
+*/
+
+$routes->get(
+    'keuangan/statistik',
+    'UnitLayanan::statistik'
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| DATA TIKET KEUANGAN
+|--------------------------------------------------------------------------
+*/
+
+$routes->get(
+    'keuangan/data-tiket',
+    'UnitLayanan::dataTiketKeuangan'
+);
 
 $routes->get(
     'keuangan/detail/(:num)',
-    'Keuangan::detail/$1'
+    'UnitLayanan::detail/$1'
 );
-
-
-// =====================================================
-// PROSES TIKET
-// =====================================================
 
 $routes->get(
     'keuangan/proses/(:num)',
-    'Keuangan::proses/$1'
+    'UnitLayanan::proses/$1'
 );
-
-
-// =====================================================
-// UPDATE PROSES TIKET
-// =====================================================
 
 $routes->post(
     'keuangan/updateProses/(:num)',
-    'Keuangan::updateProses/$1'
+    'UnitLayanan::updateProses/$1'
 );
 
+$routes->get(
+    'keuangan/upload/(:num)',
+    'UnitLayanan::upload/$1'
+);
 
-// =====================================================
-// KIRIM KE PETUGAS ULT
-// =====================================================
+$routes->post(
+    'keuangan/simpanUpload/(:num)',
+    'UnitLayanan::simpanUpload/$1'
+);
 
 $routes->get(
     'keuangan/kirim/(:num)',
-    'Keuangan::kirim/$1'
+    'UnitLayanan::kirim/$1'
 );
-
-
-// =====================================================
-// KIRIM KE PEMOHON
-// =====================================================
 
 $routes->get(
     'keuangan/kirim-pemohon/(:num)',
-    'Keuangan::kirimKePemohon/$1'
+    'UnitLayanan::kirimKePemohon/$1'
 );
 
-
-// =====================================================
-// HAPUS DOKUMEN
-// =====================================================
+$routes->get(
+    'keuangan/riwayat',
+    'UnitLayanan::riwayat'
+);
 
 $routes->get(
     'keuangan/hapus-dokumen/(:num)',
-    'Keuangan::hapusDokumen/$1'
+    'UnitLayanan::hapusDokumen/$1'
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| KEMAHASISWAAN
+|--------------------------------------------------------------------------
+*/
+
+$routes->get(
+    'kemahasiswaan',
+    'UnitLayanan::kemahasiswaan'
+);
+
+$routes->get(
+    'kemahasiswaan/dashboard',
+    'UnitLayanan::kemahasiswaan'
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| PROFILE KEMAHASISWAAN
+|--------------------------------------------------------------------------
+*/
+
+$routes->get(
+    'kemahasiswaan/profile',
+    'UnitLayanan::profile'
+);
+
+$routes->post(
+    'kemahasiswaan/profile/update',
+    'UnitLayanan::updateProfile'
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| STATISTIK KEMAHASISWAAN
+|--------------------------------------------------------------------------
+*/
+
+$routes->get(
+    'kemahasiswaan/statistik',
+    'UnitLayanan::statistik'
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| DATA TIKET KEMAHASISWAAN
+|--------------------------------------------------------------------------
+*/
+
+$routes->get(
+    'kemahasiswaan/data-tiket',
+    'UnitLayanan::dataTiketKemahasiswaan'
+);
+
+$routes->get(
+    'kemahasiswaan/detail/(:num)',
+    'UnitLayanan::detail/$1'
+);
+
+$routes->get(
+    'kemahasiswaan/proses/(:num)',
+    'UnitLayanan::proses/$1'
+);
+
+$routes->post(
+    'kemahasiswaan/updateProses/(:num)',
+    'UnitLayanan::updateProses/$1'
+);
+
+$routes->get(
+    'kemahasiswaan/upload/(:num)',
+    'UnitLayanan::upload/$1'
+);
+
+$routes->post(
+    'kemahasiswaan/simpanUpload/(:num)',
+    'UnitLayanan::simpanUpload/$1'
+);
+
+$routes->get(
+    'kemahasiswaan/kirim/(:num)',
+    'UnitLayanan::kirim/$1'
+);
+
+$routes->get(
+    'kemahasiswaan/kirim-pemohon/(:num)',
+    'UnitLayanan::kirimKePemohon/$1'
+);
+
+$routes->get(
+    'kemahasiswaan/riwayat',
+    'UnitLayanan::riwayat'
+);
+
+$routes->get(
+    'kemahasiswaan/hapus-dokumen/(:num)',
+    'UnitLayanan::hapusDokumen/$1'
 );

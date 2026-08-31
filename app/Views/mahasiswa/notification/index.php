@@ -33,8 +33,7 @@
 
                     <a
                         href="<?= base_url('dashboard-mahasiswa') ?>"
-                        class="btn btn-outline-ult-blue"
-                    >
+                        class="btn btn-outline-ult-blue">
 
                         <i class="fas fa-home me-1"></i>
 
@@ -103,7 +102,7 @@
                             </small>
 
                             <h3>
-                                <?= !empty($notifications) ? count(array_filter($notifications, function($n) {
+                                <?= !empty($notifications) ? count(array_filter($notifications, function ($n) {
                                     return isset($n['dibaca']) && !$n['dibaca'];
                                 })) : 0 ?>
                             </h3>
@@ -144,148 +143,179 @@
             </div>
 
 
-            <!-- DAFTAR NOTIFIKASI -->
-            <div class="card dashboard-card shadow-sm">
+<!-- DAFTAR NOTIFIKASI -->
+<div class="card dashboard-card shadow-sm">
 
-                <div class="card-header dashboard-card-header">
+    <div class="card-header dashboard-card-header d-flex justify-content-between align-items-center">
 
-                    <h3 class="card-title">
+        <h3 class="card-title mb-0">
+            <i class="fas fa-list me-2"></i>
+            Daftar Notifikasi
+        </h3>
 
-                        <i class="fas fa-list me-2"></i>
+        <?php if (($unreadCount ?? 0) > 0): ?>
 
-                        Daftar Notifikasi
+            <a
+                href="<?= base_url('mahasiswa/notification/read-all') ?>"
+                class="btn btn-sm btn-outline-primary"
+            >
+                <i class="fas fa-check-double me-1"></i>
+                Tandai Semua Dibaca
+            </a>
 
-                    </h3>
+        <?php endif; ?>
 
-                </div>
-
-
-                <div class="card-body p-0">
-
-                    <?php if (!empty($notifications)): ?>
-
-                        <div class="notification-list">
-
-                            <?php foreach ($notifications as $notification): ?>
-
-                                <?php
-                                    $isRead = isset($notification['dibaca'])
-                                        ? $notification['dibaca']
-                                        : false;
-                                ?>
-
-                                <div class="notification-item <?= !$isRead ? 'notification-unread' : '' ?>">
-
-                                    <!-- ICON -->
-                                    <div class="notification-icon">
-
-                                        <?php if (isset($notification['tipe']) && $notification['tipe'] == 'success'): ?>
-
-                                            <i class="fas fa-check-circle"></i>
-
-                                        <?php elseif (isset($notification['tipe']) && $notification['tipe'] == 'warning'): ?>
-
-                                            <i class="fas fa-exclamation-circle"></i>
-
-                                        <?php elseif (isset($notification['tipe']) && $notification['tipe'] == 'info'): ?>
-
-                                            <i class="fas fa-info-circle"></i>
-
-                                        <?php else: ?>
-
-                                            <i class="fas fa-bell"></i>
-
-                                        <?php endif; ?>
-
-                                    </div>
+    </div>
 
 
-                                    <!-- ISI -->
-                                    <div class="notification-content">
+    <div class="card-body p-0">
 
-                                        <div class="notification-top">
+        <?php if (!empty($notifications)): ?>
 
-                                            <h5>
+            <div class="notification-list">
 
-                                                <?= esc($notification['judul'] ?? 'Notifikasi') ?>
+                <?php foreach ($notifications as $notification): ?>
 
-                                            </h5>
+                    <?php
+                    $isRead = isset($notification['dibaca'])
+                        ? $notification['dibaca']
+                        : false;
 
-                                            <?php if (!$isRead): ?>
+                    $notificationUrl = !empty($notification['url'])
+                        ? $notification['url']
+                        : base_url(
+                            'mahasiswa/notification/read/' .
+                            ($notification['id'] ?? 0)
+                        );
+                    ?>
 
-                                                <span class="notification-badge">
-                                                    Baru
-                                                </span>
+                    <a
+                        href="<?= esc($notificationUrl) ?>"
+                        class="notification-item text-decoration-none <?= !$isRead ? 'notification-unread' : '' ?>"
+                    >
 
-                                            <?php endif; ?>
+                        <!-- ICON -->
+                        <div class="notification-icon">
 
-                                        </div>
+                            <?php if (
+                                isset($notification['tipe']) &&
+                                $notification['tipe'] === 'success'
+                            ): ?>
 
+                                <i class="fas fa-check-circle"></i>
 
-                                        <p>
+                            <?php elseif (
+                                isset($notification['tipe']) &&
+                                $notification['tipe'] === 'warning'
+                            ): ?>
 
-                                            <?= esc($notification['pesan'] ?? '') ?>
+                                <i class="fas fa-exclamation-circle"></i>
 
-                                        </p>
+                            <?php elseif (
+                                isset($notification['tipe']) &&
+                                $notification['tipe'] === 'info'
+                            ): ?>
 
+                                <i class="fas fa-info-circle"></i>
 
-                                        <small>
+                            <?php else: ?>
 
-                                            <i class="far fa-clock me-1"></i>
+                                <i class="fas fa-bell"></i>
 
-                                            <?= esc($notification['tanggal'] ?? '-') ?>
-
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-                            <?php endforeach; ?>
+                            <?php endif; ?>
 
                         </div>
 
-                    <?php else: ?>
 
-                        <!-- KOSONG -->
-                        <div class="empty-notification">
+                        <!-- ISI -->
+                        <div class="notification-content">
 
-                            <div class="empty-notification-icon">
+                            <div class="notification-top">
 
-                                <i class="far fa-bell-slash"></i>
+                                <h5>
+                                    <?= esc(
+                                        $notification['judul']
+                                        ?? 'Notifikasi'
+                                    ) ?>
+                                </h5>
+
+                                <?php if (!$isRead): ?>
+
+                                    <span class="notification-badge">
+                                        Baru
+                                    </span>
+
+                                <?php endif; ?>
 
                             </div>
 
-                            <h5>
-                                Belum Ada Notifikasi
-                            </h5>
 
                             <p>
-                                Saat ini belum ada notifikasi untuk kamu.
+                                <?= esc(
+                                    $notification['pesan']
+                                    ?? ''
+                                ) ?>
                             </p>
 
-                            <a
-                                href="<?= base_url('dashboard-mahasiswa') ?>"
-                                class="btn btn-ult-orange"
-                            >
 
-                                <i class="fas fa-home me-1"></i>
+                            <small>
 
-                                Kembali ke Dashboard
+                                <i class="far fa-clock me-1"></i>
 
-                            </a>
+                                <?= esc(
+                                    $notification['tanggal']
+                                    ?? '-'
+                                ) ?>
+
+                            </small>
 
                         </div>
 
-                    <?php endif; ?>
+                    </a>
 
-                </div>
+                <?php endforeach; ?>
 
             </div>
 
-        </div>
+        <?php else: ?>
 
-    </section>
+            <!-- KOSONG -->
+            <div class="empty-notification">
+
+                <div class="empty-notification-icon">
+
+                    <i class="far fa-bell-slash"></i>
+
+                </div>
+
+                <h5>
+                    Belum Ada Notifikasi
+                </h5>
+
+                <p>
+                    Saat ini belum ada notifikasi untuk kamu.
+                </p>
+
+                <a
+                    href="<?= base_url('dashboard-mahasiswa') ?>"
+                    class="btn btn-ult-orange"
+                >
+
+                    <i class="fas fa-home me-1"></i>
+
+                    Kembali ke Dashboard
+
+                </a>
+
+            </div>
+
+        <?php endif; ?>
+
+    </div>
+
+</div>
+
+</section>
 
 </div>
 

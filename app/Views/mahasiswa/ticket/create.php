@@ -189,7 +189,7 @@
 
                             <label class="font-weight-bold">
 
-                                NIK
+                                NIM
 
                             </label>
 
@@ -205,16 +205,16 @@
 
                                 <input
                                     type="text"
-                                    name="nik"
+                                    name="nim"
                                     class="form-control"
-                                    value="<?= esc($user['nik'] ?? '3273010101040001') ?>"
+                                    value="<?= esc($user['nim'] ?? '3273010101040001') ?>"
                                     readonly>
 
                             </div>
 
                             <small class="text-muted">
 
-                                NIK diambil dari data akun dan tidak dapat diubah.
+                                NIM diambil dari data akun dan tidak dapat diubah.
 
                             </small>
 

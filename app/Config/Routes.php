@@ -242,9 +242,20 @@ $routes->post(
 // ROUTE NOTIFIKASI MAHASISWA
 // =====================================================
 
-$routes->get('mahasiswa/notification', 'MahasiswaNotificationController::index');
+$routes->get(
+    'mahasiswa/notification',
+    'MahasiswaNotificationController::index'
+);
 
+$routes->get(
+    'mahasiswa/notification/read/(:num)',
+    'MahasiswaNotificationController::read/$1'
+);
 
+$routes->get(
+    'mahasiswa/notification/read-all',
+    'MahasiswaNotificationController::readAll'
+);
 // =====================================================
 // ROUTE PUSAT BANTUAN MAHASISWA
 // =====================================================

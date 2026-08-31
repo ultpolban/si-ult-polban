@@ -310,7 +310,452 @@
 
             </div>
 
+            <!-- =================================================
+                 TRACKING PROGRES TIKET
+            ================================================== -->
 
+            <?php
+            /*
+             * Mapping status tiket ke tahapan tracking.
+             *
+             * 0 = Submitted
+             * 1 = Verified
+             * 2 = Assigned
+             * 3 = Processed
+             * 4 = Completed
+             */
+
+            $statusTracking = strtolower(
+                trim($ticket['status'] ?? '')
+            );
+
+            $statusMap = [
+                'submitted'   => 0,
+                'verified'    => 1,
+                'assigned'    => 2,
+                'processed'   => 3,
+                'diproses'    => 3,
+                'in_progress' => 3,
+                'completed'   => 4,
+                'selesai'     => 4,
+            ];
+
+            $currentStep = $statusMap[$statusTracking] ?? 0;
+
+            $isRejected = in_array(
+                $statusTracking,
+                ['rejected', 'ditolak'],
+                true
+            );
+
+            $trackingSteps = [
+                [
+                    'label' => 'Diajukan',
+                    'icon'  => 'fa-paper-plane',
+                ],
+                [
+                    'label' => 'Diverifikasi',
+                    'icon'  => 'fa-check',
+                ],
+                [
+                    'label' => 'Didisposisi',
+                    'icon'  => 'fa-share',
+                ],
+                [
+                    'label' => 'Diproses Unit',
+                    'icon'  => 'fa-cog',
+                ],
+                [
+                    'label' => 'Selesai',
+                    'icon'  => 'fa-check-circle',
+                ],
+            ];
+
+            if ($isRejected) {
+                $statusTitle = 'Ditolak';
+                $statusDescription =
+                    'Pengajuan tiket tidak dapat dilanjutkan.';
+            } else {
+                $statusTitle = $trackingSteps[$currentStep]['label'];
+
+                $statusDescriptions = [
+                    'Tiket berhasil diajukan dan menunggu verifikasi.',
+                    'Tiket sedang dalam proses verifikasi.',
+                    'Tiket telah didisposisikan ke unit terkait.',
+                    'Tiket sedang diproses oleh unit terkait.',
+                    'Tiket telah selesai diproses.',
+                ];
+
+                $statusDescription =
+                    $statusDescriptions[$currentStep];
+            }
+            ?>
+
+
+            <div
+                class="card shadow-sm border-0 mb-4"
+                style="
+                    border-radius:15px;
+                    overflow:hidden;
+                "
+            >
+
+                <div
+                    class="card-header text-white"
+                    style="
+                        background:#0b3d91;
+                        border-bottom:4px solid #f28c28;
+                    "
+                >
+
+                    <h5 class="mb-0">
+
+                        <i class="fas fa-route mr-2"></i>
+
+                        Tracking Progres Tiket
+
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <?php if ($isRejected): ?>
+
+                        <div
+                            class="text-center py-3"
+                        >
+
+                            <div
+                                class="mb-3"
+                                style="
+                                    color:#0b3d91;
+                                    font-size:36px;
+                                "
+                            >
+
+                                <i class="fas fa-times-circle"></i>
+
+                            </div>
+
+                            <h5
+                                class="font-weight-bold mb-2"
+                                style="
+                                    color:#0b3d91;
+                                "
+                            >
+
+                                <?= esc($statusTitle) ?>
+
+                            </h5>
+
+                            <p
+                                class="text-muted mb-0"
+                            >
+
+                                <?= esc($statusDescription) ?>
+
+                            </p>
+
+                        </div>
+
+                    <?php else: ?>
+
+                        <!-- TIMELINE -->
+
+                        <div
+                            class="ticket-timeline"
+                        >
+
+                            <?php foreach (
+                                $trackingSteps
+                                as $index => $step
+                            ): ?>
+
+                                <?php
+                                $isCompleted =
+                                    $index < $currentStep;
+
+                                $isCurrent =
+                                    $index === $currentStep;
+
+                                $isPending =
+                                    $index > $currentStep;
+                                ?>
+
+                                <div
+                                    class="
+                                        ticket-step
+                                        <?= $isCompleted
+                                            ? 'completed'
+                                            : '' ?>
+                                        <?= $isCurrent
+                                            ? 'current'
+                                            : '' ?>
+                                        <?= $isPending
+                                            ? 'pending'
+                                            : '' ?>
+                                    "
+                                >
+
+                                    <div
+                                        class="ticket-step-line"
+                                    ></div>
+
+
+                                    <div
+                                        class="ticket-step-icon"
+                                    >
+
+                                        <i
+                                            class="
+                                                fas
+                                                <?= esc(
+                                                    $step['icon']
+                                                ) ?>
+                                            "
+                                        ></i>
+
+                                    </div>
+
+
+                                    <div
+                                        class="ticket-step-label"
+                                    >
+
+                                        <?= esc(
+                                            $step['label']
+                                        ) ?>
+
+
+                                        <?php if (
+                                            $isCurrent
+                                        ): ?>
+
+                                            <span
+                                                class="
+                                                    d-block
+                                                    mt-1
+                                                    small
+                                                    font-weight-normal
+                                                "
+                                            >
+
+                                                Status saat ini
+
+                                            </span>
+
+                                        <?php elseif (
+                                            $isCompleted
+                                        ): ?>
+
+                                            <span
+                                                class="
+                                                    d-block
+                                                    mt-1
+                                                    small
+                                                    font-weight-normal
+                                                "
+                                            >
+
+                                                Selesai
+
+                                            </span>
+
+                                        <?php else: ?>
+
+                                            <span
+                                                class="
+                                                    d-block
+                                                    mt-1
+                                                    small
+                                                    font-weight-normal
+                                                "
+                                            >
+
+                                                Menunggu
+
+                                            </span>
+
+                                        <?php endif; ?>
+
+                                    </div>
+
+                                </div>
+
+                            <?php endforeach; ?>
+
+                        </div>
+
+
+                        <!-- STATUS SAAT INI -->
+
+                        <div
+                            class="mt-4 p-3"
+                            style="
+                                background:#f8f9fa;
+                                border-left:4px solid #0b3d91;
+                                border-radius:8px;
+                            "
+                        >
+
+                            <div
+                                class="font-weight-bold mb-1"
+                                style="
+                                    color:#0b3d91;
+                                "
+                            >
+
+                                <i
+                                    class="
+                                        fas
+                                        fa-info-circle
+                                        mr-1
+                                    "
+                                ></i>
+
+                                Status Tiket:
+                                <?= esc($statusTitle) ?>
+
+                            </div>
+
+
+                            <div
+                                class="text-muted"
+                            >
+
+                                <?= esc(
+                                    $statusDescription
+                                ) ?>
+
+                            </div>
+
+                        </div>
+
+                    <?php endif; ?>
+
+                </div>
+
+            </div>
+
+
+            <style>
+
+                .ticket-timeline {
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: space-between;
+                    position: relative;
+                    padding: 10px 0 0;
+                }
+
+                .ticket-step {
+                    flex: 1;
+                    position: relative;
+                    text-align: center;
+                    min-width: 0;
+                }
+
+                .ticket-step-line {
+                    position: absolute;
+                    top: 19px;
+                    left: 50%;
+                    width: 100%;
+                    height: 2px;
+                    background: #dee2e6;
+                    z-index: 1;
+                }
+
+                .ticket-step:last-child
+                .ticket-step-line {
+                    display: none;
+                }
+
+                .ticket-step-icon {
+                    width: 40px;
+                    height: 40px;
+                    margin: 0 auto;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    z-index: 2;
+                    background: #ffffff;
+                    border: 2px solid #dee2e6;
+                    color: #adb5bd;
+                    transition: all .2s ease;
+                }
+
+                .ticket-step-label {
+                    margin-top: 10px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #adb5bd;
+                }
+
+                .ticket-step-label small {
+                    color: #adb5bd;
+                }
+
+                /* Tahapan yang sudah selesai */
+
+                .ticket-step.completed
+                .ticket-step-icon {
+                    background: #0b3d91;
+                    border-color: #0b3d91;
+                    color: #ffffff;
+                }
+
+                .ticket-step.completed
+                .ticket-step-line {
+                    background: #0b3d91;
+                }
+
+                .ticket-step.completed
+                .ticket-step-label {
+                    color: #17365d;
+                }
+
+                /* Status sekarang */
+
+                .ticket-step.current
+                .ticket-step-icon {
+                    background: #ffffff;
+                    border: 3px solid #0b3d91;
+                    color: #0b3d91;
+                    box-shadow:
+                        0 0 0 4px rgba(11, 61, 145, .10);
+                }
+
+                .ticket-step.current
+                .ticket-step-label {
+                    color: #0b3d91;
+                    font-weight: 700;
+                }
+
+                /* Mobile */
+
+                @media (max-width: 767.98px) {
+
+                    .ticket-timeline {
+                        overflow-x: auto;
+                        justify-content: flex-start;
+                        padding-bottom: 10px;
+                    }
+
+                    .ticket-step {
+                        min-width: 125px;
+                    }
+
+                    .ticket-step-label {
+                        font-size: 12px;
+                    }
+
+                }
+
+            </style>
 
             <!-- =================================================
                  DETAIL PENGAJUAN
@@ -966,6 +1411,5 @@
     </section>
 
 </div>
-
 
 <?= $this->include('layouts/footer') ?>

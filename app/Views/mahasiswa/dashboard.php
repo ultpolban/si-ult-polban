@@ -154,25 +154,6 @@
 
                                 </div>
 
-
-                                <!-- SEMESTER -->
-
-                                <div>
-
-                                    <i class="fas fa-calendar-alt"></i>
-
-                                    <strong>
-                                        Semester:
-                                    </strong>
-
-                                    <?= esc(
-                                        $user['semester']
-                                        ?? '-'
-                                    ); ?>
-
-                                </div>
-
-
                             </div>
 
                         </div>

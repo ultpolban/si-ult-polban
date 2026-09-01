@@ -159,43 +159,145 @@ body {
 }
 
 /* =========================================================
-   FILTER BAR & INPUT CONTROL
+   FILTER BAR & INPUT CONTROL (DEWA LEVEL STYLING)
    ========================================================= */
 .ticket-filter-card {
     border: 0;
-    border-radius: 14px;
-    background: #fff;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, .06);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px -5px rgba(26, 35, 126, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    transition: all 0.3s ease;
 }
 
-.ticket-select, .ticket-input {
-    height: 44px;
-    border-radius: 8px;
-    font-size: .9rem;
-    border: 1px solid #ced4da;
+.ticket-filter-card:hover {
+    box-shadow: 0 14px 35px -5px rgba(26, 35, 126, 0.12);
 }
 
-.ticket-select:focus, .ticket-input:focus {
+.filter-select-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.filter-select-wrapper::before {
+    content: '\f0b0';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 14px;
+    color: var(--polban-navy);
+    font-size: 0.9rem;
+    pointer-events: none;
+    z-index: 2;
+    transition: color 0.3s ease;
+}
+
+.filter-select-wrapper::after {
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 14px;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    pointer-events: none;
+    z-index: 2;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+}
+
+.filter-select-wrapper:focus-within::after {
+    transform: rotate(180deg);
+    color: var(--polban-navy);
+}
+
+.ticket-select {
+    height: 46px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0 38px 0 40px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1e293b;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.ticket-select:hover {
+    background-color: #ffffff;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+.ticket-select:focus {
+    background-color: #ffffff;
     border-color: var(--polban-navy);
-    box-shadow: 0 0 0 .18rem rgba(26, 35, 126, .12);
+    box-shadow: 0 0 0 4px rgba(26, 35, 126, 0.12);
+    outline: none;
+}
+
+/* Custom Date Inputs Box */
+#customDateBox {
+    background: #f8fafc;
+    padding: 4px 8px;
+    border-radius: 14px;
+    border: 1.5px solid #e2e8f0;
+    animation: fadeInSlide .35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.ticket-input {
+    height: 38px;
+    border-radius: 10px;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    padding: 0 10px;
+    transition: all 0.2s ease;
+}
+
+.ticket-input:focus {
+    border-color: var(--polban-navy);
+    box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+    outline: none;
 }
 
 .btn-apply-filter {
-    height: 44px;
+    height: 38px;
     border: 0;
-    border-radius: 8px;
-    background: var(--polban-navy);
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--polban-navy) 0%, #283593 100%);
     color: #fff;
     font-weight: 700;
-    transition: .25s ease;
-    padding: 0 20px;
+    font-size: 0.85rem;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(26, 35, 126, 0.2);
 }
 
 .btn-apply-filter:hover {
-    background: #11185f;
+    background: linear-gradient(135deg, #11185f 0%, #1a237e 100%);
     color: #fff;
-    transform: translateY(-1px);
-    box-shadow: 0 5px 12px rgba(26, 35, 126, .25);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(26, 35, 126, 0.35);
+}
+
+.btn-apply-filter:active {
+    transform: translateY(0);
 }
 
 /* =========================================================
@@ -348,7 +450,7 @@ body {
         </div>
     </div>
 
-    <!-- OPSI FILTER STATISTIK -->
+    <!-- OPSI FILTER STATISTIK ULTRA DEWA -->
     <div class="card ticket-filter-card mb-4 reveal-item">
         <div class="card-body p-3">
             <div class="row g-3 align-items-center justify-content-between">
@@ -361,21 +463,23 @@ body {
                 
                 <div class="col-md-8">
                     <div class="d-flex align-items-center justify-content-md-end gap-2 flex-wrap">
-                        <select id="filterPeriode" class="form-select ticket-select" style="width: auto; min-width: 170px;">
-                            <option value="semua">Semua Periode</option>
-                            <option value="hari">Hari Ini</option>
-                            <option value="minggu">Minggu Ini</option>
-                            <option value="bulan" selected>Bulan Ini</option>
-                            <option value="tahun">Tahun Ini</option>
-                            <option value="custom">Manual (Custom Tanggal)</option>
-                        </select>
+                        <div class="filter-select-wrapper">
+                            <select id="filterPeriode" class="form-select ticket-select" style="width: auto; min-width: 200px;">
+                                <option value="semua">Semua Periode</option>
+                                <option value="hari">Hari Ini</option>
+                                <option value="minggu">Minggu Ini</option>
+                                <option value="bulan" selected>Bulan Ini</option>
+                                <option value="tahun">Tahun Ini</option>
+                                <option value="custom">Manual (Custom Tanggal)</option>
+                            </select>
+                        </div>
 
                         <div id="customDateBox" class="d-none align-items-center gap-2">
                             <input type="date" id="startDate" class="form-control ticket-input" value="<?= date('Y-m-01') ?>">
-                            <span class="text-muted fw-bold">s/d</span>
+                            <span class="text-muted fw-bold style-range-separator" style="font-size: 0.8rem;">s/d</span>
                             <input type="date" id="endDate" class="form-control ticket-input" value="<?= date('Y-m-d') ?>">
                             <button type="button" id="btnApplyDate" class="btn btn-apply-filter">
-                                Terapkan
+                                <i class="fas fa-check"></i> Terapkan
                             </button>
                         </div>
                     </div>
@@ -588,7 +692,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const btnApplyDate = document.getElementById('btnApplyDate');
     if (btnApplyDate) {
-        btnApplyDate.addEventListener('click', fetchFilteredStatistik);
+        btnApplyDate.addEventListener('click', function(e) {
+            // Interactive Ripple Effect
+            const btn = e.currentTarget;
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => btn.style.transform = '', 150);
+            
+            fetchFilteredStatistik();
+        });
     }
 
     const btnRefreshData = document.getElementById('btnRefreshData');

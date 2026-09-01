@@ -2,325 +2,273 @@
 
 <?= $this->section('content') ?>
 
+<!-- ASSETS FONTS & ICONS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
     /* =========================================================
-       DETAIL TIKET - STYLE SISTEM ULT POLBAN
+       ULT POLBAN - SYSTEM DETAIL STYLING
     ========================================================= */
 
     :root {
-        --ult-navy: #1a237e;
+        --ult-navy-dark: #2b3990;
+        --ult-navy: #2b3990;
+        --ult-blue-accent: #3b4cca;
         --ult-orange: #ff8c00;
-        --ult-green: #198754;
-        --ult-blue: #0d6efd;
-        --ult-yellow: #f4c400;
-        --ult-light: #f5f7fb;
-        --ult-border: #e4e7ec;
-        --ult-text: #263238;
-        --ult-muted: #6c757d;
+        --ult-green: #10b981;
+        --ult-yellow: #f59e0b;
+        --ult-cyan: #06b6d4;
+        --ult-light-bg: #f8fafc;
+        --ult-card-border: rgba(226, 232, 240, 0.8);
+        --ult-shadow-sm: 0 4px 20px -2px rgba(43, 57, 144, 0.05);
+        --ult-shadow-hover: 0 20px 35px -10px rgba(43, 57, 144, 0.12);
     }
 
     body, .container-fluid {
-        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        background-color: #f1f5f9;
     }
 
     /* =========================
-       PAGE HEADER
+       HEADER CARD (MATCHING NAVBAR #2b3990)
     ========================= */
-
-    .detail-page-title {
-        color: var(--ult-navy);
-        font-weight: 700;
-        letter-spacing: -0.3px;
-    }
-
-    .detail-page-subtitle {
-        color: #6c757d;
-        font-size: 0.95rem;
-    }
-
-    .detail-breadcrumb {
-        font-size: 0.9rem;
-    }
-
-    .detail-breadcrumb a {
-        color: var(--ult-blue);
-        text-decoration: none;
-    }
-
-    /* =========================================================
-       SUMMARY CARDS (DISAMAKAN DENGAN FOTO HASIL REVISI)
-    ========================================================= */
-
-    .stat-tamu-card {
-        border-radius: 18px;
-        border: none;
+    .header-gradient-card {
+        background: #2b3990 !important;
+        border-radius: 20px;
+        padding: 24px 28px;
         color: #ffffff;
-        transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+        box-shadow: 0 12px 30px rgba(43, 57, 144, 0.25);
         position: relative;
         overflow: hidden;
-        z-index: 1;
     }
 
-    .stat-tamu-card::before {
+    .header-gradient-card::after {
         content: '';
         position: absolute;
         top: -50%;
-        right: -30%;
-        width: 180px;
-        height: 180px;
-        background: rgba(255, 255, 255, 0.12);
-        border-radius: 50%;
-        z-index: -1;
-        transition: transform 0.5s ease;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+        pointer-events: none;
     }
 
-    .stat-tamu-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15) !important;
+    .detail-page-title {
+        color: #ffffff;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        font-size: 1.65rem;
     }
 
-    .stat-tamu-card:hover::before {
-        transform: scale(1.25);
+    .detail-page-subtitle {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.92rem;
     }
 
-    .bg-tamu-navy {
-        background: linear-gradient(135deg, #1b2e85 0%, #283593 100%) !important;
-    }
-
-    .bg-tamu-orange {
-        background: linear-gradient(135deg, #ff7a00 0%, #ff8c00 100%) !important;
-    }
-
-    .bg-tamu-yellow {
-        background: linear-gradient(135deg, #ffb300 0%, #f4c400 100%) !important;
-    }
-
-    .bg-tamu-green {
-        background: linear-gradient(135deg, #00a86b 0%, #10b981 100%) !important;
-    }
-
-    .icon-tamu-circle {
-        width: 54px;
-        height: 54px;
-        border-radius: 14px;
-        background: rgba(255, 255, 255, 0.22);
-        backdrop-filter: blur(8px);
-        display: flex;
+    .btn-detail-back {
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        color: #ffffff !important;
+        border-radius: 12px;
+        font-weight: 700;
+        padding: 10px 20px;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        text-decoration: none !important;
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        font-size: 1.4rem;
-        box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-detail-back:hover {
+        background: #ffffff !important;
+        color: #2b3990 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
     /* =========================
-       MAIN CARD
+       ULTRA GLASS CARD & GRID
     ========================= */
-
     .detail-main-card {
-        border: none;
-        border-radius: 12px;
+        border: 1px solid var(--ult-card-border);
+        border-radius: 20px;
+        background: #ffffff;
+        box-shadow: var(--ult-shadow-sm);
+        transition: all 0.35s ease;
         overflow: hidden;
     }
 
-    .detail-card-header {
-        background: var(--ult-navy);
-        color: #fff;
-        padding: 16px 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+    .detail-main-card:hover {
+        box-shadow: var(--ult-shadow-hover);
     }
-
-    .detail-card-header-title {
-        margin: 0;
-        font-size: 1.05rem;
-        font-weight: 700;
-    }
-
-    .detail-card-header-title i {
-        margin-right: 9px;
-    }
-
-    /* =========================
-       STATUS BADGE
-    ========================= */
-
-    .status-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        border-radius: 7px;
-        padding: 8px 13px;
-        font-size: 0.8rem;
-        font-weight: 700;
-    }
-
-    .status-submitted {
-        background: #ffc107;
-        color: #212529;
-    }
-
-    .status-verified {
-        background: var(--ult-green);
-        color: #fff;
-    }
-
-    .status-disposisi {
-        background: #0dcaf0;
-        color: #212529;
-    }
-
-    .status-default {
-        background: #6c757d;
-        color: #fff;
-    }
-
-    /* =========================
-       INFORMATION GRID
-    ========================= */
 
     .info-section-title {
+        color: var(--ult-navy-dark);
+        font-weight: 800;
+        font-size: 1.05rem;
+        margin-bottom: 20px;
+        letter-spacing: -0.2px;
+        display: flex;
+        align-items: center;
+    }
+
+    .info-section-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: rgba(43, 57, 144, 0.08);
         color: var(--ult-navy);
-        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
         font-size: 1rem;
-        margin-bottom: 18px;
     }
 
-    .info-section-title i {
-        margin-right: 8px;
-    }
-
+    /* =========================
+       3D INTERACTIVE ITEM BOX
+    ========================= */
     .info-item {
-        background: #f8f9fb;
-        border: 1px solid var(--ult-border);
-        border-radius: 9px;
-        padding: 14px 16px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 16px 18px;
         height: 100%;
-        transition: all 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
     }
 
     .info-item:hover {
-        background: #fff;
-        border-color: rgba(26, 35, 126, 0.35);
-        box-shadow: 0 4px 12px rgba(26, 35, 126, 0.06);
+        background: #ffffff;
+        border-color: var(--ult-navy);
+        box-shadow: 0 10px 25px rgba(43, 57, 144, 0.08);
+        transform: translateY(-3px);
     }
 
     .info-label {
-        display: block;
-        font-size: 0.78rem;
-        font-weight: 600;
-        color: var(--ult-muted);
-        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        margin-bottom: 6px;
     }
 
     .info-label i {
         color: var(--ult-navy);
-        margin-right: 5px;
     }
 
     .info-value {
         display: block;
-        color: #212529;
-        font-weight: 600;
-        font-size: 0.94rem;
-    }
-
-    .ticket-number-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .ticket-number {
-        color: var(--ult-blue);
+        color: #0f172a;
         font-weight: 700;
+        font-size: 0.98rem;
+        word-break: break-word;
+    }
+
+    /* Nomor Tiket Styling */
+    .ticket-badge-glow {
+        color: var(--ult-navy);
+        font-size: 1.1rem;
+        font-weight: 800;
+        letter-spacing: 0.3px;
     }
 
     .btn-copy-ticket {
-        width: 30px;
-        height: 30px;
-        padding: 0;
-        border-radius: 6px;
-        border: 1px solid #dfe3e8;
-        background: #fff;
-        color: var(--ult-navy);
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #475569;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
         transition: all 0.2s ease;
     }
 
     .btn-copy-ticket:hover {
-        background: var(--ult-navy);
-        color: #fff;
+        background: var(--ult-orange);
+        border-color: var(--ult-orange);
+        color: #ffffff;
+        transform: scale(1.08);
     }
 
     /* =========================
-       ATTACHMENT
+       DYNAMIC STATUS BADGE
     ========================= */
-
-    .attachment-box {
-        border: 1px dashed #cfd4dc;
-        border-radius: 9px;
-        padding: 14px;
-        background: #fafbfc;
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 30px;
+        padding: 6px 16px;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.3px;
     }
 
-    .btn-attachment {
-        background: var(--ult-blue);
-        border-color: var(--ult-blue);
-        color: #fff;
-        border-radius: 7px;
-        font-weight: 600;
+    .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: currentColor;
+        animation: pulseDot 1.6s infinite;
     }
 
-    .btn-attachment:hover {
-        background: #0b5ed7;
-        border-color: #0b5ed7;
-        color: #fff;
+    @keyframes pulseDot {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.3); }
+        70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(0, 0, 0, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
     }
+
+    .status-submitted { background: #fef3c7; color: #b45309; }
+    .status-verified  { background: #d1fae5; color: #047857; }
+    .status-disposisi { background: #e0f2fe; color: #0369a1; }
+    .status-default   { background: #f1f5f9; color: #475569; }
 
     /* =========================
-       DESCRIPTION
+       DESCRIPTION QUOTE BOX
     ========================= */
-
     .description-box {
-        background: #f8f9fb;
-        border: 1px solid var(--ult-border);
-        border-radius: 9px;
-        padding: 16px;
-        color: #495057;
+        background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+        border-left: 5px solid var(--ult-navy);
+        border-radius: 14px;
+        padding: 20px;
+        color: #334155;
         line-height: 1.7;
-        min-height: 90px;
+        font-weight: 500;
+        font-size: 0.96rem;
     }
 
     /* =========================
        TIMELINE
     ========================= */
-
     .timeline {
         position: relative;
-        padding-left: 12px;
+        padding-left: 10px;
     }
 
     .timeline::before {
         content: "";
         position: absolute;
-        left: 28px;
-        top: 10px;
-        bottom: 10px;
+        left: 27px;
+        top: 15px;
+        bottom: 15px;
         width: 3px;
-        background: #e9ecef;
-        border-radius: 5px;
+        background: #e2e8f0;
+        border-radius: 4px;
     }
 
     .timeline-item {
         position: relative;
         display: flex;
-        gap: 16px;
+        gap: 18px;
         margin-bottom: 20px;
     }
 
@@ -331,780 +279,384 @@
     .timeline-icon {
         position: relative;
         z-index: 2;
-        width: 36px;
-        height: 36px;
-        flex: 0 0 36px;
+        width: 38px;
+        height: 38px;
+        flex: 0 0 38px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #fff;
-        font-size: 0.85rem;
-        box-shadow: 0 0 0 4px #fff;
+        color: #ffffff;
+        font-size: 0.9rem;
+        box-shadow: 0 0 0 5px #ffffff, 0 4px 10px rgba(0,0,0,0.1);
     }
 
     .timeline-icon-primary {
-        background: var(--ult-blue);
-    }
-
-    .timeline-icon-warning {
-        background: var(--ult-orange);
-    }
-
-    .timeline-icon-success {
-        background: var(--ult-green);
+        background: var(--ult-navy);
     }
 
     .timeline-content {
         flex: 1;
-        background: #f8f9fb;
-        border: 1px solid var(--ult-border);
-        border-radius: 9px;
-        padding: 13px 15px;
-        transition: all 0.2s ease;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px 18px;
+        transition: all 0.25s ease;
     }
 
     .timeline-content:hover {
-        background: #fff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        background: #ffffff;
+        border-color: var(--ult-navy);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.05);
     }
 
     .timeline-title {
-        margin: 0 0 3px;
-        font-size: 0.92rem;
-        font-weight: 700;
-        color: #212529;
-    }
-
-    .timeline-desc {
-        margin: 0;
-        font-size: 0.82rem;
-        color: #6c757d;
+        margin: 0 0 4px;
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: #0f172a;
     }
 
     .timeline-date {
-        font-size: 0.76rem;
+        font-size: 0.78rem;
         font-weight: 600;
-        color: #6c757d;
-        margin-top: 6px;
-        display: block;
+        color: #64748b;
     }
 
     /* =========================
-       ACTION FOOTER
+       TOAST FLOATING NOTIFICATION
     ========================= */
-
-    .detail-footer {
-        background: #fff;
-        border-top: 1px solid #eef0f3;
-        padding: 16px 20px;
+    #ultToast {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background: #0f172a;
+        color: #ffffff;
+        padding: 12px 22px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-    }
-
-    .detail-actions {
-        display: flex;
-        gap: 8px;
-    }
-
-    .btn-detail-back,
-    .btn-detail-success,
-    .btn-detail-orange {
-        border-radius: 8px;
+        gap: 10px;
+        font-size: 0.88rem;
         font-weight: 600;
-        transition: all 0.2s ease;
+        z-index: 9999;
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
-    .btn-detail-back:hover,
-    .btn-detail-success:hover,
-    .btn-detail-orange:hover {
-        transform: translateY(-1px);
+    #ultToast.show {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
     }
 
-    .btn-detail-orange {
-        background: var(--ult-orange);
-        border-color: var(--ult-orange);
-        color: #fff;
-    }
-
-    .btn-detail-orange:hover {
-        background: #e67e00;
-        border-color: #e67e00;
-        color: #fff;
-    }
-
-    /* =========================
-       RESPONSIVE
-    ========================= */
-
-    @media (max-width: 767px) {
-
-        .detail-card-header {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .detail-footer {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .detail-actions {
-            flex-direction: column;
-        }
-
-        .detail-actions a,
-        .detail-footer > a {
-            width: 100%;
-        }
-
-        .timeline::before {
-            left: 25px;
-        }
-
-        .timeline-icon {
-            width: 32px;
-            height: 32px;
-            flex-basis: 32px;
-        }
-    }
-
-    /* =========================
-       PAGE ANIMATION
-    ========================= */
-
+    /* Page Entrance Animation */
     .detail-animate {
         opacity: 0;
-        transform: translateY(12px);
+        transform: translateY(18px);
     }
 
     .detail-animate.show {
         opacity: 1;
         transform: translateY(0);
-        transition:
-            opacity 0.45s ease,
-            transform 0.45s ease;
+        transition: opacity 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 </style>
 
 <div class="container-fluid px-4 py-4">
 
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
-
-    <div class="d-flex justify-content-between align-items-center mb-4 detail-animate">
-
-        <div>
-            <h1 class="h3 detail-page-title mb-1">
-                <i class="fas fa-file-alt me-2"></i>
-                Detail Tiket
+    <!-- HEADER PAGE (SESUAI WARNA NAVBAR #2b3990) -->
+    <div class="header-gradient-card d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 detail-animate">
+        <div class="mb-3 mb-md-0">
+            <h1 class="detail-page-title mb-1">
+                <i class="fas fa-ticket-alt me-2 text-warning"></i>Detail Informasi Tiket
             </h1>
-
             <p class="detail-page-subtitle mb-0">
-                Informasi lengkap pengajuan layanan mahasiswa.
+                Layanan Informasi & Verifikasi Data Permohonan Terpadu POLBAN
             </p>
         </div>
-
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-transparent p-0 m-0 detail-breadcrumb">
-
-                <li class="breadcrumb-item">
-                    <a href="<?= base_url('petugas/dashboard') ?>">
-                        Dashboard
-                    </a>
-                </li>
-
-                <li class="breadcrumb-item">
-                    <a href="<?= base_url('petugas/tiket') ?>">
-                        Data Tiket
-                    </a>
-                </li>
-
-                <li class="breadcrumb-item active text-muted">
-                    Detail
-                </li>
-
-            </ol>
-        </nav>
-
+        <!-- TOMBOL KEMBALI DIARAHKAN KE PETUGAS/TIKET (MENGATASI ERROR 404) -->
+        <a href="<?= base_url('petugas/tiket') ?>" class="btn btn-detail-back align-self-start align-self-md-auto">
+            <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar
+        </a>
     </div>
 
-
-    <!-- =====================================================
-         SUMMARY CARDS (PERSIS DENGAN HAFALAN TAMPILAN FOTO)
-    ====================================================== -->
-
-    <div class="row g-3 mb-4">
-        <!-- TOTAL TAMU -->
-        <div class="col-xl-3 col-md-6 detail-animate">
-            <div class="card stat-tamu-card bg-tamu-navy p-3 shadow-sm">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">TOTAL TAMU</span>
-                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
-                            <?= esc($stats['total'] ?? '8') ?>
-                        </h4>
-                    </div>
-                    <div class="icon-tamu-circle text-white">
-                        <i class="fas fa-users"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SUBMITTED -->
-        <div class="col-xl-3 col-md-6 detail-animate">
-            <div class="card stat-tamu-card bg-tamu-orange p-3 shadow-sm">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">SUBMITTED</span>
-                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
-                            <?= esc($stats['submitted'] ?? '1') ?>
-                        </h4>
-                    </div>
-                    <div class="icon-tamu-circle text-white">
-                        <i class="fas fa-paper-plane"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ASSIGNED / DIPROSES -->
-        <div class="col-xl-3 col-md-6 detail-animate">
-            <div class="card stat-tamu-card bg-tamu-yellow p-3 shadow-sm">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">ASSIGNED / DIPROSES</span>
-                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
-                            <?= esc($stats['assigned'] ?? '5') ?>
-                        </h4>
-                    </div>
-                    <div class="icon-tamu-circle text-white">
-                        <i class="fas fa-spinner"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- VERIFIED / SELESAI -->
-        <div class="col-xl-3 col-md-6 detail-animate">
-            <div class="card stat-tamu-card bg-tamu-green p-3 shadow-sm">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">VERIFIED / SELESAI</span>
-                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
-                            <?= esc($stats['verified'] ?? '2') ?>
-                        </h4>
-                    </div>
-                    <div class="icon-tamu-circle text-white">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- =====================================================
-         DATA PENGAJUAN
-    ====================================================== -->
-
-    <div class="card detail-main-card shadow-sm mb-4 detail-animate">
-
-        <div class="detail-card-header">
-
-            <h5 class="detail-card-header-title">
-                <i class="fas fa-file-invoice"></i>
-                Data Pengajuan
-            </h5>
-
-            <?php
-                $status = $tiket['status'] ?? 'Submitted';
-
-                if ($status == 'Submitted') {
-                    $statusClass = 'status-submitted';
-                    $statusIcon = 'fa-clock';
-                } elseif ($status == 'Verified') {
-                    $statusClass = 'status-verified';
-                    $statusIcon = 'fa-check';
-                } elseif ($status == 'Disposisi') {
-                    $statusClass = 'status-disposisi';
-                    $statusIcon = 'fa-share-square';
-                } else {
-                    $statusClass = 'status-default';
-                    $statusIcon = 'fa-info-circle';
-                }
-            ?>
-
-            <span class="status-badge <?= $statusClass ?>">
-                <i class="fas <?= $statusIcon ?>"></i>
-                <?= esc($status) ?>
-            </span>
-
-        </div>
-
-
+    <!-- 1. INFORMASI TIKET -->
+    <div class="card detail-main-card mb-4 detail-animate">
         <div class="card-body p-4">
-
             <h6 class="info-section-title">
-                <i class="fas fa-user"></i>
-                Informasi Pemohon
+                <span class="info-section-icon"><i class="fas fa-folder-open"></i></span>
+                Informasi Tiket & Status
             </h6>
 
-
-            <div class="row g-3 mb-4">
-
+            <div class="row g-3">
                 <!-- NOMOR TIKET -->
-                <div class="col-lg-6">
-
+                <div class="col-md-6 col-lg-4">
                     <div class="info-item">
-
                         <span class="info-label">
-                            <i class="fas fa-hashtag"></i>
-                            Nomor Tiket
+                            <i class="fas fa-hashtag"></i> Nomor Tiket
                         </span>
-
-                        <div class="ticket-number-wrapper">
-
-                            <span
-                                id="ticketNumber"
-                                class="info-value ticket-number"
-                            >
-                                <?= esc($tiket['nomor_tiket'] ?? 'ULT-001') ?>
+                        <div class="d-flex align-items-center justify-content-between mt-1">
+                            <span id="ticketNumber" class="info-value ticket-badge-glow">
+                                <?= esc($tiket['nomor_tiket'] ?? $tiket['ticket_number'] ?? '-') ?>
                             </span>
-
-                            <button
-                                type="button"
-                                class="btn-copy-ticket"
-                                id="copyTicketBtn"
-                                title="Salin nomor tiket"
-                            >
+                            <button type="button" class="btn-copy-ticket" id="copyTicketBtn" title="Salin Nomor Tiket">
                                 <i class="fas fa-copy"></i>
                             </button>
-
                         </div>
-
                     </div>
-
                 </div>
 
-
-                <!-- NAMA -->
-                <div class="col-lg-6">
-
+                <!-- STATUS -->
+                <div class="col-md-6 col-lg-4">
                     <div class="info-item">
-
                         <span class="info-label">
-                            <i class="fas fa-user"></i>
-                            Nama Mahasiswa
+                            <i class="fas fa-signal"></i> Status Permohonan
                         </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['nama_pemohon'] ?? 'Rafi Putra') ?>
-                        </span>
-
+                        <div class="mt-1">
+                            <?php 
+                                $statusVal = strtoupper($tiket['status'] ?? 'SUBMITTED');
+                                $statusClass = match ($statusVal) {
+                                    'SUBMITTED' => 'status-submitted',
+                                    'VERIFIED'  => 'status-verified',
+                                    'ASSIGNED', 'DISPOSISI' => 'status-disposisi',
+                                    default     => 'status-default',
+                                };
+                            ?>
+                            <span class="status-badge <?= $statusClass ?>">
+                                <span class="pulse-dot"></span>
+                                <?= esc($statusVal) ?>
+                            </span>
+                        </div>
                     </div>
-
                 </div>
 
-
-                <!-- NIM -->
-                <div class="col-lg-6">
-
+                <!-- PRIORITAS -->
+                <div class="col-md-6 col-lg-4">
                     <div class="info-item">
-
                         <span class="info-label">
-                            <i class="fas fa-id-card"></i>
-                            NIM
+                            <i class="fas fa-flag"></i> Tingkat Prioritas
                         </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['nim'] ?? '231511001') ?>
+                        <span class="info-value mt-1 text-primary">
+                            <i class="fas fa-layer-group me-1"></i> <?= esc($tiket['prioritas'] ?? 'Normal') ?>
                         </span>
-
                     </div>
-
                 </div>
-
 
                 <!-- LAYANAN -->
-                <div class="col-lg-6">
-
+                <div class="col-md-6 col-lg-6">
                     <div class="info-item">
-
                         <span class="info-label">
-                            <i class="fas fa-concierge-bell"></i>
-                            Jenis Layanan
+                            <i class="fas fa-concierge-bell"></i> Kategori Layanan
                         </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['layanan'] ?? 'Surat Aktif Kuliah') ?>
+                        <span class="info-value mt-1">
+                            <?= esc($tiket['layanan'] ?? '-') ?>
                         </span>
-
                     </div>
-
                 </div>
 
-
-                <!-- EMAIL -->
-                <div class="col-lg-6">
-
+                <!-- TANGGAL PENGAJUAN -->
+                <div class="col-md-6 col-lg-6">
                     <div class="info-item">
-
                         <span class="info-label">
-                            <i class="fas fa-envelope"></i>
-                            Email
+                            <i class="far fa-calendar-alt"></i> Tanggal & Waktu Pengajuan
                         </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['email'] ?? 'rafi@student.polban.ac.id') ?>
+                        <span class="info-value mt-1">
+                            <?= esc($tiket['created_at'] ?? $tiket['tanggal_pengajuan'] ?? '-') ?>
                         </span>
-
                     </div>
-
                 </div>
-
-
-                <!-- NO HP -->
-                <div class="col-lg-6">
-
-                    <div class="info-item">
-
-                        <span class="info-label">
-                            <i class="fas fa-phone"></i>
-                            Nomor HP
-                        </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['no_hp'] ?? '081234567890') ?>
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <!-- TANGGAL -->
-                <div class="col-lg-6">
-
-                    <div class="info-item">
-
-                        <span class="info-label">
-                            <i class="far fa-calendar-alt"></i>
-                            Tanggal Pengajuan
-                        </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['tanggal'] ?? '17 Juli 2026') ?>
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <!-- KATEGORI -->
-                <div class="col-lg-6">
-
-                    <div class="info-item">
-
-                        <span class="info-label">
-                            <i class="fas fa-layer-group"></i>
-                            Kategori / Unit Tujuan
-                        </span>
-
-                        <span class="info-value">
-                            <?= esc($tiket['kategori'] ?? 'Akademik') ?>
-                        </span>
-
-                    </div>
-
-                </div>
-
             </div>
-
-
-            <!-- =================================================
-                 LAMPIRAN
-            ================================================== -->
-
-            <h6 class="info-section-title">
-                <i class="fas fa-paperclip"></i>
-                Lampiran & Dokumen
-            </h6>
-
-            <div class="attachment-box mb-4">
-
-                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-
-                    <div>
-
-                        <strong class="d-block text-dark">
-                            <i class="fas fa-file-pdf text-danger me-2"></i>
-                            Dokumen Pengajuan
-                        </strong>
-
-                        <small class="text-muted">
-                            Dokumen yang diunggah oleh pemohon.
-                        </small>
-
-                    </div>
-
-                    <a
-                        href="#"
-                        class="btn btn-attachment btn-sm"
-                    >
-                        <i class="fas fa-eye me-1"></i>
-                        Lihat Lampiran
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- =================================================
-                 DESKRIPSI
-            ================================================== -->
-
-            <h6 class="info-section-title">
-                <i class="fas fa-align-left"></i>
-                Deskripsi Pengajuan
-            </h6>
-
-            <div class="description-box">
-
-                <?= nl2br(esc(
-                    $tiket['deskripsi']
-                    ?? 'Saya mengajukan Surat Aktif Kuliah untuk keperluan beasiswa.'
-                )) ?>
-
-            </div>
-
         </div>
-
     </div>
 
-
-    <!-- =====================================================
-         RIWAYAT PROSES
-    ====================================================== -->
-
-    <div class="card detail-main-card shadow-sm mb-4 detail-animate">
-
-        <div class="detail-card-header">
-
-            <h5 class="detail-card-header-title">
-                <i class="fas fa-history"></i>
-                Riwayat Proses Tiket
-            </h5>
-
-            <span class="badge bg-light text-dark px-3 py-2">
-                Riwayat Aktivitas
-            </span>
-
-        </div>
-
-
+    <!-- 2. DATA PEMOHON -->
+    <div class="card detail-main-card mb-4 detail-animate">
         <div class="card-body p-4">
+            <h6 class="info-section-title">
+                <span class="info-section-icon"><i class="fas fa-user-shield"></i></span>
+                Data Identitas Pemohon
+            </h6>
 
-            <div class="timeline">
+            <div class="row g-3">
+                <!-- NAMA PEMOHON -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-user"></i> Nama Lengkap
+                        </span>
+                        <span class="info-value mt-1">
+                            <?= esc($tiket['nama_pemohon'] ?? $tiket['nama'] ?? '-') ?>
+                        </span>
+                    </div>
+                </div>
 
+                <!-- NIM / IDENTITAS -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-id-card"></i> NIM / Identitas
+                        </span>
+                        <span class="info-value mt-1">
+                            <?= esc($tiket['nim'] ?? '-') ?>
+                        </span>
+                    </div>
+                </div>
 
-                <!-- RIWAYAT 1 -->
+                <!-- EMAIL -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-envelope"></i> Alamat Email
+                        </span>
+                        <span class="info-value mt-1 text-truncate">
+                            <?= esc($tiket['email'] ?? '-') ?>
+                        </span>
+                    </div>
+                </div>
 
+                <!-- NO HP -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="info-item">
+                        <span class="info-label">
+                            <i class="fab fa-whatsapp"></i> No. HP / WhatsApp
+                        </span>
+                        <span class="info-value mt-1">
+                            <?= esc($tiket['no_hp'] ?? $tiket['phone'] ?? '-') ?>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. DETAIL PERMOHONAN -->
+    <div class="card detail-main-card mb-4 detail-animate">
+        <div class="card-body p-4">
+            <h6 class="info-section-title">
+                <span class="info-section-icon"><i class="fas fa-file-alt"></i></span>
+                Rincian & Keterangan Permohonan
+            </h6>
+
+            <div class="row g-3">
+                <div class="col-12">
+                    <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-heading"></i> Judul Permohonan
+                        </span>
+                        <span class="info-value mt-1 fs-6">
+                            <?= esc($tiket['judul_permohonan'] ?? $tiket['layanan'] ?? '-') ?>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="description-box">
+                        <div class="info-label text-dark fw-bold mb-2">
+                            <i class="fas fa-quote-left text-primary"></i> Deskripsi Keperluan
+                        </div>
+                        <div>
+                            <?= nl2br(esc($tiket['keterangan'] ?? $tiket['deskripsi'] ?? 'Tidak ada deskripsi tambahan.')) ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. INFORMASI PROSES / TIMELINE -->
+    <div class="card detail-main-card mb-4 detail-animate">
+        <div class="card-body p-4">
+            <h6 class="info-section-title">
+                <span class="info-section-icon"><i class="fas fa-history"></i></span>
+                Lacak Riwayat Proses
+            </h6>
+
+            <div class="timeline mt-3">
                 <div class="timeline-item">
-
                     <div class="timeline-icon timeline-icon-primary">
-                        <i class="fas fa-file-alt"></i>
+                        <i class="fas fa-paper-plane"></i>
                     </div>
-
                     <div class="timeline-content">
-
-                        <h6 class="timeline-title">
-                            Pengajuan dibuat mahasiswa
-                        </h6>
-
-                        <p class="timeline-desc">
-                            Berkas berhasil diunggah oleh mahasiswa dan tiket berhasil dibuat.
-                        </p>
-
+                        <h6 class="timeline-title">Tiket Berhasil Diajukan</h6>
                         <span class="timeline-date">
-                            <i class="far fa-clock me-1"></i>
-                            20 Juli 2026
+                            <i class="far fa-clock me-1"></i><?= esc($tiket['created_at'] ?? $tiket['tanggal_pengajuan'] ?? '-') ?>
                         </span>
-
                     </div>
-
                 </div>
-
-
-                <!-- RIWAYAT 2 -->
-
-                <div class="timeline-item">
-
-                    <div class="timeline-icon timeline-icon-warning">
-                        <i class="fas fa-user-clock"></i>
-                    </div>
-
-                    <div class="timeline-content">
-
-                        <h6 class="timeline-title">
-                            Menunggu Verifikasi Petugas
-                        </h6>
-
-                        <p class="timeline-desc">
-                            Tiket masuk dalam antrian dan menunggu pemeriksaan petugas ULT.
-                        </p>
-
-                        <span class="timeline-date">
-                            <i class="far fa-clock me-1"></i>
-                            Status saat ini
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <!-- RIWAYAT 3 -->
-
-                <div class="timeline-item">
-
-                    <div class="timeline-icon timeline-icon-success">
-                        <i class="fas fa-check"></i>
-                    </div>
-
-                    <div class="timeline-content">
-
-                        <h6 class="timeline-title">
-                            Proses berikutnya
-                        </h6>
-
-                        <p class="timeline-desc">
-                            Setelah diverifikasi, tiket dapat dilanjutkan ke proses disposisi/unit tujuan.
-                        </p>
-
-                        <span class="timeline-date">
-                            <i class="fas fa-hourglass-half me-1"></i>
-                            Menunggu proses
-                        </span>
-
-                    </div>
-
-                </div>
-
-
             </div>
-
         </div>
-
-
-        <!-- =================================================
-             ACTION BUTTONS
-        ================================================== -->
-
-        <div class="detail-footer">
-
-            <a
-                href="<?= base_url('petugas/tiket') ?>"
-                class="btn btn-secondary btn-detail-back"
-            >
-                <i class="fas fa-arrow-left me-1"></i>
-                Kembali ke Data Tiket
-            </a>
-
-
-            <div class="detail-actions">
-
-                <a
-                    href="<?= base_url('petugas/verifikasi/' . ($id ?? 1)) ?>"
-                    class="btn btn-success btn-detail-success"
-                >
-                    <i class="fas fa-user-check me-1"></i>
-                    Verifikasi Tiket
-                </a>
-
-                <a
-                    href="<?= base_url('petugas/disposisi/' . ($id ?? 1)) ?>"
-                    class="btn btn-detail-orange"
-                >
-                    <i class="fas fa-share-square me-1"></i>
-                    Disposisi
-                </a>
-
-            </div>
-
-        </div>
-
     </div>
 
 </div>
 
+<!-- TOAST CONTAINER -->
+<div id="ultToast">
+    <i class="fas fa-check-circle text-success fs-5"></i>
+    <span id="ultToastMessage">Nomor Tiket Berhasil Disalin!</span>
+</div>
 
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
-
+<!-- JAVASCRIPT -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-
-    /* ANIMASI ELEMENT SAAT HALAMAN DIBUKA */
+    
+    /* 1. STAGGERED ENTRANCE ANIMATION */
     const animatedElements = document.querySelectorAll('.detail-animate');
-
     animatedElements.forEach(function (element, index) {
-
         setTimeout(function () {
             element.classList.add('show');
-        }, index * 80);
-
+        }, index * 90);
     });
 
-
-    /* COPY NOMOR TIKET */
+    /* 2. ADVANCED COPY TO CLIPBOARD WITH TOAST */
     const copyButton = document.getElementById('copyTicketBtn');
     const ticketNumber = document.getElementById('ticketNumber');
+    const toast = document.getElementById('ultToast');
+    const toastMsg = document.getElementById('ultToastMessage');
 
-    if (copyButton && ticketNumber) {
-
-        copyButton.addEventListener('click', function () {
-
-            const text = ticketNumber.innerText.trim();
-
-            if (navigator.clipboard) {
-
-                navigator.clipboard.writeText(text).then(function () {
-
-                    const originalIcon = copyButton.innerHTML;
-
-                    copyButton.innerHTML =
-                        '<i class="fas fa-check"></i>';
-
-                    copyButton.style.backgroundColor = '#198754';
-                    copyButton.style.color = '#fff';
-
-                    setTimeout(function () {
-
-                        copyButton.innerHTML = originalIcon;
-                        copyButton.style.backgroundColor = '';
-                        copyButton.style.color = '';
-
-                    }, 1500);
-
-                });
-
-            }
-
-        });
-
+    function showToast(message) {
+        toastMsg.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2500);
     }
 
+    if (copyButton && ticketNumber) {
+        copyButton.addEventListener('click', function () {
+            const textToCopy = ticketNumber.innerText.trim();
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(textToCopy).then(function () {
+                    showToast('Nomor Tiket "' + textToCopy + '" Berhasil Disalin!');
+                    
+                    // Button Micro Animation
+                    copyButton.innerHTML = '<i class="fas fa-check text-success"></i>';
+                    setTimeout(() => {
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                    }, 1800);
+                });
+            }
+        });
+    }
+
+    /* 3. INTERACTIVE CARD 3D TILT EFFECT */
+    const cards = document.querySelectorAll('.info-item');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', function(e) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            card.style.transform = `perspective(1000px) rotateX(${-y / 20}deg) rotateY(${x / 20}deg) translateY(-3px)`;
+        });
+
+        card.addEventListener('mouseleave', function() {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+        });
+    });
 });
 </script>
-
 
 <?= $this->endSection() ?>

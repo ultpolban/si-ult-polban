@@ -13,15 +13,21 @@
         color: #1e293b;
     }
 
-    /* Modern Glassmorphism Filter Section */
+    /* Modern Glassmorphism Filter Section (DEWA LEVEL STYLING) */
     .card-filter-header {
         border-radius: 20px;
-        border: 1px solid rgba(226, 232, 240, 0.8);
-        background: #ffffff;
-        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+        transition: all 0.3s ease;
     }
 
-    /* Refined Custom Select Dropdown (Foto 2 & 3 Modernized) */
+    .card-filter-header:hover {
+        box-shadow: 0 16px 35px -5px rgba(15, 23, 42, 0.08);
+    }
+
+    /* Refined Custom Select Dropdown (DEWA LEVEL DESIGN) */
     .filter-dropdown-wrapper {
         position: relative;
         display: inline-flex;
@@ -34,32 +40,35 @@
         background-color: #ffffff;
         border: 1.5px solid #cbd5e1;
         border-radius: 12px;
-        padding: 0.55rem 2.5rem 0.55rem 2.5rem;
+        padding: 0.6rem 2.5rem 0.6rem 2.6rem;
         font-size: 0.875rem;
-        font-weight: 600;
+        font-weight: 700;
         color: #1e293b;
         cursor: pointer;
         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
     }
 
     .select-ultra:hover {
         border-color: #94a3b8;
         background-color: #f8fafc;
+        transform: translateY(-1px);
     }
 
     .select-ultra:focus {
         outline: none;
         border-color: #2563eb;
+        background-color: #ffffff;
         box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
     }
 
     .filter-icon-left {
         position: absolute;
         left: 14px;
-        color: #64748b;
+        color: #2563eb;
         pointer-events: none;
         font-size: 0.9rem;
+        z-index: 2;
     }
 
     .filter-icon-right {
@@ -68,7 +77,8 @@
         color: #64748b;
         pointer-events: none;
         font-size: 0.8rem;
-        transition: transform 0.2s ease;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+        z-index: 2;
     }
 
     .select-ultra:focus ~ .filter-icon-right {
@@ -76,14 +86,28 @@
         color: #2563eb;
     }
 
-    /* Custom Date Pickers Styling */
+    /* Custom Date Pickers & Container Styling */
+    #customDateContainer {
+        background: #f1f5f9;
+        padding: 5px 10px;
+        border-radius: 14px;
+        border: 1.5px solid #e2e8f0;
+        animation: slideInCustom .35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes slideInCustom {
+        from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
     .input-date-ultra {
         border: 1.5px solid #cbd5e1;
-        border-radius: 12px;
-        padding: 0.5rem 0.75rem;
-        font-size: 0.85rem;
+        border-radius: 10px;
+        padding: 0.45rem 0.75rem;
+        font-size: 0.83rem;
         font-weight: 600;
         color: #334155;
+        background-color: #ffffff;
         outline: none;
         transition: all 0.2s ease;
     }
@@ -97,17 +121,26 @@
         background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
         border: none;
         color: #ffffff;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 0.85rem;
-        border-radius: 12px;
-        padding: 0.55rem 1.25rem;
+        border-radius: 10px;
+        padding: 0.5rem 1.25rem;
         box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-        transition: all 0.2s ease;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
 
     .btn-apply-filter:hover {
-        transform: translateY(-1px);
+        transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+        color: #ffffff;
+    }
+
+    .btn-apply-filter:active {
+        transform: translateY(0);
     }
 
     /* Cards Styling */
@@ -186,7 +219,7 @@
 
     .chart-wrapper-box { position: relative; width: 100%; height: 320px; }
 
-    /* Timeline Section (Foto 1) */
+    /* Timeline Section */
     .timeline-tracking { position: relative; padding-left: 28px; }
     .timeline-tracking::before {
         content: '';
@@ -253,7 +286,7 @@
                     <span class="text-muted small fw-bold">s/d</span>
                     <input type="date" id="endDate" class="input-date-ultra" value="<?= date('Y-m-d') ?>">
                     <button type="button" id="btnTerapkanTanggal" class="btn btn-apply-filter">
-                        <i class="fas fa-check me-1"></i> Terapkan
+                        <i class="fas fa-check"></i> Terapkan
                     </button>
                 </div>
             </div>
@@ -392,7 +425,7 @@
         </div>
     </div>
 
-    <!-- TIMELINE TRACKING (FOTO 1 DENGAN UPDATE DINAMIS) -->
+    <!-- TIMELINE TRACKING -->
     <div class="card card-ultra">
         <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
             <h6 class="fw-bold text-dark mb-0">
@@ -448,6 +481,7 @@ document.addEventListener("DOMContentLoaded", function () {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                animation: { duration: 800, easing: 'easeOutQuart' },
                 plugins: { legend: { display: false } },
                 scales: {
                     y: { beginAtZero: true, ticks: { precision: 0 } },
@@ -477,18 +511,19 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // 2. Animate Counter Dynamic
+    // 2. Animate Counter Dynamic (Fast Smooth Transit)
     function animateCounter(elementId, targetValue) {
         const el = document.getElementById(elementId);
         if (!el) return;
         let start = parseInt(el.innerText) || 0;
-        let duration = 500;
+        let duration = 650;
         let startTime = null;
 
         function step(timestamp) {
             if (!startTime) startTime = timestamp;
             let progress = Math.min((timestamp - startTime) / duration, 1);
-            el.innerText = Math.floor(progress * (targetValue - start) + start);
+            let easeOut = 1 - Math.pow(1 - progress, 3);
+            el.innerText = Math.floor(easeOut * (targetValue - start) + start);
             if (progress < 1) {
                 window.requestAnimationFrame(step);
             } else {
@@ -584,9 +619,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    document.getElementById('btnTerapkanTanggal').addEventListener('click', function () {
-        fetchFilteredData();
-    });
+    const btnTerapkan = document.getElementById('btnTerapkanTanggal');
+    if (btnTerapkan) {
+        btnTerapkan.addEventListener('click', function (e) {
+            const btn = e.currentTarget;
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => btn.style.transform = '', 150);
+            fetchFilteredData();
+        });
+    }
 
     // Inisialisasi awal
     initCharts([

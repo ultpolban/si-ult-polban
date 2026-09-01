@@ -2,64 +2,84 @@
 
 <?= $this->section('content') ?>
 
+<!-- ASSETS FONTS & ICONS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+    /* =========================================================
+       ULT POLBAN - SYSTEM VERIFICATION STYLING
+    ========================================================= */
+
     :root {
-        --polban-navy: #1a237e;
-        --polban-blue: #005bac;
-        --polban-orange: #ff8c00;
-        --polban-yellow: #f4c400;
-        --polban-green: #10b981;
-        --soft-bg: #f4f6f9;
-        --text-dark: #263238;
-        --text-muted: #6c757d;
+        --ult-navy-dark: #2b3990;
+        --ult-navy: #2b3990;
+        --ult-blue-accent: #3b4cca;
+        --ult-orange: #ff8c00;
+        --ult-green: #10b981;
+        --ult-yellow: #f59e0b;
+        --ult-cyan: #06b6d4;
+        --ult-light-bg: #f8fafc;
+        --ult-card-border: rgba(226, 232, 240, 0.8);
+        --ult-shadow-sm: 0 4px 20px -2px rgba(43, 57, 144, 0.05);
+        --ult-shadow-hover: 0 20px 35px -10px rgba(43, 57, 144, 0.12);
     }
 
     body, .container-fluid {
-        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-        color: var(--text-dark);
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        background-color: #f1f5f9;
     }
 
-    .verification-page {
-        animation: pageFadeIn .35s ease-out;
+    /* =========================
+       HEADER CARD
+    ========================= */
+    .header-gradient-card {
+        background: #2b3990 !important;
+        border-radius: 20px;
+        padding: 24px 28px;
+        color: #ffffff;
+        box-shadow: 0 12px 30px rgba(43, 57, 144, 0.25);
+        position: relative;
+        overflow: hidden;
     }
 
-    @keyframes pageFadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(8px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .header-gradient-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+        pointer-events: none;
     }
 
-    /* Header */
-    .page-title {
-        color: var(--polban-navy);
+    .detail-page-title {
+        color: #ffffff;
         font-weight: 800;
-        letter-spacing: -0.4px;
+        letter-spacing: -0.5px;
+        font-size: 1.65rem;
     }
 
-    .breadcrumb-item a {
-        color: var(--polban-blue);
-        text-decoration: none;
+    .detail-page-subtitle {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.92rem;
     }
 
-    /* =========================================================
-       SUMMARY CARD (PERSIS SEPERTI FOTO)
-    ========================================================= */
+    /* =========================
+       SUMMARY STAT CARDS
+    ========================= */
     .stat-tamu-card {
-        border-radius: 18px;
-        border: none;
+        border-radius: 20px;
+        border: 1px solid var(--ult-card-border);
         color: #ffffff;
         transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
         position: relative;
         overflow: hidden;
         z-index: 1;
+        min-height: 100px;
+        display: flex;
+        align-items: center;
     }
 
     .stat-tamu-card::before {
@@ -76,573 +96,612 @@
     }
 
     .stat-tamu-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15) !important;
+        transform: translateY(-4px);
+        box-shadow: var(--ult-shadow-hover);
     }
 
-    .stat-tamu-card:hover::before {
-        transform: scale(1.25);
+    .stat-tamu-card:hover::before { 
+        transform: scale(1.25); 
     }
 
-    .bg-tamu-navy {
-        background: linear-gradient(135deg, #1b2e85 0%, #283593 100%) !important;
-    }
-
-    .bg-tamu-orange {
-        background: linear-gradient(135deg, #ff7a00 0%, #ff8c00 100%) !important;
-    }
-
-    .bg-tamu-yellow {
-        background: linear-gradient(135deg, #ffb300 0%, #f4c400 100%) !important;
-    }
-
-    .bg-tamu-green {
-        background: linear-gradient(135deg, #00a86b 0%, #10b981 100%) !important;
-    }
+    .bg-tamu-navy { background: linear-gradient(135deg, #2b3990 0%, #3b4cca 100%) !important; }
+    .bg-tamu-orange { background: linear-gradient(135deg, #ff8c00 0%, #f57c00 100%) !important; }
+    .bg-tamu-yellow { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; }
+    .bg-tamu-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
 
     .icon-tamu-circle {
-        width: 54px;
-        height: 54px;
-        border-radius: 14px;
-        background: rgba(255, 255, 255, 0.22);
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(8px);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.4rem;
-        box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
+        font-size: 1.1rem;
     }
 
-    /* =========================================================
-       GENERAL CARD & DETAILS
-    ========================================================= */
-    .professional-card {
-        border: none;
-        border-radius: 14px;
-        box-shadow: 0 4px 18px rgba(0,0,0,.06);
-        overflow: hidden;
-        transition: box-shadow .25s ease;
+    .stat-title {
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        display: block;
+        line-height: 1.2;
     }
 
-    .professional-card:hover {
-        box-shadow: 0 6px 20px rgba(0,0,0,.08);
-    }
-
-    .card-title-custom {
-        font-size: 1.05rem;
+    .stat-value {
+        font-size: 1.1rem;
         font-weight: 800;
-        color: var(--text-dark);
-        margin: 0;
+        line-height: 1.3;
+        margin-top: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    .card-title-custom i {
-        color: var(--polban-navy);
+    /* =========================
+       MAIN CARDS & SECTIONS
+    ========================= */
+    .detail-main-card {
+        border: 1px solid var(--ult-card-border);
+        border-radius: 20px;
+        background: #ffffff;
+        box-shadow: var(--ult-shadow-sm);
+        transition: all 0.35s ease;
+        overflow: hidden;
     }
 
-    .info-item {
-        height: 100%;
-        padding: 15px 16px;
-        background: #f8f9fa;
-        border: 1px solid #e9ecef;
+    .detail-main-card:hover {
+        box-shadow: var(--ult-shadow-hover);
+    }
+
+    .info-section-title {
+        color: var(--ult-navy-dark);
+        font-weight: 800;
+        font-size: 1.05rem;
+        margin-bottom: 20px;
+        letter-spacing: -0.2px;
+        display: flex;
+        align-items: center;
+    }
+
+    .info-section-icon {
+        width: 36px;
+        height: 36px;
         border-radius: 10px;
-        transition: all .2s ease;
+        background: rgba(43, 57, 144, 0.08);
+        color: var(--ult-navy);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        font-size: 1rem;
+    }
+
+    /* =========================
+       3D INTERACTIVE ITEM BOX & READONLY
+    ========================= */
+    .info-item {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 16px 18px;
+        height: 100%;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
     }
 
     .info-item:hover {
-        background: #f8f9ff;
-        border-color: #c9cdf5;
-        transform: translateY(-1px);
+        background: #ffffff;
+        border-color: var(--ult-navy);
+        box-shadow: 0 10px 25px rgba(43, 57, 144, 0.08);
+        transform: translateY(-3px);
     }
 
     .info-label {
-        display: block;
-        color: var(--text-muted);
-        font-size: .78rem;
-        font-weight: 600;
-        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        margin-bottom: 6px;
     }
 
     .info-label i {
-        color: var(--polban-navy);
-        width: 17px;
+        color: var(--ult-navy);
     }
 
     .info-value {
         display: block;
-        color: var(--text-dark);
-        font-size: .94rem;
+        color: #0f172a;
         font-weight: 700;
+        font-size: 0.98rem;
         word-break: break-word;
     }
 
-    .ticket-number {
-        color: var(--polban-blue);
-    }
-
-    .attachment-box {
-        border: 2px dashed #cbd5e1;
-        background: #f8fafc;
-        border-radius: 12px;
-        padding: 22px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-        transition: all .2s ease;
-    }
-
-    .attachment-box:hover {
-        background: #f8f9ff;
-        border-color: var(--polban-navy);
-    }
-
-    .attachment-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        background: #fff0f0;
-        color: #dc3545;
-        display: flex;
+    .btn-copy-ticket {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #475569;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.35rem;
-        flex-shrink: 0;
+        cursor: pointer;
+        transition: all 0.2s ease;
     }
 
-    .btn-view-file {
-        background: var(--polban-navy);
-        border: none;
-        color: #fff;
-        border-radius: 8px;
-        padding: 9px 18px;
+    .btn-copy-ticket:hover {
+        background: var(--ult-orange);
+        border-color: var(--ult-orange);
+        color: #ffffff;
+        transform: scale(1.08);
+    }
+
+    .description-box {
+        background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+        border-left: 5px solid var(--ult-navy);
+        border-radius: 14px;
+        padding: 20px;
+        color: #334155;
+        line-height: 1.7;
+        font-weight: 500;
+        font-size: 0.96rem;
+    }
+
+    /* =========================
+       FORM INPUTS & CONTAINERS
+    ========================= */
+    .disposisi-form-container {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border: 2px dashed #cbd5e1;
+        border-radius: 16px;
+        padding: 24px;
+        transition: all 0.3s ease;
+    }
+
+    .disposisi-form-container:focus-within {
+        border-color: var(--ult-navy);
+        background: #ffffff;
+        box-shadow: 0 10px 25px rgba(43, 57, 144, 0.08);
+    }
+
+    .custom-select-ultra, .custom-input-ultra {
+        min-height: 48px;
+        border-radius: 12px;
+        border: 1px solid #cbd5e1;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #0f172a;
+        padding: 10px 16px;
+        transition: all 0.25s ease;
+        background-color: #fff;
+    }
+
+    .custom-select-ultra:focus, .custom-input-ultra:focus {
+        border-color: var(--ult-navy);
+        box-shadow: 0 0 0 4px rgba(43, 57, 144, 0.15);
+        outline: none;
+    }
+
+    /* Buttons */
+    .btn-detail-back {
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        color: #ffffff !important;
+        border-radius: 12px;
         font-weight: 700;
-        transition: all .2s ease;
+        padding: 10px 20px;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        text-decoration: none !important;
+        display: inline-flex;
+        align-items: center;
     }
 
-    .btn-view-file:hover {
-        background: #12185c;
-        color: #fff;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 10px rgba(26,35,126,.25);
+    .btn-detail-back:hover {
+        background: #ffffff !important;
+        color: #2b3990 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
-    /* Checklist & Progress */
-    .verification-header {
-        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
-        color: #fff;
-        padding: 16px 20px;
+    .btn-action-back {
+        background-color: #ffffff;
+        color: #475569;
+        font-weight: 700;
+        border-radius: 12px;
+        padding: 12px 24px;
+        border: 1px solid #cbd5e1;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
     }
 
-    .checklist-box {
-        border: 1px solid #e9ecef;
-        border-radius: 10px;
-        overflow: hidden;
+    .btn-action-back:hover {
+        background-color: #f1f5f9;
+        color: #0f172a;
+        transform: translateY(-2px);
     }
 
-    .check-item {
+    .btn-action-submit {
+        font-weight: 800;
+        border-radius: 12px;
+        padding: 12px 28px;
+        border: none;
+        transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-action-submit:hover {
+        transform: translateY(-2px) scale(1.02);
+    }
+
+    /* =========================
+       TOAST FLOATING NOTIFICATION
+    ========================= */
+    #ultToast {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background: #0f172a;
+        color: #ffffff;
+        padding: 12px 22px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         display: flex;
         align-items: center;
-        padding: 14px 16px;
-        border-bottom: 1px solid #edf0f2;
-        cursor: pointer;
-        transition: all .2s ease;
-        margin: 0;
-    }
-
-    .check-item:last-child {
-        border-bottom: none;
-    }
-
-    .check-item:hover {
-        background: #f8f9ff;
-    }
-
-    .check-item.checked {
-        background: #f1fbf5;
-    }
-
-    .check-input {
-        width: 19px;
-        height: 19px;
-        margin-right: 12px;
-        accent-color: #10b981;
-        cursor: pointer;
-        flex-shrink: 0;
-    }
-
-    .check-icon {
-        color: #adb5bd;
-        margin-right: 10px;
-        transition: color .2s ease;
-    }
-
-    .check-item.checked .check-icon {
-        color: #10b981;
-    }
-
-    .check-text {
+        gap: 10px;
+        font-size: 0.88rem;
         font-weight: 600;
-        color: #343a40;
-        font-size: .9rem;
+        z-index: 9999;
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
-    .verification-progress {
-        background: #f8f9fa;
-        border: 1px solid #e9ecef;
-        border-radius: 10px;
-        padding: 14px 16px;
+    #ultToast.show {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
     }
 
-    .progress {
-        height: 8px;
-        border-radius: 10px;
-        background: #e9ecef;
-        overflow: hidden;
+    /* Page Entrance Animation */
+    .detail-animate {
+        opacity: 0;
+        transform: translateY(18px);
     }
 
-    .progress-bar {
-        background: #10b981;
-        transition: width .3s ease;
-    }
-
-    /* Form Inputs */
-    .form-label-custom {
-        font-size: .88rem;
-        font-weight: 700;
-        color: var(--text-dark);
-        margin-bottom: 7px;
-    }
-
-    .custom-form-control {
-        border: 1px solid #cbd5e1;
-        border-radius: 10px;
-        min-height: 44px;
-        font-size: .9rem;
-        transition: all .2s ease;
-    }
-
-    .custom-form-control:focus {
-        border-color: var(--polban-navy);
-        box-shadow: 0 0 0 .2rem rgba(26,35,126,.12);
-    }
-
-    textarea.custom-form-control {
-        min-height: 110px;
-        resize: vertical;
-    }
-
-    .btn-save-verification {
-        background: #10b981;
-        border: none;
-        color: #fff;
-        border-radius: 8px;
-        padding: 10px 22px;
-        font-weight: 700;
-        transition: all .2s ease;
-    }
-
-    .btn-save-verification:hover {
-        background: #059669;
-        color: #fff;
-        transform: translateY(-1px);
-        box-shadow: 0 5px 12px rgba(16,185,129,.25);
-    }
-
-    .btn-cancel {
-        background: #6c757d;
-        border: none;
-        color: #fff;
-        border-radius: 8px;
-        padding: 10px 22px;
-        font-weight: 700;
-        transition: all .2s ease;
-    }
-
-    .btn-cancel:hover {
-        background: #5a6268;
-        color: #fff;
-    }
-
-    @media (max-width: 767px) {
-        .attachment-box {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .btn-view-file {
-            width: 100%;
-            text-align: center;
-        }
-
-        .action-buttons {
-            flex-direction: column;
-            width: 100%;
-        }
-
-        .action-buttons .btn {
-            width: 100%;
-            margin: 0 0 8px 0 !important;
-        }
+    .detail-animate.show {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 </style>
 
-<div class="container-fluid px-4 py-4 verification-page">
+<div class="container-fluid px-4 py-4">
 
-    <!-- HEADER -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 page-title mb-1">
-                <i class="fas fa-user-check me-2"></i> Verifikasi Tiket Permohonan
+    <!-- HEADER PAGE -->
+    <div class="header-gradient-card d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 detail-animate">
+        <div class="mb-3 mb-md-0">
+            <h1 class="detail-page-title mb-1">
+                <i class="fas fa-shield-halved me-2 text-warning"></i>Verifikasi Tiket
             </h1>
-            <p class="text-muted mb-0">
-                Periksa kelengkapan data dan dokumen sebelum tiket diproses.
+            <p class="detail-page-subtitle mb-0">
+                Lakukan pemeriksaan data permohonan sebelum tiket diproses ke tahap selanjutnya.
             </p>
         </div>
-
-        <div class="d-flex align-items-center gap-2">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-transparent p-0 m-0">
-                    <li class="breadcrumb-item"><a href="<?= base_url('petugas/dashboard') ?>">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="<?= base_url('petugas/tiket') ?>">Data Tiket</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Verifikasi</li>
-                </ol>
-            </nav>
-        </div>
+        <a href="<?= base_url('petugas/tiket') ?>" class="btn btn-detail-back align-self-start align-self-md-auto">
+            <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar
+        </a>
     </div>
 
-    <!-- SUMMARY CARDS (PERSIS KOTAK FOTO) -->
-    <div class="row g-3 mb-4">
-        <!-- TOTAL TAMU / TOTAL -->
+    <!-- 4 SUMMARY CARDS -->
+    <div class="row g-3 mb-4 detail-animate">
         <div class="col-xl-3 col-md-6">
             <div class="card stat-tamu-card bg-tamu-navy p-3 shadow-sm">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">TOTAL TAMU</span>
-                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
-                            <?= esc($stats['total'] ?? '8') ?>
-                        </h4>
+                <div class="d-flex align-items-center justify-content-between w-100 me-2" style="min-width: 0;">
+                    <div style="min-width: 0;" class="me-2">
+                        <span class="text-white-50 text-uppercase fw-bold stat-title">Status Tiket</span>
+                        <div class="stat-value text-white" title="<?= esc($tiket['status'] ?? 'Submitted') ?>">
+                            <?= esc($tiket['status'] ?? 'Submitted') ?>
+                        </div>
                     </div>
-                    <div class="icon-tamu-circle text-white">
-                        <i class="fas fa-users"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SUBMITTED -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card stat-tamu-card bg-tamu-orange p-3 shadow-sm">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">SUBMITTED</span>
-                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
-                            <?= esc($stats['submitted'] ?? '1') ?>
-                        </h4>
-                    </div>
-                    <div class="icon-tamu-circle text-white">
-                        <i class="fas fa-paper-plane"></i>
+                    <div class="icon-tamu-circle text-white ms-auto">
+                        <i class="fas fa-ticket-alt"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ASSIGNED / DIPROSES -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card stat-tamu-card bg-tamu-yellow p-3 shadow-sm">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">ASSIGNED / DIPROSES</span>
-                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
-                            <?= esc($stats['assigned'] ?? '5') ?>
-                        </h4>
-                    </div>
-                    <div class="icon-tamu-circle text-white">
-                        <i class="fas fa-spinner"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- VERIFIED / SELESAI -->
         <div class="col-xl-3 col-md-6">
             <div class="card stat-tamu-card bg-tamu-green p-3 shadow-sm">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">VERIFIED / SELESAI</span>
-                        <h4 class="fw-bold mb-0 text-white mt-1" style="font-size: 1.8rem;">
-                            <?= esc($stats['verified'] ?? '2') ?>
-                        </h4>
+                <div class="d-flex align-items-center justify-content-between w-100 me-2" style="min-width: 0;">
+                    <div style="min-width: 0;" class="me-2">
+                        <span class="text-white-50 text-uppercase fw-bold stat-title">Prioritas</span>
+                        <div class="stat-value text-white" title="<?= strtoupper(esc($tiket['prioritas'] ?? 'NORMAL')) ?>">
+                            <?= strtoupper(esc($tiket['prioritas'] ?? 'NORMAL')) ?>
+                        </div>
                     </div>
-                    <div class="icon-tamu-circle text-white">
-                        <i class="fas fa-check-circle"></i>
+                    <div class="icon-tamu-circle text-white ms-auto">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-orange p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between w-100 me-2" style="min-width: 0;">
+                    <div style="min-width: 0;" class="me-2">
+                        <span class="text-white-50 text-uppercase fw-bold stat-title">Layanan</span>
+                        <div class="stat-value text-white" title="<?= esc($tiket['layanan'] ?? 'Layanan Surat') ?>">
+                            <?= esc($tiket['layanan'] ?? 'Layanan Surat') ?>
+                        </div>
+                    </div>
+                    <div class="icon-tamu-circle text-white ms-auto">
+                        <i class="fas fa-concierge-bell"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-tamu-card bg-tamu-yellow p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between w-100 me-2" style="min-width: 0;">
+                    <div style="min-width: 0;" class="me-2">
+                        <span class="text-white-50 text-uppercase fw-bold stat-title">Unit Tujuan</span>
+                        <div class="stat-value text-white" title="<?= esc($tiket['unit_tujuan'] ?? '-') ?>">
+                            <?= esc($tiket['unit_tujuan'] ?? '-') ?>
+                        </div>
+                    </div>
+                    <div class="icon-tamu-circle text-white ms-auto">
+                        <i class="fas fa-building"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- INFORMASI PERMOHONAN -->
-    <div class="card professional-card mb-4">
-        <div class="card-header bg-white border-0 py-3 px-4">
-            <h5 class="card-title-custom">
-                <i class="fas fa-id-card me-2"></i> Informasi Permohonan
-            </h5>
-        </div>
-        <div class="card-body px-4 pb-4">
-            <div class="row g-3">
-                <div class="col-lg-4 col-md-6">
-                    <div class="info-item">
-                        <span class="info-label"><i class="fas fa-ticket-alt"></i> Nomor Tiket</span>
-                        <span class="info-value ticket-number"><?= esc($tiket['nomor_tiket'] ?? 'ULT-20260808-0015') ?></span>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="info-item">
-                        <span class="info-label"><i class="fas fa-user"></i> Nama Pemohon</span>
-                        <span class="info-value"><?= esc($tiket['nama_pemohon'] ?? 'Rian Hidayat') ?></span>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="info-item">
-                        <span class="info-label"><i class="fas fa-id-badge"></i> NIM</span>
-                        <span class="info-value"><?= esc($tiket['nim'] ?? '231511001') ?></span>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="info-item">
-                        <span class="info-label"><i class="fas fa-concierge-bell"></i> Jenis Layanan</span>
-                        <span class="info-value"><?= esc($tiket['layanan'] ?? 'Surat Aktif Kuliah') ?></span>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="info-item">
-                        <span class="info-label"><i class="fas fa-layer-group"></i> Kategori</span>
-                        <span class="info-value"><?= esc($tiket['kategori'] ?? 'Akademik') ?></span>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="info-item">
-                        <span class="info-label"><i class="fas fa-exclamation-circle"></i> Prioritas</span>
-                        <span class="info-value"><?= esc($tiket['prioritas'] ?? 'High') ?></span>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="info-item">
-                        <span class="info-label"><i class="fas fa-envelope"></i> Email</span>
-                        <span class="info-value"><?= esc($tiket['email'] ?? 'rian@student.polban.ac.id') ?></span>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="info-item">
-                        <span class="info-label"><i class="fas fa-phone"></i> No HP</span>
-                        <span class="info-value"><?= esc($tiket['no_hp'] ?? '081234567890') ?></span>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="info-item">
-                        <span class="info-label"><i class="far fa-calendar-alt"></i> Tanggal Pengajuan</span>
-                        <span class="info-value"><?= esc($tiket['tanggal'] ?? '17 Juli 2026') ?></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- LAMPIRAN -->
-    <div class="card professional-card mb-4">
-        <div class="card-header bg-white border-0 py-3 px-4">
-            <h5 class="card-title-custom">
-                <i class="fas fa-paperclip me-2"></i> Lampiran Pemohon
-            </h5>
-        </div>
-        <div class="card-body px-4 pb-4">
-            <div class="attachment-box">
-                <div class="d-flex align-items-center">
-                    <div class="attachment-icon me-3">
-                        <i class="fas fa-file-pdf"></i>
-                    </div>
-                    <div>
-                        <div class="attachment-title fw-bold">Dokumen Persyaratan</div>
-                        <p class="attachment-info mb-0">File lampiran yang dikirim oleh pemohon.</p>
-                    </div>
-                </div>
-                <a href="<?= base_url('uploads/' . ($tiket['lampiran'] ?? 'sample.pdf')) ?>" target="_blank" class="btn btn-view-file">
-                    <i class="fas fa-eye me-1"></i> Lihat Lampiran
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- FORM VERIFIKASI -->
-    <div class="card professional-card mb-4">
-        <div class="verification-header">
-            <h5 class="mb-0 fw-bold"><i class="fas fa-check-double me-2"></i> Verifikasi Tiket</h5>
-        </div>
+    <!-- INFORMASI PERMOHONAN CARD -->
+    <div class="card detail-main-card mb-4 detail-animate">
         <div class="card-body p-4">
-            <form id="verificationForm" action="<?= base_url('petugas/verifikasi/simpan' . (isset($tiket['id']) ? '/'.$tiket['id'] : '')) ?>" method="POST">
+            <h6 class="info-section-title">
+                <span class="info-section-icon"><i class="fas fa-info-circle"></i></span>
+                Informasi Permohonan
+            </h6>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-hashtag"></i> Nomor Tiket</span>
+                            <div class="d-flex align-items-center justify-content-between mt-1">
+                                <span id="ticketNumber" class="info-value text-primary fw-bold">
+                                    <?= esc($tiket['nomor_tiket'] ?? '-') ?>
+                                </span>
+                                <button type="button" class="btn-copy-ticket" id="copyTicketBtn" onclick="copyTiket('<?= esc($tiket['nomor_tiket'] ?? '-') ?>')" title="Salin No. Tiket">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-user"></i> Nama Pemohon</span>
+                            <span class="info-value mt-1"><?= esc($tiket['nama_pemohon'] ?? '-') ?></span>
+                        </div>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-id-card"></i> NIM</span>
+                                <span class="info-value mt-1"><?= esc($tiket['nim'] ?? '-') ?></span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-address-card"></i> NIK</span>
+                                <span class="info-value mt-1"><?= esc($tiket['nik'] ?? '-') ?></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-envelope"></i> Email</span>
+                                <span class="info-value mt-1 text-truncate"><?= esc($tiket['email'] ?? '-') ?></span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-item">
+                                <span class="info-label"><i class="fab fa-whatsapp"></i> No. HP</span>
+                                <span class="info-value mt-1"><?= esc($tiket['no_hp'] ?? '-') ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-concierge-bell"></i> Layanan</span>
+                            <span class="info-value mt-1"><?= esc($tiket['layanan'] ?? '-') ?></span>
+                        </div>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-flag"></i> Prioritas</span>
+                                <span class="info-value mt-1 text-uppercase text-primary"><?= esc($tiket['prioritas'] ?? 'normal') ?></span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-building"></i> Unit Tujuan</span>
+                                <span class="info-value mt-1"><?= esc($tiket['unit_tujuan'] ?? '-') ?></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-signal"></i> Status</span>
+                                <span class="info-value mt-1 text-info fw-bold"><?= esc($tiket['status'] ?? 'Submitted') ?></span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-item">
+                                <span class="info-label"><i class="far fa-calendar-alt"></i> Tanggal Pengajuan</span>
+                                <span class="info-value mt-1"><?= esc($tiket['tanggal'] ?? '-') ?></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="info-item">
+                            <span class="info-label"><i class="far fa-clock"></i> Dibuat</span>
+                            <span class="info-value mt-1"><?= esc($tiket['created_at'] ?? '-') ?></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4" style="border-color: #e2e8f0;">
+
+            <div class="mb-3">
+                <div class="info-item">
+                    <span class="info-label"><i class="fas fa-heading"></i> Judul Permohonan</span>
+                    <span class="info-value mt-1 fs-6"><?= esc($tiket['judul_permohonan'] ?? '-') ?></span>
+                </div>
+            </div>
+
+            <div>
+                <div class="description-box">
+                    <div class="info-label text-dark fw-bold mb-2">
+                        <i class="fas fa-quote-left text-primary"></i> Deskripsi Permohonan
+                    </div>
+                    <div>
+                        <?= nl2br(esc($tiket['deskripsi'] ?? '-')) ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIWAYAT PROSES VERIFIKASI -->
+    <div class="card detail-main-card mb-4 detail-animate">
+        <div class="card-body p-4">
+            <h6 class="info-section-title">
+                <span class="info-section-icon"><i class="fas fa-history"></i></span>
+                Riwayat Proses Verifikasi
+            </h6>
+            <?php if (empty($riwayat)): ?>
+                <div class="alert alert-info border-0 rounded-3 mb-0" role="alert" style="background-color: #e0f2fe; color: #0369a1;">
+                    <i class="fas fa-info-circle me-1"></i> Belum ada riwayat proses untuk tiket ini.
+                </div>
+            <?php else: ?>
+                <ul class="list-group list-group-flush border rounded-3 overflow-hidden">
+                    <?php foreach ($riwayat as $r): ?>
+                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <div>
+                                <strong class="text-primary"><?= esc($r['status']) ?></strong> &mdash; <span><?= esc($r['catatan']) ?></span>
+                            </div>
+                            <small class="text-muted"><i class="far fa-clock me-1"></i><?= esc($r['created_at']) ?></small>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- FORM VERIFIKASI TIKET DINAMIS -->
+    <div class="card detail-main-card mb-4 detail-animate">
+        <div class="card-body p-4">
+            <h6 class="info-section-title">
+                <span class="info-section-icon"><i class="fas fa-user-check"></i></span>
+                Form Verifikasi Tiket
+            </h6>
+            <form id="verificationForm" action="<?= base_url('petugas/simpanVerifikasi/' . ($tiket['id'] ?? '')) ?>" method="POST">
                 <?= csrf_field() ?>
 
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h6 class="fw-bold text-dark mb-0">Checklist Kelengkapan</h6>
-                    <span class="badge bg-light text-dark border px-3 py-2" id="checkCount">0 / 3 lengkap</span>
-                </div>
-
-                <div class="checklist-box mb-3">
-                    <label class="check-item" data-check-item>
-                        <input type="checkbox" class="check-input verification-check" id="checkMahasiswa" name="check_mahasiswa" value="1">
-                        <i class="fas fa-user-check check-icon"></i>
-                        <span class="check-text">Data Mahasiswa Sesuai</span>
+                <div class="mb-4">
+                    <label class="info-label text-primary" style="font-size: 0.82rem;">
+                        <i class="fas fa-tasks"></i> Tentukan Hasil Verifikasi <span class="text-danger">*</span>
                     </label>
-
-                    <label class="check-item" data-check-item>
-                        <input type="checkbox" class="check-input verification-check" id="checkLampiran" name="check_lampiran" value="1">
-                        <i class="fas fa-file-circle-check check-icon"></i>
-                        <span class="check-text">Lampiran Lengkap</span>
-                    </label>
-
-                    <label class="check-item" data-check-item>
-                        <input type="checkbox" class="check-input verification-check" id="checkPersyaratan" name="check_persyaratan" value="1">
-                        <i class="fas fa-clipboard-check check-icon"></i>
-                        <span class="check-text">Persyaratan Sudah Sesuai</span>
-                    </label>
+                    <select name="hasil_verifikasi" id="hasilVerifikasi" class="form-select custom-select-ultra shadow-sm" required>
+                        <option value="" selected disabled>-- Pilih Hasil Verifikasi --</option>
+                        <option value="verify">Verify / Verifikasi</option>
+                        <option value="revision">Need Revision / Perlu Revisi</option>
+                        <option value="reject">Reject / Tolak</option>
+                    </select>
                 </div>
 
-                <div class="verification-progress mb-4">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="progress-text font-weight-bold">Kelengkapan Verifikasi</span>
-                        <span class="progress-text font-weight-bold" id="progressPercent">0%</span>
+                <div class="disposisi-form-container mb-4">
+                    <!-- FIELD DINAMIS: VERIFY -->
+                    <div id="sectionVerify" class="d-none">
+                        <div class="mb-3">
+                            <label class="info-label"><i class="fas fa-flag text-danger"></i> Tentukan Prioritas</label>
+                            <select name="prioritas" class="form-select custom-select-ultra">
+                                <option value="" selected disabled>-- Pilih Prioritas --</option>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                <option value="Urgent">Urgent</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="info-label"><i class="fas fa-building text-primary"></i> Unit Tujuan</label>
+                            <input type="text" class="form-control custom-input-ultra bg-light" value="<?= esc($tiket['unit_tujuan'] ?? '-') ?>" readonly>
+                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle text-primary"></i> Unit tujuan otomatis mengikuti unit yang dipilih saat pengajuan tiket.</small>
+                        </div>
+
+                        <div class="mb-0">
+                            <label class="info-label"><i class="fas fa-comment-alt text-secondary"></i> Catatan Verifikasi</label>
+                            <textarea name="catatan_verifikasi" class="form-control custom-input-ultra" rows="3" placeholder="Tuliskan hasil pemeriksaan dokumen..."></textarea>
+                        </div>
                     </div>
-                    <div class="progress">
-                        <div id="verificationProgress" class="progress-bar" role="progressbar" style="width: 0%;"></div>
+
+                    <!-- FIELD DINAMIS: REVISION -->
+                    <div id="sectionRevision" class="d-none">
+                        <div class="mb-0">
+                            <label class="info-label text-warning"><i class="fas fa-edit"></i> Alasan Revisi</label>
+                            <textarea name="alasan_revisi" class="form-control custom-input-ultra" rows="3" placeholder="Tuliskan alasan mengapa tiket perlu diperbaiki..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- FIELD DINAMIS: REJECT -->
+                    <div id="sectionReject" class="d-none">
+                        <div class="mb-0">
+                            <label class="info-label text-danger"><i class="fas fa-times-circle"></i> Alasan Penolakan</label>
+                            <textarea name="alasan_penolakan" class="form-control custom-input-ultra" rows="3" placeholder="Tuliskan alasan penolakan tiket..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- ALERT INFORMASI STATUS -->
+                    <div id="alertBox" class="alert alert-secondary border-0 mb-0 mt-3" role="alert">
+                        <span id="alertText"><i class="fas fa-info-circle me-1"></i> Silakan pilih hasil verifikasi terlebih dahulu.</span>
                     </div>
                 </div>
 
-                <div class="row">
-                    <!-- STATUS DROPDOWN -->
-                    <div class="col-md-6 mb-4">
-                        <label class="form-label-custom">Status Verifikasi</label>
-                        <select name="status_verifikasi" id="statusVerifikasi" class="form-select custom-form-control" required>
-                            <option value="" selected disabled>Pilih Keputusan...</option>
-                            <option value="Verified">Disetujui / Terverifikasi</option>
-                            <option value="Need Revision">Perlu Perbaikan / Need Revision</option>
-                            <option value="Rejected">Ditolak</option>
-                        </select>
-                    </div>
-
-                    <!-- CATATAN -->
-                    <div class="col-md-6 mb-4">
-                        <label class="form-label-custom">Catatan Petugas</label>
-                        <textarea name="catatan" id="catatanVerifikasi" class="form-control custom-form-control" rows="4" placeholder="Tambahkan catatan atau alasan verifikasi..."></textarea>
-                    </div>
-                </div>
-
-                <!-- BUTTONS -->
-                <div class="d-flex justify-content-end action-buttons">
-                    <a href="<?= base_url('petugas/tiket') ?>" class="btn btn-cancel me-2">
-                        <i class="fas fa-arrow-left me-1"></i> Batal
+                <!-- TOMBOL AKSI -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a href="<?= base_url('petugas/tiket') ?>" class="btn btn-action-back">
+                        <i class="fas fa-arrow-left"></i> Kembali
                     </a>
-                    <button type="submit" id="btnSubmitVerification" class="btn btn-save-verification">
-                        <i class="fas fa-save me-1"></i> Simpan Verifikasi
+                    
+                    <button type="submit" id="btnSubmitForm" class="btn btn-action-submit d-none">
+                        <i class="fas fa-save"></i> Simpan
                     </button>
                 </div>
             </form>
@@ -651,64 +710,123 @@
 
 </div>
 
+<!-- TOAST CONTAINER -->
+<div id="ultToast">
+    <i class="fas fa-check-circle text-success fs-5"></i>
+    <span id="ultToastMessage">Nomor Tiket Berhasil Disalin!</span>
+</div>
+
+<!-- JAVASCRIPT -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-
-    const checks = document.querySelectorAll('.verification-check');
-    const checkItems = document.querySelectorAll('[data-check-item]');
-    const progressBar = document.getElementById('verificationProgress');
-    const progressPercent = document.getElementById('progressPercent');
-    const checkCount = document.getElementById('checkCount');
-
-    function updateChecklist() {
-        let checked = 0;
-        checks.forEach(function (checkbox, index) {
-            const item = checkItems[index];
-            if (checkbox.checked) {
-                checked++;
-                if (item) item.classList.add('checked');
-            } else {
-                if (item) item.classList.remove('checked');
-            }
-        });
-
-        const total = checks.length;
-        const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
-
-        progressBar.style.width = percent + '%';
-        progressPercent.textContent = percent + '%';
-        checkCount.textContent = checked + ' / ' + total + ' lengkap';
-    }
-
-    checks.forEach(function (checkbox) {
-        checkbox.addEventListener('change', updateChecklist);
+    
+    /* 1. STAGGERED ENTRANCE ANIMATION */
+    const animatedElements = document.querySelectorAll('.detail-animate');
+    animatedElements.forEach(function (element, index) {
+        setTimeout(function () {
+            element.classList.add('show');
+        }, index * 90);
     });
 
-    updateChecklist();
+    /* 2. TOAST NOTIFICATION & COPY FUNCTIONALITY */
+    const toast = document.getElementById('ultToast');
+    const toastMsg = document.getElementById('ultToastMessage');
 
-    const form = document.getElementById('verificationForm');
-    const submitButton = document.getElementById('btnSubmitVerification');
-
-    if (form && submitButton) {
-        form.addEventListener('submit', function () {
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Menyimpan...';
-        });
+    function showToast(message) {
+        if (!toast || !toastMsg) return;
+        toastMsg.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2500);
     }
 
-    const statusSelect = document.getElementById('statusVerifikasi');
-    const noteField = document.getElementById('catatanVerifikasi');
+    window.copyTiket = function(text) {
+        if (!text || text === '-') return;
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(function () {
+                showToast('Nomor Tiket "' + text + '" Berhasil Disalin!');
+                
+                const copyBtn = document.getElementById('copyTicketBtn');
+                if (copyBtn) {
+                    copyBtn.innerHTML = '<i class="fas fa-check text-success"></i>';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                    }, 1800);
+                }
+            });
+        }
+    };
 
-    if (statusSelect && noteField) {
-        statusSelect.addEventListener('change', function () {
-            if (this.value === 'Need Revision') {
-                noteField.placeholder = 'Jelaskan poin-poin dokumen atau data yang perlu diperbaiki oleh pemohon...';
-                noteField.focus();
-            } else if (this.value === 'Rejected') {
-                noteField.placeholder = 'Jelaskan alasan penolakan permohonan...';
-                noteField.focus();
+    /* 3. INTERACTIVE CARD 3D TILT EFFECT */
+    const cards = document.querySelectorAll('.info-item');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', function(e) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            card.style.transform = `perspective(1000px) rotateX(${-y / 20}deg) rotateY(${x / 20}deg) translateY(-3px)`;
+        });
+
+        card.addEventListener('mouseleave', function() {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+        });
+    });
+
+    /* 4. VERIFICATION FORM INTERACTION LOGIC */
+    const hasilSelect = document.getElementById('hasilVerifikasi');
+    const secVerify = document.getElementById('sectionVerify');
+    const secRevision = document.getElementById('sectionRevision');
+    const secReject = document.getElementById('sectionReject');
+    const alertBox = document.getElementById('alertBox');
+    const alertText = document.getElementById('alertText');
+    const btnSubmit = document.getElementById('btnSubmitForm');
+
+    if (hasilSelect) {
+        hasilSelect.addEventListener('change', function () {
+            const val = this.value;
+
+            secVerify.classList.add('d-none');
+            secRevision.classList.add('d-none');
+            secReject.classList.add('d-none');
+            btnSubmit.classList.remove('d-none');
+
+            alertBox.className = 'alert border-0 mb-0 mt-3';
+
+            if (val === 'verify') {
+                secVerify.classList.remove('d-none');
+                alertBox.classList.add('alert-success');
+                alertBox.style.backgroundColor = '#d1fae5';
+                alertBox.style.color = '#065f46';
+                alertText.innerHTML = '<i class="fas fa-check-circle me-1"></i> Tiket akan diverifikasi dan dilanjutkan ke tahap disposisi.';
+                btnSubmit.className = 'btn btn-action-submit text-white';
+                btnSubmit.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                btnSubmit.style.boxShadow = '0 6px 18px rgba(16, 185, 129, 0.3)';
+                btnSubmit.innerHTML = '<i class="fas fa-check me-1"></i> Verify';
+            } else if (val === 'revision') {
+                secRevision.classList.remove('d-none');
+                alertBox.classList.add('alert-warning');
+                alertBox.style.backgroundColor = '#fef3c7';
+                alertBox.style.color = '#92400e';
+                alertText.innerHTML = '<i class="fas fa-edit me-1"></i> Tiket akan dikembalikan kepada pemohon untuk diperbaiki.';
+                btnSubmit.className = 'btn btn-action-submit text-white';
+                btnSubmit.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
+                btnSubmit.style.boxShadow = '0 6px 18px rgba(245, 158, 11, 0.3)';
+                btnSubmit.innerHTML = '<i class="fas fa-edit me-1"></i> Need Revision';
+            } else if (val === 'reject') {
+                secReject.classList.remove('d-none');
+                alertBox.classList.add('alert-danger');
+                alertBox.style.backgroundColor = '#fee2e2';
+                alertBox.style.color = '#991b1b';
+                alertText.innerHTML = '<i class="fas fa-times-circle me-1"></i> Tiket akan ditolak dan tidak dilanjutkan ke proses berikutnya.';
+                btnSubmit.className = 'btn btn-action-submit text-white';
+                btnSubmit.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+                btnSubmit.style.boxShadow = '0 6px 18px rgba(239, 68, 68, 0.3)';
+                btnSubmit.innerHTML = '<i class="fas fa-times me-1"></i> Reject';
             } else {
-                noteField.placeholder = 'Tambahkan catatan atau alasan verifikasi...';
+                alertBox.classList.add('alert-secondary');
+                alertText.innerHTML = '<i class="fas fa-info-circle me-1"></i> Silakan pilih hasil verifikasi terlebih dahulu.';
+                btnSubmit.classList.add('d-none');
             }
         });
     }

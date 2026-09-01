@@ -2,138 +2,133 @@
 
 namespace App\Controllers;
 
+use App\Models\UserModel;
+use App\Models\UserProfileModel;
+
 class DosenController extends BaseController
 {
-    // ==========================================
-    // DASHBOARD DOSEN
-    // ==========================================
+    protected UserModel $userModel;
+    protected UserProfileModel $profileModel;
+
+    public function __construct()
+    {
+        helper(['form']);
+
+        $this->userModel = new UserModel();
+        $this->profileModel = new UserProfileModel();
+    }
+
     public function dashboard()
     {
-        // ==========================================
-        // DATA USER LOGIN
-        // ==========================================
-
-        $sessionUser = session()->get('user') ?? [];
-
-        // ==========================================
-        // PROFILE DOSEN
-        // ==========================================
-
-        $profile = session()->get('dosen_profile');
-
-        if (!$profile) {
-
-            $profile = [
-
-                // ==========================
-                // DATA PRIBADI
-                // ==========================
-
-                'nama'            => $sessionUser['nama'] ?? 'Dr. Andi Saputra',
-
-                'nip'             => $sessionUser['nip'] ?? '198812312020011001',
-
-                'nidn'            => $sessionUser['nidn'] ?? '0011223344',
-
-                'nik'             => $sessionUser['nik'] ?? '',
-
-                'email'           => $sessionUser['email'] ?? 'andi@polban.ac.id',
-
-                'no_hp'           => $sessionUser['no_hp'] ?? '',
-
-                'jenis_kelamin'   => $sessionUser['jenis_kelamin'] ?? 'Laki-laki',
-
-                'alamat'          => $sessionUser['alamat'] ?? '',
-
-                'foto'            => $sessionUser['foto'] ?? null,
-
-                // ==========================
-                // AKADEMIK
-                // ==========================
-
-                'prodi'           => $sessionUser['prodi'] ?? 'D3 Teknik Informatika',
-
-                'jurusan'         => $sessionUser['jurusan'] ?? 'Teknik Komputer dan Informatika',
-
-                'fakultas'        => $sessionUser['fakultas'] ?? 'Sekolah Vokasi',
-
-                'jabatan'         => $sessionUser['jabatan'] ?? 'Dosen',
-
-                'status'          => $sessionUser['status'] ?? 'Aktif'
-
-            ];
-
-            session()->set(
-                'dosen_profile',
-                $profile
-            );
+        if (! session()->get('isLoggedIn')) {
+            return redirect()
+                ->to('/login')
+                ->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        // ==========================================
-        // DATA TIKET
-        // ==========================================
+        // Cek apakah user adalah DOSEN
+        $applicantTypeCode = session()->get('applicant_type_code');
+        if ($applicantTypeCode !== 'DOSEN') {
+            return redirect()
+                ->to('/dashboard-mahasiswa')
+                ->with('error', 'Akses hanya untuk dosen.');
+        }
+
+        $userId = (int) session()->get('user_id');
+
+        if ($userId <= 0) {
+            session()->destroy();
+
+            return redirect()
+                ->to('/login')
+                ->with('error', 'Sesi login tidak valid.');
+        }
+
+        $user = $this->userModel->find($userId);
+
+        if (! $user) {
+            session()->destroy();
+
+            return redirect()
+                ->to('/login')
+                ->with('error', 'Data pengguna tidak ditemukan.');
+        }
+
+        $profile = $this->profileModel
+            ->getComplete()
+            ->where('user_profiles.user_id', $userId)
+            ->first();
+
+        if (! $profile) {
+            $profile = session()->get('dosen_profile') ?? [];
+        }
+
+        $dosen = [
+            'id' => $userId,
+
+            'nama' => $profile['name']
+                ?? $user['full_name']
+                ?? 'Dosen',
+
+            'nip' => $profile['identity_number']
+                ?? $user['identity_number']
+                ?? '-',
+
+            'nidn' => $profile['nidn']
+                ?? '-',
+
+            'prodi' => $profile['study_program_name']
+                ?? '-',
+
+            'jurusan' => $profile['department_name']
+                ?? '-',
+
+            'fakultas' => '-',
+
+            'jabatan' => 'Dosen',
+
+            'status' => ((int) ($user['is_active'] ?? 0) === 1)
+                ? 'Aktif'
+                : 'Tidak Aktif',
+        ];
 
         $tickets = session()->get('dosen_tickets') ?? [];
 
-        // ==========================================
-        // HITUNG STATISTIK
-        // ==========================================
-
         $total = count($tickets);
-
         $diproses = 0;
-
         $revisi = 0;
-
         $selesai = 0;
 
         foreach ($tickets as $ticket) {
+            $status = strtolower(trim((string) ($ticket['status'] ?? '')));
 
-            switch ($ticket['status']) {
+            if (in_array($status, ['submitted', 'verification', 'verified', 'in progress', 'processing', 'processed', 'diproses'], true)) {
+                $diproses++;
+            }
 
-                case 'In Progress':
-                    $diproses++;
-                    break;
+            if (in_array($status, ['revision', 'revisi'], true)) {
+                $revisi++;
+            }
 
-                case 'Revision':
-                    $revisi++;
-                    break;
-
-                case 'Completed':
-                    $selesai++;
-                    break;
+            if (in_array($status, ['completed', 'selesai'], true)) {
+                $selesai++;
             }
         }
 
-        // ==========================================
-        // DATA VIEW
-        // ==========================================
-
         $data = [
-
             'title' => 'Dashboard Dosen',
-
-            'user' => $profile,
-
+            'user' => $dosen,
+            'dosen' => $dosen,
             'statistik' => [
-
                 'total' => $total,
-
                 'diproses' => $diproses,
-
                 'revisi' => $revisi,
-
-                'selesai' => $selesai
-
+                'selesai' => $selesai,
+                'notifikasi' => 0,
             ],
-
-            'tickets' => array_reverse($tickets)
-
+            'tickets' => array_reverse($tickets),
         ];
 
-        return view(
-            'dosen/dashboard',
-            $data
-        );
+        return view('dosen/dashboard', $data);
     }
 }

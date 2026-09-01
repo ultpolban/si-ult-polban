@@ -1,25 +1,20 @@
-<?= $this->include('layouts/header') ?>
-
-<?= $this->include('layouts/navbar') ?>
-
-<?= $this->include('layouts/sidebar_dosen') ?>
-
+<?= $this->include('layouts/header'); ?>
+<?= $this->include('layouts/navbar'); ?>
+<?= $this->include('layouts/sidebar_dosen'); ?>
 
 <div class="content-wrapper">
-
-    <!-- HEADER -->
 
     <section class="content-header">
 
         <div class="container-fluid">
 
-            <div class="row mb-2">
+            <div class="row align-items-center">
 
                 <div class="col-sm-6">
 
-                    <h1 style="color:#0b3d91;font-weight:700;">
+                    <h1 class="dashboard-title">
 
-                        <i class="fas fa-chalkboard-teacher"></i>
+                        <i class="fas fa-home me-2"></i>
 
                         Dashboard Dosen
 
@@ -27,20 +22,13 @@
 
                 </div>
 
-
-                <div class="col-sm-6 text-end">
+                <div class="col-sm-6 text-sm-end mt-2 mt-sm-0">
 
                     <a
                         href="<?= base_url('dosen/ticket/create') ?>"
-                        class="btn"
-                        style="
-                            background:#f28c28;
-                            color:white;
-                            font-weight:600;
-                        "
-                    >
+                        class="btn btn-ult-orange">
 
-                        <i class="fas fa-plus-circle"></i>
+                        <i class="fas fa-plus-circle me-1"></i>
 
                         Ajukan Layanan
 
@@ -54,94 +42,138 @@
 
     </section>
 
-
-    <!-- MAIN CONTENT -->
-
     <section class="content">
 
         <div class="container-fluid">
 
-
-            <!-- WELCOME -->
-
-            <div class="card shadow-sm mb-4">
+            <div class="card welcome-card shadow-sm">
 
                 <div class="card-body">
 
-                    <h3 style="color:#0b3d91;font-weight:700;">
+                    <div class="row align-items-center">
 
-                        Selamat Datang,
-                        <?= esc($user['nama'] ?? 'Dosen') ?>
+                        <div class="col-md-8">
 
-                    </h3>
+                            <h3 class="welcome-title">
 
+                                Selamat Datang,
 
-                    <p class="text-muted mb-0">
+                                <?= esc($user['nama'] ?? 'Dosen'); ?>
 
-                        <strong>NIP/NIDN:</strong>
+                                ! 👋
 
-                        <?= esc($user['nip'] ?? '-') ?>
+                            </h3>
 
-                        <br>
+                            <p class="welcome-text mb-3">
 
-                        <strong>Program Studi:</strong>
+                                Selamat datang di Sistem Informasi
+                                Unit Layanan Terpadu POLBAN.
 
-                        <?= esc($user['prodi'] ?? '-') ?>
+                            </p>
 
-                        <br>
+                            <div class="student-info">
 
-                        <strong>Fakultas:</strong>
+                                <div>
 
-                        <?= esc($user['fakultas'] ?? '-') ?>
+                                    <i class="fas fa-id-card"></i>
 
-                        <br>
+                                    <strong>
+                                        NIP/NIDN:
+                                    </strong>
 
-                        <strong>Jabatan:</strong>
+                                    <?= esc($user['nip'] ?? '-') ?>
+                                    /
+                                    <?= esc($user['nidn'] ?? '-') ?>
 
-                        <?= esc($user['jabatan'] ?? '-') ?>
+                                </div>
 
-                    </p>
+                                <div>
+
+                                    <i class="fas fa-graduation-cap"></i>
+
+                                    <strong>
+                                        Program Studi:
+                                    </strong>
+
+                                    <?= esc($user['prodi'] ?? '-') ?>
+
+                                </div>
+
+                                <div>
+
+                                    <i class="fas fa-building"></i>
+
+                                    <strong>
+                                        Fakultas:
+                                    </strong>
+
+                                    <?= esc($user['fakultas'] ?? '-') ?>
+
+                                </div>
+
+                                <div>
+
+                                    <i class="fas fa-user-tag"></i>
+
+                                    <strong>
+                                        Jabatan:
+                                    </strong>
+
+                                    <?= esc($user['jabatan'] ?? '-') ?>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4 text-center mt-3 mt-md-0">
+
+                            <div class="student-avatar">
+
+                                <i class="fas fa-user-tie"></i>
+
+                            </div>
+
+                            <div class="mt-2">
+
+                                <span class="status-active">
+
+                                    <i class="fas fa-circle"></i>
+
+                                    <?= esc(
+                                        strtolower((string) ($user['status'] ?? 'Aktif')) === 'tidak aktif'
+                                            ? 'Tidak Aktif'
+                                            : ($user['status'] ?? 'Aktif')
+                                    ); ?>
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
             </div>
 
-
-            <!-- STATISTIK -->
-
             <div class="row">
 
+                <div class="col-lg-3 col-md-6 mb-3">
 
-                <!-- TOTAL -->
+                    <div class="stat-card stat-blue">
 
-                <div class="col-lg-3 col-6">
+                        <div class="stat-content">
 
-                    <div
-                        class="small-box"
-                        style="
-                            background:#0b3d91;
-                            color:white;
-                            border-radius:15px;
-                        "
-                    >
+                            <h2><?= esc($statistik['total'] ?? 0); ?></h2>
 
-                        <div class="inner">
-
-                            <h3>
-
-                                <?= $statistik['total'] ?? 0 ?>
-
-                            </h3>
-
-                            <p>
-
-                                Jumlah Pengajuan
-
-                            </p>
+                            <p>Jumlah Pengajuan</p>
 
                         </div>
 
-                        <div class="icon">
+                        <div class="stat-icon">
 
                             <i class="fas fa-ticket-alt"></i>
 
@@ -151,37 +183,19 @@
 
                 </div>
 
+                <div class="col-lg-3 col-md-6 mb-3">
 
-                <!-- DIPROSES -->
+                    <div class="stat-card stat-orange">
 
-                <div class="col-lg-3 col-6">
+                        <div class="stat-content">
 
-                    <div
-                        class="small-box"
-                        style="
-                            background:#f28c28;
-                            color:white;
-                            border-radius:15px;
-                        "
-                    >
+                            <h2><?= esc($statistik['diproses'] ?? 0); ?></h2>
 
-                        <div class="inner">
-
-                            <h3>
-
-                                <?= $statistik['diproses'] ?? 0 ?>
-
-                            </h3>
-
-                            <p>
-
-                                Sedang Diproses
-
-                            </p>
+                            <p>Sedang Diproses</p>
 
                         </div>
 
-                        <div class="icon">
+                        <div class="stat-icon">
 
                             <i class="fas fa-spinner"></i>
 
@@ -191,39 +205,21 @@
 
                 </div>
 
+                <div class="col-lg-3 col-md-6 mb-3">
 
-                <!-- REVISI -->
+                    <div class="stat-card stat-warning">
 
-                <div class="col-lg-3 col-6">
+                        <div class="stat-content">
 
-                    <div
-                        class="small-box"
-                        style="
-                            background:#dc3545;
-                            color:white;
-                            border-radius:15px;
-                        "
-                    >
+                            <h2><?= esc($statistik['revisi'] ?? 0); ?></h2>
 
-                        <div class="inner">
-
-                            <h3>
-
-                                <?= $statistik['revisi'] ?? 0 ?>
-
-                            </h3>
-
-                            <p>
-
-                                Perlu Revisi
-
-                            </p>
+                            <p>Perlu Revisi</p>
 
                         </div>
 
-                        <div class="icon">
+                        <div class="stat-icon">
 
-                            <i class="fas fa-exclamation-circle"></i>
+                            <i class="fas fa-edit"></i>
 
                         </div>
 
@@ -231,37 +227,19 @@
 
                 </div>
 
+                <div class="col-lg-3 col-md-6 mb-3">
 
-                <!-- SELESAI -->
+                    <div class="stat-card stat-success">
 
-                <div class="col-lg-3 col-6">
+                        <div class="stat-content">
 
-                    <div
-                        class="small-box"
-                        style="
-                            background:#198754;
-                            color:white;
-                            border-radius:15px;
-                        "
-                    >
+                            <h2><?= esc($statistik['selesai'] ?? 0); ?></h2>
 
-                        <div class="inner">
-
-                            <h3>
-
-                                <?= $statistik['selesai'] ?? 0 ?>
-
-                            </h3>
-
-                            <p>
-
-                                Selesai
-
-                            </p>
+                            <p>Selesai</p>
 
                         </div>
 
-                        <div class="icon">
+                        <div class="stat-icon">
 
                             <i class="fas fa-check-circle"></i>
 
@@ -273,72 +251,45 @@
 
             </div>
 
+            <div class="row mb-4">
 
-            <!-- QUICK MENU -->
-
-            <div class="row mt-3">
-
-
-                <div class="col-md-4 mb-3">
+                <div class="col-lg-4 col-md-4 mb-2">
 
                     <a
                         href="<?= base_url('dosen/ticket/create') ?>"
-                        class="btn btn-block"
-                        style="
-                            background:#f28c28;
-                            color:white;
-                            font-weight:600;
-                            padding:12px;
-                        "
-                    >
+                        class="quick-action action-orange">
 
                         <i class="fas fa-plus-circle"></i>
 
-                        Ajukan Layanan Baru
+                        <span>Ajukan Layanan Baru</span>
 
                     </a>
 
                 </div>
 
-
-                <div class="col-md-4 mb-3">
+                <div class="col-lg-4 col-md-4 mb-2">
 
                     <a
                         href="<?= base_url('dosen/ticket/history') ?>"
-                        class="btn btn-block"
-                        style="
-                            background:#0b3d91;
-                            color:white;
-                            font-weight:600;
-                            padding:12px;
-                        "
-                    >
+                        class="quick-action action-blue">
 
                         <i class="fas fa-history"></i>
 
-                        Tracking Tiket
+                        <span>Tracking Tiket</span>
 
                     </a>
 
                 </div>
 
-
-                <div class="col-md-4 mb-3">
+                <div class="col-lg-4 col-md-4 mb-2">
 
                     <a
                         href="<?= base_url('dosen/notification') ?>"
-                        class="btn btn-block"
-                        style="
-                            background:#198754;
-                            color:white;
-                            font-weight:600;
-                            padding:12px;
-                        "
-                    >
+                        class="quick-action action-blue">
 
                         <i class="fas fa-bell"></i>
 
-                        Notifikasi
+                        <span>Notifikasi</span>
 
                     </a>
 
@@ -346,94 +297,90 @@
 
             </div>
 
+            <div class="card dashboard-card shadow-sm">
 
-            <!-- RIWAYAT -->
+                <div class="card-header dashboard-card-header">
 
-            <div class="card shadow-sm mt-4">
+                    <h3 class="card-title">
 
-                <div class="card-header">
+                        <i class="fas fa-history me-2"></i>
 
-                    <h3
-                        class="card-title"
-                        style="
-                            color:#0b3d91;
-                            font-weight:700;
-                        "
-                    >
-
-                        <i class="fas fa-history"></i>
-
-                        Riwayat Pengajuan Terbaru
+                        Riwayat Pengajuan Layanan
 
                     </h3>
 
+                    <a
+                        href="<?= base_url('dosen/ticket/history') ?>"
+                        class="btn btn-sm btn-ult-orange float-end">
+
+                        Lihat Semua
+
+                    </a>
+
                 </div>
 
+                <div class="card-body table-responsive p-0">
 
-                <div class="card-body table-responsive">
+                    <table class="table table-hover align-middle mb-0">
 
-                    <table class="table table-bordered table-hover">
-
-                        <thead style="background:#0b3d91;color:white;">
+                        <thead>
 
                             <tr>
 
                                 <th>No</th>
-
                                 <th>Nomor Tiket</th>
-
                                 <th>Layanan</th>
-
                                 <th>Tanggal</th>
-
                                 <th>Status</th>
-
                                 <th>Aksi</th>
 
                             </tr>
 
                         </thead>
 
-
                         <tbody>
 
-                            <?php if (!empty($tickets)): ?>
+                            <?php if (! empty($tickets)): ?>
 
                                 <?php $no = 1; ?>
 
                                 <?php foreach ($tickets as $ticket): ?>
 
+                                    <?php
+                                    $statusRaw = strtolower(trim((string) ($ticket['status'] ?? '')));
+                                    $statusClass = 'status-submitted';
+                                    $statusLabel = $ticket['status'] ?? 'Submitted';
+
+                                    if (in_array($statusRaw, ['in progress', 'progress', 'processing', 'processed', 'diproses'], true)) {
+                                        $statusClass = 'status-progress';
+                                        $statusLabel = 'Sedang Diproses';
+                                    } elseif (in_array($statusRaw, ['revision', 'revisi', 'needs revision', 'perlu revisi'], true)) {
+                                        $statusClass = 'status-revision';
+                                        $statusLabel = 'Perlu Revisi';
+                                    } elseif (in_array($statusRaw, ['completed', 'selesai'], true)) {
+                                        $statusClass = 'status-completed';
+                                        $statusLabel = 'Selesai';
+                                    } elseif (in_array($statusRaw, ['submitted', 'verification', 'verified'], true)) {
+                                        $statusClass = 'status-submitted';
+                                        $statusLabel = 'Diajukan';
+                                    }
+                                    ?>
+
                                     <tr>
 
-                                        <td>
+                                        <td><?= $no++; ?></td>
 
-                                            <?= $no++ ?>
+                                        <td><?= esc($ticket['nomor'] ?? '-') ?></td>
 
-                                        </td>
+                                        <td><?= esc($ticket['layanan'] ?? '-') ?></td>
 
-                                        <td>
-
-                                            <?= esc($ticket['nomor'] ?? '-') ?>
-
-                                        </td>
+                                        <td><?= esc($ticket['tanggal'] ?? '-') ?></td>
 
                                         <td>
 
-                                            <?= esc($ticket['layanan'] ?? '-') ?>
+                                            <span class="ticket-status <?= $statusClass ?>">
 
-                                        </td>
-
-                                        <td>
-
-                                            <?= esc($ticket['tanggal'] ?? '-') ?>
-
-                                        </td>
-
-                                        <td>
-
-                                            <span class="badge bg-primary">
-
-                                                <?= esc($ticket['status'] ?? '-') ?>
+                                                <?= esc($statusLabel) ?>
 
                                             </span>
 
@@ -443,10 +390,9 @@
 
                                             <a
                                                 href="<?= base_url('dosen/ticket/detail/' . ($ticket['id'] ?? 0)) ?>"
-                                                class="btn btn-sm btn-info"
-                                            >
+                                                class="btn btn-sm btn-detail">
 
-                                                <i class="fas fa-eye"></i>
+                                                <i class="fas fa-eye me-1"></i>
 
                                                 Detail
 
@@ -462,10 +408,7 @@
 
                                 <tr>
 
-                                    <td
-                                        colspan="6"
-                                        class="text-center text-muted py-4"
-                                    >
+                                    <td colspan="6" class="text-center text-muted py-4">
 
                                         <i class="fas fa-inbox fa-2x mb-2"></i>
 
@@ -487,12 +430,10 @@
 
             </div>
 
-
         </div>
 
     </section>
 
 </div>
 
-
-<?= $this->include('layouts/footer') ?>
+<?= $this->include('layouts/footer'); ?>

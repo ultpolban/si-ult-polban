@@ -298,6 +298,21 @@ $routes->post(
     'DosenTicketController::store'
 );
 
+$routes->post(
+    'dosen/ticket/save-draft',
+    'DosenTicketController::saveDraft'
+);
+
+$routes->get(
+    'dosen/ticket/jenis-layanan',
+    'DosenTicketController::jenisLayanan'
+);
+
+$routes->get(
+    'dosen/ticket/persyaratan',
+    'DosenTicketController::persyaratan'
+);
+
 // Halaman Success
 $routes->get(
     'dosen/ticket/success',

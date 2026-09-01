@@ -25,12 +25,14 @@ class AuthController extends BaseController
     }
 
     /**
-     * Halaman Login
+     * =========================================================
+     * HALAMAN LOGIN
+     * =========================================================
      */
     public function index()
     {
         if (session()->get('isLoggedIn')) {
-            return redirect()->to('/dashboard-mahasiswa');
+            return $this->redirectByApplicantType();
         }
 
         // Kembali ke halaman login dianggap membatalkan
@@ -43,12 +45,15 @@ class AuthController extends BaseController
     }
 
     /**
-     * Proses Login (Step 1: validasi kredensial)
+     * =========================================================
+     * PROSES LOGIN
+     * Step 1: Validasi email & password
+     * =========================================================
      */
     public function authenticate()
     {
         if (session()->get('isLoggedIn')) {
-            return redirect()->to('/dashboard-mahasiswa');
+            return $this->redirectByApplicantType();
         }
 
         $email    = trim((string) $this->request->getPost('email'));
@@ -60,6 +65,9 @@ class AuthController extends BaseController
                 ->with('error', 'Email dan Password wajib diisi.');
         }
 
+        /**
+         * Cari user aktif berdasarkan email.
+         */
         $user = $this->userModel
             ->where('email', $email)
             ->where('is_active', 1)
@@ -71,6 +79,9 @@ class AuthController extends BaseController
                 ->with('error', 'Email tidak ditemukan.');
         }
 
+        /**
+         * Verifikasi password.
+         */
         if (!password_verify($password, $user['password'])) {
             return redirect()->back()
                 ->withInput()
@@ -80,10 +91,13 @@ class AuthController extends BaseController
         // Reset pending MFA dari percobaan login sebelumnya.
         session()->remove('login_pending');
 
-        // =====================================================
-        // MFA: user wajib verifikasi kode terlebih dahulu
-        // =====================================================
+        /**
+         * =====================================================
+         * MFA
+         * =====================================================
+         */
         if ($this->requiresMfa($user)) {
+
             session()->set('login_pending', [
                 'user_id'   => (int) $user['id'],
                 'full_name' => $user['full_name'] ?? '',
@@ -93,20 +107,24 @@ class AuthController extends BaseController
             return redirect()->to('/login/mfa');
         }
 
-        // =====================================================
-        // Tanpa MFA: langsung login
-        // =====================================================
+        /**
+         * =====================================================
+         * TANPA MFA
+         * Langsung selesaikan login.
+         * =====================================================
+         */
         return $this->completeLogin($user);
     }
 
     /**
-     * Halaman Verifikasi Dua Langkah
-     * Step 2: masukkan kode MFA
+     * =========================================================
+     * HALAMAN VERIFIKASI MFA
+     * =========================================================
      */
     public function mfa()
     {
         if (session()->get('isLoggedIn')) {
-            return redirect()->to('/dashboard-mahasiswa');
+            return $this->redirectByApplicantType();
         }
 
         $pending = session()->get('login_pending');
@@ -120,7 +138,10 @@ class AuthController extends BaseController
             session()->remove('login_pending');
 
             return redirect()->to('/login')
-                ->with('error', 'Sesi verifikasi tidak valid. Silakan login ulang.');
+                ->with(
+                    'error',
+                    'Sesi verifikasi tidak valid. Silakan login ulang.'
+                );
         }
 
         return view('auth/login_mfa', [
@@ -130,13 +151,14 @@ class AuthController extends BaseController
     }
 
     /**
-     * Proses Verifikasi MFA
-     * Step 3: validasi kode, lalu login
+     * =========================================================
+     * VERIFIKASI MFA
+     * =========================================================
      */
     public function verifyMfa()
     {
         if (session()->get('isLoggedIn')) {
-            return redirect()->to('/dashboard-mahasiswa');
+            return $this->redirectByApplicantType();
         }
 
         $pending = session()->get('login_pending');
@@ -146,13 +168,18 @@ class AuthController extends BaseController
                 ->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        $user = $this->userModel->find((int) $pending['user_id']);
+        $userId = (int) $pending['user_id'];
 
-        if (!$user || !$this->validPendingUser((int) $pending['user_id'])) {
+        $user = $this->userModel->find($userId);
+
+        if (!$user || !$this->validPendingUser($userId)) {
             session()->remove('login_pending');
 
             return redirect()->to('/login')
-                ->with('error', 'Sesi verifikasi tidak valid. Silakan login ulang.');
+                ->with(
+                    'error',
+                    'Sesi verifikasi tidak valid. Silakan login ulang.'
+                );
         }
 
         $code = trim((string) $this->request->getPost('mfa_code'));
@@ -166,87 +193,298 @@ class AuthController extends BaseController
         $verified   = false;
         $isRecovery = false;
 
-        // Coba verifikasi menggunakan TOTP.
-        if ($this->mfaService->verifyCode((int) $user['id'], $code)) {
+        /**
+         * =====================================================
+         * COBA TOTP
+         * =====================================================
+         */
+        if ($this->mfaService->verifyCode($userId, $code)) {
+
             $verified = true;
         }
 
-        // Jika TOTP gagal, coba recovery code.
-        elseif ($this->mfaService->verifyRecoveryCode((int) $user['id'], $code)) {
+        /**
+         * =====================================================
+         * COBA RECOVERY CODE
+         * =====================================================
+         */
+        elseif ($this->mfaService->verifyRecoveryCode($userId, $code)) {
+
             $verified   = true;
             $isRecovery = true;
         }
 
+        /**
+         * =====================================================
+         * MFA GAGAL
+         * =====================================================
+         */
         if (!$verified) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Kode MFA tidak valid. Silakan coba lagi.');
+                ->with(
+                    'error',
+                    'Kode MFA tidak valid. Silakan coba lagi.'
+                );
         }
 
-        // Recovery code hanya boleh digunakan satu kali.
+        /**
+         * Recovery code hanya boleh digunakan satu kali.
+         */
         if ($isRecovery) {
+
             $this->mfaService->consumeRecoveryCode(
-                (int) $user['id'],
+                $userId,
                 $code
             );
         }
 
-        // MFA selesai.
+        /**
+         * MFA selesai.
+         */
         session()->remove('login_pending');
 
         return $this->completeLogin($user);
     }
 
     /**
-     * Selesaikan login:
+     * =========================================================
+     * SELESAIKAN LOGIN
+     *
      * - update last_login
+     * - ambil role
+     * - ambil jenis pemohon
      * - isi session
-     * - catat activity log
-     * - redirect ke dashboard mahasiswa
+     * - activity log
+     * - redirect sesuai jenis pemohon
+     * =========================================================
      */
     protected function completeLogin(array $user)
     {
+        /**
+         * =====================================================
+         * UPDATE LAST LOGIN
+         * =====================================================
+         */
         $this->userModel->update($user['id'], [
             'last_login' => date('Y-m-d H:i:s'),
         ]);
 
+        /**
+         * =====================================================
+         * AMBIL ROLE USER
+         * =====================================================
+         */
         $role = db_connect()
             ->table('roles')
             ->where('id', $user['role_id'])
             ->get()
             ->getRowArray();
 
+        /**
+         * =====================================================
+         * AMBIL PROFILE USER
+         * =====================================================
+         */
+        $userProfile = db_connect()
+            ->table('user_profiles')
+            ->where('user_id', $user['id'])
+            ->get()
+            ->getRowArray();
+
+        /**
+         * =====================================================
+         * DEFAULT DATA PEMOHON
+         * =====================================================
+         */
+        $applicantTypeId   = null;
+        $applicantTypeCode = '';
+        $applicantTypeName = '';
+
+        /**
+         * =====================================================
+         * AMBIL JENIS PEMOHON
+         * dari user_profiles.applicant_type_id
+         * =====================================================
+         */
+        if (
+            $userProfile
+            && !empty($userProfile['applicant_type_id'])
+        ) {
+
+            $applicantTypeId = (int) $userProfile['applicant_type_id'];
+
+            $applicantType = db_connect()
+                ->table('master_applicant_types')
+                ->where('id', $applicantTypeId)
+                ->where('is_active', 1)
+                ->get()
+                ->getRowArray();
+
+            if ($applicantType) {
+
+                $applicantTypeCode = strtoupper(
+                    trim((string) ($applicantType['code'] ?? ''))
+                );
+
+                $applicantTypeName = trim(
+                    (string) ($applicantType['name'] ?? '')
+                );
+            }
+        }
+
+        /**
+         * =====================================================
+         * SESSION
+         * =====================================================
+         */
         session()->set([
-            'user_id'    => $user['id'],
-            'role_id'    => $user['role_id'],
-            'role_code'  => $role['code'] ?? '',
-            'full_name'  => $user['full_name'],
-            'email'      => $user['email'],
-            'role_name'  => $role['name'] ?? '',
-            'isLoggedIn' => true,
-            'user'       => $user,
+            'user_id'            => (int) $user['id'],
+            'role_id'            => (int) $user['role_id'],
+            'role_code'          => $role['code'] ?? '',
+            'role_name'          => $role['name'] ?? '',
+
+            'full_name'          => $user['full_name'] ?? '',
+            'email'              => $user['email'] ?? '',
+
+            'applicant_type_id'  => $applicantTypeId,
+            'applicant_type_code'=> $applicantTypeCode,
+            'applicant_type_name'=> $applicantTypeName,
+
+            'isLoggedIn'         => true,
+
+            'user'               => $user,
+            'user_profile'       => $userProfile,
         ]);
 
+        /**
+         * Pastikan pending MFA dibersihkan.
+         */
         session()->remove('login_pending');
 
-        // Catat aktivitas login.
+        /**
+         * =====================================================
+         * ACTIVITY LOG
+         * =====================================================
+         */
         $this->activityLogService->storeLog([
             'action'       => 'LOGIN',
             'module'       => 'auth',
             'reference_id' => (int) $user['id'],
             'user_id'      => (int) $user['id'],
             'ip_address'   => $this->request->getIPAddress(),
-            'user_agent'   => $this->request->getUserAgent()->getAgentString(),
+            'user_agent'   => $this->request
+                ->getUserAgent()
+                ->getAgentString(),
         ]);
 
-        // =====================================================
-        // SEMENTARA FOKUS MAHASISWA
-        // =====================================================
-        return redirect()->to('/dashboard-mahasiswa');
+        /**
+         * =====================================================
+         * REDIRECT BERDASARKAN JENIS PEMOHON
+         * =====================================================
+         */
+        return $this->redirectByApplicantType();
     }
 
     /**
-     * Apakah user perlu menjalani MFA saat login?
+     * =========================================================
+     * REDIRECT BERDASARKAN JENIS PEMOHON
+     *
+     * MHS    -> Dashboard Mahasiswa
+     * ALUMNI -> Dashboard Alumni
+     * TENDIK -> Dashboard Tendik
+     * DOSEN  -> Dashboard Dosen
+     * MITRA  -> Dashboard Mitra
+     * WALI   -> Dashboard Wali
+     * UMUM   -> Dashboard Umum
+     * =========================================================
+     */
+    protected function redirectByApplicantType()
+    {
+        $applicantCode = strtoupper(
+            trim((string) session()->get('applicant_type_code'))
+        );
+
+        switch ($applicantCode) {
+
+            /**
+             * =================================================
+             * MAHASISWA
+             * =================================================
+             */
+            case 'MHS':
+
+                return redirect()->to('/dashboard-mahasiswa');
+
+            /**
+             * =================================================
+             * ALUMNI
+             * =================================================
+             */
+            case 'ALUMNI':
+
+                return redirect()->to('/alumni/dashboard');
+
+            /**
+             * =================================================
+             * TENDIK
+             * =================================================
+             */
+            case 'TENDIK':
+
+                return redirect()->to('/dashboard-tendik');
+
+            /**
+             * =================================================
+             * DOSEN
+             * =================================================
+             */
+            case 'DOSEN':
+
+                return redirect()->to('/dosen/dashboard');
+
+            /**
+             * =================================================
+             * MITRA
+             * =================================================
+             */
+            case 'MITRA':
+
+                return redirect()->to('/mitra/dashboard');
+
+            /**
+             * =================================================
+             * WALI
+             * =================================================
+             */
+            case 'WALI':
+
+                return redirect()->to('/wali/dashboard');
+
+            /**
+             * =================================================
+             * UMUM
+             * =================================================
+             */
+            case 'UMUM':
+
+                return redirect()->to('/umum/dashboard');
+
+            /**
+             * =================================================
+             * JIKA JENIS PEMOHON TIDAK DITEMUKAN
+             * =================================================
+             */
+            default:
+
+                return redirect()->to('/dashboard-mahasiswa');
+        }
+    }
+
+    /**
+     * =========================================================
+     * CEK APAKAH USER WAJIB MFA
+     * =========================================================
      */
     protected function requiresMfa(array $user): bool
     {
@@ -255,19 +493,23 @@ class AuthController extends BaseController
     }
 
     /**
-     * Validasi user yang sedang dalam proses verifikasi MFA.
+     * =========================================================
+     * VALIDASI USER PENDING MFA
+     * =========================================================
      */
     protected function validPendingUser(int $userId): bool
     {
         $user = $this->userModel->find($userId);
 
         return $user
-            && (int) $user['is_active'] === 1
+            && (int) ($user['is_active'] ?? 0) === 1
             && $this->requiresMfa($user);
     }
 
     /**
-     * Halaman akses ditolak
+     * =========================================================
+     * HALAMAN UNAUTHORIZED
+     * =========================================================
      */
     public function unauthorized()
     {
@@ -277,25 +519,39 @@ class AuthController extends BaseController
     }
 
     /**
-     * Logout
+     * =========================================================
+     * LOGOUT
+     * =========================================================
      */
     public function logout()
     {
         $userId = (int) session()->get('user_id');
 
+        /**
+         * Activity log logout.
+         */
         if ($userId > 0) {
+
             $this->activityLogService->storeLog([
                 'action'       => 'LOGOUT',
                 'module'       => 'auth',
                 'reference_id' => $userId,
                 'user_id'      => $userId,
                 'ip_address'   => $this->request->getIPAddress(),
-                'user_agent'   => $this->request->getUserAgent()->getAgentString(),
+                'user_agent'   => $this->request
+                    ->getUserAgent()
+                    ->getAgentString(),
             ]);
         }
 
+        /**
+         * Hancurkan session.
+         */
         session()->destroy();
 
+        /**
+         * Kembali ke login.
+         */
         return redirect()->to('/login');
     }
 }

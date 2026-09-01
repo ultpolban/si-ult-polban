@@ -72,6 +72,21 @@ class AuthController extends BaseController
 
 
         // =================================================
+        // AMBIL APPLICANT TYPE
+        // =================================================
+
+        $db = \Config\Database::connect();
+        $applicantType = null;
+
+        if ($profile && $profile['applicant_type_id']) {
+            $applicantType = $db->table('master_applicant_types')
+                ->where('id', $profile['applicant_type_id'])
+                ->get()
+                ->getRowArray();
+        }
+
+
+        // =================================================
         // DATA USER UNTUK SESSION
         // =================================================
 
@@ -130,6 +145,8 @@ class AuthController extends BaseController
             'user_profile_id' => $profile['id'] ?? null,
 
             'mahasiswa_profile' => $profile ?? [],
+
+            'applicant_type_code' => $applicantType['code'] ?? null,
         ]);
 
 
@@ -146,12 +163,17 @@ class AuthController extends BaseController
 
 
         // =================================================
-        // REDIRECT BERDASARKAN ROLE
+        // REDIRECT BERDASARKAN ROLE DAN APPLICANT TYPE
         // =================================================
 
         if ((int) $user['role_id'] === 6) {
 
-            // PEMOHON / MAHASISWA
+            // PEMOHON - CEK APPLICANT TYPE
+            if ($applicantType && $applicantType['code'] === 'DOSEN') {
+                return redirect()->to('/dosen/dashboard');
+            }
+
+            // DEFAULT PEMOHON / MAHASISWA
             return redirect()->to('/dashboard-mahasiswa');
         }
 

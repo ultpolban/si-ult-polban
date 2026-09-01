@@ -24,23 +24,27 @@ class UserProfileModel extends BaseModel
 
     protected $deletedField = 'deleted_at';
 
-protected $allowedFields = [
-    'user_id',
-    'applicant_type_id',
-    'study_program_id',
-    'class_id',
-    'nim',
-    'nik',
-    'student_name',
-    'institution_name',
-    'position',
-    'name',
-    'gender',
-    'email',
-    'phone',
-    'address',
-    'photo',
-];
+    protected $allowedFields = [
+        'user_id',
+        'applicant_type_id',
+        'study_program_id',
+        'class_id',
+
+        'nim',
+        'nidn',
+        'nik',
+
+        'student_name',
+        'institution_name',
+        'position',
+
+        'name',
+        'gender',
+        'email',
+        'phone',
+        'address',
+        'photo',
+    ];
 
     protected $validationRules = [
 
@@ -54,6 +58,8 @@ protected $allowedFields = [
 
         'nim' => 'permit_empty|max_length[30]',
 
+        'nidn' => 'permit_empty|max_length[30]',
+
         'nik' => 'permit_empty|max_length[30]',
 
         'name' => 'required|max_length[150]',
@@ -65,7 +71,6 @@ protected $allowedFields = [
         'address' => 'permit_empty',
 
         'photo' => 'permit_empty|max_length[255]',
-
     ];
 
     /**
@@ -73,7 +78,6 @@ protected $allowedFields = [
      * Profile lengkap
      * ======================================
      */
-
     public function getComplete()
     {
         return $this
@@ -82,7 +86,6 @@ protected $allowedFields = [
                 user_profiles.*,
 
                 users.full_name,
-
                 users.identity_number,
 
                 roles.name AS role_name,
@@ -137,13 +140,10 @@ protected $allowedFields = [
      * Berdasarkan User
      * ======================================
      */
-
     public function findByUser(int $userId)
     {
         return $this
-
             ->where('user_id', $userId)
-
             ->first();
     }
 
@@ -152,7 +152,6 @@ protected $allowedFields = [
      * Search
      * ======================================
      */
-
     public function search(string $keyword)
     {
         return $this
@@ -162,6 +161,8 @@ protected $allowedFields = [
             ->like('name', $keyword)
 
             ->orLike('nim', $keyword)
+
+            ->orLike('nidn', $keyword)
 
             ->orLike('nik', $keyword)
 

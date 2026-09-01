@@ -70,16 +70,14 @@
                                 background-color: #0d47a1;
                                 border-bottom: 4px solid #f7941d;
                                 padding: 25px;
-                            "
-                        >
+                            ">
 
                             <div
                                 class="mb-3"
                                 style="
                                     font-size: 60px;
                                     color: #ffffff;
-                                "
-                            >
+                                ">
 
                                 <i class="fas fa-check-circle"></i>
 
@@ -107,8 +105,7 @@
                                     background-color: #e8f1fb;
                                     border-left: 5px solid #0d47a1;
                                     color: #17365d;
-                                "
-                            >
+                                ">
 
                                 <i class="fas fa-info-circle mr-2"></i>
 
@@ -125,8 +122,7 @@
 
                                 <h5
                                     class="font-weight-bold mb-3"
-                                    style="color: #0d47a1;"
-                                >
+                                    style="color: #0d47a1;">
 
                                     <i class="fas fa-ticket-alt mr-2"></i>
 
@@ -148,14 +144,13 @@
                                                         width: 40%;
                                                         background-color: #f4f7fb;
                                                         color: #17365d;
-                                                    "
-                                                >
+                                                    ">
                                                     Nomor Tiket
                                                 </th>
 
                                                 <td class="font-weight-bold text-primary">
 
-                                                    <?= esc($ticket['nomor_tiket'] ?? 'Akan dibuat oleh sistem') ?>
+                                                    <?= esc($ticket['nomor'] ?? 'Akan dibuat oleh sistem') ?>
 
                                                 </td>
 
@@ -168,14 +163,13 @@
                                                     style="
                                                         background-color: #f4f7fb;
                                                         color: #17365d;
-                                                    "
-                                                >
+                                                    ">
                                                     Unit Tujuan
                                                 </th>
 
                                                 <td>
 
-                                                    <?= esc($ticket['unit_tujuan'] ?? '-') ?>
+                                                    <?= esc($ticket['unit'] ?? '-') ?>
 
                                                 </td>
 
@@ -188,14 +182,13 @@
                                                     style="
                                                         background-color: #f4f7fb;
                                                         color: #17365d;
-                                                    "
-                                                >
+                                                    ">
                                                     Jenis Layanan
                                                 </th>
 
                                                 <td>
 
-                                                    <?= esc($ticket['jenis_layanan'] ?? '-') ?>
+                                                    <?= esc($ticket['layanan'] ?? '-') ?>
 
                                                 </td>
 
@@ -208,8 +201,7 @@
                                                     style="
                                                         background-color: #f4f7fb;
                                                         color: #17365d;
-                                                    "
-                                                >
+                                                    ">
                                                     Status
                                                 </th>
 
@@ -217,7 +209,7 @@
 
                                                     <span class="badge badge-primary px-3 py-2">
 
-                                                        Submitted
+                                                        <?= esc($ticket['status'] ?? 'Submitted') ?>
 
                                                     </span>
 
@@ -238,8 +230,7 @@
 
                             <div
                                 class="text-center mt-4 pt-3"
-                                style="border-top: 1px solid #dee2e6;"
-                            >
+                                style="border-top: 1px solid #dee2e6;">
 
                                 <a
                                     href="<?= base_url('dosen/ticket/history') ?>"
@@ -247,8 +238,7 @@
                                     style="
                                         background-color: #0d47a1;
                                         border-color: #0d47a1;
-                                    "
-                                >
+                                    ">
 
                                     <i class="fas fa-ticket-alt mr-1"></i>
 
@@ -263,8 +253,7 @@
                                     style="
                                         background-color: #f7941d;
                                         border-color: #f7941d;
-                                    "
-                                >
+                                    ">
 
                                     <i class="fas fa-plus-circle mr-1"></i>
 

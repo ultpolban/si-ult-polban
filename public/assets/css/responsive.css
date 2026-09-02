@@ -1,0 +1,285 @@
+/* ==========================================================
+   LARGE DESKTOP
+========================================================== */
+
+@media (max-width:1400px){
+
+    .auth-card{
+
+        max-width:1050px;
+
+    }
+
+}
+
+/* ==========================================================
+   LAPTOP
+========================================================== */
+
+@media (max-width:1200px){
+
+    .sidebar{
+
+        width:240px;
+
+    }
+
+    .content{
+
+        margin-left:240px;
+
+    }
+
+    .auth-left{
+
+        padding:45px;
+
+    }
+
+    .auth-right{
+
+        padding:45px;
+
+    }
+
+    .dashboard-card h2{
+
+        font-size:30px;
+
+    }
+
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width:992px){
+
+    .sidebar{
+
+        width:90px;
+
+    }
+
+    .content{
+
+        margin-left:90px;
+
+    }
+
+    .sidebar-header h4,
+
+    .sidebar-header p,
+
+    .menu-title,
+
+    .sidebar-menu span{
+
+        display:none;
+
+    }
+
+    .sidebar-menu a{
+
+        justify-content:center;
+
+        padding:15px;
+
+    }
+
+    .sidebar-menu a i{
+
+        margin:0;
+
+        font-size:20px;
+
+    }
+
+    .topbar{
+
+        padding:0 20px;
+
+    }
+
+    .page{
+
+        padding:20px;
+
+    }
+
+    .auth-card{
+
+        flex-direction:column;
+
+    }
+
+    .auth-left,
+
+    .auth-right{
+
+        width:100%;
+
+    }
+
+    .auth-left{
+
+        min-height:260px;
+
+        text-align:center;
+
+    }
+
+    .auth-icon{
+
+        display:none;
+
+    }
+
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width:768px){
+
+    .sidebar{
+
+        display:none;
+
+    }
+
+    .content{
+
+        margin-left:0;
+
+    }
+
+    .topbar{
+
+        height:auto;
+
+        padding:15px;
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:15px;
+
+    }
+
+    .topbar-right{
+
+        width:100%;
+
+        justify-content:space-between;
+
+    }
+
+    .page{
+
+        padding:15px;
+
+    }
+
+    .crud-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+    .crud-tools{
+
+        width:100%;
+
+        flex-direction:column;
+
+    }
+
+    .search-box{
+
+        width:100%;
+
+    }
+
+    .dashboard-card{
+
+        margin-bottom:15px;
+
+    }
+
+    .footer{
+
+        flex-direction:column;
+
+        gap:8px;
+
+        text-align:center;
+
+        height:auto;
+
+        padding:20px;
+
+    }
+
+}
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width:576px){
+
+    .auth-page{
+
+        padding:15px;
+
+    }
+
+    .auth-card{
+
+        border-radius:18px;
+
+    }
+
+    .auth-left{
+
+        padding:30px;
+
+    }
+
+    .auth-right{
+
+        padding:30px 20px;
+
+    }
+
+    .auth-left h1{
+
+        font-size:28px;
+
+    }
+
+    .auth-right h2{
+
+        font-size:26px;
+
+    }
+
+    .btn{
+
+        width:100%;
+
+    }
+
+    .table-responsive{
+
+        font-size:14px;
+
+    }
+
+}

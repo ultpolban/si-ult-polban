@@ -1,0 +1,309 @@
+/* ==========================================================
+   AUTH PAGE
+========================================================== */
+
+.auth-page{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:linear-gradient(135deg,#E9EDF9,#F8FAFF);
+
+    padding:40px;
+
+}
+
+/* ==========================================================
+   CONTAINER
+========================================================== */
+
+.auth-container{
+
+    width:100%;
+
+    max-width:1150px;
+
+}
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+.auth-card{
+
+    display:flex;
+
+    min-height:650px;
+
+    background:#FFFFFF;
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.12);
+
+}
+
+/* ==========================================================
+   LEFT
+========================================================== */
+
+.auth-left{
+
+    width:45%;
+
+    background:linear-gradient(135deg,#293582,#4258CC);
+
+    color:#FFFFFF;
+
+    padding:60px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+}
+
+.system-badge{
+
+    display:inline-block;
+
+    background:#FF7F00;
+
+    padding:8px 18px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    margin-bottom:30px;
+
+}
+
+.auth-left h1{
+
+    color:#FFFFFF;
+
+    font-size:40px;
+
+    line-height:1.3;
+
+    font-weight:700;
+
+    margin-bottom:18px;
+
+}
+
+.auth-left p{
+
+    font-size:17px;
+
+    opacity:.9;
+
+}
+
+.auth-icon{
+
+    text-align:center;
+
+}
+
+.auth-icon i{
+
+    font-size:170px;
+
+    opacity:.18;
+
+}
+
+/* ==========================================================
+   RIGHT
+========================================================== */
+
+.auth-right{
+
+    width:55%;
+
+    padding:70px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+}
+
+.auth-right h2{
+
+    color:#293582;
+
+    font-size:34px;
+
+    font-weight:700;
+
+}
+
+.auth-right p{
+
+    color:#6B7280;
+
+}
+
+/* ==========================================================
+   FORM
+========================================================== */
+
+.auth-right .form-label{
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+}
+
+.auth-right .form-control{
+
+    height:52px;
+
+    border-radius:12px;
+
+}
+
+.auth-right .input-group .btn{
+
+    border-radius:0 12px 12px 0;
+
+}
+
+/* ==========================================================
+   BUTTON
+========================================================== */
+
+.auth-right .btn-primary{
+
+    height:54px;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    border-radius:12px;
+
+    background:#293582;
+
+    border:none;
+
+}
+
+.auth-right .btn-primary:hover{
+
+    background:#1E2768;
+
+}
+
+/* ==========================================================
+   LINK
+========================================================== */
+
+.auth-right a{
+
+    color:#FF7F00;
+
+    font-weight:600;
+
+}
+
+.auth-right a:hover{
+
+    color:#E36F00;
+
+}
+
+/* ==========================================================
+   ALERT
+========================================================== */
+
+.auth-right .alert{
+
+    border-radius:12px;
+
+}
+
+/* ==========================================================
+   DIVIDER
+========================================================== */
+
+.auth-divider{
+
+    display:flex;
+
+    align-items:center;
+
+    margin:30px 0;
+
+}
+
+.auth-divider::before,
+
+.auth-divider::after{
+
+    content:"";
+
+    flex:1;
+
+    height:1px;
+
+    background:#E5E7EB;
+
+}
+
+.auth-divider span{
+
+    margin:0 15px;
+
+    color:#94A3B8;
+
+    font-size:13px;
+
+}
+
+/* ==========================================================
+   ANIMATION
+========================================================== */
+
+.auth-card{
+
+    animation:fadeLogin .5s ease;
+
+}
+
+@keyframes fadeLogin{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(30px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}

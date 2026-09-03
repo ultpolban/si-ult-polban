@@ -20,8 +20,8 @@
                         class="font-weight-bold"
                         style="color:#0b3d91;"
                     >
-                        <i class="fas fa-check-circle text-success mr-2"></i>
-                        Pengajuan Berhasil
+                        <i class="fas fa-save text-success mr-2"></i>
+                        Draft Berhasil Disimpan
                     </h1>
 
                 </div>
@@ -37,7 +37,7 @@
                         </li>
 
                         <li class="breadcrumb-item active">
-                            Pengajuan Berhasil
+                            Draft Berhasil Disimpan
                         </li>
 
                     </ol>
@@ -75,7 +75,7 @@
                         <div
                             class="card-header text-white text-center"
                             style="
-                                background-color:#0b3d91;
+                                background:#0b3d91;
                                 border-bottom:4px solid #f28c28;
                                 padding:25px;
                             "
@@ -88,16 +88,18 @@
                                     color:#ffffff;
                                 "
                             >
-                                <i class="fas fa-check-circle"></i>
+
+                                <i class="fas fa-save"></i>
+
                             </div>
 
                             <h3 class="font-weight-bold mb-2">
-                                Pengajuan Berhasil Dikirim!
+                                Draft Berhasil Disimpan!
                             </h3>
 
                             <p class="mb-0">
-                                Pengajuan layanan Anda telah berhasil dikirim
-                                dan sedang menunggu proses dari petugas.
+                                Pengajuan Anda telah disimpan sebagai
+                                draft dan dapat dilanjutkan kembali nanti.
                             </p>
 
                         </div>
@@ -112,7 +114,7 @@
                             <div
                                 class="alert"
                                 style="
-                                    background-color:#e8f1fb;
+                                    background:#e8f1fb;
                                     border-left:5px solid #0b3d91;
                                     color:#17365d;
                                 "
@@ -120,15 +122,15 @@
 
                                 <i class="fas fa-info-circle mr-2"></i>
 
-                                Silakan simpan nomor tiket Anda untuk
-                                memantau perkembangan pengajuan melalui
-                                menu <strong>Tracking Tiket</strong>.
+                                Silakan simpan nomor draft Anda.
+                                Draft dapat dilanjutkan melalui menu
+                                <strong>Draft Pengajuan</strong>.
 
                             </div>
 
 
                             <!-- =========================
-                                 INFORMASI TIKET
+                                 INFORMASI DRAFT
                             ========================== -->
 
                             <div class="mt-4">
@@ -138,9 +140,9 @@
                                     style="color:#0b3d91;"
                                 >
 
-                                    <i class="fas fa-ticket-alt mr-2"></i>
+                                    <i class="fas fa-file-alt mr-2"></i>
 
-                                    Informasi Pengajuan
+                                    Informasi Draft
 
                                 </h5>
 
@@ -151,65 +153,67 @@
 
                                         <tbody>
 
-                                            <!-- NOMOR TIKET -->
-
                                             <tr>
 
                                                 <th
                                                     style="
                                                         width:40%;
-                                                        background-color:#f4f7fb;
+                                                        background:#f4f7fb;
                                                         color:#17365d;
                                                     "
                                                 >
-                                                    Nomor Tiket
+                                                    Nomor Draft
                                                 </th>
 
                                                 <td
-                                                    class="font-weight-bold text-primary"
+                                                    class="font-weight-bold"
+                                                    style="color:#0b3d91;"
                                                 >
+
                                                     <?= esc(
-                                                        $ticket['ticket_number']
-                                                        ?? $ticket['nomor']
-                                                        ?? '-'
+                                                        $draft['ticket_number']
+                                                        ??
+                                                        $draft['nomor_draft']
+                                                        ??
+                                                        'Draft belum memiliki nomor'
                                                     ) ?>
+
                                                 </td>
 
                                             </tr>
 
 
-                                            <!-- UNIT TUJUAN -->
-
                                             <tr>
 
                                                 <th
                                                     style="
-                                                        background-color:#f4f7fb;
+                                                        background:#f4f7fb;
                                                         color:#17365d;
                                                     "
                                                 >
-                                                    Unit Tujuan
+                                                    Unit Layanan
                                                 </th>
 
                                                 <td>
+
                                                     <?= esc(
-                                                        $ticket['unit_name']
-                                                        ?? $ticket['unit']
-                                                        ?? $ticket['unit_layanan']
-                                                        ?? '-'
+                                                        $draft['unit_name']
+                                                        ??
+                                                        $draft['unit']
+                                                        ??
+                                                        '-'
                                                     ) ?>
+
                                                 </td>
 
                                             </tr>
 
 
-                                            <!-- JENIS LAYANAN -->
-
                                             <tr>
 
                                                 <th
                                                     style="
-                                                        background-color:#f4f7fb;
+                                                        background:#f4f7fb;
                                                         color:#17365d;
                                                     "
                                                 >
@@ -217,24 +221,25 @@
                                                 </th>
 
                                                 <td>
+
                                                     <?= esc(
-                                                        $ticket['service_name']
-                                                        ?? $ticket['layanan']
-                                                        ?? $ticket['jenis_layanan']
-                                                        ?? '-'
+                                                        $draft['service_name']
+                                                        ??
+                                                        $draft['layanan']
+                                                        ??
+                                                        '-'
                                                     ) ?>
+
                                                 </td>
 
                                             </tr>
 
 
-                                            <!-- STATUS -->
-
                                             <tr>
 
                                                 <th
                                                     style="
-                                                        background-color:#f4f7fb;
+                                                        background:#f4f7fb;
                                                         color:#17365d;
                                                     "
                                                 >
@@ -244,13 +249,9 @@
                                                 <td>
 
                                                     <span
-                                                        class="badge badge-warning px-3 py-2"
+                                                        class="badge badge-secondary px-3 py-2"
                                                     >
-                                                        <i class="fas fa-clock mr-1"></i>
-                                                        <?= esc(
-                                                            $ticket['status']
-                                                            ?? 'submitted'
-                                                        ) ?>
+                                                        Draft
                                                     </span>
 
                                                 </td>
@@ -272,21 +273,23 @@
 
                             <div
                                 class="text-center mt-4 pt-3"
-                                style="border-top:1px solid #dee2e6;"
+                                style="
+                                    border-top:1px solid #dee2e6;
+                                "
                             >
 
                                 <a
-                                    href="<?= base_url('dosen/ticket/history') ?>"
+                                    href="<?= base_url('dosen/ticket/draft') ?>"
                                     class="btn btn-primary mr-2"
                                     style="
-                                        background-color:#0b3d91;
+                                        background:#0b3d91;
                                         border-color:#0b3d91;
                                     "
                                 >
 
-                                    <i class="fas fa-ticket-alt mr-1"></i>
+                                    <i class="fas fa-file-alt mr-1"></i>
 
-                                    Lihat Tracking Tiket
+                                    Lihat Draft
 
                                 </a>
 
@@ -295,7 +298,7 @@
                                     href="<?= base_url('dosen/ticket/create') ?>"
                                     class="btn btn-warning text-white"
                                     style="
-                                        background-color:#f28c28;
+                                        background:#f28c28;
                                         border-color:#f28c28;
                                     "
                                 >

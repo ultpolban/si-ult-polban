@@ -1,542 +1,442 @@
-<?= $this->include('layouts/header') ?>
+<?= $this->include('layouts/header'); ?>
+<?= $this->include('layouts/navbar'); ?>
+<?= $this->include('layouts/sidebar_dosen'); ?>
 
-<?= $this->include('layouts/navbar') ?>
+<?php
+$profile = $profile ?? [];
 
-<?= $this->include('layouts/sidebar_dosen') ?>
+$nama         = $profile['nama'] ?? 'Dosen';
+$nik          = $profile['nik'] ?? '-';
+$jenisKelamin = $profile['jenis_kelamin'] ?? '-';
+$email        = $profile['email'] ?? '-';
+$noHp         = $profile['no_hp'] ?? '-';
+$alamat       = $profile['alamat'] ?? '-';
+
+$prodi        = $profile['prodi'] ?? '-';
+$jurusan      = $profile['jurusan'] ?? '-';
+$jabatan      = $profile['jabatan'] ?? '-';
+
+$foto         = $profile['foto'] ?? null;
+?>
 
 <div class="content-wrapper">
 
-<section class="content-header">
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
 
-    <div class="container-fluid">
+                <div class="col-sm-6">
+                    <h1
+                        class="mb-0"
+                        style="
+                            color:#0b3d91;
+                            font-weight:700;
+                        "
+                    >
+                        <i class="fas fa-user-tie mr-2"></i>
+                        Profil Dosen
+                    </h1>
+                </div>
 
-        <div class="row mb-2">
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">
+                            <a href="<?= base_url('dosen/dashboard') ?>">
+                                Dashboard
+                            </a>
+                        </li>
 
-            <div class="col-sm-6">
-
-                <h1 style="font-weight:700;color:#0b3d91;">
-
-                    <i class="fas fa-user-tie"></i>
-
-                    Profil Dosen
-
-                </h1>
+                        <li class="breadcrumb-item active">
+                            Profil
+                        </li>
+                    </ol>
+                </div>
 
             </div>
+        </div>
+    </section>
 
-            <div class="col-sm-6">
 
-                <ol class="breadcrumb float-sm-right">
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+    <section class="content">
+        <div class="container-fluid">
 
-                    <li class="breadcrumb-item">
+            <!-- ALERT SUCCESS -->
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="fas fa-check-circle mr-2"></i>
 
-                        <a href="<?= base_url('dosen/dashboard') ?>">
+                    <?= esc(session()->getFlashdata('success')) ?>
 
-                            Dashboard
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                    >
+                        &times;
+                    </button>
+                </div>
+            <?php endif; ?>
 
+
+            <!-- ALERT ERROR -->
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+
+                    <?= esc(session()->getFlashdata('error')) ?>
+
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                    >
+                        &times;
+                    </button>
+                </div>
+            <?php endif; ?>
+
+
+            <!-- =================================================
+                 PROFILE CARD
+            ================================================== -->
+            <div
+                class="card shadow-sm"
+                style="
+                    border-radius:15px;
+                    border-top:5px solid #0b3d91;
+                "
+            >
+
+                <!-- CARD HEADER -->
+                <div
+                    class="card-header"
+                    style="
+                        background:#0b3d91;
+                        color:white;
+                    "
+                >
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <h3 class="card-title mb-0">
+                            <i class="fas fa-id-card mr-2"></i>
+                            Informasi Profil Dosen
+                        </h3>
+
+                        <a
+                            href="<?= base_url('dosen/profile/edit') ?>"
+                            class="btn"
+                            style="
+                                background:#f28c28;
+                                color:white;
+                                font-weight:600;
+                            "
+                        >
+                            <i class="fas fa-edit mr-1"></i>
+                            Edit Profil
                         </a>
 
-                    </li>
-
-                    <li class="breadcrumb-item active">
-
-                        Profil
-
-                    </li>
-
-                </ol>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
+                    </div>
+                </div>
 
 
-<section class="content">
+                <!-- CARD BODY -->
+                <div class="card-body">
 
-<div class="container-fluid">
+                    <!-- =================================================
+                         BAGIAN ATAS
+                    ================================================== -->
+                    <div class="row">
 
-<?php if (session()->getFlashdata('success')) : ?>
+                        <!-- FOTO + IDENTITAS -->
+                        <div class="col-lg-4 col-md-5 mb-4 mb-md-0">
 
-    <div class="alert alert-success">
+                            <div
+                                class="text-center"
+                                style="
+                                    padding:20px;
+                                    background:#f8fafc;
+                                    border-radius:12px;
+                                    height:100%;
+                                "
+                            >
 
-        <i class="fas fa-check-circle"></i>
+                                <!-- FOTO -->
+                                <?php if (!empty($foto)): ?>
 
-        <?= esc(session()->getFlashdata('success')) ?>
+                                    <img
+                                        src="<?= base_url('uploads/profile/' . $foto) ?>"
+                                        alt="Foto Profil"
+                                        style="
+                                            width:170px;
+                                            height:170px;
+                                            object-fit:cover;
+                                            border-radius:50%;
+                                            border:6px solid #0b3d91;
+                                            box-shadow:
+                                                0 5px 15px
+                                                rgba(0,0,0,.15);
+                                        "
+                                    >
 
-    </div>
+                                <?php else: ?>
 
-<?php endif; ?>
+                                    <div
+                                        style="
+                                            width:170px;
+                                            height:170px;
+                                            margin:auto;
+                                            border-radius:50%;
+                                            background:#0b3d91;
+                                            display:flex;
+                                            align-items:center;
+                                            justify-content:center;
+                                            color:white;
+                                            font-size:80px;
+                                        "
+                                    >
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
 
-
-<?php if (session()->getFlashdata('error')) : ?>
-
-    <div class="alert alert-danger">
-
-        <i class="fas fa-exclamation-circle"></i>
-
-        <?= esc(session()->getFlashdata('error')) ?>
-
-    </div>
-
-<?php endif; ?>
-
-
-<div class="card shadow-sm">
-
-    <div
-        class="card-header d-flex justify-content-between align-items-center"
-        style="background:#1b4f9c;color:white;"
-    >
-
-        <h3 class="card-title mb-0">
-
-            <i class="fas fa-id-card"></i>
-
-            Informasi Profil Dosen
-
-        </h3>
-
-
-        <a
-            href="<?= base_url('dosen/profile/edit') ?>"
-            class="btn"
-            style="background:#ff9800;color:white;font-weight:600;"
-        >
-
-            <i class="fas fa-edit"></i>
-
-            Edit Profil
-
-        </a>
-
-    </div>
+                                <?php endif; ?>
 
 
-    <div class="card-body">
+                                <!-- NAMA -->
+                                <h3
+                                    class="mt-3 mb-2"
+                                    style="
+                                        color:#0b3d91;
+                                        font-weight:700;
+                                    "
+                                >
+                                    <?= esc($nama) ?>
+                                </h3>
 
-        <div class="row">
 
-            <!-- =========================================
-                 FOTO
-            ========================================== -->
+                                <!-- NIK -->
+                                <p class="text-muted mb-0">
+                                    <i class="fas fa-id-card mr-1"></i>
+                                    <?= esc($nik) ?>
+                                </p>
 
-            <div class="col-lg-4 text-center">
+                            </div>
 
-                <?php if (! empty($profile['foto'])) : ?>
+                        </div>
 
-                    <img
-                        src="<?= base_url('uploads/profile/' . $profile['foto']) ?>"
-                        class="img-circle elevation-4"
+
+                        <!-- DATA PRIBADI -->
+                        <div class="col-lg-8 col-md-7">
+
+                            <h4
+                                class="mb-4"
+                                style="
+                                    color:#0b3d91;
+                                    font-weight:700;
+                                "
+                            >
+                                <i class="fas fa-user mr-2"></i>
+                                Data Pribadi
+                            </h4>
+
+
+                            <!-- NAMA -->
+                            <div class="row mb-3">
+
+                                <div class="col-sm-4 font-weight-bold">
+                                    <i class="fas fa-user text-primary mr-2"></i>
+                                    Nama Lengkap
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <?= esc($nama) ?>
+                                </div>
+
+                            </div>
+
+
+                            <!-- NIK -->
+                            <div class="row mb-3">
+
+                                <div class="col-sm-4 font-weight-bold">
+                                    <i class="fas fa-id-card text-primary mr-2"></i>
+                                    NIK
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <?= esc($nik) ?>
+                                </div>
+
+                            </div>
+
+
+                            <!-- JENIS KELAMIN -->
+                            <div class="row mb-3">
+
+                                <div class="col-sm-4 font-weight-bold">
+                                    <i class="fas fa-venus-mars text-primary mr-2"></i>
+                                    Jenis Kelamin
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <?= esc($jenisKelamin) ?>
+                                </div>
+
+                            </div>
+
+
+                            <!-- EMAIL -->
+                            <div class="row mb-3">
+
+                                <div class="col-sm-4 font-weight-bold">
+                                    <i class="fas fa-envelope text-primary mr-2"></i>
+                                    Email
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <?= esc($email) ?>
+                                </div>
+
+                            </div>
+
+
+                            <!-- NOMOR HP -->
+                            <div class="row mb-3">
+
+                                <div class="col-sm-4 font-weight-bold">
+                                    <i class="fas fa-phone text-primary mr-2"></i>
+                                    Nomor HP
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <?= esc($noHp) ?>
+                                </div>
+
+                            </div>
+
+
+                            <!-- ALAMAT -->
+                            <div class="row mb-0">
+
+                                <div class="col-sm-4 font-weight-bold">
+                                    <i class="fas fa-map-marker-alt text-primary mr-2"></i>
+                                    Alamat
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <?= esc($alamat) ?>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <hr class="my-4">
+
+
+                    <!-- =================================================
+                         INFORMASI AKADEMIK
+                    ================================================== -->
+                    <h4
+                        class="mb-4"
                         style="
-                            width:190px;
-                            height:190px;
-                            object-fit:cover;
-                            border:5px solid #1b4f9c;
-                            box-shadow:0 8px 20px rgba(0,0,0,.2);
+                            color:#0b3d91;
+                            font-weight:700;
                         "
                     >
-
-                <?php else : ?>
-
-                    <img
-                        src="<?= base_url('assets/img/default-user.png') ?>"
-                        class="img-circle elevation-4"
-                        style="
-                            width:190px;
-                            height:190px;
-                            object-fit:cover;
-                            border:5px solid #1b4f9c;
-                            box-shadow:0 8px 20px rgba(0,0,0,.2);
-                        "
-                    >
-
-                <?php endif; ?>
-
-
-                <h2
-                    class="mt-4 font-weight-bold"
-                    style="color:#1b4f9c;"
-                >
-
-                    <?= esc($profile['nama']) ?>
-
-                </h2>
-
-
-                <h5 class="text-muted">
-
-                    <i class="fas fa-id-card"></i>
-
-                    NIP:
-                    <?= esc($profile['nip']) ?>
-
-                </h5>
-
-
-                <h6 class="text-muted">
-
-                    <i class="fas fa-graduation-cap"></i>
-
-                    NIDN:
-                    <?= esc($profile['nidn'] ?: '-') ?>
-
-                </h6>
-
-
-                <?php if ($profile['status'] === 'Aktif') : ?>
-
-                    <span
-                        class="badge badge-success px-4 py-2 mt-2"
-                        style="font-size:17px;"
-                    >
-
-                        Aktif
-
-                    </span>
-
-                <?php else : ?>
-
-                    <span
-                        class="badge badge-danger px-4 py-2 mt-2"
-                        style="font-size:17px;"
-                    >
-
-                        Tidak Aktif
-
-                    </span>
-
-                <?php endif; ?>
-
-            </div>
-
-
-            <!-- =========================================
-                 DATA PRIBADI
-            ========================================== -->
-
-            <div class="col-lg-8">
-
-                <h2
-                    class="mb-4"
-                    style="color:#1b4f9c;font-weight:bold;"
-                >
-
-                    <i class="fas fa-info-circle"></i>
-
-                    Data Pribadi
-
-                </h2>
-
-
-                <table class="table table-borderless">
-
-                    <tr>
-
-                        <th width="45%">
-
-                            <i
-                                class="fas fa-user mr-2"
-                                style="color:#1b4f9c"
-                            ></i>
-
-                            Nama Lengkap
-
-                        </th>
-
-                        <td>
-
-                            <?= esc($profile['nama']) ?>
-
-                        </td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <th>
-
-                            <i
-                                class="fas fa-id-card mr-2"
-                                style="color:#1b4f9c"
-                            ></i>
-
-                            NIK
-
-                        </th>
-
-                        <td>
-    <?= !empty($profile['nik'])
-        ? esc($profile['nik'])
-        : '<span class="text-muted">Belum diisi</span>' ?>
-</td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <th>
-
-                            <i
-                                class="fas fa-id-badge mr-2"
-                                style="color:#1b4f9c"
-                            ></i>
-
-                            NIP
-
-                        </th>
-
-                        <td>
-
-                            <?= esc($profile['nip']) ?>
-
-                        </td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <th>
-
-                            <i
-                                class="fas fa-graduation-cap mr-2"
-                                style="color:#1b4f9c"
-                            ></i>
-
-                            NIDN
-
-                        </th>
-
-                       <td>
-    <?= !empty($profile['nidn'])
-        ? esc($profile['nidn'])
-        : '<span class="text-muted">Belum diisi</span>' ?>
-</td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <th>
-
-                            <i
-                                class="fas fa-envelope mr-2"
-                                style="color:#1b4f9c"
-                            ></i>
-
-                            Email
-
-                        </th>
-
-                        <td>
-
-                            <?= esc($profile['email']) ?>
-
-                        </td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <th>
-
-                            <i
-                                class="fas fa-phone mr-2"
-                                style="color:#1b4f9c"
-                            ></i>
-
-                            Nomor HP
-
-                        </th>
-
-                        <td>
-
-                            <?= esc($profile['no_hp'] ?: '-') ?>
-
-                        </td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <th>
-
-                            <i
-                                class="fas fa-venus-mars mr-2"
-                                style="color:#1b4f9c"
-                            ></i>
-
-                            Jenis Kelamin
-
-                        </th>
-
-                        <td>
-
-                            <?= esc($profile['jenis_kelamin'] ?: '-') ?>
-
-                        </td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <th>
-
-                            <i
-                                class="fas fa-map-marker-alt mr-2"
-                                style="color:#1b4f9c"
-                            ></i>
-
-                            Alamat
-
-                        </th>
-
-                        <td>
-
-                            <?= esc($profile['alamat'] ?: '-') ?>
-
-                        </td>
-
-                    </tr>
-
-                </table>
-
-            </div>
-
-        </div>
-
-
-        <hr>
-
-
-        <!-- =========================================
-             AKADEMIK
-        ========================================== -->
-
-        <h2
-            class="mb-4"
-            style="color:#1b4f9c;font-weight:bold;"
-        >
-
-            <i class="fas fa-university"></i>
-
-            Informasi Akademik
-
-        </h2>
-
-
-        <div class="row">
-
-            <div class="col-md-6">
-
-                <div
-                    class="small-box bg-light border-left border-primary"
-                >
-
-                    <div class="inner">
-
-                        <small class="text-muted">
-
-                            Program Studi
-
-                        </small>
-
-                        <h4>
-
-                            <?= esc($profile['prodi']) ?>
-
-                        </h4>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="col-md-6">
-
-                <div
-                    class="small-box bg-light border-left border-primary"
-                >
-
-                    <div class="inner">
-
-                        <small class="text-muted">
-
-                            Jurusan
-
-                        </small>
-
-                        <h4>
-
-                            <?= esc($profile['jurusan']) ?>
-
-                        </h4>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="col-md-6">
-
-                <div
-                    class="small-box bg-light border-left border-primary"
-                >
-
-                    <div class="inner">
-
-                        <small class="text-muted">
-
-                            Fakultas
-
-                        </small>
-
-                        <h4>
-
-                            <?= esc($profile['fakultas']) ?>
-
-                        </h4>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="col-md-6">
-
-                <div
-                    class="small-box bg-light border-left border-warning"
-                >
-
-                    <div class="inner">
-
-                        <small class="text-muted">
-
-                            Jabatan
-
-                        </small>
-
-                        <h4>
-
-                            <?= esc($profile['jabatan']) ?>
-
-                        </h4>
+                        <i class="fas fa-graduation-cap mr-2"></i>
+                        Informasi Akademik
+                    </h4>
+
+
+                    <div class="row">
+
+                        <!-- PROGRAM STUDI -->
+                        <div class="col-lg-4 col-md-6 mb-3">
+
+                            <div
+                                style="
+                                    background:#f5f8fc;
+                                    padding:20px;
+                                    border-left:4px solid #0b3d91;
+                                    border-radius:8px;
+                                    height:100%;
+                                "
+                            >
+                                <small class="text-muted">
+                                    Program Studi
+                                </small>
+
+                                <h5
+                                    class="mb-0 mt-1"
+                                    style="font-weight:600;"
+                                >
+                                    <?= esc($prodi) ?>
+                                </h5>
+                            </div>
+
+                        </div>
+
+
+                        <!-- JURUSAN -->
+                        <div class="col-lg-4 col-md-6 mb-3">
+
+                            <div
+                                style="
+                                    background:#f5f8fc;
+                                    padding:20px;
+                                    border-left:4px solid #0b3d91;
+                                    border-radius:8px;
+                                    height:100%;
+                                "
+                            >
+                                <small class="text-muted">
+                                    Jurusan
+                                </small>
+
+                                <h5
+                                    class="mb-0 mt-1"
+                                    style="font-weight:600;"
+                                >
+                                    <?= esc($jurusan) ?>
+                                </h5>
+                            </div>
+
+                        </div>
+
+
+                        <!-- JABATAN -->
+                        <div class="col-lg-4 col-md-6 mb-3">
+
+                            <div
+                                style="
+                                    background:#f5f8fc;
+                                    padding:20px;
+                                    border-left:4px solid #0b3d91;
+                                    border-radius:8px;
+                                    height:100%;
+                                "
+                            >
+                                <small class="text-muted">
+                                    Jabatan
+                                </small>
+
+                                <h5
+                                    class="mb-0 mt-1"
+                                    style="font-weight:600;"
+                                >
+                                    <?= esc($jabatan) ?>
+                                </h5>
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -545,15 +445,8 @@
             </div>
 
         </div>
-
-    </div>
-
-</div>
+    </section>
 
 </div>
 
-</section>
-
-</div>
-
-<?= $this->include('layouts/footer') ?>
+<?= $this->include('layouts/footer'); ?>

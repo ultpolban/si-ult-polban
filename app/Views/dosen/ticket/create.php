@@ -122,20 +122,27 @@
 
                         <div class="form-group">
 
-                            <label class="font-weight-bold">NIP / NIDN</label>
+                            <label class="font-weight-bold">NIK</label>
 
                             <div class="input-group">
 
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                    <span class="input-group-text">
+                                        <i class="fas fa-id-card"></i>
+                                    </span>
                                 </div>
 
-                                <input type="text" name="nip_nidn" class="form-control" value="<?= esc(($user['nip'] ?? '-') . ' / ' . ($user['nidn'] ?? '-')) ?>" readonly>
+                                <input
+                                    type="text"
+                                    name="nik"
+                                    class="form-control"
+                                    value="<?= esc($user['nik'] ?? '-') ?>"
+                                    readonly>
 
                             </div>
 
                             <small class="text-muted">
-                                NIP dan NIDN diambil dari data akun dan tidak dapat diubah.
+                                NIK diambil dari data akun dan tidak dapat diubah.
                             </small>
 
                         </div>
@@ -204,9 +211,15 @@
 
                 <div id="persyaratanContainer" class="mt-3" style="display:none;">
 
-                    <div class="alert alert-info" style="border-radius:10px;border-left:5px solid #0b3d91;">
+                    <div class="alert"
+                        style="
+                        border-radius:10px;
+                        border-left:5px solid #f7941d;
+                        background:#eaf3f8;
+                        color:#003b70;
+                        ">
 
-                        <h5 style="color:#0b3d91;font-weight:700;">
+                        <h5 style="color:#003b70;font-weight:700;">
                             <i class="fas fa-clipboard-list mr-2"></i>
                             Persyaratan
                         </h5>
@@ -238,16 +251,28 @@
 
             <div class="card-body">
 
-                <div class="alert alert-warning">
-                    <i class="fas fa-info-circle mr-2"></i>
-                    Silakan unggah dokumen sesuai dengan persyaratan layanan yang telah dipilih.
-                </div>
+                <div class="alert"
+    style="
+        border-radius:10px;
+        background:#fff4e5;
+        border-left:5px solid #f7941d;
+        color:#003b70;
+    ">
+    <i class="fas fa-info-circle mr-2"></i>
+    Silakan unggah dokumen sesuai dengan persyaratan layanan yang telah dipilih.
+</div>
 
                 <div id="dokumenWrapper">
-                    <div class="alert alert-info mb-0">
-                        <i class="fas fa-info-circle mr-2"></i>
-                        Pilih jenis layanan terlebih dahulu untuk mengunggah dokumen persyaratan.
-                    </div>
+                    <div class="alert mb-0"
+    style="
+        border-radius:10px;
+        background:#eaf3f8;
+        border-left:5px solid #003b70;
+        color:#003b70;
+    ">
+    <i class="fas fa-info-circle mr-2"></i>
+    Pilih jenis layanan terlebih dahulu untuk mengunggah dokumen persyaratan.
+</div>
                 </div>
 
                 <small class="d-block text-muted mt-3">
@@ -341,11 +366,17 @@
             persyaratanContainer.style.display = 'none';
 
             dokumenWrapper.innerHTML = `
-                <div class="alert alert-info mb-0">
-                    <i class="fas fa-info-circle mr-2"></i>
-                    Pilih jenis layanan terlebih dahulu untuk mengunggah dokumen persyaratan.
-                </div>
-            `;
+    <div class="alert mb-0"
+        style="
+            border-radius:10px;
+            background:#eaf3f8;
+            border-left:5px solid #003b70;
+            color:#003b70;
+        ">
+        <i class="fas fa-info-circle mr-2"></i>
+        Pilih jenis layanan terlebih dahulu untuk mengunggah dokumen persyaratan.
+    </div>
+`;
 
             if (!unitId) {
                 jenisSelect.innerHTML = `

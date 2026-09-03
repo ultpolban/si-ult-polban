@@ -276,9 +276,36 @@ class DosenProfileController extends BaseController
             'study_program_id' => $profile['study_program_id'] ?? null,
         ];
 
+        // =====================================================
+        // AMBIL DATA PROGRAM STUDI
+        // =====================================================
+
+        $db = \Config\Database::connect();
+
+        $studyPrograms = $db
+            ->table('master_study_programs msp')
+            ->select('
+                msp.id,
+                msp.name,
+                msp.code,
+                msp.department_id,
+                md.name AS department_name
+            ')
+            ->join(
+                'master_departments md',
+                'md.id = msp.department_id',
+                'left'
+            )
+            ->where('msp.is_active', 1)
+            ->where('msp.deleted_at IS NULL', null, false)
+            ->orderBy('msp.name', 'ASC')
+            ->get()
+            ->getResultArray();
+
         return view('dosen/profile/edit', [
-            'title'   => 'Edit Profil Dosen',
-            'profile' => $dataProfile,
+            'title'         => 'Edit Profil Dosen',
+            'profile'       => $dataProfile,
+            'studyPrograms' => $studyPrograms,
         ]);
     }
 
@@ -330,20 +357,11 @@ class DosenProfileController extends BaseController
 
         $fullName = trim((string) $this->request->getPost('nama'));
 
-        $email = trim((string) $this->request->getPost('email'));
-
         if ($fullName === '') {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with('error', 'Nama lengkap wajib diisi.');
-        }
-
-        if ($email === '') {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'Email wajib diisi.');
         }
 
         // =====================================================
@@ -353,10 +371,11 @@ class DosenProfileController extends BaseController
         // NIP disimpan di identity_number.
         // NIDN TIDAK disimpan di users.
         //
+        // Email TIDAK diubah - pakai nilai dari database
+        //
 
         $this->userModel->update($userId, [
             'full_name' => $fullName,
-            'email'     => $email,
         ]);
 
         // =====================================================
@@ -431,26 +450,37 @@ class DosenProfileController extends BaseController
         // Data PROFILE
         // =====================================================
 
+        $studyProgramId = $this->request->getPost('study_program_id');
+
+        // Ambil nilai NIK, jenis kelamin, dan email dari database
+        // (tidak diubah dari form)
+        $nikLama = $profile['nik'] ?? '';
+        $genderLama = $profile['gender'] ?? '';
+        $emailLama = $profile['email'] ?? $user['email'] ?? '';
+
         $profileData = [
 
             'user_id' => $userId,
 
             'name' => $fullName,
 
+            'study_program_id' => !empty($studyProgramId)
+                ? (int) $studyProgramId
+                : null,
+
             // NIDN SEKARANG DI SINI
             'nidn' => trim(
                 (string) $this->request->getPost('nidn')
             ),
 
-            'nik' => trim(
-                (string) $this->request->getPost('nik')
-            ),
+            // NIK TIDAK diubah - pakai nilai dari database
+            'nik' => $nikLama,
 
-            'gender' => trim(
-                (string) $this->request->getPost('jenis_kelamin')
-            ),
+            // Jenis kelamin TIDAK diubah - pakai nilai dari database
+            'gender' => $genderLama,
 
-            'email' => $email,
+            // Email TIDAK diubah - pakai nilai dari database
+            'email' => $emailLama,
 
             'phone' => trim(
                 (string) $this->request->getPost('no_hp')
@@ -493,7 +523,8 @@ class DosenProfileController extends BaseController
 
         $sessionUser['full_name'] = $fullName;
 
-        $sessionUser['email'] = $email;
+        // Email TIDAK diubah - pakai nilai dari database
+        $sessionUser['email'] = $emailLama;
 
         // NIP tetap dari users.identity_number
         $sessionUser['identity_number'] =

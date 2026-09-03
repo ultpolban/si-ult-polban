@@ -2,7 +2,13 @@
 <?= $this->include('layouts/navbar'); ?>
 <?= $this->include('layouts/sidebar_dosen'); ?>
 
+
 <div class="content-wrapper">
+
+
+    <!-- =========================================
+         HEADER DASHBOARD
+    ========================================== -->
 
     <section class="content-header">
 
@@ -22,11 +28,13 @@
 
                 </div>
 
+
                 <div class="col-sm-6 text-sm-end mt-2 mt-sm-0">
 
                     <a
                         href="<?= base_url('dosen/ticket/create') ?>"
-                        class="btn btn-ult-orange">
+                        class="btn btn-ult-orange"
+                    >
 
                         <i class="fas fa-plus-circle me-1"></i>
 
@@ -42,9 +50,20 @@
 
     </section>
 
+
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
     <section class="content">
 
         <div class="container-fluid">
+
+
+            <!-- =========================================
+                 WELCOME CARD
+            ========================================== -->
 
             <div class="card welcome-card shadow-sm">
 
@@ -52,17 +71,24 @@
 
                     <div class="row align-items-center">
 
+
+                        <!-- DATA DOSEN -->
+
                         <div class="col-md-8">
 
                             <h3 class="welcome-title">
 
                                 Selamat Datang,
 
-                                <?= esc($user['nama'] ?? 'Dosen'); ?>
+                                <?= esc(
+                                    $user['nama']
+                                    ?? 'Dosen'
+                                ); ?>
 
-                                ! 👋
+                               ! 👋
 
                             </h3>
+
 
                             <p class="welcome-text mb-3">
 
@@ -71,21 +97,29 @@
 
                             </p>
 
+
                             <div class="student-info">
+
+
+                                <!-- NIK -->
 
                                 <div>
 
                                     <i class="fas fa-id-card"></i>
 
                                     <strong>
-                                        NIP/NIDN:
+                                        NIK:
                                     </strong>
 
-                                    <?= esc($user['nip'] ?? '-') ?>
-                                    /
-                                    <?= esc($user['nidn'] ?? '-') ?>
+                                    <?= esc(
+                                        $user['nik']
+                                        ?? '-'
+                                    ); ?>
 
                                 </div>
+
+
+                                <!-- PROGRAM STUDI -->
 
                                 <div>
 
@@ -95,21 +129,33 @@
                                         Program Studi:
                                     </strong>
 
-                                    <?= esc($user['prodi'] ?? '-') ?>
+                                    <?= esc(
+                                        $user['prodi']
+                                        ?? '-'
+                                    ); ?>
 
                                 </div>
+
+
+                                <!-- JURUSAN -->
 
                                 <div>
 
                                     <i class="fas fa-building"></i>
 
                                     <strong>
-                                        Fakultas:
+                                        Jurusan:
                                     </strong>
 
-                                    <?= esc($user['fakultas'] ?? '-') ?>
+                                    <?= esc(
+                                        $user['jurusan']
+                                        ?? '-'
+                                    ); ?>
 
                                 </div>
+
+
+                                <!-- JABATAN -->
 
                                 <div>
 
@@ -119,7 +165,10 @@
                                         Jabatan:
                                     </strong>
 
-                                    <?= esc($user['jabatan'] ?? '-') ?>
+                                    <?= esc(
+                                        $user['jabatan']
+                                        ?? '-'
+                                    ); ?>
 
                                 </div>
 
@@ -127,13 +176,25 @@
 
                         </div>
 
-                        <div class="col-md-4 text-center mt-3 mt-md-0">
+
+
+                        <!-- AVATAR -->
+
+                        <div
+                            class="
+                                col-md-4
+                                text-center
+                                mt-3
+                                mt-md-0
+                            "
+                        >
 
                             <div class="student-avatar">
 
                                 <i class="fas fa-user-tie"></i>
 
                             </div>
+
 
                             <div class="mt-2">
 
@@ -142,9 +203,8 @@
                                     <i class="fas fa-circle"></i>
 
                                     <?= esc(
-                                        strtolower((string) ($user['status'] ?? 'Aktif')) === 'tidak aktif'
-                                            ? 'Tidak Aktif'
-                                            : ($user['status'] ?? 'Aktif')
+                                        $user['status']
+                                        ?? 'Aktif'
                                     ); ?>
 
                                 </span>
@@ -153,13 +213,25 @@
 
                         </div>
 
+
                     </div>
 
                 </div>
 
             </div>
 
+
+
+            <!-- =========================================
+                 STATISTIK PENGAJUAN
+            ========================================== -->
+
             <div class="row">
+
+
+                <!-- ======================================
+                     TOTAL PENGAJUAN
+                ======================================= -->
 
                 <div class="col-lg-3 col-md-6 mb-3">
 
@@ -167,11 +239,23 @@
 
                         <div class="stat-content">
 
-                            <h2><?= esc($statistik['total'] ?? 0); ?></h2>
+                            <h2>
 
-                            <p>Jumlah Pengajuan</p>
+                                <?= esc(
+                                    $statistik['total']
+                                    ?? 0
+                                ); ?>
+
+                            </h2>
+
+                            <p>
+
+                                Jumlah Pengajuan
+
+                            </p>
 
                         </div>
+
 
                         <div class="stat-icon">
 
@@ -183,17 +267,35 @@
 
                 </div>
 
+
+
+                <!-- ======================================
+                     SEDANG DIPROSES
+                ======================================= -->
+
                 <div class="col-lg-3 col-md-6 mb-3">
 
                     <div class="stat-card stat-orange">
 
                         <div class="stat-content">
 
-                            <h2><?= esc($statistik['diproses'] ?? 0); ?></h2>
+                            <h2>
 
-                            <p>Sedang Diproses</p>
+                                <?= esc(
+                                    $statistik['diproses']
+                                    ?? 0
+                                ); ?>
+
+                            </h2>
+
+                            <p>
+
+                                Sedang Diproses
+
+                            </p>
 
                         </div>
+
 
                         <div class="stat-icon">
 
@@ -205,17 +307,35 @@
 
                 </div>
 
+
+
+                <!-- ======================================
+                     PERLU REVISI
+                ======================================= -->
+
                 <div class="col-lg-3 col-md-6 mb-3">
 
                     <div class="stat-card stat-warning">
 
                         <div class="stat-content">
 
-                            <h2><?= esc($statistik['revisi'] ?? 0); ?></h2>
+                            <h2>
 
-                            <p>Perlu Revisi</p>
+                                <?= esc(
+                                    $statistik['revisi']
+                                    ?? 0
+                                ); ?>
+
+                            </h2>
+
+                            <p>
+
+                                Perlu Revisi
+
+                            </p>
 
                         </div>
+
 
                         <div class="stat-icon">
 
@@ -227,17 +347,35 @@
 
                 </div>
 
+
+
+                <!-- ======================================
+                     SELESAI
+                ======================================= -->
+
                 <div class="col-lg-3 col-md-6 mb-3">
 
                     <div class="stat-card stat-success">
 
                         <div class="stat-content">
 
-                            <h2><?= esc($statistik['selesai'] ?? 0); ?></h2>
+                            <h2>
 
-                            <p>Selesai</p>
+                                <?= esc(
+                                    $statistik['selesai']
+                                    ?? 0
+                                ); ?>
+
+                            </h2>
+
+                            <p>
+
+                                Selesai
+
+                            </p>
 
                         </div>
+
 
                         <div class="stat-icon">
 
@@ -249,55 +387,110 @@
 
                 </div>
 
+
             </div>
+
+
+
+            <!-- =========================================
+                 QUICK ACTION
+            ========================================== -->
 
             <div class="row mb-4">
 
+
+                <!-- AJUKAN LAYANAN -->
+
                 <div class="col-lg-4 col-md-4 mb-2">
 
                     <a
-                        href="<?= base_url('dosen/ticket/create') ?>"
-                        class="quick-action action-orange">
+                        href="<?= base_url(
+                            'dosen/ticket/create'
+                        ) ?>"
+                        class="quick-action action-orange"
+                    >
 
                         <i class="fas fa-plus-circle"></i>
 
-                        <span>Ajukan Layanan Baru</span>
+                        <span>
+
+                            Ajukan Layanan Baru
+
+                        </span>
 
                     </a>
 
                 </div>
 
+
+
+                <!-- TRACKING -->
+
                 <div class="col-lg-4 col-md-4 mb-2">
 
                     <a
-                        href="<?= base_url('dosen/ticket/history') ?>"
-                        class="quick-action action-blue">
+                        href="<?= base_url(
+                            'dosen/ticket/history'
+                        ) ?>"
+                        class="quick-action action-blue"
+                    >
 
                         <i class="fas fa-history"></i>
 
-                        <span>Tracking Tiket</span>
+                        <span>
+
+                            Tracking Tiket
+
+                        </span>
 
                     </a>
 
                 </div>
+
+
+
+                <!-- NOTIFIKASI -->
 
                 <div class="col-lg-4 col-md-4 mb-2">
 
                     <a
-                        href="<?= base_url('dosen/notification') ?>"
-                        class="quick-action action-blue">
+                        href="<?= base_url(
+                            'dosen/notification'
+                        ) ?>"
+                        class="quick-action action-blue"
+                    >
 
                         <i class="fas fa-bell"></i>
 
-                        <span>Notifikasi</span>
+                        <span>
+
+                            Notifikasi
+
+                        </span>
 
                     </a>
 
                 </div>
 
+
             </div>
 
+
+
+            <!-- =========================================
+                 RIWAYAT PENGAJUAN LAYANAN
+                 
+                 DATA DIAMBIL DARI:
+                 $riwayat
+
+                 $riwayat hanya berisi tiket yang
+                 statusnya Completed / Selesai.
+            ========================================== -->
+
             <div class="card dashboard-card shadow-sm">
+
+
+                <!-- HEADER RIWAYAT -->
 
                 <div class="card-header dashboard-card-header">
 
@@ -309,9 +502,18 @@
 
                     </h3>
 
+
                     <a
-                        href="<?= base_url('dosen/ticket/history') ?>"
-                        class="btn btn-sm btn-ult-orange float-end">
+                        href="<?= base_url(
+                            'dosen/ticket/history'
+                        ) ?>"
+                        class="
+                            btn
+                            btn-sm
+                            btn-ult-orange
+                            float-end
+                        "
+                    >
 
                         Lihat Semua
 
@@ -319,115 +521,306 @@
 
                 </div>
 
+
+
+                <!-- BODY TABLE -->
+
                 <div class="card-body table-responsive p-0">
 
-                    <table class="table table-hover align-middle mb-0">
+
+                    <table
+                        class="
+                            table
+                            table-hover
+                            align-middle
+                            mb-0
+                        "
+                    >
+
+
+                        <!-- HEADER TABLE -->
 
                         <thead>
 
                             <tr>
 
-                                <th>No</th>
-                                <th>Nomor Tiket</th>
-                                <th>Layanan</th>
-                                <th>Tanggal</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
+                                <th>
+                                    No
+                                </th>
+
+                                <th>
+                                    Nomor Tiket
+                                </th>
+
+                                <th>
+                                    Layanan
+                                </th>
+
+                                <th>
+                                    Unit Layanan
+                                </th>
+
+                                <th>
+                                    Tanggal
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Aksi
+                                </th>
 
                             </tr>
 
                         </thead>
 
+
+
+                        <!-- ISI TABLE -->
+
                         <tbody>
 
-                            <?php if (! empty($tickets)): ?>
 
-                                <?php $no = 1; ?>
+                        <?php if (
+                            !empty(
+                                $riwayat
+                                ?? []
+                            )
+                        ): ?>
 
-                                <?php foreach ($tickets as $ticket): ?>
 
-                                    <?php
-                                    $statusRaw = strtolower(trim((string) ($ticket['status'] ?? '')));
-                                    $statusClass = 'status-submitted';
-                                    $statusLabel = $ticket['status'] ?? 'Submitted';
+                            <?php
 
-                                    if (in_array($statusRaw, ['in progress', 'progress', 'processing', 'processed', 'diproses'], true)) {
-                                        $statusClass = 'status-progress';
-                                        $statusLabel = 'Sedang Diproses';
-                                    } elseif (in_array($statusRaw, ['revision', 'revisi', 'needs revision', 'perlu revisi'], true)) {
-                                        $statusClass = 'status-revision';
-                                        $statusLabel = 'Perlu Revisi';
-                                    } elseif (in_array($statusRaw, ['completed', 'selesai'], true)) {
-                                        $statusClass = 'status-completed';
-                                        $statusLabel = 'Selesai';
-                                    } elseif (in_array($statusRaw, ['submitted', 'verification', 'verified'], true)) {
-                                        $statusClass = 'status-submitted';
-                                        $statusLabel = 'Diajukan';
-                                    }
-                                    ?>
+                            $no = 1;
 
-                                    <tr>
+                            foreach (
+                                $riwayat
+                                as $t
+                            ):
 
-                                        <td><?= $no++; ?></td>
+                            ?>
 
-                                        <td><?= esc($ticket['nomor'] ?? '-') ?></td>
-
-                                        <td><?= esc($ticket['layanan'] ?? '-') ?></td>
-
-                                        <td><?= esc($ticket['tanggal'] ?? '-') ?></td>
-
-                                        <td>
-
-                                            <span class="ticket-status <?= $statusClass ?>">
-
-                                                <?= esc($statusLabel) ?>
-
-                                            </span>
-
-                                        </td>
-
-                                        <td>
-
-                                            <a
-                                                href="<?= base_url('dosen/ticket/detail/' . ($ticket['id'] ?? 0)) ?>"
-                                                class="btn btn-sm btn-detail">
-
-                                                <i class="fas fa-eye me-1"></i>
-
-                                                Detail
-
-                                            </a>
-
-                                        </td>
-
-                                    </tr>
-
-                                <?php endforeach; ?>
-
-                            <?php else: ?>
 
                                 <tr>
 
-                                    <td colspan="6" class="text-center text-muted py-4">
 
-                                        <i class="fas fa-inbox fa-2x mb-2"></i>
+                                    <!-- NO -->
 
-                                        <br>
+                                    <td>
 
-                                        Belum ada pengajuan layanan.
+                                        <?= $no++; ?>
 
                                     </td>
 
+
+
+                                    <!-- NOMOR TIKET -->
+
+                                    <td>
+
+                                        <strong>
+
+                                            <?= esc(
+                                                $t['nomor']
+                                                ?? '-'
+                                            ); ?>
+
+                                        </strong>
+
+                                    </td>
+
+
+
+                                    <!-- LAYANAN -->
+
+                                    <td>
+
+                                        <?= esc(
+                                            $t['layanan']
+                                            ?? '-'
+                                        ); ?>
+
+                                    </td>
+
+
+
+                                    <!-- UNIT LAYANAN -->
+
+                                    <td>
+
+                                        <?= esc(
+                                            $t['unit_layanan']
+                                            ?? $t['unit']
+                                            ?? '-'
+                                        ); ?>
+
+                                    </td>
+
+
+
+                                    <!-- TANGGAL -->
+
+                                    <td>
+
+                                        <?php
+
+                                        if (
+                                            !empty(
+                                                $t['created_at']
+                                            )
+                                        ) {
+
+                                            echo esc(
+                                                date(
+                                                    'd-m-Y',
+                                                    strtotime(
+                                                        $t['created_at']
+                                                    )
+                                                )
+                                            );
+
+                                        } elseif (
+                                            !empty(
+                                                $t['tanggal']
+                                            )
+                                        ) {
+
+                                            echo esc(
+                                                $t['tanggal']
+                                            );
+
+                                        } else {
+
+                                            echo '-';
+
+                                        }
+
+                                        ?>
+
+                                    </td>
+
+
+
+                                    <!-- STATUS -->
+
+                                    <td>
+
+                                        <span
+                                            class="
+                                                ticket-status
+                                                status-completed
+                                            "
+                                        >
+
+                                            <i
+                                                class="
+                                                    fas
+                                                    fa-check
+                                                "
+                                            ></i>
+
+                                            Selesai
+
+                                        </span>
+
+                                    </td>
+
+
+
+                                    <!-- AKSI -->
+
+                                    <td>
+
+                                        <a
+                                            href="<?= base_url(
+                                                'dosen/ticket/detail/' .
+                                                (
+                                                    $t['id']
+                                                    ?? ''
+                                                )
+                                            ) ?>"
+                                            class="btn btn-detail"
+                                        >
+
+                                            <i
+                                                class="
+                                                    fas
+                                                    fa-eye
+                                                "
+                                            ></i>
+
+                                            Detail
+
+                                        </a>
+
+                                    </td>
+
+
                                 </tr>
 
-                            <?php endif; ?>
+
+                            <?php endforeach; ?>
+
+
+                        <?php else: ?>
+
+
+                            <!-- =====================================
+                                 BELUM ADA RIWAYAT
+                            ====================================== -->
+
+                            <tr>
+
+                                <td
+                                    colspan="7"
+                                    class="
+                                        text-center
+                                        py-5
+                                        text-muted
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-history
+                                            fa-3x
+                                            mb-3
+                                        "
+                                    ></i>
+
+
+                                    <div>
+
+                                        <strong>
+
+                                            Belum Ada Riwayat Pengajuan
+
+                                        </strong>
+
+                                    </div>
+
+
+                                    <small>
+
+                                        Pengajuan yang sudah selesai
+                                        akan otomatis muncul di sini.
+
+                                    </small>
+
+                                </td>
+
+                            </tr>
+
+
+                        <?php endif; ?>
+
 
                         </tbody>
-
                     </table>
-
                 </div>
-
             </div>
 
         </div>
@@ -435,5 +828,6 @@
     </section>
 
 </div>
+
 
 <?= $this->include('layouts/footer'); ?>

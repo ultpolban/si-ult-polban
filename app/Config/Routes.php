@@ -267,6 +267,8 @@ $routes->get('mahasiswa/help', 'MahasiswaHelpController::index');
 // DASHBOARD DOSEN
 // ================================
 
+$routes->get('dashboard-dosen', 'DosenController::dashboard');
+
 $routes->get('dosen/dashboard', 'DosenController::dashboard');
 
 
@@ -329,6 +331,12 @@ $routes->get(
 $routes->get(
     'dosen/ticket/draft/edit/(:num)',
     'DosenTicketController::editDraft/$1'
+);
+
+// Halaman Draft Success
+$routes->get(
+    'dosen/ticket/draft-success',
+    'DosenTicketController::draftSuccess'
 );
 
 // Update Draft menjadi Pengajuan

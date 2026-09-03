@@ -5,7 +5,7 @@ $currentUrl = uri_string();
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
     <!-- BRAND / LOGO POLBAN -->
-    <a href="<?= base_url('dashboard-tendik') ?>" class="brand-link">
+    <a href="<?= base_url('dashboard-dosen') ?>" class="brand-link">
 
         <img
             src="<?= base_url('assets/adminlte/img/logo-polban.png') ?>"
@@ -61,7 +61,8 @@ $currentUrl = uri_string();
                 >
 
                     <?= esc(
-                        session()->get('user')['nama']
+                        session()->get('user')['full_name']
+                        ?? session()->get('user')['nama']
                         ?? 'Dosen'
                     ) ?>
 

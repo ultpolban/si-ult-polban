@@ -15,6 +15,7 @@ $routes->post('/login', 'AuthController::authenticate');
 $routes->get('/register', 'AuthController::register');
 $routes->post('/register', 'AuthController::storeRegister');
 $routes->get('/logout', 'AuthController::logout');
+$routes->get('/register/fields/(:num)', 'AuthController::fields/$1');
 
 // ======================================
 // USER MANAGEMENT

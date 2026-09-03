@@ -27,10 +27,11 @@ class DashboardController extends BaseController
             case 3: // Unit Kerja
                 return view('dashboard/unit');
 
-           case 4:
+          case 6: // Pemohon
     return view('dashboard/pemohon');
-            case 5: // Pimpinan
-                return view('dashboard/pimpinan');
+
+case 5: // Pimpinan
+    return view('dashboard/pimpinan');
 
             default:
                 session()->destroy();

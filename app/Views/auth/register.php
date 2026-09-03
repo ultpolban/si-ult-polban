@@ -1,80 +1,243 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 
 <head>
-    <title>Register</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title><?= esc($title ?? 'Registrasi') ?> - SI ULT POLBAN</title>
+
+    <link rel="icon" href="<?= base_url('assets/img/favicon.svg') ?>">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
+
 </head>
 
 <body>
 
-    <h2>Registrasi Akun</h2>
+    <div class="auth-page">
 
-    <?php if (session()->getFlashdata('errors')): ?>
+        <div class="auth-container auth-register">
 
-        <ul style="color:red">
+            <div class="auth-card">
 
-            <?php foreach (session()->getFlashdata('errors') as $error): ?>
+                <!-- Left -->
+                <div class="auth-left">
 
-                <li><?= $error ?></li>
+                    <div>
 
-            <?php endforeach; ?>
+                        <span class="system-badge">
 
-        </ul>
+                            <i class="fas fa-star me-1"></i>
 
-    <?php endif; ?>
+                            Layanan Terpadu
 
-    <form action="<?= base_url('register') ?>" method="post">
+                        </span>
 
-        <p>Nama</p>
+                        <h1>
 
-        <input
-            type="text"
-            name="name"
-            value="<?= old('name') ?>">
+                            Bergabung Dengan<br>
 
-        <p>Email</p>
+                            SI ULT POLBAN
 
-        <input
-            type="email"
-            name="email"
-            value="<?= old('email') ?>">
+                        </h1>
 
-        <p>No HP</p>
+                        <p>
 
-        <input
-            type="text"
-            name="phone"
-            value="<?= old('phone') ?>">
+                            Daftar sebagai pemohon layanan.
 
-        <p>Password</p>
+                            Lengkapi data sesuai jenis pemohon Anda.
 
-        <input
-            type="password"
-            name="password">
+                        </p>
 
-        <p>Konfirmasi Password</p>
+                        <div class="mt-3 alert alert-light border small">
 
-        <input
-            type="password"
-            name="confirm_password">
+                            <i class="fas fa-shield-hot me-2"></i>
 
-        <br><br>
+                            Setelah mendaftar, pindai kode QR MFA
 
-        <button type="submit">
+                            di aplikasi authenticator lalu masukkan
 
-            Daftar
+                            kode verifikasi untuk mengaktifkan akun.
 
-        </button>
+                        </div>
 
-    </form>
+                    </div>
 
-    <br>
+                    <div class="auth-icon">
 
-    <a href="<?= base_url('login') ?>">
+                        <i class="fas fa-user-plus"></i>
 
-        Sudah punya akun? Login
+                    </div>
 
-    </a>
+                </div>
+
+                <!-- Right -->
+                <div class="auth-right">
+<div class="text-center mb-4">
+
+                        <img src="<?= base_url('assets/images/logo.svg') ?>"
+                            alt="Logo"
+                            width="64">
+
+                        <h2 class="mt-3 mb-1">Buat Akun Pemohon</h2>
+
+                        <p>Pilih jenis pemohon untuk menyesuaikan formulir</p>
+
+                    </div>
+
+                    <?php if (session()->getFlashdata('error')) : ?>
+
+                        <div class="alert alert-danger">
+
+                            <i class="fas fa-exclamation-circle me-2"></i>
+
+                            <?= esc(session()->getFlashdata('error')) ?>
+
+                        </div>
+
+                    <?php endif; ?>
+
+                    <?php if (session()->getFlashdata('errors')) : ?>
+
+                        <?php foreach (session()->getFlashdata('errors') as $error) : ?>
+
+                            <div class="alert alert-danger py-2">
+
+                                <i class="fas fa-exclamation-circle me-2"></i>
+
+                                <?= esc($error) ?>
+
+                            </div>
+
+                        <?php endforeach; ?>
+
+                    <?php endif; ?>
+
+                    <form action="<?= base_url('register') ?>"
+                        method="post"
+                        id="registerForm">
+
+                        <?= csrf_field(); ?>
+
+                        <!-- Step 1: Pilih Jenis Pemohon -->
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                Jenis Pemohon <span class="text-danger">*</span>
+
+                            </label>
+
+                            <select
+                                name="applicant_type_id"
+                                id="applicantType"
+                                class="form-select"
+                                required>
+
+                                <option value="">-- Pilih Jenis Pemohon --</option>
+
+                                <?php foreach ($applicantTypes as $at) : ?>
+
+                                    <option value="<?= $at['id'] ?>"
+                                        data-code="<?= esc($at['code']) ?>"
+                                        <?= (string) old('applicant_type_id') === (string) $at['id'] ? 'selected' : '' ?>>
+
+                                        <?= esc($at['name']) ?>
+
+                                    </option>
+
+                                <?php endforeach; ?>
+
+                            </select>
+
+                        </div>
+
+                        <!-- Step 2: Form dinamis per jenis pemohon -->
+                        <div id="dynamicFields">
+
+                            <?= $this->include('auth/_register_fields') ?>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100 mt-2">
+
+                            <i class="fas fa-user-plus me-2"></i>
+
+                            Daftar
+
+                        </button>
+
+                    </form>
+
+                    <div class="text-center mt-3">
+
+                        <small class="text-muted">
+
+                            Sudah punya akun?
+
+                            <a href="<?= base_url('login') ?>">
+
+                                Login di sini
+
+                            </a>
+
+                        </small>
+
+                    </div>
+
+                </div>
+</div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script>
+        $(function() {
+
+            const fieldsUrl = "<?= base_url('register/fields') ?>";
+
+            const $dynamicFields = $('#dynamicFields');
+            const $applicantType = $('#applicantType');
+
+            function loadFields(id) {
+
+                if (!id) {
+                    $dynamicFields.html(
+                        '<p class="text-muted text-center py-3">Pilih jenis pemohon terlebih dahulu.</p>'
+                    );
+                    return;
+                }
+
+                $.get(fieldsUrl + '/' + id, function(res) {
+
+                    if (res) {
+                        $dynamicFields.html(res);
+                    }
+
+                });
+
+            }
+
+            $applicantType.on('change', function() {
+                loadFields($(this).val());
+            });
+
+        });
+    </script>
 
 </body>
 

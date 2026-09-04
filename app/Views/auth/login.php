@@ -17,10 +17,6 @@
 
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
 
-    <link rel="stylesheet" href="<?= base_url('assets/css/auth.css') ?>">
-
-<link rel="stylesheet" href="<?= base_url('assets/css/responsive.css') ?>">
-
 </head>
 
 <body>

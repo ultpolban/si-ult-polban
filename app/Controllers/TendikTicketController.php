@@ -2,8 +2,28 @@
 
 namespace App\Controllers;
 
+use App\Models\ServiceRequestModel;
+use App\Models\UserProfileModel;
+use App\Models\MasterServiceModel;
+use App\Models\MasterServiceUnitModel;
+
 class TendikTicketController extends BaseController
 {
+    protected ServiceRequestModel $serviceRequestModel;
+    protected UserProfileModel $userProfileModel;
+    protected MasterServiceModel $serviceModel;
+    protected MasterServiceUnitModel $serviceUnitModel;
+
+    public function __construct()
+    {
+        helper(['form', 'url']);
+
+        $this->serviceRequestModel = new ServiceRequestModel();
+        $this->userProfileModel    = new UserProfileModel();
+        $this->serviceModel        = new MasterServiceModel();
+        $this->serviceUnitModel    = new MasterServiceUnitModel();
+    }
+
     // =========================================================
     // FORM AJUKAN LAYANAN
     // =========================================================
@@ -11,9 +31,53 @@ class TendikTicketController extends BaseController
     {
         $user = session()->get('user') ?? [];
 
+        $userId = (int) session()->get('user_id');
+
+        if ($userId <= 0) {
+            return redirect()
+                ->to('/login')
+                ->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        // -----------------------------------------------------
+        // PROFILE USER
+        // -----------------------------------------------------
+        $profile = $this->userProfileModel
+            ->findByUser($userId);
+
+        if (!$profile) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Profil pengguna belum tersedia.'
+                );
+        }
+
+        // -----------------------------------------------------
+        // UNIT LAYANAN AKTIF
+        // -----------------------------------------------------
+        $units = $this->serviceUnitModel
+            ->where('is_active', 1)
+            ->orderBy('sort_order', 'ASC')
+            ->orderBy('name', 'ASC')
+            ->findAll();
+
+        // -----------------------------------------------------
+        // SEMUA LAYANAN AKTIF
+        // -----------------------------------------------------
+        $services = $this->serviceModel
+            ->where('is_active', 1)
+            ->orderBy('sort_order', 'ASC')
+            ->orderBy('name', 'ASC')
+            ->findAll();
+
         $data = [
-            'title' => 'Ajukan Layanan',
-            'user'  => $user,
+            'title'    => 'Ajukan Layanan',
+            'user'     => $user,
+            'profile'  => $profile,
+            'units'    => $units,
+            'services' => $services,
         ];
 
         return view(
@@ -29,40 +93,76 @@ class TendikTicketController extends BaseController
     public function store()
     {
         // -----------------------------------------------------
-        // AMBIL DATA FORM
+        // CEK LOGIN
         // -----------------------------------------------------
-        $unitTujuan = $this->request
-            ->getPost('unit_tujuan');
+        $userId = (int) session()->get('user_id');
 
-        $jenisLayanan = $this->request
-            ->getPost('jenis_layanan');
-
-        $judul = $this->request
-            ->getPost('judul');
-
-        $keterangan = $this->request
-            ->getPost('keterangan');
-
-        $action = $this->request
-            ->getPost('action');
-
+        if ($userId <= 0) {
+            return redirect()
+                ->to('/login')
+                ->with('error', 'Silakan login terlebih dahulu.');
+        }
 
         // -----------------------------------------------------
-        // DATA USER
+        // AMBIL PROFILE
         // -----------------------------------------------------
-        $user = session()->get('user') ?? [];
+        $profile = $this->userProfileModel
+            ->findByUser($userId);
+
+        if (!$profile) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Profil pengguna belum tersedia.'
+                );
+        }
+
+        // -----------------------------------------------------
+        // DATA FORM
+        // -----------------------------------------------------
+        $unitTujuan = trim(
+            (string) $this->request->getPost('unit_tujuan')
+        );
+
+        $jenisLayanan = trim(
+            (string) $this->request->getPost('jenis_layanan')
+        );
+
+        $judul = trim(
+            (string) $this->request->getPost('judul')
+        );
+
+        $keterangan = trim(
+            (string) $this->request->getPost('keterangan')
+        );
+
+        $priority = trim(
+            (string) $this->request->getPost('priority')
+        );
+
+        $action = trim(
+            (string) $this->request->getPost('action')
+        );
+
+        // requirement_id opsional dari form
+        $requirementId = $this->request->getPost('requirement_id');
+
+        $requirementId = !empty($requirementId)
+            ? (int) $requirementId
+            : null;
 
 
         // -----------------------------------------------------
-        // VALIDASI DATA WAJIB
+        // VALIDASI
         // -----------------------------------------------------
         if (
-            empty($unitTujuan) ||
-            empty($jenisLayanan) ||
-            empty($judul) ||
-            empty($keterangan)
+            $unitTujuan === '' ||
+            $jenisLayanan === '' ||
+            $judul === '' ||
+            $keterangan === ''
         ) {
-
             return redirect()
                 ->back()
                 ->withInput()
@@ -74,122 +174,326 @@ class TendikTicketController extends BaseController
 
 
         // -----------------------------------------------------
-        // AMBIL FILE DOKUMEN
-        // -----------------------------------------------------
-        $dokumen = $this->request
-            ->getFile('dokumen');
-
-
-        // -----------------------------------------------------
-        // PROSES UPLOAD DOKUMEN
-        // -----------------------------------------------------
-        $dokumenData = $this->processDocument(
-            $dokumen
-        );
-
-
-        // -----------------------------------------------------
-        // JIKA UPLOAD GAGAL
+        // PRIORITY
         // -----------------------------------------------------
         if (
-            $dokumenData === false
+            !in_array(
+                $priority,
+                ['low', 'normal', 'high', 'urgent'],
+                true
+            )
         ) {
+            $priority = 'normal';
+        }
+
+
+        // -----------------------------------------------------
+        // VALIDASI SERVICE
+        //
+        // jenis_layanan dianggap ID master_services
+        // -----------------------------------------------------
+        $serviceId = (int) $jenisLayanan;
+
+        if ($serviceId <= 0) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Jenis layanan tidak valid.'
+                );
+        }
+
+        $service = $this->serviceModel
+            ->where('id', $serviceId)
+            ->where('is_active', 1)
+            ->first();
+
+        if (!$service) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Layanan yang dipilih tidak ditemukan.'
+                );
+        }
+
+
+        // -----------------------------------------------------
+        // VALIDASI UNIT
+        //
+        // unit_tujuan dianggap ID master_service_units
+        // -----------------------------------------------------
+        $serviceUnitId = (int) $unitTujuan;
+
+        if ($serviceUnitId <= 0) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Unit tujuan tidak valid.'
+                );
+        }
+
+        $serviceUnit = $this->serviceUnitModel
+            ->where('id', $serviceUnitId)
+            ->where('is_active', 1)
+            ->first();
+
+        if (!$serviceUnit) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Unit layanan tidak ditemukan.'
+                );
+        }
+
+
+        // -----------------------------------------------------
+        // PASTIKAN SERVICE MEMANG MILIK UNIT TERSEBUT
+        // -----------------------------------------------------
+        if (
+            (int) ($service['service_unit_id'] ?? 0)
+            !==
+            $serviceUnitId
+        ) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Layanan tidak tersedia pada unit tujuan yang dipilih.'
+                );
+        }
+
+
+        // -----------------------------------------------------
+        // STATUS
+        // -----------------------------------------------------
+        $status = $action === 'draft'
+            ? 'draft'
+            : 'submitted';
+
+
+        // -----------------------------------------------------
+        // NOMOR TIKET
+        // -----------------------------------------------------
+        $ticketNumber = $this->generateTicketNumber();
+
+
+        // -----------------------------------------------------
+        // DATA SERVICE REQUEST
+        // -----------------------------------------------------
+        $ticketData = [
+
+            'ticket_number' =>
+                $ticketNumber,
+
+            'user_profile_id' =>
+                (int) $profile['id'],
+
+            'service_id' =>
+                $serviceId,
+
+            'title' =>
+                $judul,
+
+            'description' =>
+                $keterangan,
+
+            'status' =>
+                $status,
+
+            'priority' =>
+                $priority,
+
+            'assigned_to' =>
+                null,
+
+            'submitted_at' =>
+                $status === 'submitted'
+                    ? date('Y-m-d H:i:s')
+                    : null,
+
+            'created_at' =>
+                date('Y-m-d H:i:s'),
+
+            'updated_at' =>
+                date('Y-m-d H:i:s'),
+        ];
+
+
+        // =====================================================
+        // TRANSACTION
+        // =====================================================
+        $db = db_connect();
+
+        $db->transStart();
+
+        // -----------------------------------------------------
+        // INSERT SERVICE REQUEST
+        // -----------------------------------------------------
+        $requestId =
+            $this->serviceRequestModel
+                ->insert(
+                    $ticketData,
+                    true
+                );
+
+        if (!$requestId) {
+
+            $db->transRollback();
 
             return redirect()
                 ->back()
                 ->withInput()
                 ->with(
                     'error',
-                    'Dokumen gagal diupload. Pastikan format file benar dan ukuran maksimal 2 MB.'
+                    'Pengajuan gagal disimpan.'
                 );
         }
 
 
         // -----------------------------------------------------
-        // NOMOR TIKET
+        // FILE DOKUMEN
         // -----------------------------------------------------
-        $nomorTiket =
-            'TEN-' .
-            date('YmdHis');
+        $dokumen =
+            $this->request
+                ->getFile('dokumen');
 
 
-        // -----------------------------------------------------
-        // DATA TIKET
-        // -----------------------------------------------------
-        $ticket = [
-
-            'id' =>
-                time(),
-
-            'nomor_tiket' =>
-                $nomorTiket,
-
-            'nama' =>
-                $user['nama'] ?? '',
-
-            'nip' =>
-                $user['nip'] ?? '',
-
-            'email' =>
-                $user['email'] ?? '',
-
-            'unit_tujuan' =>
-                $unitTujuan,
-
-            'jenis_layanan' =>
-                $jenisLayanan,
-
-            'judul' =>
-                $judul,
-
-            'keterangan' =>
-                $keterangan,
-
-            'dokumen' =>
-                $dokumenData,
-
-            'status' =>
-                'Submitted',
-
-            'created_at' =>
-                date('Y-m-d H:i:s'),
-
-        ];
-
-
-        // =====================================================
-        // SIMPAN SEBAGAI DRAFT
-        // =====================================================
         if (
-            $action === 'draft'
+            $dokumen &&
+            $dokumen->getError()
+            !==
+            UPLOAD_ERR_NO_FILE
         ) {
 
-            // Ambil draft lama
-            $drafts =
-                session()->get(
-                    'tendik_drafts'
-                )
-                ?? [];
+            $documentData =
+                $this->processDocument(
+                    $dokumen
+                );
+
+            if ($documentData === false) {
+
+                $db->transRollback();
+
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Dokumen gagal diupload. Pastikan format dan ukuran file sesuai.'
+                    );
+            }
 
 
-            // Ubah status
-            $ticket['status'] =
-                'Draft';
+            // -------------------------------------------------
+            // requirement_id WAJIB
+            // -------------------------------------------------
+            if (!$requirementId) {
+
+                $db->transRollback();
+
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Requirement dokumen belum dipilih.'
+                    );
+            }
 
 
-            // Tambahkan draft baru
-            $drafts[] =
-                $ticket;
+            // -------------------------------------------------
+            // SIMPAN FILE
+            // -------------------------------------------------
+            $fileModel =
+                db_connect()
+                    ->table('service_request_files');
+
+            $fileModel->insert([
+
+                'service_requests_id' =>
+                    $requestId,
+
+                'requirement_id' =>
+                    $requirementId,
+
+                'original_name' =>
+                    $documentData['nama_asli'],
+
+                'file_name' =>
+                    $documentData['nama_file'],
+
+                'file_path' =>
+                    $documentData['path'],
+
+                'file_extension' =>
+                    $documentData['extension'],
+
+                'mime_type' =>
+                    $documentData['mime_type'],
+
+                'file_size' =>
+                    $documentData['ukuran'],
+
+                'is_verified' =>
+                    0,
+
+                'created_at' =>
+                    date('Y-m-d H:i:s'),
+
+                'updated_at' =>
+                    date('Y-m-d H:i:s'),
+            ]);
+        }
 
 
-            // Simpan ke session
-            session()->set(
-                'tendik_drafts',
-                $drafts
-            );
+        // -----------------------------------------------------
+        // LOG
+        // -----------------------------------------------------
+        $this->createLog(
+            $requestId,
+            $userId,
+            null,
+            $status,
+            $status === 'draft'
+                ? 'CREATE_DRAFT'
+                : 'SUBMIT',
+            $status === 'draft'
+                ? 'Pengajuan disimpan sebagai draft.'
+                : 'Pengajuan layanan berhasil dikirim.'
+        );
 
 
-            // Kembali ke halaman draft
+        $db->transComplete();
+
+
+        // -----------------------------------------------------
+        // CEK TRANSACTION
+        // -----------------------------------------------------
+        if ($db->transStatus() === false) {
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Terjadi kesalahan saat menyimpan pengajuan.'
+                );
+        }
+
+
+        // =====================================================
+        // DRAFT
+        // =====================================================
+        if ($status === 'draft') {
+
             return redirect()
                 ->to(
                     base_url(
@@ -204,59 +508,45 @@ class TendikTicketController extends BaseController
 
 
         // =====================================================
-        // AJUKAN LANGSUNG
-        // =====================================================
-        if (
-            $action === 'submit'
-        ) {
-
-            // Ambil tiket lama
-            $tickets =
-                session()->get(
-                    'tendik_tickets'
-                )
-                ?? [];
-
-
-            // Tambahkan tiket baru
-            $tickets[] =
-                $ticket;
-
-
-            // Simpan tiket
-            session()->set(
-                'tendik_tickets',
-                $tickets
-            );
-
-
-            // Simpan data untuk halaman sukses
-            session()->setFlashdata(
-                'ticket',
-                $ticket
-            );
-
-
-            // Redirect halaman sukses
-            return redirect()
-                ->to(
-                    base_url(
-                        'tendik/ticket/success'
-                    )
-                );
-        }
-
-
-        // =====================================================
-        // ACTION TIDAK VALID
+        // SUBMIT
         // =====================================================
         return redirect()
-            ->back()
-            ->withInput()
+            ->to(
+                base_url(
+                    'tendik/ticket/success'
+                )
+            )
             ->with(
-                'error',
-                'Aksi pengajuan tidak valid.'
+                'ticket_number',
+                $ticketNumber
             );
+    }
+
+
+    // =========================================================
+    // GENERATE NOMOR TIKET
+    // =========================================================
+    private function generateTicketNumber(): string
+    {
+        do {
+
+            $number =
+                'TEN-' .
+                date('YmdHis') .
+                '-' .
+                random_int(100, 999);
+
+            $exists =
+                $this->serviceRequestModel
+                    ->where(
+                        'ticket_number',
+                        $number
+                    )
+                    ->first();
+
+        } while ($exists);
+
+        return $number;
     }
 
 
@@ -270,39 +560,35 @@ class TendikTicketController extends BaseController
         // -----------------------------------------------------
         if (
             !$dokumen ||
-            $dokumen->getError() === UPLOAD_ERR_NO_FILE
+            $dokumen->getError()
+            === UPLOAD_ERR_NO_FILE
         ) {
-
             return null;
         }
 
 
         // -----------------------------------------------------
-        // CEK FILE VALID
+        // VALIDASI FILE
         // -----------------------------------------------------
-        if (
-            !$dokumen->isValid()
-        ) {
-
+        if (!$dokumen->isValid()) {
             return false;
         }
 
 
         // -----------------------------------------------------
-        // CEK UKURAN MAKSIMAL 2 MB
+        // MAX 2 MB
         // -----------------------------------------------------
         if (
             $dokumen->getSize()
             >
             2 * 1024 * 1024
         ) {
-
             return false;
         }
 
 
         // -----------------------------------------------------
-        // FORMAT FILE YANG DIPERBOLEHKAN
+        // EXTENSION
         // -----------------------------------------------------
         $allowedExtensions = [
 
@@ -316,36 +602,38 @@ class TendikTicketController extends BaseController
         ];
 
 
-        // Ambil extension
         $extension =
             strtolower(
                 $dokumen->getClientExtension()
             );
 
 
-        // -----------------------------------------------------
-        // CEK EXTENSION
-        // -----------------------------------------------------
         if (
             !in_array(
                 $extension,
-                $allowedExtensions
+                $allowedExtensions,
+                true
             )
         ) {
-
             return false;
         }
 
 
         // -----------------------------------------------------
-        // FOLDER UPLOAD
+        // MIME TYPE
+        // -----------------------------------------------------
+        $mimeType =
+            $dokumen->getMimeType();
+
+
+        // -----------------------------------------------------
+        // FOLDER
         // -----------------------------------------------------
         $uploadPath =
             WRITEPATH .
-            'uploads/dokumen/';
+            'uploads/service_requests/';
 
 
-        // Buat folder jika belum ada
         if (
             !is_dir(
                 $uploadPath
@@ -361,24 +649,25 @@ class TendikTicketController extends BaseController
 
 
         // -----------------------------------------------------
-        // BUAT NAMA FILE RANDOM
+        // RANDOM NAME
         // -----------------------------------------------------
         $newName =
             $dokumen->getRandomName();
 
 
         // -----------------------------------------------------
-        // PINDAHKAN FILE
+        // MOVE
         // -----------------------------------------------------
-        $dokumen->move(
-            $uploadPath,
-            $newName
-        );
+        if (
+            !$dokumen->move(
+                $uploadPath,
+                $newName
+            )
+        ) {
+            return false;
+        }
 
 
-        // -----------------------------------------------------
-        // DATA DOKUMEN
-        // -----------------------------------------------------
         return [
 
             'nama_asli' =>
@@ -389,7 +678,7 @@ class TendikTicketController extends BaseController
                 $newName,
 
             'path' =>
-                'uploads/dokumen/' .
+                'uploads/service_requests/' .
                 $newName,
 
             'ukuran' =>
@@ -399,20 +688,34 @@ class TendikTicketController extends BaseController
             'extension' =>
                 $extension,
 
+            'mime_type' =>
+                $mimeType,
         ];
     }
 
 
     // =========================================================
-    // HALAMAN SUCCESS
+    // SUCCESS
     // =========================================================
     public function success()
     {
-        $ticket =
+        $ticketNumber =
             session()->getFlashdata(
-                'ticket'
-            )
-            ?? [];
+                'ticket_number'
+            );
+
+        $ticket = null;
+
+        if ($ticketNumber) {
+
+            $ticket =
+                $this->serviceRequestModel
+                    ->where(
+                        'ticket_number',
+                        $ticketNumber
+                    )
+                    ->first();
+        }
 
 
         $data = [
@@ -434,16 +737,77 @@ class TendikTicketController extends BaseController
 
 
     // =========================================================
-    // TRACKING TIKET
+    // HISTORY / TRACKING
     // =========================================================
     public function history()
     {
-        // Ambil semua tiket Tendik
+        $userId =
+            (int) session()->get(
+                'user_id'
+            );
+
+        if ($userId <= 0) {
+            return redirect()
+                ->to('/login');
+        }
+
+
+        // -----------------------------------------------------
+        // AMBIL PROFILE
+        // -----------------------------------------------------
+        $profile =
+            $this->userProfileModel
+                ->findByUser($userId);
+
+
+        if (!$profile) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Profil pengguna tidak ditemukan.'
+                );
+        }
+
+
+        // -----------------------------------------------------
+        // TIKET USER
+        // -----------------------------------------------------
         $tickets =
-            session()->get(
-                'tendik_tickets'
-            )
-            ?? [];
+            $this->serviceRequestModel
+
+                ->select('
+                    service_requests.*,
+
+                    master_services.name AS service_name,
+                    master_services.code AS service_code,
+
+                    master_service_units.name AS unit_name
+
+                ')
+
+                ->join(
+                    'master_services',
+                    'master_services.id = service_requests.service_id'
+                )
+
+                ->join(
+                    'master_service_units',
+                    'master_service_units.id = master_services.service_unit_id'
+                )
+
+                ->where(
+                    'service_requests.user_profile_id',
+                    $profile['id']
+                )
+
+                ->orderBy(
+                    'service_requests.created_at',
+                    'DESC'
+                )
+
+                ->findAll();
 
 
         $data = [
@@ -469,41 +833,82 @@ class TendikTicketController extends BaseController
     // =========================================================
     public function detail($id)
     {
-        // Ambil semua tiket
-        $tickets =
-            session()->get(
-                'tendik_tickets'
-            )
-            ?? [];
+        $userId =
+            (int) session()->get(
+                'user_id'
+            );
 
 
-        // Cari tiket berdasarkan ID
-        $ticket = null;
-
-
-        foreach (
-            $tickets
-            as $item
-        ) {
-
-            if (
-                (string)($item['id'] ?? '')
-                ===
-                (string)$id
-            ) {
-
-                $ticket =
-                    $item;
-
-                break;
-            }
+        if ($userId <= 0) {
+            return redirect()
+                ->to('/login');
         }
 
 
-        // Jika tiket tidak ditemukan
-        if (
-            !$ticket
-        ) {
+        // -----------------------------------------------------
+        // PROFILE
+        // -----------------------------------------------------
+        $profile =
+            $this->userProfileModel
+                ->findByUser($userId);
+
+
+        if (!$profile) {
+            return redirect()
+                ->to(
+                    base_url(
+                        'tendik/ticket/history'
+                    )
+                )
+                ->with(
+                    'error',
+                    'Profil tidak ditemukan.'
+                );
+        }
+
+
+        // -----------------------------------------------------
+        // TIKET
+        // -----------------------------------------------------
+        $ticket =
+            $this->serviceRequestModel
+
+                ->select('
+                    service_requests.*,
+
+                    master_services.name AS service_name,
+                    master_services.code AS service_code,
+
+                    master_service_units.name AS unit_name,
+                    master_service_units.email AS unit_email,
+                    master_service_units.phone AS unit_phone
+
+                ')
+
+                ->join(
+                    'master_services',
+                    'master_services.id = service_requests.service_id'
+                )
+
+                ->join(
+                    'master_service_units',
+                    'master_service_units.id = master_services.service_unit_id'
+                )
+
+                ->where(
+                    'service_requests.id',
+                    $id
+                )
+
+                ->where(
+                    'service_requests.user_profile_id',
+                    $profile['id']
+                )
+
+                ->first();
+
+
+        if (!$ticket) {
 
             return redirect()
                 ->to(
@@ -519,28 +924,52 @@ class TendikTicketController extends BaseController
 
 
         // -----------------------------------------------------
-        // AMBIL BALASAN TENDIK
+        // FILE
         // -----------------------------------------------------
-        $replies =
-            session()->get(
-                'tendik_replies'
-            )
-            ?? [];
-
-
-        $ticket['balasan'] =
-            $replies[$id]['balasan']
-            ?? null;
-
-
-        $ticket['tanggal_balasan'] =
-            $replies[$id]['tanggal']
-            ?? null;
+        $files =
+            db_connect()
+                ->table(
+                    'service_request_files'
+                )
+                ->where(
+                    'service_requests_id',
+                    $ticket['id']
+                )
+                ->where(
+                    'deleted_at',
+                    null
+                )
+                ->get()
+                ->getResultArray();
 
 
         // -----------------------------------------------------
-        // DATA DETAIL
+        // LOG
         // -----------------------------------------------------
+        $logs =
+            db_connect()
+                ->table(
+                    'service_request_logs'
+                )
+                ->where(
+                    'service_request_id',
+                    $ticket['id']
+                )
+                ->orderBy(
+                    'created_at',
+                    'ASC'
+                )
+                ->get()
+                ->getResultArray();
+
+
+        $ticket['files'] =
+            $files;
+
+        $ticket['logs'] =
+            $logs;
+
+
         $data = [
 
             'title' =>
@@ -560,16 +989,77 @@ class TendikTicketController extends BaseController
 
 
     // =========================================================
-    // HALAMAN DRAFT
+    // DRAFT
     // =========================================================
     public function draft()
     {
-        // Ambil semua draft
+        $userId =
+            (int) session()->get(
+                'user_id'
+            );
+
+
+        if ($userId <= 0) {
+            return redirect()
+                ->to('/login');
+        }
+
+
+        $profile =
+            $this->userProfileModel
+                ->findByUser($userId);
+
+
+        if (!$profile) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Profil pengguna tidak ditemukan.'
+                );
+        }
+
+
         $drafts =
-            session()->get(
-                'tendik_drafts'
-            )
-            ?? [];
+            $this->serviceRequestModel
+
+                ->select('
+                    service_requests.*,
+
+                    master_services.name AS service_name,
+                    master_services.code AS service_code,
+
+                    master_service_units.name AS unit_name
+
+                ')
+
+                ->join(
+                    'master_services',
+                    'master_services.id = service_requests.service_id'
+                )
+
+                ->join(
+                    'master_service_units',
+                    'master_service_units.id = master_services.service_unit_id'
+                )
+
+                ->where(
+                    'service_requests.user_profile_id',
+                    $profile['id']
+                )
+
+                ->where(
+                    'service_requests.status',
+                    'draft'
+                )
+
+                ->orderBy(
+                    'service_requests.updated_at',
+                    'DESC'
+                )
+
+                ->findAll();
 
 
         $data = [
@@ -591,24 +1081,49 @@ class TendikTicketController extends BaseController
 
 
     // =========================================================
-    // EDIT / LANJUTKAN DRAFT
+    // EDIT DRAFT
     // =========================================================
-    public function editDraft($index)
+    public function editDraft($id)
     {
-        // Ambil semua draft
-        $drafts =
-            session()->get(
-                'tendik_drafts'
-            )
-            ?? [];
+        $userId =
+            (int) session()->get(
+                'user_id'
+            );
 
 
-        // Cek draft
-        if (
-            !isset(
-                $drafts[$index]
-            )
-        ) {
+        $profile =
+            $this->userProfileModel
+                ->findByUser($userId);
+
+
+        if (!$profile) {
+            return redirect()
+                ->to('/login');
+        }
+
+
+        $draft =
+            $this->serviceRequestModel
+
+                ->where(
+                    'id',
+                    $id
+                )
+
+                ->where(
+                    'user_profile_id',
+                    $profile['id']
+                )
+
+                ->where(
+                    'status',
+                    'draft'
+                )
+
+                ->first();
+
+
+        if (!$draft) {
 
             return redirect()
                 ->to(
@@ -623,17 +1138,30 @@ class TendikTicketController extends BaseController
         }
 
 
-        // Ambil draft yang dipilih
-        $draft =
-            $drafts[$index];
+        $services =
+            $this->serviceModel
+                ->where(
+                    'is_active',
+                    1
+                )
+                ->orderBy(
+                    'sort_order',
+                    'ASC'
+                )
+                ->findAll();
 
 
-        // Ambil user
-        $user =
-            session()->get(
-                'user'
-            )
-            ?? [];
+        $units =
+            $this->serviceUnitModel
+                ->where(
+                    'is_active',
+                    1
+                )
+                ->orderBy(
+                    'sort_order',
+                    'ASC'
+                )
+                ->findAll();
 
 
         $data = [
@@ -642,13 +1170,19 @@ class TendikTicketController extends BaseController
                 'Lanjutkan Draft Pengajuan',
 
             'user' =>
-                $user,
+                session()->get('user') ?? [],
+
+            'profile' =>
+                $profile,
 
             'draft' =>
                 $draft,
 
-            'draft_index' =>
-                $index,
+            'services' =>
+                $services,
+
+            'units' =>
+                $units,
 
         ];
 
@@ -661,28 +1195,52 @@ class TendikTicketController extends BaseController
 
 
     // =========================================================
-    // UPDATE / KIRIM DRAFT
+    // UPDATE DRAFT
     // =========================================================
-    public function updateDraft($index)
+    public function updateDraft($id)
     {
+        $userId =
+            (int) session()->get(
+                'user_id'
+            );
+
+
+        $profile =
+            $this->userProfileModel
+                ->findByUser($userId);
+
+
+        if (!$profile) {
+            return redirect()
+                ->to('/login');
+        }
+
+
         // -----------------------------------------------------
         // AMBIL DRAFT
         // -----------------------------------------------------
-        $drafts =
-            session()->get(
-                'tendik_drafts'
-            )
-            ?? [];
+        $draft =
+            $this->serviceRequestModel
+
+                ->where(
+                    'id',
+                    $id
+                )
+
+                ->where(
+                    'user_profile_id',
+                    $profile['id']
+                )
+
+                ->where(
+                    'status',
+                    'draft'
+                )
+
+                ->first();
 
 
-        // -----------------------------------------------------
-        // CEK DRAFT
-        // -----------------------------------------------------
-        if (
-            !isset(
-                $drafts[$index]
-            )
-        ) {
+        if (!$draft) {
 
             return redirect()
                 ->to(
@@ -698,47 +1256,53 @@ class TendikTicketController extends BaseController
 
 
         // -----------------------------------------------------
-        // AMBIL DATA FORM
+        // FORM
         // -----------------------------------------------------
-        $unitTujuan =
-            $this->request
-                ->getPost(
-                    'unit_tujuan'
-                );
-
-        $jenisLayanan =
-            $this->request
+        $serviceId =
+            (int) $this->request
                 ->getPost(
                     'jenis_layanan'
                 );
 
-        $judul =
-            $this->request
+        $unitId =
+            (int) $this->request
                 ->getPost(
-                    'judul'
+                    'unit_tujuan'
                 );
+
+        $judul =
+            trim(
+                (string) $this->request
+                    ->getPost('judul')
+            );
 
         $keterangan =
-            $this->request
-                ->getPost(
-                    'keterangan'
-                );
+            trim(
+                (string) $this->request
+                    ->getPost('keterangan')
+            );
+
+        $priority =
+            trim(
+                (string) $this->request
+                    ->getPost('priority')
+            );
 
         $action =
-            $this->request
-                ->getPost(
-                    'action'
-                );
+            trim(
+                (string) $this->request
+                    ->getPost('action')
+            );
 
 
         // -----------------------------------------------------
-        // VALIDASI DATA WAJIB
+        // VALIDASI
         // -----------------------------------------------------
         if (
-            empty($unitTujuan) ||
-            empty($jenisLayanan) ||
-            empty($judul) ||
-            empty($keterangan)
+            $serviceId <= 0 ||
+            $unitId <= 0 ||
+            $judul === '' ||
+            $keterangan === ''
         ) {
 
             return redirect()
@@ -751,115 +1315,82 @@ class TendikTicketController extends BaseController
         }
 
 
-        // -----------------------------------------------------
-        // AMBIL DOKUMEN BARU
-        // -----------------------------------------------------
-        $dokumen =
-            $this->request
-                ->getFile(
-                    'dokumen'
-                );
-
-
-        // -----------------------------------------------------
-        // PERTAHANKAN DOKUMEN LAMA
-        // -----------------------------------------------------
-        $dokumenData =
-            $drafts[$index]['dokumen']
-            ?? null;
-
-
-        // -----------------------------------------------------
-        // JIKA ADA DOKUMEN BARU
-        // -----------------------------------------------------
         if (
-            $dokumen &&
-            $dokumen->getError()
-            !==
-            UPLOAD_ERR_NO_FILE
+            !in_array(
+                $priority,
+                ['low', 'normal', 'high', 'urgent'],
+                true
+            )
         ) {
-
-            // Proses upload
-            $newDocument =
-                $this->processDocument(
-                    $dokumen
-                );
-
-
-            // Cek upload
-            if (
-                $newDocument === false
-            ) {
-
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with(
-                        'error',
-                        'Dokumen gagal diupload. Pastikan format file benar dan ukuran maksimal 2 MB.'
-                    );
-            }
-
-
-            // Gunakan dokumen baru
-            $dokumenData =
-                $newDocument;
+            $priority = 'normal';
         }
 
 
         // -----------------------------------------------------
-        // AMBIL DATA DRAFT
+        // SERVICE
         // -----------------------------------------------------
-        $draft =
-            $drafts[$index];
+        $service =
+            $this->serviceModel
+                ->where(
+                    'id',
+                    $serviceId
+                )
+                ->where(
+                    'is_active',
+                    1
+                )
+                ->first();
 
 
-        // -----------------------------------------------------
-        // UPDATE DATA
-        // -----------------------------------------------------
-        $draft['unit_tujuan'] =
-            $unitTujuan;
-
-        $draft['jenis_layanan'] =
-            $jenisLayanan;
-
-        $draft['judul'] =
-            $judul;
-
-        $draft['keterangan'] =
-            $keterangan;
-
-        $draft['dokumen'] =
-            $dokumenData;
-
-        $draft['updated_at'] =
-            date(
-                'Y-m-d H:i:s'
-            );
-
-
-        // =====================================================
-        // JIKA MASIH INGIN SIMPAN SEBAGAI DRAFT
-        // =====================================================
         if (
-            $action === 'draft'
+            !$service ||
+            (int) $service['service_unit_id']
+            !==
+            $unitId
         ) {
 
-            // Status tetap Draft
-            $draft['status'] =
-                'Draft';
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Layanan dan unit tujuan tidak sesuai.'
+                );
+        }
 
 
-            // Update draft pada index yang sama
-            $drafts[$index] =
-                $draft;
+        // -----------------------------------------------------
+        // UPDATE
+        // -----------------------------------------------------
+        $updateData = [
+
+            'service_id' =>
+                $serviceId,
+
+            'title' =>
+                $judul,
+
+            'description' =>
+                $keterangan,
+
+            'priority' =>
+                $priority,
+
+            'updated_at' =>
+                date('Y-m-d H:i:s'),
+        ];
 
 
-            // Simpan kembali
-            session()->set(
-                'tendik_drafts',
-                $drafts
-            );
+        // =====================================================
+        // MASIH DRAFT
+        // =====================================================
+        if ($action === 'draft') {
+
+            $this->serviceRequestModel
+                ->update(
+                    $id,
+                    $updateData
+                );
 
 
             return redirect()
@@ -876,77 +1407,54 @@ class TendikTicketController extends BaseController
 
 
         // =====================================================
-        // JIKA KIRIM PENGAJUAN
+        // SUBMIT DRAFT
         // =====================================================
-        if (
-            $action === 'submit'
-        ) {
+        if ($action === 'submit') {
 
-            // Ubah status
-            $draft['status'] =
-                'Submitted';
+            $updateData['status'] =
+                'submitted';
 
-
-            // Ambil tiket lama
-            $submittedTickets =
-                session()->get(
-                    'tendik_tickets'
-                )
-                ?? [];
+            $updateData['submitted_at'] =
+                date('Y-m-d H:i:s');
 
 
-            // Tambahkan ke tracking
-            $submittedTickets[] =
-                $draft;
-
-
-            // Simpan tiket
-            session()->set(
-                'tendik_tickets',
-                $submittedTickets
-            );
-
-
-            // Hapus draft
-            unset(
-                $drafts[$index]
-            );
-
-
-            // Rapikan index
-            $drafts =
-                array_values(
-                    $drafts
+            $this->serviceRequestModel
+                ->update(
+                    $id,
+                    $updateData
                 );
 
 
-            // Simpan draft tersisa
-            session()->set(
-                'tendik_drafts',
-                $drafts
+            $this->createLog(
+
+                $id,
+
+                $userId,
+
+                'draft',
+
+                'submitted',
+
+                'SUBMIT_DRAFT',
+
+                'Draft diajukan menjadi tiket.'
+
             );
 
 
-            // Simpan untuk success page
-            session()->setFlashdata(
-                'ticket',
-                $draft
-            );
-
-
-            // Redirect success
             return redirect()
                 ->to(
                     base_url(
                         'tendik/ticket/success'
                     )
+                )
+                ->with(
+                    'ticket_number',
+                    $draft['ticket_number']
                 );
         }
 
 
-        // =====================================================
-        // ACTION TIDAK VALID
-        // =====================================================
         return redirect()
             ->back()
             ->withInput()
@@ -958,24 +1466,49 @@ class TendikTicketController extends BaseController
 
 
     // =========================================================
-    // HAPUS DRAFT
+    // DELETE DRAFT
     // =========================================================
-    public function deleteDraft($index)
+    public function deleteDraft($id)
     {
-        // Ambil draft
-        $drafts =
-            session()->get(
-                'tendik_drafts'
-            )
-            ?? [];
+        $userId =
+            (int) session()->get(
+                'user_id'
+            );
 
 
-        // Cek draft
-        if (
-            !isset(
-                $drafts[$index]
-            )
-        ) {
+        $profile =
+            $this->userProfileModel
+                ->findByUser($userId);
+
+
+        if (!$profile) {
+            return redirect()
+                ->to('/login');
+        }
+
+
+        $draft =
+            $this->serviceRequestModel
+
+                ->where(
+                    'id',
+                    $id
+                )
+
+                ->where(
+                    'user_profile_id',
+                    $profile['id']
+                )
+
+                ->where(
+                    'status',
+                    'draft'
+                )
+
+                ->first();
+
+
+        if (!$draft) {
 
             return redirect()
                 ->to(
@@ -990,24 +1523,17 @@ class TendikTicketController extends BaseController
         }
 
 
-        // Hapus draft
-        unset(
-            $drafts[$index]
-        );
-
-
-        // Rapikan array
-        $drafts =
-            array_values(
-                $drafts
+        // -----------------------------------------------------
+        // SOFT DELETE
+        // -----------------------------------------------------
+        $this->serviceRequestModel
+            ->update(
+                $id,
+                [
+                    'deleted_at' =>
+                        date('Y-m-d H:i:s')
+                ]
             );
-
-
-        // Simpan kembali
-        session()->set(
-            'tendik_drafts',
-            $drafts
-        );
 
 
         return redirect()
@@ -1018,84 +1544,86 @@ class TendikTicketController extends BaseController
             )
             ->with(
                 'success',
-                'Draft pengajuan berhasil dihapus.'
+                'Draft berhasil dihapus.'
             );
     }
 
+
+    // =========================================================
+    // NOTIFICATION
+    // =========================================================
     public function notification()
-{
-    $notifications = session()->get('tendik_notifications') ?? [
-
-        [
-            'id' => 1,
-
-            'judul' =>
-                'Pengajuan Berhasil Dikirim',
-
-            'pesan' =>
-                'Pengajuan layanan Anda berhasil dikirim dan sedang menunggu proses verifikasi.',
-
-            'tanggal' =>
-                date('d F Y H:i'),
-
-        ],
-
-        [
-            'id' => 2,
-
-            'judul' =>
-                'Informasi Pengajuan',
-
-            'pesan' =>
-                'Anda dapat memantau perkembangan pengajuan melalui menu Tracking Tiket.',
-
-            'tanggal' =>
-                date('d F Y H:i'),
-
-        ],
-
-    ];
+    {
+        $userId =
+            (int) session()->get(
+                'user_id'
+            );
 
 
-    $data = [
-
-        'title' =>
-            'Notifikasi',
-
-        'notifications' =>
-            $notifications,
-
-    ];
+        if ($userId <= 0) {
+            return redirect()
+                ->to('/login');
+        }
 
 
-    return view(
-        'tendik/notification',
-        $data
-    );
-}
+        $notifications =
+            db_connect()
+                ->table('notifications')
+                ->where(
+                    'user_id',
+                    $userId
+                )
+                ->orderBy(
+                    'created_at',
+                    'DESC'
+                )
+                ->get()
+                ->getResultArray();
+
+
+        $data = [
+
+            'title' =>
+                'Notifikasi',
+
+            'notifications' =>
+                $notifications,
+
+        ];
+
+
+        return view(
+            'tendik/notification',
+            $data
+        );
+    }
 
 
     // =========================================================
-    // BALASAN TENDIK TERHADAP CATATAN PETUGAS
+    // BALASAN / RESPONSE USER
     // =========================================================
     public function reply($id)
     {
-        // Ambil balasan
+        $userId =
+            (int) session()->get(
+                'user_id'
+            );
+
+
+        if ($userId <= 0) {
+            return redirect()
+                ->to('/login');
+        }
+
+
         $balasan =
-            $this->request
-                ->getPost(
-                    'balasan'
-                );
+            trim(
+                (string) $this->request
+                    ->getPost('balasan')
+            );
 
 
-        // Validasi
-        if (
-            empty(
-                trim(
-                    $balasan
-                )
-            )
-        ) {
+        if ($balasan === '') {
 
             return redirect()
                 ->to(
@@ -1111,36 +1639,71 @@ class TendikTicketController extends BaseController
         }
 
 
-        // Ambil replies lama
-        $replies =
-            session()->get(
-                'tendik_replies'
-            )
-            ?? [];
+        // -----------------------------------------------------
+        // CEK TIKET MILIK USER
+        // -----------------------------------------------------
+        $profile =
+            $this->userProfileModel
+                ->findByUser($userId);
 
 
-        // Simpan balasan
-        $replies[$id] = [
-
-            'balasan' =>
-                $balasan,
-
-            'tanggal' =>
-                date(
-                    'Y-m-d H:i:s'
-                ),
-
-        ];
+        if (!$profile) {
+            return redirect()
+                ->to('/login');
+        }
 
 
-        // Simpan ke session
-        session()->set(
-            'tendik_replies',
-            $replies
+        $ticket =
+            $this->serviceRequestModel
+
+                ->where(
+                    'id',
+                    $id
+                )
+
+                ->where(
+                    'user_profile_id',
+                    $profile['id']
+                )
+
+                ->first();
+
+
+        if (!$ticket) {
+
+            return redirect()
+                ->to(
+                    base_url(
+                        'tendik/ticket/history'
+                    )
+                )
+                ->with(
+                    'error',
+                    'Tiket tidak ditemukan.'
+                );
+        }
+
+
+        // -----------------------------------------------------
+        // SIMPAN RESPONSE SEBAGAI LOG
+        // -----------------------------------------------------
+        $this->createLog(
+
+            $id,
+
+            $userId,
+
+            $ticket['status'],
+
+            $ticket['status'],
+
+            'USER_REPLY',
+
+            $balasan
+
         );
 
 
-        // Kembali ke detail
         return redirect()
             ->to(
                 base_url(
@@ -1152,5 +1715,56 @@ class TendikTicketController extends BaseController
                 'success',
                 'Balasan berhasil dikirim.'
             );
+    }
+
+
+    // =========================================================
+    // CREATE SERVICE REQUEST LOG
+    // =========================================================
+    private function createLog(
+        int $requestId,
+        int $userId,
+        ?string $oldStatus,
+        string $newStatus,
+        string $action,
+        ?string $description = null
+    ): bool
+    {
+        return db_connect()
+            ->table(
+                'service_request_logs'
+            )
+            ->insert([
+
+                'service_request_id' =>
+                    $requestId,
+
+                'user_id' =>
+                    $userId,
+
+                'old_status' =>
+                    $oldStatus,
+
+                'new_status' =>
+                    $newStatus,
+
+                'action' =>
+                    $action,
+
+                'description' =>
+                    $description,
+
+                'ip_address' =>
+                    $this->request
+                        ->getIPAddress(),
+
+                'user_agent' =>
+                    $this->request
+                        ->getUserAgent()
+                        ->getAgentString(),
+
+                'created_at' =>
+                    date('Y-m-d H:i:s'),
+            ]);
     }
 }

@@ -321,28 +321,10 @@ $routes->get(
     'DosenTicketController::success'
 );
 
-// Halaman Draft
-$routes->get(
-    'dosen/ticket/draft',
-    'DosenTicketController::draft'
-);
-
-// Edit / Lanjutkan Draft
-$routes->get(
-    'dosen/ticket/draft/edit/(:num)',
-    'DosenTicketController::editDraft/$1'
-);
-
 // Halaman Draft Success
 $routes->get(
     'dosen/ticket/draft-success',
     'DosenTicketController::draftSuccess'
-);
-
-// Update Draft menjadi Pengajuan
-$routes->post(
-    'dosen/ticket/draft/update/(:num)',
-    'DosenTicketController::updateDraft/$1'
 );
 
 // Tracking / History Tiket
@@ -362,21 +344,48 @@ $routes->post(
     'DosenTicketController::reply/$1'
 );
 
+// ================================
+// TIKET DOSEN DRAFT
+// ================================
+
+$routes->get(
+    'dosen/ticket/draft',
+    'DosenTicketController::draft'
+);
+
+$routes->get(
+    'dosen/ticket/draft/edit/(:num)',
+    'DosenTicketController::editDraft/$1'
+);
+
+$routes->post(
+    'dosen/ticket/draft/update/(:num)',
+    'DosenTicketController::updateDraft/$1'
+);
+
 $routes->get(
     'dosen/ticket/draft/delete/(:num)',
     'DosenTicketController::deleteDraft/$1'
 );
 
-
-// ================================
-// NOTIFIKASI DOSEN
-// ================================
+// =====================================================
+// ROUTE NOTIFIKASI DOSEN
+// =====================================================
 
 $routes->get(
     'dosen/notification',
     'DosenNotificationController::index'
 );
 
+$routes->get(
+    'dosen/notification/read/(:num)',
+    'DosenNotificationController::read/$1'
+);
+
+$routes->get(
+    'dosen/notification/read-all',
+    'DosenNotificationController::readAll'
+);
 
 // ================================
 // DASHBOARD TENDIK

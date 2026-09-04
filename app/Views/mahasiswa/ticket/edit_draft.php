@@ -663,57 +663,7 @@
     );
 </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
 
-        const unitSelect = document.getElementById('unit_layanan');
-
-        const serviceSelect = document.getElementById('service_id');
-
-        function filterServices() {
-
-            const selectedUnit = unitSelect.value;
-
-            const options = serviceSelect.querySelectorAll('option');
-
-            options.forEach(function(option) {
-
-                if (!option.value) {
-                    return;
-                }
-
-                const unitId = option.getAttribute('data-unit');
-
-                if (
-                    selectedUnit === '' ||
-                    unitId === selectedUnit
-                ) {
-
-                    option.style.display = '';
-
-                } else {
-
-                    option.style.display = 'none';
-
-                    if (option.selected) {
-                        option.selected = false;
-                    }
-
-                }
-
-            });
-
-        }
-
-        unitSelect.addEventListener(
-            'change',
-            filterServices
-        );
-
-        filterServices();
-
-    });
-</script>
 
 
 <?= $this->include('layouts/footer') ?>

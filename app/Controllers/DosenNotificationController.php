@@ -2,52 +2,254 @@
 
 namespace App\Controllers;
 
+use App\Models\NotificationModel;
+
 class DosenNotificationController extends BaseController
 {
+    protected NotificationModel $notificationModel;
+
+
+    public function __construct()
+    {
+        helper(['url']);
+
+        $this->notificationModel = new NotificationModel();
+    }
+
+
+    // =====================================================
+    // AMBIL USER ID YANG SEDANG LOGIN
+    // =====================================================
+
+    private function getUserId()
+    {
+        $userId = session()->get('user_id');
+
+        if (!$userId) {
+
+            $user = session()->get('user');
+
+            if (is_array($user)) {
+
+                $userId = $user['id'] ?? null;
+
+            }
+        }
+
+        return $userId;
+    }
+
+
+    // =====================================================
+    // HALAMAN NOTIFIKASI
+    // =====================================================
+
     public function index()
     {
-        $notifications = [
-            [
-                'id' => 1,
-                'judul' => 'Pengajuan Berhasil Dikirim',
-                'pesan' => 'Pengajuan layanan dosen berhasil dikirim dan sedang menunggu verifikasi.',
-                'tanggal' => '28 Juli 2026',
-                'waktu' => '09:30',
-                'status' => 'baru',
-                'icon' => 'fa-check-circle',
-            ],
-            [
-                'id' => 2,
-                'judul' => 'Tiket Sedang Diproses',
-                'pesan' => 'Tiket pengajuan layanan Anda sedang diproses oleh unit terkait.',
-                'tanggal' => '28 Juli 2026',
-                'waktu' => '10:15',
-                'status' => 'baru',
-                'icon' => 'fa-info-circle',
-            ],
-            [
-                'id' => 3,
-                'judul' => 'Pengajuan Selesai',
-                'pesan' => 'Pengajuan layanan Anda telah selesai diproses.',
-                'tanggal' => '28 Juli 2026',
-                'waktu' => '11:00',
-                'status' => 'dibaca',
-                'icon' => 'fa-check-circle',
-            ],
-        ];
+        $userId = $this->getUserId();
+
+        if (!$userId) {
+
+            return redirect()
+                ->to('/login')
+                ->with(
+                    'error',
+                    'Silakan login terlebih dahulu.'
+                );
+        }
+
+
+        // =================================================
+        // AMBIL NOTIFIKASI
+        // =================================================
+
+        $rows = $this->notificationModel
+            ->getByUser((int) $userId);
+
+
+        // =================================================
+        // FORMAT DATA
+        // =================================================
+
+        $notifications = [];
+
+        foreach ($rows as $row) {
+
+            $notifications[] = [
+
+                'id' =>
+                    $row['id'] ?? null,
+
+                'judul' =>
+                    $row['title'] ?? 'Notifikasi',
+
+                'pesan' =>
+                    $row['message'] ?? '',
+
+                'tanggal' =>
+                    !empty($row['created_at'])
+                        ? date(
+                            'd F Y, H:i',
+                            strtotime(
+                                $row['created_at']
+                            )
+                        )
+                        : '-',
+
+                'tipe' =>
+                    $row['type'] ?? 'info',
+
+                'dibaca' =>
+                    (bool) (
+                        $row['is_read'] ?? 0
+                    ),
+
+                'url' =>
+                    $row['url'] ?? null,
+
+                'service_request_id' =>
+                    $row['service_request_id'] ?? null,
+            ];
+        }
+
+
+        // =================================================
+        // JUMLAH BELUM DIBACA
+        // =================================================
+
+        $unreadCount =
+            $this->notificationModel
+                ->countUnread(
+                    (int) $userId
+                );
+
+
+        // =================================================
+        // DATA VIEW
+        // =================================================
 
         $data = [
-            'title' => 'Notifikasi Dosen',
-            'notifications' => $notifications,
-            'totalNotifikasi' => count($notifications),
-            'belumDibaca' => count(
-                array_filter(
-                    $notifications,
-                    fn($notification) => $notification['status'] === 'baru'
-                )
-            ),
+
+            'title' =>
+                'Notifikasi Dosen',
+
+            'notifications' =>
+                $notifications,
+
+            'unreadCount' =>
+                $unreadCount,
         ];
 
-        return view('dosen/notification/index', $data);
+
+        return view(
+            'dosen/notification/index',
+            $data
+        );
+    }
+
+
+    // =====================================================
+    // TANDAI SATU NOTIFIKASI SUDAH DIBACA
+    // =====================================================
+
+    public function read(int $id)
+    {
+        $userId = $this->getUserId();
+
+        if (!$userId) {
+
+            return redirect()
+                ->to('/login');
+        }
+
+
+        // =================================================
+        // PASTIKAN NOTIFIKASI MILIK USER LOGIN
+        // =================================================
+
+        $notification =
+            $this->notificationModel
+                ->where(
+                    'id',
+                    $id
+                )
+                ->where(
+                    'user_id',
+                    $userId
+                )
+                ->first();
+
+
+        if (!$notification) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Notifikasi tidak ditemukan.'
+                );
+        }
+
+
+        // =================================================
+        // TANDAI SUDAH DIBACA
+        // =================================================
+
+        $this->notificationModel
+            ->markAsRead(
+                $id,
+                (int) $userId
+            );
+
+
+        // =================================================
+        // JIKA ADA URL
+        // =================================================
+
+        if (!empty($notification['url'])) {
+
+            return redirect()
+                ->to(
+                    $notification['url']
+                );
+        }
+
+
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                'Notifikasi ditandai sudah dibaca.'
+            );
+    }
+
+
+    // =====================================================
+    // TANDAI SEMUA SUDAH DIBACA
+    // =====================================================
+
+    public function readAll()
+    {
+        $userId = $this->getUserId();
+
+        if (!$userId) {
+
+            return redirect()
+                ->to('/login');
+        }
+
+
+        $this->notificationModel
+            ->markAllAsRead(
+                (int) $userId
+            );
+
+
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                'Semua notifikasi sudah dibaca.'
+            );
     }
 }

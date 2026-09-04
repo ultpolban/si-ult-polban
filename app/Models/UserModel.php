@@ -46,21 +46,13 @@ class UserModel extends BaseModel
     protected $validationRules = [
 
         'role_id' => 'required|integer',
-
         'full_name' => 'required|max_length[150]',
-
         'identity_number' => 'permit_empty|max_length[30]',
-
         'phone_number' => 'permit_empty|max_length[20]',
-
         'gender' => 'permit_empty|in_list[L,P]',
-
         'email' => 'required|valid_email|max_length[150]|is_unique[users.email,id,{id}]',
-
         'password' => 'permit_empty|min_length[8]',
-
         'profile_photo' => 'permit_empty|max_length[255]',
-
         'is_active' => 'required|in_list[0,1]',
 
     ];

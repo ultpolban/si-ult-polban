@@ -168,119 +168,66 @@
                                     </label>
 
 
-                                    <select
-                                        name="unit_tujuan"
-                                        class="form-control"
-                                        required
-                                    >
+                                   <select
+    name="unit_tujuan"
+    id="unit_tujuan"
+    class="form-control"
+    required
+>
+    <option value="">
+        -- Pilih Unit Tujuan --
+    </option>
 
-                                        <option value="">
+    <?php foreach ($units as $unit): ?>
 
-                                            -- Pilih Unit Tujuan --
+        <option
+            value="<?= esc($unit['id']) ?>"
+            <?= old('unit_tujuan') == $unit['id'] ? 'selected' : '' ?>
+        >
+            <?= esc($unit['name']) ?>
+        </option>
 
-                                        </option>
+    <?php endforeach; ?>
 
-
-                                        <option value="Akademik">
-
-                                            Akademik
-
-                                        </option>
-
-
-                                        <option value="Kemahasiswaan">
-
-                                            Kemahasiswaan
-
-                                        </option>
-
-
-                                        <option value="Keuangan">
-
-                                            Keuangan
-
-                                        </option>
-
-
-                                        <option value="Umum">
-
-                                            Umum
-
-                                        </option>
-
-
-                                    </select>
+</select>
 
                                 </div>
 
 
                                 <!-- JENIS LAYANAN -->
-                                <div class="form-group">
+                              <div class="form-group">
 
-                                    <label>
+    <label>
+        Jenis Layanan
+        <span class="text-danger">*</span>
+    </label>
 
-                                        Jenis Layanan
+    <select
+        name="service_id"
+        id="service_id"
+        class="form-control"
+        required
+    >
 
-                                        <span
-                                            class="text-danger"
-                                        >
-                                            *
-                                        </span>
+        <option value="">
+            -- Pilih Jenis Layanan --
+        </option>
 
-                                    </label>
+        <?php foreach ($services as $service): ?>
 
+            <option
+                value="<?= esc($service['id']) ?>"
+                data-unit="<?= esc($service['service_unit_id']) ?>"
+                <?= old('service_id') == $service['id'] ? 'selected' : '' ?>
+            >
+                <?= esc($service['name']) ?>
+            </option>
 
-                                    <select
-                                        name="jenis_layanan"
-                                        class="form-control"
-                                        required
-                                    >
+        <?php endforeach; ?>
 
-                                        <option value="">
+    </select>
 
-                                            -- Pilih Jenis Layanan --
-
-                                        </option>
-
-
-                                        <option value="Administrasi Kepegawaian">
-
-                                            Administrasi Kepegawaian
-
-                                        </option>
-
-
-                                        <option value="Surat Keterangan">
-
-                                            Surat Keterangan
-
-                                        </option>
-
-
-                                        <option value="Administrasi Umum">
-
-                                            Administrasi Umum
-
-                                        </option>
-
-
-                                        <option value="Layanan Keuangan">
-
-                                            Layanan Keuangan
-
-                                        </option>
-
-
-                                        <option value="Layanan Akademik">
-
-                                            Layanan Akademik
-
-                                        </option>
-
-
-                                    </select>
-
-                                </div>
+</div>
 
 
                                 <!-- JUDUL -->
@@ -497,27 +444,64 @@
 
 <script>
 
-document
-    .getElementById('dokumen')
-    ?.addEventListener('change', function (e) {
+document.addEventListener('DOMContentLoaded', function () {
 
-        const fileName =
-            e.target.files[0]?.name
-            || 'Pilih dokumen...';
+    const unitSelect =
+        document.getElementById('unit_tujuan');
 
-        const label =
-            document.querySelector(
-                'label[for="dokumen"]'
-            );
+    const serviceSelect =
+        document.getElementById('service_id');
 
-        if (label) {
+    if (!unitSelect || !serviceSelect) {
+        return;
+    }
 
-            label.textContent =
-                fileName;
+    function filterServices() {
 
+        const selectedUnit =
+            unitSelect.value;
+
+        Array.from(
+            serviceSelect.options
+        ).forEach(function (option) {
+
+            if (!option.value) {
+                option.hidden = false;
+                return;
+            }
+
+            const serviceUnit =
+                option.dataset.unit;
+
+            option.hidden =
+                selectedUnit !== serviceUnit;
+
+        });
+
+        // Kalau service yang sedang dipilih
+        // bukan milik unit tersebut
+        const selectedOption =
+            serviceSelect.options[
+                serviceSelect.selectedIndex
+            ];
+
+        if (
+            selectedOption &&
+            selectedOption.dataset.unit !== selectedUnit
+        ) {
+
+            serviceSelect.value = '';
         }
+    }
 
-    });
+    unitSelect.addEventListener(
+        'change',
+        filterServices
+    );
+
+    filterServices();
+
+});
 
 </script>
 

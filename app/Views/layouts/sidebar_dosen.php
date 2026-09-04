@@ -18,16 +18,14 @@ $currentUrl = uri_string();
                 opacity: 1;
                 margin-left: 8px;
                 margin-right: 8px;
-            "
-        >
+            ">
 
         <span
             class="brand-text font-weight-bold"
             style="
                 color: white;
                 font-size: 17px;
-            "
-        >
+            ">
             SI-ULT POLBAN
         </span>
 
@@ -46,10 +44,9 @@ $currentUrl = uri_string();
             <div class="image">
 
                 <img
-                    src="<?= base_url('assets/adminlte/img/default-profile.png') ?>"
+                    src="<?= base_url('assets/adminlte/img/default-profil.png') ?>"
                     class="img-circle elevation-2"
-                    alt="Foto Profil"
-                >
+                    alt="Foto Profil">
 
             </div>
 
@@ -57,13 +54,12 @@ $currentUrl = uri_string();
 
                 <a
                     href="<?= base_url('dosen/profile') ?>"
-                    class="d-block"
-                >
+                    class="d-block">
 
                     <?= esc(
                         session()->get('user')['full_name']
-                        ?? session()->get('user')['nama']
-                        ?? 'Dosen'
+                            ?? session()->get('user')['nama']
+                            ?? 'Dosen'
                     ) ?>
 
                 </a>
@@ -84,8 +80,7 @@ $currentUrl = uri_string();
                 class="nav nav-pills nav-sidebar flex-column"
                 data-widget="treeview"
                 role="menu"
-                data-accordion="false"
-            >
+                data-accordion="false">
 
 
                 <!-- =================================
@@ -93,69 +88,68 @@ $currentUrl = uri_string();
                 ================================== -->
 
                 <!-- Dashboard -->
-<li class="nav-item">
-    <a href="<?= base_url('dosen/dashboard') ?>"
-       class="nav-link <?= $currentUrl === 'dosen/dashboard' ? 'active' : '' ?>">
-        <i class="nav-icon fas fa-home"></i>
-        <p>Dashboard</p>
-    </a>
-</li>
+                <li class="nav-item">
+                    <a href="<?= base_url('dosen/dashboard') ?>"
+                        class="nav-link <?= $currentUrl === 'dosen/dashboard' ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-home"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
 
 
-<!-- Ajukan Layanan -->
-<li class="nav-item">
-    <a href="<?= base_url('dosen/ticket/create') ?>"
-       class="nav-link <?= $currentUrl === 'dosen/ticket/create' ? 'active' : '' ?>">
-        <i class="nav-icon fas fa-plus-circle"></i>
-        <p>Ajukan Layanan</p>
-    </a>
-</li>
+                <!-- Ajukan Layanan -->
+                <li class="nav-item">
+                    <a href="<?= base_url('dosen/ticket/create') ?>"
+                        class="nav-link <?= $currentUrl === 'dosen/ticket/create' ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-plus-circle"></i>
+                        <p>Ajukan Layanan</p>
+                    </a>
+                </li>
 
 
-<li class="nav-item">
-    <a
-        href="<?= base_url('dosen/ticket/draft') ?>"
-        class="nav-link <?= strpos($currentUrl, 'dosen/ticket/draft') === 0 ? 'active' : '' ?>"
-    >
+                <li class="nav-item">
+                    <a
+                        href="<?= base_url('dosen/ticket/draft') ?>"
+                        class="nav-link <?= strpos($currentUrl, 'dosen/ticket/draft') === 0 ? 'active' : '' ?>">
 
-        <i class="nav-icon fas fa-file-alt"></i>
+                        <i class="nav-icon fas fa-file-alt"></i>
 
-        <p>
-            Draft Pengajuan
-        </p>
+                        <p>
+                            Draft Pengajuan
+                        </p>
 
-    </a>
-</li>
-
-
-<!-- Tracking Tiket -->
-<li class="nav-item">
-    <a href="<?= base_url('dosen/ticket/history') ?>"
-       class="nav-link <?= $currentUrl === 'dosen/ticket/history' ? 'active' : '' ?>">
-        <i class="nav-icon fas fa-ticket-alt"></i>
-        <p>Tracking Tiket</p>
-    </a>
-</li>
+                    </a>
+                </li>
 
 
-<!-- Notifikasi -->
-<li class="nav-item">
-    <a href="<?= base_url('dosen/notification') ?>"
-       class="nav-link <?= strpos($currentUrl, 'dosen/notification') === 0 ? 'active' : '' ?>">
-        <i class="nav-icon fas fa-bell"></i>
-        <p>Notifikasi</p>
-    </a>
-</li>
+                <!-- Tracking Tiket -->
+                <li class="nav-item">
+                    <a href="<?= base_url('dosen/ticket/history') ?>"
+                        class="nav-link <?= $currentUrl === 'dosen/ticket/history' ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-ticket-alt"></i>
+                        <p>Tracking Tiket</p>
+                    </a>
+                </li>
 
 
-<!-- Profil -->
-<li class="nav-item">
-    <a href="<?= base_url('dosen/profile') ?>"
-       class="nav-link <?= strpos($currentUrl, 'dosen/profile') === 0 ? 'active' : '' ?>">
-        <i class="nav-icon fas fa-user"></i>
-        <p>Profil</p>
-    </a>
-</li>
+                <!-- Notifikasi -->
+                <li class="nav-item">
+                    <a href="<?= base_url('dosen/notification') ?>"
+                        class="nav-link <?= strpos($currentUrl, 'dosen/notification') === 0 ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-bell"></i>
+                        <p>Notifikasi</p>
+                    </a>
+                </li>
+
+
+                <!-- Profil -->
+                <li class="nav-item">
+                    <a href="<?= base_url('dosen/profile') ?>"
+                        class="nav-link <?= strpos($currentUrl, 'dosen/profile') === 0 ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>Profil</p>
+                    </a>
+                </li>
 
 
                 <!-- =================================
@@ -176,8 +170,7 @@ $currentUrl = uri_string();
 
                     <a
                         href="<?= base_url('logout') ?>"
-                        class="nav-link"
-                    >
+                        class="nav-link">
 
                         <i class="nav-icon fas fa-sign-out-alt"></i>
 

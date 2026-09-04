@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ServiceRequestModel;
+use App\Models\ServiceRequestFileModel;
 use App\Models\MasterServiceUnitModel;
 use App\Models\MasterServiceModel;
 use App\Models\MasterServiceRequirementModel;
@@ -29,201 +30,234 @@ class DosenTicketController extends BaseController
     }
 
     /**
-     * =========================================================
-     * FORM AJUKAN LAYANAN
-     * =========================================================
-     */
-    public function create()
-    {
-        $check = $this->checkDosenRole();
+ * =========================================================
+ * CREATE / AJUKAN LAYANAN
+ * =========================================================
+ */
+public function create()
+{
+    $check = $this->checkDosenRole();
 
-        if ($check) {
-            return $check;
-        }
-
-        $db = \Config\Database::connect();
-
-        $unitModel = new MasterServiceUnitModel();
-        $userProfileModel = new UserProfileModel();
-
-        // =====================================================
-        // USER LOGIN
-        // =====================================================
-
-        $user = session()->get('user') ?? [];
-
-        $userId = (int) (
-            session()->get('user_id')
-            ?? ($user['id'] ?? 0)
-        );
-
-        if ($userId <= 0) {
-            return redirect()
-                ->to(base_url('login'))
-                ->with(
-                    'error',
-                    'Sesi login tidak ditemukan. Silakan login kembali.'
-                );
-        }
-
-        // =====================================================
-        // PROFILE DOSEN
-        // =====================================================
-
-        $profile = $userProfileModel
-            ->where('user_id', $userId)
-            ->where('deleted_at', null)
-            ->first();
-
-        if (!$profile) {
-            return redirect()
-                ->to(base_url('dashboard-dosen'))
-                ->with(
-                    'error',
-                    'Data profil dosen tidak ditemukan.'
-                );
-        }
-
-        // =====================================================
-        // SIMPAN PROFILE KE SESSION
-        // =====================================================
-
-        $userProfileId = (int) $profile['id'];
-
-        session()->set([
-            'user_profile_id' => $userProfileId,
-            'dosen_profile'   => $profile,
-        ]);
-
-        // =====================================================
-        // UNIT LAYANAN
-        // =====================================================
-
-        $units = $unitModel
-            ->where('is_active', 1)
-            ->orderBy('sort_order', 'ASC')
-            ->findAll();
-
-        // =====================================================
-        // DATA PEMOHON
-        // =====================================================
-
-        $pemohon = [
-
-            'nama' => $user['nama']
-                ?? $user['full_name']
-                ?? $profile['name']
-                ?? 'Dosen',
-
-            'nik' => $profile['nik']
-                ?? $user['nik']
-                ?? '',
-
-            'nip' => $profile['nip']
-                ?? $user['nip']
-                ?? '',
-
-            'nidn' => $profile['nidn']
-                ?? $user['nidn']
-                ?? '',
-
-            'email' => $user['email']
-                ?? $profile['email']
-                ?? '',
-
-            'telepon' => $user['no_hp']
-                ?? $user['phone_number']
-                ?? $profile['phone']
-                ?? '',
-
-        ];
-
-        return view(
-            'dosen/ticket/create',
-            [
-                'title'         => 'Ajukan Layanan',
-                'user'          => $pemohon,
-                'profile'       => $profile,
-                'userProfileId' => $userProfileId,
-                'units'         => $units,
-            ]
-        );
+    if ($check) {
+        return $check;
     }
 
-    /**
-     * =========================================================
-     * JENIS LAYANAN
-     * =========================================================
-     */
-    public function jenisLayanan()
-    {
-        $check = $this->checkDosenRole();
+    // =====================================================
+    // MODEL
+    // =====================================================
 
-        if ($check) {
-            return $check;
-        }
+    $unitModel = new MasterServiceUnitModel();
+    $profileModel = new UserProfileModel();
 
-        $unitId = $this->request->getGet('unit_id');
+    // =====================================================
+    // USER LOGIN
+    // =====================================================
 
-        if (!$unitId) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Unit layanan tidak ditemukan.',
-                'data'    => [],
-            ]);
-        }
+    $user = session()->get('user') ?? [];
 
-        $serviceModel = new MasterServiceModel();
+    $userId = (int) (
+        session()->get('user_id')
+        ?? ($user['id'] ?? 0)
+    );
 
-        $services = $serviceModel
-            ->where('service_unit_id', $unitId)
-            ->where('is_active', 1)
-            ->orderBy('sort_order', 'ASC')
-            ->findAll();
+    if ($userId <= 0) {
+
+        return redirect()
+            ->to(base_url('login'))
+            ->with(
+                'error',
+                'Sesi login tidak ditemukan. Silakan login kembali.'
+            );
+    }
+
+    // =====================================================
+    // PROFILE DOSEN
+    // =====================================================
+
+    $profile = $profileModel
+        ->where('user_id', $userId)
+        ->where('deleted_at', null)
+        ->first();
+
+    if (!$profile) {
+
+        return redirect()
+            ->to(base_url('dosen/dashboard'))
+            ->with(
+                'error',
+                'Data profil dosen tidak ditemukan.'
+            );
+    }
+
+    // =====================================================
+    // SIMPAN PROFILE ID KE SESSION
+    // =====================================================
+
+    $userProfileId = (int) $profile['id'];
+
+    session()->set([
+        'user_profile_id' => $userProfileId,
+        'dosen_profile'   => $profile,
+    ]);
+
+    // =====================================================
+    // UNIT LAYANAN
+    // =====================================================
+
+    $units = $unitModel
+        ->where('is_active', 1)
+        ->orderBy('sort_order', 'ASC')
+        ->findAll();
+
+    // =====================================================
+    // DATA PEMOHON
+    // =====================================================
+
+    $pemohon = [
+
+        'nama' =>
+            $user['nama']
+            ?? $user['full_name']
+            ?? $profile['name']
+            ?? 'Dosen',
+
+        'nik' =>
+            $profile['nik']
+            ?? $user['nik']
+            ?? '',
+
+        'email' =>
+            $user['email']
+            ?? $profile['email']
+            ?? '',
+
+        'telepon' =>
+            $user['no_hp']
+            ?? $user['phone_number']
+            ?? $profile['phone']
+            ?? '',
+
+    ];
+
+    // =====================================================
+    // DATA VIEW
+    // =====================================================
+
+    $data = [
+
+        'title' =>
+            'Ajukan Layanan',
+
+        'user' =>
+            $pemohon,
+
+        'profile' =>
+            $profile,
+
+        'userProfileId' =>
+            $userProfileId,
+
+        'units' =>
+            $units,
+
+    ];
+
+    // =====================================================
+    // VIEW
+    // =====================================================
+
+    return view(
+        'dosen/ticket/create',
+        $data
+    );
+}
+
+   /**
+ * =========================================================
+ * JENIS LAYANAN
+ * =========================================================
+ */
+public function jenisLayanan()
+{
+    $check = $this->checkDosenRole();
+
+    if ($check) {
+        return $check;
+    }
+
+    $unitId = $this->request->getGet('unit_id');
+
+    if (!$unitId) {
 
         return $this->response->setJSON([
-            'success' => true,
-            'data'    => $services,
+            'success' => false,
+            'message' => 'Unit layanan tidak ditemukan.',
+            'data'    => [],
         ]);
     }
 
-    /**
-     * =========================================================
-     * PERSYARATAN
-     * =========================================================
-     */
-    public function persyaratan()
-    {
-        $check = $this->checkDosenRole();
+    $serviceModel = new MasterServiceModel();
 
-        if ($check) {
-            return $check;
-        }
+    $services = $serviceModel
+        ->where('service_unit_id', $unitId)
+        ->where('is_active', 1)
+        ->orderBy('sort_order', 'ASC')
+        ->findAll();
 
-        $serviceId = $this->request->getGet('service_id');
+    return $this->response->setJSON([
+        'success' => true,
+        'data'    => $services,
+    ]);
+}
 
-        if (!$serviceId) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Jenis layanan tidak ditemukan.',
-                'data'    => [],
-            ]);
-        }
+/**
+ * =========================================================
+ * PERSYARATAN LAYANAN
+ * =========================================================
+ */
+public function persyaratan()
+{
+    $check = $this->checkDosenRole();
 
-        $requirementModel =
-            new MasterServiceRequirementModel();
+    if ($check) {
+        return $check;
+    }
 
-        $requirements = $requirementModel
-            ->where('service_id', $serviceId)
-            ->where('is_active', 1)
-            ->orderBy('sort_order', 'ASC')
-            ->findAll();
+    $serviceId =
+        $this->request->getGet('service_id');
+
+    if (!$serviceId) {
 
         return $this->response->setJSON([
-            'success' => true,
-            'data'    => $requirements,
+            'success' => false,
+            'message' => 'Jenis layanan tidak ditemukan.',
+            'data'    => [],
         ]);
     }
+
+    $requirementModel =
+        new MasterServiceRequirementModel();
+
+    $requirements = $requirementModel
+        ->where(
+            'service_id',
+            $serviceId
+        )
+        ->where(
+            'is_active',
+            1
+        )
+        ->orderBy(
+            'sort_order',
+            'ASC'
+        )
+        ->findAll();
+
+    return $this->response->setJSON([
+        'success' => true,
+        'data'    => $requirements,
+    ]);
+}
 
     /**
      * =========================================================
@@ -1310,59 +1344,37 @@ class DosenTicketController extends BaseController
         );
     }
 
-    /**
-     * =========================================================
-     * DELETE DRAFT
-     * =========================================================
-     */
-    public function deleteDraft($id)
-    {
-        $check = $this->checkDosenRole();
+   /**
+ * =========================================================
+ * DELETE DRAFT
+ * =========================================================
+ */
+public function deleteDraft($id)
+{
+    $check = $this->checkDosenRole();
 
-        if ($check) {
-            return $check;
-        }
+    if ($check) {
+        return $check;
+    }
 
-        $serviceRequestModel =
-            new ServiceRequestModel();
+    $db = \Config\Database::connect();
 
-        $userProfileId =
-            session()->get(
-                'user_profile_id'
-            );
+    $userProfileId =
+        session()->get('user_profile_id');
 
-        $draft =
-            $serviceRequestModel
-                ->where(
-                    'id',
-                    $id
-                )
-                ->where(
-                    'user_profile_id',
-                    $userProfileId
-                )
-                ->where(
-                    'status',
-                    'draft'
-                )
-                ->first();
+    // =====================================================
+    // CEK DRAFT
+    // =====================================================
 
-        if (!$draft) {
+    $draft =
+        $db->table('service_requests')
+        ->where('id', $id)
+        ->where('status', 'draft')
+        ->where('user_profile_id', $userProfileId)
+        ->get()
+        ->getRowArray();
 
-            return redirect()
-                ->to(
-                    base_url(
-                        'dosen/ticket/draft'
-                    )
-                )
-                ->with(
-                    'error',
-                    'Draft tidak ditemukan atau bukan milik Anda.'
-                );
-        }
-
-        $serviceRequestModel
-            ->delete($id);
+    if (!$draft) {
 
         return redirect()
             ->to(
@@ -1371,10 +1383,86 @@ class DosenTicketController extends BaseController
                 )
             )
             ->with(
-                'success',
-                'Draft berhasil dihapus.'
+                'error',
+                'Draft tidak ditemukan atau bukan milik Anda.'
             );
     }
+
+    // =====================================================
+    // FILE DOKUMEN
+    // =====================================================
+
+    $files =
+        $db->table(
+            'service_request_files'
+        )
+        ->where(
+            'service_request_id',
+            $id
+        )
+        ->where(
+            'deleted_at',
+            null
+        )
+        ->get()
+        ->getResultArray();
+
+    foreach ($files as $file) {
+
+        $filePath =
+            FCPATH .
+            $file['file_path'];
+
+        if (is_file($filePath)) {
+            @unlink($filePath);
+        }
+    }
+
+    // =====================================================
+    // HAPUS DATA FILE
+    // =====================================================
+
+    $db->table(
+        'service_request_files'
+    )
+    ->where(
+        'service_request_id',
+        $id
+    )
+    ->delete();
+
+    // =====================================================
+    // HAPUS DRAFT
+    // =====================================================
+
+    $db->table(
+        'service_requests'
+    )
+    ->where(
+        'id',
+        $id
+    )
+    ->where(
+        'user_profile_id',
+        $userProfileId
+    )
+    ->delete();
+
+    // =====================================================
+    // REDIRECT
+    // =====================================================
+
+    return redirect()
+        ->to(
+            base_url(
+                'dosen/ticket/draft'
+            )
+        )
+        ->with(
+            'success',
+            'Draft berhasil dihapus.'
+        );
+}
 
     /**
      * =========================================================
@@ -2276,44 +2364,38 @@ class DosenTicketController extends BaseController
         );
     }
 
-    /**
-     * =========================================================
-     * SUCCESS
-     * =========================================================
-     */
-    public function success()
-    {
-        $check = $this->checkDosenRole();
+/**
+ * =========================================================
+ * SUCCESS TIKET
+ * =========================================================
+ */
+public function success()
+{
+    $check = $this->checkDosenRole();
 
-        if ($check) {
-            return $check;
-        }
-
-        $ticket =
-            session()->get(
-                'last_ticket'
-            );
-
-        if (!$ticket) {
-            return redirect()
-                ->to(
-                    base_url(
-                        'dosen/ticket/create'
-                    )
-                );
-        }
-
-        return view(
-            'dosen/ticket/success',
-            [
-                'title' =>
-                    'Pengajuan Berhasil',
-
-                'ticket' =>
-                    $ticket
-            ]
-        );
+    if ($check) {
+        return $check;
     }
+
+    $ticket = session()->get('last_ticket');
+
+    if (!$ticket) {
+        return redirect()
+            ->to(base_url('dosen/ticket/create'))
+            ->with(
+                'error',
+                'Data pengajuan tidak ditemukan.'
+            );
+    }
+
+    return view(
+        'dosen/ticket/success',
+        [
+            'title'  => 'Pengajuan Berhasil Dikirim',
+            'ticket' => $ticket
+        ]
+    );
+}
 
     /**
      * =========================================================
@@ -2540,131 +2622,192 @@ class DosenTicketController extends BaseController
         );
     }
 
-    /**
-     * =========================================================
-     * DETAIL TIKET
-     * =========================================================
-     */
-    public function detail($id)
-    {
-        $check = $this->checkDosenRole();
+   /**
+ * =========================================================
+ * DETAIL TIKET
+ * =========================================================
+ */
+public function detail($id)
+{
+    $check = $this->checkDosenRole();
 
-        if ($check) {
-            return $check;
-        }
-
-        $db = \Config\Database::connect();
-
-        $userProfileId =
-            session()->get(
-                'user_profile_id'
-            );
-
-        if (empty($userProfileId)) {
-
-            return redirect()
-                ->to(
-                    base_url(
-                        'dosen/ticket/history'
-                    )
-                )
-                ->with(
-                    'error',
-                    'Data profil dosen tidak ditemukan.'
-                );
-        }
-
-        // =====================================================
-        // TICKET
-        // =====================================================
-
-        $ticket =
-            $db->table(
-                'service_requests sr'
-            )
-            ->select('
-                sr.*,
-                ms.name AS service_name,
-                msu.name AS unit_name
-            ')
-            ->join(
-                'master_services ms',
-                'ms.id = sr.service_id',
-                'left'
-            )
-            ->join(
-                'master_service_units msu',
-                'msu.id = ms.service_unit_id',
-                'left'
-            )
-            ->where(
-                'sr.id',
-                $id
-            )
-            ->where(
-                'sr.user_profile_id',
-                $userProfileId
-            )
-            ->get()
-            ->getRowArray();
-
-        if (!$ticket) {
-
-            return redirect()
-                ->to(
-                    base_url(
-                        'dosen/ticket/history'
-                    )
-                )
-                ->with(
-                    'error',
-                    'Tiket tidak ditemukan.'
-                );
-        }
-
-        // =====================================================
-        // DOCUMENTS
-        // =====================================================
-
-        $documents =
-            $db->table(
-                'service_request_files srf'
-            )
-            ->select('
-                srf.*,
-                msr.name AS requirement_name
-            ')
-            ->join(
-                'master_service_requirements msr',
-                'msr.id = srf.requirement_id',
-                'left'
-            )
-            ->where(
-                'srf.service_request_id',
-                $id
-            )
-            ->where(
-                'srf.deleted_at',
-                null
-            )
-            ->get()
-            ->getResultArray();
-
-        return view(
-            'dosen/ticket/detail',
-            [
-                'title' =>
-                    'Detail Tiket',
-
-                'ticket' =>
-                    $ticket,
-
-                'documents' =>
-                    $documents,
-            ]
-        );
+    if ($check) {
+        return $check;
     }
 
+    $db = \Config\Database::connect();
+
+    $userProfileId = session()->get('user_profile_id');
+
+    if (empty($userProfileId)) {
+        return redirect()
+            ->to(base_url('dosen/ticket/history'))
+            ->with(
+                'error',
+                'Data profil dosen tidak ditemukan.'
+            );
+    }
+
+    // =====================================================
+    // TIKET
+    // =====================================================
+
+    $ticket = $db->table('service_requests sr')
+        ->select('
+            sr.id,
+            sr.ticket_number,
+            sr.user_profile_id,
+            sr.service_id,
+            sr.title,
+            sr.description,
+            sr.status,
+            sr.priority,
+            sr.submitted_at,
+            sr.created_at,
+            sr.updated_at,
+
+            ms.name AS service_name,
+            ms.service_unit_id,
+
+            msu.name AS unit_name
+        ')
+        ->join(
+            'master_services ms',
+            'ms.id = sr.service_id',
+            'left'
+        )
+        ->join(
+            'master_service_units msu',
+            'msu.id = ms.service_unit_id',
+            'left'
+        )
+        ->where(
+            'sr.id',
+            $id
+        )
+        ->where(
+            'sr.user_profile_id',
+            $userProfileId
+        )
+        ->where(
+            'sr.status !=',
+            'draft'
+        )
+        ->get()
+        ->getRowArray();
+
+    if (!$ticket) {
+
+        return redirect()
+            ->to(
+                base_url(
+                    'dosen/ticket/history'
+                )
+            )
+            ->with(
+                'error',
+                'Tiket tidak ditemukan atau bukan milik Anda.'
+            );
+    }
+
+    // =====================================================
+    // DOKUMEN
+    // =====================================================
+
+    $files = $db->table(
+        'service_request_files srf'
+    )
+        ->select('
+            srf.id,
+            srf.requirement_id,
+            srf.original_name,
+            srf.file_name,
+            srf.file_path,
+            srf.file_extension,
+            srf.mime_type,
+            srf.file_size,
+            srf.is_verified,
+
+            msr.name AS requirement_name
+        ')
+        ->join(
+            'master_service_requirements msr',
+            'msr.id = srf.requirement_id',
+            'left'
+        )
+        ->where(
+            'srf.service_request_id',
+            $id
+        )
+        ->where(
+            'srf.deleted_at',
+            null
+        )
+        ->orderBy(
+            'msr.sort_order',
+            'ASC'
+        )
+        ->get()
+        ->getResultArray();
+
+    // =====================================================
+    // STATUS LABEL
+    // =====================================================
+
+    $status = strtolower(
+        trim(
+            $ticket['status'] ?? ''
+        )
+    );
+
+    switch ($status) {
+
+        case 'submitted':
+            $statusLabel = 'Submitted';
+            break;
+
+        case 'processed':
+        case 'diproses':
+        case 'in_progress':
+            $statusLabel = 'Diproses';
+            break;
+
+        case 'completed':
+        case 'selesai':
+            $statusLabel = 'Selesai';
+            break;
+
+        case 'rejected':
+        case 'ditolak':
+            $statusLabel = 'Ditolak';
+            break;
+
+        default:
+            $statusLabel = ucfirst(
+                $ticket['status'] ?? '-'
+            );
+            break;
+    }
+
+    $ticket['status_label'] = $statusLabel;
+
+    // =====================================================
+    // VIEW
+    // =====================================================
+
+    return view(
+        'dosen/ticket/detail',
+        [
+            'title' => 'Detail Tiket',
+
+            'ticket' =>
+                $ticket,
+
+            'files' =>
+                $files
+        ]
+    );
+}
     /**
      * =========================================================
      * REPLY

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-class MasterServiceUnitModel extends BaseModel
+class MasterServiceCategoryModel extends BaseModel
 {
-    protected $table = 'master_service_units';
+    protected $table = 'master_service_categories';
 
     protected $primaryKey = 'id';
 
@@ -28,11 +28,6 @@ class MasterServiceUnitModel extends BaseModel
         'code',
         'name',
         'description',
-        'email',
-        'phone',
-        'location',
-        'website',
-        'logo',
         'sort_order',
         'is_active',
     ];
@@ -44,16 +39,6 @@ class MasterServiceUnitModel extends BaseModel
 
         'description' => 'permit_empty',
 
-        'email' => 'permit_empty|valid_email|max_length[150]',
-
-        'phone' => 'permit_empty|max_length[30]',
-
-        'location' => 'permit_empty',
-
-        'website' => 'permit_empty|max_length[255]',
-
-        'logo' => 'permit_empty|max_length[255]',
-
         'sort_order' => 'permit_empty|integer',
 
         'is_active' => 'required|in_list[0,1]',
@@ -61,7 +46,7 @@ class MasterServiceUnitModel extends BaseModel
 
     /**
      * =========================================================
-     * UNIT AKTIF
+     * CATEGORY AKTIF
      * =========================================================
      */
     public function getActive()
@@ -82,19 +67,6 @@ class MasterServiceUnitModel extends BaseModel
     {
         return $this
             ->where('code', $code)
-            ->first();
-    }
-
-    /**
-     * =========================================================
-     * DETAIL UNIT
-     * =========================================================
-     */
-    public function getDetail(int $unitId)
-    {
-        return $this
-            ->where('id', $unitId)
-            ->where('is_active', 1)
             ->first();
     }
 

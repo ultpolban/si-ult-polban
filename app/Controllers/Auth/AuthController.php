@@ -10,17 +10,15 @@ use App\Services\MfaService;
 class AuthController extends BaseController
 {
     protected UserModel $userModel;
-
     protected MfaService $mfaService;
-
     protected ActivityLogService $activityLogService;
 
     public function __construct()
     {
         helper(['form']);
 
-        $this->userModel          = new UserModel();
-        $this->mfaService         = new MfaService();
+        $this->userModel = new UserModel();
+        $this->mfaService = new MfaService();
         $this->activityLogService = service('activityLogService');
     }
 
@@ -33,7 +31,7 @@ class AuthController extends BaseController
             return redirect()->to('/dashboard');
         }
 
-        // Kembali ke halaman login dianggap batal pada proses MFA yang belum selesai.
+        // Jika kembali ke login, proses MFA sebelumnya dianggap dibatalkan
         session()->remove('login_pending');
 
         return view('auth/login', [
@@ -42,7 +40,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * Proses Login (Step 1: validasi kredensial)
+     * Proses Login - Step 1
      */
     public function authenticate()
     {
@@ -50,18 +48,19 @@ class AuthController extends BaseController
             return redirect()->to('/dashboard');
         }
 
-        $email    = trim((string) $this->request->getPost('email'));
+        $email = trim((string) $this->request->getPost('email'));
         $password = (string) $this->request->getPost('password');
 
+        // Validasi input
         if ($email === '' || $password === '') {
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Email dan Password wajib diisi.');
         }
 
+        // Cari user berdasarkan email
         $user = $this->userModel
             ->where('email', $email)
-            ->where('is_active', 1)
             ->first();
 
         if (!$user) {
@@ -70,32 +69,45 @@ class AuthController extends BaseController
                 ->with('error', 'Email tidak ditemukan.');
         }
 
+        // Cek status akun
+        if ((int) ($user['is_active'] ?? 0) !== 1) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Akun belum aktif.');
+        }
+
+        // Cek password
         if (!password_verify($password, $user['password'])) {
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Password salah.');
         }
 
-        // Reset pending MFA yang mungkin tersisa dari percobaan sebelumnya.
+        // Bersihkan MFA pending sebelumnya
         session()->remove('login_pending');
 
-        // ---- Langkah MFA (TOTP / recovery code) ----
+        /**
+         * Jika MFA aktif, lanjut ke halaman MFA
+         */
         if ($this->requiresMfa($user)) {
+
             session()->set('login_pending', [
-                'user_id'   => (int) $user['id'],
+                'user_id' => (int) $user['id'],
                 'full_name' => $user['full_name'] ?? '',
-                'email'     => $user['email'] ?? '',
+                'email' => $user['email'] ?? '',
             ]);
 
             return redirect()->to('/login/mfa');
         }
 
-        // ---- Tanpa MFA: langsung login ----
+        /**
+         * Jika MFA tidak aktif, langsung login
+         */
         return $this->completeLogin($user);
     }
 
     /**
-     * Halaman Verifikasi Dua Langkah (Step 2: masukkan kode MFA)
+     * Halaman MFA - Step 2
      */
     public function mfa()
     {
@@ -106,25 +118,29 @@ class AuthController extends BaseController
         $pending = session()->get('login_pending');
 
         if (!$pending || empty($pending['user_id'])) {
-            return redirect()->to('/login')
+            return redirect()
+                ->to('/login')
                 ->with('error', 'Silakan login terlebih dahulu.');
         }
 
+        // Pastikan user masih valid
         if (!$this->validPendingUser((int) $pending['user_id'])) {
+
             session()->remove('login_pending');
 
-            return redirect()->to('/login')
+            return redirect()
+                ->to('/login')
                 ->with('error', 'Sesi verifikasi tidak valid. Silakan login ulang.');
         }
 
         return view('auth/login_mfa', [
-            'title'   => 'Verifikasi Dua Langkah',
+            'title' => 'Verifikasi Dua Langkah',
             'account' => $pending,
         ]);
     }
 
     /**
-     * Proses Verifikasi MFA (Step 3: validasi kode, lalu login)
+     * Verifikasi MFA - Step 3
      */
     public function verifyMfa()
     {
@@ -135,16 +151,21 @@ class AuthController extends BaseController
         $pending = session()->get('login_pending');
 
         if (!$pending || empty($pending['user_id'])) {
-            return redirect()->to('/login')
+            return redirect()
+                ->to('/login')
                 ->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        $user = $this->userModel->find((int) $pending['user_id']);
+        $userId = (int) $pending['user_id'];
 
-        if (!$user || !$this->validPendingUser((int) $pending['user_id'])) {
+        $user = $this->userModel->find($userId);
+
+        if (!$user || !$this->validPendingUser($userId)) {
+
             session()->remove('login_pending');
 
-            return redirect()->to('/login')
+            return redirect()
+                ->to('/login')
                 ->with('error', 'Sesi verifikasi tidak valid. Silakan login ulang.');
         }
 
@@ -156,13 +177,18 @@ class AuthController extends BaseController
                 ->with('error', 'Kode MFA wajib diisi.');
         }
 
-        $verified   = false;
+        $verified = false;
         $isRecovery = false;
 
-        if ($this->mfaService->verifyCode((int) $user['id'], $code)) {
+        // Cek kode TOTP
+        if ($this->mfaService->verifyCode($userId, $code)) {
+
             $verified = true;
-        } elseif ($this->mfaService->verifyRecoveryCode((int) $user['id'], $code)) {
-            $verified   = true;
+
+        // Cek recovery code
+        } elseif ($this->mfaService->verifyRecoveryCode($userId, $code)) {
+
+            $verified = true;
             $isRecovery = true;
         }
 
@@ -172,73 +198,83 @@ class AuthController extends BaseController
                 ->with('error', 'Kode MFA tidak valid. Silakan coba lagi.');
         }
 
-        // Recovery code bersifat sekali pakai → segera dihapus
+        // Recovery code hanya bisa digunakan sekali
         if ($isRecovery) {
-            $this->mfaService->consumeRecoveryCode((int) $user['id'], $code);
+            $this->mfaService->consumeRecoveryCode($userId, $code);
         }
 
+        // Hapus session pending MFA
         session()->remove('login_pending');
 
+        // Selesaikan login
         return $this->completeLogin($user);
     }
 
     /**
-     * Selesaikan login: catat last_login, isi session, dan catat activity log.
+     * Selesaikan proses login
      */
     protected function completeLogin(array $user)
     {
+        // Update waktu login terakhir
         $this->userModel->update($user['id'], [
             'last_login' => date('Y-m-d H:i:s')
         ]);
 
+        // Ambil data role
         $role = db_connect()
             ->table('roles')
             ->where('id', $user['role_id'])
             ->get()
             ->getRowArray();
 
+        // Set session login
         session()->set([
-            'user_id'    => $user['id'],
-            'role_id'    => $user['role_id'],
-            'role_code'  => $role['code'] ?? '',
-            'full_name'  => $user['full_name'],
-            'email'      => $user['email'],
-            'role_name'  => $role['name'] ?? '',
+            'user_id' => (int) $user['id'],
+            'role_id' => (int) $user['role_id'],
+            'role_code' => $role['code'] ?? '',
+            'role_name' => $role['name'] ?? '',
+            'full_name' => $user['full_name'] ?? '',
+            'email' => $user['email'] ?? '',
             'isLoggedIn' => true,
-            'user'       => $user,
+            'user' => $user,
         ]);
 
+        // Bersihkan MFA pending
         session()->remove('login_pending');
 
+        // Catat activity log
         $this->activityLogService->storeLog([
-            'action'       => 'LOGIN',
-            'module'       => 'auth',
+            'action' => 'LOGIN',
+            'module' => 'auth',
             'reference_id' => (int) $user['id'],
-            'user_id'      => (int) $user['id'],
-            'ip_address'   => $this->request->getIPAddress(),
-            'user_agent'   => $this->request->getUserAgent()->getAgentString(),
+            'user_id' => (int) $user['id'],
+            'ip_address' => $this->request->getIPAddress(),
+            'user_agent' => $this->request
+                ->getUserAgent()
+                ->getAgentString(),
         ]);
 
         return redirect()->to('/dashboard');
     }
 
     /**
-     * Apakah user perlu menjalani MFA saat login?
+     * Cek apakah user menggunakan MFA
      */
     protected function requiresMfa(array $user): bool
     {
-        return (int) ($user['mfa_enabled'] ?? 0) === 1 && !empty($user['mfa_secret']);
+        return (int) ($user['mfa_enabled'] ?? 0) === 1
+            && !empty($user['mfa_secret']);
     }
 
     /**
-     * Validasi user yang sedang dalam proses verifikasi MFA.
+     * Validasi user yang sedang melakukan MFA
      */
     protected function validPendingUser(int $userId): bool
     {
         $user = $this->userModel->find($userId);
 
         return $user
-            && (int) $user['is_active'] === 1
+            && (int) ($user['is_active'] ?? 0) === 1
             && $this->requiresMfa($user);
     }
 
@@ -259,19 +295,26 @@ class AuthController extends BaseController
     {
         $userId = (int) session()->get('user_id');
 
+        // Catat logout
         if ($userId > 0) {
+
             $this->activityLogService->storeLog([
-                'action'       => 'LOGOUT',
-                'module'       => 'auth',
+                'action' => 'LOGOUT',
+                'module' => 'auth',
                 'reference_id' => $userId,
-                'user_id'      => $userId,
-                'ip_address'   => $this->request->getIPAddress(),
-                'user_agent'   => $this->request->getUserAgent()->getAgentString(),
+                'user_id' => $userId,
+                'ip_address' => $this->request->getIPAddress(),
+                'user_agent' => $this->request
+                    ->getUserAgent()
+                    ->getAgentString(),
             ]);
         }
 
+        // Hapus seluruh session
         session()->destroy();
 
-        return redirect()->to('/login');
+        return redirect()
+            ->to('/login')
+            ->with('success', 'Anda berhasil logout.');
     }
 }

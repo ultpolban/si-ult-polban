@@ -9,14 +9,25 @@ use CodeIgniter\Router\RouteCollection;
 // ======================================
 // PUBLIC & AUTH
 // ======================================
-$routes->get('/', 'AuthController::login');
-$routes->get('/login', 'AuthController::login');
-$routes->post('/login', 'AuthController::authenticate');
-$routes->get('/register', 'AuthController::register');
-$routes->post('/register', 'AuthController::storeRegister');
-$routes->get('/logout', 'AuthController::logout');
-$routes->get('/register/fields/(:num)', 'AuthController::fields/$1');
+$routes->get('/', 'Auth\AuthController::index');
+$routes->get('/login', 'Auth\AuthController::index');
+$routes->post('/login', 'Auth\AuthController::authenticate');
 
+// MFA Login
+$routes->get('/login/mfa', 'Auth\AuthController::mfa');
+$routes->post('/login/mfa/verify', 'Auth\AuthController::verifyMfa');
+
+// Register
+$routes->get('/register', 'Auth\RegisterController::index');
+$routes->post('/register', 'Auth\RegisterController::store');
+$routes->get('/register/fields/(:num)', 'Auth\RegisterController::fields/$1');
+
+// MFA Setup setelah Register
+$routes->get('/register/mfa-setup', 'Auth\RegisterController::mfaSetup');
+$routes->post('/register/mfa-setup', 'Auth\RegisterController::verify');
+
+// Logout
+$routes->get('/logout', 'Auth\AuthController::logout');
 // ======================================
 // USER MANAGEMENT
 // ======================================

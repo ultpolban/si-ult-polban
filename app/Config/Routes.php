@@ -391,3 +391,20 @@ $routes->get(
     'kemahasiswaan/hapus-dokumen/(:num)',
     'UnitLayanan::hapusDokumen/$1'
 );
+// =========================
+// AUTH - LOGIN & REGISTER
+// =========================
+
+$routes->get('/login', 'Auth\AuthController::index');
+$routes->post('/login', 'Auth\AuthController::authenticate');
+
+$routes->get('/login/mfa', 'Auth\AuthController::mfa');
+$routes->post('/login/mfa/verify', 'Auth\AuthController::verifyMfa');
+
+$routes->get('/register', 'Auth\RegisterController::index');
+$routes->post('/register', 'Auth\RegisterController::store');
+
+$routes->get('/register/mfa', 'Auth\RegisterController::mfaSetup');
+$routes->post('/register/mfa/verify', 'Auth\RegisterController::verify');
+
+$routes->get('/register/fields/(:num)', 'Auth\RegisterController::fields/$1');

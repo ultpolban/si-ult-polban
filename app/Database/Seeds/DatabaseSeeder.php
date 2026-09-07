@@ -63,6 +63,16 @@ class DatabaseSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
+        | MAPPING AKSES LAYANAN BERDASARKAN JENIS PEMOHON
+        |--------------------------------------------------------------------------
+        */
+
+        // membutuhkan layanan + jenis pemohon
+        $this->call(ServiceApplicantTypeSeeder::class);
+
+
+        /*
+        |--------------------------------------------------------------------------
         | REQUIREMENT
         |--------------------------------------------------------------------------
         */
@@ -112,6 +122,8 @@ echo PHP_EOL;
             'master_study_programs',
             'master_departments',
             'master_applicant_types',
+            'service_applicant_types',
+            'faqs',
         ];
 
         foreach ($tables as $table) {

@@ -134,6 +134,14 @@ class PermissionSeeder extends Seeder
                 'view' => 'Lihat Statistik',
             ],
 
+            'faq' => [
+                'view'    => 'Lihat FAQ',
+                'create'  => 'Tambah FAQ',
+                'update'  => 'Ubah FAQ',
+                'delete'  => 'Hapus FAQ',
+                'restore' => 'Pulihkan FAQ',
+            ],
+
         ];
 
         $permissions = [];

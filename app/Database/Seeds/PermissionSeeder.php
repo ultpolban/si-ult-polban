@@ -110,6 +110,7 @@ class PermissionSeeder extends Seeder
             'request' => [
                 'create'   => 'Buat Pengajuan',
                 'view'     => 'Lihat Pengajuan',
+                'update'   => 'Ubah Pengajuan',
                 'verify'   => 'Verifikasi Pengajuan',
                 'approve'  => 'Setujui Pengajuan',
                 'reject'   => 'Tolak Pengajuan',

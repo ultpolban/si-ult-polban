@@ -136,7 +136,7 @@ class UserService extends BaseService
             'study_program_id'   => !empty($data['study_program_id']) ? $data['study_program_id'] : null,
             'class_id'           => !empty($data['class_id']) ? $data['class_id'] : null,
             'nim'                => !empty($data['nim']) ? $data['nim'] : null,
-            'nik'                => !empty($data['nik']) ? $data['nik'] : null,
+            'nik'                => !empty($data['nik']) ? $data['nik'] : (!empty($data['identity_number']) ? $data['identity_number'] : null),
             'student_name'       => !empty($data['student_name']) ? $data['student_name'] : null,
             'institution_name'   => !empty($data['institution_name']) ? $data['institution_name'] : null,
             'position'           => !empty($data['position']) ? $data['position'] : null,

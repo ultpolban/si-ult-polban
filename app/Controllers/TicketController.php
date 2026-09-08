@@ -122,9 +122,31 @@ class TicketController extends AdminController
                 ->with('error', 'Layanan tidak tersedia untuk jenis pemohon yang dipilih.');
         }
 
-        $this->ticketService->create($data);
+        $ticketId = $this->ticketService->create($data);
 
-        $this->logActivity('create_ticket', 'Membuat tiket baru', 'tickets');
+        $this->logActivity('create_ticket', 'Membuat tiket baru #' . $ticketId, 'tickets', $ticketId);
+
+        // Notifikasi ke pemohon yang bersangkutan
+        $this->notificationService->notifyProfileOwner(
+            (int) ($data['user_profile_id'] ?? 0),
+            'Tiket Baru Dibuat',
+            'Tiket #' . $ticketId . ' telah dibuat untuk Anda.',
+            'info',
+            null,
+            site_url('tickets/show/' . $ticketId)
+        );
+
+        // Notifikasi ke petugas yang ditugaskan
+        if (!empty($data['assigned_to'])) {
+            $this->notificationService->notify(
+                (int) $data['assigned_to'],
+                'Tiket Ditugaskan',
+                'Anda ditugaskan menangani tiket #' . $ticketId . '.',
+                'info',
+                null,
+                site_url('tickets/show/' . $ticketId)
+            );
+        }
 
         return redirect()
             ->to(site_url('tickets'))
@@ -246,6 +268,31 @@ class TicketController extends AdminController
         );
 
         $this->logActivity('change_ticket_status', 'Ubah status tiket #' . $id . ' menjadi ' . $status, 'tickets', $id);
+
+        $statusLabels = [
+            'submitted'    => 'Diajukan',
+            'verification' => 'Verifikasi',
+            'revision'     => 'Revisi',
+            'processing'   => 'Diproses',
+            'completed'    => 'Selesai',
+            'rejected'     => 'Ditolak',
+            'cancelled'    => 'Dibatalkan',
+        ];
+        $label = $statusLabels[$status] ?? ucfirst($status);
+
+        // Notifikasi ke pemohon pemilik tiket
+        $ticket = $this->ticketService->getById($id);
+        if ($ticket) {
+            $this->notificationService->notifyProfileOwner(
+                (int) ($ticket['user_profile_id'] ?? 0),
+                'Status Tiket Berubah',
+                'Tiket ' . ($ticket['ticket_number'] ?? '#') . $id . ' kini berstatus: ' . $label .
+                    ($note !== '' ? " - $note" : ''),
+                $status === 'completed' ? 'success' : ($status === 'rejected' || $status === 'cancelled' ? 'danger' : 'info'),
+                $id,
+                site_url('tickets/show/' . $id)
+            );
+        }
 
         return redirect()->back()->with('success', 'Status tiket berhasil diperbarui.');
     }

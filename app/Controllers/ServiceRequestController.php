@@ -103,7 +103,20 @@ class ServiceRequestController extends AdminController
 
         $data['user_profile_id'] = $profile ? (int) $profile['id'] : 0;
 
-        $this->serviceRequestService->create($userId, $data);
+        $requestId = $this->serviceRequestService->create($userId, $data);
+
+        // Notifikasi ke petugas ULT / admin bahwa ada pengajuan baru
+        $created = $this->serviceRequestService->getById($requestId);
+        $requestTitle = $created['title'] ?? ($data['title'] ?? 'Pengajuan layanan');
+
+        $this->notificationService->notifyToRole(
+            ['SUPER_ADMIN', 'ADMIN_ULT', 'PETUGAS_ULT'],
+            'Pengajuan Baru',
+            'Pengajuan "' . $requestTitle . '" masuk dan menunggu verifikasi.',
+            'info',
+            $requestId,
+            site_url('verifications/show/' . $requestId)
+        );
 
         return redirect()
             ->to(site_url('service-requests'))

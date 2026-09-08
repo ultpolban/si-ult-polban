@@ -246,7 +246,7 @@ class RegisterController extends BaseController
             'study_program_id'  => $this->nullableInt($data['study_program_id'] ?? 0),
             'class_id'          => $this->nullableInt($data['class_id'] ?? 0),
             'nim'               => $this->nullable($data['nim'] ?? null),
-            'nik'               => $this->nullable($data['nik'] ?? null),
+            'nik'               => $this->nullable($data['nik'] ?? $data['identity_number'] ?? null),
             'student_name'      => $this->nullable($data['student_name'] ?? null),
             'institution_name'  => $this->nullable($data['institution_name'] ?? null),
             'position'          => $this->nullable($data['position'] ?? null),

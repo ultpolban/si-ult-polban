@@ -73,6 +73,19 @@ class VerificationController extends AdminController
 
         $this->serviceRequestService->changeStatus($id, 'processing', $userId, 'Pengajuan diverifikasi dan diproses');
 
+        // Notifikasi ke pemohon bahwa pengajuan diverifikasi
+        $request = $this->serviceRequestService->getById($id);
+        if ($request) {
+            $this->notificationService->notifyProfileOwner(
+                (int) ($request['user_profile_id'] ?? 0),
+                'Pengajuan Diverifikasi',
+                'Pengajuan ' . ($request['ticket_number'] ?? '#') . $id . ' telah diverifikasi dan sedang diproses.',
+                'success',
+                $id,
+                site_url('service-requests/show/' . $id)
+            );
+        }
+
         return redirect()
             ->to(site_url('verifications'))
             ->with('success', 'Pengajuan berhasil diverifikasi.');
@@ -90,6 +103,19 @@ class VerificationController extends AdminController
         $note = trim($this->request->getPost('note') ?? '');
 
         $this->serviceRequestService->changeStatus($id, 'rejected', $userId, $note ?: 'Pengajuan ditolak');
+
+        // Notifikasi ke pemohon bahwa pengajuan ditolak
+        $request = $this->serviceRequestService->getById($id);
+        if ($request) {
+            $this->notificationService->notifyProfileOwner(
+                (int) ($request['user_profile_id'] ?? 0),
+                'Pengajuan Ditolak',
+                'Pengajuan ' . ($request['ticket_number'] ?? '#') . $id . ' ditolak.' . ($note !== '' ? " Alasan: $note" : ''),
+                'danger',
+                $id,
+                site_url('service-requests/show/' . $id)
+            );
+        }
 
         return redirect()
             ->to(site_url('verifications'))

@@ -37,9 +37,12 @@ class ServiceApplicantTypeModel extends BaseModel
      */
     public function getApplicantTypeIdsForService(int $serviceId): array
     {
-        return array_column(
-            $this->where('service_id', $serviceId)->findAll(),
-            'applicant_type_id'
+        return array_map(
+            'intval',
+            array_column(
+                $this->where('service_id', $serviceId)->findAll(),
+                'applicant_type_id'
+            )
         );
     }
 
@@ -48,9 +51,12 @@ class ServiceApplicantTypeModel extends BaseModel
      */
     public function getServiceIdsForApplicantType(int $applicantTypeId): array
     {
-        return array_column(
-            $this->where('applicant_type_id', $applicantTypeId)->findAll(),
-            'service_id'
+        return array_map(
+            'intval',
+            array_column(
+                $this->where('applicant_type_id', $applicantTypeId)->findAll(),
+                'service_id'
+            )
         );
     }
 

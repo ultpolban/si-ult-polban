@@ -37,7 +37,7 @@
 - [x] Buat `Auth\RegisterController` + route `register` (GET/POST)
 - [x] Buat view `auth/register` dengan pilihan jenis pemohon & form dinamis per jenis
 - [x] Simpan ke `users` (role PEMOHON) + `user_profiles` (jenis pemohon + detail)
-- [x] Form dinamis: Mahasiswa (NIM, prodi, kelas), Calon Mahasiswa (no.pendaftaran), Alumni (NIM), Dosen (NIP), Tendik (NIP), Mitra (perusahaan), Instansi (nama instansi), Umum (NIK)
+- [x] Form dinamis: Mahasiswa (NIM, prodi, kelas), Calon Mahasiswa (no.pendaftaran), Alumni (NIM), Dosen (NIK), Tendik (NIK), Mitra (perusahaan), Instansi (nama instansi), Umum (NIK)
 - [x] Tambah link "Daftar sebagai Pemohon" di halaman login
 
 ## Fase 7 - User Management dengan Jenis Pemohon

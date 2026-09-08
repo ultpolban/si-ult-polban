@@ -104,7 +104,7 @@
 
                             <label class="form-label">
 
-                                Email / NIM / NIP
+                                Email / NIM / NIK
 
                             </label>
 

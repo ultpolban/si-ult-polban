@@ -75,7 +75,7 @@
 
             <tr>
 
-                <th>Nomor Identitas</th>
+                <th>NIK</th>
 
                 <td><?= esc($item['identity_number'] ?? '-') ?></td>
 

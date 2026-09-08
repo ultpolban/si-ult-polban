@@ -69,6 +69,68 @@ class NotificationService
         ]);
     }
 
+    /**
+     * Kirim notifikasi ke seluruh user yang memiliki role tertentu.
+     *
+     * @param string|string[] $roleCode Kode role (mis. 'PETUGAS_ULT') atau array kode role.
+     *
+     * @return int Jumlah notifikasi yang berhasil dibuat.
+     */
+    public function notifyToRole(
+        $roleCode,
+        string $title,
+        string $message,
+        string $type = 'info',
+        ?int $serviceRequestId = null,
+        ?string $url = null
+    ): int {
+        $roles = is_array($roleCode) ? $roleCode : [$roleCode];
+        $roles = array_map('strtoupper', $roles);
+
+        $users = db_connect()
+            ->table('users')
+            ->select('users.id')
+            ->join('roles', 'roles.id = users.role_id')
+            ->whereIn('roles.code', $roles)
+            ->where('users.is_active', 1)
+            ->get()
+            ->getResultArray();
+
+        $count = 0;
+
+        foreach ($users as $user) {
+            if ($this->notify((int) $user['id'], $title, $message, $type, $serviceRequestId, $url)) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * Kirim notifikasi ke pemilik sebuah user profile (pemohon).
+     */
+    public function notifyProfileOwner(
+        int $userProfileId,
+        string $title,
+        string $message,
+        string $type = 'info',
+        ?int $serviceRequestId = null,
+        ?string $url = null
+    ): bool {
+        if ($userProfileId <= 0) {
+            return false;
+        }
+
+        $profile = (new \App\Models\UserProfileModel())->find($userProfileId);
+
+        if (! $profile || empty($profile['user_id'])) {
+            return false;
+        }
+
+        return $this->notify((int) $profile['user_id'], $title, $message, $type, $serviceRequestId, $url);
+    }
+
     public function getModel(): NotificationModel
     {
         return $this->model;

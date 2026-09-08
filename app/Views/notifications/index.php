@@ -45,6 +45,15 @@
 
             <?php else: ?>
 
+                <?php
+                $typeLabel = [
+                    'info'    => ['bg-info', 'info'],
+                    'success' => ['bg-success', 'success'],
+                    'warning' => ['bg-warning', 'warning'],
+                    'danger'  => ['bg-danger', 'danger'],
+                ];
+                ?>
+
                 <?php foreach ($notificationList as $n): ?>
 
                     <a href="<?= site_url('notifications/read/' . $n['id']) ?>"
@@ -52,13 +61,31 @@
 
                         <div class="d-flex w-100 justify-content-between">
 
-                            <h6 class="mb-1"><?= esc($n['title']) ?></h6>
+                            <h6 class="mb-1">
+
+                                <?php
+                                $type = $n['type'] ?? 'info';
+                                $badge = $typeLabel[$type] ?? ['bg-secondary', 'info'];
+                                ?>
+                                <span class="badge <?= $badge[0] ?>"><?= esc($badge[1]) ?></span>
+
+                                <?= esc($n['title']) ?>
+
+                                <?php if (!$n['is_read']): ?>
+                                    <span class="badge bg-danger ms-1">Baru</span>
+                                <?php endif; ?>
+
+                            </h6>
 
                             <small class="text-muted"><?= esc($n['created_at']) ?></small>
 
                         </div>
 
                         <p class="mb-1"><?= esc($n['message']) ?></p>
+
+                        <?php if (!empty($n['url'])): ?>
+                            <small class="text-primary"><i class="fas fa-arrow-right"></i> Buka detail</small>
+                        <?php endif; ?>
 
                     </a>
 

@@ -16,7 +16,7 @@
 
                     <th>Email</th>
 
-                    <th>Nomor Identitas</th>
+                    <th>NIK</th>
 
                     <th>Role</th>
 

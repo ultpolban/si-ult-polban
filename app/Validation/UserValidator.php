@@ -29,7 +29,7 @@ class UserValidator
 
             'identity_number' => [
 
-                'label' => 'Nomor Identitas',
+                'label' => 'NIK',
 
                 'rules' => 'permit_empty|max_length[30]',
 
@@ -193,7 +193,7 @@ class UserValidator
 
             'identity_number' => [
 
-                'label' => 'Nomor Identitas',
+                'label' => 'NIK',
 
                 'rules' => 'permit_empty|max_length[30]',
 

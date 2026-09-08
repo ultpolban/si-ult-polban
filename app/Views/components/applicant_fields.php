@@ -307,7 +307,7 @@ $selectedClass        = $getValue('class_id');
     <div class="mb-3">
 
         <label for="identity_number" class="form-label">
-            NIP/NIDN <span class="text-danger">*</span>
+            NIK <span class="text-danger">*</span>
         </label>
 
         <input
@@ -316,7 +316,7 @@ $selectedClass        = $getValue('class_id');
             id="identity_number"
             class="form-control <?= validation_show_error('identity_number') ? 'is-invalid' : '' ?>"
             value="<?= esc($getValue('identity_number')) ?>"
-            placeholder="Nomor Induk Pegawai / NIDN"
+            placeholder="Nomor Induk Kependudukan"
             required>
 
         <div class="invalid-feedback">

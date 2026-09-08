@@ -12,7 +12,7 @@
                         type="text"
                         name="keyword"
                         class="form-control"
-                        placeholder="Cari nama, email, nomor identitas, atau nomor HP..."
+                        placeholder="Cari nama, email, NIK, atau nomor HP..."
                         value="<?= esc($keyword ?? '') ?>">
 
                 </div>

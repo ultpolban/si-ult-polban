@@ -44,11 +44,38 @@
             </button>
 
             <ul class="dropdown-menu dropdown-menu-end shadow"
-                style="min-width:320px;">
+                style="min-width:320px; max-height:420px; overflow-y:auto;">
 
                 <li class="dropdown-header">
                     <?= $notificationCount ?? 0 ?> Notifikasi
                 </li>
+
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <?php if (empty($notifications)): ?>
+                    <li>
+                        <a class="dropdown-item text-muted" href="<?= site_url('notifications') ?>">
+                            <em>Tidak ada notifikasi baru.</em>
+                        </a>
+                    </li>
+                <?php else: ?>
+                    <?php $nCount = 0; ?>
+                    <?php foreach ($notifications as $n): ?>
+                        <?php if ($nCount >= 8) { break; } $nCount++; ?>
+                        <li>
+                            <a class="dropdown-item"
+                                href="<?= site_url('notifications/read/' . $n['id']) ?>">
+                                <div class="d-flex justify-content-between">
+                                    <strong class="small"><?= esc($n['title']) ?></strong>
+                                    <small class="text-muted ms-2 text-nowrap"><?= esc(date('d/m H:i', strtotime($n['created_at'] ?? 'now'))) ?></small>
+                                </div>
+                                <div class="small text-muted text-truncate" style="max-width:260px;"><?= esc($n['message']) ?></div>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
                 <li>
                     <hr class="dropdown-divider">

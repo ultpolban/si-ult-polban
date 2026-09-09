@@ -1,6 +1,111 @@
+nano app/Controllers/Auth/AuthController.phpnano app/Controllers/Auth/AuthController.php
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <?php
 
 namespace App\Controllers\Auth;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
@@ -276,170 +381,6 @@ class AuthController extends BaseController
         return $user
             && (int) ($user['is_active'] ?? 0) === 1
             && $this->requiresMfa($user);
-    }
-
-        /**
-     * Setup MFA untuk user yang sudah login
-     */
-    public function mfaSetup()
-    {
-        if (! session()->get('isLoggedIn')) {
-            return redirect()
-                ->to('/login')
-                ->with('error', 'Silakan login terlebih dahulu.');
-        }
-
-        $userId = (int) session()->get('user_id');
-
-        if ($userId <= 0) {
-            return redirect()->to('/login');
-        }
-
-        $user = $this->userModel->find($userId);
-
-        if (! $user || (int) ($user['is_active'] ?? 0) !== 1) {
-            session()->destroy();
-
-            return redirect()
-                ->to('/login')
-                ->with('error', 'Akun tidak valid.');
-        }
-
-        // Jika MFA sudah aktif, tidak perlu setup ulang
-        if ($this->requiresMfa($user)) {
-            return redirect()
-                ->to('/petugas/dashboard')
-                ->with('success', 'MFA pada akun ini sudah aktif.');
-        }
-
-        $pending = session()->get('mfa_setup_pending');
-
-        // Generate setup baru jika belum ada proses MFA
-        if (! $pending || (int) ($pending['user_id'] ?? 0) !== $userId) {
-
-            $secret = $this->mfaService->generateSecret();
-            $recoveryCodes = $this->mfaService->generateRecoveryCodes();
-
-            if (! $this->mfaService->beginSetup(
-                $userId,
-                $secret,
-                $recoveryCodes
-            )) {
-                return redirect()
-                    ->to('/petugas/dashboard')
-                    ->with('error', 'Gagal memulai setup MFA.');
-            }
-
-            session()->set('mfa_setup_pending', [
-                'user_id' => $userId,
-            ]);
-
-            $user = $this->userModel->find($userId);
-        }
-
-        $secret = $user['mfa_secret'] ?? '';
-
-        if ($secret === '') {
-            return redirect()
-                ->to('/petugas/dashboard')
-                ->with('error', 'Secret MFA tidak tersedia.');
-        }
-
-        $uri = $this->mfaService->provisioningUri(
-            $secret,
-            $user['email']
-        );
-
-        $recoveryCodes = json_decode(
-            $user['mfa_recovery_codes'] ?? '[]',
-            true
-        );
-
-        $recoveryCodes = is_array($recoveryCodes)
-            ? $recoveryCodes
-            : [];
-
-        return view('auth/setup_mfa', [
-            'title' => 'Setup MFA',
-            'secret' => $secret,
-            'uri' => $uri,
-            'recoveryCodes' => $recoveryCodes,
-            'account' => [
-                'full_name' => $user['full_name'] ?? '',
-                'email' => $user['email'] ?? '',
-            ],
-        ]);
-    }
-
-    /**
-     * Verifikasi MFA untuk akun yang sudah login
-     */
-    public function verifyMfaSetup()
-    {
-        if (! session()->get('isLoggedIn')) {
-            return redirect()
-                ->to('/login')
-                ->with('error', 'Silakan login terlebih dahulu.');
-        }
-
-        $userId = (int) session()->get('user_id');
-
-        if ($userId <= 0) {
-            return redirect()->to('/login');
-        }
-
-        $user = $this->userModel->find($userId);
-
-        if (! $user || (int) ($user['is_active'] ?? 0) !== 1) {
-            session()->destroy();
-
-            return redirect()
-                ->to('/login')
-                ->with('error', 'Akun tidak valid.');
-        }
-
-        if ($this->requiresMfa($user)) {
-            return redirect()
-                ->to('/petugas/dashboard')
-                ->with('success', 'MFA sudah aktif.');
-        }
-
-        $code = trim((string) $this->request->getPost('mfa_code'));
-
-        if (! preg_match('/^\d{6}$/', $code)) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'Kode MFA harus terdiri dari 6 digit.');
-        }
-
-        if (! $this->mfaService->verifyCode($userId, $code)) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'Kode MFA tidak valid. Silakan coba lagi.');
-        }
-
-        if (! $this->mfaService->activate($userId)) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'Gagal mengaktifkan MFA.');
-        }
-
-        session()->remove('mfa_setup_pending');
-
-        // Refresh data user di session
-        $user = $this->userModel->find($userId);
-
-        session()->set('user', $user);
-
-        return redirect()
-            ->to('/petugas/dashboard')
-            ->with(
-                'success',
-                'MFA berhasil diaktifkan. Saat login berikutnya Anda akan diminta kode MFA.'
-            );
     }
 
     /**

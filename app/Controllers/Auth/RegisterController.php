@@ -44,13 +44,9 @@ class RegisterController extends BaseController
     /**
      * Halaman Registrasi
      */
-    public function index()
-    {
-        if (session()->get('isLoggedIn')) {
-            return redirect()->to('/dashboard');
-        }
-
-        return view('auth/register', [
+public function index()
+{
+    return view('auth/register', [
             'title'          => 'Registrasi',
             'applicantTypes' => $this->applicantTypeModel->getActive(),
             'studyPrograms'  => $this->studyProgramModel->getActive(),

@@ -57,6 +57,11 @@ $routes->group('dashboard', ['filter' => 'auth'], function ($routes) {
 |--------------------------------------------------------------------------
 */
 $routes->group('petugas', function($routes){
+
+        // MFA Setup untuk akun Petugas yang sudah login
+    $routes->get('mfa', 'Auth\AuthController::mfaSetup');
+    $routes->post('mfa/verify', 'Auth\AuthController::verifyMfaSetup');
+
     $routes->get('/', 'PetugasController::dashboard');
     $routes->get('dashboard', 'PetugasController::dashboard');
     $routes->get('tiket', 'PetugasController::tiket');

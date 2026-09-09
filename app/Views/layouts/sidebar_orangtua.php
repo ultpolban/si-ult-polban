@@ -124,18 +124,6 @@ $uri = service('uri');
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a
-                        href="<?= base_url('orangtua/help') ?>"
-                        class="nav-link <?= str_contains(uri_string(), 'orangtua/help') ? 'active' : '' ?>">
-
-                        <i class="nav-icon fas fa-question-circle"></i>
-
-                        <p>Pusat Bantuan</p>
-
-                    </a>
-                </li>
-
                 <!-- Logout -->
                 <li class="nav-item">
 

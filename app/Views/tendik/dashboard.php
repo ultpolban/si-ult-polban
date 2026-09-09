@@ -1,33 +1,26 @@
-<?= $this->include('layouts/header') ?>
-
-<?= $this->include('layouts/navbar') ?>
-
-<?= $this->include('layouts/sidebar_tendik') ?>
+<?= $this->include('layouts/header'); ?>
+<?= $this->include('layouts/navbar'); ?>
+<?= $this->include('layouts/sidebar_tendik'); ?>
 
 
 <div class="content-wrapper">
 
 
-    <!-- ==========================================
-         HEADER
-    =========================================== -->
+    <!-- =========================================
+         HEADER DASHBOARD
+    ========================================== -->
 
     <section class="content-header">
 
         <div class="container-fluid">
 
-            <div class="row mb-2">
+            <div class="row align-items-center">
 
                 <div class="col-sm-6">
 
-                    <h1
-                        style="
-                            color:#0b3d91;
-                            font-weight:700;
-                        "
-                    >
+                    <h1 class="dashboard-title">
 
-                        <i class="fas fa-user-tie"></i>
+                        <i class="fas fa-home me-2"></i>
 
                         Dashboard Tendik
 
@@ -36,21 +29,14 @@
                 </div>
 
 
-                <div class="col-sm-6 text-end">
+                <div class="col-sm-6 text-sm-end mt-2 mt-sm-0">
 
                     <a
-                        href="<?= base_url(
-                            'tendik/ticket/create'
-                        ) ?>"
-                        class="btn"
-                        style="
-                            background:#f28c28;
-                            color:white;
-                            font-weight:600;
-                        "
+                        href="<?= base_url('tendik/ticket/create') ?>"
+                        class="btn btn-ult-orange"
                     >
 
-                        <i class="fas fa-plus-circle"></i>
+                        <i class="fas fa-plus-circle me-1"></i>
 
                         Ajukan Layanan
 
@@ -66,81 +52,134 @@
 
 
 
-    <!-- ==========================================
+    <!-- =========================================
          MAIN CONTENT
-    =========================================== -->
+    ========================================== -->
 
     <section class="content">
 
         <div class="container-fluid">
 
 
-            <!-- ==========================================
-                 WELCOME
-            =========================================== -->
+            <!-- =========================================
+                 WELCOME CARD
+            ========================================== -->
 
-            <div class="card shadow-sm mb-4">
+            <div class="card welcome-card shadow-sm">
 
                 <div class="card-body">
 
-                    <h3
-                        style="
-                            color:#0b3d91;
-                            font-weight:700;
-                        "
-                    >
-
-                        Selamat Datang,
-
-                        <?= esc(
-                            $user['nama']
-                            ?? 'Tenaga Kependidikan'
-                        ) ?>
-
-                    </h3>
+                    <div class="row align-items-center">
 
 
-                    <p class="text-muted mb-0">
+                        <!-- DATA TENDIK -->
 
-                        <strong>NIP/NIK:</strong>
+                        <div class="col-md-8">
 
-                        <?= esc(
-                            $user['nip']
-                            ?? $user['nik']
-                            ?? '-'
-                        ) ?>
+                            <h3 class="welcome-title">
 
-                        <br>
+                                Selamat Datang,
 
+                                <?= esc(
+                                    $dataPribadi['nama']
+                                    ?? 'Tendik'
+                                ); ?>
 
-                        <strong>Unit Kerja:</strong>
+                                ! 👋
 
-                        <?= esc(
-                            $user['unit_kerja']
-                            ?? '-'
-                        ) ?>
-
-                        <br>
+                            </h3>
 
 
-                        <strong>Jabatan:</strong>
+                            <p class="welcome-text mb-3">
 
-                        <?= esc(
-                            $user['jabatan']
-                            ?? '-'
-                        ) ?>
+                                Selamat datang di Sistem Informasi
+                                Unit Layanan Terpadu POLBAN.
 
-                        <br>
+                            </p>
 
 
-                        <strong>Email:</strong>
+                            <div class="student-info">
 
-                        <?= esc(
-                            $user['email']
-                            ?? '-'
-                        ) ?>
 
-                    </p>
+                                <!-- NIK -->
+
+                                <div>
+
+                                    <i class="fas fa-id-card"></i>
+
+                                    <strong>
+                                        NIK:
+                                    </strong>
+
+                                    <?= esc(
+                                        $dataPribadi['nik']
+                                        ?? '-'
+                                    ); ?>
+
+                                </div>
+
+
+                                <!-- JABATAN -->
+
+                                <div>
+
+                                    <i class="fas fa-user-tag"></i>
+
+                                    <strong>
+                                        Jabatan:
+                                    </strong>
+
+                                    <?= esc(
+                                        $dataPribadi['jabatan']
+                                        ?? '-'
+                                    ); ?>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- AVATAR -->
+
+                        <div
+                            class="
+                                col-md-4
+                                text-center
+                                mt-3
+                                mt-md-0
+                            "
+                        >
+
+                            <div class="student-avatar">
+
+                                <i class="fas fa-user-tie"></i>
+
+                            </div>
+
+
+                            <div class="mt-2">
+
+                                <span class="status-active">
+
+                                    <i class="fas fa-circle"></i>
+
+                                    <?= esc(
+                                        $dataPribadi['status']
+                                        ?? 'Aktif'
+                                    ); ?>
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
 
                 </div>
 
@@ -148,33 +187,31 @@
 
 
 
-            <!-- ==========================================
-                 STATISTIK
-            =========================================== -->
+            <!-- =========================================
+                 STATISTIK PENGAJUAN
+            ========================================== -->
 
             <div class="row">
 
 
-                <!-- TOTAL PENGAJUAN -->
+                <!-- ======================================
+                     TOTAL PENGAJUAN
+                ======================================= -->
 
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-3 col-md-6 mb-3">
 
-                    <div
-                        class="small-box"
-                        style="
-                            background:#0b3d91;
-                            color:white;
-                            border-radius:15px;
-                        "
-                    >
+                    <div class="stat-card stat-blue">
 
-                        <div class="inner">
+                        <div class="stat-content">
 
-                            <h3>
+                            <h2>
 
-                                <?= $statistik['total'] ?? 0 ?>
+                                <?= esc(
+                                    $jumlahPengajuan
+                                    ?? 0
+                                ); ?>
 
-                            </h3>
+                            </h2>
 
                             <p>
 
@@ -185,9 +222,9 @@
                         </div>
 
 
-                        <div class="icon">
+                        <div class="stat-icon">
 
-                            <i class="fas fa-file-signature"></i>
+                            <i class="fas fa-ticket-alt"></i>
 
                         </div>
 
@@ -197,26 +234,24 @@
 
 
 
-                <!-- DIPROSES -->
+                <!-- ======================================
+                     SEDANG DIPROSES
+                ======================================= -->
 
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-3 col-md-6 mb-3">
 
-                    <div
-                        class="small-box"
-                        style="
-                            background:#f28c28;
-                            color:white;
-                            border-radius:15px;
-                        "
-                    >
+                    <div class="stat-card stat-orange">
 
-                        <div class="inner">
+                        <div class="stat-content">
 
-                            <h3>
+                            <h2>
 
-                                <?= $statistik['diproses'] ?? 0 ?>
+                                <?= esc(
+                                    $sedangDiproses
+                                    ?? 0
+                                ); ?>
 
-                            </h3>
+                            </h2>
 
                             <p>
 
@@ -227,7 +262,7 @@
                         </div>
 
 
-                        <div class="icon">
+                        <div class="stat-icon">
 
                             <i class="fas fa-spinner"></i>
 
@@ -239,26 +274,24 @@
 
 
 
-                <!-- REVISI -->
+                <!-- ======================================
+                     PERLU REVISI
+                ======================================= -->
 
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-3 col-md-6 mb-3">
 
-                    <div
-                        class="small-box"
-                        style="
-                            background:#dc3545;
-                            color:white;
-                            border-radius:15px;
-                        "
-                    >
+                    <div class="stat-card stat-warning">
 
-                        <div class="inner">
+                        <div class="stat-content">
 
-                            <h3>
+                            <h2>
 
-                                <?= $statistik['revisi'] ?? 0 ?>
+                                <?= esc(
+                                    $perluRevisi
+                                    ?? 0
+                                ); ?>
 
-                            </h3>
+                            </h2>
 
                             <p>
 
@@ -269,9 +302,9 @@
                         </div>
 
 
-                        <div class="icon">
+                        <div class="stat-icon">
 
-                            <i class="fas fa-exclamation-circle"></i>
+                            <i class="fas fa-edit"></i>
 
                         </div>
 
@@ -281,26 +314,24 @@
 
 
 
-                <!-- SELESAI -->
+                <!-- ======================================
+                     SELESAI
+                ======================================= -->
 
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-3 col-md-6 mb-3">
 
-                    <div
-                        class="small-box"
-                        style="
-                            background:#198754;
-                            color:white;
-                            border-radius:15px;
-                        "
-                    >
+                    <div class="stat-card stat-success">
 
-                        <div class="inner">
+                        <div class="stat-content">
 
-                            <h3>
+                            <h2>
 
-                                <?= $statistik['selesai'] ?? 0 ?>
+                                <?= esc(
+                                    $selesai
+                                    ?? 0
+                                ); ?>
 
-                            </h3>
+                            </h2>
 
                             <p>
 
@@ -311,7 +342,7 @@
                         </div>
 
 
-                        <div class="icon">
+                        <div class="stat-icon">
 
                             <i class="fas fa-check-circle"></i>
 
@@ -326,33 +357,31 @@
 
 
 
-            <!-- ==========================================
-                 QUICK MENU
-            =========================================== -->
+            <!-- =========================================
+                 QUICK ACTION
+            ========================================== -->
 
-            <div class="row mt-3">
+            <div class="row mb-4">
 
 
-                <!-- AJUKAN -->
+                <!-- AJUKAN LAYANAN -->
 
-                <div class="col-md-4 mb-3">
+                <div class="col-lg-4 col-md-4 mb-2">
 
                     <a
                         href="<?= base_url(
                             'tendik/ticket/create'
                         ) ?>"
-                        class="btn btn-block"
-                        style="
-                            background:#f28c28;
-                            color:white;
-                            font-weight:600;
-                            padding:12px;
-                        "
+                        class="quick-action action-orange"
                     >
 
                         <i class="fas fa-plus-circle"></i>
 
-                        Ajukan Layanan Baru
+                        <span>
+
+                            Ajukan Layanan Baru
+
+                        </span>
 
                     </a>
 
@@ -362,24 +391,22 @@
 
                 <!-- TRACKING -->
 
-                <div class="col-md-4 mb-3">
+                <div class="col-lg-4 col-md-4 mb-2">
 
                     <a
                         href="<?= base_url(
                             'tendik/ticket/history'
                         ) ?>"
-                        class="btn btn-block"
-                        style="
-                            background:#0b3d91;
-                            color:white;
-                            font-weight:600;
-                            padding:12px;
-                        "
+                        class="quick-action action-blue"
                     >
 
                         <i class="fas fa-history"></i>
 
-                        Tracking Tiket
+                        <span>
+
+                            Tracking Tiket
+
+                        </span>
 
                     </a>
 
@@ -389,24 +416,22 @@
 
                 <!-- NOTIFIKASI -->
 
-                <div class="col-md-4 mb-3">
+                <div class="col-lg-4 col-md-4 mb-2">
 
                     <a
                         href="<?= base_url(
-                            'tendik/notification'
+                            'tendik/notifikasi'
                         ) ?>"
-                        class="btn btn-block"
-                        style="
-                            background:#198754;
-                            color:white;
-                            font-weight:600;
-                            padding:12px;
-                        "
+                        class="quick-action action-blue"
                     >
 
                         <i class="fas fa-bell"></i>
 
-                        Notifikasi
+                        <span>
+
+                            Notifikasi
+
+                        </span>
 
                     </a>
 
@@ -417,47 +442,64 @@
 
 
 
-            <!-- ==========================================
-                 RIWAYAT PENGAJUAN TERBARU
-            =========================================== -->
+            <!-- =========================================
+                 RIWAYAT PENGAJUAN LAYANAN
+            ========================================== -->
 
-            <div class="card shadow-sm mt-4">
+            <div class="card dashboard-card shadow-sm">
 
 
-                <div class="card-header">
+                <!-- HEADER RIWAYAT -->
 
-                    <h3
-                        class="card-title"
-                        style="
-                            color:#0b3d91;
-                            font-weight:700;
+                <div class="card-header dashboard-card-header">
+
+                    <h3 class="card-title">
+
+                        <i class="fas fa-history me-2"></i>
+
+                        Riwayat Pengajuan Layanan
+
+                    </h3>
+
+
+                    <a
+                        href="<?= base_url(
+                            'tendik/ticket/history'
+                        ) ?>"
+                        class="
+                            btn
+                            btn-sm
+                            btn-ult-orange
+                            float-end
                         "
                     >
 
-                        <i class="fas fa-history"></i>
+                        Lihat Semua
 
-                        Riwayat Pengajuan Terbaru
-
-                    </h3>
+                    </a>
 
                 </div>
 
 
 
-                <div class="card-body table-responsive">
+                <!-- BODY TABLE -->
+
+                <div class="card-body table-responsive p-0">
 
 
                     <table
-                        class="table table-bordered table-hover"
+                        class="
+                            table
+                            table-hover
+                            align-middle
+                            mb-0
+                        "
                     >
 
 
-                        <thead
-                            style="
-                                background:#0b3d91;
-                                color:white;
-                            "
-                        >
+                        <!-- HEADER TABLE -->
+
+                        <thead>
 
                             <tr>
 
@@ -474,7 +516,7 @@
                                 </th>
 
                                 <th>
-                                    Unit Tujuan
+                                    Unit Layanan
                                 </th>
 
                                 <th>
@@ -495,175 +537,319 @@
 
 
 
+                        <!-- ISI TABLE -->
+
                         <tbody>
 
 
-                            <?php if (!empty($tickets)): ?>
+                        <?php if (
+                            !empty(
+                                $recentTickets
+                                ?? []
+                            )
+                        ): ?>
 
 
-                                <?php $no = 1; ?>
+                            <?php
 
+                            $no = 1;
 
-                                <?php foreach (
-                                    array_slice(
-                                        array_reverse($tickets),
-                                        0,
-                                        5
-                                    )
-                                    as $ticket
-                                ): ?>
+                            foreach (
+                                $recentTickets
+                                as $t
+                            ):
 
-
-                                    <tr>
-
-
-                                        <td>
-
-                                            <?= $no++ ?>
-
-                                        </td>
-
-
-                                        <td>
-
-                                            <?= esc(
-                                                $ticket['nomor_tiket']
-                                                ??
-                                                $ticket['nomor']
-                                                ??
-                                                '-'
-                                            ) ?>
-
-                                        </td>
-
-
-                                        <td>
-
-                                            <?= esc(
-                                                $ticket['jenis_layanan']
-                                                ??
-                                                $ticket['layanan']
-                                                ??
-                                                '-'
-                                            ) ?>
-
-                                        </td>
-
-
-                                        <td>
-
-                                            <?= esc(
-                                                $ticket['unit_tujuan']
-                                                ??
-                                                $ticket['unit']
-                                                ??
-                                                '-'
-                                            ) ?>
-
-                                        </td>
-
-
-                                        <td>
-
-                                            <?= esc(
-                                                $ticket['created_at']
-                                                ??
-                                                $ticket['tanggal']
-                                                ??
-                                                '-'
-                                            ) ?>
-
-                                        </td>
-
-
-                                        <td>
-
-                                            <span
-                                                class="badge bg-primary"
-                                            >
-
-                                                <?= esc(
-                                                    $ticket['status']
-                                                    ?? '-'
-                                                ) ?>
-
-                                            </span>
-
-                                        </td>
-
-
-                                        <td>
-
-                                            <a
-                                                href="<?= base_url(
-                                                    'tendik/ticket/detail/' .
-                                                    (
-                                                        $ticket['id']
-                                                        ?? 0
-                                                    )
-                                                ) ?>"
-                                                class="btn btn-sm btn-info"
-                                            >
-
-                                                <i
-                                                    class="fas fa-eye"
-                                                ></i>
-
-                                                Detail
-
-                                            </a>
-
-                                        </td>
-
-
-                                    </tr>
-
-
-                                <?php endforeach; ?>
-
-
-                            <?php else: ?>
+                            ?>
 
 
                                 <tr>
 
-                                    <td
-                                        colspan="7"
-                                        class="text-center text-muted py-4"
-                                    >
 
-                                        <i
-                                            class="
-                                                fas
-                                                fa-inbox
-                                                fa-2x
-                                                mb-2
-                                            "
-                                        ></i>
+                                    <!-- NO -->
 
-                                        <br>
+                                    <td>
 
-                                        Belum ada pengajuan layanan.
+                                        <?= $no++; ?>
 
                                     </td>
+
+
+
+                                    <!-- NOMOR TIKET -->
+
+                                    <td>
+
+                                        <strong>
+
+                                            <?= esc(
+                                                $t['ticket_number']
+                                                ?? '-'
+                                            ); ?>
+
+                                        </strong>
+
+                                    </td>
+
+
+
+                                    <!-- LAYANAN -->
+
+                                    <td>
+
+                                        <?= esc(
+                                            $t['service_name']
+                                            ?? '-'
+                                        ); ?>
+
+                                    </td>
+
+
+
+                                    <!-- UNIT LAYANAN -->
+
+                                    <td>
+
+                                        <?= esc(
+                                            $t['unit_name']
+                                            ?? '-'
+                                        ); ?>
+
+                                    </td>
+
+
+
+                                    <!-- TANGGAL -->
+
+                                    <td>
+
+                                        <?php
+
+                                        if (
+                                            !empty(
+                                                $t['created_at']
+                                            )
+                                        ) {
+
+                                            echo esc(
+                                                date(
+                                                    'd-m-Y',
+                                                    strtotime(
+                                                        $t['created_at']
+                                                    )
+                                                )
+                                            );
+
+                                        } else {
+
+                                            echo '-';
+
+                                        }
+
+                                        ?>
+
+                                    </td>
+
+
+
+                                    <!-- STATUS -->
+
+                                    <td>
+
+                                        <span
+                                            class="
+                                                ticket-status
+                                                <?= esc(
+                                                    $t['status_class']
+                                                    ?? 'status-submitted'
+                                                ); ?>
+                                            "
+                                        >
+
+                                            <?php
+                                            $status =
+                                                strtolower(
+                                                    (string) (
+                                                        $t['status']
+                                                        ?? ''
+                                                    )
+                                                );
+                                            ?>
+
+
+                                            <?php if (
+                                                in_array(
+                                                    $status,
+                                                    [
+                                                        'completed',
+                                                        'selesai'
+                                                    ],
+                                                    true
+                                                )
+                                            ): ?>
+
+                                                <i
+                                                    class="
+                                                        fas
+                                                        fa-check
+                                                    "
+                                                ></i>
+
+                                            <?php elseif (
+                                                in_array(
+                                                    $status,
+                                                    [
+                                                        'rejected',
+                                                        'ditolak'
+                                                    ],
+                                                    true
+                                                )
+                                            ): ?>
+
+                                                <i
+                                                    class="
+                                                        fas
+                                                        fa-times
+                                                    "
+                                                ></i>
+
+                                            <?php elseif (
+                                                in_array(
+                                                    $status,
+                                                    [
+                                                        'processed',
+                                                        'diproses',
+                                                        'in_progress'
+                                                    ],
+                                                    true
+                                                )
+                                            ): ?>
+
+                                                <i
+                                                    class="
+                                                        fas
+                                                        fa-spinner
+                                                    "
+                                                ></i>
+
+                                            <?php else: ?>
+
+                                                <i
+                                                    class="
+                                                        fas
+                                                        fa-clock
+                                                    "
+                                                ></i>
+
+                                            <?php endif; ?>
+
+
+                                            <?= esc(
+                                                $t['status_label']
+                                                ?? 'Diajukan'
+                                            ); ?>
+
+                                        </span>
+
+                                    </td>
+
+
+
+                                    <!-- AKSI -->
+
+                                    <td>
+
+                                        <a
+                                            href="<?= base_url(
+                                                'tendik/ticket/detail/' .
+                                                (
+                                                    $t['id']
+                                                    ?? ''
+                                                )
+                                            ) ?>"
+                                            class="btn btn-detail"
+                                        >
+
+                                            <i
+                                                class="
+                                                    fas
+                                                    fa-eye
+                                                "
+                                            ></i>
+
+                                            Detail
+
+                                        </a>
+
+                                    </td>
+
 
                                 </tr>
 
 
-                            <?php endif; ?>
+                            <?php endforeach; ?>
+
+
+                        <?php else: ?>
+
+
+                            <!-- =====================================
+                                 BELUM ADA RIWAYAT
+                            ====================================== -->
+
+                            <tr>
+
+                                <td
+                                    colspan="7"
+                                    class="
+                                        text-center
+                                        py-5
+                                        text-muted
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-history
+                                            fa-3x
+                                            mb-3
+                                        "
+                                    ></i>
+
+
+                                    <div>
+
+                                        <strong>
+
+                                            Belum Ada Riwayat Pengajuan
+
+                                        </strong>
+
+                                    </div>
+
+
+                                    <small>
+
+                                        Pengajuan yang sudah dibuat
+                                        akan otomatis muncul di sini.
+
+                                    </small>
+
+                                </td>
+
+                            </tr>
+
+
+                        <?php endif; ?>
 
 
                         </tbody>
 
-
                     </table>
-
 
                 </div>
 
-
             </div>
-
 
         </div>
 
@@ -672,4 +858,4 @@
 </div>
 
 
-<?= $this->include('layouts/footer') ?>
+<?= $this->include('layouts/footer'); ?>

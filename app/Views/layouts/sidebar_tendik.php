@@ -167,29 +167,6 @@
 
 </li>
 
-
-                <!-- PUSAT BANTUAN -->
-                <li class="nav-item">
-
-                    <a
-                        href="<?= base_url('tendik/help') ?>"
-                        class="nav-link <?= str_contains(
-                            uri_string(),
-                            'tendik/help'
-                        ) ? 'active' : '' ?>"
-                    >
-
-                        <i class="nav-icon fas fa-question-circle"></i>
-
-                        <p>
-                            Pusat Bantuan
-                        </p>
-
-                    </a>
-
-                </li>
-
-
                 <!-- LOGOUT -->
                 <li class="nav-item">
 

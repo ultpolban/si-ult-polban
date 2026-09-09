@@ -348,8 +348,8 @@ class AuthController extends BaseController
             'email'              => $user['email'] ?? '',
 
             'applicant_type_id'  => $applicantTypeId,
-            'applicant_type_code'=> $applicantTypeCode,
-            'applicant_type_name'=> $applicantTypeName,
+            'applicant_type_code' => $applicantTypeCode,
+            'applicant_type_name' => $applicantTypeName,
 
             'isLoggedIn'         => true,
 
@@ -459,7 +459,7 @@ class AuthController extends BaseController
              */
             case 'WALI':
 
-                return redirect()->to('/wali/dashboard');
+                return redirect()->to('/dashboard-orangtua');
 
             /**
              * =================================================

@@ -2,48 +2,296 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
+use App\Models\NotificationModel;
 
 class OrangTuaNotificationController extends BaseController
 {
+    protected NotificationModel $notificationModel;
+
+
+    public function __construct()
+    {
+        helper(['url']);
+
+        $this->notificationModel =
+            new NotificationModel();
+    }
+
+
+    // =====================================================
+    // AMBIL USER ID YANG SEDANG LOGIN
+    // =====================================================
+
+    private function getUserId()
+    {
+        $userId =
+            session()->get('user_id');
+
+
+        if (!$userId) {
+
+            $user =
+                session()->get('user');
+
+
+            if (is_array($user)) {
+
+                $userId =
+                    $user['id']
+                    ?? null;
+
+            }
+
+        }
+
+
+        return $userId;
+    }
+
+
+    // =====================================================
+    // HALAMAN NOTIFIKASI
+    // =====================================================
+
     public function index()
     {
-        $data['notifications'] = [
+        $userId =
+            $this->getUserId();
 
-            [
-                'icon' => 'fas fa-paper-plane',
-                'color' => 'primary',
-                'judul' => 'Pengajuan berhasil dikirim',
-                'pesan' => 'ULT-ORT-20260807102531 berhasil dikirim.',
-                'waktu' => '5 menit yang lalu'
-            ],
 
-            [
-                'icon' => 'fas fa-check-circle',
-                'color' => 'success',
-                'judul' => 'Tiket telah diverifikasi',
-                'pesan' => 'Pengajuan Surat Aktif Kuliah telah diverifikasi petugas.',
-                'waktu' => '30 menit yang lalu'
-            ],
+        if (!$userId) {
 
-            [
-                'icon' => 'fas fa-share',
-                'color' => 'warning',
-                'judul' => 'Diteruskan ke Unit Akademik',
-                'pesan' => 'Tiket sedang diproses Unit Akademik.',
-                'waktu' => '1 jam yang lalu'
-            ],
+            return redirect()
+                ->to('/login')
+                ->with(
+                    'error',
+                    'Silakan login terlebih dahulu.'
+                );
 
-            [
-                'icon' => 'fas fa-check',
-                'color' => 'success',
-                'judul' => 'Pengajuan selesai',
-                'pesan' => 'Silakan unduh surat yang telah diterbitkan.',
-                'waktu' => 'Kemarin'
-            ]
+        }
+
+
+        // =================================================
+        // AMBIL NOTIFIKASI USER
+        // =================================================
+
+        $rows =
+            $this->notificationModel
+                ->getByUser(
+                    (int) $userId
+                );
+
+
+        // =================================================
+        // FORMAT DATA
+        // =================================================
+
+        $notifications = [];
+
+
+        foreach ($rows as $row) {
+
+            $notifications[] = [
+
+                'id' =>
+                    $row['id']
+                    ?? null,
+
+                'judul' =>
+                    $row['title']
+                    ?? 'Notifikasi',
+
+                'pesan' =>
+                    $row['message']
+                    ?? '',
+
+                'tanggal' =>
+                    !empty(
+                        $row['created_at']
+                    )
+                        ? date(
+                            'd F Y, H:i',
+                            strtotime(
+                                $row['created_at']
+                            )
+                        )
+                        : '-',
+
+                'tipe' =>
+                    $row['type']
+                    ?? 'info',
+
+                'dibaca' =>
+                    (bool) (
+                        $row['is_read']
+                        ?? 0
+                    ),
+
+                'url' =>
+                    $row['url']
+                    ?? null,
+
+                'service_request_id' =>
+                    $row[
+                        'service_request_id'
+                    ]
+                    ?? null,
+
+            ];
+
+        }
+
+
+        // =================================================
+        // JUMLAH BELUM DIBACA
+        // =================================================
+
+        $unreadCount =
+            $this->notificationModel
+                ->countUnread(
+                    (int) $userId
+                );
+
+
+        // =================================================
+        // DATA VIEW
+        // =================================================
+
+        $data = [
+
+            'title' =>
+                'Notifikasi Orangtua',
+
+            'notifications' =>
+                $notifications,
+
+            'unreadCount' =>
+                $unreadCount,
 
         ];
 
-        return view('orangtua/notification/index', $data);
+
+        return view(
+            'orangtua/notification/index',
+            $data
+        );
+    }
+
+
+    // =====================================================
+    // TANDAI SATU NOTIFIKASI SUDAH DIBACA
+    // =====================================================
+
+    public function read(int $id)
+    {
+        $userId =
+            $this->getUserId();
+
+
+        if (!$userId) {
+
+            return redirect()
+                ->to('/login');
+
+        }
+
+
+        // =================================================
+        // PASTIKAN MILIK USER
+        // =================================================
+
+        $notification =
+            $this->notificationModel
+                ->where(
+                    'id',
+                    $id
+                )
+                ->where(
+                    'user_id',
+                    $userId
+                )
+                ->first();
+
+
+        if (!$notification) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Notifikasi tidak ditemukan.'
+                );
+
+        }
+
+
+        // =================================================
+        // TANDAI DIBACA
+        // =================================================
+
+        $this->notificationModel
+            ->markAsRead(
+                $id,
+                (int) $userId
+            );
+
+
+        // =================================================
+        // REDIRECT KE LINK
+        // =================================================
+
+        if (
+            !empty(
+                $notification['url']
+            )
+        ) {
+
+            return redirect()
+                ->to(
+                    $notification['url']
+                );
+
+        }
+
+
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                'Notifikasi ditandai sudah dibaca.'
+            );
+    }
+
+
+    // =====================================================
+    // TANDAI SEMUA SUDAH DIBACA
+    // =====================================================
+
+    public function readAll()
+    {
+        $userId =
+            $this->getUserId();
+
+
+        if (!$userId) {
+
+            return redirect()
+                ->to('/login');
+
+        }
+
+
+        $this->notificationModel
+            ->markAllAsRead(
+                (int) $userId
+            );
+
+
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                'Semua notifikasi sudah dibaca.'
+            );
     }
 }

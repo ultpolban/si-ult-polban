@@ -1,7 +1,5 @@
 <?= $this->include('layouts/header') ?>
-
 <?= $this->include('layouts/navbar') ?>
-
 <?= $this->include('layouts/sidebar_orangtua') ?>
 
 <div class="content-wrapper">
@@ -9,477 +7,1340 @@
     <!-- =====================================================
          HEADER
     ====================================================== -->
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1
-                        style="
-                            color:#0b3d91;
-                            font-weight:700;
-                        ">
-                        <i class="fas fa-paper-plane mr-2"></i>
-                        Ajukan Layanan
-                    </h1>
-                </div>
+    <div class="row mb-3">
 
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item">
-                            <a
-                                href="<?= base_url(
-                                            'dashboard-orangtua'
-                                        ) ?>">
+        <div class="col-md-8">
 
-                                Dashboard
-                            </a>
-                        </li>
+            <h3 style="
+                font-weight:700;
+                color:#0b3d91;
+                margin-bottom:5px;
+            ">
+                <i class="fas fa-file-signature mr-2"></i>
+                Ajukan Layanan
+            </h3>
 
-                        <li class="breadcrumb-item active">
-                            Ajukan Layanan
-                        </li>
-                    </ol>
-                </div>
-            </div>
+            <p class="text-muted mb-0">
+                Silakan lengkapi data pengajuan layanan Anda.
+            </p>
+
         </div>
-    </section>
+
+        <div class="col-md-4">
+
+            <ol class="breadcrumb float-md-right">
+
+                <li class="breadcrumb-item">
+                    <a href="<?= base_url('dashboard-orangtua') ?>">
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="breadcrumb-item active">
+                    Ajukan Layanan
+                </li>
+
+            </ol>
+
+        </div>
+
+    </div>
+
 
     <!-- =====================================================
-         CONTENT
+         FLASH MESSAGE
     ====================================================== -->
-    <section class="content">
 
-        <div class="container-fluid">
+    <?php if (session()->getFlashdata('success')) : ?>
 
-            <div class="row justify-content-center">
+        <div class="alert alert-success alert-dismissible fade show">
 
-                <div class="col-lg-8 col-md-10">
-                    <!-- =================================================
-                         ALERT ERROR
-                    ================================================== -->
+            <i class="fas fa-check-circle mr-2"></i>
 
-                    <?php if (
-                        session()->getFlashdata('error')
-                    ) : ?>
+            <?= esc(session()->getFlashdata('success')) ?>
 
-                        <div
-                            class="
-                                alert
-                                alert-danger
-                                alert-dismissible
-                                fade
-                                show
-                            ">
+            <button
+                type="button"
+                class="close"
+                data-dismiss="alert">
 
-                            <i
-                                class="
-                                    fas
-                                    fa-exclamation-circle
-                                    mr-2
-                                "></i>
+                <span>&times;</span>
 
-                            <?= esc(
-                                session()->getFlashdata('error')
-                            ) ?>
+            </button>
 
-                            <button
-                                type="button"
-                                class="close"
-                                data-dismiss="alert">
+        </div>
 
-                                &times;
+    <?php endif; ?>
 
-                            </button>
+
+    <?php if (session()->getFlashdata('error')) : ?>
+
+        <div class="alert alert-danger alert-dismissible fade show">
+
+            <i class="fas fa-exclamation-circle mr-2"></i>
+
+            <?= esc(session()->getFlashdata('error')) ?>
+
+            <button
+                type="button"
+                class="close"
+                data-dismiss="alert">
+
+                <span>&times;</span>
+
+            </button>
+
+        </div>
+
+    <?php endif; ?>
+
+
+    <!-- =====================================================
+         FORM
+    ====================================================== -->
+
+    <form
+        action="<?= base_url('orangtua/ticket/store') ?>"
+        method="post"
+        enctype="multipart/form-data"
+        id="formPengajuan">
+
+        <?= csrf_field() ?>
+
+
+        <!-- =================================================
+             DATA PEMOHON
+        ================================================== -->
+
+        <div
+            class="card shadow-sm mb-4"
+            style="
+                border-radius:15px;
+                border:none;
+            ">
+
+            <div
+                class="card-header"
+                style="
+                    background:#0b3d91;
+                    color:white;
+                    border-radius:15px 15px 0 0;
+                    border-bottom:4px solid #f28c28;
+                ">
+
+                <h5 class="mb-0">
+
+                    <i class="fas fa-user mr-2"></i>
+
+                    Data Pemohon
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <!-- =====================================
+                         NAMA ORANGTUA
+                    ====================================== -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label class="font-weight-bold">
+
+                                Nama Pemohon
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <div class="input-group-prepend">
+
+                                    <span class="input-group-text">
+
+                                        <i class="fas fa-user"></i>
+
+                                    </span>
+
+                                </div>
+
+                                <input
+                                    type="text"
+                                    name="nama_pemohon"
+                                    class="form-control"
+                                    value="<?= esc(
+                                        $profile['name']
+                                        ?? $user['nama']
+                                        ?? $user['full_name']
+                                        ?? 'Orangtua'
+                                    ) ?>"
+                                    readonly>
+
+                            </div>
+
+                            <small class="text-muted">
+
+                                Nama pemohon diambil dari data akun
+                                Orangtua/Wali dan tidak dapat diubah.
+
+                            </small>
+
                         </div>
 
-                    <?php endif; ?>
-                    <!-- ================================================
-                         CARD
-                    ================================================== -->
+                    </div>
+
+
+                    <!-- =====================================
+                         NIM ANAK
+                    ====================================== -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label class="font-weight-bold">
+
+                                NIM Mahasiswa
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <div class="input-group-prepend">
+
+                                    <span class="input-group-text">
+
+                                        <i class="fas fa-id-card"></i>
+
+                                    </span>
+
+                                </div>
+
+                                <input
+                                    type="text"
+                                    name="nim"
+                                    class="form-control"
+                                    value="<?= esc(
+                                        $profile['nim'] ?? ''
+                                    ) ?>"
+                                    readonly>
+
+                            </div>
+
+                            <small class="text-muted">
+
+                                NIM mahasiswa diambil dari data
+                                pendaftaran Orangtua/Wali.
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             LAYANAN
+        ================================================== -->
+
+        <div
+            class="card shadow-sm mb-4"
+            style="
+                border-radius:15px;
+                border:none;
+            ">
+
+            <div
+                class="card-header"
+                style="
+                    background:#0b3d91;
+                    color:white;
+                    border-radius:15px 15px 0 0;
+                    border-bottom:4px solid #f28c28;
+                ">
+
+                <h5 class="mb-0">
+
+                    <i class="fas fa-list-alt mr-2"></i>
+
+                    Pilih Layanan
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <!-- =====================================
+                         UNIT LAYANAN
+                    ====================================== -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label class="font-weight-bold">
+
+                                Unit Layanan
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <select
+                                name="unit_layanan"
+                                id="unitLayanan"
+                                class="form-control"
+                                required>
+
+                                <option value="">
+
+                                    -- Pilih Unit Layanan --
+
+                                </option>
+
+                                <?php foreach ($units as $unit) : ?>
+
+                                    <option
+                                        value="<?= esc($unit['id']) ?>">
+
+                                        <?= esc($unit['name']) ?>
+
+                                    </option>
+
+                                <?php endforeach; ?>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         JENIS LAYANAN
+                    ====================================== -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label class="font-weight-bold">
+
+                                Jenis Layanan
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <select
+                                name="jenis_layanan"
+                                id="jenisLayanan"
+                                class="form-control"
+                                required
+                                disabled>
+
+                                <option value="">
+
+                                    -- Pilih Unit Layanan Terlebih Dahulu --
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     PERSYARATAN
+                ================================================== -->
+
+                <div
+                    id="persyaratanContainer"
+                    class="mt-3"
+                    style="display:none;">
+
                     <div
-                        class="
-                            card
-                            shadow-sm
-                        "
+                        class="alert alert-info"
                         style="
-                            border-top:5px solid #0b3d91;
-                            border-radius:15px;
+                            border-radius:10px;
+                            border-left:5px solid #0b3d91;
                         ">
 
+                        <h5
+                            style="
+                                color:#0b3d91;
+                                font-weight:700;
+                            ">
 
-                        <!-- CARD HEADER -->
+                            <i class="fas fa-clipboard-list mr-2"></i>
 
-                        <div
+                            Persyaratan
+
+                        </h5>
+
+                        <p class="text-muted mb-2">
+
+                            Dokumen/data yang perlu disiapkan
+                            untuk layanan ini:
+
+                        </p>
+
+                        <ol
+                            id="listPersyaratan"
+                            class="mb-0">
+                        </ol>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             DOKUMEN PERSYARATAN
+        ================================================== -->
+
+        <div
+            class="card shadow-sm mb-4"
+            style="
+                border-radius:15px;
+                border:none;
+            ">
+
+            <div
+                class="card-header"
+                style="
+                    background:#0b3d91;
+                    color:white;
+                    border-radius:15px 15px 0 0;
+                    border-bottom:4px solid #f28c28;
+                ">
+
+                <h5 class="mb-0">
+
+                    <i class="fas fa-paperclip mr-2"></i>
+
+                    Upload Dokumen Persyaratan
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="alert alert-warning">
+
+                    <i class="fas fa-info-circle mr-2"></i>
+
+                    Silakan unggah dokumen sesuai dengan persyaratan
+                    layanan yang telah dipilih.
+
+                </div>
+
+
+                <!-- =============================================
+                     CONTAINER DOKUMEN
+                ============================================== -->
+
+                <div id="dokumenWrapper">
+
+                    <div class="alert alert-info mb-0">
+
+                        <i class="fas fa-info-circle mr-2"></i>
+
+                        Pilih jenis layanan terlebih dahulu untuk
+                        mengunggah dokumen persyaratan.
+
+                    </div>
+
+                </div>
+
+
+                <small class="d-block text-muted mt-3">
+
+                    <i class="fas fa-file mr-1"></i>
+
+                    Format yang diperbolehkan mengikuti ketentuan
+                    masing-masing persyaratan.
+
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             KETERANGAN
+        ================================================== -->
+
+        <div
+            class="card shadow-sm mb-4"
+            style="
+                border-radius:15px;
+                border:none;
+            ">
+
+            <div
+                class="card-header"
+                style="
+                    background:#0b3d91;
+                    color:white;
+                    border-radius:15px 15px 0 0;
+                    border-bottom:4px solid #f28c28;
+                ">
+
+                <h5 class="mb-0">
+
+                    <i class="fas fa-comment-alt mr-2"></i>
+
+                    Keterangan Pengajuan
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="form-group mb-0">
+
+                    <label class="font-weight-bold">
+
+                        Keterangan
+
+                    </label>
+
+                    <textarea
+                        name="keterangan"
+                        class="form-control"
+                        rows="5"
+                        placeholder="Tuliskan keterangan atau keperluan pengajuan Anda..."></textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             BUTTON
+        ================================================== -->
+
+        <div
+            class="card shadow-sm mb-5"
+            style="
+                border-radius:15px;
+                border:none;
+            ">
+
+            <div class="card-body">
+
+                <div
+                    class="
+                        d-flex
+                        justify-content-between
+                        align-items-center
+                        flex-wrap
+                    ">
+
+                    <!-- KEMBALI -->
+
+                    <a
+                        href="<?= base_url('dashboard-orangtua') ?>"
+                        class="
+                            btn
+                            btn-secondary
+                            mb-2
+                        ">
+
+                        <i class="fas fa-arrow-left mr-1"></i>
+
+                        Kembali
+
+                    </a>
+
+
+                    <div>
+
+                        <!-- SIMPAN DRAFT -->
+
+                        <button
+                            type="submit"
+                            name="action"
+                            value="draft"
+                            formnovalidate
                             class="
-                                card-header
+                                btn
+                                btn-outline-primary
+                                mr-2
+                                mb-2
+                            ">
+
+                            <i class="fas fa-save mr-1"></i>
+
+                            Simpan Draft
+
+                        </button>
+
+
+                        <!-- KIRIM PENGAJUAN -->
+
+                        <button
+                            type="submit"
+                            name="action"
+                            value="submit"
+                            class="
+                                btn
+                                mb-2
                             "
                             style="
                                 background:#0b3d91;
                                 color:white;
+                                font-weight:600;
+                                border-radius:8px;
+                                padding:10px 25px;
                             ">
 
-                            <h3 class="card-title">
+                            <i class="fas fa-paper-plane mr-1"></i>
 
-                                <i
-                                    class="
-                                        fas
-                                        fa-file-alt
-                                        mr-2
-                                    "></i>
+                            Kirim Pengajuan
 
-                                Form Pengajuan Layanan
+                        </button>
 
-                            </h3>
-
-                        </div>
-
-                        <!-- CARD BODY -->
-
-                        <div class="card-body">
-
-
-                            <!-- =================================================
-                                 FORM
-                            ================================================== -->
-                            <form
-                                action="<?= base_url(
-                                            'orangtua/ticket/store'
-                                        ) ?>"
-                                method="post"
-                                enctype="multipart/form-data">
-                                <?= csrf_field() ?>
-                                <!-- =================================================
-                                     UNIT LAYANAN
-                                ================================================== -->
-                                <div class="form-group">
-                                    <label
-                                        for="unit_layanan"
-                                        class="
-                                            font-weight-bold">
-                                        Unit Layanan
-                                        <span class="text-danger">
-                                            *
-                                        </span>
-                                    </label>
-                                    <select
-                                        name="unit_layanan"
-                                        id="unit_layanan"
-                                        class="form-control"
-                                        required>
-                                        <option value="">
-
-                                            -- Pilih Unit Layanan --
-
-                                        </option>
-
-                                        <option value="Akademik">
-                                            Akademik
-                                        </option>
-
-                                        <option value="Kemahasiswaan">
-                                            Kemahasiswaan
-                                        </option>
-
-                                        <option value="Keuangan">
-                                            Keuangan
-                                        </option>
-                                    </select>
-                                </div>
-                                <!-- =================================================
-     NIK (Readonly)
-================================================== -->
-
-                                <div class="form-group">
-
-                                    <label
-                                        for="nik"
-                                        class="font-weight-bold">
-                                        NIK
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        id="nik"
-                                        class="form-control"
-                                        value="<?= session()->get('nik') ?? '3273010101040001'; ?>"
-                                        readonly>
-                                </div>
-                                <!-- =================================================
-     NAMA MAHASISWA (Readonly)
-================================================== -->
-                                <div class="form-group">
-                                    <label
-                                        for="nama_mahasiswa"
-                                        class="font-weight-bold">
-                                        Nama Mahasiswa
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        id="nama_mahasiswa"
-                                        class="form-control"
-                                        value="<?= session()->get('nama') ?? 'Muhamad Rafi Putra Zakaria'; ?>"
-                                        readonly>
-
-                                </div>
-
-                                <!-- =================================================
-                                     JENIS LAYANAN
-                                ================================================== -->
-                                <div class="form-group">
-                                    <label
-                                        for="layanan"
-                                        class="
-                                            font-weight-bold">
-                                        Jenis Layanan
-
-                                        <span class="text-danger">
-                                            *
-                                        </span>
-                                    </label>
-
-                                    <select
-                                        name="layanan"
-                                        id="layanan"
-                                        class="form-control"
-                                        required
-                                        disabled>
-                                        <option value="">
-                                            -- Pilih Unit Layanan Terlebih Dahulu --
-                                        </option>
-                                    </select>
-                                </div>
-                                <!-- ================================================
-                                     KETERANGAN
-                                ================================================== -->
-                                <div class="form-group">
-
-                                    <label
-                                        for="keterangan"
-                                        class="
-                                            font-weight-bold
-                                        ">
-
-                                        Keterangan / Detail Permohonan
-
-                                        <span class="text-danger">
-
-                                            *
-
-                                        </span>
-
-                                    </label>
-
-                                    <textarea
-                                        name="keterangan"
-                                        id="keterangan"
-                                        class="form-control"
-                                        rows="6"
-                                        placeholder="
-                                            Jelaskan detail permohonan layanan Anda...
-                                        "
-                                        required></textarea>
-                                </div>
-                                <!-- =================================================
-                                     DOkUMEN
-                                ================================================== -->
-                                <div class="form-group">
-                                    <label
-                                        for="dokumen"
-                                        class="
-                                            font-weight-bold
-                                        ">
-                                        Dokumen Pendukung
-                                        <span class="text-muted">
-                                            (Opsional)
-                                        </span>
-                                    </label>
-                                    <input
-                                        type="file"
-                                        name="dokumen"
-                                        id="dokumen"
-                                        class="
-                                            form-control-file
-                                        "
-                                        accept="
-                                            .pdf,
-                                            .jpg,
-                                            .jpeg,
-                                            .png,
-                                            .doc,
-                                            .docx
-                                        ">
-                                    <small
-                                        class="
-                                            form-text
-                                            text-muted
-                                        ">
-                                        Format yang diperbolehkan:
-                                        PDF, JPG, JPEG, PNG, DOC, DOCX.
-                                        <br>
-                                        Ukuran maksimal:
-                                        <strong>
-                                            2 MB
-                                        </strong>.
-                                    </small>
-                                </div>
-                                <!-- =================================================
-                                     BUTTON
-                                ================================================== -->
-                                <div
-                                    class="
-                                        d-flex
-                                        justify-content-between
-                                        flex-wrap
-                                        mt-4
-                                    ">
-                                    <!-- KEMBALI -->
-                                    <a
-                                        href="<?= base_url(
-                                                    'dashboard-orangtua'
-                                                ) ?>"
-                                        class="
-                                            btn
-                                            btn-secondary
-                                        ">
-
-                                        <i
-                                            class="
-                                                fas
-                                                fa-arrow-left
-                                                mr-1
-                                            "></i>
-
-                                        Kembali
-                                    </a>
-                                    <div>
-                                        <!-- SIMPAN DRAFT -->
-
-                                        <button
-                                            type="submit"
-                                            name="action"
-                                            value="draft"
-                                            class="btn"
-                                            style="
-                                                background:#f28c28;
-                                                color:white;
-                                                font-weight:600;
-                                            ">
-
-                                            <i
-                                                class="
-                                                    fas
-                                                    fa-save
-                                                    mr-1
-                                                "></i>
-
-                                            Simpan Draft
-                                        </button>
-                                        <!-- KIRIM PENGAJUAN -->
-                                        <button
-                                            type="submit"
-                                            name="action"
-                                            value="submit"
-                                            class="
-                                                btn
-                                                btn-success
-                                            ">
-
-                                            <i
-                                                class="
-                                                    fas
-                                                    fa-paper-plane
-                                                    mr-1
-                                                "></i>
-
-                                            Kirim Pengajuan
-
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
                     </div>
+
                 </div>
+
             </div>
+
         </div>
-    </section>
+
+    </form>
+
 </div>
-<!-- =====================================================
-     DYNAMIC JENIS LAYANAN
-====================================================== -->
+
+
+<?= $this->include('layouts/footer') ?>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================== -->
+
 <script>
-    const layanan = {
-        "Akademik": [
-            "Surat Aktif Kuliah",
-            "Surat Keterangan Mahasiswa",
-            "Legalisir Ijazah",
-            "Legalisir Transkrip Nilai",
-            "Surat Keterangan Lulus",
-            "Surat Keterangan Cuti Akademik",
-            "Surat Keterangan Pengunduran Diri",
-            "Perubahan Data Akademik",
-            "Informasi KRS/KHS",
-            "Informasi Jadwal Kuliah",
-            "Informasi Nilai"
-        ],
 
-        "Kemahasiswaan": [
-            "Surat Beasiswa",
-            "Pengajuan Beasiswa",
-            "Surat Keterangan Tidak Menerima Beasiswa",
-            "Surat Keterangan Organisasi Mahasiswa",
-            "Surat Keterangan Kegiatan Kemahasiswaan",
-            "Pengajuan Kegiatan Mahasiswa",
-            "Informasi UKM",
-            "Informasi Organisasi Kemahasiswaan",
-            "Konsultasi Kemahasiswaan"
-        ],
+document.addEventListener('DOMContentLoaded', function () {
 
-        "Keuangan": [
-            "Informasi UKT/SPP",
-            "Informasi Pembayaran Kuliah",
-            "Konfirmasi Pembayaran",
-            "Permohonan Pengembalian Dana",
-            "Informasi Tagihan",
-            "Permohonan Keringanan Biaya Pendidikan",
-            "Informasi Administrasi Keuangan"
-        ]
-    };
+    // =====================================================
+    // ELEMENT
+    // =====================================================
 
-    const unit = document.getElementById('unit_layanan');
-    const jenis = document.getElementById('layanan');
+    const unitSelect =
+        document.getElementById('unitLayanan');
 
-unit.addEventListener('change', function () {
+    const jenisSelect =
+        document.getElementById('jenisLayanan');
 
-    jenis.innerHTML = '<option value="">-- Pilih Jenis Layanan --</option>';
+    const persyaratanContainer =
+        document.getElementById('persyaratanContainer');
 
-    if(this.value == ''){
-        jenis.disabled = true;
-        return;
-    }
+    const listPersyaratan =
+        document.getElementById('listPersyaratan');
 
-    jenis.disabled = false;
+    const dokumenWrapper =
+        document.getElementById('dokumenWrapper');
 
-    let data = layanan[this.value];
 
-    if(data){
+    // =====================================================
+    // UNIT LAYANAN
+    // =====================================================
 
-        data.forEach(function(item){
+    unitSelect.addEventListener('change', function () {
 
-            let option = document.createElement("option");
+        const unitId = this.value;
 
-            option.value = item;
 
-            option.textContent = item;
+        // =================================================
+        // RESET JENIS LAYANAN
+        // =================================================
 
-            jenis.appendChild(option);
+        jenisSelect.innerHTML = `
+            <option value="">
+                -- Memuat Jenis Layanan... --
+            </option>
+        `;
+
+        jenisSelect.disabled = true;
+
+
+        // =================================================
+        // RESET PERSYARATAN
+        // =================================================
+
+        listPersyaratan.innerHTML = '';
+
+        persyaratanContainer.style.display = 'none';
+
+
+        // =================================================
+        // RESET DOKUMEN
+        // =================================================
+
+        dokumenWrapper.innerHTML = `
+            <div class="alert alert-info mb-0">
+
+                <i class="fas fa-info-circle mr-2"></i>
+
+                Pilih jenis layanan terlebih dahulu untuk
+                mengunggah dokumen persyaratan.
+
+            </div>
+        `;
+
+
+        // =================================================
+        // JIKA UNIT KOSONG
+        // =================================================
+
+        if (!unitId) {
+
+            jenisSelect.innerHTML = `
+                <option value="">
+                    -- Pilih Unit Layanan Terlebih Dahulu --
+                </option>
+            `;
+
+            return;
+        }
+
+
+        // =================================================
+        // AMBIL JENIS LAYANAN
+        // =================================================
+
+        fetch(
+            '<?= base_url('orangtua/ticket/jenis-layanan') ?>?unit_id='
+            + encodeURIComponent(unitId)
+        )
+
+        .then(function (response) {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    'Gagal mengambil jenis layanan.'
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+        .then(function (result) {
+
+            jenisSelect.innerHTML = `
+                <option value="">
+                    -- Pilih Jenis Layanan --
+                </option>
+            `;
+
+
+            if (
+                !result.success ||
+                !result.data ||
+                result.data.length === 0
+            ) {
+
+                jenisSelect.innerHTML = `
+                    <option value="">
+                        -- Tidak Ada Jenis Layanan --
+                    </option>
+                `;
+
+                return;
+
+            }
+
+
+            result.data.forEach(function (layanan) {
+
+                const option =
+                    document.createElement('option');
+
+                option.value =
+                    layanan.id;
+
+                option.textContent =
+                    layanan.name;
+
+                jenisSelect.appendChild(option);
+
+            });
+
+
+            jenisSelect.disabled = false;
+
+        })
+
+        .catch(function (error) {
+
+            console.error(error);
+
+            jenisSelect.innerHTML = `
+                <option value="">
+                    -- Gagal Mengambil Data --
+                </option>
+            `;
 
         });
+
+    });
+
+
+    // =====================================================
+    // JENIS LAYANAN
+    // =====================================================
+
+    jenisSelect.addEventListener('change', function () {
+
+        const serviceId = this.value;
+
+
+        // =================================================
+        // RESET
+        // =================================================
+
+        listPersyaratan.innerHTML = '';
+
+        persyaratanContainer.style.display = 'none';
+
+
+        dokumenWrapper.innerHTML = `
+            <div class="alert alert-info mb-0">
+
+                <i class="fas fa-info-circle mr-2"></i>
+
+                Pilih jenis layanan untuk melihat dokumen
+                persyaratan.
+
+            </div>
+        `;
+
+
+        if (!serviceId) {
+
+            return;
+
+        }
+
+
+        // =================================================
+        // LOADING
+        // =================================================
+
+        persyaratanContainer.style.display = 'block';
+
+        listPersyaratan.innerHTML = `
+            <li class="text-muted">
+
+                <i class="fas fa-spinner fa-spin mr-2"></i>
+
+                Memuat persyaratan...
+
+            </li>
+        `;
+
+
+        // =================================================
+        // AMBIL PERSYARATAN
+        // =================================================
+
+        fetch(
+            '<?= base_url('orangtua/ticket/persyaratan') ?>?service_id='
+            + encodeURIComponent(serviceId)
+        )
+
+        .then(function (response) {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    'Gagal mengambil persyaratan.'
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+        .then(function (result) {
+
+            if (
+                !result.success ||
+                !result.data ||
+                result.data.length === 0
+            ) {
+
+                listPersyaratan.innerHTML = `
+                    <li class="text-muted">
+
+                        Tidak ada persyaratan khusus
+                        untuk layanan ini.
+
+                    </li>
+                `;
+
+
+                dokumenWrapper.innerHTML = `
+                    <div class="alert alert-warning mb-0">
+
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+
+                        Tidak ada dokumen persyaratan
+                        untuk layanan ini.
+
+                    </div>
+                `;
+
+                return;
+
+            }
+
+
+            // =================================================
+            // TAMPILKAN PERSYARATAN
+            // =================================================
+
+            result.data.forEach(function (persyaratan) {
+
+                const li =
+                    document.createElement('li');
+
+                li.className =
+                    'mb-3';
+
+
+                let html = `
+
+                    <i class="
+                        fas
+                        fa-check-circle
+                        text-success
+                        mr-2
+                    "></i>
+
+                    <strong>
+                        ${escapeHtml(persyaratan.name)}
+                    </strong>
+
+                `;
+
+
+                // =================================================
+                // WAJIB / OPSIONAL
+                // =================================================
+
+                if (
+                    persyaratan.is_required == 1
+                ) {
+
+                    html += `
+                        <span class="
+                            badge
+                            badge-danger
+                            ml-2
+                        ">
+                            Wajib
+                        </span>
+                    `;
+
+                } else {
+
+                    html += `
+                        <span class="
+                            badge
+                            badge-secondary
+                            ml-2
+                        ">
+                            Opsional
+                        </span>
+                    `;
+
+                }
+
+
+                // =================================================
+                // DESKRIPSI
+                // =================================================
+
+                if (persyaratan.description) {
+
+                    html += `
+                        <div class="
+                            text-muted
+                            small
+                            ml-4
+                            mt-1
+                        ">
+
+                            ${escapeHtml(
+                                persyaratan.description
+                            )}
+
+                        </div>
+                    `;
+
+                }
+
+
+                li.innerHTML =
+                    html;
+
+                listPersyaratan.appendChild(
+                    li
+                );
+
+            });
+
+
+            // =================================================
+            // TAMPILKAN UPLOAD DOKUMEN
+            // =================================================
+
+            dokumenWrapper.innerHTML = '';
+
+
+            result.data.forEach(function (persyaratan) {
+
+                const item =
+                    document.createElement('div');
+
+                item.className =
+                    'border rounded p-3 mb-3';
+
+
+                let requiredAttribute =
+                    '';
+
+
+                if (
+                    persyaratan.is_required == 1
+                ) {
+
+                    requiredAttribute =
+                        'required';
+
+                }
+
+
+                item.innerHTML = `
+
+                    <div class="mb-2">
+
+                        <strong>
+
+                            ${escapeHtml(
+                                persyaratan.name
+                            )}
+
+                        </strong>
+
+                        ${
+                            persyaratan.is_required == 1
+                            ? `
+                                <span class="
+                                    badge
+                                    badge-danger
+                                    ml-2
+                                ">
+                                    Wajib
+                                </span>
+                              `
+                            : `
+                                <span class="
+                                    badge
+                                    badge-secondary
+                                    ml-2
+                                ">
+                                    Opsional
+                                </span>
+                              `
+                        }
+
+                    </div>
+
+
+                    ${
+                        persyaratan.description
+                        ? `
+                            <div class="
+                                text-muted
+                                small
+                                mb-2
+                            ">
+
+                                ${escapeHtml(
+                                    persyaratan.description
+                                )}
+
+                            </div>
+                          `
+                        : ''
+                    }
+
+
+                    <input
+                        type="file"
+                        name="dokumen[${persyaratan.id}]"
+                        class="
+                            form-control
+                            dokumen-persyaratan
+                        "
+                        accept="${getAcceptExtensions(
+                            persyaratan.allowed_extensions
+                        )}"
+                        ${requiredAttribute}>
+
+
+                    <small class="text-muted">
+
+                        <i class="fas fa-upload mr-1"></i>
+
+                        Upload:
+                        ${escapeHtml(
+                            persyaratan.name
+                        )}
+
+                    </small>
+
+                `;
+
+
+                dokumenWrapper.appendChild(
+                    item
+                );
+
+            });
+
+        })
+
+        .catch(function (error) {
+
+            console.error(error);
+
+
+            listPersyaratan.innerHTML = `
+                <li class="text-danger">
+
+                    <i class="
+                        fas
+                        fa-times-circle
+                        mr-2
+                    "></i>
+
+                    Gagal mengambil data persyaratan.
+
+                </li>
+            `;
+
+
+            dokumenWrapper.innerHTML = `
+                <div class="alert alert-danger mb-0">
+
+                    <i class="
+                        fas
+                        fa-times-circle
+                        mr-2
+                    "></i>
+
+                    Gagal mengambil dokumen persyaratan.
+
+                </div>
+            `;
+
+        });
+
+    });
+
+
+    // =====================================================
+    // ESCAPE HTML
+    // =====================================================
+
+    function escapeHtml(text) {
+
+        if (
+            text === null ||
+            text === undefined
+        ) {
+
+            return '';
+
+        }
+
+
+        return String(text)
+
+            .replace(/&/g, '&amp;')
+
+            .replace(/</g, '&lt;')
+
+            .replace(/>/g, '&gt;')
+
+            .replace(/"/g, '&quot;')
+
+            .replace(/'/g, '&#039;');
+
+    }
+
+
+    // =====================================================
+    // FORMAT EXTENSION FILE
+    // =====================================================
+
+    function getAcceptExtensions(extensions) {
+
+        if (!extensions) {
+
+            return '.pdf,.jpg,.jpeg,.png,.doc,.docx';
+
+        }
+
+
+        // =================================================
+        // JIKA ARRAY
+        // =================================================
+
+        if (Array.isArray(extensions)) {
+
+            return extensions
+
+                .map(function (ext) {
+
+                    ext =
+                        String(ext).trim();
+
+                    if (
+                        !ext.startsWith('.')
+                    ) {
+
+                        ext =
+                            '.' + ext;
+
+                    }
+
+                    return ext;
+
+                })
+
+                .join(',');
+
+        }
+
+
+        // =================================================
+        // JIKA JSON
+        // =================================================
+
+        try {
+
+            const parsed =
+                JSON.parse(extensions);
+
+
+            if (
+                Array.isArray(parsed)
+            ) {
+
+                return parsed
+
+                    .map(function (ext) {
+
+                        ext =
+                            String(ext).trim();
+
+                        if (
+                            !ext.startsWith('.')
+                        ) {
+
+                            ext =
+                                '.' + ext;
+
+                        }
+
+                        return ext;
+
+                    })
+
+                    .join(',');
+
+            }
+
+        } catch (error) {
+
+            // Bukan JSON
+
+        }
+
+
+        // =================================================
+        // JIKA STRING
+        // pdf,jpg,jpeg
+        // =================================================
+
+        return String(extensions)
+
+            .split(',')
+
+            .map(function (ext) {
+
+                ext =
+                    ext.trim();
+
+                if (
+                    !ext.startsWith('.')
+                ) {
+
+                    ext =
+                        '.' + ext;
+
+                }
+
+                return ext;
+
+            })
+
+            .join(',');
 
     }
 
 });
-</script>
 
-<?= $this->include('layouts/footer') ?>
+</script>

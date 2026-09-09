@@ -2,7 +2,9 @@
 <?= $this->include('layouts/navbar'); ?>
 <?= $this->include('layouts/sidebar_orangtua'); ?>
 
+
 <div class="content-wrapper">
+
 
     <!-- =========================================
          HEADER DASHBOARD
@@ -20,11 +22,12 @@
 
                         <i class="fas fa-home me-2"></i>
 
-                        Dashboard Orang Tua
+                        Dashboard Orangtua
 
                     </h1>
 
                 </div>
+
 
                 <div class="col-sm-6 text-sm-end mt-2 mt-sm-0">
 
@@ -57,6 +60,7 @@
 
         <div class="container-fluid">
 
+
             <!-- =========================================
                  WELCOME CARD
             ========================================== -->
@@ -67,7 +71,8 @@
 
                     <div class="row align-items-center">
 
-                        <!-- DATA ORANG TUA -->
+
+                        <!-- DATA ORANGTUA -->
 
                         <div class="col-md-8">
 
@@ -75,11 +80,15 @@
 
                                 Selamat Datang,
 
-                                <strong>Bapak Ahmad Wijaya</strong>
+                                <?= esc(
+                                    $user['nama']
+                                    ?? 'Orangtua'
+                                ); ?>
 
-                                👋
+                                ! 👋
 
                             </h3>
+
 
                             <p class="welcome-text mb-3">
 
@@ -88,45 +97,60 @@
 
                             </p>
 
+
                             <div class="student-info">
+
+
+                                <!-- NIK -->
 
                                 <div>
 
                                     <i class="fas fa-id-card"></i>
 
-                                    <strong>NIK :</strong>
+                                    <strong>
+                                        NIK:
+                                    </strong>
 
-                                    3273010101010001
-
-                                </div>
-
-                                <div>
-
-                                    <i class="fas fa-user"></i>
-
-                                    <strong>Nama Mahasiswa :</strong>
-
-                                    Muhammad Rafi Putra Zakaria
+                                    <?= esc(
+                                        $user['nik']
+                                        ?? '-'
+                                    ); ?>
 
                                 </div>
 
+
+                                <!-- EMAIL -->
+
                                 <div>
 
-                                    <i class="fas fa-graduation-cap"></i>
+                                    <i class="fas fa-envelope"></i>
 
-                                    <strong>NIM :</strong>
+                                    <strong>
+                                        Email:
+                                    </strong>
 
-                                    241511001
+                                    <?= esc(
+                                        $user['email']
+                                        ?? '-'
+                                    ); ?>
 
                                 </div>
 
+
+                                <!-- TELEPON -->
+
                                 <div>
 
-                                    <i class="fas fa-building"></i>
+                                    <i class="fas fa-phone"></i>
 
-                                    <strong>Program Studi :</strong>
+                                    <strong>
+                                        Telepon:
+                                    </strong>
 
-                                    D4 Teknik Informatika
+                                    <?= esc(
+                                        $user['phone']
+                                        ?? '-'
+                                    ); ?>
 
                                 </div>
 
@@ -138,13 +162,21 @@
 
                         <!-- AVATAR -->
 
-                        <div class="col-md-4 text-center mt-3 mt-md-0">
+                        <div
+                            class="
+                                col-md-4
+                                text-center
+                                mt-3
+                                mt-md-0
+                            "
+                        >
 
                             <div class="student-avatar">
 
-                                <i class="fas fa-users"></i>
+                                <i class="fas fa-user-friends"></i>
 
                             </div>
+
 
                             <div class="mt-2">
 
@@ -152,7 +184,10 @@
 
                                     <i class="fas fa-circle"></i>
 
-                                    Orang Tua Aktif
+                                    <?= esc(
+                                        $user['status']
+                                        ?? 'Aktif'
+                                    ); ?>
 
                                 </span>
 
@@ -160,13 +195,16 @@
 
                         </div>
 
+
                     </div>
 
                 </div>
 
             </div>
 
-                        <!-- =========================================
+
+
+            <!-- =========================================
                  STATISTIK PENGAJUAN
             ========================================== -->
 
@@ -181,7 +219,14 @@
 
                         <div class="stat-content">
 
-                            <h2>0</h2>
+                            <h2>
+
+                                <?= esc(
+                                    $statistik['total']
+                                    ?? 0
+                                ); ?>
+
+                            </h2>
 
                             <p>
 
@@ -190,6 +235,7 @@
                             </p>
 
                         </div>
+
 
                         <div class="stat-icon">
 
@@ -211,7 +257,14 @@
 
                         <div class="stat-content">
 
-                            <h2>0</h2>
+                            <h2>
+
+                                <?= esc(
+                                    $statistik['diproses']
+                                    ?? 0
+                                ); ?>
+
+                            </h2>
 
                             <p>
 
@@ -220,6 +273,7 @@
                             </p>
 
                         </div>
+
 
                         <div class="stat-icon">
 
@@ -241,7 +295,14 @@
 
                         <div class="stat-content">
 
-                            <h2>0</h2>
+                            <h2>
+
+                                <?= esc(
+                                    $statistik['revisi']
+                                    ?? 0
+                                ); ?>
+
+                            </h2>
 
                             <p>
 
@@ -250,6 +311,7 @@
                             </p>
 
                         </div>
+
 
                         <div class="stat-icon">
 
@@ -271,7 +333,14 @@
 
                         <div class="stat-content">
 
-                            <h2>0</h2>
+                            <h2>
+
+                                <?= esc(
+                                    $statistik['selesai']
+                                    ?? 0
+                                ); ?>
+
+                            </h2>
 
                             <p>
 
@@ -280,6 +349,7 @@
                             </p>
 
                         </div>
+
 
                         <div class="stat-icon">
 
@@ -290,6 +360,7 @@
                     </div>
 
                 </div>
+
 
             </div>
 
@@ -302,12 +373,14 @@
             <div class="row mb-4">
 
 
-                <!-- AJUKAN -->
+                <!-- AJUKAN LAYANAN -->
 
                 <div class="col-lg-4 col-md-4 mb-2">
 
                     <a
-                        href="<?= base_url('orangtua/ticket/create') ?>"
+                        href="<?= base_url(
+                            'orangtua/ticket/create'
+                        ) ?>"
                         class="quick-action action-orange"
                     >
 
@@ -330,7 +403,9 @@
                 <div class="col-lg-4 col-md-4 mb-2">
 
                     <a
-                        href="<?= base_url('orangtua/ticket/history') ?>"
+                        href="<?= base_url(
+                            'orangtua/ticket/history'
+                        ) ?>"
                         class="quick-action action-blue"
                     >
 
@@ -353,7 +428,9 @@
                 <div class="col-lg-4 col-md-4 mb-2">
 
                     <a
-                        href="<?= base_url('orangtua/notification') ?>"
+                        href="<?= base_url(
+                            'orangtua/notification'
+                        ) ?>"
                         class="quick-action action-blue"
                     >
 
@@ -369,141 +446,411 @@
 
                 </div>
 
+
             </div>
 
-                        <!-- =========================================
+
+
+            <!-- =========================================
                  RIWAYAT PENGAJUAN
             ========================================== -->
 
-            <div class="card shadow-sm">
+            <div class="card dashboard-card shadow-sm">
 
-                <div
-                    class="card-header d-flex justify-content-between align-items-center"
-                    style="
-                        background:#0b3d91;
-                        color:white;
-                        border-bottom:4px solid #f28c28;
-                    "
-                >
 
-                    <h3 class="card-title mb-0">
+                <!-- HEADER -->
+
+                <div class="card-header dashboard-card-header">
+
+                    <h3 class="card-title">
 
                         <i class="fas fa-history me-2"></i>
 
-                        Riwayat Pengajuan
+                        Riwayat Pengajuan Layanan
 
                     </h3>
 
+
+                    <a
+                        href="<?= base_url(
+                            'orangtua/ticket/history'
+                        ) ?>"
+                        class="
+                            btn
+                            btn-sm
+                            btn-ult-orange
+                            float-end
+                        "
+                    >
+
+                        Lihat Semua
+
+                    </a>
+
                 </div>
 
-                <div class="card-body p-0">
 
-                    <div class="table-responsive">
 
-                        <table class="table table-hover table-striped mb-0">
+                <!-- TABLE -->
 
-                            <thead
-                                style="
-                                    background:#f8f9fa;
-                                "
-                            >
+                <div class="card-body table-responsive p-0">
+
+
+                    <table
+                        class="
+                            table
+                            table-hover
+                            align-middle
+                            mb-0
+                        "
+                    >
+
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    No
+                                </th>
+
+                                <th>
+                                    Nomor Tiket
+                                </th>
+
+                                <th>
+                                    Layanan
+                                </th>
+
+                                <th>
+                                    Unit Layanan
+                                </th>
+
+                                <th>
+                                    Tanggal
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Aksi
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+
+                        <tbody>
+
+
+                        <?php if (
+                            !empty(
+                                $riwayat
+                                ?? []
+                            )
+                        ): ?>
+
+
+                            <?php
+
+                            $no = 1;
+
+                            foreach (
+                                $riwayat
+                                as $t
+                            ):
+
+                            ?>
+
 
                                 <tr>
 
-                                    <th width="8%">
-                                        No
-                                    </th>
 
-                                    <th>
-                                        Nomor Tiket
-                                    </th>
+                                    <!-- NO -->
 
-                                    <th>
-                                        Layanan
-                                    </th>
+                                    <td>
 
-                                    <th>
-                                        Unit
-                                    </th>
+                                        <?= $no++; ?>
 
-                                    <th>
-                                        Tanggal
-                                    </th>
+                                    </td>
 
-                                    <th>
-                                        Status
-                                    </th>
 
-                                    <th width="10%">
-                                        Aksi
-                                    </th>
 
-                                </tr>
+                                    <!-- NOMOR TIKET -->
 
-                            </thead>
+                                    <td>
 
-                            <tbody>
+                                        <strong>
 
-                                <tr>
+                                            <?= esc(
+                                                $t['nomor']
+                                                ?? '-'
+                                            ); ?>
 
-                                    <td colspan="7" class="text-center py-5">
+                                        </strong>
 
-                                        <i
-                                            class="fas fa-inbox"
-                                            style="
-                                                font-size:50px;
-                                                color:#ced4da;
-                                            "
-                                        ></i>
+                                    </td>
 
-                                        <h5
-                                            class="mt-3"
-                                            style="
-                                                color:#6c757d;
+
+
+                                    <!-- LAYANAN -->
+
+                                    <td>
+
+                                        <?= esc(
+                                            $t['layanan']
+                                            ?? '-'
+                                        ); ?>
+
+                                    </td>
+
+
+
+                                    <!-- UNIT -->
+
+                                    <td>
+
+                                        <?= esc(
+                                            $t['unit_layanan']
+                                            ?? $t['unit']
+                                            ?? '-'
+                                        ); ?>
+
+                                    </td>
+
+
+
+                                    <!-- TANGGAL -->
+
+                                    <td>
+
+                                        <?php
+
+                                        if (
+                                            !empty(
+                                                $t['created_at']
+                                            )
+                                        ) {
+
+                                            echo esc(
+                                                date(
+                                                    'd-m-Y',
+                                                    strtotime(
+                                                        $t['created_at']
+                                                    )
+                                                )
+                                            );
+
+                                        } elseif (
+                                            !empty(
+                                                $t['tanggal']
+                                            )
+                                        ) {
+
+                                            echo esc(
+                                                $t['tanggal']
+                                            );
+
+                                        } else {
+
+                                            echo '-';
+
+                                        }
+
+                                        ?>
+
+                                    </td>
+
+
+
+                                    <!-- STATUS -->
+
+                                    <td>
+
+                                        <?php
+
+                                        $statusClass =
+                                            $t['status_class']
+                                            ?? 'status-submitted';
+
+                                        $statusLabel =
+                                            $t['status_label']
+                                            ?? 'Diajukan';
+
+                                        ?>
+
+                                        <span
+                                            class="
+                                                ticket-status
+                                                <?= esc(
+                                                    $statusClass
+                                                ); ?>
                                             "
                                         >
 
-                                            Belum Ada Riwayat Pengajuan
+                                            <?php if (
+                                                $statusClass ===
+                                                'status-completed'
+                                            ): ?>
 
-                                        </h5>
+                                                <i
+                                                    class="
+                                                        fas
+                                                        fa-check
+                                                    "
+                                                ></i>
 
-                                        <p
-                                            class="text-muted mb-4"
-                                        >
+                                            <?php elseif (
+                                                $statusClass ===
+                                                'status-processing'
+                                            ): ?>
 
-                                            Silakan ajukan layanan terlebih dahulu.
+                                                <i
+                                                    class="
+                                                        fas
+                                                        fa-spinner
+                                                    "
+                                                ></i>
 
-                                        </p>
+                                            <?php elseif (
+                                                $statusClass ===
+                                                'status-revision'
+                                            ): ?>
+
+                                                <i
+                                                    class="
+                                                        fas
+                                                        fa-edit
+                                                    "
+                                                ></i>
+
+                                            <?php else: ?>
+
+                                                <i
+                                                    class="
+                                                        fas
+                                                        fa-info-circle
+                                                    "
+                                                ></i>
+
+                                            <?php endif; ?>
+
+
+                                            <?= esc(
+                                                $statusLabel
+                                            ); ?>
+
+                                        </span>
+
+                                    </td>
+
+
+
+                                    <!-- AKSI -->
+
+                                    <td>
 
                                         <a
-                                            href="<?= base_url('orangtua/ticket/create') ?>"
-                                            class="btn btn-warning"
+                                            href="<?= base_url(
+                                                'orangtua/ticket/detail/' .
+                                                (
+                                                    $t['id']
+                                                    ?? ''
+                                                )
+                                            ) ?>"
+                                            class="btn btn-detail"
                                         >
 
-                                            <i class="fas fa-plus-circle"></i>
+                                            <i
+                                                class="
+                                                    fas
+                                                    fa-eye
+                                                "
+                                            ></i>
 
-                                            Ajukan Layanan
+                                            Detail
 
                                         </a>
 
                                     </td>
 
+
                                 </tr>
 
-                            </tbody>
 
-                        </table>
+                            <?php endforeach; ?>
 
-                    </div>
+
+                        <?php else: ?>
+
+
+                            <!-- BELUM ADA RIWAYAT -->
+
+                            <tr>
+
+                                <td
+                                    colspan="7"
+                                    class="
+                                        text-center
+                                        py-5
+                                        text-muted
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fas
+                                            fa-history
+                                            fa-3x
+                                            mb-3
+                                        "
+                                    ></i>
+
+
+                                    <div>
+
+                                        <strong>
+
+                                            Belum Ada Riwayat Pengajuan
+
+                                        </strong>
+
+                                    </div>
+
+
+                                    <small>
+
+                                        Pengajuan layanan Orangtua
+                                        akan muncul di sini.
+
+                                    </small>
+
+                                </td>
+
+                            </tr>
+
+
+                        <?php endif; ?>
+
+
+                        </tbody>
+
+                    </table>
 
                 </div>
 
             </div>
+
 
         </div>
 
     </section>
 
 </div>
+
 
 <?= $this->include('layouts/footer'); ?>

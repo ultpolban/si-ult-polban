@@ -1,13 +1,13 @@
 <?= $this->include('layouts/header') ?>
-
 <?= $this->include('layouts/navbar') ?>
-
 <?= $this->include('layouts/sidebar_tendik') ?>
-
 
 <div class="content-wrapper">
 
-    <!-- HEADER -->
+    <!-- =========================
+         HEADER
+    ========================== -->
+
     <section class="content-header">
 
         <div class="container-fluid">
@@ -18,7 +18,7 @@
 
                     <h1
                         class="font-weight-bold"
-                        style="color:#0d47a1;"
+                        style="color:#0b3d91;"
                     >
 
                         <i class="fas fa-file-alt mr-2"></i>
@@ -36,11 +36,9 @@
 
                         <li class="breadcrumb-item">
 
-                            <a
-                                href="<?= base_url('dashboard-tendik') ?>"
-                            >
+                            <a href="<?= base_url('dashboard-tendik') ?>">
 
-                                Dashboard
+                                Dashboard Tendik
 
                             </a>
 
@@ -63,13 +61,19 @@
     </section>
 
 
-    <!-- CONTENT -->
+    <!-- =========================
+         CONTENT
+    ========================== -->
+
     <section class="content">
 
         <div class="container-fluid">
 
 
-            <!-- SUCCESS -->
+            <!-- =========================
+                 SUCCESS
+            ========================== -->
+
             <?php if (session()->getFlashdata('success')) : ?>
 
                 <div
@@ -97,7 +101,10 @@
             <?php endif; ?>
 
 
-            <!-- ERROR -->
+            <!-- =========================
+                 ERROR
+            ========================== -->
+
             <?php if (session()->getFlashdata('error')) : ?>
 
                 <div
@@ -125,16 +132,20 @@
             <?php endif; ?>
 
 
-            <!-- CARD -->
+            <!-- =========================
+                 CARD
+            ========================== -->
+
             <div class="card shadow-sm border-0">
 
 
-                <!-- HEADER CARD -->
+                <!-- CARD HEADER -->
+
                 <div
                     class="card-header text-white"
                     style="
-                        background-color:#0d47a1;
-                        border-bottom:4px solid #f7941d;
+                        background:#0b3d91;
+                        border-bottom:4px solid #f28c28;
                     "
                 >
 
@@ -149,7 +160,8 @@
                 </div>
 
 
-                <!-- BODY -->
+                <!-- CARD BODY -->
+
                 <div class="card-body">
 
 
@@ -164,26 +176,44 @@
 
                                 <thead
                                     style="
-                                        background-color:#e8f1fb;
+                                        background:#e8f1fb;
                                         color:#17365d;
                                     "
                                 >
 
                                     <tr>
 
-                                        <th>No</th>
+                                        <th style="width:5%;">
+                                            No
+                                        </th>
 
-                                        <th>Unit Tujuan</th>
+                                        <th>
+                                            Unit Layanan
+                                        </th>
 
-                                        <th>Jenis Layanan</th>
+                                        <th>
+                                            Jenis Layanan
+                                        </th>
 
-                                        <th>Judul</th>
+                                        <th>
+                                            Keterangan
+                                        </th>
 
-                                        <th>Status</th>
+                                        <th>
+                                            Dokumen
+                                        </th>
 
-                                        <th>Tanggal</th>
+                                        <th>
+                                            Status
+                                        </th>
 
-                                        <th>Aksi</th>
+                                        <th>
+                                            Tanggal
+                                        </th>
+
+                                        <th style="width:18%;">
+                                            Aksi
+                                        </th>
 
                                     </tr>
 
@@ -201,6 +231,9 @@
 
                                         <tr>
 
+
+                                            <!-- NO -->
+
                                             <td>
 
                                                 <?= $index + 1 ?>
@@ -208,40 +241,110 @@
                                             </td>
 
 
+                                            <!-- UNIT LAYANAN -->
+
                                             <td>
 
                                                 <?= esc(
-                                                    $draft['unit_tujuan']
+                                                    $draft['unit_name']
                                                     ?? '-'
                                                 ) ?>
 
                                             </td>
 
 
+                                            <!-- JENIS LAYANAN -->
+
                                             <td>
 
                                                 <?= esc(
-                                                    $draft['jenis_layanan']
+                                                    $draft['service_name']
                                                     ?? '-'
                                                 ) ?>
 
                                             </td>
 
 
+                                            <!-- KETERANGAN -->
+
                                             <td>
 
-                                                <?= esc(
-                                                    $draft['judul']
-                                                    ?? '-'
-                                                ) ?>
+                                                <?php
+                                                $description =
+                                                    trim(
+                                                        (string) (
+                                                            $draft['description']
+                                                            ?? ''
+                                                        )
+                                                    );
+                                                ?>
+
+                                                <?php if ($description !== '') : ?>
+
+                                                    <?= esc(
+                                                        $description
+                                                    ) ?>
+
+                                                <?php else : ?>
+
+                                                    <span class="text-muted">
+                                                        -
+                                                    </span>
+
+                                                <?php endif; ?>
 
                                             </td>
 
+
+                                            <!-- DOKUMEN -->
+
+                                            <td>
+
+                                                <?php if (
+                                                    isset(
+                                                        $draft['document_complete']
+                                                    )
+                                                    &&
+                                                    $draft['document_complete']
+                                                ) : ?>
+
+                                                    <span
+                                                        class="badge badge-success px-2 py-1"
+                                                    >
+
+                                                        <i
+                                                            class="fas fa-check mr-1"
+                                                        ></i>
+
+                                                        Lengkap
+
+                                                    </span>
+
+                                                <?php else : ?>
+
+                                                    <span
+                                                        class="badge badge-warning px-2 py-1"
+                                                    >
+
+                                                        <i
+                                                            class="fas fa-exclamation-circle mr-1"
+                                                        ></i>
+
+                                                        Belum Lengkap
+
+                                                    </span>
+
+                                                <?php endif; ?>
+
+                                            </td>
+
+
+                                            <!-- STATUS -->
 
                                             <td>
 
                                                 <span
-                                                    class="badge badge-secondary"
+                                                    class="badge badge-secondary px-3 py-2"
                                                 >
 
                                                     Draft
@@ -251,28 +354,40 @@
                                             </td>
 
 
+                                            <!-- TANGGAL -->
+
                                             <td>
 
-                                                <?= esc(
+                                                <?php
+                                                $createdAt =
                                                     $draft['created_at']
-                                                    ?? '-'
-                                                ) ?>
+                                                    ?? null;
+                                                ?>
+
+                                                <?= $createdAt
+                                                    ? date(
+                                                        'd-m-Y H:i',
+                                                        strtotime($createdAt)
+                                                    )
+                                                    : '-'
+                                                ?>
 
                                             </td>
 
 
-                                            <td>
+                                            <!-- AKSI -->
 
+                                            <td>
 
                                                 <a
                                                     href="<?= base_url(
                                                         'tendik/ticket/draft/edit/' .
-                                                        $index
+                                                        $draft['id']
                                                     ) ?>"
-                                                    class="btn btn-sm text-white"
+                                                    class="btn btn-sm text-white mb-1"
                                                     style="
-                                                        background-color:#f7941d;
-                                                        border-color:#f7941d;
+                                                        background:#f28c28;
+                                                        border-color:#f28c28;
                                                     "
                                                 >
 
@@ -288,9 +403,9 @@
                                                 <a
                                                     href="<?= base_url(
                                                         'tendik/ticket/draft/delete/' .
-                                                        $index
+                                                        $draft['id']
                                                     ) ?>"
-                                                    class="btn btn-sm btn-danger"
+                                                    class="btn btn-sm btn-danger mb-1"
                                                     onclick="
                                                         return confirm(
                                                             'Apakah Anda yakin ingin menghapus draft ini?'
@@ -306,8 +421,8 @@
 
                                                 </a>
 
-
                                             </td>
+
 
                                         </tr>
 
@@ -324,6 +439,10 @@
 
                     <?php else : ?>
 
+
+                        <!-- =========================
+                             EMPTY STATE
+                        ========================== -->
 
                         <div class="text-center py-5">
 
@@ -360,8 +479,8 @@
                                 ) ?>"
                                 class="btn text-white"
                                 style="
-                                    background-color:#f7941d;
-                                    border-color:#f7941d;
+                                    background:#f28c28;
+                                    border-color:#f28c28;
                                 "
                             >
 
@@ -389,6 +508,5 @@
     </section>
 
 </div>
-
 
 <?= $this->include('layouts/footer') ?>

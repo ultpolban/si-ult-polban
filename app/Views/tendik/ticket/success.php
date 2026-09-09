@@ -1,23 +1,21 @@
 <?= $this->include('layouts/header') ?>
 <?= $this->include('layouts/navbar') ?>
-<?= $this->include('layouts/sidebar_orangtua') ?>
+<?= $this->include('layouts/sidebar_tendik') ?>
 
 <?php
+
     // =====================================================
     // DATA TIKET
     // =====================================================
 
-    $ticketNumber = $ticket['ticket_number']
-        ?? session()->get('last_ticket')
-        ?? '-';
+    $ticketNumber = $ticket['ticket_number'] ?? '-';
 
-    $serviceName = $ticket['service_name']
-        ?? '-';
+    $serviceName = $ticket['service_name'] ?? '-';
 
-    $status = $ticket['status']
-        ?? 'submitted';
+    $status = $ticket['status'] ?? 'submitted';
 
-    $createdAt = $ticket['created_at']
+    $createdAt =
+        $ticket['created_at']
         ?? $ticket['submitted_at']
         ?? null;
 
@@ -35,7 +33,10 @@
         if ($timestamp) {
 
             $formattedDate =
-                date('d F Y, H:i', $timestamp);
+                date(
+                    'd F Y, H:i',
+                    $timestamp
+                );
 
         }
 
@@ -46,32 +47,48 @@
     // STATUS TAMPILAN
     // =====================================================
 
-    $statusLabel = 'Menunggu Verifikasi';
-    $statusClass = 'status-warning';
+    $statusLabel =
+        'Menunggu Verifikasi';
+
+    $statusClass =
+        'status-warning';
+
 
     if ($status === 'submitted') {
 
-        $statusLabel = 'Menunggu Verifikasi';
-        $statusClass = 'status-warning';
+        $statusLabel =
+            'Menunggu Verifikasi';
+
+        $statusClass =
+            'status-warning';
 
     } elseif ($status === 'verified') {
 
-        $statusLabel = 'Terverifikasi';
-        $statusClass = 'status-info';
+        $statusLabel =
+            'Terverifikasi';
+
+        $statusClass =
+            'status-info';
 
     } elseif ($status === 'processing') {
 
-        $statusLabel = 'Sedang Diproses';
-        $statusClass = 'status-info';
+        $statusLabel =
+            'Sedang Diproses';
+
+        $statusClass =
+            'status-info';
 
     } elseif ($status === 'completed') {
 
-        $statusLabel = 'Selesai';
-        $statusClass = 'status-success';
+        $statusLabel =
+            'Selesai';
+
+        $statusClass =
+            'status-success';
 
     }
-?>
 
+?>
 
 <style>
 
@@ -83,9 +100,11 @@
 
         background: #f4f6f9;
 
-        min-height: calc(100vh - 57px);
+        min-height:
+            calc(100vh - 57px);
 
-        padding: 35px 20px 50px;
+        padding:
+            35px 20px 50px;
 
     }
 
@@ -100,7 +119,7 @@
 
 
     /* ==========================================
-       SUCCESS HEADER
+       SUCCESS CARD
     ========================================== */
 
     .success-card {
@@ -119,13 +138,19 @@
     }
 
 
+    /* ==========================================
+       SUCCESS HEADER
+    ========================================== */
+
     .success-top {
 
         text-align: center;
 
-        padding: 45px 30px 35px;
+        padding:
+            45px 30px 35px;
 
-        border-bottom: 1px solid #eeeeee;
+        border-bottom:
+            1px solid #eeeeee;
 
     }
 
@@ -136,7 +161,8 @@
 
         height: 82px;
 
-        margin: 0 auto 20px;
+        margin:
+            0 auto 20px;
 
         display: flex;
 
@@ -146,7 +172,8 @@
 
         background: #e8f7ee;
 
-        border: 5px solid #c8efd8;
+        border:
+            5px solid #c8efd8;
 
         border-radius: 50%;
 
@@ -187,13 +214,15 @@
 
     .ticket-box {
 
-        margin: 30px auto 0;
+        margin:
+            30px auto 0;
 
         max-width: 500px;
 
         background: #f8faff;
 
-        border: 2px dashed #0b3d91;
+        border:
+            2px dashed #0b3d91;
 
         border-radius: 14px;
 
@@ -305,7 +334,8 @@
 
         padding: 18px;
 
-        border-left: 4px solid #0b3d91;
+        border-left:
+            4px solid #0b3d91;
 
     }
 
@@ -369,7 +399,8 @@
 
         gap: 7px;
 
-        padding: 7px 12px;
+        padding:
+            7px 12px;
 
         border-radius: 20px;
 
@@ -413,7 +444,8 @@
 
     .timeline-section {
 
-        padding: 0 30px 30px;
+        padding:
+            0 30px 30px;
 
     }
 
@@ -504,7 +536,8 @@
 
         color: #ffffff;
 
-        box-shadow: 0 0 0 5px #eaf1ff;
+        box-shadow:
+            0 0 0 5px #eaf1ff;
 
     }
 
@@ -546,9 +579,11 @@
 
     .action-section {
 
-        padding: 25px 30px 35px;
+        padding:
+            25px 30px 35px;
 
-        border-top: 1px solid #eeeeee;
+        border-top:
+            1px solid #eeeeee;
 
         text-align: center;
 
@@ -559,7 +594,8 @@
 
         background: #0b3d91;
 
-        border: 2px solid #0b3d91;
+        border:
+            2px solid #0b3d91;
 
         color: #ffffff;
 
@@ -567,7 +603,8 @@
 
         border-radius: 9px;
 
-        padding: 11px 24px;
+        padding:
+            11px 24px;
 
         min-width: 180px;
 
@@ -589,7 +626,8 @@
 
         background: #ffffff;
 
-        border: 2px solid #0b3d91;
+        border:
+            2px solid #0b3d91;
 
         color: #0b3d91;
 
@@ -597,7 +635,8 @@
 
         border-radius: 9px;
 
-        padding: 11px 24px;
+        padding:
+            11px 24px;
 
         min-width: 180px;
 
@@ -639,14 +678,16 @@
 
         .success-page {
 
-            padding: 20px 12px 35px;
+            padding:
+                20px 12px 35px;
 
         }
 
 
         .success-top {
 
-            padding: 35px 20px 30px;
+            padding:
+                35px 20px 30px;
 
         }
 
@@ -717,7 +758,6 @@
 
                 <div class="success-top">
 
-
                     <div class="success-icon">
 
                         <i class="fas fa-check"></i>
@@ -735,7 +775,8 @@
                     <p class="success-subtitle">
 
                         Pengajuan layanan Anda telah berhasil
-                        dikirim dan tercatat dalam sistem SI-ULT POLBAN.
+                        dikirim dan tercatat dalam sistem
+                        SI-ULT POLBAN.
 
                     </p>
 
@@ -854,10 +895,7 @@
                                 <div class="info-value">
 
                                     <span
-                                        class="
-                                            status-badge
-                                            <?= esc($statusClass) ?>
-                                        ">
+                                        class="status-badge <?= esc($statusClass) ?>">
 
                                         <i class="fas fa-clock"></i>
 
@@ -931,7 +969,6 @@
 
                             <div class="timeline-line"></div>
 
-
                             <div class="timeline-icon">
 
                                 <i class="fas fa-check"></i>
@@ -965,7 +1002,6 @@
 
                             <div class="timeline-line"></div>
 
-
                             <div class="timeline-icon">
 
                                 <i class="fas fa-user-check"></i>
@@ -980,7 +1016,6 @@
                                     Menunggu verifikasi petugas
 
                                 </div>
-
 
                                 <p class="timeline-description">
 
@@ -1013,7 +1048,6 @@
 
                                 </div>
 
-
                                 <p class="timeline-description">
 
                                     Pengajuan akan diproses oleh
@@ -1031,16 +1065,14 @@
 
 
                 <!-- =========================================
-                     ACTION BUTTON
+                     ACTION
                 ========================================== -->
 
                 <div class="action-section">
 
 
                     <a
-                        href="<?= base_url(
-                            'orangtua/ticket/history'
-                        ) ?>"
+                        href="<?= base_url('tendik/ticket/history') ?>"
                         class="btn btn-tracking mr-2">
 
                         <i class="fas fa-ticket-alt mr-2"></i>
@@ -1051,9 +1083,7 @@
 
 
                     <a
-                        href="<?= base_url(
-                            'dashboard-orangtua'
-                        ) ?>"
+                        href="<?= base_url('dashboard-tendik') ?>"
                         class="btn btn-dashboard">
 
                         <i class="fas fa-home mr-2"></i>
@@ -1092,45 +1122,119 @@ function copyTicket() {
             'ticketNumber'
         );
 
+
     const ticketNumber =
         ticketElement.innerText.trim();
 
 
-    navigator.clipboard
-        .writeText(ticketNumber)
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
 
-        .then(function () {
+        navigator.clipboard
+            .writeText(ticketNumber)
+            .then(function () {
 
-            const button =
-                document.querySelector(
-                    '.copy-ticket'
-                );
+                showCopySuccess();
 
-            const original =
-                button.innerHTML;
+            })
+            .catch(function () {
+
+                fallbackCopy(ticketNumber);
+
+            });
+
+    } else {
+
+        fallbackCopy(ticketNumber);
+
+    }
+
+}
 
 
-            button.innerHTML =
-                '<i class="fas fa-check"></i>';
+function showCopySuccess() {
+
+    const button =
+        document.querySelector(
+            '.copy-ticket'
+        );
 
 
-            setTimeout(function () {
+    const original =
+        button.innerHTML;
 
-                button.innerHTML =
-                    original;
 
-            }, 1500);
+    button.innerHTML =
+        '<i class="fas fa-check"></i>';
 
-        })
 
-        .catch(function () {
+    button.style.color =
+        '#198754';
 
-            alert(
-                'Nomor tiket: ' +
-                ticketNumber
-            );
 
-        });
+    setTimeout(function () {
+
+        button.innerHTML =
+            original;
+
+        button.style.color =
+            '';
+
+    }, 1500);
+
+}
+
+
+function fallbackCopy(text) {
+
+    const textarea =
+        document.createElement(
+            'textarea'
+        );
+
+
+    textarea.value = text;
+
+
+    textarea.style.position =
+        'fixed';
+
+    textarea.style.opacity =
+        '0';
+
+
+    document.body.appendChild(
+        textarea
+    );
+
+
+    textarea.focus();
+
+    textarea.select();
+
+
+    try {
+
+        document.execCommand(
+            'copy'
+        );
+
+        showCopySuccess();
+
+    } catch (error) {
+
+        alert(
+            'Nomor tiket: ' + text
+        );
+
+    }
+
+
+    document.body.removeChild(
+        textarea
+    );
 
 }
 

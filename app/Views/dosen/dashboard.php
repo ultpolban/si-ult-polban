@@ -826,8 +826,5 @@
         </div>
 
     </section>
-
 </div>
-
-
 <?= $this->include('layouts/footer'); ?>

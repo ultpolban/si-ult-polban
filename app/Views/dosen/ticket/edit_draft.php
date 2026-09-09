@@ -91,7 +91,6 @@
 
             <?php endif; ?>
 
-
             <div class="card shadow-sm border-0">
 
                 <div
@@ -101,14 +100,12 @@
                         border-bottom:4px solid #f28c28;
                     "
                 >
-
                     <h5 class="mb-0">
                         <i class="fas fa-file-alt mr-2"></i>
                         Lanjutkan Draft Pengajuan
                     </h5>
 
                 </div>
-
 
                 <div class="card-body">
 
@@ -122,16 +119,13 @@
 
                         <?= csrf_field() ?>
 
-
                         <!-- UNIT LAYANAN -->
                         <div class="form-group">
 
                             <label class="font-weight-bold">
 
                                 <i class="fas fa-building mr-1"></i>
-
                                 Unit Layanan
-
                             </label>
 
                             <select
@@ -140,11 +134,9 @@
                                 class="form-control"
                                 required
                             >
-
                                 <option value="">
                                     -- Pilih Unit Layanan --
                                 </option>
-
                                 <?php foreach ($units as $unit): ?>
 
                                     <option
@@ -691,6 +683,5 @@ document.addEventListener(
 );
 
 </script>
-
 
 <?= $this->include('layouts/footer') ?>

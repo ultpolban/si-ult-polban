@@ -4,328 +4,718 @@
 
 <div class="content-wrapper">
 
-<section class="content-header">
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
-    <div class="container-fluid">
+    <section class="content-header">
 
-        <div class="row mb-2">
+        <div class="container-fluid">
 
-            <div class="col-sm-6">
+            <div class="row align-items-center">
 
-                <h1
-                    style="
-                        font-weight:700;
-                        color:#0b3d91;
-                    ">
+                <div class="col-sm-6">
 
-                    <i class="fas fa-bell mr-2"></i>
+                    <h1 class="dashboard-title">
 
-                    Notifikasi
-
-                </h1>
-
-            </div>
-
-            <div class="col-sm-6">
-
-                <ol class="breadcrumb float-sm-right">
-
-                    <li class="breadcrumb-item">
-
-                        <a href="<?= base_url('dashboard-orangtua') ?>">
-
-                            Dashboard
-
-                        </a>
-
-                    </li>
-
-                    <li class="breadcrumb-item active">
+                        <i class="fas fa-bell mr-2"></i>
 
                         Notifikasi
 
-                    </li>
+                    </h1>
 
-                </ol>
+                    <p class="text-muted mb-0">
+
+                        Lihat informasi terbaru mengenai
+                        pengajuan layanan Anda.
+
+                    </p>
+
+                </div>
+
+
+                <div class="col-sm-6 text-sm-right mt-3 mt-sm-0">
+
+                    <a
+                        href="<?= base_url(
+                            'dashboard-orangtua'
+                        ) ?>"
+                        class="
+                            btn
+                            btn-outline-ult-blue
+                        "
+                    >
+
+                        <i class="fas fa-home mr-1"></i>
+
+                        Dashboard
+
+                    </a>
+
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+    </section>
 
-</section>
 
-<section class="content">
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
 
-<div class="container-fluid">
+    <section class="content">
 
-<div class="row">
+        <div class="container-fluid">
 
-<div class="col-lg-12">
 
-<div
-class="card shadow-sm"
-style="
-border-radius:15px;
-">
+            <!-- =================================================
+                 FLASH MESSAGE
+            ================================================== -->
 
-<div
-class="card-header"
-style="
-background:#0b3d91;
-color:white;
-border-bottom:4px solid #f28c28;
-">
+            <?php if (
+                session()->getFlashdata('success')
+            ) : ?>
 
-<div class="d-flex justify-content-between align-items-center">
+                <div
+                    class="
+                        alert
+                        alert-success
+                        alert-dismissible
+                        fade
+                        show
+                    "
+                >
 
-<h3 class="card-title mb-0">
+                    <i
+                        class="
+                            fas
+                            fa-check-circle
+                            mr-2
+                        "
+                    ></i>
 
-<i class="fas fa-bell mr-2"></i>
+                    <?= esc(
+                        session()->getFlashdata('success')
+                    ) ?>
 
-Daftar Notifikasi
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                    >
 
-</h3>
+                        &times;
 
-<span
-class="badge badge-light">
+                    </button>
 
-<?= count($notifications) ?>
+                </div>
 
-Notifikasi
+            <?php endif; ?>
 
-</span>
 
-</div>
+            <?php if (
+                session()->getFlashdata('error')
+            ) : ?>
 
-</div>
+                <div
+                    class="
+                        alert
+                        alert-danger
+                        alert-dismissible
+                        fade
+                        show
+                    "
+                >
 
-<div class="card-body p-0">
+                    <i
+                        class="
+                            fas
+                            fa-exclamation-circle
+                            mr-2
+                        "
+                    ></i>
 
-<?php if(empty($notifications)): ?>
+                    <?= esc(
+                        session()->getFlashdata('error')
+                    ) ?>
 
-<div
-class="text-center py-5">
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                    >
 
-<i
-class="fas fa-bell-slash"
-style="
-font-size:80px;
-color:#adb5bd;
-"></i>
+                        &times;
 
-<h4
-class="mt-3 text-muted">
+                    </button>
 
-Belum ada notifikasi
+                </div>
 
-</h4>
+            <?php endif; ?>
 
-<p class="text-muted">
 
-Semua informasi mengenai tiket
-akan muncul di sini.
+            <!-- =================================================
+                 RINGKASAN
+            ================================================== -->
 
-</p>
+            <div class="row mb-4">
 
-</div>
 
-<?php else: ?>
+                <!-- TOTAL -->
 
-<div class="list-group list-group-flush">
-    <?php foreach($notifications as $notif): ?>
+                <div class="col-md-4">
 
-<div
-class="list-group-item p-4"
-style="
-border-left:6px solid #0b3d91;
-transition:.25s;
-">
+                    <div
+                        class="
+                            notification-summary-card
+                        "
+                    >
 
-<div class="d-flex">
+                        <div
+                            class="
+                                notification-summary-icon
+                                blue
+                            "
+                        >
 
-<div
-class="mr-4 text-center"
-style="
-width:60px;
-">
+                            <i class="fas fa-bell"></i>
 
-<div
-style="
-width:55px;
-height:55px;
-border-radius:50%;
-background:#0b3d91;
-display:flex;
-align-items:center;
-justify-content:center;
-">
+                        </div>
 
-<i
-class="<?= $notif['icon'] ?>"
-style="
-font-size:22px;
-color:white;
-"></i>
 
-</div>
+                        <div>
 
-</div>
+                            <small>
+                                Total Notifikasi
+                            </small>
 
-<div class="flex-fill">
+                            <h3>
 
-<div
-class="d-flex
-justify-content-between
-align-items-center
-flex-wrap">
+                                <?= !empty(
+                                    $notifications
+                                )
+                                    ? count(
+                                        $notifications
+                                    )
+                                    : 0 ?>
 
-<h5
-class="mb-1"
-style="
-font-weight:700;
-color:#0b3d91;
-">
+                            </h3>
 
-<?= esc($notif['judul']) ?>
+                        </div>
 
-</h5>
+                    </div>
 
-<small class="text-muted">
+                </div>
 
-<i class="far fa-clock mr-1"></i>
 
-<?= esc($notif['waktu']) ?>
+                <!-- BELUM DIBACA -->
 
-</small>
+                <div class="col-md-4">
 
-</div>
+                    <div
+                        class="
+                            notification-summary-card
+                        "
+                    >
 
-<p
-class="mb-2 text-muted">
+                        <div
+                            class="
+                                notification-summary-icon
+                                orange
+                            "
+                        >
 
-<?= esc($notif['pesan']) ?>
+                            <i class="fas fa-envelope"></i>
 
-</p>
+                        </div>
 
-<span
-class="badge badge-<?= $notif['color'] ?>">
 
-<?= esc($notif['judul']) ?>
+                        <div>
 
-</span>
+                            <small>
+                                Belum Dibaca
+                            </small>
 
-</div>
+                            <h3>
 
-</div>
+                                <?= (int) (
+                                    $unreadCount
+                                    ?? 0
+                                ) ?>
 
-</div>
+                            </h3>
 
-<?php endforeach; ?>
-</div>
+                        </div>
 
-<?php endif; ?>
+                    </div>
 
-</div>
+                </div>
 
-<div
-    class="card-footer
-    d-flex
-    justify-content-between
-    align-items-center
-    flex-wrap">
 
-    <small class="text-muted">
+                <!-- STATUS -->
 
-        Total Notifikasi :
-        <strong>
+                <div class="col-md-4">
 
-            <?= count($notifications) ?>
+                    <div
+                        class="
+                            notification-summary-card
+                        "
+                    >
 
-        </strong>
+                        <div
+                            class="
+                                notification-summary-icon
+                                green
+                            "
+                        >
 
-    </small>
+                            <i
+                                class="
+                                    fas
+                                    fa-check-circle
+                                "
+                            ></i>
 
-    <button
-        class="btn"
-        style="
-            background:#0b3d91;
-            color:white;
-            font-weight:600;
-            border-radius:8px;
-        ">
+                        </div>
 
-        <i class="fas fa-check-double mr-2"></i>
 
-        Tandai Semua Sudah Dibaca
+                        <div>
 
-    </button>
+                            <small>
+                                Status
+                            </small>
 
-</div>
+                            <h3>
+                                Aktif
+                            </h3>
 
-</div>
+                        </div>
 
-</div>
+                    </div>
 
-</div>
+                </div>
 
-<!-- =====================================================
-     TIPS
-====================================================== -->
+            </div>
 
-<div class="row mt-4">
 
-<div class="col-lg-12">
+            <!-- =================================================
+                 DAFTAR NOTIFIKASI
+            ================================================== -->
 
-<div
-class="card shadow-sm"
-style="
-border-left:5px solid #f28c28;
-border-radius:15px;
-">
+            <div
+                class="
+                    card
+                    dashboard-card
+                    shadow-sm
+                "
+            >
 
-<div class="card-body">
+                <div
+                    class="
+                        card-header
+                        dashboard-card-header
+                        d-flex
+                        justify-content-between
+                        align-items-center
+                    "
+                >
 
-<h4
-style="
-font-weight:700;
-color:#0b3d91;
-">
+                    <h3
+                        class="
+                            card-title
+                            mb-0
+                        "
+                    >
 
-<i class="fas fa-info-circle mr-2"></i>
+                        <i
+                            class="
+                                fas
+                                fa-list
+                                mr-2
+                            "
+                        ></i>
 
-Informasi
+                        Daftar Notifikasi
 
-</h4>
+                    </h3>
 
-<p class="mb-0 text-muted">
 
-Semua perubahan status tiket akan otomatis
-muncul pada halaman ini.
+                    <?php if (
+                        ($unreadCount ?? 0) > 0
+                    ) : ?>
 
-Mulai dari:
+                        <a
+                            href="<?= base_url(
+                                'orangtua/notification/read-all'
+                            ) ?>"
+                            class="
+                                btn
+                                btn-sm
+                                btn-outline-primary
+                            "
+                        >
 
-<strong>Submitted</strong>,
-<strong>Diverifikasi</strong>,
-<strong>Diteruskan</strong>,
-<strong>Diproses</strong>,
-hingga
-<strong>Selesai</strong>.
+                            <i
+                                class="
+                                    fas
+                                    fa-check-double
+                                    mr-1
+                                "
+                            ></i>
 
-</p>
+                            Tandai Semua Dibaca
 
-</div>
+                        </a>
 
-</div>
+                    <?php endif; ?>
 
-</div>
+                </div>
 
-</div>
 
-</div>
+                <div class="card-body p-0">
 
-</section>
+
+                    <?php if (
+                        !empty($notifications)
+                    ) : ?>
+
+
+                        <div
+                            class="
+                                notification-list
+                            "
+                        >
+
+
+                            <?php foreach (
+                                $notifications
+                                as $notification
+                            ) : ?>
+
+
+                                <?php
+
+                                $isRead =
+                                    isset(
+                                        $notification[
+                                            'dibaca'
+                                        ]
+                                    )
+                                        ? $notification[
+                                            'dibaca'
+                                        ]
+                                        : false;
+
+
+                                $notificationUrl =
+                                    !empty(
+                                        $notification[
+                                            'url'
+                                        ]
+                                    )
+                                        ? $notification[
+                                            'url'
+                                        ]
+                                        : base_url(
+                                            'orangtua/notification/read/' .
+                                            (
+                                                $notification[
+                                                    'id'
+                                                ]
+                                                ?? 0
+                                            )
+                                        );
+
+                                ?>
+
+
+                                <a
+                                    href="<?= esc(
+                                        $notificationUrl
+                                    ) ?>"
+                                    class="
+                                        notification-item
+                                        text-decoration-none
+                                        <?= !$isRead
+                                            ? 'notification-unread'
+                                            : '' ?>
+                                    "
+                                >
+
+
+                                    <!-- ICON -->
+
+                                    <div
+                                        class="
+                                            notification-icon
+                                        "
+                                    >
+
+                                        <?php if (
+                                            isset(
+                                                $notification[
+                                                    'tipe'
+                                                ]
+                                            )
+                                            &&
+                                            $notification[
+                                                'tipe'
+                                            ] === 'success'
+                                        ) : ?>
+
+                                            <i
+                                                class="
+                                                    fas
+                                                    fa-check-circle
+                                                "
+                                            ></i>
+
+
+                                        <?php elseif (
+                                            isset(
+                                                $notification[
+                                                    'tipe'
+                                                ]
+                                            )
+                                            &&
+                                            $notification[
+                                                'tipe'
+                                            ] === 'warning'
+                                        ) : ?>
+
+                                            <i
+                                                class="
+                                                    fas
+                                                    fa-exclamation-circle
+                                                "
+                                            ></i>
+
+
+                                        <?php elseif (
+                                            isset(
+                                                $notification[
+                                                    'tipe'
+                                                ]
+                                            )
+                                            &&
+                                            $notification[
+                                                'tipe'
+                                            ] === 'danger'
+                                        ) : ?>
+
+                                            <i
+                                                class="
+                                                    fas
+                                                    fa-times-circle
+                                                "
+                                            ></i>
+
+
+                                        <?php elseif (
+                                            isset(
+                                                $notification[
+                                                    'tipe'
+                                                ]
+                                            )
+                                            &&
+                                            $notification[
+                                                'tipe'
+                                            ] === 'info'
+                                        ) : ?>
+
+                                            <i
+                                                class="
+                                                    fas
+                                                    fa-info-circle
+                                                "
+                                            ></i>
+
+
+                                        <?php else : ?>
+
+                                            <i
+                                                class="
+                                                    fas
+                                                    fa-bell
+                                                "
+                                            ></i>
+
+                                        <?php endif; ?>
+
+                                    </div>
+
+
+                                    <!-- ISI -->
+
+                                    <div
+                                        class="
+                                            notification-content
+                                        "
+                                    >
+
+                                        <div
+                                            class="
+                                                notification-top
+                                            "
+                                        >
+
+                                            <h5>
+
+                                                <?= esc(
+                                                    $notification[
+                                                        'judul'
+                                                    ]
+                                                    ??
+                                                    'Notifikasi'
+                                                ) ?>
+
+                                            </h5>
+
+
+                                            <?php if (
+                                                !$isRead
+                                            ) : ?>
+
+                                                <span
+                                                    class="
+                                                        notification-badge
+                                                    "
+                                                >
+
+                                                    Baru
+
+                                                </span>
+
+                                            <?php endif; ?>
+
+                                        </div>
+
+
+                                        <p>
+
+                                            <?= esc(
+                                                $notification[
+                                                    'pesan'
+                                                ]
+                                                ?? ''
+                                            ) ?>
+
+                                        </p>
+
+
+                                        <small>
+
+                                            <i
+                                                class="
+                                                    far
+                                                    fa-clock
+                                                    mr-1
+                                                "
+                                            ></i>
+
+                                            <?= esc(
+                                                $notification[
+                                                    'tanggal'
+                                                ]
+                                                ?? '-'
+                                            ) ?>
+
+                                        </small>
+
+                                    </div>
+
+
+                                </a>
+
+
+                            <?php endforeach; ?>
+
+
+                        </div>
+
+
+                    <?php else : ?>
+
+
+                        <!-- =================================================
+                             EMPTY STATE
+                        ================================================== -->
+
+                        <div
+                            class="
+                                empty-notification
+                            "
+                        >
+
+                            <div
+                                class="
+                                    empty-notification-icon
+                                "
+                            >
+
+                                <i
+                                    class="
+                                        far
+                                        fa-bell-slash
+                                    "
+                                ></i>
+
+                            </div>
+
+
+                            <h5>
+
+                                Belum Ada Notifikasi
+
+                            </h5>
+
+
+                            <p>
+
+                                Saat ini belum ada
+                                notifikasi untuk Anda.
+
+                            </p>
+
+
+                            <a
+                                href="<?= base_url(
+                                    'dashboard-orangtua'
+                                ) ?>"
+                                class="
+                                    btn
+                                    btn-ult-orange
+                                "
+                            >
+
+                                <i
+                                    class="
+                                        fas
+                                        fa-home
+                                        mr-1
+                                    "
+                                ></i>
+
+                                Kembali ke Dashboard
+
+                            </a>
+
+                        </div>
+
+
+                    <?php endif; ?>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
 
 </div>
 

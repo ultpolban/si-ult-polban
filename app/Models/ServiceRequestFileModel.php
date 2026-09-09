@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class ServiceRequestModel extends BaseModel
+class ServiceRequestFileModel extends BaseModel
 {
     protected $table = 'service_requests';
 

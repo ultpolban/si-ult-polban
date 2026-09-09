@@ -1,14 +1,11 @@
 <?= $this->include('layouts/header') ?>
-
 <?= $this->include('layouts/navbar') ?>
-
 <?= $this->include('layouts/sidebar_tendik') ?>
-
 
 <div class="content-wrapper">
 
+    <!-- HEADER -->
     <section class="content-header">
-
         <div class="container-fluid">
 
             <div class="row mb-2">
@@ -16,419 +13,576 @@
                 <div class="col-sm-6">
 
                     <h1
-                        style="
-                            color:#0b3d91;
-                            font-weight:700;
-                        "
+                        class="font-weight-bold"
+                        style="color:#0b3d91;"
                     >
 
-                        <i class="fas fa-edit"></i>
+                        <i class="fas fa-edit mr-2"></i>
 
-                        Lanjutkan Draft Pengajuan
+                        Edit Draft Pengajuan
 
                     </h1>
 
                 </div>
 
+
+                <div class="col-sm-6">
+
+                    <ol class="breadcrumb float-sm-right">
+
+                        <li class="breadcrumb-item">
+
+                            <a href="<?= base_url('dashboard-tendik') ?>">
+
+                                Dashboard
+
+                            </a>
+
+                        </li>
+
+                        <li class="breadcrumb-item">
+
+                            <a href="<?= base_url('tendik/ticket/draft') ?>">
+
+                                Draft Pengajuan
+
+                            </a>
+
+                        </li>
+
+                        <li class="breadcrumb-item active">
+
+                            Edit Draft
+
+                        </li>
+
+                    </ol>
+
+                </div>
+
             </div>
 
         </div>
-
     </section>
 
 
+    <!-- CONTENT -->
     <section class="content">
 
         <div class="container-fluid">
 
-            <div class="row justify-content-center">
 
-                <div class="col-lg-8 col-md-10">
+            <!-- SUCCESS -->
+            <?php if (session()->getFlashdata('success')) : ?>
 
+                <div
+                    class="alert alert-success alert-dismissible fade show"
+                >
 
-                    <div
-                        class="card shadow-sm"
-                        style="
-                            border-top:5px solid #0b3d91;
-                            border-radius:15px;
-                        "
+                    <i class="fas fa-check-circle mr-2"></i>
+
+                    <?= esc(
+                        session()->getFlashdata('success')
+                    ) ?>
+
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
                     >
 
+                        &times;
 
-                        <div
-                            class="card-header"
-                            style="
-                                background:#0b3d91;
-                                color:white;
-                            "
-                        >
+                    </button>
 
-                            <h3 class="card-title">
+                </div>
 
-                                <i class="fas fa-file-alt mr-2"></i>
+            <?php endif; ?>
 
-                                Edit Draft Pengajuan
 
-                            </h3>
+            <!-- ERROR -->
+            <?php if (session()->getFlashdata('error')) : ?>
+
+                <div
+                    class="alert alert-danger alert-dismissible fade show"
+                >
+
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+
+                    <?= esc(
+                        session()->getFlashdata('error')
+                    ) ?>
+
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                    >
+
+                        &times;
+
+                    </button>
+
+                </div>
+
+            <?php endif; ?>
+
+
+            <!-- CARD -->
+            <div class="card shadow-sm border-0">
+
+
+                <!-- CARD HEADER -->
+
+                <div
+                    class="card-header text-white"
+                    style="
+                        background-color:#0b3d91;
+                        border-bottom:4px solid #f28c28;
+                    "
+                >
+
+                    <h5 class="mb-0">
+
+                        <i class="fas fa-file-alt mr-2"></i>
+
+                        Lanjutkan Draft Pengajuan
+
+                    </h5>
+
+                </div>
+
+
+                <!-- CARD BODY -->
+
+                <div class="card-body">
+
+
+                    <form
+                        action="<?= base_url(
+                            'tendik/ticket/draft/update/' .
+                            $draft['id']
+                        ) ?>"
+                        method="post"
+                        enctype="multipart/form-data"
+                    >
+
+                        <?= csrf_field() ?>
+
+
+                        <!-- =========================
+                             UNIT LAYANAN
+                        ========================== -->
+
+                        <div class="form-group">
+
+                            <label class="font-weight-bold">
+
+                                <i class="fas fa-building mr-1"></i>
+
+                                Unit Layanan
+
+                            </label>
+
+
+                            <select
+                                name="unit_id"
+                                id="unit_layanan"
+                                class="form-control"
+                                required
+                            >
+
+                                <option value="">
+
+                                    -- Pilih Unit Layanan --
+
+                                </option>
+
+
+                                <?php foreach ($units as $unit) : ?>
+
+                                    <option
+                                        value="<?= esc($unit['id']) ?>"
+                                        <?= (
+                                            (int)($draft['service_unit_id'] ?? 0)
+                                            ===
+                                            (int)$unit['id']
+                                        )
+                                            ? 'selected'
+                                            : ''
+                                        ?>
+                                    >
+
+                                        <?= esc($unit['name']) ?>
+
+                                    </option>
+
+                                <?php endforeach; ?>
+
+                            </select>
 
                         </div>
 
 
-                        <div class="card-body">
+                        <!-- =========================
+                             JENIS LAYANAN
+                        ========================== -->
+
+                        <div class="form-group">
+
+                            <label class="font-weight-bold">
+
+                                <i class="fas fa-list mr-1"></i>
+
+                                Jenis Layanan
+
+                            </label>
 
 
-                            <?php if (
-                                session()->getFlashdata('error')
-                            ): ?>
+                            <select
+                                name="jenis_layanan"
+                                id="layanan"
+                                class="form-control"
+                                required
+                            >
 
-                                <div
-                                    class="alert alert-danger"
-                                >
+                                <option value="">
 
-                                    <i
-                                        class="fas fa-exclamation-circle mr-2"
-                                    ></i>
+                                    -- Pilih Jenis Layanan --
 
-                                    <?= esc(
-                                        session()->getFlashdata('error')
-                                    ) ?>
-
-                                </div>
-
-                            <?php endif; ?>
+                                </option>
 
 
-                            <<form
-    action="<?= base_url(
-        'tendik/ticket/draft/update/' .
-        ($draft_index ?? 0)
-    ) ?>"
-    method="post"
-    enctype="multipart/form-data"
->
+                                <?php foreach ($services as $service) : ?>
 
-                                <?= csrf_field() ?>
-
-
-                                <!-- NOMOR -->
-                                <div class="form-group">
-
-                                    <label class="font-weight-bold">
-
-                                        Nomor Draft
-
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        value="<?= esc(
-                                            $draft['nomor_tiket']
-                                            ?? '-'
+                                    <option
+                                        value="<?= esc($service['id']) ?>"
+                                        data-unit-id="<?= esc(
+                                            $service['service_unit_id']
                                         ) ?>"
-                                        readonly
+                                        <?= (
+                                            (int)($draft['service_id'] ?? 0)
+                                            ===
+                                            (int)$service['id']
+                                        )
+                                            ? 'selected'
+                                            : ''
+                                        ?>
                                     >
 
-                                </div>
+                                        <?= esc($service['name']) ?>
+
+                                    </option>
+
+                                <?php endforeach; ?>
+
+                            </select>
+
+                        </div>
 
 
-                                <!-- UNIT -->
-                                <div class="form-group">
+                        <!-- =========================
+                             KETERANGAN
+                        ========================== -->
 
-                                    <label class="font-weight-bold">
+                        <div class="form-group">
 
-                                        Unit Tujuan
+                            <label class="font-weight-bold">
 
-                                    </label>
+                                <i class="fas fa-align-left mr-1"></i>
 
-                                    <select
-                                        name="unit_tujuan"
-                                        class="form-control"
-                                        required
-                                    >
+                                Keterangan
 
-                                        <option value="">
+                            </label>
 
-                                            -- Pilih Unit Tujuan --
 
-                                        </option>
+                            <textarea
+                                name="description"
+                                class="form-control"
+                                rows="5"
+                                placeholder="Masukkan keterangan pengajuan..."
+                            ><?= esc(
+                                $draft['description'] ?? ''
+                            ) ?></textarea>
+
+                        </div>
+
+
+                        <!-- =========================
+                             PERSYARATAN DOKUMEN
+                        ========================== -->
+
+                        <div class="mb-4">
+
+                            <label class="font-weight-bold">
+
+                                <i class="fas fa-paperclip mr-1"></i>
+
+                                Persyaratan Dokumen
+
+                            </label>
+
+
+                            <div id="requirements-container">
+
+
+                                <?php if (!empty($requirements)) : ?>
+
+
+                                    <?php foreach (
+                                        $requirements
+                                        as $requirement
+                                    ) : ?>
 
 
                                         <?php
-                                        $units = [
-                                            'Akademik',
-                                            'Kemahasiswaan',
-                                            'Keuangan',
-                                            'Umum'
-                                        ];
+
+                                        $oldFile =
+                                            $uploadedFiles[
+                                                $requirement['id']
+                                            ] ?? null;
+
                                         ?>
 
 
-                                        <?php foreach (
-                                            $units
-                                            as $unit
-                                        ): ?>
+                                        <div class="card mb-3">
 
-                                            <option
-                                                value="<?= $unit ?>"
-                                                <?= (
-                                                    ($draft['unit_tujuan'] ?? '')
-                                                    === $unit
-                                                )
-                                                    ? 'selected'
-                                                    : ''
-                                                ?>
-                                            >
+                                            <div class="card-body">
 
-                                                <?= $unit ?>
 
-                                            </option>
+                                                <!-- NAMA REQUIREMENT -->
 
-                                        <?php endforeach; ?>
+                                                <label class="font-weight-bold">
 
+                                                    <?= esc(
+                                                        $requirement['name']
+                                                    ) ?>
 
-                                    </select>
 
-                                </div>
+                                                    <?php if (
+                                                        (int)$requirement[
+                                                            'is_required'
+                                                        ] === 1
+                                                    ) : ?>
 
+                                                        <span
+                                                            class="text-danger"
+                                                        >
+                                                            *
+                                                        </span>
 
-                                <!-- JENIS LAYANAN -->
-                                <div class="form-group">
+                                                    <?php endif; ?>
 
-                                    <label class="font-weight-bold">
+                                                </label>
 
-                                        Jenis Layanan
 
-                                    </label>
+                                                <!-- DESKRIPSI -->
 
-                                    <input
-                                        type="text"
-                                        name="jenis_layanan"
-                                        class="form-control"
-                                        value="<?= esc(
-                                            $draft['jenis_layanan']
-                                            ?? ''
-                                        ) ?>"
-                                        required
-                                    >
+                                                <?php if (
+                                                    !empty(
+                                                        $requirement[
+                                                            'description'
+                                                        ]
+                                                    )
+                                                ) : ?>
 
-                                </div>
+                                                    <p
+                                                        class="text-muted mb-2"
+                                                    >
 
+                                                        <?= esc(
+                                                            $requirement[
+                                                                'description'
+                                                            ]
+                                                        ) ?>
 
-                                <!-- JUDUL -->
-                                <div class="form-group">
+                                                    </p>
 
-                                    <label class="font-weight-bold">
+                                                <?php endif; ?>
 
-                                        Judul Pengajuan
 
-                                    </label>
+                                                <!-- FILE LAMA -->
 
-                                    <input
-                                        type="text"
-                                        name="judul"
-                                        class="form-control"
-                                        value="<?= esc(
-                                            $draft['judul']
-                                            ?? ''
-                                        ) ?>"
-                                        required
-                                    >
+                                                <?php if ($oldFile) : ?>
 
-                                </div>
+                                                    <div
+                                                        class="alert alert-success"
+                                                    >
 
+                                                        <i
+                                                            class="fas fa-check-circle mr-1"
+                                                        ></i>
 
-                                <!-- KETERANGAN -->
-                                <div class="form-group">
+                                                        Dokumen sudah
+                                                        diupload:
 
-                                    <label class="font-weight-bold">
+                                                        <strong>
 
-                                        Keterangan / Detail Permohonan
+                                                            <?= esc(
+                                                                $oldFile[
+                                                                    'original_name'
+                                                                ]
+                                                            ) ?>
 
-                                    </label>
+                                                        </strong>
 
-                                    <textarea
-                                        name="keterangan"
-                                        class="form-control"
-                                        rows="6"
-                                        required
-                                    ><?= esc(
-                                        $draft['keterangan']
-                                        ?? ''
-                                    ) ?></textarea>
+                                                    </div>
 
-                                    <!-- ========================================== -->
-<!-- DOKUMEN PENDUKUNG -->
-<!-- ========================================== -->
+                                                <?php else : ?>
 
-<div class="form-group mt-4">
+                                                    <div
+                                                        class="alert alert-warning"
+                                                    >
 
-    <label
-        for="dokumen"
-        class="font-weight-bold"
-    >
+                                                        <i
+                                                            class="fas fa-exclamation-circle mr-1"
+                                                        ></i>
 
-        <i class="fas fa-paperclip mr-1"></i>
+                                                        Dokumen belum
+                                                        diupload.
 
-        Dokumen Pendukung
+                                                    </div>
 
-        <span class="text-muted font-weight-normal">
+                                                <?php endif; ?>
 
-            (Opsional)
 
-        </span>
+                                                <!-- UPLOAD FILE -->
 
-    </label>
+                                                <input
+                                                    type="file"
+                                                    name="dokumen[<?= esc(
+                                                        $requirement['id']
+                                                    ) ?>]"
+                                                    class="form-control"
+                                                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx"
+                                                >
 
 
-    <!-- DOKUMEN LAMA -->
+                                                <!-- INFO FILE -->
 
-    <?php if (
-        !empty($draft['dokumen']) &&
-        !empty($draft['dokumen']['nama_asli'])
-    ) : ?>
+                                                <small class="text-muted">
 
-        <div
-            class="alert alert-info"
-        >
+                                                    Maksimal:
 
-            <i class="fas fa-file-alt mr-2"></i>
+                                                    <?= esc(
+                                                        $requirement[
+                                                            'max_file_size'
+                                                        ]
+                                                        ?? 2048
+                                                    ) ?>
 
-            <strong>
-                Dokumen saat ini:
-            </strong>
+                                                    KB
 
-            <?= esc(
-                $draft['dokumen']['nama_asli']
-            ) ?>
 
-        </div>
+                                                    <?php if (
+                                                        !empty(
+                                                            $requirement[
+                                                                'allowed_extensions'
+                                                            ]
+                                                        )
+                                                    ) : ?>
 
-    <?php endif; ?>
+                                                        <br>
 
+                                                        Format:
 
-    <!-- INPUT FILE -->
+                                                        <?= esc(
+                                                            $requirement[
+                                                                'allowed_extensions'
+                                                            ]
+                                                        ) ?>
 
-    <div class="custom-file">
+                                                    <?php endif; ?>
 
-        <input
-            type="file"
-            name="dokumen"
-            id="dokumen"
-            class="custom-file-input"
-            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-        >
+                                                </small>
 
-        <label
-            class="custom-file-label"
-            for="dokumen"
-        >
+                                            </div>
 
-            Pilih dokumen baru...
+                                        </div>
 
-        </label>
 
-    </div>
+                                    <?php endforeach; ?>
 
 
-    <small class="form-text text-muted">
+                                <?php else : ?>
 
-        Pilih file baru jika ingin mengganti
-        dokumen sebelumnya.
 
-        <br>
-
-        Format:
-        PDF, DOC, DOCX, JPG, JPEG, PNG.
-
-        Maksimal ukuran <strong>2 MB</strong>.
-
-    </small>
-
-</div>
-
-                                </div>
-
-
-                                <!-- BUTTON -->
-                                <div
-                                    class="
-                                        d-flex
-                                        justify-content-between
-                                        flex-wrap
-                                        mt-4
-                                    "
-                                >
-
-
-                                    <a
-                                        href="<?= base_url(
-                                            'tendik/ticket/draft'
-                                        ) ?>"
-                                        class="btn btn-secondary"
-                                    >
+                                    <div class="alert alert-info">
 
                                         <i
-                                            class="fas fa-arrow-left mr-1"
+                                            class="fas fa-info-circle mr-1"
                                         ></i>
 
-                                        Kembali
-
-                                    </a>
-
-
-                                    <div>
-
-
-                                        <button
-                                            type="submit"
-                                            name="action"
-                                            value="draft"
-                                            class="btn"
-                                            style="
-                                                background:#f28c28;
-                                                color:white;
-                                                font-weight:600;
-                                            "
-                                        >
-
-                                            <i
-                                                class="fas fa-save mr-1"
-                                            ></i>
-
-                                            Simpan Perubahan
-
-                                        </button>
-
-
-                                        <button
-                                            type="submit"
-                                            name="action"
-                                            value="submit"
-                                            class="btn btn-success"
-                                        >
-
-                                            <i
-                                                class="fas fa-paper-plane mr-1"
-                                            ></i>
-
-                                            Kirim Pengajuan
-
-                                        </button>
-
+                                        Tidak ada persyaratan dokumen
+                                        untuk layanan ini.
 
                                     </div>
 
 
-                                </div>
+                                <?php endif; ?>
 
 
-                            </form>
+                            </div>
+
+                        </div>
+
+
+                        <!-- =========================
+                             BUTTON
+                        ========================== -->
+
+                        <div class="mt-4">
+
+
+                            <a
+                                href="<?= base_url(
+                                    'tendik/ticket/draft'
+                                ) ?>"
+                                class="btn btn-secondary"
+                            >
+
+                                <i class="fas fa-arrow-left mr-1"></i>
+
+                                Kembali
+
+                            </a>
+
+
+                            <button
+                                type="submit"
+                                name="action"
+                                value="draft"
+                                class="btn btn-outline-primary"
+                            >
+
+                                <i class="fas fa-save mr-1"></i>
+
+                                Simpan Draft
+
+                            </button>
+
+
+                            <button
+                                type="submit"
+                                name="action"
+                                value="submit"
+                                class="btn text-white"
+                                style="
+                                    background:#0b3d91;
+                                    border-color:#0b3d91;
+                                "
+                            >
+
+                                <i class="fas fa-paper-plane mr-1"></i>
+
+                                Ajukan
+
+                            </button>
 
 
                         </div>
 
-                    </div>
+                    </form>
 
                 </div>
 
@@ -440,30 +594,287 @@
 
 </div>
 
+
+<!-- =========================
+     JAVASCRIPT
+========================== -->
+
 <script>
 
-document
-    .getElementById('dokumen')
-    ?.addEventListener('change', function (e) {
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
 
-        const fileName =
-            e.target.files[0]?.name
-            || 'Pilih dokumen baru...';
-
-        const label =
-            document.querySelector(
-                'label[for="dokumen"]'
+        const unit =
+            document.getElementById(
+                'unit_layanan'
             );
 
-        if (label) {
+        const layanan =
+            document.getElementById(
+                'layanan'
+            );
 
-            label.textContent =
-                fileName;
+        const container =
+            document.getElementById(
+                'requirements-container'
+            );
+
+
+        /*
+         * Filter jenis layanan berdasarkan
+         * unit layanan.
+         */
+        function filterServices() {
+
+            const unitId =
+                unit.value;
+
+
+            Array.from(
+                layanan.options
+            ).forEach(function (option) {
+
+                if (!option.value) {
+
+                    return;
+
+                }
+
+
+                option.hidden =
+                    option.dataset.unitId !== unitId;
+
+            });
 
         }
 
-    });
+
+        /*
+         * Saat unit berubah,
+         * layanan harus dipilih ulang.
+         */
+        unit.addEventListener(
+            'change',
+            function () {
+
+                filterServices();
+
+                layanan.value = '';
+
+                container.innerHTML = '';
+
+            }
+        );
+
+
+        /*
+         * Saat layanan berubah,
+         * ambil persyaratan dari server.
+         */
+        layanan.addEventListener(
+            'change',
+            function () {
+
+                const serviceId =
+                    this.value;
+
+
+                if (!serviceId) {
+
+                    container.innerHTML = '';
+
+                    return;
+
+                }
+
+
+                fetch(
+                    '<?= base_url(
+                        'tendik/ticket/persyaratan'
+                    ) ?>?service_id=' +
+                    serviceId
+                )
+                .then(
+                    response => response.json()
+                )
+                .then(
+                    result => {
+
+                        if (!result.success) {
+
+                            container.innerHTML =
+                                '<div class="alert alert-danger">' +
+                                'Persyaratan gagal dimuat.' +
+                                '</div>';
+
+                            return;
+
+                        }
+
+
+                        renderRequirements(
+                            result.data
+                        );
+
+                    }
+                )
+                .catch(
+                    error => {
+
+                        console.error(error);
+
+                        container.innerHTML =
+                            '<div class="alert alert-danger">' +
+                            'Terjadi kesalahan saat memuat persyaratan.' +
+                            '</div>';
+
+                    }
+                );
+
+            }
+        );
+
+
+        /*
+         * Render persyaratan.
+         */
+        function renderRequirements(
+            requirements
+        ) {
+
+            if (!requirements.length) {
+
+                container.innerHTML =
+                    '<div class="alert alert-info">' +
+                    '<i class="fas fa-info-circle mr-1"></i>' +
+                    'Tidak ada persyaratan dokumen untuk layanan ini.' +
+                    '</div>';
+
+                return;
+
+            }
+
+
+            let html = '';
+
+
+            requirements.forEach(
+                function (requirement) {
+
+                    html += `
+
+                        <div class="card mb-3">
+
+                            <div class="card-body">
+
+                                <label class="font-weight-bold">
+
+                                    ${escapeHtml(
+                                        requirement.name
+                                    )}
+
+                                    ${
+                                        requirement.is_required == 1
+                                            ? '<span class="text-danger">*</span>'
+                                            : ''
+                                    }
+
+                                </label>
+
+
+                                ${
+                                    requirement.description
+                                        ? `
+                                            <p class="text-muted mb-2">
+
+                                                ${escapeHtml(
+                                                    requirement.description
+                                                )}
+
+                                            </p>
+                                        `
+                                        : ''
+                                }
+
+
+                                <input
+                                    type="file"
+                                    name="dokumen[${requirement.id}]"
+                                    class="form-control"
+                                >
+
+
+                                <small class="text-muted">
+
+                                    Maksimal:
+
+                                    ${
+                                        requirement.max_file_size || 2048
+                                    }
+
+                                    KB
+
+
+                                    ${
+                                        requirement.allowed_extensions
+                                            ? `
+                                                <br>
+
+                                                Format:
+
+                                                ${escapeHtml(
+                                                    requirement.allowed_extensions
+                                                )}
+                                            `
+                                            : ''
+                                    }
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+
+            container.innerHTML =
+                html;
+
+        }
+
+
+        /*
+         * Escape HTML untuk hasil AJAX.
+         */
+        function escapeHtml(text) {
+
+            const div =
+                document.createElement(
+                    'div'
+                );
+
+            div.textContent =
+                text ?? '';
+
+            return div.innerHTML;
+
+        }
+
+
+        /*
+         * Filter pertama kali saat halaman dibuka.
+         */
+        filterServices();
+
+    }
+);
 
 </script>
+
 
 <?= $this->include('layouts/footer') ?>

@@ -46,7 +46,7 @@ $routes->get(
 
 $routes->get(
     'dashboard-orangtua',
-    'OrangTuaDashboardController::index'
+    'OrangtuaController::dashboard'
 );
 
 $routes->get(
@@ -67,6 +67,16 @@ $routes->get(
 $routes->get(
     'orangtua/ticket/success',
     'OrangTuaTicketController::success'
+);
+
+$routes->get(
+    'orangtua/ticket/jenis-layanan',
+    'OrangTuaTicketController::jenisLayanan'
+);
+
+$routes->get(
+    'orangtua/ticket/persyaratan',
+    'OrangTuaTicketController::persyaratan'
 );
 
 $routes->get(
@@ -123,6 +133,16 @@ $routes->get(
 $routes->get(
     'orangtua/notification',
     'OrangTuaNotificationController::index'
+);
+
+$routes->get(
+    'orangtua/notification/read/(:num)',
+    'OrangTuaNotificationController::read/$1'
+);
+
+$routes->get(
+    'orangtua/notification/read-all',
+    'OrangTuaNotificationController::readAll'
 );
 
 // =====================================
@@ -408,6 +428,21 @@ $routes->get(
 $routes->post(
     'tendik/ticket/store',
     'TendikTicketController::store'
+);
+
+$routes->post(
+    'tendik/ticket/save-draft',
+    'TendikTicketController::saveDraft'
+);
+
+$routes->get(
+    'tendik/ticket/jenis-layanan',
+    'TendikTicketController::jenisLayanan'
+);
+
+$routes->get(
+    'tendik/ticket/persyaratan',
+    'TendikTicketController::persyaratan'
 );
 
 $routes->get(

@@ -157,8 +157,18 @@
         margin-bottom: 15px;
     }
 
+    .info-alert-green {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        border-radius: 4px;
+        padding: 13px 17px;
+        margin-bottom: 15px;
+    }
+
     .info-alert i,
-    .info-alert-blue i {
+    .info-alert-blue i,
+    .info-alert-green i {
         margin-right: 10px;
     }
 
@@ -166,24 +176,87 @@
        REQUIREMENTS
        ========================================================= */
 
-    #requirements-container {
+    #requirement-container {
         margin-top: 15px;
     }
 
-    #requirements-container .card {
+    .requirement-box {
         border: 1px solid #e0e0e0;
         border-radius: 8px;
-        box-shadow: none;
+        overflow: hidden;
+        background: #fff;
     }
 
-    #requirements-container .card-header {
+    .requirement-title {
         background: #f7f7f7;
         border-bottom: 1px solid #ddd;
         padding: 12px 15px;
+        color: #124b93;
+        font-size: 16px;
     }
 
-    #requirements-container .card-body {
-        padding: 18px;
+    .requirement-title i {
+        margin-right: 8px;
+    }
+
+    .requirement-description {
+        padding: 12px 15px 5px;
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    #requirement-list {
+        padding: 15px;
+    }
+
+    .requirement-item {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background: #fafafa;
+    }
+
+    .requirement-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .requirement-item-title {
+        font-weight: 600;
+        color: #292929;
+        margin-bottom: 8px;
+    }
+
+    .requirement-item-description {
+        color: #6c757d;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    .badge-required {
+        background: #dc3545;
+        color: #fff;
+        padding: 4px 7px;
+        border-radius: 4px;
+        font-size: 11px;
+        margin-left: 5px;
+    }
+
+    .badge-optional {
+        background: #6c757d;
+        color: #fff;
+        padding: 4px 7px;
+        border-radius: 4px;
+        font-size: 11px;
+        margin-left: 5px;
+    }
+
+    /* =========================================================
+       FALLBACK UPLOAD
+       ========================================================= */
+
+    #fallback-upload-container {
+        display: none;
     }
 
     /* =========================================================
@@ -276,20 +349,38 @@
     <div class="guest-header">
 
         <div>
+
             <div class="guest-header-left">
+
                 <i class="fas fa-file-alt guest-header-icon"></i>
 
                 <div>
+
                     <h1>Ajukan Layanan</h1>
-                    <p>Silakan lengkapi data pengajuan layanan Anda.</p>
+
+                    <p>
+                        Silakan lengkapi data pengajuan layanan Anda.
+                    </p>
+
                 </div>
+
             </div>
+
         </div>
 
+
         <div class="guest-breadcrumb">
-            <a href="<?= base_url('dashboard') ?>">Dashboard</a>
+
+            <a href="<?= base_url('dashboard') ?>">
+                Dashboard
+            </a>
+
             <span class="mx-2">/</span>
-            <span>Ajukan Layanan</span>
+
+            <span>
+                Ajukan Layanan
+            </span>
+
         </div>
 
     </div>
@@ -316,7 +407,9 @@
 
                     <?php foreach (session()->getFlashdata('errors') as $error): ?>
 
-                        <li><?= esc($error) ?></li>
+                        <li>
+                            <?= esc($error) ?>
+                        </li>
 
                     <?php endforeach; ?>
 
@@ -330,7 +423,9 @@
         <?php if (session()->getFlashdata('success')): ?>
 
             <div class="alert alert-success">
+
                 <?= session()->getFlashdata('success') ?>
+
             </div>
 
         <?php endif; ?>
@@ -346,7 +441,9 @@
 
                 <i class="fas fa-user"></i>
 
-                <h3>Data Pemohon</h3>
+                <h3>
+                    Data Pemohon
+                </h3>
 
             </div>
 
@@ -518,134 +615,160 @@
         </div>
 
 
-       <!-- =================================================
-     PILIH LAYANAN
-     ================================================= -->
+        <!-- =================================================
+             PILIH LAYANAN
+             ================================================= -->
 
-<div class="service-section">
+        <div class="service-section">
 
-    <div class="service-section-header">
-        <i class="fas fa-list-alt"></i>
-        <h3>Pilih Layanan</h3>
-    </div>
+            <div class="service-section-header">
 
-    <div class="service-section-body">
+                <i class="fas fa-list-alt"></i>
 
-        <div class="row">
+                <h3>
+                    Pilih Layanan
+                </h3>
 
-            <!-- UNIT LAYANAN -->
-            <div class="col-md-6 mb-3">
+            </div>
 
-                <label
-                    for="unit_id"
-                    class="form-label"
-                >
-                    Unit Layanan
-                    <span class="text-danger">*</span>
-                </label>
 
-                <select
-                    name="unit_id"
-                    id="unit_id"
-                    class="form-control"
-                    required
-                >
+            <div class="service-section-body">
 
-                    <option value="">
-                        -- Pilih Unit Layanan --
-                    </option>
+                <div class="row">
 
-                    <?php foreach ($units as $unit): ?>
+                    <!-- UNIT LAYANAN -->
 
-                        <option
-                            value="<?= esc($unit['id']) ?>"
-                            <?= old('unit_id') == $unit['id'] ? 'selected' : '' ?>
+                    <div class="col-md-6 mb-3">
+
+                        <label
+                            for="unit_id"
+                            class="form-label"
                         >
-                            <?= esc($unit['name']) ?>
-                        </option>
 
-                    <?php endforeach; ?>
+                            Unit Layanan
 
-                </select>
+                            <span class="text-danger">
+                                *
+                            </span>
 
-            </div>
+                        </label>
 
 
-            <!-- JENIS LAYANAN -->
-            <div class="col-md-6 mb-3">
+                        <select
+                            name="unit_id"
+                            id="unit_id"
+                            class="form-control"
+                            required
+                        >
 
-                <label
-                    for="service_id"
-                    class="form-label"
+                            <option value="">
+                                -- Pilih Unit Layanan --
+                            </option>
+
+                            <?php foreach ($units as $unit): ?>
+
+                                <option
+                                    value="<?= esc($unit['id']) ?>"
+                                    <?= old('unit_id') == $unit['id'] ? 'selected' : '' ?>
+                                >
+
+                                    <?= esc($unit['name']) ?>
+
+                                </option>
+
+                            <?php endforeach; ?>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- JENIS LAYANAN -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label
+                            for="service_id"
+                            class="form-label"
+                        >
+
+                            Jenis Layanan
+
+                            <span class="text-danger">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <select
+                            name="service_id"
+                            id="service_id"
+                            class="form-control"
+                            required
+                            disabled
+                        >
+
+                            <option value="">
+                                -- Pilih Unit Layanan Terlebih Dahulu --
+                            </option>
+
+                        </select>
+
+
+                        <input
+                            type="hidden"
+                            name="service_name"
+                            id="service_name"
+                            value="<?= old('service_name') ?>"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     PERSYARATAN LAYANAN
+                     ================================================= -->
+
+                <div
+                    id="requirement-container"
+                    class="mt-3"
+                    style="display:none;"
                 >
-                    Jenis Layanan
-                    <span class="text-danger">*</span>
-                </label>
 
-                <select
-                    name="service_id"
-                    id="service_id"
-                    class="form-control"
-                    required
-                    disabled
-                >
+                    <div class="requirement-box">
 
-                    <option value="">
-                        -- Pilih Unit Layanan Terlebih Dahulu --
-                    </option>
+                        <div class="requirement-title">
 
-                </select>
+                            <i class="fas fa-clipboard-list"></i>
+
+                            <strong>
+                                Persyaratan Layanan
+                            </strong>
+
+                        </div>
 
 
-                <!-- DIISI OTOMATIS OLEH JAVASCRIPT -->
-                <input
-                    type="hidden"
-                    name="service_name"
-                    id="service_name"
-                    value="<?= old('service_name') ?>"
-                >
+                        <div class="requirement-description">
+
+                            Silakan upload dokumen sesuai persyaratan
+                            layanan yang dipilih.
+
+                        </div>
+
+
+                        <div id="requirement-list"></div>
+
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
 
-
-        <!-- =====================================================
-             PERSYARATAN
-             ===================================================== -->
-
-        <div
-            id="requirement-container"
-            class="mt-3"
-            style="display:none;"
-        >
-
-            <div class="requirement-box">
-
-                <div class="requirement-title">
-
-                    <i class="fas fa-clipboard-list"></i>
-
-                    <strong>
-                        Persyaratan Layanan
-                    </strong>
-
-                </div>
-
-                <div class="requirement-description">
-                    Silakan upload dokumen sesuai persyaratan
-                    layanan yang dipilih.
-                </div>
-
-                <div id="requirement-list"></div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 
         <!-- =================================================
              DATA TAMBAHAN PEMOHON
@@ -657,13 +780,14 @@
 
                 <i class="fas fa-user-edit"></i>
 
-                <h3>Data Tambahan Pemohon</h3>
+                <h3>
+                    Data Tambahan Pemohon
+                </h3>
 
             </div>
 
 
             <div class="service-section-body">
-
 
                 <!-- MAHASISWA -->
 
@@ -905,15 +1029,15 @@
                             class="form-control"
                         >
 
-                            <option>
+                            <option value="Ayah">
                                 Ayah
                             </option>
 
-                            <option>
+                            <option value="Ibu">
                                 Ibu
                             </option>
 
-                            <option>
+                            <option value="Wali">
                                 Wali
                             </option>
 
@@ -1060,7 +1184,7 @@
 
 
         <!-- =================================================
-             KETERANGAN / DESKRIPSI
+             KETERANGAN PENGAJUAN
              ================================================= -->
 
         <div class="service-section">
@@ -1069,7 +1193,9 @@
 
                 <i class="fas fa-comment-alt"></i>
 
-                <h3>Keterangan Pengajuan</h3>
+                <h3>
+                    Keterangan Pengajuan
+                </h3>
 
             </div>
 
@@ -1098,16 +1224,24 @@
 
 
         <!-- =================================================
-             UPLOAD
+             UPLOAD CADANGAN
+             
+             HANYA MUNCUL JIKA LAYANAN TIDAK MEMILIKI
+             PERSYARATAN KHUSUS
              ================================================= -->
 
-        <div class="service-section">
+        <div
+            id="fallback-upload-container"
+            class="service-section"
+        >
 
             <div class="service-section-header">
 
                 <i class="fas fa-paperclip"></i>
 
-                <h3>Upload Dokumen Persyaratan</h3>
+                <h3>
+                    Upload Dokumen Persyaratan
+                </h3>
 
             </div>
 
@@ -1118,16 +1252,18 @@
 
                     <i class="fas fa-info-circle"></i>
 
-                    Silakan unggah dokumen sesuai dengan persyaratan layanan yang telah dipilih.
+                    Layanan ini tidak memiliki persyaratan
+                    dokumen khusus.
 
                 </div>
 
 
-                <div class="info-alert-blue">
+                <div class="info-alert-green">
 
-                    <i class="fas fa-info-circle"></i>
+                    <i class="fas fa-check-circle"></i>
 
-                    Pilih jenis layanan terlebih dahulu untuk mengunggah dokumen persyaratan.
+                    Lampiran bersifat <strong>opsional</strong>.
+                    Anda boleh mengunggah dokumen jika diperlukan.
 
                 </div>
 
@@ -1136,22 +1272,30 @@
 
                     <i class="fas fa-file"></i>
 
-                    Format yang diperbolehkan mengikuti ketentuan masing-masing persyaratan.
+                    Format yang diperbolehkan:
+                    PDF / JPG / JPEG / PNG.
+                    Maksimal 5MB.
 
                 </div>
 
 
-                <div class="form-group">
+                <div class="form-group mb-0">
 
                     <label>
-                        Lampiran (PDF/JPG/PNG maks.5MB)
+                        Lampiran (Opsional)
                     </label>
 
                     <input
                         type="file"
                         name="attachment"
+                        id="attachment"
                         class="form-control"
+                        accept=".pdf,.jpg,.jpeg,.png"
                     >
+
+                    <small class="text-muted">
+                        Tidak wajib diisi.
+                    </small>
 
                 </div>
 
@@ -1170,8 +1314,11 @@
                 href="<?= base_url('guest-report') ?>"
                 class="btn btn-secondary"
             >
+
                 <i class="fas fa-arrow-left"></i>
+
                 Kembali
+
             </a>
 
 
@@ -1181,8 +1328,11 @@
                     type="reset"
                     class="btn btn-warning mr-2"
                 >
+
                     <i class="fas fa-redo"></i>
+
                     Reset
+
                 </button>
 
 
@@ -1190,8 +1340,11 @@
                     type="submit"
                     class="btn btn-primary"
                 >
+
                     <i class="fas fa-paper-plane"></i>
+
                     Kirim Pengajuan
+
                 </button>
 
             </div>
@@ -1207,50 +1360,80 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // =====================================================
-    // ELEMENT DATA PEMOHON
-    // =====================================================
+    /* =====================================================
+       ELEMENT DATA PEMOHON
+       ===================================================== */
 
-    const applicantType = document.getElementById('applicant_type');
+    const applicantType =
+        document.getElementById('applicant_type');
 
-    const labelNama = document.getElementById('labelNama');
-    const labelIdentitas = document.getElementById('labelIdentitas');
+    const labelNama =
+        document.getElementById('labelNama');
 
-
-    // =====================================================
-    // FORM TAMBAHAN PEMOHON
-    // =====================================================
-
-    const formMahasiswa = document.getElementById('formMahasiswa');
-    const formDosen = document.getElementById('formDosen');
-    const formTendik = document.getElementById('formTendik');
-    const formOrangTua = document.getElementById('formOrangTua');
-    const formAlumni = document.getElementById('formAlumni');
-    const formMitra = document.getElementById('formMitra');
-    const formPublic = document.getElementById('formPublic');
-    const formMasyarakat = document.getElementById('formMasyarakat');
+    const labelIdentitas =
+        document.getElementById('labelIdentitas');
 
 
-    // =====================================================
-    // SEMBUNYIKAN SEMUA FORM
-    // =====================================================
+    /* =====================================================
+       FORM TAMBAHAN PEMOHON
+       ===================================================== */
+
+    const formMahasiswa =
+        document.getElementById('formMahasiswa');
+
+    const formDosen =
+        document.getElementById('formDosen');
+
+    const formTendik =
+        document.getElementById('formTendik');
+
+    const formOrangTua =
+        document.getElementById('formOrangTua');
+
+    const formAlumni =
+        document.getElementById('formAlumni');
+
+    const formMitra =
+        document.getElementById('formMitra');
+
+    const formPublic =
+        document.getElementById('formPublic');
+
+    const formMasyarakat =
+        document.getElementById('formMasyarakat');
+
+
+    /* =====================================================
+       SEMBUNYIKAN SEMUA FORM PEMOHON
+       ===================================================== */
 
     function hideAllApplicantForms() {
 
-        formMahasiswa.style.display = 'none';
-        formDosen.style.display = 'none';
-        formTendik.style.display = 'none';
-        formOrangTua.style.display = 'none';
-        formAlumni.style.display = 'none';
-        formMitra.style.display = 'none';
-        formPublic.style.display = 'none';
-        formMasyarakat.style.display = 'none';
+        const forms = [
+            formMahasiswa,
+            formDosen,
+            formTendik,
+            formOrangTua,
+            formAlumni,
+            formMitra,
+            formPublic,
+            formMasyarakat
+        ];
+
+        forms.forEach(function (form) {
+
+            if (form) {
+                form.style.display = 'none';
+            }
+
+        });
+
     }
 
 
-    // =====================================================
-    // RESET INPUT FORM TAMBAHAN
-    // =====================================================
+    /* =====================================================
+       RESET FORM TAMBAHAN
+       ===================================================== */
 
     function resetApplicantForms() {
 
@@ -1282,22 +1465,30 @@ document.addEventListener('DOMContentLoaded', function () {
                     input.type !== 'hidden' &&
                     input.type !== 'file'
                 ) {
+
                     input.value = '';
+
                 }
 
             });
 
         });
+
     }
 
 
-    // =====================================================
-    // UBAH LABEL SESUAI JENIS PEMOHON
-    // =====================================================
+    /* =====================================================
+       UPDATE LABEL PEMOHON
+       ===================================================== */
 
     function updateApplicantLabel(type) {
 
-        labelNama.textContent = 'Nama Pemohon';
+        labelNama.textContent =
+            'Nama Pemohon';
+
+        labelIdentitas.textContent =
+            'NIM / NIP / NIK';
+
 
         switch (type) {
 
@@ -1388,53 +1579,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 break;
 
-
-            default:
-
-                labelNama.textContent =
-                    'Nama Pemohon';
-
-                labelIdentitas.textContent =
-                    'NIM / NIP / NIK';
-
-                break;
         }
+
     }
 
 
-    // =====================================================
-    // TAMPILKAN FORM BERDASARKAN JENIS PEMOHON
-    // =====================================================
+    /* =====================================================
+       UPDATE FORM TAMBAHAN PEMOHON
+       ===================================================== */
 
     function updateApplicantForm() {
 
-        const type = applicantType.value;
-
-
-        // ---------------------------------------------
-        // SEMBUNYIKAN SEMUA DAHULU
-        // ---------------------------------------------
+        const type =
+            applicantType.value;
 
         hideAllApplicantForms();
 
-
-        // ---------------------------------------------
-        // RESET ISIAN FORM TAMBAHAN
-        // ---------------------------------------------
-
         resetApplicantForms();
-
-
-        // ---------------------------------------------
-        // UPDATE LABEL
-        // ---------------------------------------------
 
         updateApplicantLabel(type);
 
-
-        // ---------------------------------------------
-        // TAMPILKAN FORM SESUAI JENIS
-        // ---------------------------------------------
 
         switch (type) {
 
@@ -1501,17 +1665,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 break;
 
-
-            default:
-
-                break;
         }
+
     }
 
 
-    // =====================================================
-    // EVENT JENIS PEMOHON
-    // =====================================================
+    /* =====================================================
+       EVENT JENIS PEMOHON
+       ===================================================== */
 
     applicantType.addEventListener(
         'change',
@@ -1523,9 +1684,9 @@ document.addEventListener('DOMContentLoaded', function () {
     );
 
 
-    // =====================================================
-    // ELEMENT LAYANAN
-    // =====================================================
+    /* =====================================================
+       ELEMENT LAYANAN
+       ===================================================== */
 
     const unitSelect =
         document.getElementById('unit_id');
@@ -1546,21 +1707,55 @@ document.addEventListener('DOMContentLoaded', function () {
             'requirement-list'
         );
 
+    const fallbackUploadContainer =
+        document.getElementById(
+            'fallback-upload-container'
+        );
 
-    // =====================================================
-    // UNIT LAYANAN DIPILIH
-    // =====================================================
+    const attachmentInput =
+        document.getElementById(
+            'attachment'
+        );
+
+
+    /* =====================================================
+       FUNGSI RESET UPLOAD
+       ===================================================== */
+
+    function resetUploadArea() {
+
+        requirementContainer.style.display =
+            'none';
+
+        requirementList.innerHTML =
+            '';
+
+        fallbackUploadContainer.style.display =
+            'none';
+
+        if (attachmentInput) {
+
+            attachmentInput.value =
+                '';
+
+        }
+
+    }
+
+
+    /* =====================================================
+       UNIT LAYANAN DIPILIH
+       ===================================================== */
 
     unitSelect.addEventListener(
         'change',
         function () {
 
-            const unitId = this.value;
+            const unitId =
+                this.value;
 
 
-            // -----------------------------------------
-            // RESET SERVICE
-            // -----------------------------------------
+            /* RESET SERVICE */
 
             serviceSelect.innerHTML = `
                 <option value="">
@@ -1568,42 +1763,37 @@ document.addEventListener('DOMContentLoaded', function () {
                 </option>
             `;
 
-            serviceSelect.disabled = true;
+            serviceSelect.disabled =
+                true;
 
 
-            // -----------------------------------------
-            // RESET SERVICE NAME
-            // -----------------------------------------
+            /* RESET SERVICE NAME */
 
-            serviceNameInput.value = '';
+            serviceNameInput.value =
+                '';
 
 
-            // -----------------------------------------
-            // RESET REQUIREMENT
-            // -----------------------------------------
+            /* RESET UPLOAD */
 
-            requirementContainer.style.display =
-                'none';
-
-            requirementList.innerHTML = '';
+            resetUploadArea();
 
 
             if (!unitId) {
 
                 serviceSelect.innerHTML = `
                     <option value="">
-                        -- Pilih Unit Layanan
-                        Terlebih Dahulu --
+                        -- Pilih Unit Layanan Terlebih Dahulu --
                     </option>
                 `;
 
                 return;
+
             }
 
 
-            // =================================================
-            // AMBIL JENIS LAYANAN
-            // =================================================
+            /* =================================================
+               AMBIL JENIS LAYANAN
+               ================================================= */
 
             fetch(
                 '<?= base_url('guest-report/services-by-unit') ?>/'
@@ -1617,6 +1807,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     throw new Error(
                         'Gagal memuat jenis layanan'
                     );
+
                 }
 
                 return response.json();
@@ -1637,24 +1828,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     data.length > 0
                 ) {
 
-                    data.forEach(function (service) {
+                    data.forEach(
+                        function (service) {
 
-                        const option =
-                            document.createElement(
-                                'option'
+                            const option =
+                                document.createElement(
+                                    'option'
+                                );
+
+                            option.value =
+                                service.id;
+
+                            option.textContent =
+                                service.name;
+
+                            serviceSelect.appendChild(
+                                option
                             );
 
-                        option.value =
-                            service.id;
-
-                        option.textContent =
-                            service.name;
-
-                        serviceSelect.appendChild(
-                            option
-                        );
-
-                    });
+                        }
+                    );
 
 
                     serviceSelect.disabled =
@@ -1667,6 +1860,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             -- Tidak Ada Jenis Layanan --
                         </option>
                     `;
+
                 }
 
             })
@@ -1681,21 +1875,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     </option>
                 `;
 
+                serviceSelect.disabled =
+                    true;
+
             });
 
         }
     );
 
 
-    // =====================================================
-    // JENIS LAYANAN DIPILIH
-    // =====================================================
+    /* =====================================================
+       JENIS LAYANAN DIPILIH
+       ===================================================== */
 
     serviceSelect.addEventListener(
         'change',
         function () {
 
-            const serviceId = this.value;
+            const serviceId =
+                this.value;
 
             const selectedOption =
                 this.options[
@@ -1703,9 +1901,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 ];
 
 
-            // -----------------------------------------
-            // SIMPAN NAMA SERVICE
-            // -----------------------------------------
+            /* =================================================
+               SIMPAN NAMA LAYANAN
+               ================================================= */
 
             if (
                 serviceId &&
@@ -1719,18 +1917,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             } else {
 
-                serviceNameInput.value = '';
+                serviceNameInput.value =
+                    '';
+
             }
 
 
-            // -----------------------------------------
-            // RESET REQUIREMENT
-            // -----------------------------------------
+            /* =================================================
+               RESET SEMUA AREA UPLOAD
+               ================================================= */
 
-            requirementContainer.style.display =
-                'none';
-
-            requirementList.innerHTML = '';
+            resetUploadArea();
 
 
             if (!serviceId) {
@@ -1738,24 +1935,29 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
 
-            // -----------------------------------------
-            // LOADING
-            // -----------------------------------------
+            /* =================================================
+               TAMPILKAN LOADING
+               ================================================= */
 
             requirementContainer.style.display =
                 'block';
 
             requirementList.innerHTML = `
+
                 <div class="text-muted">
+
                     <i class="fas fa-spinner fa-spin"></i>
+
                     Memuat persyaratan...
+
                 </div>
+
             `;
 
 
-            // =================================================
-            // AMBIL REQUIREMENT
-            // =================================================
+            /* =================================================
+               AMBIL REQUIREMENT
+               ================================================= */
 
             fetch(
                 '<?= base_url('guest-report/requirements') ?>/'
@@ -1769,6 +1971,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     throw new Error(
                         'Gagal memuat persyaratan'
                     );
+
                 }
 
                 return response.json();
@@ -1777,32 +1980,54 @@ document.addEventListener('DOMContentLoaded', function () {
 
             .then(function (data) {
 
-                requirementList.innerHTML = '';
+                requirementList.innerHTML =
+                    '';
 
 
-                // -----------------------------------------
-                // TIDAK ADA REQUIREMENT
-                // -----------------------------------------
+                /* =================================================
+                   TIDAK ADA PERSYARATAN
+                   ================================================= */
 
                 if (
                     !Array.isArray(data) ||
                     data.length === 0
                 ) {
 
-                    requirementList.innerHTML = `
-                        <div class="alert alert-info mb-0">
-                            Tidak ada persyaratan khusus
-                            untuk layanan ini.
-                        </div>
-                    `;
+                    /*
+                     * HILANGKAN BOX PERSYARATAN
+                     */
+                    requirementContainer.style.display =
+                        'none';
+
+
+                    /*
+                     * TAMPILKAN UPLOAD CADANGAN
+                     * DAN BERSIFAT OPSIONAL
+                     */
+                    fallbackUploadContainer.style.display =
+                        'block';
+
 
                     return;
+
                 }
 
 
-                // -----------------------------------------
-                // TAMPILKAN REQUIREMENT
-                // -----------------------------------------
+                /* =================================================
+                   ADA PERSYARATAN
+                   ================================================= */
+
+                requirementContainer.style.display =
+                    'block';
+
+
+                /*
+                 * PENTING:
+                 * Upload cadangan TIDAK ditampilkan
+                 */
+                fallbackUploadContainer.style.display =
+                    'none';
+
 
                 data.forEach(
                     function (
@@ -1815,8 +2040,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                 'div'
                             );
 
+
                         wrapper.className =
-                            'mb-4';
+                            'requirement-item';
 
 
                         const wajib =
@@ -1825,44 +2051,50 @@ document.addEventListener('DOMContentLoaded', function () {
                             ) === 1;
 
 
+                        const badge =
+                            wajib
+                            ?
+                            `
+                            <span class="badge-required">
+                                Wajib
+                            </span>
+                            `
+                            :
+                            `
+                            <span class="badge-optional">
+                                Opsional
+                            </span>
+                            `;
+
+
+                        const description =
+                            requirement.description
+                            ?
+                            `
+                            <div class="requirement-item-description">
+                                ${escapeHtml(
+                                    requirement.description
+                                )}
+                            </div>
+                            `
+                            :
+                            '';
+
+
                         wrapper.innerHTML = `
 
-                            <label
-                                class="form-label fw-bold"
-                            >
+                            <div class="requirement-item-title">
 
                                 ${index + 1}.
                                 ${escapeHtml(
                                     requirement.name
                                 )}
 
-                                ${
-                                    wajib
-                                    ?
-                                    '<span class="badge bg-danger ms-2">Wajib</span>'
-                                    :
-                                    '<span class="badge bg-secondary ms-2">Opsional</span>'
-                                }
+                                ${badge}
 
-                            </label>
+                            </div>
 
-
-                            ${
-                                requirement.description
-                                ?
-                                `
-                                <div
-                                    class="small text-muted mb-2"
-                                >
-                                    ${escapeHtml(
-                                        requirement.description
-                                    )}
-                                </div>
-                                `
-                                :
-                                ''
-                            }
-
+                            ${description}
 
                             <input
                                 type="file"
@@ -1872,12 +2104,15 @@ document.addEventListener('DOMContentLoaded', function () {
                                 ${wajib ? 'required' : ''}
                             >
 
+                            <div class="small text-muted mt-2">
 
-                            <div
-                                class="small text-muted mt-1"
-                            >
+                                <i class="fas fa-file"></i>
+
                                 Format:
                                 PDF / JPG / JPEG / PNG
+
+                                <?php /* Maksimal 5MB */ ?>
+
                             </div>
 
                         `;
@@ -1896,10 +2131,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 console.error(error);
 
+
+                requirementContainer.style.display =
+                    'block';
+
+
+                fallbackUploadContainer.style.display =
+                    'none';
+
+
                 requirementList.innerHTML = `
-                    <div class="alert alert-danger">
+
+                    <div class="alert alert-danger mb-0">
+
+                        <i class="fas fa-exclamation-circle"></i>
+
                         Gagal memuat persyaratan layanan.
+
                     </div>
+
                 `;
 
             });
@@ -1908,9 +2158,9 @@ document.addEventListener('DOMContentLoaded', function () {
     );
 
 
-    // =====================================================
-    // RESET BUTTON
-    // =====================================================
+    /* =====================================================
+       RESET BUTTON
+       ===================================================== */
 
     const form =
         applicantType.closest('form');
@@ -1922,33 +2172,39 @@ document.addEventListener('DOMContentLoaded', function () {
             'reset',
             function () {
 
-                setTimeout(function () {
+                setTimeout(
+                    function () {
 
-                    hideAllApplicantForms();
+                        /* RESET PEMOHON */
 
-                    updateApplicantLabel('');
+                        hideAllApplicantForms();
 
-                    serviceSelect.innerHTML = `
-                        <option value="">
-                            -- Pilih Unit Layanan
-                            Terlebih Dahulu --
-                        </option>
-                    `;
+                        updateApplicantLabel('');
 
-                    serviceSelect.disabled =
-                        true;
 
-                    serviceNameInput.value =
-                        '';
+                        /* RESET SERVICE */
 
-                    requirementContainer
-                        .style
-                        .display = 'none';
+                        serviceSelect.innerHTML = `
+                            <option value="">
+                                -- Pilih Unit Layanan Terlebih Dahulu --
+                            </option>
+                        `;
 
-                    requirementList.innerHTML =
-                        '';
+                        serviceSelect.disabled =
+                            true;
 
-                }, 10);
+
+                        serviceNameInput.value =
+                            '';
+
+
+                        /* RESET UPLOAD */
+
+                        resetUploadArea();
+
+                    },
+                    10
+                );
 
             }
         );
@@ -1956,25 +2212,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    // =====================================================
-    // ESCAPE HTML
-    // =====================================================
+    /* =====================================================
+       ESCAPE HTML
+       ===================================================== */
 
     function escapeHtml(text) {
 
         const div =
-            document.createElement('div');
+            document.createElement(
+                'div'
+            );
 
         div.textContent =
             text ?? '';
 
         return div.innerHTML;
+
     }
 
 
-    // =====================================================
-    // JALANKAN SAAT HALAMAN PERTAMA DIBUKA
-    // =====================================================
+    /* =====================================================
+       JALANKAN SAAT HALAMAN DIBUKA
+       ===================================================== */
 
     updateApplicantForm();
 

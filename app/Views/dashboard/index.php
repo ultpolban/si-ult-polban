@@ -3,463 +3,366 @@
 <?= $this->section('content') ?>
 
 <style>
+
+.dashboard-title {
+    color: #182b80;
+    font-weight: 700;
+    font-size: 30px;
+}
+
+.dashboard-subtitle {
+    color: #777;
+    font-size: 16px;
+}
+
+/* =========================================================
+   STATISTIC BOX
+   ========================================================= */
+
+.stat-card {
+    border-radius: 12px;
+    color: white;
+    min-height: 105px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 3px 8px rgba(0,0,0,.12);
+}
+
+.stat-card .inner {
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.stat-card h3 {
+    font-size: 27px;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+}
+
+.stat-card p {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.stat-card .stat-icon {
+    position: absolute;
+    right: 20px;
+    top: 25px;
+    font-size: 45px;
+    opacity: .20;
+}
+
+.stat-blue {
+    background: #202d87;
+}
+
+.stat-orange {
+    background: #ff8b00;
+}
+
+.stat-yellow {
+    background: #f5c400;
+}
+
+.stat-green {
+    background: #128044;
+}
+
+/* =========================================================
+   QUICK ACTION
+   ========================================================= */
+
+.quick-card {
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,.10);
+    overflow: hidden;
+}
+
+.section-header {
+    background: #202d87;
+    color: white;
+    padding: 10px 16px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.quick-body {
+    padding: 16px;
+}
+
+.quick-btn {
+    width: 100%;
+    border: none;
+    color: white !important;
+    font-size: 17px;
+    font-weight: 600;
+    padding: 17px 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,.12);
+    text-decoration: none !important;
+    cursor: pointer;
+}
+
+.quick-orange {
+    background: #ff8b00;
+}
+
+.quick-green {
+    background: #128044;
+}
+
+.quick-yellow {
+    background: #f5c400;
+}
+
+.quick-dark {
+    background: #343a40;
+}
+
+/* =========================================================
+   ANALYTICS
+   ========================================================= */
+
+.analytics-card {
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,.10);
+    overflow: hidden;
+    background: #fff;
+}
+
+.analytics-header {
+    background: #202d87;
+    color: white;
+    padding: 13px 16px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.analytics-body {
+    padding: 20px;
+}
+
+/* =========================================================
+   FILTER
+   ========================================================= */
+
+.period-filter {
+    background: #f8f9fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.period-label {
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 7px;
+}
+
+.period-control {
+    height: 45px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.date-manual {
+    display: none;
+}
+
+.date-manual.show {
+    display: block;
+}
+
+.apply-btn {
+    height: 45px;
+    border-radius: 8px;
+    background: #ff8b00;
+    border: none;
+    color: white;
+    font-weight: 600;
+    width: 100%;
+}
+
+.apply-btn:hover {
+    background: #e77c00;
+    color: white;
+}
+
+.period-info {
+    color: #777;
+    font-size: 14px;
+}
+
+/* =========================================================
+   ANALYTICS STAT
+   ========================================================= */
+
+.analytics-stat {
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 17px;
+    height: 100%;
+    background: #fff;
+}
+
+.analytics-stat .analytics-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    float: left;
+    margin-right: 12px;
+}
+
+.analytics-stat .analytics-number {
+    font-size: 25px;
+    font-weight: 700;
+    color: #202d87;
+    line-height: 1.1;
+}
+
+.analytics-stat .analytics-label {
+    font-size: 13px;
+    color: #777;
+    margin-top: 4px;
+}
+
+.icon-total {
+    background: #202d87;
+}
+
+.icon-submitted {
+    background: #ff8b00;
+}
+
+.icon-process {
+    background: #f5c400;
+}
+
+.icon-completed {
+    background: #128044;
+}
+
+/* =========================================================
+   CHART
+   ========================================================= */
+
+.chart-container {
+    position: relative;
+    height: 350px;
+    width: 100%;
+}
+
+.chart-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 15px;
+    height: 100%;
+}
+
+.chart-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width: 768px) {
+
     .dashboard-title {
-        color: #182b80;
-        font-weight: 700;
-        font-size: 30px;
-    }
-
-    .dashboard-subtitle {
-        color: #777;
-        font-size: 16px;
-    }
-
-    /* STATISTIC BOX */
-    .stat-card {
-        border-radius: 12px;
-        color: white;
-        min-height: 105px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 3px 8px rgba(0,0,0,.12);
-    }
-
-    .stat-card .inner {
-        padding: 20px;
-        position: relative;
-        z-index: 2;
-    }
-
-    .stat-card h3 {
-        font-size: 27px;
-        font-weight: 700;
-        margin: 0 0 5px 0;
-    }
-
-    .stat-card p {
-        font-size: 16px;
-        font-weight: 600;
-        margin: 0;
-    }
-
-    .stat-card .stat-icon {
-        position: absolute;
-        right: 20px;
-        top: 25px;
-        font-size: 45px;
-        opacity: .20;
-    }
-
-    .stat-blue {
-        background: #202d87;
-    }
-
-    .stat-orange {
-        background: #ff8b00;
-    }
-
-    .stat-yellow {
-        background: #f5c400;
-    }
-
-    .stat-green {
-        background: #128044;
-    }
-
-    /* QUICK ACTION */
-    .quick-card {
-        border-radius: 12px;
-        box-shadow: 0 3px 8px rgba(0,0,0,.10);
-        overflow: hidden;
-    }
-
-    .section-header {
-        background: #202d87;
-        color: white;
-        padding: 10px 16px;
-        font-size: 18px;
-        font-weight: 700;
-    }
-
-    .quick-body {
-        padding: 16px;
+        font-size: 24px;
     }
 
     .quick-btn {
-        width: 100%;
-        border: none;
-        color: white !important;
-        font-size: 17px;
-        font-weight: 600;
-        padding: 17px 10px;
-        border-radius: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 12px;
-        box-shadow: 0 2px 5px rgba(0,0,0,.12);
-    }
-
-    .quick-orange {
-        background: #ff8b00;
-    }
-
-    .quick-green {
-        background: #128044;
-    }
-
-    .quick-yellow {
-        background: #f5c400;
-    }
-
-    .quick-dark {
-        background: #343a40;
-    }
-
-    /* FILTER */
-    .filter-card {
-        border-radius: 12px;
-        box-shadow: 0 3px 8px rgba(0,0,0,.10);
-    }
-
-    .filter-card .card-body {
-        padding: 20px;
-    }
-
-    .filter-label {
-        font-weight: 600;
-        color: #666;
-        margin-bottom: 7px;
-    }
-
-    .filter-control {
-        height: 45px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-    }
-
-    .search-btn {
-        height: 45px;
-        border-radius: 8px;
-        width: 100%;
-        background: #ff8b00;
-        border: none;
-        color: white;
-        font-weight: 600;
-        font-size: 16px;
-    }
-
-    /* TABLE */
-    .dashboard-table {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 3px 8px rgba(0,0,0,.10);
-    }
-
-    .dashboard-table .table {
-        margin-bottom: 0;
-    }
-
-    .dashboard-table thead {
-        background: #202d87;
-        color: white;
-    }
-
-    .dashboard-table thead th {
-        padding: 14px 12px;
-        font-weight: 600;
-        border: none;
-        white-space: nowrap;
-    }
-
-    .dashboard-table tbody td {
-        padding: 14px 12px;
-        vertical-align: middle;
-    }
-
-    .ticket-number {
-        color: #1683df;
-        font-weight: 700;
-    }
-
-    .priority-high {
-        background: #dc3545;
-        color: white;
-    }
-
-    .priority-medium {
-        background: #ffc107;
-        color: white;
-    }
-
-    .priority-low {
-        background: #6c757d;
-        color: white;
-    }
-
-    .status-badge {
-        padding: 6px 10px;
-        border-radius: 5px;
-        font-size: 12px;
-        font-weight: 600;
-        white-space: nowrap;
-    }
-
-    /* BOTTOM CARDS */
-    .bottom-card {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 3px 8px rgba(0,0,0,.10);
-        height: 100%;
-    }
-
-    .bottom-card-header {
-        background: #202d87;
-        color: white;
-        padding: 13px 16px;
-        font-size: 18px;
-        font-weight: 700;
-    }
-
-    .sla-table {
-        margin-bottom: 0;
-    }
-
-    .sla-table td,
-    .sla-table th {
-        padding: 15px;
-        vertical-align: middle;
-    }
-
-    .sla-safe {
-        background: #28a745;
-        color: white;
-    }
-
-    .sla-warning {
-        background: #ffc107;
-        color: white;
-    }
-
-    .sla-danger {
-        background: #dc3545;
-        color: white;
-    }
-
-    /* ACTIVITY */
-    .activity-card {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 3px 8px rgba(0,0,0,.10);
-    }
-
-    .activity-header {
-        background: #1683df;
-        color: white;
-        padding: 14px 18px;
-        font-size: 18px;
-        font-weight: 700;
-    }
-
-    .activity-date {
-        display: inline-block;
-        background: #1683df;
-        color: white;
-        padding: 6px 14px;
-        border-radius: 6px;
-        font-weight: 600;
-        margin-bottom: 12px;
-    }
-
-    .activity-item {
-        border: 1px solid #eee;
-        border-radius: 8px;
-        padding: 15px;
         margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
     }
 
-    .activity-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        border: 1px solid #ddd;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #1683df;
-        font-size: 20px;
-        flex-shrink: 0;
+    .chart-container {
+        height: 280px;
     }
 
-    .activity-content strong {
-        display: block;
-        font-size: 15px;
-        margin-bottom: 3px;
-    }
+}
 
-    .activity-content span {
-        color: #777;
-    }
-
-    .empty-data {
-        text-align: center;
-        padding: 25px;
-        color: #888;
-    }
-
-    @media(max-width: 768px) {
-        .quick-btn {
-            margin-bottom: 10px;
-        }
-
-        .dashboard-title {
-            font-size: 24px;
-        }
-    }
 </style>
 
+
 <?php
-/*
-|--------------------------------------------------------------------------
-| DATA DASHBOARD
-|--------------------------------------------------------------------------
-*/
-
-$tiketMasuk = $total ?? 0;
-
-$diverifikasi = $verified ?? 0;
-
-$diprosesUnit = ($assigned ?? 0) + ($progress ?? 0);
 
 /*
 |--------------------------------------------------------------------------
-| Hitung SLA dari tiket yang tersedia
+| DATA TIKET
 |--------------------------------------------------------------------------
-| Estimasi SLA = 3 hari.
 */
-$terlambatSla = 0;
 
-if (!empty($tickets)) {
-    foreach ($tickets as $t) {
+$allTickets = !empty($tickets)
+    ? $tickets
+    : [];
 
-        if (
-            !empty($t['submitted_at']) &&
-            !in_array($t['status'], ['Completed', 'Rejected'])
-        ) {
 
-            $tanggalMasuk = strtotime($t['submitted_at']);
-            $sekarang     = time();
+/*
+|--------------------------------------------------------------------------
+| KONVERSI DATA UNTUK JAVASCRIPT
+|--------------------------------------------------------------------------
+*/
 
-            $selisihHari = floor(
-                ($sekarang - $tanggalMasuk) / 86400
-            );
+$ticketsJson = [];
 
-            if ($selisihHari > 3) {
-                $terlambatSla++;
-            }
-        }
-    }
+foreach ($allTickets as $ticket) {
+
+    $ticketsJson[] = [
+
+        'id' => $ticket['id'] ?? '',
+
+        'ticket_number' =>
+            $ticket['ticket_number'] ?? '',
+
+        'status' =>
+            strtolower(trim($ticket['status'] ?? '')),
+
+        'submitted_at' =>
+            $ticket['submitted_at'] ?? '',
+
+        'service_name' =>
+            $ticket['service_name'] ?? '',
+
+        'priority' =>
+            $ticket['priority'] ?? '',
+
+        'applicant_name' =>
+            $ticket['applicant_name'] ?? '',
+
+        'nim' =>
+            $ticket['nim'] ?? '',
+
+        'nik' =>
+            $ticket['nik'] ?? ''
+
+    ];
 }
 
-/*
-|--------------------------------------------------------------------------
-| Status badge
-|--------------------------------------------------------------------------
-*/
-function dashboardStatusBadge($status)
-{
-    switch ($status) {
-
-        case 'Submitted':
-            return 'warning';
-
-        case 'Verified':
-            return 'success';
-
-        case 'Assigned':
-            return 'info';
-
-        case 'In Progress':
-            return 'primary';
-
-        case 'Completed':
-            return 'success';
-
-        case 'Need Revision':
-            return 'dark';
-
-        case 'Rejected':
-            return 'danger';
-
-        default:
-            return 'secondary';
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| Priority badge
-|--------------------------------------------------------------------------
-*/
-function dashboardPriorityBadge($priority)
-{
-    switch (strtolower($priority ?? '')) {
-
-        case 'high':
-        case 'tinggi':
-            return 'priority-high';
-
-        case 'medium':
-        case 'sedang':
-            return 'priority-medium';
-
-        case 'low':
-        case 'rendah':
-            return 'priority-low';
-
-        default:
-            return 'priority-low';
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| Cari tiket prioritas tinggi
-|--------------------------------------------------------------------------
-*/
-$tiketPrioritas = [];
-
-if (!empty($tickets)) {
-
-    foreach ($tickets as $t) {
-
-        $priority = strtolower($t['priority'] ?? '');
-
-        if (
-            $priority === 'high' ||
-            $priority === 'tinggi'
-        ) {
-            $tiketPrioritas[] = $t;
-        }
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| Ambil maksimal 5 tiket prioritas
-|--------------------------------------------------------------------------
-*/
-$tiketPrioritas = array_slice($tiketPrioritas, 0, 5);
 ?>
 
-<!-- ========================================================= -->
-<!-- HEADER -->
-<!-- ========================================================= -->
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
 
 <section class="content-header">
+
     <div class="container-fluid">
 
         <div class="row">
@@ -479,11 +382,15 @@ $tiketPrioritas = array_slice($tiketPrioritas, 0, 5);
             <div class="col-sm-4 text-right">
 
                 <div class="text-muted mt-2">
+
                     <span style="color:#1683df;">
                         Dashboard
                     </span>
+
                     &nbsp;/&nbsp;
+
                     Home
+
                 </div>
 
             </div>
@@ -491,6 +398,7 @@ $tiketPrioritas = array_slice($tiketPrioritas, 0, 5);
         </div>
 
     </div>
+
 </section>
 
 
@@ -499,13 +407,14 @@ $tiketPrioritas = array_slice($tiketPrioritas, 0, 5);
 <div class="container-fluid">
 
 
-<!-- ========================================================= -->
-<!-- STATISTIK -->
-<!-- ========================================================= -->
+<!-- =========================================================
+     STATISTIK ATAS
+     ========================================================= -->
 
 <div class="row mb-4">
 
-    <!-- Tiket Masuk -->
+
+    <!-- TOTAL -->
 
     <div class="col-lg-3 col-md-6 mb-3">
 
@@ -513,8 +422,35 @@ $tiketPrioritas = array_slice($tiketPrioritas, 0, 5);
 
             <div class="inner">
 
-                <h3>
-                    <?= $tiketMasuk ?>
+                <h3 id="topTotal">
+                    <?= $total_tiket ?? 0 ?>
+                </h3>
+
+                <p>
+                    Total Tiket
+                </p>
+
+            </div>
+
+            <div class="stat-icon">
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TIKET MASUK -->
+
+    <div class="col-lg-3 col-md-6 mb-3">
+
+        <div class="stat-card stat-orange">
+
+            <div class="inner">
+
+                <h3 id="topMasuk">
+                    <?= $submitted ?? 0 ?>
                 </h3>
 
                 <p>
@@ -532,20 +468,20 @@ $tiketPrioritas = array_slice($tiketPrioritas, 0, 5);
     </div>
 
 
-    <!-- Diverifikasi -->
+    <!-- SELESAI -->
 
     <div class="col-lg-3 col-md-6 mb-3">
 
-        <div class="stat-card stat-orange">
+        <div class="stat-card stat-yellow">
 
             <div class="inner">
 
-                <h3>
-                    <?= $diverifikasi ?>
+                <h3 id="topSelesai">
+                    <?= $completed ?? 0 ?>
                 </h3>
 
                 <p>
-                    Diverifikasi
+                    Tiket Selesai
                 </p>
 
             </div>
@@ -559,34 +495,7 @@ $tiketPrioritas = array_slice($tiketPrioritas, 0, 5);
     </div>
 
 
-    <!-- Diproses Unit -->
-
-    <div class="col-lg-3 col-md-6 mb-3">
-
-        <div class="stat-card stat-yellow">
-
-            <div class="inner">
-
-                <h3>
-                    <?= $diprosesUnit ?>
-                </h3>
-
-                <p>
-                    Diproses Unit
-                </p>
-
-            </div>
-
-            <div class="stat-icon">
-                <i class="fas fa-spinner"></i>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- Terlambat SLA -->
+    <!-- REVISI -->
 
     <div class="col-lg-3 col-md-6 mb-3">
 
@@ -594,18 +503,18 @@ $tiketPrioritas = array_slice($tiketPrioritas, 0, 5);
 
             <div class="inner">
 
-                <h3>
-                    <?= $terlambatSla ?>
+                <h3 id="topRevisi">
+                    <?= $revision ?? 0 ?>
                 </h3>
 
                 <p>
-                    Terlambat SLA
+                    Perlu Revisi
                 </p>
 
             </div>
 
             <div class="stat-icon">
-                <i class="fas fa-clock"></i>
+                <i class="fas fa-edit"></i>
             </div>
 
         </div>
@@ -615,18 +524,20 @@ $tiketPrioritas = array_slice($tiketPrioritas, 0, 5);
 </div>
 
 
-<!-- ========================================================= -->
-<!-- QUICK ACTION -->
-<!-- ========================================================= -->
+<!-- =========================================================
+     QUICK ACTION
+     ========================================================= -->
 
 <div class="quick-card mb-4">
 
     <div class="section-header">
 
-        <i class="fas fa-bolt"></i>
+        <i class="fas fa-bolt mr-1"></i>
+
         Quick Action
 
     </div>
+
 
     <div class="quick-body">
 
@@ -703,966 +614,321 @@ $tiketPrioritas = array_slice($tiketPrioritas, 0, 5);
 </div>
 
 
-<!-- ========================================================= -->
-<!-- FILTER TIKET -->
-<!-- ========================================================= -->
+<!-- =========================================================
+     STATISTIK & ANALITIK
+     ========================================================= -->
 
-<div class="card filter-card mb-4">
+<div class="analytics-card mb-4">
 
-    <div class="section-header">
+    <div class="analytics-header">
 
-        <i class="fas fa-filter"></i>
-        Filter Tiket
+        <i class="fas fa-chart-line mr-1"></i>
 
-    </div>
-
-    <div class="card-body">
-
-        <div class="row">
-
-            <!-- STATUS -->
-
-            <div class="col-md-3 mb-3">
-
-                <label class="filter-label">
-                    Status
-                </label>
-
-                <select
-                    id="filterStatus"
-                    class="form-control filter-control"
-                >
-
-                    <option value="">
-                        Semua Status
-                    </option>
-
-                    <option value="Submitted">
-                        Submitted
-                    </option>
-
-                    <option value="Verified">
-                        Verified
-                    </option>
-
-                    <option value="Assigned">
-                        Assigned
-                    </option>
-
-                    <option value="In Progress">
-                        In Progress
-                    </option>
-
-                    <option value="Completed">
-                        Completed
-                    </option>
-
-                    <option value="Need Revision">
-                        Need Revision
-                    </option>
-
-                    <option value="Rejected">
-                        Rejected
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- KATEGORI -->
-
-            <div class="col-md-3 mb-3">
-
-                <label class="filter-label">
-                    Kategori
-                </label>
-
-                <select
-                    id="filterKategori"
-                    class="form-control filter-control"
-                >
-
-                    <option value="">
-                        Semua Kategori
-                    </option>
-
-                    <?php
-
-                    $kategori = [];
-
-                    if (!empty($tickets)) {
-
-                        foreach ($tickets as $ticket) {
-
-                            $layanan = $ticket['service_name'] ?? '';
-
-                            if (
-                                $layanan &&
-                                !in_array($layanan, $kategori)
-                            ) {
-                                $kategori[] = $layanan;
-                            }
-
-                        }
-
-                    }
-
-                    foreach ($kategori as $k):
-
-                    ?>
-
-                        <option value="<?= esc($k) ?>">
-                            <?= esc($k) ?>
-                        </option>
-
-                    <?php endforeach; ?>
-
-                </select>
-
-            </div>
-
-
-            <!-- PRIORITAS -->
-
-            <div class="col-md-2 mb-3">
-
-                <label class="filter-label">
-                    Prioritas
-                </label>
-
-                <select
-                    id="filterPrioritas"
-                    class="form-control filter-control"
-                >
-
-                    <option value="">
-                        Semua Prioritas
-                    </option>
-
-                    <option value="High">
-                        High
-                    </option>
-
-                    <option value="Medium">
-                        Medium
-                    </option>
-
-                    <option value="Low">
-                        Low
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- UNIT -->
-
-            <div class="col-md-2 mb-3">
-
-                <label class="filter-label">
-                    Unit Tujuan
-                </label>
-
-                <select
-                    id="filterUnit"
-                    class="form-control filter-control"
-                >
-
-                    <option value="">
-                        Semua Unit
-                    </option>
-
-                    <?php
-
-                    $units = [];
-
-                    if (!empty($tickets)) {
-
-                        foreach ($tickets as $ticket) {
-
-                            $unit = $ticket['assigned_unit'] ?? '';
-
-                            if (
-                                $unit &&
-                                !in_array($unit, $units)
-                            ) {
-                                $units[] = $unit;
-                            }
-
-                        }
-
-                    }
-
-                    foreach ($units as $unit):
-
-                    ?>
-
-                        <option value="<?= esc($unit) ?>">
-                            <?= esc($unit) ?>
-                        </option>
-
-                    <?php endforeach; ?>
-
-                </select>
-
-            </div>
-
-
-            <!-- BUTTON -->
-
-            <div class="col-md-2 mb-3">
-
-                <label class="filter-label">
-                    &nbsp;
-                </label>
-
-                <button
-                    type="button"
-                    onclick="filterTickets()"
-                    class="search-btn"
-                >
-
-                    <i class="fas fa-search"></i>
-                    Cari
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- KEYWORD -->
-
-        <div class="row">
-
-            <div class="col-md-12">
-
-                <label class="filter-label">
-                    Pencarian Keyword
-                </label>
-
-                <input
-                    type="text"
-                    id="filterKeyword"
-                    class="form-control filter-control"
-                    placeholder="Cari Nama / NIM / Nomor Tiket..."
-                    onkeyup="filterTickets()"
-                >
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ========================================================= -->
-<!-- ANTRIAN TIKET TERBARU -->
-<!-- ========================================================= -->
-
-<div class="dashboard-table mb-4">
-
-    <div class="section-header">
-
-        <i class="fas fa-inbox"></i>
-
-        Antrian Tiket Terbaru
-
-        <a
-            href="<?= base_url('datatiket') ?>"
-            class="btn btn-sm btn-light float-right"
-        >
-
-            <i class="fas fa-list"></i>
-            Lihat Semua
-
-        </a>
+        Statistik & Analitik Tiket
 
     </div>
 
 
-    <div class="table-responsive">
-
-        <table class="table table-hover">
-
-            <thead>
-
-                <tr>
-
-                    <th>No Tiket</th>
-
-                    <th>Mahasiswa</th>
-
-                    <th>Layanan</th>
-
-                    <th>Prioritas</th>
-
-                    <th>Status</th>
-
-                    <th>Tanggal</th>
-
-                    <th>Aksi</th>
-
-                </tr>
-
-            </thead>
+    <div class="analytics-body">
 
 
-            <tbody id="ticketTable">
+        <!-- FILTER -->
 
-            <?php if (!empty($tickets)): ?>
+        <div class="period-filter">
 
-                <?php foreach ($tickets as $ticket): ?>
+            <div class="row align-items-end">
 
-                    <tr
-                        class="ticket-row"
+                <div class="col-md-4 mb-2">
 
-                        data-status="<?= esc($ticket['status'] ?? '') ?>"
+                    <label class="period-label">
+                        Periode Statistik
+                    </label>
 
-                        data-kategori="<?= esc($ticket['service_name'] ?? '') ?>"
-
-                        data-prioritas="<?= esc($ticket['priority'] ?? '') ?>"
-
-                        data-unit="<?= esc($ticket['assigned_unit'] ?? '') ?>"
-
-                        data-keyword="
-                            <?= esc(
-                                ($ticket['ticket_number'] ?? '') . ' ' .
-                                ($ticket['applicant_name'] ?? '') . ' ' .
-                                ($ticket['nim'] ?? '')
-                            ) ?>
-                        "
+                    <select
+                        id="periodFilter"
+                        class="form-control period-control"
                     >
 
-                        <!-- NOMOR -->
+                        <option value="today">
+                            Hari Ini
+                        </option>
 
-                        <td>
+                        <option value="week">
+                            Minggu Ini
+                        </option>
 
-                            <span class="ticket-number">
+                        <option
+                            value="month"
+                            selected
+                        >
+                            Bulan Ini
+                        </option>
 
-                                <?= esc(
-                                    $ticket['ticket_number'] ?? '-'
-                                ) ?>
+                        <option value="year">
+                            Tahun Ini
+                        </option>
 
-                            </span>
+                        <option value="all">
+                            Semua Periode
+                        </option>
 
-                        </td>
+                        <option value="manual">
+                            Tanggal Manual
+                        </option>
 
+                    </select>
 
-                        <!-- MAHASISWA -->
-
-                        <td>
-
-                            <?= esc(
-                                $ticket['applicant_name'] ?? '-'
-                            ) ?>
-
-                        </td>
-
-
-                        <!-- LAYANAN -->
-
-                        <td>
-
-                            <?= esc(
-                                $ticket['service_name'] ?? '-'
-                            ) ?>
-
-                        </td>
+                </div>
 
 
-                        <!-- PRIORITAS -->
+                <div
+                    class="col-md-3 mb-2 date-manual"
+                    id="manualStart"
+                >
 
-                        <td>
+                    <label class="period-label">
+                        Dari Tanggal
+                    </label>
 
-                            <span
-                                class="status-badge
-                                <?= dashboardPriorityBadge(
-                                    $ticket['priority'] ?? ''
-                                ) ?>"
-                            >
-
-                                <?= esc(
-                                    $ticket['priority'] ?? 'Low'
-                                ) ?>
-
-                            </span>
-
-                        </td>
-
-
-                        <!-- STATUS -->
-
-                        <td>
-
-                            <span
-                                class="status-badge badge-<?= dashboardStatusBadge(
-                                    $ticket['status'] ?? ''
-                                ) ?>"
-                            >
-
-                                <?= esc(
-                                    $ticket['status'] ?? '-'
-                                ) ?>
-
-                            </span>
-
-                        </td>
-
-
-                        <!-- TANGGAL -->
-
-                        <td>
-
-                            <?php if (!empty($ticket['submitted_at'])): ?>
-
-                                <?= date(
-                                    'd F Y',
-                                    strtotime(
-                                        $ticket['submitted_at']
-                                    )
-                                ) ?>
-
-                            <?php else: ?>
-
-                                -
-
-                            <?php endif; ?>
-
-                        </td>
-
-
-                        <!-- AKSI -->
-
-                        <td>
-
-                            <a
-                                href="<?= base_url(
-                                    'verification/detail/' .
-                                    ($ticket['id'] ?? '')
-                                ) ?>"
-                                class="btn btn-sm btn-info"
-                                title="Lihat Detail"
-                            >
-
-                                <i class="fas fa-eye"></i>
-
-                            </a>
-
-                        </td>
-
-                    </tr>
-
-                <?php endforeach; ?>
-
-            <?php else: ?>
-
-                <tr>
-
-                    <td
-                        colspan="7"
-                        class="empty-data"
+                    <input
+                        type="date"
+                        id="startDate"
+                        class="form-control period-control"
                     >
 
-                        <i class="fas fa-inbox fa-2x mb-2"></i>
-
-                        <br>
-
-                        Belum ada tiket.
-
-                    </td>
-
-                </tr>
-
-            <?php endif; ?>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
+                </div>
 
 
-<!-- ========================================================= -->
-<!-- TIKET PRIORITAS + MONITORING SLA -->
-<!-- ========================================================= -->
+                <div
+                    class="col-md-3 mb-2 date-manual"
+                    id="manualEnd"
+                >
 
-<div class="row mb-4">
+                    <label class="period-label">
+                        Sampai Tanggal
+                    </label>
+
+                    <input
+                        type="date"
+                        id="endDate"
+                        class="form-control period-control"
+                    >
+
+                </div>
 
 
-    <!-- PRIORITAS TINGGI -->
+                <div class="col-md-2 mb-2">
 
-    <div class="col-md-6 mb-3">
+                    <button
+                        type="button"
+                        class="apply-btn"
+                        onclick="applyAnalyticsFilter()"
+                    >
 
-        <div class="bottom-card">
+                        <i class="fas fa-filter mr-1"></i>
 
-            <div class="bottom-card-header">
+                        Terapkan
 
-                <i class="fas fa-exclamation-triangle"></i>
+                    </button>
 
-                Tiket Prioritas Tinggi
+                </div>
 
             </div>
 
 
-            <div class="table-responsive">
+            <div class="period-info mt-2">
 
-                <table class="table table-hover mb-0">
+                <i class="fas fa-info-circle mr-1"></i>
 
-                    <thead>
+                Menampilkan statistik:
 
-                        <tr>
-
-                            <th>No Tiket</th>
-
-                            <th>Mahasiswa</th>
-
-                            <th>Layanan</th>
-
-                            <th>SLA</th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                    <?php if (!empty($tiketPrioritas)): ?>
-
-                        <?php foreach ($tiketPrioritas as $ticket): ?>
-
-                            <?php
-
-                            $slaText = 'Aman';
-
-                            $slaClass = 'badge-success';
-
-                            if (!empty($ticket['submitted_at'])) {
-
-                                $hari = floor(
-                                    (
-                                        time() -
-                                        strtotime(
-                                            $ticket['submitted_at']
-                                        )
-                                    ) / 86400
-                                );
-
-                                if ($hari >= 3) {
-
-                                    $slaText = 'Hari Ini';
-                                    $slaClass = 'badge-danger';
-
-                                } elseif ($hari >= 2) {
-
-                                    $slaText = '1 Hari';
-                                    $slaClass = 'badge-warning';
-
-                                }
-
-                            }
-
-                            ?>
-
-                            <tr>
-
-                                <td>
-
-                                    <span class="ticket-number">
-
-                                        <?= esc(
-                                            $ticket['ticket_number'] ?? '-'
-                                        ) ?>
-
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <?= esc(
-                                        $ticket['applicant_name'] ?? '-'
-                                    ) ?>
-
-                                </td>
-
-                                <td>
-
-                                    <?= esc(
-                                        $ticket['service_name'] ?? '-'
-                                    ) ?>
-
-                                </td>
-
-                                <td>
-
-                                    <span
-                                        class="badge <?= $slaClass ?>"
-                                    >
-
-                                        <?= $slaText ?>
-
-                                    </span>
-
-                                </td>
-
-                            </tr>
-
-                        <?php endforeach; ?>
-
-                    <?php else: ?>
-
-                        <tr>
-
-                            <td
-                                colspan="4"
-                                class="empty-data"
-                            >
-
-                                Tidak ada tiket prioritas tinggi.
-
-                            </td>
-
-                        </tr>
-
-                    <?php endif; ?>
-
-                    </tbody>
-
-                </table>
+                <strong id="periodText">
+                    Bulan Ini
+                </strong>
 
             </div>
 
         </div>
 
-    </div>
 
+        <!-- RINGKASAN -->
 
-    <!-- MONITORING SLA -->
+        <div class="row mb-4">
 
-    <div class="col-md-6 mb-3">
 
-        <div class="bottom-card">
+            <div class="col-lg-3 col-md-6 mb-3">
 
-            <div class="bottom-card-header">
+                <div class="analytics-stat clearfix">
 
-                <i class="fas fa-clock"></i>
+                    <div class="analytics-icon icon-total">
 
-                Monitoring SLA
-
-            </div>
-
-
-            <div class="table-responsive">
-
-                <table class="table sla-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Status SLA</th>
-
-                            <th>Jumlah</th>
-
-                            <th>Keterangan</th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        <?php
-
-                        $aman = max(
-                            0,
-                            ($total ?? 0)
-                            - $terlambatSla
-                        );
-
-                        $mendekati = 0;
-
-                        if (!empty($tickets)) {
-
-                            foreach ($tickets as $ticket) {
-
-                                if (
-                                    empty(
-                                        $ticket['submitted_at']
-                                    )
-                                ) {
-                                    continue;
-                                }
-
-                                if (
-                                    in_array(
-                                        $ticket['status'],
-                                        ['Completed', 'Rejected']
-                                    )
-                                ) {
-                                    continue;
-                                }
-
-                                $hari = floor(
-                                    (
-                                        time() -
-                                        strtotime(
-                                            $ticket['submitted_at']
-                                        )
-                                    ) / 86400
-                                );
-
-                                if (
-                                    $hari >= 2 &&
-                                    $hari <= 3
-                                ) {
-                                    $mendekati++;
-                                }
-
-                            }
-
-                        }
-
-                        ?>
-
-                        <tr>
-
-                            <td>
-
-                                <span
-                                    class="badge sla-safe"
-                                >
-
-                                    Aman
-
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <strong>
-                                    <?= $aman ?>
-                                </strong>
-
-                            </td>
-
-                            <td>
-                                Masih dalam batas SLA
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>
-
-                                <span
-                                    class="badge sla-warning"
-                                >
-
-                                    Mendekati Deadline
-
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <strong>
-                                    <?= $mendekati ?>
-                                </strong>
-
-                            </td>
-
-                            <td>
-                                &lt; 24 Jam
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>
-
-                                <span
-                                    class="badge sla-danger"
-                                >
-
-                                    Melewati SLA
-
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <strong>
-                                    <?= $terlambatSla ?>
-                                </strong>
-
-                            </td>
-
-                            <td>
-                                Harus segera diproses
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ========================================================= -->
-<!-- AKTIVITAS TERBARU -->
-<!-- ========================================================= -->
-
-<div class="activity-card mb-4">
-
-    <div class="activity-header">
-
-        <i class="fas fa-history"></i>
-
-        Aktivitas Terbaru
-
-    </div>
-
-
-    <div class="card-body">
-
-        <div class="activity-date">
-
-            <?= date('d F Y') ?>
-
-        </div>
-
-
-        <?php if (!empty($tickets)): ?>
-
-            <?php
-
-            $activityTickets = array_slice(
-                $tickets,
-                0,
-                5
-            );
-
-            ?>
-
-            <?php foreach ($activityTickets as $ticket): ?>
-
-                <div class="activity-item">
-
-                    <div class="activity-icon">
-
-                        <?php
-
-                        $activityIcon =
-                            'fa-file-alt';
-
-                        if (
-                            ($ticket['status'] ?? '') ===
-                            'Verified'
-                        ) {
-                            $activityIcon =
-                                'fa-check-circle';
-                        }
-
-                        if (
-                            ($ticket['status'] ?? '') ===
-                            'Assigned'
-                        ) {
-                            $activityIcon =
-                                'fa-share-square';
-                        }
-
-                        if (
-                            ($ticket['status'] ?? '') ===
-                            'Completed'
-                        ) {
-                            $activityIcon =
-                                'fa-check-double';
-                        }
-
-                        ?>
-
-                        <i class="fas <?= $activityIcon ?>"></i>
+                        <i class="fas fa-ticket-alt"></i>
 
                     </div>
 
+                    <div>
 
-                    <div class="activity-content">
+                        <div
+                            class="analytics-number"
+                            id="analyticsTotal"
+                        >
+                            0
+                        </div>
 
-                        <strong>
-
-                            <?= esc(
-                                $ticket['status'] ?? 'Aktivitas Tiket'
-                            ) ?>
-
-                        </strong>
-
-
-                        <span>
-
-                            <strong
-                                style="
-                                display:inline;
-                                color:#333;
-                                "
-                            >
-
-                                <?= esc(
-                                    $ticket['applicant_name'] ?? '-'
-                                ) ?>
-
-                            </strong>
-
-                            mengajukan
-
-                            <?= esc(
-                                $ticket['service_name'] ?? '-'
-                            ) ?>
-
-                            .
-
-                        </span>
+                        <div class="analytics-label">
+                            Total Tiket
+                        </div>
 
                     </div>
 
                 </div>
 
-            <?php endforeach; ?>
+            </div>
 
-        <?php else: ?>
 
-            <div class="empty-data">
+            <div class="col-lg-3 col-md-6 mb-3">
 
-                Belum ada aktivitas terbaru.
+                <div class="analytics-stat clearfix">
+
+                    <div class="analytics-icon icon-submitted">
+
+                        <i class="fas fa-clock"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div
+                            class="analytics-number"
+                            id="analyticsSubmitted"
+                        >
+                            0
+                        </div>
+
+                        <div class="analytics-label">
+                            Menunggu Verifikasi
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 
-        <?php endif; ?>
+
+            <div class="col-lg-3 col-md-6 mb-3">
+
+                <div class="analytics-stat clearfix">
+
+                    <div class="analytics-icon icon-process">
+
+                        <i class="fas fa-spinner"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div
+                            class="analytics-number"
+                            id="analyticsProcess"
+                        >
+                            0
+                        </div>
+
+                        <div class="analytics-label">
+                            Sedang Diproses
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-3 col-md-6 mb-3">
+
+                <div class="analytics-stat clearfix">
+
+                    <div class="analytics-icon icon-completed">
+
+                        <i class="fas fa-check-double"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div
+                            class="analytics-number"
+                            id="analyticsCompleted"
+                        >
+                            0
+                        </div>
+
+                        <div class="analytics-label">
+                            Tiket Selesai
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- GRAFIK -->
+
+        <div class="row mb-4">
+
+
+            <div class="col-lg-8 mb-3">
+
+                <div class="chart-card">
+
+                    <div class="chart-title">
+
+                        <i class="fas fa-chart-bar mr-1"></i>
+
+                        Perkembangan Tiket
+
+                    </div>
+
+                    <div class="chart-container">
+
+                        <canvas id="ticketPeriodChart"></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-4 mb-3">
+
+                <div class="chart-card">
+
+                    <div class="chart-title">
+
+                        <i class="fas fa-chart-pie mr-1"></i>
+
+                        Distribusi Status
+
+                    </div>
+
+                    <div class="chart-container">
+
+                        <canvas id="ticketStatusChart"></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
@@ -1674,102 +940,1136 @@ $tiketPrioritas = array_slice($tiketPrioritas, 0, 5);
 </section>
 
 
-<!-- ========================================================= -->
-<!-- FILTER JAVASCRIPT -->
-<!-- ========================================================= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 <script>
 
-function filterTickets()
+/* =========================================================
+   DATA TIKET
+   ========================================================= */
+
+const dashboardTickets =
+    <?= json_encode(
+        $ticketsJson,
+        JSON_UNESCAPED_UNICODE |
+        JSON_UNESCAPED_SLASHES
+    ) ?>;
+
+
+/* =========================================================
+   CHART
+   ========================================================= */
+
+let ticketPeriodChart = null;
+let ticketStatusChart = null;
+
+
+/* =========================================================
+   STATUS DATABASE
+   ========================================================= */
+
+const statusList = [
+    'submitted',
+    'verified',
+    'assigned',
+    'in_progress',
+    'completed',
+    'need_revision',
+    'rejected'
+];
+
+
+/* =========================================================
+   NAMA STATUS
+   ========================================================= */
+
+const statusLabel = {
+
+    submitted: 'Submitted',
+
+    verified: 'Verified',
+
+    assigned: 'Assigned',
+
+    in_progress: 'In Progress',
+
+    completed: 'Completed',
+
+    need_revision: 'Need Revision',
+
+    rejected: 'Rejected'
+
+};
+
+
+/* =========================================================
+   SAAT HALAMAN SELESAI
+   ========================================================= */
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const period =
+            document.getElementById(
+                'periodFilter'
+            );
+
+        period.addEventListener(
+            'change',
+            function () {
+
+                toggleManualDate();
+
+            }
+        );
+
+        toggleManualDate();
+
+        applyAnalyticsFilter();
+
+    }
+);
+
+
+/* =========================================================
+   TOGGLE MANUAL DATE
+   ========================================================= */
+
+function toggleManualDate()
 {
-    const status =
-        document.getElementById('filterStatus')
-        .value
-        .toLowerCase();
+    const period =
+        document.getElementById(
+            'periodFilter'
+        ).value;
 
-    const kategori =
-        document.getElementById('filterKategori')
-        .value
-        .toLowerCase();
+    const start =
+        document.getElementById(
+            'manualStart'
+        );
 
-    const prioritas =
-        document.getElementById('filterPrioritas')
-        .value
-        .toLowerCase();
+    const end =
+        document.getElementById(
+            'manualEnd'
+        );
 
-    const unit =
-        document.getElementById('filterUnit')
-        .value
-        .toLowerCase();
+    if (period === 'manual') {
 
-    const keyword =
-        document.getElementById('filterKeyword')
-        .value
-        .toLowerCase();
+        start.classList.add('show');
 
-    const rows =
-        document.querySelectorAll('.ticket-row');
+        end.classList.add('show');
 
-    rows.forEach(function(row)
-    {
+    } else {
 
-        const rowStatus =
-            row.dataset.status
-            .toLowerCase();
+        start.classList.remove('show');
 
-        const rowKategori =
-            row.dataset.kategori
-            .toLowerCase();
+        end.classList.remove('show');
 
-        const rowPrioritas =
-            row.dataset.prioritas
-            .toLowerCase();
+    }
+}
 
-        const rowUnit =
-            row.dataset.unit
-            .toLowerCase();
 
-        const rowKeyword =
-            row.dataset.keyword
-            .toLowerCase();
+/* =========================================================
+   FORMAT DATE
+   ========================================================= */
 
-        const statusMatch =
-            !status ||
-            rowStatus === status;
+function formatDate(date)
+{
+    const year =
+        date.getFullYear();
 
-        const kategoriMatch =
-            !kategori ||
-            rowKategori === kategori;
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(2, '0');
 
-        const prioritasMatch =
-            !prioritas ||
-            rowPrioritas === prioritas;
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2, '0');
 
-        const unitMatch =
-            !unit ||
-            rowUnit === unit;
+    return (
+        year +
+        '-' +
+        month +
+        '-' +
+        day
+    );
+}
 
-        const keywordMatch =
-            !keyword ||
-            rowKeyword.includes(keyword);
 
-        if (
-            statusMatch &&
-            kategoriMatch &&
-            prioritasMatch &&
-            unitMatch &&
-            keywordMatch
-        ) {
+/* =========================================================
+   PARSE DATE
+   ========================================================= */
 
-            row.style.display = '';
+function parseTicketDate(dateString)
+{
+    if (!dateString) {
+        return null;
+    }
 
-        } else {
+    const date =
+        new Date(
+            dateString.replace(
+                ' ',
+                'T'
+            )
+        );
 
-            row.style.display = 'none';
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+        return null;
+    }
+
+    return date;
+}
+
+
+/* =========================================================
+   FILTER TIKET
+   ========================================================= */
+
+function getFilteredTickets()
+{
+    const period =
+        document.getElementById(
+            'periodFilter'
+        ).value;
+
+    const now =
+        new Date();
+
+    let startDate = null;
+    let endDate = null;
+
+
+    /* HARI INI */
+
+    if (period === 'today') {
+
+        startDate =
+            new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate()
+            );
+
+        endDate =
+            new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate(),
+                23,
+                59,
+                59
+            );
+
+    }
+
+
+    /* MINGGU INI */
+
+    else if (period === 'week') {
+
+        const day =
+            now.getDay();
+
+        const diff =
+            day === 0
+                ? -6
+                : 1 - day;
+
+        startDate =
+            new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate() + diff
+            );
+
+        endDate =
+            new Date(
+                startDate.getFullYear(),
+                startDate.getMonth(),
+                startDate.getDate() + 6,
+                23,
+                59,
+                59
+            );
+
+    }
+
+
+    /* BULAN INI */
+
+    else if (period === 'month') {
+
+        startDate =
+            new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                1
+            );
+
+        endDate =
+            new Date(
+                now.getFullYear(),
+                now.getMonth() + 1,
+                0,
+                23,
+                59,
+                59
+            );
+
+    }
+
+
+    /* TAHUN INI */
+
+    else if (period === 'year') {
+
+        startDate =
+            new Date(
+                now.getFullYear(),
+                0,
+                1
+            );
+
+        endDate =
+            new Date(
+                now.getFullYear(),
+                11,
+                31,
+                23,
+                59,
+                59
+            );
+
+    }
+
+
+    /* MANUAL */
+
+    else if (period === 'manual') {
+
+        const start =
+            document.getElementById(
+                'startDate'
+            ).value;
+
+        const end =
+            document.getElementById(
+                'endDate'
+            ).value;
+
+        if (!start || !end) {
+
+            return [];
 
         }
 
-    });
+        startDate =
+            new Date(
+                start + 'T00:00:00'
+            );
+
+        endDate =
+            new Date(
+                end + 'T23:59:59'
+            );
+
+        if (startDate > endDate) {
+
+            return [];
+
+        }
+
+    }
+
+
+    /* SEMUA */
+
+    if (period === 'all') {
+
+        return dashboardTickets;
+
+    }
+
+
+    /* FILTER */
+
+    return dashboardTickets.filter(
+        function (ticket) {
+
+            const ticketDate =
+                parseTicketDate(
+                    ticket.submitted_at
+                );
+
+            if (!ticketDate) {
+
+                return false;
+
+            }
+
+            return (
+                ticketDate >= startDate &&
+                ticketDate <= endDate
+            );
+
+        }
+    );
+}
+
+
+/* =========================================================
+   UPDATE ANALYTICS
+   ========================================================= */
+
+function updateAnalytics()
+{
+    const filteredTickets =
+        getFilteredTickets();
+
+
+    const statusCount = {};
+
+    statusList.forEach(
+        function (status) {
+
+            statusCount[status] = 0;
+
+        }
+    );
+
+
+    filteredTickets.forEach(
+        function (ticket) {
+
+            const status =
+                String(
+                    ticket.status || ''
+                ).toLowerCase().trim();
+
+            if (
+                Object.prototype.hasOwnProperty.call(
+                    statusCount,
+                    status
+                )
+            ) {
+
+                statusCount[status]++;
+
+            }
+
+        }
+    );
+
+
+    const total =
+        filteredTickets.length;
+
+    const submitted =
+        statusCount.submitted || 0;
+
+    const process =
+        (statusCount.assigned || 0) +
+        (statusCount.in_progress || 0);
+
+    const completed =
+        statusCount.completed || 0;
+
+    const revision =
+        statusCount.need_revision || 0;
+
+
+    /* KARTU ATAS */
+
+    document.getElementById(
+        'topTotal'
+    ).textContent = total;
+
+    document.getElementById(
+        'topMasuk'
+    ).textContent = submitted;
+
+    document.getElementById(
+        'topSelesai'
+    ).textContent = completed;
+
+    document.getElementById(
+        'topRevisi'
+    ).textContent = revision;
+
+
+    /* KARTU ANALITIK */
+
+    document.getElementById(
+        'analyticsTotal'
+    ).textContent = total;
+
+    document.getElementById(
+        'analyticsSubmitted'
+    ).textContent = submitted;
+
+    document.getElementById(
+        'analyticsProcess'
+    ).textContent = process;
+
+    document.getElementById(
+        'analyticsCompleted'
+    ).textContent = completed;
+
+
+    /* TEKS PERIODE */
+
+    updatePeriodText();
+
+
+    /* CHART */
+
+    updatePeriodChart(
+        filteredTickets
+    );
+
+    updateStatusChart(
+        statusCount
+    );
+}
+
+
+/* =========================================================
+   TEKS PERIODE
+   ========================================================= */
+
+function updatePeriodText()
+{
+    const period =
+        document.getElementById(
+            'periodFilter'
+        ).value;
+
+    let text = '';
+
+
+    if (period === 'today') {
+
+        text = 'Hari Ini';
+
+    }
+
+    else if (period === 'week') {
+
+        text = 'Minggu Ini';
+
+    }
+
+    else if (period === 'month') {
+
+        text = 'Bulan Ini';
+
+    }
+
+    else if (period === 'year') {
+
+        text = 'Tahun Ini';
+
+    }
+
+    else if (period === 'all') {
+
+        text = 'Semua Periode';
+
+    }
+
+    else if (period === 'manual') {
+
+        const start =
+            document.getElementById(
+                'startDate'
+            ).value;
+
+        const end =
+            document.getElementById(
+                'endDate'
+            ).value;
+
+        if (start && end) {
+
+            text =
+                formatDisplayDate(start) +
+                ' s/d ' +
+                formatDisplayDate(end);
+
+        } else {
+
+            text = 'Tanggal Manual';
+
+        }
+
+    }
+
+
+    document.getElementById(
+        'periodText'
+    ).textContent = text;
+}
+
+
+/* =========================================================
+   FORMAT DISPLAY DATE
+   ========================================================= */
+
+function formatDisplayDate(
+    dateString
+)
+{
+    const date =
+        new Date(
+            dateString +
+            'T00:00:00'
+        );
+
+    return date.toLocaleDateString(
+        'id-ID',
+        {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        }
+    );
+}
+
+
+/* =========================================================
+   GRAFIK PERKEMBANGAN
+   ========================================================= */
+
+function updatePeriodChart(
+    tickets
+)
+{
+    const period =
+        document.getElementById(
+            'periodFilter'
+        ).value;
+
+    let labels = [];
+    let values = [];
+
+
+    /* SEMUA PERIODE */
+
+    if (period === 'all') {
+
+        const grouped = {};
+
+        tickets.forEach(
+            function (ticket) {
+
+                const date =
+                    parseTicketDate(
+                        ticket.submitted_at
+                    );
+
+                if (!date) {
+                    return;
+                }
+
+                const key =
+                    date.getFullYear() +
+                    '-' +
+                    String(
+                        date.getMonth() + 1
+                    ).padStart(2, '0');
+
+                if (!grouped[key]) {
+
+                    grouped[key] = 0;
+
+                }
+
+                grouped[key]++;
+
+            }
+        );
+
+
+        Object.keys(grouped)
+            .sort()
+            .forEach(
+                function (key) {
+
+                    const parts =
+                        key.split('-');
+
+                    const date =
+                        new Date(
+                            Number(parts[0]),
+                            Number(parts[1]) - 1,
+                            1
+                        );
+
+                    labels.push(
+                        date.toLocaleDateString(
+                            'id-ID',
+                            {
+                                month: 'short',
+                                year: 'numeric'
+                            }
+                        )
+                    );
+
+                    values.push(
+                        grouped[key]
+                    );
+
+                }
+            );
+
+    }
+
+
+    /* TAHUN */
+
+    else if (period === 'year') {
+
+        const grouped = {};
+
+        for (
+            let month = 0;
+            month < 12;
+            month++
+        ) {
+
+            grouped[month] = 0;
+
+        }
+
+
+        tickets.forEach(
+            function (ticket) {
+
+                const date =
+                    parseTicketDate(
+                        ticket.submitted_at
+                    );
+
+                if (!date) {
+                    return;
+                }
+
+                grouped[
+                    date.getMonth()
+                ]++;
+
+            }
+        );
+
+
+        for (
+            let month = 0;
+            month < 12;
+            month++
+        ) {
+
+            const date =
+                new Date(
+                    new Date().getFullYear(),
+                    month,
+                    1
+                );
+
+            labels.push(
+                date.toLocaleDateString(
+                    'id-ID',
+                    {
+                        month: 'short'
+                    }
+                )
+            );
+
+            values.push(
+                grouped[month]
+            );
+
+        }
+
+    }
+
+
+    /* BULAN */
+
+    else if (period === 'month') {
+
+        const now =
+            new Date();
+
+        const days =
+            new Date(
+                now.getFullYear(),
+                now.getMonth() + 1,
+                0
+            ).getDate();
+
+        const grouped = {};
+
+        for (
+            let day = 1;
+            day <= days;
+            day++
+        ) {
+
+            grouped[day] = 0;
+
+        }
+
+
+        tickets.forEach(
+            function (ticket) {
+
+                const date =
+                    parseTicketDate(
+                        ticket.submitted_at
+                    );
+
+                if (!date) {
+                    return;
+                }
+
+                grouped[
+                    date.getDate()
+                ]++;
+
+            }
+        );
+
+
+        for (
+            let day = 1;
+            day <= days;
+            day++
+        ) {
+
+            labels.push(
+                String(day)
+            );
+
+            values.push(
+                grouped[day]
+            );
+
+        }
+
+    }
+
+
+    /* HARI / MINGGU / MANUAL */
+
+    else {
+
+        const grouped = {};
+
+        tickets.forEach(
+            function (ticket) {
+
+                const date =
+                    parseTicketDate(
+                        ticket.submitted_at
+                    );
+
+                if (!date) {
+                    return;
+                }
+
+                const key =
+                    formatDate(date);
+
+                if (!grouped[key]) {
+
+                    grouped[key] = 0;
+
+                }
+
+                grouped[key]++;
+
+            }
+        );
+
+
+        Object.keys(grouped)
+            .sort()
+            .forEach(
+                function (key) {
+
+                    labels.push(
+                        formatDisplayDate(key)
+                    );
+
+                    values.push(
+                        grouped[key]
+                    );
+
+                }
+            );
+
+
+        if (labels.length === 0) {
+
+            labels.push(
+                'Tidak ada data'
+            );
+
+            values.push(0);
+
+        }
+
+    }
+
+
+    if (ticketPeriodChart) {
+
+        ticketPeriodChart.destroy();
+
+    }
+
+
+    const canvas =
+        document.getElementById(
+            'ticketPeriodChart'
+        );
+
+    if (!canvas) {
+        return;
+    }
+
+
+    ticketPeriodChart =
+        new Chart(
+            canvas.getContext('2d'),
+            {
+
+                type: 'bar',
+
+                data: {
+
+                    labels: labels,
+
+                    datasets: [
+                        {
+                            label: 'Jumlah Tiket',
+
+                            data: values,
+
+                            backgroundColor:
+                                '#202d87',
+
+                            borderRadius: 6,
+
+                            borderWidth: 0
+                        }
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            ticks: {
+                                precision: 0
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+}
+
+
+/* =========================================================
+   GRAFIK STATUS
+   ========================================================= */
+
+function updateStatusChart(
+    statusCount
+)
+{
+    const values =
+        statusList.map(
+            function (status) {
+
+                return (
+                    statusCount[status] ||
+                    0
+                );
+
+            }
+        );
+
+
+    if (ticketStatusChart) {
+
+        ticketStatusChart.destroy();
+
+    }
+
+
+    const canvas =
+        document.getElementById(
+            'ticketStatusChart'
+        );
+
+    if (!canvas) {
+        return;
+    }
+
+
+    ticketStatusChart =
+        new Chart(
+            canvas.getContext('2d'),
+            {
+
+                type: 'doughnut',
+
+                data: {
+
+                    labels: statusList.map(
+                        function (status) {
+
+                            return statusLabel[
+                                status
+                            ];
+
+                        }
+                    ),
+
+                    datasets: [
+                        {
+
+                            data: values,
+
+                            backgroundColor: [
+                                '#ffc107',
+                                '#28a745',
+                                '#17a2b8',
+                                '#007bff',
+                                '#128044',
+                                '#343a40',
+                                '#dc3545'
+                            ],
+
+                            borderWidth: 2,
+
+                            borderColor: '#ffffff'
+
+                        }
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+
+                            position: 'bottom',
+
+                            labels: {
+
+                                boxWidth: 12
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+}
+
+
+/* =========================================================
+   TERAPKAN FILTER
+   ========================================================= */
+
+function applyAnalyticsFilter()
+{
+    const period =
+        document.getElementById(
+            'periodFilter'
+        ).value;
+
+
+    if (period === 'manual') {
+
+        const start =
+            document.getElementById(
+                'startDate'
+            ).value;
+
+        const end =
+            document.getElementById(
+                'endDate'
+            ).value;
+
+
+        if (!start || !end) {
+
+            alert(
+                'Silakan pilih Dari Tanggal dan Sampai Tanggal terlebih dahulu.'
+            );
+
+            return;
+
+        }
+
+
+        if (start > end) {
+
+            alert(
+                'Dari Tanggal tidak boleh lebih besar dari Sampai Tanggal.'
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    updateAnalytics();
 }
 
 </script>

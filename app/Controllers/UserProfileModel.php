@@ -10,17 +10,28 @@ class UserProfileModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $allowedFields    = [
+
+    protected $allowedFields = [
         'user_id',
         'applicant_type_id',
-        'full_name',
-        'identity_number',
-        'phone_number',
+        'study_program_id',
+        'class_id',
+        'student_name',
         'institution_name',
-        'address'
+        'position',
+        'nim',
+        'nik',
+        'name',
+        'email',
+        'phone',
+        'address',
+        'photo',
     ];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    protected $useSoftDeletes = true;
+    protected $deletedField  = 'deleted_at';
 }

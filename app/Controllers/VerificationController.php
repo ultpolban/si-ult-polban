@@ -18,13 +18,42 @@ class VerificationController extends BaseController
 
     /**
      * ============================================================
-     * HALAMAN VERIFIKASI
-     * Hanya menampilkan tiket yang masih SUBMITTED
+     * HALAMAN DAFTAR VERIFIKASI
+     * HANYA MENAMPILKAN TIKET SUBMITTED
      * ============================================================
      */
     public function index()
     {
-        $tickets = $this->ticketModel->getByStatus('submitted');
+        $tickets = $this->db
+            ->table('tickets t')
+            ->select('
+                t.id,
+                t.ticket_number,
+                t.user_profile_id,
+                t.service_id,
+                t.status,
+                t.priority,
+                t.submitted_at,
+                t.created_at,
+                ms.name AS service_name,
+                up.name AS applicant_name,
+                up.nim,
+                up.nik
+            ')
+            ->join(
+                'master_services ms',
+                'ms.id = t.service_id',
+                'left'
+            )
+            ->join(
+                'user_profiles up',
+                'up.id = t.user_profile_id',
+                'left'
+            )
+            ->where('LOWER(t.status)', 'submitted')
+            ->orderBy('t.submitted_at', 'DESC')
+            ->get()
+            ->getResultArray();
 
         return view('verification/index', [
             'tickets' => $tickets
@@ -38,176 +67,480 @@ class VerificationController extends BaseController
      */
     public function detail($id)
     {
-        $ticket = $this->ticketModel->getTicketDetail($id);
+        $ticket = $this->db
+            ->table('tickets t')
+            ->select('
+                t.*,
+                ms.name AS service_name
+            ')
+            ->join(
+                'master_services ms',
+                'ms.id = t.service_id',
+                'left'
+            )
+            ->where('t.id', $id)
+            ->get()
+            ->getRowArray();
 
         if (!$ticket) {
             return redirect()
-                ->to('/verification')
-                ->with('error', 'Data tiket tidak ditemukan.');
+                ->to(base_url('verification'))
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
         }
 
-        // Data pemohon
         $profile = null;
 
         if (!empty($ticket['user_profile_id'])) {
             $profile = $this->db
                 ->table('user_profiles')
-                ->where('id', $ticket['user_profile_id'])
+                ->where(
+                    'id',
+                    $ticket['user_profile_id']
+                )
                 ->get()
                 ->getRowArray();
         }
 
-        // Data unit layanan
-        $unit = null;
-
-        if (!empty($ticket['service_unit_id'])) {
-            $unit = $this->db
-                ->table('master_service_units')
-                ->where('id', $ticket['service_unit_id'])
-                ->get()
-                ->getRowArray();
-        }
-
-        // Komentar
-        $comments = [];
-
-        if ($this->db->tableExists('ticket_comments')) {
-            $comments = $this->db
-                ->table('ticket_comments')
-                ->where('ticket_id', $id)
-                ->orderBy('id', 'ASC')
-                ->get()
-                ->getResultArray();
-        }
-
-        // Log tiket
         $logs = [];
 
         if ($this->db->tableExists('ticket_logs')) {
             $logs = $this->db
                 ->table('ticket_logs')
-                ->where('ticket_id', $id)
-                ->orderBy('id', 'ASC')
+                ->where(
+                    'ticket_id',
+                    $id
+                )
+                ->orderBy(
+                    'created_at',
+                    'ASC'
+                )
                 ->get()
                 ->getResultArray();
         }
 
         return view('verification/detail', [
-            'ticket'   => $ticket,
-            'profile'  => $profile,
-            'unit'     => $unit,
-            'comments' => $comments,
-            'logs'     => $logs
+            'ticket'  => $ticket,
+            'profile' => $profile,
+            'logs'    => $logs
         ]);
     }
 
     /**
-     * Alias process
+     * ============================================================
+     * FORM VERIFIKASI
+     * ============================================================
      */
-    public function process($id)
+    public function verify($id)
     {
-        return $this->detail($id);
+        $ticket = $this->db
+            ->table('tickets t')
+            ->select('
+                t.*,
+
+                ms.name AS service_name,
+
+                up.name AS applicant_name,
+                up.nim,
+                up.nik,
+                up.email,
+                up.phone
+            ')
+            ->join(
+                'master_services ms',
+                'ms.id = t.service_id',
+                'left'
+            )
+            ->join(
+                'user_profiles up',
+                'up.id = t.user_profile_id',
+                'left'
+            )
+            ->where(
+                't.id',
+                $id
+            )
+            ->get()
+            ->getRowArray();
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('verification'))
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
+        }
+
+        /**
+         * Hanya tiket submitted
+         * yang boleh masuk form verifikasi.
+         */
+        if (
+            strtolower(
+                trim($ticket['status'] ?? '')
+            ) !== 'submitted'
+        ) {
+            return redirect()
+                ->to(base_url('verification'))
+                ->with(
+                    'error',
+                    'Tiket ini sudah diproses.'
+                );
+        }
+
+        /**
+         * RIWAYAT LOG
+         */
+        $logs = [];
+
+        if ($this->db->tableExists('ticket_logs')) {
+            $logs = $this->db
+                ->table('ticket_logs')
+                ->where(
+                    'ticket_id',
+                    $id
+                )
+                ->orderBy(
+                    'created_at',
+                    'DESC'
+                )
+                ->get()
+                ->getResultArray();
+        }
+
+        return view('verification/verify', [
+            'ticket' => $ticket,
+            'logs'   => $logs
+        ]);
     }
 
     /**
      * ============================================================
-     * VERIFIKASI TIKET
+     * SIMPAN HASIL VERIFIKASI
      *
      * submitted
      *     ↓
      * verified
      *     ↓
-     * masuk antrean DISPOSISI
-     *
-     * TIDAK langsung dikirim ke unit.
+     * disposition
      * ============================================================
      */
-    public function verify($id)
+    public function process($id)
     {
-        // Pastikan tiket ada
         $ticket = $this->ticketModel->find($id);
 
         if (!$ticket) {
             return redirect()
-                ->to('/verification')
-                ->with('error', 'Tiket tidak ditemukan.');
-        }
-
-        // Pastikan hanya tiket submitted yang boleh diverifikasi
-        if (($ticket['status'] ?? '') !== 'submitted') {
-            return redirect()
-                ->to('/verification')
+                ->to(base_url('verification'))
                 ->with(
                     'error',
-                    'Tiket ini tidak dapat diverifikasi karena statusnya sudah berubah.'
+                    'Tiket tidak ditemukan.'
+                );
+        }
+
+        /**
+         * Pastikan tiket masih submitted.
+         */
+        if (
+            strtolower(
+                trim($ticket['status'] ?? '')
+            ) !== 'submitted'
+        ) {
+            return redirect()
+                ->to(base_url('verification'))
+                ->with(
+                    'error',
+                    'Tiket sudah diproses atau tidak dapat diverifikasi.'
                 );
         }
 
         $now = date('Y-m-d H:i:s');
 
-        // Ambil user yang melakukan verifikasi
-        $userId = session()->get('user_id');
-
-        $updateData = [
-            'status'      => 'verified',
-            'verified_at' => $now
-        ];
-
-        /*
-         * Jika kolom verified_by memang tersedia,
-         * simpan ID petugas yang melakukan verifikasi.
+        /**
+         * ========================================================
+         * HASIL VERIFIKASI
+         * ========================================================
+         *
+         * Nilai yang dikirim dari form:
+         *
+         * verify   = Verified
+         * revision = Revision
+         * reject   = Rejected
          */
-        $ticketFields = $this->db->getFieldNames('tickets');
+        $action = strtolower(
+            trim(
+                (string) $this->request->getPost('action')
+            )
+        );
 
-        if (
-            in_array('verified_by', $ticketFields) &&
-            !empty($userId)
-        ) {
-            $updateData['verified_by'] = $userId;
+        /**
+         * Jika action kosong, default verify.
+         */
+        if ($action === '') {
+            $action = 'verify';
         }
 
-        // Update tiket
-        $updated = $this->ticketModel->update($id, $updateData);
+        /**
+         * Mapping action ke status database.
+         */
+        $statusMap = [
+            'verify'   => 'verified',
+            'revision' => 'revision',
+            'reject'   => 'rejected'
+        ];
+
+        if (!isset($statusMap[$action])) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Hasil verifikasi tidak valid.'
+                );
+        }
+
+        $newStatus = $statusMap[$action];
+
+        /**
+         * ========================================================
+         * DATA YANG DIISI DARI FORM
+         * ========================================================
+         */
+
+        $priority = trim(
+            (string) $this->request->getPost('priority')
+        );
+
+        /**
+         * Unit tujuan.
+         *
+         * Nilai ini diambil dari form.
+         * Kalau form sudah mengisi unit tujuan,
+         * nilai tersebut akan disimpan ke tiket.
+         */
+        $assignedTo = trim(
+            (string) $this->request->getPost('assigned_to')
+        );
+
+        /**
+         * Catatan verifikasi.
+         */
+        $verificationNote = trim(
+            (string) $this->request->getPost('verification_note')
+        );
+
+        /**
+         * Komentar petugas.
+         */
+        $comment = trim(
+            (string) $this->request->getPost('comment')
+        );
+
+        /**
+         * ========================================================
+         * SIAPKAN DATA UPDATE
+         * ========================================================
+         */
+        $updateData = [];
+
+        $ticketFields = $this->db
+            ->getFieldNames('tickets');
+
+        /**
+         * STATUS
+         */
+        if (in_array('status', $ticketFields)) {
+            $updateData['status'] = $newStatus;
+        }
+
+        /**
+         * PRIORITY
+         */
+        if (
+            $priority !== '' &&
+            in_array('priority', $ticketFields)
+        ) {
+            $updateData['priority'] = $priority;
+        }
+
+        /**
+         * ========================================================
+         * UNIT TUJUAN
+         * ========================================================
+         *
+         * Ini bagian penting:
+         * nilai assigned_to dari form disimpan ke tickets
+         * jika kolom tersebut memang tersedia di database.
+         */
+        if (
+            $assignedTo !== '' &&
+            in_array('assigned_to', $ticketFields)
+        ) {
+            $updateData['assigned_to'] = $assignedTo;
+        }
+
+        /**
+         * ========================================================
+         * CATATAN VERIFIKASI
+         * ========================================================
+         */
+        if (
+            $verificationNote !== '' &&
+            in_array('verification_note', $ticketFields)
+        ) {
+            $updateData['verification_note'] = $verificationNote;
+        }
+
+        /**
+         * ========================================================
+         * KOMENTAR
+         * ========================================================
+         */
+        if (
+            $comment !== '' &&
+            in_array('admin_note', $ticketFields)
+        ) {
+            $updateData['admin_note'] = $comment;
+        }
+
+        /**
+         * VERIFIED AT
+         */
+        if (
+            $action === 'verify' &&
+            in_array('verified_at', $ticketFields)
+        ) {
+            $updateData['verified_at'] = $now;
+        }
+
+        /**
+         * REJECTED AT
+         */
+        if (
+            $action === 'reject' &&
+            in_array('rejected_at', $ticketFields)
+        ) {
+            $updateData['rejected_at'] = $now;
+        }
+
+        /**
+         * Jika tidak ada data yang bisa diupdate.
+         */
+        if (empty($updateData)) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Tidak ada data yang dapat diperbarui.'
+                );
+        }
+
+        /**
+         * ========================================================
+         * UPDATE TIKET
+         * ========================================================
+         */
+        $updated = $this->ticketModel->update(
+            $id,
+            $updateData
+        );
 
         if (!$updated) {
             return redirect()
                 ->back()
-                ->with('error', 'Gagal memverifikasi tiket.');
+                ->with(
+                    'error',
+                    'Gagal menyimpan hasil verifikasi tiket.'
+                );
         }
 
-        // Simpan log
-        $this->addTicketLog(
-            $id,
-            'verified',
-            'Tiket telah diverifikasi oleh Petugas ULT dan masuk ke antrean disposisi.'
-        );
-
-        /*
-         * Setelah diverifikasi:
-         *
-         * VERIFIED
-         *    ↓
-         * DISPOSISI
-         *
-         * BUKAN langsung ke unit.
+        /**
+         * ========================================================
+         * SIMPAN LOG
+         * ========================================================
          */
+        if ($this->db->tableExists('ticket_logs')) {
+
+            $logFields = $this->db
+                ->getFieldNames('ticket_logs');
+
+            $logData = [];
+
+            if (in_array('ticket_id', $logFields)) {
+                $logData['ticket_id'] = $id;
+            }
+
+            if (in_array('activity', $logFields)) {
+
+                $activityMap = [
+                    'verify'   => 'verified',
+                    'revision' => 'revision',
+                    'reject'   => 'rejected'
+                ];
+
+                $logData['activity'] =
+                    $activityMap[$action];
+            }
+
+            if (in_array('user_name', $logFields)) {
+                $logData['user_name'] =
+                    session()->get('name')
+                    ?? 'Petugas ULT';
+            }
+
+            if (in_array('created_at', $logFields)) {
+                $logData['created_at'] = $now;
+            }
+
+            if (!empty($logData)) {
+                $this->db
+                    ->table('ticket_logs')
+                    ->insert($logData);
+            }
+        }
+
+        /**
+         * ========================================================
+         * REDIRECT SESUAI HASIL VERIFIKASI
+         * ========================================================
+         */
+
+        if ($action === 'verify') {
+            return redirect()
+                ->to(base_url('disposition'))
+                ->with(
+                    'success',
+                    'Tiket berhasil diverifikasi dan masuk ke antrean disposisi.'
+                );
+        }
+
+        if ($action === 'revision') {
+            return redirect()
+                ->to(base_url('verification'))
+                ->with(
+                    'success',
+                    'Tiket berhasil dikembalikan untuk diperbaiki.'
+                );
+        }
+
+        if ($action === 'reject') {
+            return redirect()
+                ->to(base_url('verification'))
+                ->with(
+                    'success',
+                    'Tiket berhasil ditolak.'
+                );
+        }
+
         return redirect()
-            ->to('/disposition')
-            ->with(
-                'success',
-                'Tiket berhasil diverifikasi dan masuk ke antrean disposisi.'
-            );
+            ->to(base_url('verification'));
     }
 
     /**
      * ============================================================
      * KEMBALIKAN TIKET UNTUK REVISI
-     *
-     * submitted
-     *     ↓
-     * need_revision
-     *     ↓
-     * pemohon memperbaiki
      * ============================================================
      */
     public function revision($id)
@@ -216,16 +549,23 @@ class VerificationController extends BaseController
 
         if (!$ticket) {
             return redirect()
-                ->to('/verification')
-                ->with('error', 'Tiket tidak ditemukan.');
-        }
-
-        if (($ticket['status'] ?? '') !== 'submitted') {
-            return redirect()
-                ->to('/verification')
+                ->to(base_url('verification'))
                 ->with(
                     'error',
-                    'Tiket ini tidak dapat dikembalikan karena statusnya sudah berubah.'
+                    'Tiket tidak ditemukan.'
+                );
+        }
+
+        if (
+            strtolower(
+                trim($ticket['status'] ?? '')
+            ) !== 'submitted'
+        ) {
+            return redirect()
+                ->to(base_url('verification'))
+                ->with(
+                    'error',
+                    'Tiket ini sudah diproses.'
                 );
         }
 
@@ -233,47 +573,193 @@ class VerificationController extends BaseController
             (string) $this->request->getPost('comment')
         );
 
-        if ($comment === '') {
-            return redirect()
-                ->back()
-                ->with('error', 'Alasan revisi wajib diisi.');
+        $now = date('Y-m-d H:i:s');
+
+        $ticketFields = $this->db
+            ->getFieldNames('tickets');
+
+        $updateData = [];
+
+        if (in_array('status', $ticketFields)) {
+            $updateData['status'] = 'revision';
         }
 
-        $updated = $this->ticketModel->update($id, [
-            'status' => 'need_revision'
-        ]);
+        if (
+            in_array('admin_note', $ticketFields) &&
+            $comment !== ''
+        ) {
+            $updateData['admin_note'] = $comment;
+        }
+
+        if (empty($updateData)) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Tidak ada field yang dapat diperbarui.'
+                );
+        }
+
+        $updated = $this->ticketModel->update(
+            $id,
+            $updateData
+        );
 
         if (!$updated) {
             return redirect()
                 ->back()
-                ->with('error', 'Gagal mengubah status tiket.');
+                ->with(
+                    'error',
+                    'Gagal mengubah status tiket.'
+                );
         }
 
-        // Simpan komentar alasan revisi
-        $this->addTicketComment($id, $comment);
+        if ($this->db->tableExists('ticket_logs')) {
 
-        // Simpan log
-        $this->addTicketLog(
-            $id,
-            'need_revision',
-            'Tiket dikembalikan kepada pemohon untuk diperbaiki: ' . $comment
-        );
+            $logFields = $this->db
+                ->getFieldNames('ticket_logs');
+
+            $logData = [];
+
+            if (in_array('ticket_id', $logFields)) {
+                $logData['ticket_id'] = $id;
+            }
+
+            if (in_array('activity', $logFields)) {
+                $logData['activity'] = 'revision';
+            }
+
+            if (in_array('user_name', $logFields)) {
+                $logData['user_name'] =
+                    session()->get('name')
+                    ?? 'Petugas ULT';
+            }
+
+            if (in_array('created_at', $logFields)) {
+                $logData['created_at'] = $now;
+            }
+
+            if (!empty($logData)) {
+                $this->db
+                    ->table('ticket_logs')
+                    ->insert($logData);
+            }
+        }
 
         return redirect()
-            ->to('/verification')
+            ->to(base_url('verification'))
             ->with(
                 'success',
-                'Tiket berhasil dikembalikan kepada pemohon untuk diperbaiki.'
+                'Tiket berhasil dikembalikan untuk diperbaiki.'
+            );
+    }
+
+    /**
+     * ============================================================
+     * PROSES TIKET
+     * VERIFIED
+     *     ↓
+     * PROCESSING
+     * ============================================================
+     */
+    public function processing($id)
+    {
+        $ticket = $this->ticketModel->find($id);
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('verification'))
+                ->with(
+                    'error',
+                    'Tiket tidak ditemukan.'
+                );
+        }
+
+        if (
+            strtolower(
+                trim($ticket['status'] ?? '')
+            ) !== 'verified'
+        ) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Tiket belum diverifikasi atau sudah diproses.'
+                );
+        }
+
+        $now = date('Y-m-d H:i:s');
+
+        $ticketFields = $this->db
+            ->getFieldNames('tickets');
+
+        $updateData = [];
+
+        if (in_array('status', $ticketFields)) {
+            $updateData['status'] = 'processing';
+        }
+
+        if (in_array('processed_at', $ticketFields)) {
+            $updateData['processed_at'] = $now;
+        }
+
+        $updated = $this->ticketModel->update(
+            $id,
+            $updateData
+        );
+
+        if (!$updated) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Gagal mengubah status tiket.'
+                );
+        }
+
+        if ($this->db->tableExists('ticket_logs')) {
+
+            $logFields = $this->db
+                ->getFieldNames('ticket_logs');
+
+            $logData = [];
+
+            if (in_array('ticket_id', $logFields)) {
+                $logData['ticket_id'] = $id;
+            }
+
+            if (in_array('activity', $logFields)) {
+                $logData['activity'] = 'processing';
+            }
+
+            if (in_array('user_name', $logFields)) {
+                $logData['user_name'] =
+                    session()->get('name')
+                    ?? 'Petugas ULT';
+            }
+
+            if (in_array('created_at', $logFields)) {
+                $logData['created_at'] = $now;
+            }
+
+            if (!empty($logData)) {
+                $this->db
+                    ->table('ticket_logs')
+                    ->insert($logData);
+            }
+        }
+
+        return redirect()
+            ->to(base_url('tracking'))
+            ->with(
+                'success',
+                'Tiket berhasil diproses.'
             );
     }
 
     /**
      * ============================================================
      * TOLAK TIKET
-     *
-     * submitted
-     *     ↓
-     * rejected
      * ============================================================
      */
     public function reject($id)
@@ -282,153 +768,92 @@ class VerificationController extends BaseController
 
         if (!$ticket) {
             return redirect()
-                ->to('/verification')
-                ->with('error', 'Tiket tidak ditemukan.');
-        }
-
-        if (($ticket['status'] ?? '') !== 'submitted') {
-            return redirect()
-                ->to('/verification')
+                ->to(base_url('verification'))
                 ->with(
                     'error',
-                    'Tiket ini tidak dapat ditolak karena statusnya sudah berubah.'
+                    'Tiket tidak ditemukan.'
                 );
         }
 
-        $comment = trim(
-            (string) $this->request->getPost('comment')
-        );
-
-        if ($comment === '') {
+        if (
+            strtolower(
+                trim($ticket['status'] ?? '')
+            ) !== 'submitted'
+        ) {
             return redirect()
-                ->back()
-                ->with('error', 'Alasan penolakan wajib diisi.');
+                ->to(base_url('verification'))
+                ->with(
+                    'error',
+                    'Tiket ini sudah diproses.'
+                );
         }
 
-        $updated = $this->ticketModel->update($id, [
-            'status' => 'rejected'
-        ]);
+        $now = date('Y-m-d H:i:s');
+
+        $ticketFields = $this->db
+            ->getFieldNames('tickets');
+
+        $updateData = [];
+
+        if (in_array('status', $ticketFields)) {
+            $updateData['status'] = 'rejected';
+        }
+
+        if (in_array('rejected_at', $ticketFields)) {
+            $updateData['rejected_at'] = $now;
+        }
+
+        $updated = $this->ticketModel->update(
+            $id,
+            $updateData
+        );
 
         if (!$updated) {
             return redirect()
                 ->back()
-                ->with('error', 'Gagal mengubah status tiket.');
+                ->with(
+                    'error',
+                    'Gagal menolak tiket.'
+                );
         }
 
-        // Simpan alasan penolakan
-        $this->addTicketComment($id, $comment);
+        if ($this->db->tableExists('ticket_logs')) {
 
-        // Simpan log
-        $this->addTicketLog(
-            $id,
-            'rejected',
-            'Tiket ditolak: ' . $comment
-        );
+            $logFields = $this->db
+                ->getFieldNames('ticket_logs');
+
+            $logData = [];
+
+            if (in_array('ticket_id', $logFields)) {
+                $logData['ticket_id'] = $id;
+            }
+
+            if (in_array('activity', $logFields)) {
+                $logData['activity'] = 'rejected';
+            }
+
+            if (in_array('user_name', $logFields)) {
+                $logData['user_name'] =
+                    session()->get('name')
+                    ?? 'Petugas ULT';
+            }
+
+            if (in_array('created_at', $logFields)) {
+                $logData['created_at'] = $now;
+            }
+
+            if (!empty($logData)) {
+                $this->db
+                    ->table('ticket_logs')
+                    ->insert($logData);
+            }
+        }
 
         return redirect()
-            ->to('/verification')
+            ->to(base_url('verification'))
             ->with(
                 'success',
                 'Tiket berhasil ditolak.'
             );
-    }
-
-    /**
-     * ============================================================
-     * SIMPAN KOMENTAR
-     * ============================================================
-     */
-    private function addTicketComment($ticketId, $comment)
-    {
-        if (!$this->db->tableExists('ticket_comments')) {
-            return;
-        }
-
-        $fields = $this->db->getFieldNames('ticket_comments');
-
-        $data = [];
-
-        if (in_array('ticket_id', $fields)) {
-            $data['ticket_id'] = $ticketId;
-        }
-
-        if (in_array('comment', $fields)) {
-            $data['comment'] = $comment;
-        } elseif (in_array('content', $fields)) {
-            $data['content'] = $comment;
-        } elseif (in_array('message', $fields)) {
-            $data['message'] = $comment;
-        }
-
-        if (in_array('user_id', $fields)) {
-            $userId = session()->get('user_id');
-
-            if (!empty($userId)) {
-                $data['user_id'] = $userId;
-            }
-        }
-
-        if (in_array('created_at', $fields)) {
-            $data['created_at'] = date('Y-m-d H:i:s');
-        }
-
-        if (!empty($data)) {
-            $this->db
-                ->table('ticket_comments')
-                ->insert($data);
-        }
-    }
-
-    /**
-     * ============================================================
-     * SIMPAN LOG TIKET
-     * ============================================================
-     */
-    private function addTicketLog(
-        $ticketId,
-        $status,
-        $description
-    ) {
-        if (!$this->db->tableExists('ticket_logs')) {
-            return;
-        }
-
-        $fields = $this->db->getFieldNames('ticket_logs');
-
-        $data = [];
-
-        if (in_array('ticket_id', $fields)) {
-            $data['ticket_id'] = $ticketId;
-        }
-
-        if (in_array('user_id', $fields)) {
-            $userId = session()->get('user_id');
-
-            if (!empty($userId)) {
-                $data['user_id'] = $userId;
-            }
-        }
-
-        if (in_array('status', $fields)) {
-            $data['status'] = $status;
-        }
-
-        if (in_array('description', $fields)) {
-            $data['description'] = $description;
-        } elseif (in_array('note', $fields)) {
-            $data['note'] = $description;
-        } elseif (in_array('message', $fields)) {
-            $data['message'] = $description;
-        }
-
-        if (in_array('created_at', $fields)) {
-            $data['created_at'] = date('Y-m-d H:i:s');
-        }
-
-        if (!empty($data)) {
-            $this->db
-                ->table('ticket_logs')
-                ->insert($data);
-        }
     }
 }

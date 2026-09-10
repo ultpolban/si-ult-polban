@@ -2,97 +2,221 @@
 
 <?= $this->section('content') ?>
 
+<style>
+    .verification-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    }
+
+    .verification-card .card-header {
+        background: #2d3e8f;
+        color: #fff;
+        border-radius: 10px 10px 0 0;
+        padding: 16px 20px;
+    }
+
+    .verification-card .card-header h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .table thead th {
+        background: #2d3e8f;
+        color: #fff;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    .table tbody td {
+        vertical-align: middle;
+    }
+
+    .ticket-number {
+        font-weight: 600;
+        color: #222;
+    }
+
+    .badge-status {
+        display: inline-block;
+        padding: 5px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .badge-submitted {
+        background: #ff9800;
+        color: #fff;
+    }
+
+    .badge-normal {
+        background: #6c757d;
+        color: #fff;
+    }
+
+    .badge-high {
+        background: #dc3545;
+        color: #fff;
+    }
+
+    .badge-medium {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .badge-low {
+        background: #28a745;
+        color: #fff;
+    }
+
+    .btn-detail {
+        background: #17a2b8;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-detail:hover {
+        background: #138496;
+        color: #fff;
+    }
+
+    .btn-verify {
+        background: #28a745;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-verify:hover {
+        background: #218838;
+        color: #fff;
+    }
+
+    .action-buttons {
+        white-space: nowrap;
+    }
+
+    .empty-state {
+        padding: 40px 20px;
+        text-align: center;
+        color: #6c757d;
+    }
+
+    .filter-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-box label {
+        margin: 0;
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+        .filter-box {
+            margin-top: 10px;
+        }
+
+        .table {
+            font-size: 13px;
+        }
+    }
+</style>
+
 <div class="container-fluid">
 
-    <div class="card">
+    <!-- JUDUL HALAMAN -->
+    <div class="mb-3">
+        <h4 class="mb-0">
+            <i class="fas fa-check-circle mr-2"></i>
+            Verifikasi Tiket
+        </h4>
+    </div>
+
+    <!-- PESAN SUCCESS -->
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show">
+            <i class="fas fa-check-circle mr-2"></i>
+            <?= esc(session()->getFlashdata('success')) ?>
+
+            <button type="button"
+                    class="close"
+                    data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
+    <?php endif; ?>
+
+    <!-- PESAN ERROR -->
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <?= esc(session()->getFlashdata('error')) ?>
+
+            <button type="button"
+                    class="close"
+                    data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
+    <?php endif; ?>
+
+    <!-- ========================================================= -->
+    <!-- DAFTAR TIKET -->
+    <!-- ========================================================= -->
+
+    <div class="card verification-card">
 
         <div class="card-header">
-            <h3 class="card-title">
-                <i class="fas fa-check-circle"></i>
-                Verifikasi Tiket
-            </h3>
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h3>
+                    <i class="fas fa-list mr-2"></i>
+                    Daftar Tiket Menunggu Verifikasi
+                </h3>
+
+                <div class="filter-box">
+
+                    <label for="filterStatus">
+                        Filter Status:
+                    </label>
+
+                    <select id="filterStatus"
+                            class="form-control form-control-sm"
+                            style="width: 160px;"
+                            onchange="filterStatus()">
+
+                        <option value="Submitted" selected>
+                            Submitted
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
         </div>
 
         <div class="card-body">
 
-            <?php if (session()->getFlashdata('success')): ?>
-
-                <div class="alert alert-success alert-dismissible fade show">
-
-                    <button type="button"
-                            class="close"
-                            data-dismiss="alert">
-
-                        <span>&times;</span>
-
-                    </button>
-
-                    <i class="fas fa-check-circle"></i>
-
-                    <?= esc(session()->getFlashdata('success')) ?>
-
-                </div>
-
-            <?php endif; ?>
-
-
-            <?php if (session()->getFlashdata('error')): ?>
-
-                <div class="alert alert-danger alert-dismissible fade show">
-
-                    <button type="button"
-                            class="close"
-                            data-dismiss="alert">
-
-                        <span>&times;</span>
-
-                    </button>
-
-                    <i class="fas fa-exclamation-circle"></i>
-
-                    <?= esc(session()->getFlashdata('error')) ?>
-
-                </div>
-
-            <?php endif; ?>
-
-
             <div class="table-responsive">
 
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover mb-0">
 
-                    <thead class="thead-light">
+                    <thead>
 
                         <tr>
-
-                            <th width="5%">
-                                No
-                            </th>
-
-                            <th>
-                                Nomor Tiket
-                            </th>
-
-                            <th>
-                                Layanan
-                            </th>
-
-                            <th>
-                                Status
-                            </th>
-
-                            <th>
-                                Prioritas
-                            </th>
-
-                            <th>
-                                Tanggal Pengajuan
-                            </th>
-
-                            <th width="30%">
-                                Aksi
-                            </th>
-
+                            <th width="60">No</th>
+                            <th>Nomor Tiket</th>
+                            <th>Layanan</th>
+                            <th>Prioritas</th>
+                            <th>Status</th>
+                            <th>Tanggal Pengajuan</th>
+                            <th width="220">Aksi</th>
                         </tr>
 
                     </thead>
@@ -106,87 +230,158 @@
                         <?php foreach ($tickets as $ticket): ?>
 
                             <?php
-                            $status = strtolower(
-                                trim(
-                                    $ticket['status'] ?? ''
-                                )
-                            );
+                                $status = strtolower(
+                                    trim($ticket['status'] ?? 'submitted')
+                                );
 
-                            $ticketId = $ticket['id'];
+                                $priority = strtolower(
+                                    trim($ticket['priority'] ?? 'normal')
+                                );
+
+                                /*
+                                 * Nama layanan
+                                 */
+                                $serviceName =
+                                    $ticket['service_name']
+                                    ?? $ticket['service']
+                                    ?? '-';
+
+                                /*
+                                 * Tanggal pengajuan
+                                 */
+                                $submittedAt =
+                                    $ticket['submitted_at']
+                                    ?? $ticket['created_at']
+                                    ?? null;
                             ?>
 
                             <tr>
 
+                                <!-- NO -->
                                 <td>
                                     <?= $no++ ?>
                                 </td>
 
-                                <td>
-                                    <strong>
-                                        <?= esc(
-                                            $ticket['ticket_number'] ?? '-'
-                                        ) ?>
-                                    </strong>
-                                </td>
-
-                                <td>
-                                    <?= esc(
-                                        $ticket['service_display_name'] ?? '-'
-                                    ) ?>
-                                </td>
-
+                                <!-- NOMOR TIKET -->
                                 <td>
 
-                                    <?php
-
-                                    $badge = 'secondary';
-
-                                    if ($status === 'submitted') {
-                                        $badge = 'warning';
-                                    } elseif ($status === 'verified') {
-                                        $badge = 'success';
-                                    } elseif (
-                                        $status === 'need_revision' ||
-                                        $status === 'revision'
-                                    ) {
-                                        $badge = 'info';
-                                    } elseif ($status === 'rejected') {
-                                        $badge = 'danger';
-                                    }
-
-                                    ?>
-
-                                    <span class="badge badge-<?= $badge ?>">
+                                    <span class="ticket-number">
 
                                         <?= esc(
-                                            $ticket['status'] ?? '-'
+                                            $ticket['ticket_number']
+                                            ?? '-'
                                         ) ?>
 
                                     </span>
 
                                 </td>
 
+                                <!-- LAYANAN -->
                                 <td>
-                                    <?= esc(
-                                        $ticket['priority'] ?? '-'
-                                    ) ?>
+                                    <?= esc($serviceName) ?>
                                 </td>
 
+                                <!-- PRIORITAS -->
                                 <td>
-                                    <?= esc(
-                                        $ticket['submitted_at']
-                                        ?? $ticket['created_at']
-                                        ?? '-'
-                                    ) ?>
+
+                                    <?php if (
+                                        $priority === 'high' ||
+                                        $priority === 'tinggi'
+                                    ): ?>
+
+                                        <span class="badge-status badge-high">
+                                            <?= esc(
+                                                $ticket['priority'] ?? 'High'
+                                            ) ?>
+                                        </span>
+
+                                    <?php elseif (
+                                        $priority === 'medium' ||
+                                        $priority === 'sedang'
+                                    ): ?>
+
+                                        <span class="badge-status badge-medium">
+                                            <?= esc(
+                                                $ticket['priority'] ?? 'Medium'
+                                            ) ?>
+                                        </span>
+
+                                    <?php elseif (
+                                        $priority === 'low' ||
+                                        $priority === 'rendah'
+                                    ): ?>
+
+                                        <span class="badge-status badge-low">
+                                            <?= esc(
+                                                $ticket['priority'] ?? 'Low'
+                                            ) ?>
+                                        </span>
+
+                                    <?php else: ?>
+
+                                        <span class="badge-status badge-normal">
+                                            <?= esc(
+                                                $ticket['priority'] ?? 'Normal'
+                                            ) ?>
+                                        </span>
+
+                                    <?php endif; ?>
+
                                 </td>
 
+                                <!-- STATUS -->
                                 <td>
+
+                                    <?php if ($status === 'submitted'): ?>
+
+                                        <span class="badge-status badge-submitted">
+                                            Submitted
+                                        </span>
+
+                                    <?php else: ?>
+
+                                        <span class="badge badge-secondary">
+                                            <?= esc(
+                                                $ticket['status'] ?? '-'
+                                            ) ?>
+                                        </span>
+
+                                    <?php endif; ?>
+
+                                </td>
+
+                                <!-- TANGGAL -->
+                                <td>
+
+                                    <?php if (!empty($submittedAt)): ?>
+
+                                        <?= esc(
+                                            date(
+                                                'Y-m-d H:i:s',
+                                                strtotime($submittedAt)
+                                            )
+                                        ) ?>
+
+                                    <?php else: ?>
+
+                                        -
+
+                                    <?php endif; ?>
+
+                                </td>
+
+                                <!-- ================================================= -->
+                                <!-- AKSI -->
+                                <!-- ================================================= -->
+                                <td class="action-buttons">
 
                                     <!-- DETAIL -->
-                                    <a href="<?= site_url(
-                                        'verification/detail/' . $ticketId
-                                    ) ?>"
-                                       class="btn btn-info btn-sm">
+                                    <a
+                                        href="<?= base_url(
+                                            'verification/detail/' .
+                                            $ticket['id']
+                                        ) ?>"
+                                        class="btn btn-sm btn-info">
 
                                         <i class="fas fa-eye"></i>
                                         Detail
@@ -194,419 +389,37 @@
                                     </a>
 
 
-                                    <?php if ($status === 'submitted'): ?>
+                                    <!-- ================================================= -->
+                                    <!-- VERIFIKASI -->
+                                    <!--
+                                        PENTING:
+                                        Sekarang TIDAK menggunakan POST.
 
-                                        <!-- ========================= -->
-                                        <!-- TOMBOL VERIFIKASI -->
-                                        <!-- ========================= -->
+                                        Klik tombol:
+                                        1. Muncul konfirmasi
+                                        2. Jika OK -> masuk ke halaman form verifikasi
+                                        3. Belum mengubah status tiket
+                                    -->
+                                    <!-- ================================================= -->
 
-                                        <button
-                                            type="button"
-                                            class="btn btn-success btn-sm"
-                                            data-toggle="modal"
-                                            data-target="#modalVerifikasi<?= $ticketId ?>">
+                                    <a
+                                        href="<?= base_url(
+                                            'verification/verify/' .
+                                            $ticket['id']
+                                        ) ?>"
+                                        class="btn btn-sm btn-success"
+                                        onclick="return confirm(
+                                            'Apakah data tiket ini sudah lengkap dan benar?'
+                                        )">
 
-                                            <i class="fas fa-check"></i>
-                                            Verifikasi
+                                        <i class="fas fa-check"></i>
+                                        Verifikasi
 
-                                        </button>
-
-
-                                        <!-- ========================= -->
-                                        <!-- TOMBOL KEMBALIKAN -->
-                                        <!-- ========================= -->
-
-                                        <button
-                                            type="button"
-                                            class="btn btn-warning btn-sm"
-                                            data-toggle="modal"
-                                            data-target="#modalRevision<?= $ticketId ?>">
-
-                                            <i class="fas fa-undo"></i>
-                                            Kembalikan
-
-                                        </button>
-
-
-                                        <!-- ========================= -->
-                                        <!-- TOMBOL TOLAK -->
-                                        <!-- ========================= -->
-
-                                        <button
-                                            type="button"
-                                            class="btn btn-danger btn-sm"
-                                            data-toggle="modal"
-                                            data-target="#modalReject<?= $ticketId ?>">
-
-                                            <i class="fas fa-times"></i>
-                                            Tolak
-
-                                        </button>
-
-                                    <?php endif; ?>
+                                    </a>
 
                                 </td>
 
                             </tr>
-
-
-                            <!-- ================================================= -->
-                            <!-- MODAL VERIFIKASI -->
-                            <!-- ================================================= -->
-
-                            <div
-                                class="modal fade"
-                                id="modalVerifikasi<?= $ticketId ?>"
-                                tabindex="-1"
-                                role="dialog"
-                                aria-hidden="true">
-
-                                <div
-                                    class="modal-dialog modal-dialog-centered"
-                                    role="document">
-
-                                    <div class="modal-content">
-
-                                        <div class="modal-header bg-success">
-
-                                            <h5 class="modal-title text-white">
-
-                                                <i class="fas fa-check-circle"></i>
-                                                Konfirmasi Verifikasi
-
-                                            </h5>
-
-                                            <button
-                                                type="button"
-                                                class="close text-white"
-                                                data-dismiss="modal">
-
-                                                <span>&times;</span>
-
-                                            </button>
-
-                                        </div>
-
-
-                                        <div class="modal-body">
-
-                                            <div class="text-center mb-3">
-
-                                                <i
-                                                    class="fas fa-check-circle text-success"
-                                                    style="font-size: 55px;">
-                                                </i>
-
-                                            </div>
-
-                                            <p class="text-center mb-2">
-
-                                                Apakah data tiket ini sudah
-                                                <strong>lengkap dan benar</strong>?
-
-                                            </p>
-
-                                            <div class="alert alert-info">
-
-                                                <strong>Nomor Tiket:</strong><br>
-
-                                                <?= esc(
-                                                    $ticket['ticket_number'] ?? '-'
-                                                ) ?>
-
-                                                <br><br>
-
-                                                <strong>Layanan:</strong><br>
-
-                                                <?= esc(
-                                                    $ticket['service_display_name'] ?? '-'
-                                                ) ?>
-
-                                            </div>
-
-                                            <p class="text-center mb-0">
-
-                                                Setelah diverifikasi, tiket akan
-                                                masuk ke <strong>Disposisi Tiket</strong>
-                                                untuk dipilih unit tujuan.
-
-                                            </p>
-
-                                        </div>
-
-
-                                        <div class="modal-footer">
-
-                                            <button
-                                                type="button"
-                                                class="btn btn-secondary"
-                                                data-dismiss="modal">
-
-                                                <i class="fas fa-times"></i>
-                                                Batal
-
-                                            </button>
-
-
-                                            <form
-                                                action="<?= site_url(
-                                                    'verification/verify/' . $ticketId
-                                                ) ?>"
-                                                method="post"
-                                                style="display:inline;">
-
-                                                <?= csrf_field() ?>
-
-                                                <button
-                                                    type="submit"
-                                                    class="btn btn-success">
-
-                                                    <i class="fas fa-check"></i>
-                                                    Ya, Verifikasi
-
-                                                </button>
-
-                                            </form>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <!-- ================================================= -->
-                            <!-- MODAL KEMBALIKAN / REVISI -->
-                            <!-- ================================================= -->
-
-                            <div
-                                class="modal fade"
-                                id="modalRevision<?= $ticketId ?>"
-                                tabindex="-1"
-                                role="dialog"
-                                aria-hidden="true">
-
-                                <div
-                                    class="modal-dialog modal-dialog-centered"
-                                    role="document">
-
-                                    <div class="modal-content">
-
-                                        <form
-                                            action="<?= site_url(
-                                                'verification/revision/' . $ticketId
-                                            ) ?>"
-                                            method="post">
-
-                                            <?= csrf_field() ?>
-
-                                            <div class="modal-header bg-warning">
-
-                                                <h5 class="modal-title">
-
-                                                    <i class="fas fa-undo"></i>
-                                                    Kembalikan Data
-
-                                                </h5>
-
-                                                <button
-                                                    type="button"
-                                                    class="close"
-                                                    data-dismiss="modal">
-
-                                                    <span>&times;</span>
-
-                                                </button>
-
-                                            </div>
-
-
-                                            <div class="modal-body">
-
-                                                <div class="alert alert-warning">
-
-                                                    <strong>
-                                                        <?= esc(
-                                                            $ticket['ticket_number'] ?? '-'
-                                                        ) ?>
-                                                    </strong>
-
-                                                    akan dikembalikan kepada
-                                                    pemohon untuk diperbaiki.
-
-                                                </div>
-
-
-                                                <div class="form-group">
-
-                                                    <label>
-                                                        <strong>
-                                                            Alasan / Data yang Harus Diperbaiki
-                                                        </strong>
-                                                        <span class="text-danger">*</span>
-                                                    </label>
-
-                                                    <textarea
-                                                        name="comment"
-                                                        class="form-control"
-                                                        rows="5"
-                                                        placeholder="Tuliskan data atau dokumen yang harus diperbaiki oleh pemohon..."
-                                                        required></textarea>
-
-                                                </div>
-
-                                            </div>
-
-
-                                            <div class="modal-footer">
-
-                                                <button
-                                                    type="button"
-                                                    class="btn btn-secondary"
-                                                    data-dismiss="modal">
-
-                                                    <i class="fas fa-times"></i>
-                                                    Batal
-
-                                                </button>
-
-
-                                                <button
-                                                    type="submit"
-                                                    class="btn btn-warning">
-
-                                                    <i class="fas fa-undo"></i>
-                                                    Kembalikan Data
-
-                                                </button>
-
-                                            </div>
-
-                                        </form>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <!-- ================================================= -->
-                            <!-- MODAL TOLAK -->
-                            <!-- ================================================= -->
-
-                            <div
-                                class="modal fade"
-                                id="modalReject<?= $ticketId ?>"
-                                tabindex="-1"
-                                role="dialog"
-                                aria-hidden="true">
-
-                                <div
-                                    class="modal-dialog modal-dialog-centered"
-                                    role="document">
-
-                                    <div class="modal-content">
-
-                                        <form
-                                            action="<?= site_url(
-                                                'verification/reject/' . $ticketId
-                                            ) ?>"
-                                            method="post">
-
-                                            <?= csrf_field() ?>
-
-                                            <div class="modal-header bg-danger">
-
-                                                <h5 class="modal-title text-white">
-
-                                                    <i class="fas fa-times-circle"></i>
-                                                    Tolak Tiket
-
-                                                </h5>
-
-                                                <button
-                                                    type="button"
-                                                    class="close text-white"
-                                                    data-dismiss="modal">
-
-                                                    <span>&times;</span>
-
-                                                </button>
-
-                                            </div>
-
-
-                                            <div class="modal-body">
-
-                                                <div class="alert alert-danger">
-
-                                                    <strong>
-                                                        <?= esc(
-                                                            $ticket['ticket_number'] ?? '-'
-                                                        ) ?>
-                                                    </strong>
-
-                                                    akan ditolak dan tidak
-                                                    dilanjutkan ke proses disposisi.
-
-                                                </div>
-
-
-                                                <div class="form-group">
-
-                                                    <label>
-                                                        <strong>
-                                                            Alasan Penolakan
-                                                        </strong>
-                                                        <span class="text-danger">*</span>
-                                                    </label>
-
-                                                    <textarea
-                                                        name="comment"
-                                                        class="form-control"
-                                                        rows="5"
-                                                        placeholder="Tuliskan alasan tiket ditolak..."
-                                                        required></textarea>
-
-                                                </div>
-
-                                            </div>
-
-
-                                            <div class="modal-footer">
-
-                                                <button
-                                                    type="button"
-                                                    class="btn btn-secondary"
-                                                    data-dismiss="modal">
-
-                                                    <i class="fas fa-times"></i>
-                                                    Batal
-
-                                                </button>
-
-
-                                                <button
-                                                    type="submit"
-                                                    class="btn btn-danger">
-
-                                                    <i class="fas fa-times"></i>
-                                                    Tolak Tiket
-
-                                                </button>
-
-                                            </div>
-
-                                        </form>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
 
                         <?php endforeach; ?>
 
@@ -614,13 +427,21 @@
 
                         <tr>
 
-                            <td
-                                colspan="7"
-                                class="text-center">
+                            <td colspan="7">
 
-                                <i class="fas fa-inbox"></i>
+                                <div class="empty-state">
 
-                                Tidak ada tiket yang perlu diverifikasi.
+                                    <i class="fas fa-inbox fa-3x mb-3"></i>
+
+                                    <h5>
+                                        Tidak Ada Tiket
+                                    </h5>
+
+                                    <p class="mb-0">
+                                        Belum ada tiket yang menunggu verifikasi.
+                                    </p>
+
+                                </div>
 
                             </td>
 
@@ -634,10 +455,68 @@
 
             </div>
 
+
+            <!-- ========================================================= -->
+            <!-- PAGINATION -->
+            <!-- ========================================================= -->
+
+            <?php if (!empty($tickets)): ?>
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+
+                    <div class="text-muted">
+
+                        Menampilkan
+
+                        <strong>
+                            <?= count($tickets) ?>
+                        </strong>
+
+                        tiket menunggu verifikasi.
+
+                    </div>
+
+                    <div>
+
+                        <button class="btn btn-sm btn-light border">
+                            &laquo;
+                        </button>
+
+                        <button class="btn btn-sm btn-primary">
+                            1
+                        </button>
+
+                        <button class="btn btn-sm btn-light border">
+                            &raquo;
+                        </button>
+
+                    </div>
+
+                </div>
+
+            <?php endif; ?>
+
         </div>
 
     </div>
 
 </div>
+
+
+<script>
+function filterStatus() {
+
+    const status =
+        document.getElementById('filterStatus').value;
+
+    if (status === 'Submitted') {
+
+        window.location.href =
+            "<?= base_url('verification') ?>";
+
+    }
+
+}
+</script>
 
 <?= $this->endSection() ?>

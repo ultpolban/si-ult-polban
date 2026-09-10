@@ -7,60 +7,225 @@ use App\Models\TicketLogModel;
 
 class UnitController extends BaseController
 {
-    protected $ticketModel;
+    protected TicketModel $ticketModel;
+    protected TicketLogModel $ticketLogModel;
+    protected $db;
 
     public function __construct()
     {
         $this->ticketModel = new TicketModel();
+        $this->ticketLogModel = new TicketLogModel();
+        $this->db = \Config\Database::connect();
     }
 
+    /**
+     * ============================================================
+     * HALAMAN UNIT LAYANAN
+     *
+     * Menampilkan tiket:
+     * assigned
+     * processing
+     * ============================================================
+     */
     public function index()
     {
-        $data['tickets'] = $this->ticketModel
-            ->where('status', 'Assigned')
-            ->findAll();
+        $tickets = $this->db
+            ->table('tickets t')
+            ->select('
+                t.*,
+                ms.name AS service_display_name,
+                ms.code AS service_code,
+                ms.service_unit_id,
+                msu.name AS unit_name
+            ')
+            ->join(
+                'master_services ms',
+                'ms.id = t.service_id',
+                'left'
+            )
+            ->join(
+                'master_service_units msu',
+                'msu.id = t.assigned_to',
+                'left'
+            )
+            ->whereIn('LOWER(t.status)', ['assigned', 'processing'])
+            ->orderBy('t.updated_at', 'DESC')
+            ->get()
+            ->getResultArray();
 
-        return view('unit/index', $data);
+        /*
+         * Ambil data pemohon berdasarkan user_profile_id.
+         */
+        foreach ($tickets as &$ticket) {
+
+            $ticket['applicant_name'] = '-';
+
+            if (!empty($ticket['user_profile_id'])) {
+
+                $profile = $this->db
+                    ->table('user_profiles')
+                    ->where('id', $ticket['user_profile_id'])
+                    ->get()
+                    ->getRowArray();
+
+                if ($profile) {
+
+                    /*
+                     * Sesuaikan dengan nama kolom yang tersedia.
+                     */
+                    if (!empty($profile['name'])) {
+                        $ticket['applicant_name'] = $profile['name'];
+                    } elseif (!empty($profile['full_name'])) {
+                        $ticket['applicant_name'] = $profile['full_name'];
+                    } elseif (!empty($profile['nama'])) {
+                        $ticket['applicant_name'] = $profile['nama'];
+                    } elseif (!empty($profile['username'])) {
+                        $ticket['applicant_name'] = $profile['username'];
+                    }
+                }
+            }
+        }
+
+        unset($ticket);
+
+        return view('unit/index', [
+            'tickets' => $tickets
+        ]);
     }
 
-    public function process($id)
+
+    /**
+     * ============================================================
+     * PROSES TIKET
+     *
+     * assigned
+     *     ↓
+     * processing
+     * ============================================================
+     */
+    public function process($id = null)
     {
-        $ticketModel = new TicketModel();
-        $logModel = new TicketLogModel();
+        if (empty($id)) {
+            return redirect()
+                ->to(base_url('unit'))
+                ->with('error', 'ID tiket tidak ditemukan.');
+        }
 
-        $ticketModel->update($id, [
-            'status' => 'In Progress'
+        $ticket = $this->ticketModel->find($id);
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('unit'))
+                ->with('error', 'Tiket tidak ditemukan.');
+        }
+
+        if (
+            strtolower(trim($ticket['status'] ?? '')) !== 'assigned'
+        ) {
+            return redirect()
+                ->to(base_url('unit'))
+                ->with(
+                    'error',
+                    'Tiket ini belum berada dalam antrean unit.'
+                );
+        }
+
+        $now = date('Y-m-d H:i:s');
+
+        $updated = $this->ticketModel->update($id, [
+            'status'       => 'processing',
+            'processed_at' => $now,
+            'updated_at'   => $now
         ]);
 
-        $logModel->insert([
-            'ticket_id'  => $id,
-            'activity'   => 'Tiket sedang diproses oleh unit.',
-            'user_name'  => 'Petugas Unit',
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
+        if (!$updated) {
+            return redirect()
+                ->to(base_url('unit'))
+                ->with(
+                    'error',
+                    'Gagal mengubah status tiket menjadi processing.'
+                );
+        }
 
-        return redirect()->to(base_url('unit'))
-            ->with('success', 'Tiket sedang diproses.');
+        $this->ticketLogModel->addLog(
+            $id,
+            'Tiket mulai diproses oleh unit layanan.',
+            session()->get('name') ?? 'Petugas Unit'
+        );
+
+        return redirect()
+            ->to(base_url('unit'))
+            ->with(
+                'success',
+                'Tiket berhasil diproses.'
+            );
     }
 
-    public function complete($id)
+
+    /**
+     * ============================================================
+     * SELESAIKAN TIKET
+     *
+     * processing
+     *     ↓
+     * completed
+     * ============================================================
+     */
+    public function complete($id = null)
     {
-        $ticketModel = new TicketModel();
-        $logModel = new TicketLogModel();
+        if (empty($id)) {
+            return redirect()
+                ->to(base_url('unit'))
+                ->with('error', 'ID tiket tidak ditemukan.');
+        }
 
-        $ticketModel->update($id, [
-            'status' => 'Completed',
-            'completed_at' => date('Y-m-d H:i:s')
+        $ticket = $this->ticketModel->find($id);
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('unit'))
+                ->with('error', 'Tiket tidak ditemukan.');
+        }
+
+        if (
+            strtolower(trim($ticket['status'] ?? '')) !== 'processing'
+        ) {
+            return redirect()
+                ->to(base_url('unit'))
+                ->with(
+                    'error',
+                    'Tiket belum berstatus processing.'
+                );
+        }
+
+        $now = date('Y-m-d H:i:s');
+
+        $updated = $this->ticketModel->update($id, [
+            'status'       => 'completed',
+            'completed_at' => $now,
+            'updated_at'   => $now
         ]);
 
-        $logModel->insert([
-            'ticket_id'  => $id,
-            'activity'   => 'Tiket telah selesai diproses.',
-            'user_name'  => 'Petugas Unit',
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
+        if (!$updated) {
+            return redirect()
+                ->to(base_url('unit'))
+                ->with(
+                    'error',
+                    'Gagal menyelesaikan tiket.'
+                );
+        }
 
-        return redirect()->to(base_url('unit'))
-            ->with('success', 'Tiket selesai diproses.');
+        $this->ticketLogModel->addLog(
+            $id,
+            'Tiket telah selesai diproses oleh unit layanan.',
+            session()->get('name') ?? 'Petugas Unit'
+        );
+
+        return redirect()
+            ->to(base_url('unit'))
+            ->with(
+                'success',
+                'Tiket berhasil diselesaikan.'
+            );
     }
 }

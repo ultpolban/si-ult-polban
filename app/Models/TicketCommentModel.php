@@ -10,26 +10,25 @@ class TicketCommentModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $allowedFields    = [
+
+    protected $allowedFields = [
         'ticket_id',
-        'user_id',
+        'sender',
         'comment',
-        'attachment',
-        'is_internal'
+        'created_at',
     ];
 
-    protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    protected $useTimestamps = false;
 
+    /**
+     * ============================================================
+     * AMBIL KOMENTAR BERDASARKAN TIKET
+     * ============================================================
+     */
     public function getCommentsByTicket($ticketId)
     {
-        return $this->db->table($this->table)
-            ->select('ticket_comments.*, users.username, users.role')
-            ->join('users', 'users.id = ticket_comments.user_id', 'left')
-            ->where('ticket_comments.ticket_id', $ticketId)
-            ->orderBy('ticket_comments.created_at', 'ASC')
-            ->get()
-            ->getResultArray();
+        return $this->where('ticket_id', $ticketId)
+            ->orderBy('created_at', 'ASC')
+            ->findAll();
     }
 }

@@ -6,71 +6,65 @@ use CodeIgniter\Model;
 
 class TicketLogModel extends Model
 {
-    protected $table = 'ticket_logs';
+    protected $table            = 'ticket_logs';
+    protected $primaryKey       = 'id';
+    protected $returnType       = 'array';
+    protected $useAutoIncrement = true;
 
-    protected $primaryKey = 'id';
+    /**
+     * ============================================================
+     * SESUAI DENGAN STRUKTUR DATABASE ticket_logs
+     * ============================================================
+     *
+     * id
+     * ticket_id
+     * activity
+     * user_name
+     * created_at
+     *
+     * ============================================================
+     */
+    protected $allowedFields = [
+        'ticket_id',
+        'activity',
+        'user_name',
+        'created_at',
+    ];
 
-    protected $returnType = 'array';
-
-   protected $allowedFields = [
-
-    'ticket_number',
-    'service_name',
-
-    'applicant_name',
-    'applicant_type',
-    'submission_type',
-
-    'nim',
-    'email',
-    'phone',
-
-    'program_studi',
-    'jurusan',
-    'angkatan',
-
-    'fakultas',
-    'jabatan_dosen',
-
-    'unit_kerja',
-    'jabatan_tendik',
-
-    'nama_mahasiswa',
-    'nim_mahasiswa',
-    'hubungan',
-
-    'prodi_alumni',
-    'tahun_lulus',
-
-    'instansi',
-    'pic',
-    'jabatan_mitra',
-
-    'instansi_public',
-    'alamat_public',
-
-    'alamat',
-    'pekerjaan',
-
-    'ticket_title',
-    'ticket_description',
-    'attachment',
-
-    'status',
-    'priority',
-
-    'assigned_unit',
-    'verified_by',
-    'verification_note',
-
-    'submitted_at',
-    'verified_at',
-    'completed_at',
-
-    'created_at',
-    'updated_at'
-
-];
-
+    /**
+     * created_at diisi manual oleh controller.
+     */
     protected $useTimestamps = false;
+
+
+    /**
+     * ============================================================
+     * AMBIL LOG BERDASARKAN TIKET
+     * ============================================================
+     */
+    public function getLogsByTicket($ticketId)
+    {
+        return $this->where('ticket_id', $ticketId)
+            ->orderBy('created_at', 'ASC')
+            ->findAll();
+    }
+
+
+    /**
+     * ============================================================
+     * TAMBAH LOG AKTIVITAS
+     * ============================================================
+     */
+    public function addLog(
+        $ticketId,
+        $activity,
+        $userName = 'Petugas ULT'
+    ) {
+        return $this->insert([
+            'ticket_id'  => (int) $ticketId,
+            'activity'   => $activity,
+            'user_name'  => $userName ?: 'Petugas ULT',
+            'created_at' => date('Y-m-d H:i:s'),
+        ]);
+    }
 }

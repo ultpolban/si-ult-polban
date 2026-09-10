@@ -2,295 +2,918 @@
 
 <?= $this->section('content') ?>
 
-<div class="container-fluid">
-    <div class="card shadow-sm">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-            <h3 class="card-title m-0 font-weight-bold">
-                <i class="fas fa-ticket-alt text-primary mr-1"></i> Detail Tiket
-            </h3>
-            <div class="card-tools">
-                <a href="<?= site_url('verification') ?>" class="btn btn-secondary btn-sm">
-                    <i class="fas fa-arrow-left mr-1"></i> Kembali
-                </a>
+<style>
+    .detail-page {
+        padding-bottom: 30px;
+    }
+
+    /* HEADER */
+    .detail-header {
+        background: #293b91;
+        color: #fff;
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .detail-header-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .detail-header-icon {
+        font-size: 26px;
+    }
+
+    .detail-header h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    .detail-header p {
+        margin: 3px 0 0;
+        font-size: 14px;
+        opacity: .9;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: #fff;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 7px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .btn-back:hover {
+        background: #5a6268;
+        color: #fff;
+    }
+
+    /* CARD */
+    .detail-card {
+        background: #fff;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+        border: 1px solid #e5e8f0;
+    }
+
+    .detail-card-header {
+        background: #f5f7fc;
+        padding: 16px 20px;
+        border-bottom: 1px solid #e1e5ee;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .detail-card-header i {
+        color: #293b91;
+        font-size: 17px;
+    }
+
+    .detail-card-header h3 {
+        margin: 0;
+        color: #20368d;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .detail-card-body {
+        padding: 18px 20px;
+    }
+
+    /* GRID */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+    }
+
+    .info-item {
+        border: 1px solid #e0e5ef;
+        border-radius: 9px;
+        padding: 14px 16px;
+        background: #fff;
+        min-height: 78px;
+    }
+
+    .info-label {
+        color: #69738a;
+        font-size: 13px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .info-label i {
+        color: #293b91;
+        width: 15px;
+    }
+
+    .info-value {
+        color: #17233f;
+        font-size: 14px;
+        font-weight: 500;
+        word-break: break-word;
+    }
+
+    .ticket-number {
+        color: #17368f;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    /* STATUS */
+    .status-badge {
+        display: inline-block;
+        padding: 5px 11px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .status-submitted {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-verified {
+        background: #d1edda;
+        color: #216c3a;
+    }
+
+    .status-revision {
+        background: #ffe5b4;
+        color: #8a5200;
+    }
+
+    .status-processing {
+        background: #cfe2ff;
+        color: #174ea6;
+    }
+
+    .status-completed {
+        background: #d1edda;
+        color: #216c3a;
+    }
+
+    .status-rejected,
+    .status-cancelled {
+        background: #f8d7da;
+        color: #842029;
+    }
+
+    .status-draft {
+        background: #e2e3e5;
+        color: #41464b;
+    }
+
+    /* DETAIL TEXT */
+    .detail-text {
+        border: 1px solid #e0e5ef;
+        border-radius: 9px;
+        padding: 15px 16px;
+        background: #fff;
+    }
+
+    .detail-text-label {
+        color: #69738a;
+        font-size: 13px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .detail-text-label i {
+        color: #293b91;
+    }
+
+    .detail-text-content {
+        color: #17233f;
+        font-size: 14px;
+        line-height: 1.7;
+        white-space: pre-line;
+    }
+
+    /* PROCESS */
+    .timeline {
+        position: relative;
+        padding: 2px 0 2px 56px;
+    }
+
+    .timeline::before {
+        content: "";
+        position: absolute;
+        left: 19px;
+        top: 18px;
+        bottom: 18px;
+        width: 2px;
+        background: #dce2ef;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding: 0 0 24px 20px;
+    }
+
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+
+    .timeline-icon {
+        position: absolute;
+        left: -56px;
+        top: 0;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #293b91;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+    }
+
+    .timeline-title {
+        font-weight: 700;
+        color: #17233f;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .timeline-date {
+        color: #7b8496;
+        font-size: 12px;
+    }
+
+    .timeline-empty {
+        color: #7b8496;
+        font-size: 13px;
+        font-style: italic;
+    }
+
+    /* ALERT */
+    .note-box {
+        border: 1px solid #e0e5ef;
+        border-radius: 9px;
+        padding: 15px 16px;
+        background: #fff;
+    }
+
+    .note-title {
+        color: #293b91;
+        font-weight: 700;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .note-content {
+        color: #17233f;
+        font-size: 14px;
+        line-height: 1.6;
+        white-space: pre-line;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+        .info-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 700px) {
+        .detail-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .timeline {
+            padding-left: 50px;
+        }
+    }
+</style>
+
+<div class="detail-page">
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+    <div class="detail-header">
+
+        <div class="detail-header-left">
+            <div class="detail-header-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+
+            <div>
+                <h2>Detail Tiket</h2>
+                <p>Informasi lengkap data permohonan tiket</p>
             </div>
         </div>
 
-        <div class="card-body">
-            <!-- FLASH MESSAGES -->
-            <?php if (session()->getFlashdata('success')): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?= esc(session()->getFlashdata('success')) ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <?php endif; ?>
+        <a href="<?= site_url('verification') ?>" class="btn-back">
+            <i class="fas fa-arrow-left"></i>
+            Kembali
+        </a>
 
-            <?php if (session()->getFlashdata('error')): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?= esc(session()->getFlashdata('error')) ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <?php endif; ?>
+    </div>
 
-            <!-- INFORMASI TIKET -->
-            <h5 class="mb-3 font-weight-bold text-dark">Informasi Tiket</h5>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <tr>
-                        <th width="25%" class="bg-light">Nomor Tiket</th>
-                        <td><?= esc($ticket['ticket_number'] ?? '-') ?></td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Layanan</th>
-                        <td><?= esc($ticket['service_display_name'] ?? '-') ?></td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Kode Layanan</th>
-                        <td><?= esc($ticket['service_code'] ?? '-') ?></td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Status</th>
-                        <td>
-                            <?php
-                            $status = strtolower(trim($ticket['status'] ?? ''));
-                            $badge = 'secondary';
 
-                            if ($status === 'submitted') {
-                                $badge = 'warning';
-                            } elseif ($status === 'verified') {
-                                $badge = 'success';
-                            } elseif (in_array($status, ['need_revision', 'revision'])) {
-                                $badge = 'info';
-                            } elseif ($status === 'rejected') {
-                                $badge = 'danger';
-                            }
-                            ?>
-                            <span class="badge badge-<?= $badge ?> p-2">
-                                <?= esc(str_replace('_', ' ', strtoupper($ticket['status'] ?? '-'))) ?>
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Prioritas</th>
-                        <td><?= esc(ucfirst($ticket['priority'] ?? '-')) ?></td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Tanggal Pengajuan</th>
-                        <td><?= esc($ticket['submitted_at'] ?? $ticket['created_at'] ?? '-') ?></td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Tanggal Verifikasi</th>
-                        <td><?= esc($ticket['verified_at'] ?? '-') ?></td>
-                    </tr>
-                </table>
-            </div>
+    <!-- =========================================================
+         INFORMASI TIKET
+    ========================================================== -->
+    <div class="detail-card">
 
-            <!-- DATA PEMOHON -->
-            <h5 class="mt-4 mb-3 font-weight-bold text-dark">Data Pemohon</h5>
-            <?php if (!empty($profile)): ?>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <?php foreach ($profile as $key => $value): ?>
-                            <?php if (in_array($key, ['id', 'created_at', 'updated_at'])) continue; ?>
-                            <tr>
-                                <th width="25%" class="bg-light">
-                                    <?= esc(ucwords(str_replace('_', ' ', $key))) ?>
-                                </th>
-                                <td><?= esc($value ?? '-') ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </table>
-                </div>
-            <?php else: ?>
-                <div class="alert alert-info">Data profil pemohon tidak ditemukan.</div>
-            <?php endif; ?>
+        <div class="detail-card-header">
+            <i class="fas fa-ticket-alt"></i>
+            <h3>Informasi Tiket</h3>
+        </div>
 
-            <!-- UNIT LAYANAN -->
-            <?php if (!empty($unit)): ?>
-                <h5 class="mt-4 mb-3 font-weight-bold text-dark">Unit Layanan</h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <?php foreach ($unit as $key => $value): ?>
-                            <?php if (in_array($key, ['id', 'created_at', 'updated_at'])) continue; ?>
-                            <tr>
-                                <th width="25%" class="bg-light">
-                                    <?= esc(ucwords(str_replace('_', ' ', $key))) ?>
-                                </th>
-                                <td><?= esc($value ?? '-') ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </table>
-                </div>
-            <?php endif; ?>
+        <div class="detail-card-body">
 
-            <!-- TINDAKAN VERIFIKASI ADMIN -->
-            <?php if ($status === 'submitted'): ?>
-                <hr class="my-4">
-                <div class="card border-primary mb-4">
-                    <div class="card-header bg-primary text-white font-weight-bold">
-                        <i class="fas fa-gavel mr-1"></i> Keputusan Verifikasi Admin
+            <div class="info-grid">
+
+                <!-- Nomor Tiket -->
+                <div class="info-item">
+
+                    <div class="info-label">
+                        <i class="fas fa-ticket-alt"></i>
+                        Nomor Tiket
                     </div>
-                    <div class="card-body">
-                        <p class="text-muted">Pilih salah satu opsi tindakan verifikasi berkas di bawah ini:</p>
-                        <div class="row">
-                            <!-- Button Trigger Modal Approve & Disposisi -->
-                            <div class="col-md-4 mb-2">
-                                <button type="button" class="btn btn-success btn-block font-weight-bold" data-toggle="modal" data-target="#approveModal">
-                                    <i class="fas fa-check-circle mr-1"></i> Verifikasi & Disposisi
-                                </button>
-                            </div>
 
-                            <!-- Button Trigger Modal Revisi -->
-                            <div class="col-md-4 mb-2">
-                                <button type="button" class="btn btn-warning text-white btn-block font-weight-bold" data-toggle="modal" data-target="#revisionModal">
-                                    <i class="fas fa-edit mr-1"></i> Minta Revisi
-                                </button>
-                            </div>
+                    <div class="info-value ticket-number">
+                        <?= esc($ticket['ticket_number'] ?? '') ?>
+                    </div>
 
-                            <!-- Button Trigger Modal Reject -->
-                            <div class="col-md-4 mb-2">
-                                <button type="button" class="btn btn-danger btn-block font-weight-bold" data-toggle="modal" data-target="#rejectModal">
-                                    <i class="fas fa-times-circle mr-1"></i> Tolak Tiket
-                                </button>
-                            </div>
+                </div>
+
+
+                <!-- Status -->
+                <div class="info-item">
+
+                    <div class="info-label">
+                        <i class="fas fa-info-circle"></i>
+                        Status
+                    </div>
+
+                    <div class="info-value">
+
+                        <?php
+                        $status = strtolower($ticket['status'] ?? '');
+
+                        $statusClass = 'status-' . $status;
+
+                        $statusText = [
+                            'draft'        => 'Draft',
+                            'submitted'    => 'Submitted',
+                            'verification' => 'Verification',
+                            'verified'     => 'Verified',
+                            'revision'     => 'Revision',
+                            'assigned'     => 'Assigned',
+                            'processing'   => 'Processing',
+                            'completed'    => 'Completed',
+                            'rejected'     => 'Rejected',
+                            'cancelled'    => 'Cancelled'
+                        ];
+
+                        $displayStatus = $statusText[$status] ?? ucfirst($status);
+                        ?>
+
+                        <span class="status-badge <?= esc($statusClass) ?>">
+                            <?= esc($displayStatus) ?>
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Prioritas -->
+                <div class="info-item">
+
+                    <div class="info-label">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Prioritas
+                    </div>
+
+                    <div class="info-value">
+                        <?= esc(ucfirst($ticket['priority'] ?? '')) ?>
+                    </div>
+
+                </div>
+
+
+                <!-- Layanan -->
+                <div class="info-item">
+
+                    <div class="info-label">
+                        <i class="fas fa-concierge-bell"></i>
+                        Layanan
+                    </div>
+
+                    <div class="info-value">
+                        <?= esc($ticket['service_name'] ?? '') ?>
+                    </div>
+
+                </div>
+
+
+                <!-- Tanggal Pengajuan -->
+                <?php if (!empty($ticket['submitted_at'])): ?>
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            <i class="fas fa-calendar-alt"></i>
+                            Tanggal Pengajuan
                         </div>
-                    </div>
-                </div>
-            <?php endif; ?>
 
-            <!-- RIWAYAT KOMENTAR -->
-            <h5 class="mt-4 mb-3 font-weight-bold text-dark">Riwayat Komentar</h5>
-            <?php if (!empty($comments)): ?>
-                <?php foreach ($comments as $comment): ?>
-                    <div class="card card-outline card-secondary mb-2">
-                        <div class="card-body py-2">
-                            <?= esc($comment['comment'] ?? $comment['content'] ?? $comment['message'] ?? '-') ?>
+                        <div class="info-value">
+                            <?= esc($ticket['submitted_at']) ?>
                         </div>
+
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p class="text-muted">Belum ada komentar.</p>
-            <?php endif; ?>
 
-            <!-- RIWAYAT TIKET / LOGS -->
-            <h5 class="mt-4 mb-3 font-weight-bold text-dark">Riwayat Tiket</h5>
-            <?php if (!empty($logs)): ?>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Status</th>
-                                <th>Keterangan</th>
-                                <th>Waktu</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($logs as $log): ?>
-                                <tr>
-                                    <td>
-                                        <span class="badge badge-secondary">
-                                            <?= esc(str_replace('_', ' ', strtoupper($log['status'] ?? '-'))) ?>
-                                        </span>
-                                    </td>
-                                    <td><?= esc($log['description'] ?? $log['note'] ?? $log['message'] ?? '-') ?></td>
-                                    <td><?= esc($log['created_at'] ?? '-') ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else: ?>
-                <p class="text-muted">Belum ada riwayat.</p>
-            <?php endif; ?>
-        </div>
-    </div>
-</div>
+                <?php endif; ?>
 
-<!-- MODAL 1: KONFIRMASI VERIFIKASI & DISPOSISI -->
-<div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title font-weight-bold">
-                    <i class="fas fa-check-circle mr-2"></i>Konfirmasi Verifikasi
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post" action="<?= site_url('verification/verify/' . $ticket['id']) ?>">
-                <?= csrf_field() ?>
-                <div class="modal-body">
-                    Apakah Anda yakin seluruh berkas telah sesuai dan ingin <strong>menyetujui serta meneruskan tiket ini ke tahap Disposisi</strong>?
-                </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-success btn-sm font-weight-bold">Ya, Verifikasi & Disposisi</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
-<!-- MODAL 2: NEED REVISION -->
-<div class="modal fade" id="revisionModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-warning text-white">
-                <h5 class="modal-title font-weight-bold">
-                    <i class="fas fa-edit mr-2"></i>Kembalikan Untuk Revisi
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post" action="<?= site_url('verification/revision/' . $ticket['id']) ?>">
-                <?= csrf_field() ?>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="font-weight-bold">Alasan Revisi <span class="text-danger">*</span></label>
-                        <textarea name="comment" class="form-control" rows="4" placeholder="Jelaskan bagian berkas/data yang perlu diperbaiki oleh pemohon..." required></textarea>
+                <!-- Tanggal Verifikasi -->
+                <?php if (!empty($ticket['verified_at'])): ?>
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            <i class="fas fa-calendar-check"></i>
+                            Tanggal Verifikasi
+                        </div>
+
+                        <div class="info-value">
+                            <?= esc($ticket['verified_at']) ?>
+                        </div>
+
                     </div>
-                </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-warning text-white btn-sm font-weight-bold">Kirim Revisi</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
-<!-- MODAL 3: REJECT TICKET -->
-<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title font-weight-bold">
-                    <i class="fas fa-times-circle mr-2"></i>Tolak Permohonan Tiket
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <?php endif; ?>
+
             </div>
-            <form method="post" action="<?= site_url('verification/reject/' . $ticket['id']) ?>">
-                <?= csrf_field() ?>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="font-weight-bold">Alasan Penolakan <span class="text-danger">*</span></label>
-                        <textarea name="comment" class="form-control" rows="4" placeholder="Jelaskan alasan kenapa tiket ini ditolak..." required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger btn-sm font-weight-bold">Tolak Tiket</button>
-                </div>
-            </form>
+
         </div>
+
     </div>
+
+
+    <!-- =========================================================
+         DATA PEMOHON
+    ========================================================== -->
+    <?php if (!empty($profile)): ?>
+
+        <div class="detail-card">
+
+            <div class="detail-card-header">
+                <i class="fas fa-user"></i>
+                <h3>Data Pemohon</h3>
+            </div>
+
+            <div class="detail-card-body">
+
+                <div class="info-grid">
+
+                    <!-- Nama -->
+                    <?php if (!empty($profile['name'])): ?>
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                <i class="fas fa-user"></i>
+                                Nama Pemohon
+                            </div>
+
+                            <div class="info-value">
+                                <?= esc($profile['name']) ?>
+                            </div>
+
+                        </div>
+
+                    <?php endif; ?>
+
+
+                    <!-- NIM -->
+                    <?php if (!empty($profile['nim'])): ?>
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                <i class="fas fa-id-card"></i>
+                                NIM
+                            </div>
+
+                            <div class="info-value">
+                                <?= esc($profile['nim']) ?>
+                            </div>
+
+                        </div>
+
+                    <?php endif; ?>
+
+
+                    <!-- NIK -->
+                    <?php if (!empty($profile['nik'])): ?>
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                <i class="fas fa-id-card"></i>
+                                NIK
+                            </div>
+
+                            <div class="info-value">
+                                <?= esc($profile['nik']) ?>
+                            </div>
+
+                        </div>
+
+                    <?php endif; ?>
+
+
+                    <!-- Email -->
+                    <?php if (!empty($profile['email'])): ?>
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                <i class="fas fa-envelope"></i>
+                                Email
+                            </div>
+
+                            <div class="info-value">
+                                <?= esc($profile['email']) ?>
+                            </div>
+
+                        </div>
+
+                    <?php endif; ?>
+
+
+                    <!-- No HP -->
+                    <?php if (!empty($profile['phone'])): ?>
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                <i class="fas fa-phone"></i>
+                                No. HP
+                            </div>
+
+                            <div class="info-value">
+                                <?= esc($profile['phone']) ?>
+                            </div>
+
+                        </div>
+
+                    <?php endif; ?>
+
+
+                    <!-- Alamat -->
+                    <?php if (!empty($profile['address'])): ?>
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Alamat
+                            </div>
+
+                            <div class="info-value">
+                                <?= esc($profile['address']) ?>
+                            </div>
+
+                        </div>
+
+                    <?php endif; ?>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    <?php endif; ?>
+
+
+    <!-- =========================================================
+         DETAIL PERMOHONAN
+    ========================================================== -->
+    <?php if (
+        !empty($ticket['title']) ||
+        !empty($ticket['description'])
+    ): ?>
+
+        <div class="detail-card">
+
+            <div class="detail-card-header">
+                <i class="fas fa-align-left"></i>
+                <h3>Detail Permohonan</h3>
+            </div>
+
+            <div class="detail-card-body">
+
+                <!-- Judul -->
+                <?php if (!empty($ticket['title'])): ?>
+
+                    <div class="detail-text" style="margin-bottom: 14px;">
+
+                        <div class="detail-text-label">
+                            <i class="fas fa-heading"></i>
+                            Judul Permohonan
+                        </div>
+
+                        <div class="detail-text-content">
+                            <?= esc($ticket['title']) ?>
+                        </div>
+
+                    </div>
+
+                <?php endif; ?>
+
+
+                <!-- Keterangan -->
+                <?php if (!empty($ticket['description'])): ?>
+
+                    <div class="detail-text">
+
+                        <div class="detail-text-label">
+                            <i class="fas fa-align-left"></i>
+                            Keterangan Permohonan
+                        </div>
+
+                        <div class="detail-text-content">
+                            <?= esc($ticket['description']) ?>
+                        </div>
+
+                    </div>
+
+                <?php endif; ?>
+
+            </div>
+
+        </div>
+
+    <?php endif; ?>
+
+
+    <!-- =========================================================
+         INFORMASI PROSES
+    ========================================================== -->
+    <div class="detail-card">
+
+        <div class="detail-card-header">
+            <i class="fas fa-history"></i>
+            <h3>Informasi Proses</h3>
+        </div>
+
+        <div class="detail-card-body">
+
+            <div class="timeline">
+
+                <!-- TIKET DIAJUKAN -->
+                <?php if (!empty($ticket['submitted_at'])): ?>
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-icon">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+
+                        <div class="timeline-title">
+                            Tiket Diajukan
+                        </div>
+
+                        <div class="timeline-date">
+                            <?= esc($ticket['submitted_at']) ?>
+                        </div>
+
+                    </div>
+
+                <?php endif; ?>
+
+
+                <!-- VERIFIKASI -->
+                <?php if (!empty($ticket['verified_at'])): ?>
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+
+                        <div class="timeline-title">
+                            Verifikasi
+                        </div>
+
+                        <div class="timeline-date">
+                            <?= esc($ticket['verified_at']) ?>
+                        </div>
+
+                    </div>
+
+                <?php endif; ?>
+
+
+                <!-- PROSES -->
+                <?php if (!empty($ticket['processed_at'])): ?>
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+
+                        <div class="timeline-title">
+                            Diproses
+                        </div>
+
+                        <div class="timeline-date">
+                            <?= esc($ticket['processed_at']) ?>
+                        </div>
+
+                    </div>
+
+                <?php endif; ?>
+
+
+                <!-- SELESAI -->
+                <?php if (!empty($ticket['completed_at'])): ?>
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-icon">
+                            <i class="fas fa-check-double"></i>
+                        </div>
+
+                        <div class="timeline-title">
+                            Selesai
+                        </div>
+
+                        <div class="timeline-date">
+                            <?= esc($ticket['completed_at']) ?>
+                        </div>
+
+                    </div>
+
+                <?php endif; ?>
+
+
+                <!-- DITOLAK -->
+                <?php if (!empty($ticket['rejected_at'])): ?>
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-icon">
+                            <i class="fas fa-times"></i>
+                        </div>
+
+                        <div class="timeline-title">
+                            Ditolak
+                        </div>
+
+                        <div class="timeline-date">
+                            <?= esc($ticket['rejected_at']) ?>
+                        </div>
+
+                    </div>
+
+                <?php endif; ?>
+
+
+                <!-- DIBATALKAN -->
+                <?php if (!empty($ticket['cancelled_at'])): ?>
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-icon">
+                            <i class="fas fa-ban"></i>
+                        </div>
+
+                        <div class="timeline-title">
+                            Dibatalkan
+                        </div>
+
+                        <div class="timeline-date">
+                            <?= esc($ticket['cancelled_at']) ?>
+                        </div>
+
+                    </div>
+
+                <?php endif; ?>
+
+
+                <!-- Jika belum ada proses -->
+                <?php if (
+                    empty($ticket['submitted_at']) &&
+                    empty($ticket['verified_at']) &&
+                    empty($ticket['processed_at']) &&
+                    empty($ticket['completed_at']) &&
+                    empty($ticket['rejected_at']) &&
+                    empty($ticket['cancelled_at'])
+                ): ?>
+
+                    <div class="timeline-empty">
+                        Belum ada informasi proses.
+                    </div>
+
+                <?php endif; ?>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         CATATAN ADMIN
+    ========================================================== -->
+    <?php if (!empty($ticket['admin_note'])): ?>
+
+        <div class="detail-card">
+
+            <div class="detail-card-header">
+                <i class="fas fa-sticky-note"></i>
+                <h3>Catatan Admin</h3>
+            </div>
+
+            <div class="detail-card-body">
+
+                <div class="note-box">
+
+                    <div class="note-title">
+                        Catatan
+                    </div>
+
+                    <div class="note-content">
+                        <?= esc($ticket['admin_note']) ?>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    <?php endif; ?>
+
+
+    <!-- =========================================================
+         ALASAN PENOLAKAN
+    ========================================================== -->
+    <?php if (!empty($ticket['rejection_reason'])): ?>
+
+        <div class="detail-card">
+
+            <div class="detail-card-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Alasan Penolakan</h3>
+            </div>
+
+            <div class="detail-card-body">
+
+                <div class="note-box">
+
+                    <div class="note-title">
+                        Alasan
+                    </div>
+
+                    <div class="note-content">
+                        <?= esc($ticket['rejection_reason']) ?>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    <?php endif; ?>
+
 </div>
 
 <?= $this->endSection() ?>

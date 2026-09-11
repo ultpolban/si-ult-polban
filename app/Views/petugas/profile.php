@@ -1217,9 +1217,17 @@
                     <div class="profile-photo-wrapper">
                         <div class="profile-photo-ring"></div>
                         <div id="photoContainer">
-                            <div class="profile-photo-empty">
-                                <i class="fas fa-user-tie"></i>
-                            </div>
+                            <?php if (!empty($user['profile_photo'])): ?>
+                                <img
+                                    src="<?= base_url('uploads/profile/' . $user['profile_photo']) ?>"
+                                    class="profile-photo"
+                                    alt="Foto Profil Petugas"
+                                >
+                            <?php else: ?>
+                                <div class="profile-photo-empty">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <label
                             for="photoInput"
@@ -1231,13 +1239,14 @@
                         <input
                             type="file"
                             id="photoInput"
+                            name="profile_photo"
                             class="photo-upload-input"
                             accept="image/png,image/jpeg,image/jpg,image/webp"
                         >
                     </div>
 
                     <h2 class="profile-name" id="displayName">
-                        <?= esc(session()->get('name') ?? 'Petugas ULT') ?>
+                        <?= esc($user['full_name'] ?? 'Petugas ULT') ?>
                     </h2>
 
                     <div class="profile-role">
@@ -1279,7 +1288,7 @@
                                 <span class="data-copy-badge"><i class="fas fa-copy me-1"></i>Salin</span>
                             </div>
                             <div class="data-value" id="displayNameData">
-                                <?= esc(session()->get('name') ?? 'Petugas ULT') ?>
+                                <?= esc($user['full_name'] ?? 'Petugas ULT') ?>
                             </div>
                         </div>
 
@@ -1292,7 +1301,7 @@
                                 <span class="data-copy-badge"><i class="fas fa-copy me-1"></i>Salin</span>
                             </div>
                             <div class="data-value" id="displayId">
-                                <?= esc(session()->get('user_id') ?? '-') ?>
+                                <?= esc($user['id'] ?? '-') ?>
                             </div>
                         </div>
 
@@ -1305,7 +1314,7 @@
                                 <span class="data-copy-badge"><i class="fas fa-copy me-1"></i>Salin</span>
                             </div>
                             <div class="data-value" id="displayEmail">
-                                <?= esc(session()->get('email') ?? '-') ?>
+                                <?= esc($user['email'] ?? '-') ?>
                             </div>
                         </div>
 
@@ -1318,7 +1327,7 @@
                                 <span class="data-copy-badge"><i class="fas fa-copy me-1"></i>Salin</span>
                             </div>
                             <div class="data-value" id="displayPhone">
-                                -
+                                <?= esc($user['phone_number'] ?? '-') ?>
                             </div>
                         </div>
 
@@ -1405,7 +1414,8 @@
             </div>
 
             <div class="modal-body">
-                <form id="profileEditForm">
+                <form id="profileEditForm" action="<?= base_url('profile/update') ?>" method="POST" enctype="multipart/form-data">
+                    <?= csrf_field() ?>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">
@@ -1415,7 +1425,8 @@
                                 type="text"
                                 class="form-control"
                                 id="editName"
-                                value="<?= esc(session()->get('name') ?? 'Petugas ULT') ?>"
+                                name="full_name"
+                                value="<?= esc($user['full_name'] ?? '') ?>"
                                 required
                             >
                         </div>
@@ -1428,7 +1439,8 @@
                                 type="email"
                                 class="form-control"
                                 id="editEmail"
-                                value="<?= esc(session()->get('email') ?? '') ?>"
+                                name="email"
+                                value="<?= esc($user['email'] ?? '') ?>"
                                 required
                             >
                         </div>
@@ -1440,7 +1452,7 @@
                             <input
                                 type="text"
                                 class="form-control"
-                                value="<?= esc(session()->get('user_id') ?? '-') ?>"
+                                value="<?= esc($user['id'] ?? '-') ?>"
                                 disabled
                             >
                         </div>
@@ -1453,6 +1465,8 @@
                                 type="text"
                                 class="form-control"
                                 id="editPhone"
+                                name="phone_number"
+                                value="<?= esc($user['phone_number'] ?? '') ?>"
                                 placeholder="Contoh: 081234567890"
                             >
                         </div>
@@ -1532,6 +1546,7 @@
                                 type="file"
                                 class="form-control"
                                 id="modalPhotoInput"
+                                name="profile_photo"
                                 accept="image/png,image/jpeg,image/jpg,image/webp"
                             >
                         </div>
@@ -1575,7 +1590,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const STORAGE_KEY = 'si_ult_petugas_profile_v3';
     const THEME_KEY = 'si_ult_petugas_theme_v3';
 
     const editForm = document.getElementById('profileEditForm');
@@ -1741,38 +1755,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    let savedData = {};
-    try {
-        savedData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    } catch (e) { savedData = {}; }
-
-    function applySavedData() {
-        if (savedData.name && displayName && displayNameData && editName) {
-            displayName.textContent = savedData.name;
-            displayNameData.textContent = savedData.name;
-            editName.value = savedData.name;
-        }
-        if (savedData.email && displayEmail && editEmail) {
-            displayEmail.textContent = savedData.email;
-            editEmail.value = savedData.email;
-        }
-        if (savedData.phone && displayPhone && editPhone) {
-            displayPhone.textContent = savedData.phone;
-            editPhone.value = savedData.phone;
-        }
-        if (savedData.position && displayPosition && editPosition) {
-            displayPosition.textContent = savedData.position;
-            editPosition.value = savedData.position;
-        }
-        if (savedData.unit && displayUnit && editUnit) {
-            displayUnit.textContent = savedData.unit;
-            editUnit.value = savedData.unit;
-        }
-        if (savedData.photo && photoContainer) {
-            showPhoto(savedData.photo);
-        }
-    }
-    applySavedData();
 
     function showPhoto(imageSource) {
         if (!photoContainer) return;
@@ -1786,21 +1768,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function processPhoto(file) {
         if (!file) return;
+
         if (!['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.type)) {
             showToast('Format foto harus JPG, PNG, atau WEBP.', 'error', 'Format Salah');
             return;
         }
+
         if (file.size > 2 * 1024 * 1024) {
             showToast('Ukuran berkas maksimal 2 MB.', 'error', 'Berkas Terlalu Besar');
             return;
         }
+
         const reader = new FileReader();
+
         reader.onload = function (event) {
-            savedData.photo = event.target.result;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedData));
-            showPhoto(savedData.photo);
-            showToast('Foto profil berhasil diperbarui!', 'success', 'Foto Disimpan');
+            showPhoto(event.target.result);
+            showToast(
+                'Foto siap disimpan. Klik tombol simpan profil.',
+                'success',
+                'Foto Dipilih'
+            );
         };
+
         reader.readAsDataURL(file);
     }
 
@@ -1808,39 +1797,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (modalPhotoInput) modalPhotoInput.addEventListener('change', function () { processPhoto(this.files[0]); });
 
     if (editForm) {
-        editForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            const name = editName.value.trim();
-            const email = editEmail.value.trim();
-            const phone = editPhone.value.trim();
-            const position = editPosition.value.trim();
-            const unit = editUnit.value.trim();
+        editForm.addEventListener('submit', function () {
             const selectedTheme = themeSelector ? themeSelector.value : 'normal';
 
-            if (!name || !email) {
-                showToast('Nama dan Email wajib diisi.', 'error', 'Validasi Gagal');
-                return;
-            }
-
-            savedData.name = name;
-            savedData.email = email;
-            savedData.phone = phone || '-';
-            savedData.position = position || 'Petugas ULT';
-            savedData.unit = unit || 'Unit Layanan Terpadu';
-
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedData));
+            // Tema hanya untuk tampilan dan tetap disimpan di browser.
             localStorage.setItem(THEME_KEY, selectedTheme);
-            applyTheme(selectedTheme);
-
-            if (displayName) displayName.textContent = name;
-            if (displayNameData) displayNameData.textContent = name;
-            if (displayEmail) displayEmail.textContent = email;
-            if (displayPhone) displayPhone.textContent = phone || '-';
-            if (displayPosition) displayPosition.textContent = position || 'Petugas ULT';
-            if (displayUnit) displayUnit.textContent = unit || 'Unit Layanan Terpadu';
-
-            closeProfileEditModal();
-            showToast('Profil petugas & tema karakter berhasil diperbarui secara permanen.', 'success', 'Pembaruan Disimpan');
         });
     }
 });

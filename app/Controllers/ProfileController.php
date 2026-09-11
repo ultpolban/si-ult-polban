@@ -33,7 +33,7 @@ class ProfileController extends BaseController
             'user'  => $user,
         ];
 
-        return view('profile/index', $data);
+        return view('petugas/profile', $data);
     }
 
     // =========================================================

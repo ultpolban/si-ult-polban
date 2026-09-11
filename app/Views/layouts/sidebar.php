@@ -173,7 +173,7 @@
 
         </a>
 
-        <hr>
+
 
         <span class="menu-title">
             SYSTEM
@@ -231,6 +231,21 @@
             class="<?= service('uri')->getSegment(1) == 'profil' ? 'active' : '' ?>">
             <i class="bi bi-person-gear"></i>
             Profil
+        </a>
+
+        <hr>
+
+        <span class="menu-title">
+            KONTEN
+        </span>
+
+        <a href="<?= base_url('faqs') ?>"
+            class="<?= service('uri')->getSegment(1) == 'faqs' ? 'active' : '' ?>">
+
+            <i class="bi bi-question-circle"></i>
+
+            Manajemen FAQ
+
         </a>
 
         <a href="<?= base_url('logout') ?>">

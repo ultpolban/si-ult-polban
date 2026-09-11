@@ -437,7 +437,9 @@ class AuthController extends BaseController
     public function login()
     {
         if (session()->get('logged_in')) {
-            return redirect()->to('/');
+            $roleCode = session()->get('role_code') ?? '';
+            $dashboard = ($roleCode === 'PIMPINAN') ? '/pimpinan/dashboard' : '/dashboard';
+            return redirect()->to($dashboard);
         }
 
         return view('auth/login', [
@@ -481,6 +483,11 @@ class AuthController extends BaseController
                 ->with('error', 'Akun belum aktif.');
         }
 
+        if (!empty($user['mfa_enabled']) && $user['mfa_enabled'] == 1) {
+            session()->set('mfa_pending_user_id', $user['id']);
+            return redirect()->to('/mfa/verify');
+        }
+
         $this->userModel->updateLastLogin($user['id']);
 
         $this->setUserSession($user);
@@ -495,7 +502,7 @@ class AuthController extends BaseController
 
         $dashboard = ($user['role_code'] ?? '') === 'PIMPINAN'
             ? '/pimpinan/dashboard'
-            : '/';
+            : '/dashboard';
 
         return redirect()
             ->to($dashboard)
@@ -511,7 +518,9 @@ class AuthController extends BaseController
     public function register()
     {
         if (session()->get('logged_in')) {
-            return redirect()->to('/');
+            $roleCode = session()->get('role_code') ?? '';
+            $dashboard = ($roleCode === 'PIMPINAN') ? '/pimpinan/dashboard' : '/dashboard';
+            return redirect()->to($dashboard);
         }
 
         $data = $this->getRegisterData();

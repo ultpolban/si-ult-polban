@@ -26,12 +26,23 @@ require APPPATH . 'Config/Routes/Api.php';
 |--------------------------------------------------------------------------
 */
 
-$routes->get('/', 'Web::login');
+$routes->get('/', 'AuthController::login');
 
-$routes->get('login', 'Web::login');
+$routes->get('login', 'AuthController::login');
 $routes->post('login', 'AuthController::authenticate');
 
 $routes->get('logout', 'AuthController::logout');
+
+/*
+|--------------------------------------------------------------------------
+| MFA
+|--------------------------------------------------------------------------
+*/
+
+$routes->get('mfa/setup', 'MfaController::setup');
+$routes->post('mfa/setup-verify', 'MfaController::setupVerify');
+$routes->get('mfa/verify', 'MfaController::verify');
+$routes->post('mfa/verify', 'MfaController::verifyProcess');
 
 /*
 |--------------------------------------------------------------------------
@@ -61,8 +72,10 @@ $routes->group('classes', ['filter' => 'auth'], function ($routes) {
 */
 
 // $routes->get('register', 'AuthController::register');
-
 // $routes->post('register/store', 'AuthController::storeRegister');
+
+$routes->get('register', 'RegisterController::index');
+$routes->post('register/store', 'RegisterController::store');
 
 /*
 |--------------------------------------------------------------------------
@@ -296,4 +309,14 @@ $routes->group('program-studi', ['filter' => 'auth'], function ($routes) {
     $routes->get('edit/(:num)', 'ProgramStudiController::edit/$1');
     $routes->post('update/(:num)', 'ProgramStudiController::update/$1');
     $routes->get('delete/(:num)', 'ProgramStudiController::delete/$1');
+});
+
+// Manajemen FAQ
+$routes->group('faqs', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'FaqController::index');
+    $routes->get('create', 'FaqController::create');
+    $routes->post('store', 'FaqController::store');
+    $routes->get('edit/(:num)', 'FaqController::edit/$1');
+    $routes->post('update/(:num)', 'FaqController::update/$1');
+    $routes->get('delete/(:num)', 'FaqController::delete/$1');
 });

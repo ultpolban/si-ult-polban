@@ -50,25 +50,40 @@ class RegisterController extends BaseController
 
             'title' => 'Registrasi Pemohon',
 
+            // Jenis Pemohon
             'userTypes' => $this->userTypeModel
-                ->orderBy('name')
+                ->select('master_applicant_types.*, master_applicant_types.name as type_name')
+                ->orderBy('name', 'ASC')
                 ->findAll(),
 
+            // Jurusan
             'departments' => $this->departmentModel
-                ->orderBy('name')
+                ->select('master_departments.*, master_departments.name as department_name')
+                ->orderBy('name', 'ASC')
                 ->findAll(),
 
+            // Program Studi
             'studyPrograms' => $this->studyProgramModel
-                ->orderBy('degree')
-                ->orderBy('name')
+                ->select('master_study_programs.*, master_study_programs.name as program_name, master_study_programs.degree as education_level, master_departments.name as department_name')
+                ->join(
+                    'master_departments',
+                    'master_departments.id = master_study_programs.department_id',
+                    'left'
+                )
+                ->orderBy('degree', 'ASC')
+                ->orderBy('master_study_programs.name', 'ASC')
                 ->findAll(),
 
+            // Unit Kerja
             'workUnits' => $this->workUnitModel
-                ->orderBy('name')
+                ->select('master_service_units.*, master_service_units.name as unit_name')
+                ->orderBy('name', 'ASC')
                 ->findAll(),
 
+            // Kelas
             'classes' => $this->classModel
-                ->orderBy('name')
+                ->select('master_classes.*, master_classes.name as class_name')
+                ->orderBy('name', 'ASC')
                 ->findAll()
 
         ]);
@@ -93,9 +108,9 @@ class RegisterController extends BaseController
             'full_name'              => 'required|min_length[3]',
             'user_type_id'           => 'required',
 
-            'email'         => 'required|valid_email|is_unique[users.email]',
+            'personal_email'         => 'required|valid_email|is_unique[users.email]',
 
-            'phone'                  => 'required|min_length[10]',
+            'phone'                  => 'required|min_length[8]',
 
             'gender'                 => 'required|in_list[L,P]',
 
@@ -169,13 +184,13 @@ class RegisterController extends BaseController
                 break;
         }
 
-        // if (!$this->validate($rules)) {
+        if (!$this->validate($rules)) {
 
-        //     return redirect()
-        //         ->back()
-        //         ->withInput()
-        //         ->with('errors', $this->validator->getErrors());
-        // }
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors());
+        }
 
         /*
 |--------------------------------------------------------------------------
@@ -245,7 +260,7 @@ class RegisterController extends BaseController
 
             // Akun
             'full_name' => $this->request->getPost('full_name'),
-            'email' => $this->request->getPost('email'),
+            'email' => $this->request->getPost('personal_email') ?: $this->request->getPost('email'),
             'institution_email' => $this->request->getPost('institution_email'),
             'password' => password_hash(
                 $this->request->getPost('password'),
@@ -362,11 +377,13 @@ class RegisterController extends BaseController
 
         $this->db->transCommit();
 
+        session()->set('mfa_setup_user_id', $userId);
+
         return redirect()
-            ->to('/login')
+            ->to('/mfa/setup')
             ->with(
                 'success',
-                'Registrasi berhasil. Silakan login.'
+                'Registrasi berhasil. Silakan setup MFA Anda.'
             );
     }
 

@@ -142,8 +142,9 @@
 
                 </form>
 
-                
-
+                <div class="mt-4 text-center">
+                    <p class="mb-0">Belum punya akun? <a href="<?= base_url('register') ?>" class="text-primary fw-bold">Daftar sekarang</a></p>
+                </div>
             </div>
 
         </div>

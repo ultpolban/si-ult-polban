@@ -28,6 +28,8 @@ class UserModel extends Model
         'last_login',
         'remember_token',
         'email_verified_at',
+        'mfa_secret',
+        'mfa_enabled',
     ];
 
     protected $useTimestamps = true;

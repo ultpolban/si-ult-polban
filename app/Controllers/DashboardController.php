@@ -443,6 +443,18 @@ class DashboardController extends BaseController
             'total_tiket' =>
                 $totalTiket,
 
+            'jumlahTiket' =>
+    $totalTiket,
+
+'jumlahSubmitted' =>
+    $submittedTiket,
+
+'jumlahVerified' =>
+    $verifiedTiket,
+
+'jumlahDisposisi' =>
+    $assignedTiket + $progressTiket,
+
             'submitted' =>
                 $submittedTiket,
 
@@ -527,8 +539,181 @@ class DashboardController extends BaseController
 
 
         return view(
-            'dashboard/index',
-            $data
-        );
+    'petugas/dashboard',
+    $data
+);
+
+
+
     }
+
+    public function statistikData()
+    {
+        $ticketModel = new TicketModel();
+
+        $tickets = $ticketModel->getTickets();
+
+        $periode = $this->request->getGet('periode') ?? 'bulan_ini';
+
+        $tanggalMulai   = null;
+        $tanggalSelesai = null;
+
+        // Frontend3 menggunakan "custom",
+        // backend3 sebelumnya menggunakan "manual".
+        if ($periode === 'custom') {
+            $periode = 'manual';
+        }
+
+        switch ($periode) {
+
+            case 'hari_ini':
+                $tanggalMulai   = date('Y-m-d');
+                $tanggalSelesai = date('Y-m-d');
+                break;
+
+            case 'minggu_ini':
+                $tanggalMulai = date(
+                    'Y-m-d',
+                    strtotime('monday this week')
+                );
+
+                $tanggalSelesai = date(
+                    'Y-m-d',
+                    strtotime('sunday this week')
+                );
+                break;
+
+            case 'bulan_ini':
+                $tanggalMulai   = date('Y-m-01');
+                $tanggalSelesai = date('Y-m-t');
+                break;
+
+            case 'tahun_ini':
+                $tanggalMulai   = date('Y-01-01');
+                $tanggalSelesai = date('Y-12-31');
+                break;
+
+            case 'semua':
+                $tanggalMulai   = null;
+                $tanggalSelesai = null;
+                break;
+
+            case 'manual':
+                $tanggalMulai = $this->request->getGet('start_date')
+                    ?? $this->request->getGet('tanggal_mulai');
+
+                $tanggalSelesai = $this->request->getGet('end_date')
+                    ?? $this->request->getGet('tanggal_selesai');
+
+                if (!$tanggalMulai || !$tanggalSelesai) {
+                    $tanggalMulai   = date('Y-m-01');
+                    $tanggalSelesai = date('Y-m-t');
+                }
+
+                break;
+
+            default:
+                $tanggalMulai   = date('Y-m-01');
+                $tanggalSelesai = date('Y-m-t');
+                break;
+        }
+
+        // Filter tiket berdasarkan submitted_at
+        $filteredTickets = $tickets;
+
+        if ($tanggalMulai && $tanggalSelesai) {
+
+            $startTimestamp = strtotime(
+                $tanggalMulai . ' 00:00:00'
+            );
+
+            $endTimestamp = strtotime(
+                $tanggalSelesai . ' 23:59:59'
+            );
+
+            $filteredTickets = array_filter(
+                $tickets,
+                function ($ticket) use (
+                    $startTimestamp,
+                    $endTimestamp
+                ) {
+                    if (empty($ticket['submitted_at'])) {
+                        return false;
+                    }
+
+                    $timestamp = strtotime(
+                        $ticket['submitted_at']
+                    );
+
+                    return (
+                        $timestamp >= $startTimestamp &&
+                        $timestamp <= $endTimestamp
+                    );
+                }
+            );
+        }
+
+        // Hitung status
+        $submittedTiket = 0;
+        $verifiedTiket  = 0;
+        $assignedTiket  = 0;
+        $progressTiket  = 0;
+        $completedTiket = 0;
+        $rejectedTiket  = 0;
+
+        foreach ($filteredTickets as $ticket) {
+
+            $status = strtolower(
+                trim($ticket['status'] ?? '')
+            );
+
+            switch ($status) {
+
+                case 'submitted':
+                    $submittedTiket++;
+                    break;
+
+                case 'verified':
+                    $verifiedTiket++;
+                    break;
+
+                case 'assigned':
+                    $assignedTiket++;
+                    break;
+
+                case 'in progress':
+                case 'in_progress':
+                case 'processing':
+                    $progressTiket++;
+                    break;
+
+                case 'completed':
+                    $completedTiket++;
+                    break;
+
+                case 'rejected':
+                    $rejectedTiket++;
+                    break;
+            }
+        }
+
+        // Diproses / disposisi
+        $diprosesUnit =
+            $assignedTiket +
+            $progressTiket;
+
+        return $this->response->setJSON([
+            'status' => 'success',
+
+            'data' => [
+                'submitted'   => $submittedTiket,
+                'verified'    => $verifiedTiket,
+                'disposisi'   => $diprosesUnit,
+                'in_progress' => $progressTiket,
+                'completed'   => $completedTiket,
+                'rejected'    => $rejectedTiket,
+            ],
+        ]);
+    }
+
 }

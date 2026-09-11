@@ -17,8 +17,10 @@ $routes->get('/', 'Home::index');
 // ============================================================
 $routes->get('login', 'Auth\AuthController::index');
 $routes->post('login', 'Auth\AuthController::authenticate');
+
 $routes->get('login/mfa', 'Auth\AuthController::mfa');
 $routes->post('login/mfa/verify', 'Auth\AuthController::verifyMfa');
+
 
 // ============================================================
 // REGISTER
@@ -45,22 +47,48 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ========================================================
     // DASHBOARD & PROFIL
     // ========================================================
-    $routes->get('dashboard', 'DashboardController::index');
 
-    $routes->get('profile', 'ProfileController::index');
-    $routes->get('profile/edit', 'ProfileController::edit');
-    $routes->post('profile/update', 'ProfileController::update');
+    $routes->get(
+        'dashboard',
+        'DashboardController::index'
+    );
+
+    // AJAX statistik dashboard
+    $routes->get(
+        'dashboard/api/statistik-data',
+        'DashboardController::statistikData'
+    );
+
+    $routes->get(
+        'profile',
+        'ProfileController::index'
+    );
+
+    $routes->get(
+        'profile/edit',
+        'ProfileController::edit'
+    );
+
+    $routes->post(
+        'profile/update',
+        'ProfileController::update'
+    );
 
 
     // ========================================================
-    // DATA TIKET UTAMA
+    // DATA TIKET
     // ========================================================
+
     $routes->get(
         'datatiket',
         'DataTicketController::index'
     );
 
-    // EXPORT DATA TIKET
+    $routes->get(
+        'datatiket/detail/(:num)',
+        'DataTicketController::detail/$1'
+    );
+
     $routes->get(
         'datatiket/export/pdf',
         'DataTicketController::exportPdf'
@@ -80,71 +108,52 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ========================================================
     // VERIFIKASI TIKET
     // ========================================================
+
     $routes->group('verification', function ($routes) {
 
-        // ----------------------------------------------------
-        // DAFTAR TIKET MENUNGGU VERIFIKASI
-        // GET /verification
-        // ----------------------------------------------------
         $routes->get(
             '/',
             'VerificationController::index'
         );
 
-        // ----------------------------------------------------
-        // DETAIL TIKET
-        // GET /verification/detail/22
-        // ----------------------------------------------------
         $routes->get(
             'detail/(:num)',
             'VerificationController::detail/$1'
         );
 
-        // ----------------------------------------------------
-        // FORM VERIFIKASI
-        // GET /verification/verify/22
-        // ----------------------------------------------------
         $routes->get(
             'verify/(:num)',
             'VerificationController::verify/$1'
         );
 
-        // ----------------------------------------------------
-        // PROSES SIMPAN VERIFIKASI
-        // POST /verification/process/22
-        // ----------------------------------------------------
         $routes->post(
             'process/(:num)',
             'VerificationController::process/$1'
         );
-
     });
 
 
     // ========================================================
     // DISPOSISI TIKET
     // ========================================================
+
     $routes->group('disposition', function ($routes) {
 
-        // Daftar disposisi
         $routes->get(
             '/',
             'DispositionController::index'
         );
 
-        // Form disposisi
         $routes->get(
             'create/(:num)',
             'DispositionController::create/$1'
         );
 
-        // Detail disposisi
         $routes->get(
             'detail/(:num)',
             'DispositionController::detail/$1'
         );
 
-        // Proses disposisi
         $routes->post(
             'process/(:num)',
             'DispositionController::process/$1'
@@ -155,6 +164,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ========================================================
     // UNIT LAYANAN
     // ========================================================
+
     $routes->get(
         'unit',
         'UnitController::index'
@@ -174,6 +184,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ========================================================
     // USER MANAGEMENT
     // ========================================================
+
     $routes->get(
         'users',
         'UserController::index'
@@ -208,6 +219,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ========================================================
     // LAPORAN TIKET
     // ========================================================
+
     $routes->get(
         'report',
         'ReportController::index'
@@ -232,6 +244,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ========================================================
     // LAPORAN TAMU / WALK IN
     // ========================================================
+
     $routes->get(
         'guest-report',
         'GuestReportController::index'
@@ -281,6 +294,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ========================================================
     // PENGAJUAN ONLINE
     // ========================================================
+
     $routes->get(
         'online',
         'OnlineController::index'
@@ -330,10 +344,16 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ========================================================
     // STATISTIK & TRACKING
     // ========================================================
+
     $routes->get(
         'statistics',
         'StatisticsController::index'
     );
+
+    $routes->get(
+    'statistics/api/statistik-data',
+    'StatisticsController::statistikData'
+);
 
     $routes->get(
         'tracking',
@@ -364,6 +384,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ========================================================
     // LOG AKTIVITAS
     // ========================================================
+
     $routes->get(
         'log-aktivitas',
         'LogAktivitasController::index'
@@ -374,6 +395,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 // ============================================================
 // KHUSUS ADMIN
 // ============================================================
+
 $routes->group(
     'admin-users',
     ['filter' => 'role'],

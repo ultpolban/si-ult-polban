@@ -14,21 +14,45 @@ class DataTicketController extends BaseController
     }
 
     /**
-     * Halaman utama Data Tiket
+     * ============================================================
+     * HALAMAN UTAMA DATA TIKET
+     * ============================================================
      */
     public function index()
     {
-        $keyword = trim((string) $this->request->getGet('keyword'));
-        $status  = trim((string) $this->request->getGet('status'));
-        $category = trim((string) $this->request->getGet('category'));
+        // ========================================================
+        // PARAMETER FILTER
+        // ========================================================
+        $keyword = trim((string) (
+            $this->request->getGet('search')
+            ?? $this->request->getGet('keyword')
+            ?? ''
+        ));
 
-        // Ambil jumlah data per halaman
-        $perPage = (int) ($this->request->getGet('per_page') ?? 10);
+        $status = trim((string) (
+            $this->request->getGet('status')
+            ?? ''
+        ));
+
+        $category = trim((string) (
+            $this->request->getGet('kategori')
+            ?? $this->request->getGet('category')
+            ?? ''
+        ));
+
+        $perPage = (int) (
+            $this->request->getGet('limit')
+            ?? $this->request->getGet('per_page')
+            ?? 10
+        );
 
         if ($perPage < 1) {
             $perPage = 10;
         }
 
+        // ========================================================
+        // QUERY DATA
+        // ========================================================
         $builder = $this->buildTicketQuery();
 
         // SEARCH
@@ -49,52 +73,251 @@ class DataTicketController extends BaseController
         }
 
         // FILTER KATEGORI
-        if ($category !== '') {
-            $builder->where('master_service_categories.name', $category);
-        }
+        // Belum digunakan karena kategori belum tersedia
+        // langsung pada query backend3.
 
+        // ========================================================
+        // DATA TIKET
+        // ========================================================
         $tickets = $builder
             ->orderBy('tickets.submitted_at', 'DESC')
             ->paginate($perPage, 'datatiket');
 
-        return view('datatiket/index', [
-            'tickets'        => $tickets,
-            'pager'          => $this->ticketModel->pager,
-            'perPage'        => $perPage,
-            'keyword'        => $keyword,
-            'status'         => $status,
-            'category'       => $category,
+        // ========================================================
+        // MAPPING BACKEND3 → FRONTEND3
+        // ========================================================
+        foreach ($tickets as &$ticket) {
 
-            'totalTickets'   => $this->ticketModel->countAll(),
+            // Nomor tiket
+            $ticket['nomor_tiket'] =
+                $ticket['ticket_number'] ?? '-';
 
-            'totalPending'   => $this->ticketModel
-                ->whereIn('status', [
-                    'submitted',
-                    'verification'
-                ])
-                ->countAllResults(),
+            // Nama pemohon
+            $ticket['nama_pemohon'] =
+                $ticket['applicant_name'] ?? '-';
 
-            'totalVerified'  => $this->ticketModel
-                ->whereIn('status', [
-                    'verified',
-                    'assigned',
-                    'processing',
-                    'completed'
-                ])
-                ->countAllResults(),
+            // Layanan
+            $ticket['layanan'] =
+                $ticket['service_name'] ?? '-';
 
-            'totalProcessed' => $this->ticketModel
-                ->whereIn('status', [
-                    'assigned',
-                    'processing'
-                ])
-                ->countAllResults(),
+            // Kategori
+            $ticket['kategori'] =
+                $ticket['category_name'] ?? '-';
 
-            'total_tiket'    => $this->ticketModel->countAll(),
+            // Lampiran
+            $ticket['lampiran'] =
+                $ticket['lampiran'] ?? [];
 
-            'submitted'      => $this->ticketModel
-                ->where('status', 'submitted')
-                ->countAllResults(),
+            // Status lowercase
+            $ticket['status'] = strtolower(
+                trim($ticket['status'] ?? '')
+            );
+
+            // Created at
+            $ticket['created_at'] =
+                $ticket['created_at']
+                ?? $ticket['submitted_at']
+                ?? null;
+        }
+
+        unset($ticket);
+
+        // ========================================================
+        // ADAPTER FRONTEND3
+        // ========================================================
+        $totalData = count($tickets);
+
+        // Tidak ada dummy data
+        $realTickets = $tickets;
+        $dummyTickets = [];
+
+        $filteredTickets = $tickets;
+        $tiket_list = $tickets;
+
+        // Pagination frontend3
+        $currentPage = (int) (
+            $this->request->getGet('page')
+            ?? $this->request->getGet('page_datatiket')
+            ?? 1
+        );
+
+        if ($currentPage < 1) {
+            $currentPage = 1;
+        }
+
+        $offset = ($currentPage - 1) * $perPage;
+
+        $paginatedList = array_slice(
+            $tickets,
+            $offset,
+            $perPage
+        );
+
+        $totalPages = $perPage > 0
+            ? (int) ceil($totalData / $perPage)
+            : 1;
+
+        if ($totalPages < 1) {
+            $totalPages = 1;
+        }
+
+        // ========================================================
+        // STATISTIK
+        // ========================================================
+        $jumlahTiket = $this->ticketModel->countAll();
+
+        $jumlahSubmitted = $this->ticketModel
+            ->where('status', 'submitted')
+            ->countAllResults();
+
+        $jumlahVerified = $this->ticketModel
+            ->whereIn('status', [
+                'verified',
+                'assigned',
+                'processing',
+                'completed'
+            ])
+            ->countAllResults();
+
+        $jumlahDisposisi = $this->ticketModel
+            ->whereIn('status', [
+                'assigned',
+                'processing'
+            ])
+            ->countAllResults();
+
+        // ========================================================
+        // KIRIM KE VIEW FRONTEND3
+        // ========================================================
+        return view('petugas/tiket', [
+
+            // Data utama
+            'tickets' => $tickets,
+
+            // Pager CI4
+            'pager' => $this->ticketModel->pager,
+
+            // Filter
+            'perPage' => $perPage,
+            'keyword' => $keyword,
+            'status' => $status,
+            'category' => $category,
+
+            // Statistik backend3
+            'totalTickets' =>
+                $this->ticketModel->countAll(),
+
+            'totalPending' =>
+                $this->ticketModel
+                    ->whereIn('status', [
+                        'submitted',
+                        'verification'
+                    ])
+                    ->countAllResults(),
+
+            'totalVerified' =>
+                $this->ticketModel
+                    ->whereIn('status', [
+                        'verified',
+                        'assigned',
+                        'processing',
+                        'completed'
+                    ])
+                    ->countAllResults(),
+
+            'totalProcessed' =>
+                $this->ticketModel
+                    ->whereIn('status', [
+                        'assigned',
+                        'processing'
+                    ])
+                    ->countAllResults(),
+
+            'total_tiket' =>
+                $this->ticketModel->countAll(),
+
+            'submitted' =>
+                $this->ticketModel
+                    ->where('status', 'submitted')
+                    ->countAllResults(),
+
+            // ====================================================
+            // ADAPTER FRONTEND3
+            // ====================================================
+            'realTickets' => $realTickets,
+            'dummyTickets' => $dummyTickets,
+            'filteredTickets' => $filteredTickets,
+            'tiket_list' => $tiket_list,
+
+            'currentPage' => $currentPage,
+            'offset' => $offset,
+            'paginatedList' => $paginatedList,
+            'totalData' => $totalData,
+            'totalPages' => $totalPages,
+
+            // Statistik frontend3
+            'jumlahTiket' => $jumlahTiket,
+            'jumlahSubmitted' => $jumlahSubmitted,
+            'jumlahVerified' => $jumlahVerified,
+            'jumlahDisposisi' => $jumlahDisposisi,
+        ]);
+    }
+
+
+    /**
+     * ============================================================
+     * DETAIL DATA TIKET
+     * ============================================================
+     *
+     * GET /datatiket/detail/25
+     */
+    public function detail($id = null)
+    {
+        if ($id === null) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
+                'ID tiket tidak ditemukan'
+            );
+        }
+
+        // Ambil data dari database backend3
+        $ticket = $this->ticketModel->getTicketDetail($id);
+
+        if (!$ticket) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
+                'Tiket tidak ditemukan'
+            );
+        }
+
+        // ========================================================
+        // MAPPING BACKEND3 → FRONTEND3
+        // ========================================================
+        $ticket['nomor_tiket'] =
+            $ticket['ticket_number'] ?? '-';
+
+        $ticket['nama_pemohon'] =
+            $ticket['applicant_name'] ?? '-';
+
+        $ticket['layanan'] =
+            $ticket['service_name'] ?? '-';
+
+        $ticket['kategori'] =
+            $ticket['category_name'] ?? '-';
+
+        $ticket['status'] = strtolower(
+            trim($ticket['status'] ?? '')
+        );
+
+        $ticket['created_at'] =
+            $ticket['created_at']
+            ?? $ticket['submitted_at']
+            ?? null;
+
+        // ========================================================
+        // VIEW FRONTEND3
+        // ========================================================
+        return view('petugas/detail', [
+            'ticket' => $ticket,
+            'tiket' => $ticket,
         ]);
     }
 
@@ -151,17 +374,25 @@ class DataTicketController extends BaseController
      * ============================================================
      * EXPORT DATA
      * ============================================================
-     *
-     * URL:
-     * /datatiket/export/pdf
-     * /datatiket/export/excel
-     * /datatiket/export/csv
      */
     private function getExportData()
     {
-        $keyword  = trim((string) $this->request->getGet('keyword'));
-        $status   = trim((string) $this->request->getGet('status'));
-        $category = trim((string) $this->request->getGet('category'));
+        $keyword = trim((string) (
+            $this->request->getGet('search')
+            ?? $this->request->getGet('keyword')
+            ?? ''
+        ));
+
+        $status = trim((string) (
+            $this->request->getGet('status')
+            ?? ''
+        ));
+
+        $category = trim((string) (
+            $this->request->getGet('kategori')
+            ?? $this->request->getGet('category')
+            ?? ''
+        ));
 
         $builder = $this->buildTicketQuery();
 
@@ -182,10 +413,8 @@ class DataTicketController extends BaseController
             $builder->where('tickets.status', $status);
         }
 
-        // FILTER KATEGORI
-        if ($category !== '') {
-            $builder->where('master_service_categories.name', $category);
-        }
+        // Kategori belum digunakan
+        // karena relasi kategori belum tersedia.
 
         return $builder
             ->orderBy('tickets.submitted_at', 'DESC')
@@ -202,7 +431,10 @@ class DataTicketController extends BaseController
     {
         $tickets = $this->getExportData();
 
-        $filename = 'data-tiket-' . date('Y-m-d-H-i-s') . '.csv';
+        $filename =
+            'data-tiket-' .
+            date('Y-m-d-H-i-s') .
+            '.csv';
 
         $this->response->setHeader(
             'Content-Type',
@@ -211,12 +443,14 @@ class DataTicketController extends BaseController
 
         $this->response->setHeader(
             'Content-Disposition',
-            'attachment; filename="' . $filename . '"'
+            'attachment; filename="' .
+            $filename .
+            '"'
         );
 
         $output = fopen('php://output', 'w');
 
-        // BOM agar Excel membaca UTF-8 dengan benar
+        // BOM UTF-8
         fwrite($output, "\xEF\xBB\xBF");
 
         // HEADER
@@ -267,14 +501,15 @@ class DataTicketController extends BaseController
      * ============================================================
      * EXPORT EXCEL
      * ============================================================
-     *
-     * Menghasilkan file HTML yang dapat dibuka oleh Microsoft Excel.
      */
     public function exportExcel()
     {
         $tickets = $this->getExportData();
 
-        $filename = 'data-tiket-' . date('Y-m-d-H-i-s') . '.xls';
+        $filename =
+            'data-tiket-' .
+            date('Y-m-d-H-i-s') .
+            '.xls';
 
         $this->response->setHeader(
             'Content-Type',
@@ -283,7 +518,9 @@ class DataTicketController extends BaseController
 
         $this->response->setHeader(
             'Content-Disposition',
-            'attachment; filename="' . $filename . '"'
+            'attachment; filename="' .
+            $filename .
+            '"'
         );
 
         $html = '
@@ -291,6 +528,7 @@ class DataTicketController extends BaseController
         <html>
         <head>
             <meta charset="UTF-8">
+
             <style>
                 table {
                     border-collapse: collapse;
@@ -351,31 +589,57 @@ class DataTicketController extends BaseController
             $html .= '
                 <tr>
 
-                    <td>' . $no++ . '</td>
+                    <td>' .
+                        $no++ .
+                    '</td>
 
-                    <td>' . esc($ticket['ticket_number'] ?? '-') . '</td>
+                    <td>' .
+                        esc($ticket['ticket_number'] ?? '-') .
+                    '</td>
 
-                    <td>' . esc($ticket['applicant_name'] ?? '-') . '</td>
+                    <td>' .
+                        esc($ticket['applicant_name'] ?? '-') .
+                    '</td>
 
-                    <td>' . esc($ticket['nim'] ?? '-') . '</td>
+                    <td>' .
+                        esc($ticket['nim'] ?? '-') .
+                    '</td>
 
-                    <td>' . esc($ticket['nik'] ?? '-') . '</td>
+                    <td>' .
+                        esc($ticket['nik'] ?? '-') .
+                    '</td>
 
-                    <td>' . esc($ticket['email'] ?? '-') . '</td>
+                    <td>' .
+                        esc($ticket['email'] ?? '-') .
+                    '</td>
 
-                    <td>' . esc($ticket['phone'] ?? '-') . '</td>
+                    <td>' .
+                        esc($ticket['phone'] ?? '-') .
+                    '</td>
 
-                    <td>' . esc($ticket['service_name'] ?? '-') . '</td>
+                    <td>' .
+                        esc($ticket['service_name'] ?? '-') .
+                    '</td>
 
-                    <td>' . esc($ticket['unit_name'] ?? '-') . '</td>
+                    <td>' .
+                        esc($ticket['unit_name'] ?? '-') .
+                    '</td>
 
-                    <td>' . esc($ticket['status'] ?? '-') . '</td>
+                    <td>' .
+                        esc($ticket['status'] ?? '-') .
+                    '</td>
 
-                    <td>' . esc($ticket['priority'] ?? '-') . '</td>
+                    <td>' .
+                        esc($ticket['priority'] ?? '-') .
+                    '</td>
 
-                    <td>' . esc($ticket['submitted_at'] ?? '-') . '</td>
+                    <td>' .
+                        esc($ticket['submitted_at'] ?? '-') .
+                    '</td>
 
-                    <td>' . esc($ticket['verified_at'] ?? '-') . '</td>
+                    <td>' .
+                        esc($ticket['verified_at'] ?? '-') .
+                    '</td>
 
                 </tr>
             ';
@@ -398,9 +662,6 @@ class DataTicketController extends BaseController
      * ============================================================
      * EXPORT PDF
      * ============================================================
-     *
-     * Untuk PDF, sementara menggunakan tampilan HTML
-     * yang bisa dicetak menjadi PDF melalui browser.
      */
     public function exportPdf()
     {

@@ -85,13 +85,13 @@ LAPORAN TIKET ULT POLBAN
 
 <td><?= $t['ticket_number'] ?></td>
 
-<td><?= $t['applicant_name'] ?></td>
+<td><?= $t['applicant_name'] ?? '-' ?></td>
 
-<td><?= $t['applicant_type'] ?></td>
+<td><?= $t['applicant_type'] ?? '-' ?></td>
 
-<td><?= $t['service_name'] ?></td>
+<td><?= $t['service_name'] ?? '-' ?></td>
 
-<td><?= $t['status'] ?></td>
+<td><?= $t['status'] ?? '-' ?></td>
 
 <td><?= date('d-m-Y',strtotime($t['submitted_at'])) ?></td>
 

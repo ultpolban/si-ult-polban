@@ -98,10 +98,11 @@ class DispositionController extends BaseController
             ->get()
             ->getResultArray();
 
-        return view('disposition/detail', [
-            'ticket' => $ticket,
-            'units'  => $units
-        ]);
+        return view('petugas/disposisi', [
+    'tiket'  => $ticket,
+    'ticket' => $ticket,
+    'units'  => $units
+]);
     }
 
 

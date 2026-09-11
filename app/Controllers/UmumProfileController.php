@@ -1,0 +1,789 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Models\UserProfileModel;
+use App\Models\UserModel;
+
+class UmumProfileController extends BaseController
+{
+    // =====================================================
+    // AMBIL USER ID YANG SEDANG LOGIN
+    // =====================================================
+    private function getUserId()
+    {
+        $userId = session()->get('user_id');
+
+        if (!$userId) {
+            $user = session()->get('user');
+
+            if (is_array($user)) {
+                $userId = $user['id'] ?? null;
+            }
+        }
+
+        return $userId;
+    }
+
+
+    // =====================================================
+    // AMBIL DATA PROFILE DARI DATABASE
+    // =====================================================
+private function getProfile($userId)
+{
+    $db = \Config\Database::connect();
+
+    $builder = $db->table('user_profiles up');
+
+    $builder->select('
+        up.id,
+        up.user_id,
+        up.applicant_type_id,
+
+        up.student_name,
+        up.institution_name,
+        up.position,
+
+        up.nik,
+
+        up.name AS nama,
+        up.email,
+
+        COALESCE(up.gender, u.gender) AS jenis_kelamin,
+
+        up.phone AS no_hp,
+        up.address AS alamat,
+        up.photo AS foto
+    ');
+
+    // USER
+    $builder->join(
+        'users u',
+        'u.id = up.user_id',
+        'left'
+    );
+
+    $builder->where(
+        'up.user_id',
+        $userId
+    );
+
+    $builder->where(
+        'up.deleted_at',
+        null
+    );
+
+    return $builder
+        ->get()
+        ->getRowArray();
+}
+
+
+    // =====================================================
+    // HALAMAN PROFIL UMUM
+    // =====================================================
+    public function index()
+    {
+        $userId = $this->getUserId();
+
+        if (!$userId) {
+            return redirect()
+                ->to('/login')
+                ->with(
+                    'error',
+                    'Silakan login terlebih dahulu.'
+                );
+        }
+
+        $profile = $this->getProfile($userId);
+
+        if (!$profile) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Data profil umum tidak ditemukan.'
+                );
+        }
+
+        $data = [
+            'title' => 'Profil Masyarakat Umum',
+
+            'profile' => [
+
+                // DATA PRIBADI
+                'nama' =>
+                $profile['nama']
+                    ?? $profile['student_name']
+                    ?? '-',
+
+                'nik' =>
+                $profile['nik']
+                    ?? '-',
+
+                'email' =>
+                $profile['email']
+                    ?? '-',
+
+                'jenis_kelamin' =>
+                $profile['jenis_kelamin']
+                ?? '-',
+
+                'no_hp' =>
+                $profile['no_hp']
+                    ?? '-',
+
+                'alamat' =>
+                $profile['alamat']
+                    ?? '-',
+
+                'foto' =>
+                $profile['foto']
+                    ?? null,
+            ]
+        ];
+
+        return view(
+            'umum/profile/index',
+            $data
+        );
+    }
+
+
+    // =====================================================
+    // HALAMAN EDIT PROFILE
+    // =====================================================
+    public function edit()
+    {
+        $userId = $this->getUserId();
+
+        if (!$userId) {
+            return redirect()
+                ->to('/login')
+                ->with(
+                    'error',
+                    'Silakan login terlebih dahulu.'
+                );
+        }
+
+        $profile = $this->getProfile($userId);
+
+        if (!$profile) {
+            return redirect()
+                ->to(
+                    base_url(
+                        'umum/profile'
+                    )
+                )
+                ->with(
+                    'error',
+                    'Data profil umum tidak ditemukan.'
+                );
+        }
+
+        $data = [
+            'title' => 'Edit Profil Masyarakat Umum',
+
+            'profile' => [
+
+                'id' =>
+                $profile['id']
+                    ?? null,
+
+                'user_id' =>
+                $profile['user_id']
+                    ?? null,
+
+
+                // DATA PRIBADI
+                'nama' =>
+                $profile['nama']
+                    ?? $profile['student_name']
+                    ?? '',
+
+                'jenis_kelamin' =>
+                $profile['jenis_kelamin']
+                    ?? '',
+
+                'nik' =>
+                $profile['nik']
+                    ?? '',
+
+                'email' =>
+                $profile['email']
+                    ?? '',
+
+                'no_hp' =>
+                $profile['no_hp']
+                    ?? '',
+
+                'alamat' =>
+                $profile['alamat']
+                    ?? '',
+
+                'foto' =>
+                $profile['foto']
+                    ?? null,
+            ]
+        ];
+
+        return view(
+            'umum/profile/edit',
+            $data
+        );
+    }
+
+
+    public function update()
+    {
+        // =====================================================
+        // 1. AMBIL USER LOGIN
+        // =====================================================
+
+        $userId = $this->getUserId();
+
+        if (!$userId) {
+            return redirect()
+                ->to('/login')
+                ->with(
+                    'error',
+                    'Silakan login terlebih dahulu.'
+                );
+        }
+
+
+        // =====================================================
+        // 2. AMBIL PROFILE LAMA
+        // =====================================================
+
+        $profile = $this->getProfile($userId);
+
+        if (!$profile) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Data profil umum tidak ditemukan.'
+                );
+        }
+
+// =====================================================
+// 3. AMBIL DATA DARI FORM
+// =====================================================
+
+$nama = trim(
+    (string) $this->request->getPost('nama')
+);
+
+$email = trim(
+    (string) $this->request->getPost('email')
+);
+
+$noHp = trim(
+    (string) $this->request->getPost('no_hp')
+);
+
+$alamat = trim(
+    (string) $this->request->getPost('alamat')
+);
+
+
+        // =====================================================
+        // 4. VALIDASI DATA PRIBADI
+        // =====================================================
+
+        if (
+            empty($nama) ||
+            empty($email) ||
+            empty($noHp) ||
+            empty($alamat)
+        ) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Nama, email, nomor HP, dan alamat wajib diisi.'
+                );
+        }
+
+
+        // =====================================================
+        // 5. VALIDASI EMAIL
+        // =====================================================
+
+        if (
+            !filter_var(
+                $email,
+                FILTER_VALIDATE_EMAIL
+            )
+        ) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Format email tidak valid.'
+                );
+        }
+
+
+        // =====================================================
+        // 6. DATA UNTUK USER_PROFILES
+        // =====================================================
+
+$updateProfileData = [
+    'name' =>
+    $nama,
+
+    'email' =>
+    $email,
+
+    'phone' =>
+    $noHp,
+
+    'address' =>
+    $alamat,
+
+    'updated_at' =>
+    date('Y-m-d H:i:s')
+];
+
+
+        // =====================================================
+        // 7. UPLOAD FOTO
+        // =====================================================
+
+        $foto = $this->request->getFile('foto');
+
+        $newPhotoName = null;
+
+        if (
+            $foto &&
+            $foto->isValid() &&
+            !$foto->hasMoved()
+        ) {
+
+            // -------------------------------------------------
+            // VALIDASI UKURAN
+            // -------------------------------------------------
+
+            if (
+                $foto->getSize()
+                > 2 * 1024 * 1024
+            ) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Ukuran foto maksimal 2 MB.'
+                    );
+            }
+
+
+            // -------------------------------------------------
+            // VALIDASI EXTENSION
+            // -------------------------------------------------
+
+            $allowedExtensions = [
+                'jpg',
+                'jpeg',
+                'png',
+                'webp'
+            ];
+
+            $extension = strtolower(
+                $foto->getExtension()
+            );
+
+            if (
+                !in_array(
+                    $extension,
+                    $allowedExtensions,
+                    true
+                )
+            ) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Format foto harus JPG, JPEG, PNG, atau WEBP.'
+                    );
+            }
+
+
+            // -------------------------------------------------
+            // FOLDER UPLOAD
+            // -------------------------------------------------
+
+            $uploadPath =
+                FCPATH .
+                'uploads/profile';
+
+            if (!is_dir($uploadPath)) {
+
+                if (
+                    !mkdir(
+                        $uploadPath,
+                        0777,
+                        true
+                    )
+                ) {
+                    return redirect()
+                        ->back()
+                        ->withInput()
+                        ->with(
+                            'error',
+                            'Folder upload foto tidak dapat dibuat.'
+                        );
+                }
+            }
+
+
+            // -------------------------------------------------
+            // BUAT NAMA FOTO BARU
+            // -------------------------------------------------
+
+            $newPhotoName =
+                $foto->getRandomName();
+
+
+            // -------------------------------------------------
+            // PINDAHKAN FOTO
+            // -------------------------------------------------
+
+            try {
+
+                $foto->move(
+                    $uploadPath,
+                    $newPhotoName
+                );
+            } catch (\Throwable $e) {
+
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Foto gagal diupload: ' .
+                            $e->getMessage()
+                    );
+            }
+
+
+            // -------------------------------------------------
+            // MASUKKAN FOTO KE USER_PROFILES
+            // -------------------------------------------------
+
+            $updateProfileData['photo'] =
+                $newPhotoName;
+        }
+
+
+        // =====================================================
+        // 8. CONNECT DATABASE
+        // =====================================================
+
+        $db = \Config\Database::connect();
+
+
+        // =====================================================
+        // 9. MODEL
+        // =====================================================
+
+        $userModel =
+            new UserModel();
+
+        $profileModel =
+            new UserProfileModel();
+
+
+        // =====================================================
+        // 10. CEK EMAIL DI TABEL USERS
+        // =====================================================
+        //
+        // Email milik user sendiri tetap boleh digunakan.
+        // Yang ditolak hanya email milik user lain.
+        //
+
+        $existingUser = $db
+            ->table('users')
+            ->where(
+                'email',
+                $email
+            )
+            ->where(
+                'id !=',
+                $userId
+            )
+            ->where(
+                'deleted_at',
+                null
+            )
+            ->get()
+            ->getRowArray();
+
+
+        if ($existingUser) {
+
+            // Kalau tadi sudah upload foto baru,
+            // hapus karena update database dibatalkan.
+
+            if ($newPhotoName !== null) {
+
+                $newPhotoPath =
+                    FCPATH .
+                    'uploads/profile' .
+                    DIRECTORY_SEPARATOR .
+                    $newPhotoName;
+
+                if (
+                    is_file($newPhotoPath)
+                ) {
+                    unlink($newPhotoPath);
+                }
+            }
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Email tersebut sudah digunakan oleh akun lain.'
+                );
+        }
+
+
+        // =====================================================
+        // 11. MULAI TRANSAKSI
+        // =====================================================
+
+        $db->transBegin();
+
+
+        try {
+
+            // =================================================
+            // 12. DATA UNTUK TABEL USERS
+            // =================================================
+
+$userUpdateData = [
+    'full_name' =>
+    $nama,
+
+    'email' =>
+    $email,
+
+    'phone_number' =>
+    $noHp,
+
+    'updated_at' =>
+    date('Y-m-d H:i:s')
+];
+
+
+            // -------------------------------------------------
+            // FOTO UNTUK TABEL USERS
+            // -------------------------------------------------
+
+            if ($newPhotoName !== null) {
+
+                $userUpdateData['profile_photo'] =
+                    $newPhotoName;
+            } elseif (
+                !empty($profile['foto']
+                    ?? null)
+            ) {
+
+                $userUpdateData['profile_photo'] =
+                    $profile['foto'];
+            }
+
+
+            // =================================================
+            // 13. UPDATE TABEL USERS
+            // =================================================
+
+            $userModel->skipValidation(true);
+
+            $userUpdated =
+                $userModel->update(
+                    $userId,
+                    $userUpdateData
+                );
+
+
+            if ($userUpdated === false) {
+
+                $errors =
+                    $userModel->errors();
+
+                $errorMessage =
+                    !empty($errors)
+                    ? implode(
+                        ', ',
+                        $errors
+                    )
+                    : 'Update tabel users gagal.';
+
+                throw new \RuntimeException(
+                    $errorMessage
+                );
+            }
+
+
+            // =================================================
+            // 14. UPDATE TABEL USER_PROFILES
+            // =================================================
+
+            $profileUpdated =
+                $profileModel->update(
+                    $profile['id'],
+                    $updateProfileData
+                );
+
+
+            if ($profileUpdated === false) {
+
+                $errors =
+                    $profileModel->errors();
+
+                $errorMessage =
+                    !empty($errors)
+                    ? implode(
+                        ', ',
+                        $errors
+                    )
+                    : 'Update tabel user_profiles gagal.';
+
+                throw new \RuntimeException(
+                    $errorMessage
+                );
+            }
+
+
+            // =================================================
+            // 15. CEK TRANSAKSI
+            // =================================================
+
+            if (
+                !$db->transStatus()
+            ) {
+
+                throw new \RuntimeException(
+                    'Transaksi database gagal.'
+                );
+            }
+
+
+            // =================================================
+            // 16. COMMIT
+            // =================================================
+
+            $db->transCommit();
+        } catch (\Throwable $e) {
+
+            // =================================================
+            // ROLLBACK
+            // =================================================
+
+            $db->transRollback();
+
+
+            // =================================================
+            // HAPUS FOTO BARU JIKA GAGAL
+            // =================================================
+
+            if ($newPhotoName !== null) {
+
+                $newPhotoPath =
+                    FCPATH .
+                    'uploads/profile' .
+                    DIRECTORY_SEPARATOR .
+                    $newPhotoName;
+
+                if (
+                    is_file($newPhotoPath)
+                ) {
+                    unlink($newPhotoPath);
+                }
+            }
+
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Gagal memperbarui profil: ' .
+                        $e->getMessage()
+                );
+        }
+
+
+        // =====================================================
+        // 17. HAPUS FOTO LAMA
+        // =====================================================
+
+        if (
+            $newPhotoName !== null &&
+            !empty($profile['foto']
+                ?? null)
+        ) {
+
+            $oldPhotoPath =
+                FCPATH .
+                'uploads/profile' .
+                DIRECTORY_SEPARATOR .
+                $profile['foto'];
+
+            if (
+                is_file($oldPhotoPath)
+            ) {
+                unlink($oldPhotoPath);
+            }
+        }
+
+
+        // =====================================================
+        // 18. UPDATE SESSION UMUM_PROFILE
+        // =====================================================
+
+        $updatedProfile =
+            $profileModel
+                ->where(
+                    'user_id',
+                    $userId
+                )
+                ->where(
+                    'deleted_at',
+                    null
+                )
+                ->first();
+
+        if ($updatedProfile) {
+            session()->set(
+                'umum_profile',
+                $updatedProfile
+            );
+        }
+
+
+        // =====================================================
+        // 19. BERHASIL
+        // =====================================================
+
+        return redirect()
+            ->to(
+                base_url(
+                    'umum/profile'
+                )
+            )
+            ->with(
+                'success',
+                'Profil umum berhasil diperbarui.'
+            );
+    }
+}

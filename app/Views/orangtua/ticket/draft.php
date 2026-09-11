@@ -88,7 +88,13 @@
             ) : ?>
 
                 <div
-                    class="alert alert-success alert-dismissible fade show"
+                    class="
+                        alert
+                        alert-success
+                        alert-dismissible
+                        fade
+                        show
+                    "
                 >
 
                     <i class="fas fa-check-circle mr-2"></i>
@@ -96,6 +102,7 @@
                     <?= esc(
                         session()->getFlashdata('success')
                     ) ?>
+
 
                     <button
                         type="button"
@@ -122,16 +129,26 @@
             ) : ?>
 
                 <div
-                    class="alert alert-danger alert-dismissible fade show"
+                    class="
+                        alert
+                        alert-danger
+                        alert-dismissible
+                        fade
+                        show
+                    "
                 >
 
                     <i
-                        class="fas fa-exclamation-circle mr-2"
+                        class="
+                            fas
+                            fa-exclamation-circle
+                        "
                     ></i>
 
                     <?= esc(
                         session()->getFlashdata('error')
                     ) ?>
+
 
                     <button
                         type="button"
@@ -154,14 +171,21 @@
             =========================================== -->
 
             <div
-                class="card shadow-sm border-0"
+                class="
+                    card
+                    shadow-sm
+                    border-0
+                "
             >
 
 
                 <!-- CARD HEADER -->
 
                 <div
-                    class="card-header text-white"
+                    class="
+                        card-header
+                        text-white
+                    "
                     style="
                         background-color:#0b3d91;
                         border-bottom:4px solid #f28c28;
@@ -171,7 +195,11 @@
                     <h5 class="mb-0">
 
                         <i
-                            class="fas fa-save mr-2"
+                            class="
+                                fas
+                                fa-save
+                                mr-2
+                            "
                         ></i>
 
                         Daftar Draft Pengajuan
@@ -266,7 +294,9 @@
                                         <tr>
 
 
-                                            <!-- NO -->
+                                            <!-- =================================
+                                                 NO
+                                            ================================== -->
 
                                             <td>
 
@@ -275,14 +305,15 @@
                                             </td>
 
 
-
-                                            <!-- UNIT LAYANAN -->
+                                            <!-- =================================
+                                                 UNIT
+                                            ================================== -->
 
                                             <td>
 
                                                 <?= esc(
                                                     $draft[
-                                                        'unit_layanan'
+                                                        'unit_name'
                                                     ]
                                                     ?? '-'
                                                 ) ?>
@@ -290,14 +321,15 @@
                                             </td>
 
 
-
-                                            <!-- JENIS LAYANAN -->
+                                            <!-- =================================
+                                                 JENIS LAYANAN
+                                            ================================== -->
 
                                             <td>
 
                                                 <?= esc(
                                                     $draft[
-                                                        'layanan'
+                                                        'service_name'
                                                     ]
                                                     ?? '-'
                                                 ) ?>
@@ -305,14 +337,15 @@
                                             </td>
 
 
-
-                                            <!-- KETERANGAN -->
+                                            <!-- =================================
+                                                 KETERANGAN
+                                            ================================== -->
 
                                             <td>
 
                                                 <?= esc(
                                                     $draft[
-                                                        'keterangan'
+                                                        'description'
                                                     ]
                                                     ?? '-'
                                                 ) ?>
@@ -320,75 +353,78 @@
                                             </td>
 
 
+                                            <!-- =================================
+                                                 DOKUMEN
+                                            ================================== -->
 
-                                            <!-- DOKUMEN -->
+                                            <td class="text-center">
 
-                                            <td>
 
                                                 <?php if (
                                                     !empty(
                                                         $draft[
-                                                            'dokumen'
+                                                            'document_complete'
                                                         ]
                                                     )
                                                 ) : ?>
 
-
-                                                    <a
-                                                        href="<?= base_url(
-                                                            'uploads/dokumen/' .
-                                                            $draft[
-                                                                'dokumen'
-                                                            ]
-                                                        ) ?>"
-                                                        target="_blank"
+                                                    <span
                                                         class="
-                                                            btn
-                                                            btn-sm
-                                                            btn-primary
+                                                            badge
+                                                            badge-success
                                                         "
                                                     >
 
                                                         <i
                                                             class="
                                                                 fas
-                                                                fa-file-alt
+                                                                fa-check-circle
+                                                                mr-1
                                                             "
                                                         ></i>
 
-                                                        Lihat
-
-                                                    </a>
-
-
-                                                <?php else : ?>
-
-
-                                                    <span
-                                                        class="
-                                                            text-muted
-                                                        "
-                                                    >
-
-                                                        Tidak ada
+                                                        Selesai
 
                                                     </span>
 
 
+                                                <?php else : ?>
+
+                                                    <span
+                                                        class="
+                                                            badge
+                                                            badge-warning
+                                                        "
+                                                    >
+
+                                                        <i
+                                                            class="
+                                                                fas
+                                                                fa-exclamation-circle
+                                                                mr-1
+                                                            "
+                                                        ></i>
+
+                                                        Belum lengkap
+
+                                                    </span>
+
                                                 <?php endif; ?>
+
 
                                             </td>
 
 
-
-                                            <!-- STATUS -->
+                                            <!-- =================================
+                                                 STATUS
+                                            ================================== -->
 
                                             <td>
 
                                                 <span
                                                     class="
                                                         badge
-                                                        badge-secondary
+                                                        bg-secondary
                                                     "
                                                 >
 
@@ -407,116 +443,104 @@
                                             </td>
 
 
-
-                                            <!-- TANGGAL -->
+                                            <!-- =================================
+                                                 TANGGAL
+                                            ================================== -->
 
                                             <td>
 
-                                                <?= esc(
-                                                    $draft[
-                                                        'created_at'
-                                                    ]
-                                                    ?? '-'
-                                                ) ?>
+                                                <?php if (
+                                                    !empty(
+                                                        $draft[
+                                                            'created_at'
+                                                        ]
+                                                    )
+                                                ) : ?>
+
+                                                    <?= esc(
+                                                        date(
+                                                            'Y-m-d H:i:s',
+                                                            strtotime(
+                                                                $draft[
+                                                                    'created_at'
+                                                                ]
+                                                            )
+                                                        )
+                                                    ) ?>
+
+                                                <?php else : ?>
+
+                                                    -
+
+                                                <?php endif; ?>
 
                                             </td>
 
 
-
-                                            <!-- AKSI -->
+                                            <!-- =================================
+                                                 AKSI
+                                            ================================== -->
 
                                             <td>
 
-                                                <div
+
+                                                <!-- LANJUTKAN -->
+
+                                                <a
+                                                    href="<?= base_url(
+                                                        'orangtua/ticket/draft/edit/' .
+                                                        $draft['id']
+                                                    ) ?>"
                                                     class="
-                                                        d-flex
-                                                        flex-wrap
+                                                        btn
+                                                        btn-warning
+                                                        btn-sm
                                                     "
                                                 >
 
-
-                                                    <!-- LANJUTKAN -->
-
-                                                    <a
-                                                        href="<?= base_url(
-                                                            'orangtua/ticket/draft/edit/' .
-                                                            $index
-                                                        ) ?>"
+                                                    <i
                                                         class="
-                                                            btn
-                                                            btn-sm
-                                                            mr-1
-                                                            mb-1
+                                                            fas
+                                                            fa-edit
                                                         "
-                                                        style="
-                                                            background-color:#f28c28;
-                                                            border-color:#f28c28;
-                                                            color:white;
+                                                    ></i>
+
+                                                    Lanjutkan
+
+                                                </a>
+
+
+                                                <!-- HAPUS -->
+
+                                                <a
+                                                    href="<?= base_url(
+                                                        'orangtua/ticket/draft/delete/' .
+                                                        $draft['id']
+                                                    ) ?>"
+                                                    class="
+                                                        btn
+                                                        btn-danger
+                                                        btn-sm
+                                                    "
+                                                    onclick="
+                                                        return confirm(
+                                                            'Yakin ingin menghapus draft ini?'
+                                                        )
+                                                    "
+                                                >
+
+                                                    <i
+                                                        class="
+                                                            fas
+                                                            fa-trash
                                                         "
-                                                    >
+                                                    ></i>
 
-                                                        <i
-                                                            class="
-                                                                fas
-                                                                fa-edit
-                                                                mr-1
-                                                            "
-                                                        ></i>
+                                                    Hapus
 
-                                                        Lanjutkan
-
-                                                    </a>
-
-
-
-                                                    <!-- HAPUS -->
-
-                                                    <form
-                                                        action="<?= base_url(
-                                                            'orangtua/ticket/draft/delete/' .
-                                                            $index
-                                                        ) ?>"
-                                                        method="post"
-                                                        class="d-inline"
-                                                        onsubmit="
-                                                            return confirm(
-                                                                'Apakah Anda yakin ingin menghapus draft ini?'
-                                                            );
-                                                        "
-                                                    >
-
-                                                        <?= csrf_field() ?>
-
-
-                                                        <button
-                                                            type="submit"
-                                                            class="
-                                                                btn
-                                                                btn-sm
-                                                                btn-danger
-                                                                mb-1
-                                                            "
-                                                        >
-
-                                                            <i
-                                                                class="
-                                                                    fas
-                                                                    fa-trash
-                                                                    mr-1
-                                                                "
-                                                            ></i>
-
-                                                            Hapus
-
-                                                        </button>
-
-                                                    </form>
-
-
-                                                </div>
+                                                </a>
 
                                             </td>
-
 
                                         </tr>
 
@@ -581,7 +605,10 @@
                                 href="<?= base_url(
                                     'orangtua/ticket/create'
                                 ) ?>"
-                                class="btn text-white"
+                                class="
+                                    btn
+                                    text-white
+                                "
                                 style="
                                     background-color:#f28c28;
                                     border-color:#f28c28;

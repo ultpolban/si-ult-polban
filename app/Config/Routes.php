@@ -84,9 +84,38 @@ $routes->get(
     'OrangTuaTicketController::detail/$1'
 );
 
+// =====================================================
+// TICKET DRAFT ORANGTUA
+// =====================================================
+
+$routes->post(
+    'orangtua/ticket/save-draft',
+    'OrangTuaTicketController::saveDraft'
+);
+
 $routes->get(
     'orangtua/ticket/draft',
     'OrangTuaTicketController::draft'
+);
+
+$routes->get(
+    'orangtua/ticket/draft/edit/(:num)',
+    'OrangTuaTicketController::editDraft/$1'
+);
+
+$routes->post(
+    'orangtua/ticket/draft/update/(:num)',
+    'OrangTuaTicketController::updateDraft/$1'
+);
+
+$routes->get(
+    'orangtua/ticket/draft/delete/(:num)',
+    'OrangTuaTicketController::deleteDraft/$1'
+);
+
+$routes->get(
+    'orangtua/ticket/draft/success',
+    'OrangTuaTicketController::draftSuccess'
 );
 // =========================
 // PROFILE ORANG TUA
@@ -107,25 +136,6 @@ $routes->post(
     'OrangTuaProfileController::update'
 );
 
-
-// =========================
-// DRAFT ORANG TUA
-// =========================
-
-$routes->get(
-    'orangtua/draft',
-    'OrangTuaDraftController::index'
-);
-
-$routes->get(
-    'orangtua/draft/edit/(:num)',
-    'OrangTuaDraftController::edit/$1'
-);
-
-$routes->get(
-    'orangtua/draft/delete/(:num)',
-    'OrangTuaDraftController::delete/$1'
-);
 // =====================================
 // NOTIFIKASI ORANG TUA
 // =====================================
@@ -516,4 +526,349 @@ $routes->get(
 $routes->post(
     'tendik/profile/update',
     'TendikProfileController::update'
+);
+
+// ==========================================
+// DASHBOARD ALUMNI
+// ==========================================
+$routes->get(
+    'dashboard-alumni',
+    'AlumniController::dashboard'
+);
+
+// ==========================================
+// TICKET ALUMNI
+// ==========================================
+$routes->get(
+    'alumni/ticket/create',
+    'AlumniTicketController::create'
+);
+
+$routes->post(
+    'alumni/ticket/store',
+    'AlumniTicketController::store'
+);
+
+$routes->get(
+    'alumni/ticket/success',
+    'AlumniTicketController::success'
+);
+
+$routes->get(
+    'alumni/ticket/history',
+    'AlumniTicketController::history'
+);
+
+$routes->get(
+    'alumni/ticket/detail/(:any)',
+    'AlumniTicketController::detail/$1'
+);
+
+$routes->get(
+    'alumni/ticket/jenis-layanan',
+    'AlumniTicketController::jenisLayanan'
+);
+
+$routes->get(
+    'alumni/ticket/persyaratan',
+    'AlumniTicketController::persyaratan'
+);
+
+$routes->post(
+    'alumni/ticket/save-draft',
+    'AlumniTicketController::saveDraft'
+);
+
+$routes->get(
+    'alumni/ticket/draft',
+    'AlumniTicketController::draft'
+);
+
+$routes->get(
+    'alumni/ticket/edit-draft/(:num)',
+    'AlumniTicketController::editDraft/$1'
+);
+
+$routes->post(
+    'alumni/ticket/update-draft/(:num)',
+    'AlumniTicketController::updateDraft/$1'
+);
+
+$routes->get(
+    'alumni/ticket/delete-draft/(:num)',
+    'AlumniTicketController::deleteDraft/$1'
+);
+
+// ==========================================
+// PROFILE ALUMNI
+// ==========================================
+
+$routes->get(
+    'alumni/profile',
+    'AlumniProfileController::index'
+);
+
+$routes->get(
+    'alumni/profile/edit',
+    'AlumniProfileController::edit'
+);
+
+$routes->post(
+    'alumni/profile/update',
+    'AlumniProfileController::update'
+);
+
+// ==========================================
+// NOTIFICATION ALUMNI
+// ==========================================
+
+$routes->get(
+    'alumni/notification',
+    'AlumniNotificationController::index'
+);
+
+$routes->get(
+    'alumni/notification/read/(:num)',
+    'AlumniNotificationController::read/$1'
+);
+
+$routes->get(
+    'alumni/notification/read-all',
+    'AlumniNotificationController::readAll'
+);
+
+// ==========================================
+// DASHBOARD MITRA
+// ==========================================
+
+$routes->get(
+    'mitra/dashboard',
+    'MitraController::dashboard'
+);
+
+/// =====================================================
+// ROUTE MITRA - TICKET
+// =====================================================
+
+$routes->get(
+    'mitra/ticket/create',
+    'MitraTicketController::create'
+);
+
+$routes->post(
+    'mitra/ticket/save-draft',
+    'MitraTicketController::saveDraft'
+);
+
+$routes->get(
+    'mitra/ticket/jenis-layanan',
+    'MitraTicketController::jenisLayanan'
+);
+
+$routes->get(
+    'mitra/ticket/persyaratan',
+    'MitraTicketController::persyaratan'
+);
+
+$routes->post(
+    'mitra/ticket/store',
+    'MitraTicketController::store'
+);
+
+$routes->get(
+    'mitra/ticket/layanan',
+    'MitraTicketController::layanan'
+);
+
+$routes->get(
+    'mitra/ticket/draft',
+    'MitraTicketController::draft'
+);
+
+$routes->get(
+    'mitra/ticket/edit-draft/(:num)',
+    'MitraTicketController::editDraft/$1'
+);
+
+$routes->post(
+    'mitra/ticket/update-draft/(:num)',
+    'MitraTicketController::updateDraft/$1'
+);
+
+$routes->get(
+    'mitra/ticket/delete-draft/(:num)',
+    'MitraTicketController::deleteDraft/$1'
+);
+
+$routes->get(
+    'mitra/ticket/draft-success',
+    'MitraTicketController::draftSuccess'
+);
+
+$routes->get(
+    'mitra/ticket/success',
+    'MitraTicketController::success'
+);
+
+$routes->get(
+    'mitra/ticket/history',
+    'MitraTicketController::history'
+);
+
+$routes->get(
+    'mitra/ticket/detail/(:num)',
+    'MitraTicketController::detail/$1'
+);
+
+$routes->get(
+    'mitra/ticket/reply/(:num)',
+    'MitraTicketController::reply/$1'
+);
+
+// ===============================
+// MITRA PROFILE
+// ===============================
+$routes->get('mitra/profile', 'MitraProfileController::index');
+$routes->get('mitra/profile/edit', 'MitraProfileController::edit');
+$routes->post('mitra/profile/update', 'MitraProfileController::update');
+
+// ===============================
+// MITRA NOTIFICATION
+// ===============================
+$routes->get(
+    'mitra/notification',
+    'MitraNotificationController::index'
+);
+
+$routes->get(
+    'mitra/notification/read/(:num)',
+    'MitraNotificationController::read/$1'
+);
+
+$routes->get(
+    'mitra/notification/read-all',
+    'MitraNotificationController::readAll'
+);
+
+// ===============================
+// DASHBOARD UMUM
+// ===============================
+$routes->get('umum/dashboard', 'UmumController::index');
+
+/// =====================================================
+// ROUTE UMUM - TICKET
+// =====================================================
+
+$routes->get(
+    'umum/ticket/create',
+    'UmumTicketController::create'
+);
+
+$routes->get(
+    'umum/ticket/jenis-layanan',
+    'UmumTicketController::jenisLayanan'
+);
+
+$routes->get(
+    'umum/ticket/persyaratan',
+    'UmumTicketController::persyaratan'
+);
+
+$routes->post(
+    'umum/ticket/store',
+    'UmumTicketController::store'
+);
+
+$routes->get(
+    'umum/ticket/layanan',
+    'UmumTicketController::layanan'
+);
+
+$routes->get(
+    'umum/ticket/draft',
+    'UmumTicketController::draft'
+);
+
+$routes->post(
+    'umum/ticket/save-draft',
+    'UmumTicketController::saveDraft'
+);
+
+$routes->get(
+    'umum/ticket/edit-draft/(:num)',
+    'UmumTicketController::editDraft/$1'
+);
+
+$routes->post(
+    'umum/ticket/update-draft/(:num)',
+    'UmumTicketController::updateDraft/$1'
+);
+
+$routes->get(
+    'umum/ticket/delete-draft/(:num)',
+    'UmumTicketController::deleteDraft/$1'
+);
+
+$routes->get(
+    'umum/ticket/draft-success',
+    'UmumTicketController::draftSuccess'
+);
+
+$routes->get(
+    'umum/ticket/success',
+    'UmumTicketController::success'
+);
+
+$routes->get(
+    'umum/ticket/history',
+    'UmumTicketController::history'
+);
+
+$routes->get(
+    'umum/ticket/detail/(:num)',
+    'UmumTicketController::detail/$1'
+);
+
+$routes->get(
+    'umum/ticket/reply/(:num)',
+    'UmumTicketController::reply/$1'
+);
+
+// =====================================================
+// ROUTE UMUM - PROFILE
+// =====================================================
+
+$routes->get(
+    'umum/profile',
+    'UmumProfileController::index'
+);
+
+$routes->get(
+    'umum/profile/edit',
+    'UmumProfileController::edit'
+);
+
+$routes->post(
+    'umum/profile/update',
+    'UmumProfileController::update'
+);
+
+
+// =====================================================
+// ROUTE UMUM - NOTIFICATION
+// =====================================================
+
+$routes->get(
+    'umum/notification',
+    'UmumNotificationController::index'
+);
+
+$routes->get(
+    'umum/notification/read/(:num)',
+    'UmumNotificationController::read/$1'
+);
+
+$routes->get(
+    'umum/notification/read-all',
+    'UmumNotificationController::readAll'
 );

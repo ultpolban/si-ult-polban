@@ -1245,8 +1245,9 @@ class MahasiswaTicketController extends BaseController
             'left'
         );
 
-        // Hanya draft
-        $builder->where('sr.status', 'draft');
+// Hanya draft yang belum dihapus
+$builder->where('sr.status', 'draft');
+$builder->where('sr.deleted_at', null);
 
         // Hanya draft milik mahasiswa yang sedang login
         if (empty($userProfileId)) {
@@ -1394,45 +1395,61 @@ class MahasiswaTicketController extends BaseController
      * HAPUS DRAFT
      * =========================================================
      */
-    public function deleteDraft($id)
-    {
-        $serviceRequestModel = new \App\Models\ServiceRequestModel();
+public function deleteDraft($id)
+{
+    $db = \Config\Database::connect();
 
-        // Ambil user_profile_id dari session
-        $userProfileId = session()->get('user_profile_id');
+    $userProfileId = session()->get('user_profile_id');
 
-        // Cari draft berdasarkan ID
-        $draft = $serviceRequestModel
-            ->where('id', $id)
-            ->where('user_profile_id', $userProfileId)
-            ->where('status', 'draft')
-            ->first();
+    // =====================================================
+    // CEK DRAFT
+    // =====================================================
 
-        // Kalau draft tidak ditemukan
-        if (!$draft) {
+    $draft = $db->table('service_requests')
+        ->where('id', $id)
+        ->where('status', 'draft')
+        ->where('user_profile_id', $userProfileId)
+        ->where('deleted_at', null)
+        ->get()
+        ->getRowArray();
 
-            session()->setFlashdata(
+    if (!$draft) {
+
+        return redirect()
+            ->to(
+                base_url(
+                    'mahasiswa/ticket/draft'
+                )
+            )
+            ->with(
                 'error',
                 'Draft tidak ditemukan atau bukan milik Anda.'
             );
+    }
 
-            return redirect()->to(
-                base_url('mahasiswa/ticket/draft')
-            );
-        }
+    // =====================================================
+    // HAPUS DRAFT
+    // =====================================================
 
-        // Hapus draft
-        $serviceRequestModel->delete($id);
+    $db->table('service_requests')
+        ->where('id', $id)
+        ->where('user_profile_id', $userProfileId)
+        ->where('status', 'draft')
+        ->update([
+            'deleted_at' => date('Y-m-d H:i:s')
+        ]);
 
-        session()->setFlashdata(
+    return redirect()
+        ->to(
+            base_url(
+                'mahasiswa/ticket/draft'
+            )
+        )
+        ->with(
             'success',
             'Draft berhasil dihapus.'
         );
-
-        return redirect()->to(
-            base_url('mahasiswa/ticket/draft')
-        );
-    }
+}
     /**
      * =========================================================
      * EDIT / LANJUTKAN DRAFT

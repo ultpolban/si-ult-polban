@@ -15,7 +15,7 @@
                     <div class="card shadow">
 
                         <div class="card-header text-center"
-                             style="background:#174a96;color:white;">
+                            style="background:#174a96;color:white;">
 
                             <h4 class="mb-0">
                                 <i class="fas fa-save"></i>
@@ -29,7 +29,7 @@
                             <div class="mb-4">
 
                                 <i class="fas fa-file-alt"
-                                   style="font-size:80px;color:#174a96;">
+                                    style="font-size:80px;color:#174a96;">
                                 </i>
 
                             </div>
@@ -56,7 +56,7 @@
                             <div class="mt-4">
 
                                 <a href="<?= base_url('mahasiswa/ticket/draft') ?>"
-                                   class="btn btn-primary mr-2">
+                                    class="btn btn-primary mr-2">
 
                                     <i class="fas fa-file-alt"></i>
                                     Lihat Draft
@@ -64,7 +64,7 @@
                                 </a>
 
                                 <a href="<?= base_url('mahasiswa/dashboard') ?>"
-                                   class="btn btn-secondary">
+                                    class="btn btn-secondary">
 
                                     <i class="fas fa-home"></i>
                                     Dashboard

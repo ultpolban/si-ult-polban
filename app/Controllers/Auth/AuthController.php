@@ -423,7 +423,7 @@ class AuthController extends BaseController
              */
             case 'ALUMNI':
 
-                return redirect()->to('/alumni/dashboard');
+                return redirect()->to('/dashboard-alumni');
 
             /**
              * =================================================

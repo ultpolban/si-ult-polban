@@ -174,11 +174,11 @@
                                     name="nama_pemohon"
                                     class="form-control"
                                     value="<?= esc(
-                                        $profile['name']
-                                        ?? $user['nama']
-                                        ?? $user['full_name']
-                                        ?? 'Orangtua'
-                                    ) ?>"
+                                                $profile['name']
+                                                    ?? $user['nama']
+                                                    ?? $user['full_name']
+                                                    ?? 'Orangtua'
+                                            ) ?>"
                                     readonly>
 
                             </div>
@@ -226,8 +226,8 @@
                                     name="nim"
                                     class="form-control"
                                     value="<?= esc(
-                                        $profile['nim'] ?? ''
-                                    ) ?>"
+                                                $profile['nim'] ?? ''
+                                            ) ?>"
                                     readonly>
 
                             </div>
@@ -594,17 +594,12 @@
                             name="action"
                             value="draft"
                             formnovalidate
-                            class="
-                                btn
-                                btn-outline-primary
-                                mr-2
-                                mb-2
-                            ">
-
+                            formaction="<?= base_url(
+                                            'orangtua/ticket/save-draft'
+                                        ) ?>"
+                            class="btn btn-outline-primary mr-2 mb-2">
                             <i class="fas fa-save mr-1"></i>
-
                             Simpan Draft
-
                         </button>
 
 
@@ -653,65 +648,64 @@
 ========================================================== -->
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
 
-document.addEventListener('DOMContentLoaded', function () {
+        // =====================================================
+        // ELEMENT
+        // =====================================================
 
-    // =====================================================
-    // ELEMENT
-    // =====================================================
+        const unitSelect =
+            document.getElementById('unitLayanan');
 
-    const unitSelect =
-        document.getElementById('unitLayanan');
+        const jenisSelect =
+            document.getElementById('jenisLayanan');
 
-    const jenisSelect =
-        document.getElementById('jenisLayanan');
+        const persyaratanContainer =
+            document.getElementById('persyaratanContainer');
 
-    const persyaratanContainer =
-        document.getElementById('persyaratanContainer');
+        const listPersyaratan =
+            document.getElementById('listPersyaratan');
 
-    const listPersyaratan =
-        document.getElementById('listPersyaratan');
-
-    const dokumenWrapper =
-        document.getElementById('dokumenWrapper');
-
-
-    // =====================================================
-    // UNIT LAYANAN
-    // =====================================================
-
-    unitSelect.addEventListener('change', function () {
-
-        const unitId = this.value;
+        const dokumenWrapper =
+            document.getElementById('dokumenWrapper');
 
 
-        // =================================================
-        // RESET JENIS LAYANAN
-        // =================================================
+        // =====================================================
+        // UNIT LAYANAN
+        // =====================================================
 
-        jenisSelect.innerHTML = `
+        unitSelect.addEventListener('change', function() {
+
+            const unitId = this.value;
+
+
+            // =================================================
+            // RESET JENIS LAYANAN
+            // =================================================
+
+            jenisSelect.innerHTML = `
             <option value="">
                 -- Memuat Jenis Layanan... --
             </option>
         `;
 
-        jenisSelect.disabled = true;
+            jenisSelect.disabled = true;
 
 
-        // =================================================
-        // RESET PERSYARATAN
-        // =================================================
+            // =================================================
+            // RESET PERSYARATAN
+            // =================================================
 
-        listPersyaratan.innerHTML = '';
+            listPersyaratan.innerHTML = '';
 
-        persyaratanContainer.style.display = 'none';
+            persyaratanContainer.style.display = 'none';
 
 
-        // =================================================
-        // RESET DOKUMEN
-        // =================================================
+            // =================================================
+            // RESET DOKUMEN
+            // =================================================
 
-        dokumenWrapper.innerHTML = `
+            dokumenWrapper.innerHTML = `
             <div class="alert alert-info mb-0">
 
                 <i class="fas fa-info-circle mr-2"></i>
@@ -723,125 +717,125 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
 
 
-        // =================================================
-        // JIKA UNIT KOSONG
-        // =================================================
+            // =================================================
+            // JIKA UNIT KOSONG
+            // =================================================
 
-        if (!unitId) {
+            if (!unitId) {
 
-            jenisSelect.innerHTML = `
+                jenisSelect.innerHTML = `
                 <option value="">
                     -- Pilih Unit Layanan Terlebih Dahulu --
                 </option>
             `;
 
-            return;
-        }
-
-
-        // =================================================
-        // AMBIL JENIS LAYANAN
-        // =================================================
-
-        fetch(
-            '<?= base_url('orangtua/ticket/jenis-layanan') ?>?unit_id='
-            + encodeURIComponent(unitId)
-        )
-
-        .then(function (response) {
-
-            if (!response.ok) {
-
-                throw new Error(
-                    'Gagal mengambil jenis layanan.'
-                );
-
+                return;
             }
 
-            return response.json();
 
-        })
+            // =================================================
+            // AMBIL JENIS LAYANAN
+            // =================================================
 
-        .then(function (result) {
+            fetch(
+                    '<?= base_url('orangtua/ticket/jenis-layanan') ?>?unit_id=' +
+                    encodeURIComponent(unitId)
+                )
 
-            jenisSelect.innerHTML = `
+                .then(function(response) {
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            'Gagal mengambil jenis layanan.'
+                        );
+
+                    }
+
+                    return response.json();
+
+                })
+
+                .then(function(result) {
+
+                    jenisSelect.innerHTML = `
                 <option value="">
                     -- Pilih Jenis Layanan --
                 </option>
             `;
 
 
-            if (
-                !result.success ||
-                !result.data ||
-                result.data.length === 0
-            ) {
+                    if (
+                        !result.success ||
+                        !result.data ||
+                        result.data.length === 0
+                    ) {
 
-                jenisSelect.innerHTML = `
+                        jenisSelect.innerHTML = `
                     <option value="">
                         -- Tidak Ada Jenis Layanan --
                     </option>
                 `;
 
-                return;
+                        return;
 
-            }
-
-
-            result.data.forEach(function (layanan) {
-
-                const option =
-                    document.createElement('option');
-
-                option.value =
-                    layanan.id;
-
-                option.textContent =
-                    layanan.name;
-
-                jenisSelect.appendChild(option);
-
-            });
+                    }
 
 
-            jenisSelect.disabled = false;
+                    result.data.forEach(function(layanan) {
 
-        })
+                        const option =
+                            document.createElement('option');
 
-        .catch(function (error) {
+                        option.value =
+                            layanan.id;
 
-            console.error(error);
+                        option.textContent =
+                            layanan.name;
 
-            jenisSelect.innerHTML = `
+                        jenisSelect.appendChild(option);
+
+                    });
+
+
+                    jenisSelect.disabled = false;
+
+                })
+
+                .catch(function(error) {
+
+                    console.error(error);
+
+                    jenisSelect.innerHTML = `
                 <option value="">
                     -- Gagal Mengambil Data --
                 </option>
             `;
 
+                });
+
         });
 
-    });
+
+        // =====================================================
+        // JENIS LAYANAN
+        // =====================================================
+
+        jenisSelect.addEventListener('change', function() {
+
+            const serviceId = this.value;
 
 
-    // =====================================================
-    // JENIS LAYANAN
-    // =====================================================
+            // =================================================
+            // RESET
+            // =================================================
 
-    jenisSelect.addEventListener('change', function () {
+            listPersyaratan.innerHTML = '';
 
-        const serviceId = this.value;
-
-
-        // =================================================
-        // RESET
-        // =================================================
-
-        listPersyaratan.innerHTML = '';
-
-        persyaratanContainer.style.display = 'none';
+            persyaratanContainer.style.display = 'none';
 
 
-        dokumenWrapper.innerHTML = `
+            dokumenWrapper.innerHTML = `
             <div class="alert alert-info mb-0">
 
                 <i class="fas fa-info-circle mr-2"></i>
@@ -853,20 +847,20 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
 
 
-        if (!serviceId) {
+            if (!serviceId) {
 
-            return;
+                return;
 
-        }
+            }
 
 
-        // =================================================
-        // LOADING
-        // =================================================
+            // =================================================
+            // LOADING
+            // =================================================
 
-        persyaratanContainer.style.display = 'block';
+            persyaratanContainer.style.display = 'block';
 
-        listPersyaratan.innerHTML = `
+            listPersyaratan.innerHTML = `
             <li class="text-muted">
 
                 <i class="fas fa-spinner fa-spin mr-2"></i>
@@ -877,38 +871,38 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
 
 
-        // =================================================
-        // AMBIL PERSYARATAN
-        // =================================================
+            // =================================================
+            // AMBIL PERSYARATAN
+            // =================================================
 
-        fetch(
-            '<?= base_url('orangtua/ticket/persyaratan') ?>?service_id='
-            + encodeURIComponent(serviceId)
-        )
+            fetch(
+                    '<?= base_url('orangtua/ticket/persyaratan') ?>?service_id=' +
+                    encodeURIComponent(serviceId)
+                )
 
-        .then(function (response) {
+                .then(function(response) {
 
-            if (!response.ok) {
+                    if (!response.ok) {
 
-                throw new Error(
-                    'Gagal mengambil persyaratan.'
-                );
+                        throw new Error(
+                            'Gagal mengambil persyaratan.'
+                        );
 
-            }
+                    }
 
-            return response.json();
+                    return response.json();
 
-        })
+                })
 
-        .then(function (result) {
+                .then(function(result) {
 
-            if (
-                !result.success ||
-                !result.data ||
-                result.data.length === 0
-            ) {
+                    if (
+                        !result.success ||
+                        !result.data ||
+                        result.data.length === 0
+                    ) {
 
-                listPersyaratan.innerHTML = `
+                        listPersyaratan.innerHTML = `
                     <li class="text-muted">
 
                         Tidak ada persyaratan khusus
@@ -918,7 +912,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
 
 
-                dokumenWrapper.innerHTML = `
+                        dokumenWrapper.innerHTML = `
                     <div class="alert alert-warning mb-0">
 
                         <i class="fas fa-exclamation-triangle mr-2"></i>
@@ -929,25 +923,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 `;
 
-                return;
+                        return;
 
-            }
-
-
-            // =================================================
-            // TAMPILKAN PERSYARATAN
-            // =================================================
-
-            result.data.forEach(function (persyaratan) {
-
-                const li =
-                    document.createElement('li');
-
-                li.className =
-                    'mb-3';
+                    }
 
 
-                let html = `
+                    // =================================================
+                    // TAMPILKAN PERSYARATAN
+                    // =================================================
+
+                    result.data.forEach(function(persyaratan) {
+
+                        const li =
+                            document.createElement('li');
+
+                        li.className =
+                            'mb-3';
+
+
+                        let html = `
 
                     <i class="
                         fas
@@ -963,15 +957,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
 
 
-                // =================================================
-                // WAJIB / OPSIONAL
-                // =================================================
+                        // =================================================
+                        // WAJIB / OPSIONAL
+                        // =================================================
 
-                if (
-                    persyaratan.is_required == 1
-                ) {
+                        if (
+                            persyaratan.is_required == 1
+                        ) {
 
-                    html += `
+                            html += `
                         <span class="
                             badge
                             badge-danger
@@ -981,9 +975,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         </span>
                     `;
 
-                } else {
+                        } else {
 
-                    html += `
+                            html += `
                         <span class="
                             badge
                             badge-secondary
@@ -993,16 +987,16 @@ document.addEventListener('DOMContentLoaded', function () {
                         </span>
                     `;
 
-                }
+                        }
 
 
-                // =================================================
-                // DESKRIPSI
-                // =================================================
+                        // =================================================
+                        // DESKRIPSI
+                        // =================================================
 
-                if (persyaratan.description) {
+                        if (persyaratan.description) {
 
-                    html += `
+                            html += `
                         <div class="
                             text-muted
                             small
@@ -1017,50 +1011,50 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     `;
 
-                }
+                        }
 
 
-                li.innerHTML =
-                    html;
+                        li.innerHTML =
+                            html;
 
-                listPersyaratan.appendChild(
-                    li
-                );
+                        listPersyaratan.appendChild(
+                            li
+                        );
 
-            });
-
-
-            // =================================================
-            // TAMPILKAN UPLOAD DOKUMEN
-            // =================================================
-
-            dokumenWrapper.innerHTML = '';
+                    });
 
 
-            result.data.forEach(function (persyaratan) {
+                    // =================================================
+                    // TAMPILKAN UPLOAD DOKUMEN
+                    // =================================================
 
-                const item =
-                    document.createElement('div');
-
-                item.className =
-                    'border rounded p-3 mb-3';
+                    dokumenWrapper.innerHTML = '';
 
 
-                let requiredAttribute =
-                    '';
+                    result.data.forEach(function(persyaratan) {
+
+                        const item =
+                            document.createElement('div');
+
+                        item.className =
+                            'border rounded p-3 mb-3';
 
 
-                if (
-                    persyaratan.is_required == 1
-                ) {
-
-                    requiredAttribute =
-                        'required';
-
-                }
+                        let requiredAttribute =
+                            '';
 
 
-                item.innerHTML = `
+                        if (
+                            persyaratan.is_required == 1
+                        ) {
+
+                            requiredAttribute =
+                                'required';
+
+                        }
+
+
+                        item.innerHTML = `
 
                     <div class="mb-2">
 
@@ -1143,20 +1137,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
 
 
-                dokumenWrapper.appendChild(
-                    item
-                );
+                        dokumenWrapper.appendChild(
+                            item
+                        );
 
-            });
+                    });
 
-        })
+                })
 
-        .catch(function (error) {
+                .catch(function(error) {
 
-            console.error(error);
+                    console.error(error);
 
 
-            listPersyaratan.innerHTML = `
+                    listPersyaratan.innerHTML = `
                 <li class="text-danger">
 
                     <i class="
@@ -1171,7 +1165,7 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
 
 
-            dokumenWrapper.innerHTML = `
+                    dokumenWrapper.innerHTML = `
                 <div class="alert alert-danger mb-0">
 
                     <i class="
@@ -1185,103 +1179,64 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
             `;
 
+                });
+
         });
 
-    });
 
+        // =====================================================
+        // ESCAPE HTML
+        // =====================================================
 
-    // =====================================================
-    // ESCAPE HTML
-    // =====================================================
-
-    function escapeHtml(text) {
-
-        if (
-            text === null ||
-            text === undefined
-        ) {
-
-            return '';
-
-        }
-
-
-        return String(text)
-
-            .replace(/&/g, '&amp;')
-
-            .replace(/</g, '&lt;')
-
-            .replace(/>/g, '&gt;')
-
-            .replace(/"/g, '&quot;')
-
-            .replace(/'/g, '&#039;');
-
-    }
-
-
-    // =====================================================
-    // FORMAT EXTENSION FILE
-    // =====================================================
-
-    function getAcceptExtensions(extensions) {
-
-        if (!extensions) {
-
-            return '.pdf,.jpg,.jpeg,.png,.doc,.docx';
-
-        }
-
-
-        // =================================================
-        // JIKA ARRAY
-        // =================================================
-
-        if (Array.isArray(extensions)) {
-
-            return extensions
-
-                .map(function (ext) {
-
-                    ext =
-                        String(ext).trim();
-
-                    if (
-                        !ext.startsWith('.')
-                    ) {
-
-                        ext =
-                            '.' + ext;
-
-                    }
-
-                    return ext;
-
-                })
-
-                .join(',');
-
-        }
-
-
-        // =================================================
-        // JIKA JSON
-        // =================================================
-
-        try {
-
-            const parsed =
-                JSON.parse(extensions);
-
+        function escapeHtml(text) {
 
             if (
-                Array.isArray(parsed)
+                text === null ||
+                text === undefined
             ) {
 
-                return parsed
+                return '';
 
-                    .map(function (ext) {
+            }
+
+
+            return String(text)
+
+                .replace(/&/g, '&amp;')
+
+                .replace(/</g, '&lt;')
+
+                .replace(/>/g, '&gt;')
+
+                .replace(/"/g, '&quot;')
+
+                .replace(/'/g, '&#039;');
+
+        }
+
+
+        // =====================================================
+        // FORMAT EXTENSION FILE
+        // =====================================================
+
+        function getAcceptExtensions(extensions) {
+
+            if (!extensions) {
+
+                return '.pdf,.jpg,.jpeg,.png,.doc,.docx';
+
+            }
+
+
+            // =================================================
+            // JIKA ARRAY
+            // =================================================
+
+            if (Array.isArray(extensions)) {
+
+                return extensions
+
+                    .map(function(ext) {
 
                         ext =
                             String(ext).trim();
@@ -1303,44 +1258,82 @@ document.addEventListener('DOMContentLoaded', function () {
 
             }
 
-        } catch (error) {
 
-            // Bukan JSON
+            // =================================================
+            // JIKA JSON
+            // =================================================
 
-        }
+            try {
 
+                const parsed =
+                    JSON.parse(extensions);
 
-        // =================================================
-        // JIKA STRING
-        // pdf,jpg,jpeg
-        // =================================================
-
-        return String(extensions)
-
-            .split(',')
-
-            .map(function (ext) {
-
-                ext =
-                    ext.trim();
 
                 if (
-                    !ext.startsWith('.')
+                    Array.isArray(parsed)
                 ) {
 
-                    ext =
-                        '.' + ext;
+                    return parsed
+
+                        .map(function(ext) {
+
+                            ext =
+                                String(ext).trim();
+
+                            if (
+                                !ext.startsWith('.')
+                            ) {
+
+                                ext =
+                                    '.' + ext;
+
+                            }
+
+                            return ext;
+
+                        })
+
+                        .join(',');
 
                 }
 
-                return ext;
+            } catch (error) {
 
-            })
+                // Bukan JSON
 
-            .join(',');
+            }
 
-    }
 
-});
+            // =================================================
+            // JIKA STRING
+            // pdf,jpg,jpeg
+            // =================================================
 
+            return String(extensions)
+
+                .split(',')
+
+                .map(function(ext) {
+
+                    ext =
+                        ext.trim();
+
+                    if (
+                        !ext.startsWith('.')
+                    ) {
+
+                        ext =
+                            '.' + ext;
+
+                    }
+
+                    return ext;
+
+                })
+
+                .join(',');
+
+        }
+
+    });
 </script>

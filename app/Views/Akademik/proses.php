@@ -265,6 +265,7 @@ textarea.process-control{
                 ($tiket['id'] ?? '')
             ) ?>"
             method="post"
+            enctype="multipart/form-data"
         >
 
             <?= csrf_field() ?>
@@ -552,6 +553,52 @@ textarea.process-control{
 
 
             <!-- =================================================
+                 DOKUMEN HASIL
+            ================================================== -->
+
+            <div class="process-section">
+
+                <h6 class="process-section-title">
+
+                    <i class="fas fa-file-upload text-primary me-2"></i>
+
+                    Dokumen Hasil
+
+                </h6>
+
+
+                <div class="mb-4">
+
+                    <label
+                        for="file_hasil"
+                        class="process-label"
+                    >
+                        Upload Dokumen Hasil
+                    </label>
+
+                    <input
+                        type="file"
+                        name="file_hasil[]"
+                        id="file_hasil"
+                        class="form-control process-control"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        multiple
+                    >
+
+                    <div id="list_file" class="mt-3"></div>
+
+                    <small class="text-muted">
+                        Bisa upload banyak file.<br>
+                        Format PDF, JPG, JPEG, PNG.<br>
+                        Maksimal 5 MB per file.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
                  TOMBOL
             ================================================== -->
 
@@ -598,5 +645,36 @@ textarea.process-control{
 
 </div>
 
+<script>
+let inputFile = document.getElementById('file_hasil');
+let listFile = document.getElementById('list_file');
+
+if (inputFile && listFile) {
+    inputFile.addEventListener('change', function () {
+        let fileBaru = Array.from(this.files);
+        listFile.innerHTML = '';
+
+        fileBaru.forEach(function (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Ukuran ' + file.name + ' maksimal 5 MB');
+                return;
+            }
+
+            let ekstensi = file.name.split('.').pop().toLowerCase();
+            let formatDiizinkan = ['pdf', 'jpg', 'jpeg', 'png'];
+
+            if (!formatDiizinkan.includes(ekstensi)) {
+                alert('Format file ' + file.name + ' tidak diperbolehkan.');
+                return;
+            }
+
+            let item = document.createElement('div');
+            item.className = 'alert alert-light border py-2 px-3 mb-2';
+            item.innerHTML = '<i class="fas fa-file me-2"></i>' + file.name;
+            listFile.appendChild(item);
+        });
+    });
+}
+</script>
 
 <?= $this->endSection() ?>

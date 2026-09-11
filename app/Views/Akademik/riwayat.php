@@ -81,7 +81,7 @@ Riwayat Tiket Unit Layanan
 <?php if(!empty($t['file_hasil'])): ?>
 
 
-<a href="<?= base_url('uploads/hasil/'.$t['file_hasil']) ?>"
+<a href="<?= base_url('akademik/lihat/' . rawurlencode($t['file_hasil'])) ?>"
 target="_blank"
 class="btn btn-sm btn-primary">
 

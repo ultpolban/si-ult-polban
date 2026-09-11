@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use CodeIgniter\Router\RouteCollection;
 
@@ -8,403 +8,1412 @@ use CodeIgniter\Router\RouteCollection;
 
 
 /*
-|--------------------------------------------------------------------------
-| UNIT LAYANAN UMUM
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
+| AUTH - LOGIN
+|-------------------------------------------------------------------------- 
 */
 
 $routes->get(
-    'unit-layanan',
-    'UnitLayanan::dashboard'
-);
-
-$routes->get(
-    'unit-layanan/dashboard',
-    'UnitLayanan::dashboard'
-);
-
-$routes->get(
-    'unit-layanan/profile',
-    'UnitLayanan::profile'
+    'login',
+    'Auth\AuthController::index'
 );
 
 $routes->post(
-    'unit-layanan/profile/update',
-    'UnitLayanan::updateProfile'
-);
-
-$routes->get(
-    'unit-layanan/data-tiket',
-    'UnitLayanan::dataTiket'
-);
-
-$routes->get(
-    'unit-layanan/detail/(:num)',
-    'UnitLayanan::detail/$1'
-);
-
-$routes->get(
-    'unit-layanan/proses/(:num)',
-    'UnitLayanan::proses/$1'
-);
-
-$routes->post(
-    'unit-layanan/updateProses/(:num)',
-    'UnitLayanan::updateProses/$1'
-);
-
-$routes->get(
-    'unit-layanan/upload/(:num)',
-    'UnitLayanan::upload/$1'
-);
-
-$routes->post(
-    'unit-layanan/simpanUpload/(:num)',
-    'UnitLayanan::simpanUpload/$1'
-);
-
-$routes->get(
-    'unit-layanan/kirim/(:num)',
-    'UnitLayanan::kirim/$1'
-);
-
-$routes->get(
-    'unit-layanan/kirim-pemohon/(:num)',
-    'UnitLayanan::kirimKePemohon/$1'
-);
-
-$routes->get(
-    'unit-layanan/riwayat',
-    'UnitLayanan::riwayat'
-);
-
-$routes->get(
-    'unit-layanan/hapus-dokumen/(:num)',
-    'UnitLayanan::hapusDokumen/$1'
+    'login',
+    'Auth\AuthController::authenticate'
 );
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
+| LOGIN MFA
+|-------------------------------------------------------------------------- 
+*/
+
+$routes->get(
+    'login/mfa',
+    'Auth\AuthController::mfa'
+);
+
+$routes->post(
+    'login/mfa/verify',
+    'Auth\AuthController::verifyMfa'
+);
+
+
+/*
+|-------------------------------------------------------------------------- 
+| REGISTER
+|-------------------------------------------------------------------------- 
+*/
+
+$routes->get(
+    'register',
+    'Auth\RegisterController::index'
+);
+
+$routes->post(
+    'register',
+    'Auth\RegisterController::store'
+);
+
+
+/*
+|-------------------------------------------------------------------------- 
+| REGISTER MFA
+|-------------------------------------------------------------------------- 
+*/
+
+$routes->get(
+    'register/mfa',
+    'Auth\RegisterController::mfaSetup'
+);
+
+$routes->post(
+    'register/mfa/verify',
+    'Auth\RegisterController::verify'
+);
+
+
+/*
+|-------------------------------------------------------------------------- 
+| REGISTER DYNAMIC FIELDS
+|-------------------------------------------------------------------------- 
+*/
+
+$routes->get(
+    'register/fields/(:num)',
+    'Auth\RegisterController::fields/$1'
+);
+
+
+/*
+|-------------------------------------------------------------------------- 
+| LOGOUT
+|-------------------------------------------------------------------------- 
+*/
+
+$routes->get(
+    'logout',
+    'Auth\AuthController::logout'
+);
+
+
+/*
+|-------------------------------------------------------------------------- 
+| DEFAULT DASHBOARD
+|-------------------------------------------------------------------------- 
+|
+| Untuk:
+| - SUPER_ADMIN
+| - ADMIN_ULT
+| - PEMOHON
+|
+*/
+
+$routes->get(
+    'dashboard',
+    'DashboardController::index'
+);
+
+
+/*
+|-------------------------------------------------------------------------- 
+| UPT TEKNOLOGI INFORMASI DAN KOMUNIKASI
+|-------------------------------------------------------------------------- 
+*/
+
+$routes->group(
+    'upt-tik',
+    [
+        'filter' => [
+            'auth',
+            'role:SUPER_ADMIN,ADMIN_ULT,PETUGAS_TIK',
+        ],
+    ],
+    static function ($routes) {
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Dashboard
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            '',
+            'UptTik::dashboard'
+        );
+
+        $routes->get(
+            'dashboard',
+            'UptTik::dashboard'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Profile
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'profile',
+            'UptTik::profile'
+        );
+
+        $routes->post(
+            'profile/update',
+            'UptTik::updateProfile'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Data Tiket
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'data-tiket',
+            'UptTik::dataTiket'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Detail Tiket
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'detail/(:num)',
+            'UptTik::detail/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | PROSES TIKET
+        |-------------------------------------------------------------------------- 
+        |
+        | GET  = membuka halaman proses
+        | POST = menyimpan proses
+        |
+        */
+
+        $routes->get(
+            'proses/(:num)',
+            'UptTik::proses/$1'
+        );
+
+        $routes->post(
+            'proses/update/(:num)',
+            'UptTik::updateProses/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Statistik
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'statistik',
+            'UptTik::statistik'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Log Aktivitas
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'log-aktivitas',
+            'UptTik::logAktivitas'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Lihat File
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'lihat/(:segment)',
+            'UptTik::lihatFile/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Download File
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'download/(:segment)',
+            'UptTik::downloadFile/$1'
+        );
+    }
+);
+
+
+/*
+|-------------------------------------------------------------------------- 
+| ADMINISTRASI UMUM
+|-------------------------------------------------------------------------- 
+|
+| Route ini menggunakan filter auth.
+| Pengecekan role dilakukan di Controller AdministrasiUmum.
+|
+*/
+
+$routes->group(
+    'administrasi-umum',
+    [
+        'filter' => 'auth',
+    ],
+    static function ($routes) {
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Dashboard
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            '',
+            'AdministrasiUmum::dashboard'
+        );
+
+        $routes->get(
+            'dashboard',
+            'AdministrasiUmum::dashboard'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Profile
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'profile',
+            'AdministrasiUmum::profile'
+        );
+
+        $routes->post(
+            'profile/update',
+            'AdministrasiUmum::updateProfile'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Data Tiket
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'data-tiket',
+            'AdministrasiUmum::dataTiket'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Detail Tiket
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'detail/(:num)',
+            'AdministrasiUmum::detail/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Proses Tiket
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'proses/(:num)',
+            'AdministrasiUmum::proses/$1'
+        );
+
+        $routes->post(
+            'proses/update/(:num)',
+            'AdministrasiUmum::updateProses/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Upload Hasil
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'upload/(:num)',
+            'AdministrasiUmum::upload/$1'
+        );
+
+        $routes->post(
+            'upload/(:num)',
+            'AdministrasiUmum::simpanUpload/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Lihat File
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'lihat/(:segment)',
+            'AdministrasiUmum::lihatFile/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Download File
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'download/(:segment)',
+            'AdministrasiUmum::downloadFile/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Statistik
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'statistik',
+            'AdministrasiUmum::statistik'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Log Aktivitas
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'log-aktivitas',
+            'AdministrasiUmum::logAktivitas'
+        );
+    }
+);
+
+
+/*
+|-------------------------------------------------------------------------- 
 | AKADEMIK
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
+|
+| Role:
+| - SUPER_ADMIN
+| - ADMIN_ULT
+| - PETUGAS_AKADEMIK
+|
 */
 
-$routes->get(
+$routes->group(
     'akademik',
-    'UnitLayanan::akademik'
-);
+    [
+        'filter' => [
+            'auth',
+            'role:SUPER_ADMIN,ADMIN_ULT,PETUGAS_AKADEMIK',
+        ],
+    ],
+    static function ($routes) {
 
-$routes->get(
-    'akademik/dashboard',
-    'UnitLayanan::akademik'
+        /*
+        |-------------------------------------------------------------------------- 
+        | Dashboard Akademik
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            '',
+            'Akademik::dashboard'
+        );
+
+        $routes->get(
+            'dashboard',
+            'Akademik::dashboard'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Profile
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'profile',
+            'Akademik::profile'
+        );
+
+        $routes->post(
+            'profile/update',
+            'Akademik::updateProfile'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Statistik
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'statistik',
+            'Akademik::statistik'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Log Aktivitas
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'log-aktivitas',
+            'Akademik::logAktivitas'
+        );
+
+        /*
+         * DIPERBAIKI:
+         *
+         * Controller Akademik.php memiliki:
+         * - lihatLog()
+         * - downloadLog()
+         *
+         * BUKAN:
+         * - lihatDokumenLog()
+         * - downloadDokumenLog()
+         */
+
+        $routes->get(
+            'log-aktivitas/lihat/(:num)',
+            'Akademik::lihatLog/$1'
+        );
+
+        $routes->get(
+            'log-aktivitas/download/(:num)',
+            'Akademik::downloadLog/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Data Tiket Akademik
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'data-tiket',
+            'Akademik::dataTiket'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Detail Tiket Akademik
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'detail/(:num)',
+            'Akademik::detail/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Proses
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'proses/(:num)',
+            'Akademik::proses/$1'
+        );
+
+        $routes->post(
+            'updateProses/(:num)',
+            'Akademik::updateProses/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Upload
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'upload/(:num)',
+            'Akademik::upload/$1'
+        );
+
+        $routes->post(
+            'simpanUpload/(:num)',
+            'Akademik::simpanUpload/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Lihat File
+        |-------------------------------------------------------------------------- 
+        */
+
+        /*
+         * DIPERBAIKI:
+         *
+         * Controller Akademik.php yang kamu kirim
+         * memiliki method:
+         *
+         * public function lihat($filename)
+         *
+         * Jadi route harus menuju:
+         * Akademik::lihat/$1
+         */
+
+        $routes->get(
+            'lihat/(:segment)',
+            'Akademik::lihat/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Download File
+        |-------------------------------------------------------------------------- 
+        */
+
+        /*
+         * DIPERBAIKI:
+         *
+         * Controller Akademik.php memiliki:
+         *
+         * public function download($filename)
+         */
+
+        $routes->get(
+            'download/(:segment)',
+            'Akademik::download/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Kirim
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'kirim/(:num)',
+            'Akademik::kirim/$1'
+        );
+
+        $routes->get(
+            'kirim-pemohon/(:num)',
+            'Akademik::kirimKePemohon/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Riwayat
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'riwayat',
+            'Akademik::riwayat'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Hapus Dokumen
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'hapus-dokumen/(:num)',
+            'Akademik::hapusDokumen/$1'
+        );
+    }
 );
 
 
 /*
-|--------------------------------------------------------------------------
-| PROFILE AKADEMIK
-|--------------------------------------------------------------------------
-*/
-
-$routes->get(
-    'akademik/profile',
-    'UnitLayanan::profile'
-);
-
-$routes->post(
-    'akademik/profile/update',
-    'UnitLayanan::updateProfile'
-);
-
-
-/*
-|--------------------------------------------------------------------------
-| STATISTIK AKADEMIK
-|--------------------------------------------------------------------------
-*/
-
-$routes->get(
-    'akademik/statistik',
-    'UnitLayanan::statistik'
-);
-
-
-/*
-|--------------------------------------------------------------------------
-| DATA TIKET AKADEMIK
-|--------------------------------------------------------------------------
-*/
-
-$routes->get(
-    'akademik/data-tiket',
-    'UnitLayanan::dataTiketAkademik'
-);
-
-$routes->get(
-    'akademik/detail/(:num)',
-    'UnitLayanan::detailAkademik/$1'
-);
-
-$routes->get(
-    'akademik/proses/(:num)',
-    'UnitLayanan::proses/$1'
-);
-
-$routes->post(
-    'akademik/updateProses/(:num)',
-    'UnitLayanan::updateProses/$1'
-);
-
-$routes->get(
-    'akademik/upload/(:num)',
-    'UnitLayanan::upload/$1'
-);
-
-$routes->post(
-    'akademik/simpanUpload/(:num)',
-    'UnitLayanan::simpanUpload/$1'
-);
-
-$routes->get(
-    'akademik/kirim/(:num)',
-    'UnitLayanan::kirim/$1'
-);
-
-$routes->get(
-    'akademik/kirim-pemohon/(:num)',
-    'UnitLayanan::kirimKePemohon/$1'
-);
-
-$routes->get(
-    'akademik/riwayat',
-    'UnitLayanan::riwayat'
-);
-
-$routes->get(
-    'akademik/hapus-dokumen/(:num)',
-    'UnitLayanan::hapusDokumen/$1'
-);
-
-
-/*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | KEUANGAN
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
+|
+| Role:
+| - SUPER_ADMIN
+| - ADMIN_ULT
+| - PETUGAS_KEUANGAN
+|
 */
 
-$routes->get(
+$routes->group(
     'keuangan',
-    'UnitLayanan::keuangan'
-);
+    [
+        'filter' => [
+            'auth',
+            'role:SUPER_ADMIN,ADMIN_ULT,PETUGAS_KEUANGAN',
+        ],
+    ],
+    static function ($routes) {
 
-$routes->get(
-    'keuangan/dashboard',
-    'UnitLayanan::keuangan'
+        /*
+        |-------------------------------------------------------------------------- 
+        | Dashboard Keuangan
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            '',
+            'Keuangan::dashboard'
+        );
+
+        $routes->get(
+            'dashboard',
+            'Keuangan::dashboard'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Profile
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'profile',
+            'Keuangan::profile'
+        );
+
+        $routes->post(
+            'profile/update',
+            'Keuangan::updateProfile'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Statistik
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'statistik',
+            'Keuangan::statistik'
+        );
+
+        $routes->get(
+            'log-aktivitas',
+            'Keuangan::logAktivitas'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Data Tiket Keuangan
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'data-tiket',
+            'Keuangan::dataTiket'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Detail Tiket
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'detail/(:num)',
+            'Keuangan::detail/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Proses
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'proses/(:num)',
+            'Keuangan::proses/$1'
+        );
+
+        $routes->post(
+            'updateProses/(:num)',
+            'Keuangan::updateProses/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Upload
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'upload/(:num)',
+            'Keuangan::upload/$1'
+        );
+
+        $routes->post(
+            'simpanUpload/(:num)',
+            'Keuangan::simpanUpload/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Lihat File
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'lihat/(:segment)',
+            'Keuangan::lihatFile/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Download File
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'download/(:segment)',
+            'Keuangan::downloadFile/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Kirim
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'kirim/(:num)',
+            'Keuangan::kirim/$1'
+        );
+
+        $routes->get(
+            'kirim-pemohon/(:num)',
+            'Keuangan::kirimKePemohon/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Riwayat
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'riwayat',
+            'Keuangan::riwayat'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Hapus Dokumen
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'hapus-dokumen/(:num)',
+            'Keuangan::hapusDokumen/$1'
+        );
+    }
 );
 
 
 /*
-|--------------------------------------------------------------------------
-| PROFILE KEUANGAN
-|--------------------------------------------------------------------------
-*/
-
-$routes->get(
-    'keuangan/profile',
-    'UnitLayanan::profile'
-);
-
-$routes->post(
-    'keuangan/profile/update',
-    'UnitLayanan::updateProfile'
-);
-
-
-/*
-|--------------------------------------------------------------------------
-| STATISTIK KEUANGAN
-|--------------------------------------------------------------------------
-*/
-
-$routes->get(
-    'keuangan/statistik',
-    'UnitLayanan::statistik'
-);
-
-
-/*
-|--------------------------------------------------------------------------
-| DATA TIKET KEUANGAN
-|--------------------------------------------------------------------------
-*/
-
-$routes->get(
-    'keuangan/data-tiket',
-    'UnitLayanan::dataTiketKeuangan'
-);
-
-$routes->get(
-    'keuangan/detail/(:num)',
-    'UnitLayanan::detail/$1'
-);
-
-$routes->get(
-    'keuangan/proses/(:num)',
-    'UnitLayanan::proses/$1'
-);
-
-$routes->post(
-    'keuangan/updateProses/(:num)',
-    'UnitLayanan::updateProses/$1'
-);
-
-$routes->get(
-    'keuangan/upload/(:num)',
-    'UnitLayanan::upload/$1'
-);
-
-$routes->post(
-    'keuangan/simpanUpload/(:num)',
-    'UnitLayanan::simpanUpload/$1'
-);
-
-$routes->get(
-    'keuangan/kirim/(:num)',
-    'UnitLayanan::kirim/$1'
-);
-
-$routes->get(
-    'keuangan/kirim-pemohon/(:num)',
-    'UnitLayanan::kirimKePemohon/$1'
-);
-
-$routes->get(
-    'keuangan/riwayat',
-    'UnitLayanan::riwayat'
-);
-
-$routes->get(
-    'keuangan/hapus-dokumen/(:num)',
-    'UnitLayanan::hapusDokumen/$1'
-);
-
-
-/*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | KEMAHASISWAAN
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
+|
+| Role:
+| - SUPER_ADMIN
+| - ADMIN_ULT
+| - PETUGAS_KEMAHASISWAAN
+|
 */
 
-$routes->get(
+$routes->group(
     'kemahasiswaan',
-    'UnitLayanan::kemahasiswaan'
-);
+    [
+        'filter' => [
+            'auth',
+            'role:SUPER_ADMIN,ADMIN_ULT,PETUGAS_KEMAHASISWAAN',
+        ],
+    ],
+    static function ($routes) {
 
-$routes->get(
-    'kemahasiswaan/dashboard',
-    'UnitLayanan::kemahasiswaan'
+        /*
+        |-------------------------------------------------------------------------- 
+        | Dashboard Kemahasiswaan
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            '',
+            'Kemahasiswaan::dashboard'
+        );
+
+        $routes->get(
+            'dashboard',
+            'Kemahasiswaan::dashboard'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Profile
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'profile',
+            'Kemahasiswaan::profile'
+        );
+
+        $routes->post(
+            'profile/update',
+            'Kemahasiswaan::updateProfile'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Statistik
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'statistik',
+            'Kemahasiswaan::statistik'
+        );
+
+        $routes->get(
+            'log-aktivitas',
+            'Kemahasiswaan::logAktivitas'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Data Tiket Kemahasiswaan
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'data-tiket',
+            'Kemahasiswaan::dataTiket'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Detail Tiket
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'detail/(:num)',
+            'Kemahasiswaan::detail/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Proses
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'proses/(:num)',
+            'Kemahasiswaan::proses/$1'
+        );
+
+        $routes->post(
+            'updateProses/(:num)',
+            'Kemahasiswaan::updateProses/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Upload
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'upload/(:num)',
+            'Kemahasiswaan::upload/$1'
+        );
+
+        $routes->post(
+            'simpanUpload/(:num)',
+            'Kemahasiswaan::simpanUpload/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Lihat File
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'lihat/(:segment)',
+            'Kemahasiswaan::lihatFile/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Download File
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'download/(:segment)',
+            'Kemahasiswaan::downloadFile/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Kirim
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'kirim/(:num)',
+            'Kemahasiswaan::kirim/$1'
+        );
+
+        $routes->get(
+            'kirim-pemohon/(:num)',
+            'Kemahasiswaan::kirimKePemohon/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Riwayat
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'riwayat',
+            'Kemahasiswaan::riwayat'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Hapus Dokumen
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'hapus-dokumen/(:num)',
+            'Kemahasiswaan::hapusDokumen/$1'
+        );
+    }
 );
 
 
 /*
-|--------------------------------------------------------------------------
-| PROFILE KEMAHASISWAAN
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
+| PERPUSTAKAAN
+|-------------------------------------------------------------------------- 
+|
+| Role:
+| - SUPER_ADMIN
+| - ADMIN_ULT
+| - PETUGAS_PERPUSTAKAAN
+|
 */
 
-$routes->get(
-    'kemahasiswaan/profile',
-    'UnitLayanan::profile'
-);
+$routes->group(
+    'perpustakaan',
+    [
+        'filter' => [
+            'auth',
+            'role:SUPER_ADMIN,ADMIN_ULT,PETUGAS_PERPUSTAKAAN',
+        ],
+    ],
+    static function ($routes) {
 
-$routes->post(
-    'kemahasiswaan/profile/update',
-    'UnitLayanan::updateProfile'
+        /*
+        |-------------------------------------------------------------------------- 
+        | Dashboard
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            '',
+            'Perpustakaan::dashboard'
+        );
+
+        $routes->get(
+            'dashboard',
+            'Perpustakaan::dashboard'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Profile
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'profile',
+            'Perpustakaan::profile'
+        );
+
+        $routes->post(
+            'profile/update',
+            'Perpustakaan::updateProfile'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Statistik
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'statistik',
+            'Perpustakaan::statistik'
+        );
+
+        $routes->get(
+            'log-aktivitas',
+            'Perpustakaan::logAktivitas'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Data Tiket
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'data-tiket',
+            'Perpustakaan::dataTiket'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Detail
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'detail/(:num)',
+            'Perpustakaan::detail/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Proses
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'proses/(:num)',
+            'Perpustakaan::proses/$1'
+        );
+
+        $routes->post(
+            'updateProses/(:num)',
+            'Perpustakaan::updateProses/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Upload
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'upload/(:num)',
+            'Perpustakaan::upload/$1'
+        );
+
+        $routes->post(
+            'simpanUpload/(:num)',
+            'Perpustakaan::simpanUpload/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Lihat File
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'lihat/(:segment)',
+            'Perpustakaan::lihatFile/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Download File
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'download/(:segment)',
+            'Perpustakaan::downloadFile/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Kirim
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'kirim/(:num)',
+            'Perpustakaan::kirim/$1'
+        );
+
+        $routes->get(
+            'kirim-pemohon/(:num)',
+            'Perpustakaan::kirimKePemohon/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Riwayat
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'riwayat',
+            'Perpustakaan::riwayat'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Hapus Dokumen
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'hapus-dokumen/(:num)',
+            'Perpustakaan::hapusDokumen/$1'
+        );
+    }
 );
 
 
 /*
-|--------------------------------------------------------------------------
-| STATISTIK KEMAHASISWAAN
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
+| JURUSAN
+|-------------------------------------------------------------------------- 
+|
+| Role:
+| - SUPER_ADMIN
+| - ADMIN_ULT
+| - PETUGAS_JURUSAN
+|
 */
 
-$routes->get(
-    'kemahasiswaan/statistik',
-    'UnitLayanan::statistik'
+$routes->group(
+    'jurusan',
+    [
+        'filter' => [
+            'auth',
+            'role:SUPER_ADMIN,ADMIN_ULT,PETUGAS_JURUSAN',
+        ],
+    ],
+    static function ($routes) {
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Dashboard
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            '',
+            'Jurusan::dashboard'
+        );
+
+        $routes->get(
+            'dashboard',
+            'Jurusan::dashboard'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Profile
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'profile',
+            'Jurusan::profile'
+        );
+
+        $routes->post(
+            'profile/update',
+            'Jurusan::updateProfile'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Statistik
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'statistik',
+            'Jurusan::statistik'
+        );
+
+        $routes->get(
+            'log-aktivitas',
+            'Jurusan::logAktivitas'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Data Tiket
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'data-tiket',
+            'Jurusan::dataTiket'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Detail
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'detail/(:num)',
+            'Jurusan::detail/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Proses
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'proses/(:num)',
+            'Jurusan::proses/$1'
+        );
+
+        $routes->post(
+            'updateProses/(:num)',
+            'Jurusan::updateProses/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Upload
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'upload/(:num)',
+            'Jurusan::upload/$1'
+        );
+
+        $routes->post(
+            'simpanUpload/(:num)',
+            'Jurusan::simpanUpload/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Lihat File
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'lihat/(:segment)',
+            'Jurusan::lihatFile/$1'
+        );
+
+
+        /*
+        |-------------------------------------------------------------------------- 
+        | Download File
+        |-------------------------------------------------------------------------- 
+        */
+
+        $routes->get(
+            'download/(:segment)',
+            'Jurusan::downloadFile/$1'
+        );
+    }
 );
-
-
-/*
-|--------------------------------------------------------------------------
-| DATA TIKET KEMAHASISWAAN
-|--------------------------------------------------------------------------
-*/
-
-$routes->get(
-    'kemahasiswaan/data-tiket',
-    'UnitLayanan::dataTiketKemahasiswaan'
-);
-
-$routes->get(
-    'kemahasiswaan/detail/(:num)',
-    'UnitLayanan::detail/$1'
-);
-
-$routes->get(
-    'kemahasiswaan/proses/(:num)',
-    'UnitLayanan::proses/$1'
-);
-
-$routes->post(
-    'kemahasiswaan/updateProses/(:num)',
-    'UnitLayanan::updateProses/$1'
-);
-
-$routes->get(
-    'kemahasiswaan/upload/(:num)',
-    'UnitLayanan::upload/$1'
-);
-
-$routes->post(
-    'kemahasiswaan/simpanUpload/(:num)',
-    'UnitLayanan::simpanUpload/$1'
-);
-
-$routes->get(
-    'kemahasiswaan/kirim/(:num)',
-    'UnitLayanan::kirim/$1'
-);
-
-$routes->get(
-    'kemahasiswaan/kirim-pemohon/(:num)',
-    'UnitLayanan::kirimKePemohon/$1'
-);
-
-$routes->get(
-    'kemahasiswaan/riwayat',
-    'UnitLayanan::riwayat'
-);
-
-$routes->get(
-    'kemahasiswaan/hapus-dokumen/(:num)',
-    'UnitLayanan::hapusDokumen/$1'
-);
-// =========================
-// AUTH - LOGIN & REGISTER
-// =========================
-
-$routes->get('/login', 'Auth\AuthController::index');
-$routes->post('/login', 'Auth\AuthController::authenticate');
-
-$routes->get('/login/mfa', 'Auth\AuthController::mfa');
-$routes->post('/login/mfa/verify', 'Auth\AuthController::verifyMfa');
-
-$routes->get('/register', 'Auth\RegisterController::index');
-$routes->post('/register', 'Auth\RegisterController::store');
-
-$routes->get('/register/mfa', 'Auth\RegisterController::mfaSetup');
-$routes->post('/register/mfa/verify', 'Auth\RegisterController::verify');
-
-$routes->get('/register/fields/(:num)', 'Auth\RegisterController::fields/$1');

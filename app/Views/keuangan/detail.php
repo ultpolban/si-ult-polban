@@ -1,4 +1,3 @@
-```php
 <?= $this->extend('layouts/template') ?>
 
 <?= $this->section('content') ?>
@@ -121,12 +120,46 @@
     background:#f8f9fa;
 }
 
-.document-link{
-    display:inline-flex;
+.document-item{
+    display:flex;
     align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    padding:12px;
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.document-item:last-child{
+    margin-bottom:0;
+}
+
+.document-name{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+}
+
+.document-name i{
+    font-size:22px;
+    color:#293582;
+}
+
+.document-name span{
+    word-break:break-word;
+}
+
+.document-actions{
+    display:flex;
     gap:7px;
-    text-decoration:none;
-    margin-top:5px;
+    flex-shrink:0;
+}
+
+.document-actions .btn{
+    border-radius:8px;
 }
 
 
@@ -193,6 +226,19 @@
 
     .detail-card-body{
         padding:20px;
+    }
+
+    .document-item{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .document-actions{
+        width:100%;
+    }
+
+    .document-actions .btn{
+        flex:1;
     }
 
 }
@@ -313,13 +359,20 @@
 
             <p class="detail-value">
 
-                <?php if(!empty($tiket['created_at'])): ?>
+                <?php
+
+                $tanggalPengajuan =
+                    $tiket['created_at']
+                    ?? $tiket['submitted_at']
+                    ?? null;
+
+                ?>
+
+                <?php if(!empty($tanggalPengajuan)): ?>
 
                     <?= date(
                         'd-m-Y H:i:s',
-                        strtotime(
-                            $tiket['created_at']
-                        )
+                        strtotime($tanggalPengajuan)
                     ) ?>
 
                 <?php else: ?>
@@ -348,6 +401,7 @@
                 <?= esc(
                     $tiket['nama_pemohon']
                     ?? $tiket['applicant_name']
+                    ?? $tiket['user_name']
                     ?? 'Nama pemohon belum tersedia'
                 ) ?>
 
@@ -371,6 +425,7 @@
             $nik =
                 $tiket['nik']
                 ?? $tiket['nim']
+                ?? $tiket['identity_number']
                 ?? null;
 
             ?>
@@ -401,7 +456,8 @@
 
                 <?= esc(
                     $tiket['nama_unit']
-                    ?? 'Unit layanan belum tersedia'
+                    ?? $tiket['unit_name']
+                    ?? 'Keuangan'
                 ) ?>
 
             </p>
@@ -423,6 +479,7 @@
 
                 <?= esc(
                     $tiket['nama_layanan']
+                    ?? $tiket['service_name']
                     ?? 'Jenis layanan belum tersedia'
                 ) ?>
 
@@ -446,6 +503,7 @@
                 <?= nl2br(
                     esc(
                         $tiket['deskripsi']
+                        ?? $tiket['description']
                         ?? 'Deskripsi belum tersedia'
                     )
                 ) ?>
@@ -481,6 +539,7 @@
 
                 $filePendukung =
                     $tiket['file_pendukung']
+                    ?? $tiket['supporting_file']
                     ?? null;
 
                 ?>
@@ -493,7 +552,7 @@
                         <a
                             href="<?= base_url(
                                 'uploads/pendukung/'
-                                . $filePendukung
+                                . rawurlencode($filePendukung)
                             ) ?>"
                             target="_blank"
                             class="btn btn-info text-white"
@@ -510,9 +569,7 @@
 
                             <small class="text-muted">
 
-                                <?= esc(
-                                    $filePendukung
-                                ) ?>
+                                <?= esc($filePendukung) ?>
 
                             </small>
 
@@ -563,12 +620,6 @@
                 <p>
 
                 <?php
-
-                /*
-                |--------------------------------------------------------------------------
-                | NORMALISASI STATUS
-                |--------------------------------------------------------------------------
-                */
 
                 $statusDatabase = strtolower(
                     trim(
@@ -708,6 +759,7 @@
                 $catatan =
                     $tiket['catatan']
                     ?? $tiket['admin_note']
+                    ?? $tiket['processing_note']
                     ?? '';
 
                 ?>
@@ -749,7 +801,7 @@
             <div class="detail-item">
 
                 <label class="detail-label">
-                    Dokumen Hasil
+                    Dokumen Hasil Layanan
                 </label>
 
 
@@ -757,6 +809,7 @@
 
                 $files =
                     $tiket['dokumen_hasil']
+                    ?? $tiket['result_documents']
                     ?? [];
 
                 ?>
@@ -778,31 +831,84 @@
                         ): ?>
 
 
-                            <?php if(
-                                !empty(
-                                    $file['nama_file']
-                                )
-                            ): ?>
+                            <?php
+
+                            $namaFile =
+                                $file['nama_file']
+                                ?? $file['file_name']
+                                ?? '';
+
+                            $namaAsli =
+                                $file['nama_asli']
+                                ?? $file['original_name']
+                                ?? $namaFile;
+
+                            ?>
 
 
-                                <a
-                                    href="<?= base_url(
-                                        'uploads/hasil/'
-                                        . $file['nama_file']
-                                    ) ?>"
-                                    target="_blank"
-                                    class="btn btn-success document-link me-2"
-                                >
+                            <?php if(!empty($namaFile)): ?>
 
-                                    <i class="fas fa-file"></i>
+                                <div class="document-item">
 
-                                    <?= esc(
-                                        $file['nama_asli']
-                                        ?? $file['nama_file']
-                                    ) ?>
 
-                                </a>
+                                    <!-- NAMA FILE -->
 
+                                    <div class="document-name">
+
+                                        <i class="fas fa-file-pdf"></i>
+
+                                        <span>
+
+                                            <?= esc($namaAsli) ?>
+
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- AKSI DOKUMEN -->
+
+                                    <div class="document-actions">
+
+
+                                        <!-- LIHAT -->
+
+                                        <a
+                                            href="<?= base_url(
+                                                'keuangan/lihat/'
+                                                . rawurlencode($namaFile)
+                                            ) ?>"
+                                            target="_blank"
+                                            class="btn btn-success btn-sm"
+                                        >
+
+                                            <i class="fas fa-eye me-1"></i>
+
+                                            Lihat
+
+                                        </a>
+
+
+                                        <!-- DOWNLOAD -->
+
+                                        <a
+                                            href="<?= base_url(
+                                                'keuangan/download/'
+                                                . rawurlencode($namaFile)
+                                            ) ?>"
+                                            class="btn btn-primary btn-sm"
+                                        >
+
+                                            <i class="fas fa-download me-1"></i>
+
+                                            Download
+
+                                        </a>
+
+
+                                    </div>
+
+                                </div>
 
                             <?php endif; ?>
 
@@ -813,15 +919,33 @@
                     </div>
 
 
-                <?php else: ?>
+                    <!-- KETERANGAN -->
 
-                    <p class="text-muted">
+                    <small class="text-muted d-block mt-2">
 
                         <i class="fas fa-info-circle me-1"></i>
 
-                        Belum ada dokumen hasil.
+                        Dokumen hasil layanan telah tersimpan pada sistem
+                        dan dapat dilihat atau di-download melalui Detail Pengajuan Tiket.
 
-                    </p>
+                    </small>
+
+
+                <?php else: ?>
+
+
+                    <div class="document-box">
+
+                        <p class="text-muted mb-0">
+
+                            <i class="fas fa-info-circle me-1"></i>
+
+                            Belum ada dokumen hasil layanan yang diunggah oleh petugas.
+
+                        </p>
+
+                    </div>
+
 
                 <?php endif; ?>
 
@@ -891,7 +1015,6 @@
                                     )
                                 ): ?>
 
-
                                     <div class="text-muted small mt-2">
 
                                         Dikirim pada:
@@ -906,7 +1029,6 @@
                                         ) ?>
 
                                     </div>
-
 
                                 <?php endif; ?>
 
@@ -976,7 +1098,6 @@
                                     )
                                 ): ?>
 
-
                                     <div class="text-muted small mt-2">
 
                                         Dikirim pada:
@@ -991,7 +1112,6 @@
                                         ) ?>
 
                                     </div>
-
 
                                 <?php endif; ?>
 
@@ -1049,12 +1169,6 @@
 
             <?php
 
-            /*
-            |--------------------------------------------------------------------------
-            | CEK STATUS SELESAI
-            |--------------------------------------------------------------------------
-            */
-
             $statusBisaKirim =
                 in_array(
                     $statusDatabase,
@@ -1084,13 +1198,6 @@
                 ): ?>
 
 
-                    <!--
-                    =================================================
-                    TIKET SUDAH PERNAH DIKIRIM
-                    TETAP BISA DIKIRIM LAGI
-                    =================================================
-                    -->
-
                     <a
                         href="<?= base_url(
                             'keuangan/kirim/'
@@ -1111,12 +1218,6 @@
 
                 <?php else: ?>
 
-
-                    <!--
-                    =================================================
-                    TIKET BELUM PERNAH DIKIRIM
-                    =================================================
-                    -->
 
                     <a
                         href="<?= base_url(
@@ -1153,13 +1254,6 @@
                 ): ?>
 
 
-                    <!--
-                    =================================================
-                    TIKET SUDAH PERNAH DIKIRIM
-                    TETAP BISA DIKIRIM LAGI
-                    =================================================
-                    -->
-
                     <a
                         href="<?= base_url(
                             'keuangan/kirim-pemohon/'
@@ -1180,12 +1274,6 @@
 
                 <?php else: ?>
 
-
-                    <!--
-                    =================================================
-                    TIKET BELUM PERNAH DIKIRIM
-                    =================================================
-                    -->
 
                     <a
                         href="<?= base_url(
@@ -1212,7 +1300,7 @@
 
 
             <!-- =========================================
-                 KEMBALI KE DASHBOARD KEUANGAN
+                 KEMBALI
             ========================================== -->
 
             <a

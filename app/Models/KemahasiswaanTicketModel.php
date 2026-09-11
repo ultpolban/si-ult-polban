@@ -6,15 +6,12 @@ use CodeIgniter\Model;
 
 class KemahasiswaanTicketModel extends Model
 {
-    protected $table = 'tickets';
+    protected $table = 'kemahasiswaan_tickets';
     protected $primaryKey = 'id';
     protected $returnType = 'array';
     protected $useSoftDeletes = true;
     protected $allowedFields = [
-        'ticket_number', 'user_profile_id', 'service_id', 'title',
-        'description', 'status', 'priority', 'assigned_to', 'submitted_at',
-        'verified_at', 'processed_at', 'completed_at', 'rejected_at',
-        'cancelled_at', 'admin_note', 'rejection_reason',
+        'ticket_number','applicant_name','applicant_identifier','service_name','service_category','unit_name','title','description','status','priority','admin_note','result_note','result_file','submitted_at','processed_at','completed_at',
     ];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
@@ -22,16 +19,6 @@ class KemahasiswaanTicketModel extends Model
 
     public function queryTickets()
     {
-        return $this->select(
-            'tickets.*, tickets.ticket_number AS no_tiket,
-             tickets.title AS judul, tickets.description AS deskripsi,
-             master_services.name AS nama_layanan,
-             master_service_categories.name AS nama_kategori,
-             master_service_units.name AS nama_unit'
-        )
-            ->join('master_services', 'master_services.id = tickets.service_id', 'left')
-            ->join('master_service_categories', 'master_service_categories.id = master_services.service_category_id', 'left')
-            ->join('master_service_units', 'master_service_units.id = master_service_categories.service_unit_id', 'left')
-            ->where('LOWER(master_service_units.name)', 'kemahasiswaan');
+        return $this->select('kemahasiswaan_tickets.*, ticket_number AS no_tiket, title AS judul, description AS deskripsi, service_name AS nama_layanan, service_category AS nama_kategori, unit_name AS nama_unit, applicant_name AS nama_pemohon');
     }
 }

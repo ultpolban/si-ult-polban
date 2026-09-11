@@ -2,805 +2,742 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
-use App\Models\TicketModel;
-use App\Models\DokumenHasilModel;
+use App\Models\AkademikTicketModel;
+use App\Models\AkademikActivityLogModel;
 
 class Akademik extends BaseController
 {
-    protected $db;
-    protected $ticketModel;
-    protected $dokumenHasilModel;
+    protected AkademikTicketModel $tickets;
+    protected AkademikActivityLogModel $activityLogs;
 
     public function __construct()
     {
-        $this->db = \Config\Database::connect();
-        $this->ticketModel = new TicketModel();
-        $this->dokumenHasilModel = new DokumenHasilModel();
+        $this->tickets = new AkademikTicketModel();
+        $this->activityLogs = new AkademikActivityLogModel();
     }
 
-
-    /* =====================================================
-       AMBIL SEMUA TIKET AKADEMIK
-    ===================================================== */
-
-    protected function tickets(): array
-    {
-        return $this->db->table('tickets t')
-            ->select(
-                't.*,
-                 t.ticket_number AS no_tiket,
-                 t.title AS judul,
-                 t.description AS deskripsi,
-                 ms.name AS nama_layanan,
-                 msc.name AS nama_kategori,
-                 msu.name AS nama_unit'
-            )
-            ->join(
-                'master_services ms',
-                'ms.id = t.service_id',
-                'left'
-            )
-            ->join(
-                'master_service_categories msc',
-                'msc.id = ms.service_category_id',
-                'left'
-            )
-            ->join(
-                'master_service_units msu',
-                'msu.id = msc.service_unit_id',
-                'left'
-            )
-            ->where(
-                'LOWER(msu.name)',
-                'bagian akademik'
-            )
-            ->orderBy(
-                't.id',
-                'DESC'
-            )
-            ->get()
-            ->getResultArray();
-    }
-
-
-    /* =====================================================
-       NORMALISASI STATUS
-    ===================================================== */
-
-    protected function normalizeStatus(string $status): ?string
-    {
-        $status = strtolower(trim($status));
-
-        $map = [
-
-            'draft'       => 'submitted',
-            'submitted'   => 'submitted',
-            'menunggu'    => 'submitted',
-            'waiting'     => 'submitted',
-
-            'verification' => 'processing',
-            'processing'   => 'processing',
-            'in_progress'  => 'processing',
-            'diproses'     => 'processing',
-
-            'completed'    => 'completed',
-            'complete'     => 'completed',
-            'selesai'      => 'completed',
-
-            'rejected'     => 'rejected',
-            'ditolak'      => 'rejected',
-
-        ];
-
-        return $map[$status] ?? null;
-    }
-
-
-    /* =====================================================
-       LABEL STATUS
-    ===================================================== */
-
-    protected function statusLabel(string $status): string
-    {
-        switch ($this->normalizeStatus($status)) {
-
-            case 'submitted':
-                return 'Menunggu';
-
-            case 'processing':
-                return 'Diproses';
-
-            case 'completed':
-                return 'Selesai';
-
-            case 'rejected':
-                return 'Ditolak';
-
-            default:
-                return 'Menunggu';
-        }
-    }
-
-
-    /* =====================================================
-       HITUNG STATUS
-    ===================================================== */
-
-    protected function statusCounts(array $tickets): array
-    {
-        $counts = [
-            'menunggu' => 0,
-            'diproses' => 0,
-            'selesai'  => 0,
-            'ditolak'  => 0,
-        ];
-
-        foreach ($tickets as $ticket) {
-
-            $status = $this->normalizeStatus(
-                (string) ($ticket['status'] ?? '')
-            );
-
-            switch ($status) {
-
-                case 'submitted':
-                    $counts['menunggu']++;
-                    break;
-
-                case 'processing':
-                    $counts['diproses']++;
-                    break;
-
-                case 'completed':
-                    $counts['selesai']++;
-                    break;
-
-                case 'rejected':
-                    $counts['ditolak']++;
-                    break;
-            }
-        }
-
-        return $counts;
-    }
-
-
-    /* =====================================================
-       DATA VIEW DASHBOARD
-    ===================================================== */
-
-    protected function viewData(array $tickets): array
-    {
-        $counts = $this->statusCounts($tickets);
-
-        $total = count($tickets);
-
-        return [
-
-            'title' => 'Dashboard Akademik',
-
-            'unit' => 'Akademik',
-
-            'tickets' => $tickets,
-
-            'tiket' => $tickets,
-
-            'total' => $total,
-
-            'totalTiket' => $total,
-
-            'menunggu' => $counts['menunggu'],
-
-            'diproses' => $counts['diproses'],
-
-            'selesai' => $counts['selesai'],
-
-            'ditolak' => $counts['ditolak'],
-
-            'persentaseSelesai' =>
-                $total
-                    ? round(
-                        ($counts['selesai'] / $total) * 100
-                    )
-                    : 0,
-
-            'statistikLayanan' => [],
-
-            'dataTiketUrl' =>
-                site_url('akademik/data-tiket'),
-
-        ];
-    }
-
-
-    /* =====================================================
-       INDEX
-    ===================================================== */
-
-    public function index()
-    {
-        return $this->dashboard();
-    }
-
-
-    /* =====================================================
+    /* =========================================================
        DASHBOARD
-    ===================================================== */
+    ========================================================= */
 
     public function dashboard()
     {
-        return view(
-            'akademik/dashboard',
-            $this->viewData(
-                $this->tickets()
-            )
-        );
+        $tickets = $this->tickets
+            ->orderBy('id', 'DESC')
+            ->findAll();
+
+        $total = count($tickets);
+        $menunggu = 0;
+        $diproses = 0;
+        $selesai = 0;
+
+        foreach ($tickets as $ticket) {
+            $status = strtolower(
+                trim((string) ($ticket['status'] ?? ''))
+            );
+
+            if (
+                str_contains($status, 'menunggu') ||
+                str_contains($status, 'pending') ||
+                str_contains($status, 'submitted')
+            ) {
+                $menunggu++;
+            } elseif (
+                str_contains($status, 'diproses') ||
+                str_contains($status, 'processing') ||
+                str_contains($status, 'process')
+            ) {
+                $diproses++;
+            } elseif (
+                str_contains($status, 'selesai') ||
+                str_contains($status, 'completed') ||
+                str_contains($status, 'complete')
+            ) {
+                $selesai++;
+            }
+        }
+
+        return view('akademik/dashboard', [
+            'title'    => 'Dashboard Akademik',
+            'unit'     => 'Akademik',
+            'total'    => $total,
+            'menunggu' => $menunggu,
+            'diproses' => $diproses,
+            'selesai'  => $selesai,
+        ]);
     }
 
-
-    /* =====================================================
+    /* =========================================================
        DATA TIKET
-    ===================================================== */
+    ========================================================= */
 
     public function dataTiket()
     {
-        $tickets = $this->tickets();
+        $tickets = $this->tickets
+            ->orderBy('id', 'DESC')
+            ->findAll();
 
-        $keyword = trim(
-            (string) $this->request->getGet('keyword')
+        $tickets = array_map(
+            fn ($ticket) => $this->decorateTicket($ticket),
+            $tickets
         );
 
-        if ($keyword !== '') {
-
-            $tickets = array_values(
-                array_filter(
-                    $tickets,
-                    static function ($ticket) use ($keyword) {
-
-                        return str_contains(
-                            strtolower(
-                                implode(
-                                    ' ',
-                                    array_map(
-                                        'strval',
-                                        $ticket
-                                    )
-                                )
-                            ),
-                            strtolower($keyword)
-                        );
-                    }
-                )
-            );
-        }
-
-        return view(
-            'akademik/data_tiket',
-            [
-
-                'tickets' => $tickets,
-
-                'tiket' => $tickets,
-
-                'keyword' => $keyword,
-
-                'unit' => 'Akademik',
-
-                'nama_unit' => 'Akademik',
-
-            ]
-        );
+        return view('akademik/data_tiket', [
+            'title'   => 'Data Tiket Akademik',
+            'unit'    => 'Akademik',
+            'tickets' => $tickets,
+            'tiket'   => $tickets,
+        ]);
     }
 
-
-    /* =====================================================
-       STATISTIK
-    ===================================================== */
-
-    public function statistik()
-    {
-        $tickets = $this->db->table('tickets t')
-            ->select('t.status')
-            ->join(
-                'master_services ms',
-                'ms.id = t.service_id',
-                'left'
-            )
-            ->join(
-                'master_service_categories msc',
-                'msc.id = ms.service_category_id',
-                'left'
-            )
-            ->join(
-                'master_service_units msu',
-                'msu.id = msc.service_unit_id',
-                'left'
-            )
-            ->where(
-                'LOWER(msu.name)',
-                'bagian akademik'
-            )
-            ->get()
-            ->getResultArray();
-
-        return view(
-            'akademik/statistik',
-            $this->viewData($tickets)
-        );
-    }
-
-
-    /* =====================================================
-       DETAIL TIKET
-    ===================================================== */
-
-    public function detail($id)
-    {
-        $id = (int) $id;
-
-        $ticket = $this->ticketsById($id);
-
-        if (!$ticket) {
-
-            return redirect()
-                ->to('akademik/data-tiket')
-                ->with(
-                    'error',
-                    'Tiket Akademik tidak ditemukan.'
-                );
-        }
-
-        /*
-         * Pastikan status yang dikirim ke view
-         * selalu konsisten.
-         */
-        $ticket['status_normalized'] =
-            $this->normalizeStatus(
-                (string) ($ticket['status'] ?? '')
-            );
-
-        $ticket['status_label'] =
-            $this->statusLabel(
-                (string) ($ticket['status'] ?? '')
-            );
-
-        return view(
-            'akademik/detail',
-            [
-                'tiket' => $ticket,
-                'unit' => 'Akademik',
-                'nama_unit' => 'Akademik',
-            ]
-        );
-    }
-
-
-    /* =====================================================
-       CARI TIKET BERDASARKAN ID
-    ===================================================== */
-
-    protected function ticketsById(int $id): ?array
-    {
-        $ticket = $this->db->table('tickets t')
-            ->select(
-                't.*,
-                 t.ticket_number AS no_tiket,
-                 t.title AS judul,
-                 t.description AS deskripsi,
-                 ms.name AS nama_layanan,
-                 msc.name AS nama_kategori,
-                 msu.name AS nama_unit'
-            )
-            ->join(
-                'master_services ms',
-                'ms.id = t.service_id',
-                'left'
-            )
-            ->join(
-                'master_service_categories msc',
-                'msc.id = ms.service_category_id',
-                'left'
-            )
-            ->join(
-                'master_service_units msu',
-                'msu.id = msc.service_unit_id',
-                'left'
-            )
-            ->where(
-                't.id',
-                $id
-            )
-            ->where(
-                'LOWER(msu.name)',
-                'bagian akademik'
-            )
-            ->get()
-            ->getRowArray();
-
-        if ($ticket) {
-            return $ticket;
-        }
-
-        return null;
-    }
-
-
-    /* =====================================================
-       HALAMAN PROSES TIKET
-    ===================================================== */
-
-    public function proses($id)
-    {
-        $id = (int) $id;
-
-        $ticket = $this->ticketsById($id);
-
-        if (!$ticket) {
-
-            return redirect()
-                ->to('akademik/data-tiket')
-                ->with(
-                    'error',
-                    'Tiket Akademik tidak ditemukan.'
-                );
-        }
-
-        return view(
-            'akademik/proses',
-            [
-                'tiket' => $ticket,
-                'unit' => 'Akademik',
-                'nama_unit' => 'Akademik',
-            ]
-        );
-    }
-
-
-    /* =====================================================
-       RIWAYAT
-    ===================================================== */
-
-    public function riwayat()
-    {
-        return view(
-            'akademik/riwayat',
-            [
-                'tickets' => $this->tickets(),
-                'unit' => 'Akademik',
-            ]
-        );
-    }
-
-
-    /* =====================================================
-       LOG AKTIVITAS
-    ===================================================== */
-
-    public function logAktivitas()
-    {
-        $logs = $this->db
-            ->table('activity_logs al')
-            ->select(
-                'al.reference_id AS ticket_id,
-                 t.ticket_number AS no_tiket,
-                 msu.name AS unit,
-                 ms.name AS layanan,
-                 al.action AS aktivitas,
-                 t.status,
-                 al.created_at AS waktu'
-            )
-            ->join(
-                'tickets t',
-                't.id = al.reference_id',
-                'inner'
-            )
-            ->join(
-                'master_services ms',
-                'ms.id = t.service_id',
-                'inner'
-            )
-            ->join(
-                'master_service_categories msc',
-                'msc.id = ms.service_category_id',
-                'inner'
-            )
-            ->join(
-                'master_service_units msu',
-                'msu.id = msc.service_unit_id',
-                'inner'
-            )
-            ->where(
-                'al.module',
-                'Akademik'
-            )
-            ->where(
-                'LOWER(msu.name)',
-                'bagian akademik'
-            )
-            ->orderBy(
-                'al.created_at',
-                'DESC'
-            )
-            ->get()
-            ->getResultArray();
-
-        return view(
-            'akademik/log_aktivitas',
-            [
-                'unit' => 'Akademik',
-                'units' => [
-                    'Bagian Akademik'
-                ],
-                'logs' => $logs,
-                'keyword' => '',
-            ]
-        );
-    }
-
-
-    /* =====================================================
+    /* =========================================================
        PROFILE
-    ===================================================== */
+    ========================================================= */
 
     public function profile()
     {
-        return view(
-            'akademik/profile',
-            [
-                'unit' => 'Akademik'
-            ]
-        );
+        return view('akademik/profile', [
+            'title'   => 'Profil Petugas Akademik',
+            'name'    => session()->get('full_name') ?: 'Petugas Akademik',
+            'email'   => session()->get('email') ?: '',
+            'nip'     => session()->get('identity_number') ?: '',
+            'no_hp'   => session()->get('phone_number') ?: '',
+            'jabatan' => 'Petugas Unit Layanan',
+        ]);
     }
-
-
-    /* =====================================================
-       UPDATE PROFILE
-    ===================================================== */
 
     public function updateProfile()
     {
+        $name = trim(
+            (string) $this->request->getPost('name')
+        );
+
+        session()->set('full_name', $name);
+
         return redirect()
-            ->to('akademik/profile');
+            ->to(base_url('akademik/profile'))
+            ->with(
+                'success',
+                'Profil berhasil diperbarui.'
+            );
     }
 
+    /* =========================================================
+       STATISTIK
+    ========================================================= */
 
-    /* =====================================================
+    public function statistik()
+    {
+        $tickets = $this->tickets
+            ->orderBy('id', 'DESC')
+            ->findAll();
+
+        $total = count($tickets);
+        $menunggu = 0;
+        $diproses = 0;
+        $selesai = 0;
+        $statistikLayanan = [];
+
+        foreach ($tickets as $ticket) {
+            $status = strtolower(
+                trim((string) ($ticket['status'] ?? ''))
+            );
+
+            if (
+                str_contains($status, 'menunggu') ||
+                str_contains($status, 'pending') ||
+                str_contains($status, 'submitted')
+            ) {
+                $menunggu++;
+            } elseif (
+                str_contains($status, 'diproses') ||
+                str_contains($status, 'processing') ||
+                str_contains($status, 'process')
+            ) {
+                $diproses++;
+            } elseif (
+                str_contains($status, 'selesai') ||
+                str_contains($status, 'completed') ||
+                str_contains($status, 'complete')
+            ) {
+                $selesai++;
+            }
+
+            $layanan = trim(
+                (string) ($ticket['service_name'] ?? 'Lainnya')
+            );
+
+            if ($layanan === '') {
+                $layanan = 'Lainnya';
+            }
+
+            $statistikLayanan[$layanan] =
+                ($statistikLayanan[$layanan] ?? 0) + 1;
+        }
+
+        ksort($statistikLayanan);
+
+        return view('akademik/statistik', [
+            'title'              => 'Statistik Akademik',
+            'unit'               => 'Akademik',
+            'totalTiket'         => $total,
+            'total'              => $total,
+            'menunggu'           => $menunggu,
+            'diproses'           => $diproses,
+            'selesai'            => $selesai,
+            'persentaseSelesai'  => $total > 0
+                ? round(($selesai / $total) * 100)
+                : 0,
+            'statistikLayanan'   => $statistikLayanan,
+        ]);
+    }
+
+    /* =========================================================
+       UPLOAD DOKUMEN TERPISAH
+    ========================================================= */
+
+    public function upload($id)
+    {
+        $id = (int) $id;
+
+        $ticket = $this->tickets->find($id);
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('akademik/data-tiket'))
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
+        }
+
+        return view('akademik/upload', [
+            'title' => 'Upload Dokumen Akademik',
+            'unit'  => 'Akademik',
+            'tiket' => $this->decorateTicket($ticket),
+        ]);
+    }
+
+    /* =========================================================
+       KIRIM TIKET KE PETUGAS ULT
+    ========================================================= */
+
+    public function kirim($id)
+    {
+        $id = (int) $id;
+
+        $ticket = $this->tickets->find($id);
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('akademik/data-tiket'))
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
+        }
+
+        $this->tickets->update($id, [
+            'sent_to_ult'    => 1,
+            'sent_to_ult_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $this->writeActivityLog(
+            $ticket,
+            $ticket['status'] ?? 'Selesai',
+            'Tiket dikirim ke Petugas ULT.'
+        );
+
+        return redirect()
+            ->to(base_url('akademik/detail/' . $id))
+            ->with(
+                'success',
+                'Tiket berhasil dikirim ke Petugas ULT.'
+            );
+    }
+
+    /* =========================================================
+       KIRIM TIKET KE PEMOHON
+    ========================================================= */
+
+    public function kirimKePemohon($id)
+    {
+        $id = (int) $id;
+
+        $ticket = $this->tickets->find($id);
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('akademik/data-tiket'))
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
+        }
+
+        $this->tickets->update($id, [
+            'sent_to_applicant'    => 1,
+            'sent_to_applicant_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $this->writeActivityLog(
+            $ticket,
+            $ticket['status'] ?? 'Selesai',
+            'Hasil layanan dikirim ke Pemohon.'
+        );
+
+        return redirect()
+            ->to(base_url('akademik/detail/' . $id))
+            ->with(
+                'success',
+                'Hasil layanan berhasil dikirim ke Pemohon.'
+            );
+    }
+
+    /* =========================================================
+       RIWAYAT
+    ========================================================= */
+
+    public function riwayat()
+    {
+        $tickets = $this->tickets
+            ->orderBy('id', 'DESC')
+            ->findAll();
+
+        $tickets = array_map(
+            fn ($ticket) => $this->decorateTicket($ticket),
+            $tickets
+        );
+
+        return view('akademik/riwayat', [
+            'title' => 'Riwayat Tiket Akademik',
+            'tiket' => $tickets,
+        ]);
+    }
+
+    /* =========================================================
+       HAPUS DOKUMEN HASIL
+    ========================================================= */
+
+    public function hapusDokumen($id)
+    {
+        $id = (int) $id;
+
+        $ticket = $this->tickets->find($id);
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('akademik/data-tiket'))
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
+        }
+
+        $filename = trim(
+            (string) ($ticket['result_file'] ?? '')
+        );
+
+        if ($filename !== '') {
+            $path = WRITEPATH . 'uploads/akademik/' . basename($filename);
+
+            if (is_file($path)) {
+                @unlink($path);
+            }
+        }
+
+        $this->tickets->update($id, [
+            'result_file' => null,
+            'result_note' => null,
+        ]);
+
+        return redirect()
+            ->to(base_url('akademik/detail/' . $id))
+            ->with(
+                'success',
+                'Dokumen hasil layanan berhasil dihapus.'
+            );
+    }
+
+    /* =========================================================
+       DETAIL TIKET
+    ========================================================= */
+
+    public function detail($id)
+    {
+        $ticket = $this->tickets->find((int) $id);
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('akademik/data-tiket'))
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
+        }
+
+        $ticket = $this->decorateTicket($ticket);
+
+        return view('akademik/detail', [
+            'title' => 'Detail Pengajuan Tiket',
+            'unit'  => 'Akademik',
+            'tiket' => $ticket,
+        ]);
+    }
+
+    /* =========================================================
+       PROSES TIKET
+    ========================================================= */
+
+    public function proses($id)
+    {
+        $ticket = $this->tickets->find((int) $id);
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('akademik/data-tiket'))
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
+        }
+
+        $ticket = $this->decorateTicket($ticket);
+
+        return view('akademik/proses', [
+            'title' => 'Proses Tiket Akademik',
+            'unit'  => 'Akademik',
+            'tiket' => $ticket,
+        ]);
+    }
+
+    /* =========================================================
        UPDATE PROSES TIKET
-    ===================================================== */
+    ========================================================= */
 
     public function updateProses($id)
     {
         $id = (int) $id;
 
-        $ticket = $this->ticketsById($id);
+        $ticket = $this->tickets->find($id);
 
         if (!$ticket) {
-
             return redirect()
-                ->to('akademik/data-tiket')
+                ->to(base_url('akademik/data-tiket'))
                 ->with(
                     'error',
-                    'Tiket Akademik tidak ditemukan.'
+                    'Data tiket tidak ditemukan.'
                 );
         }
 
-        $statusInput = trim(
+        $status = trim(
             (string) $this->request->getPost('status')
         );
 
         $catatan = trim(
-            (string) (
-                $this->request->getPost('catatan')
-                ??
-                $this->request->getPost('admin_note')
-                ??
-                ''
-            )
+            (string) $this->request->getPost('catatan')
         );
 
-        /*
-         * NORMALISASI STATUS
-         *
-         * Semua tiket memakai status database:
-         *
-         * submitted
-         * processing
-         * completed
-         * rejected
-         */
-
-        $status = $this->normalizeStatus(
-            $statusInput
-        );
-
-        if ($status === null) {
-
+        if ($status === '') {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with(
                     'error',
-                    'Status tiket tidak valid.'
+                    'Status tiket wajib dipilih.'
                 );
         }
 
-
-        $oldStatus = $ticket['status'] ?? null;
-
-        /*
-         * UPDATE DATABASE
-         */
-
-        $updateData = [
-
-            'status' => $status,
-
+        $data = [
+            'status'     => $status,
             'admin_note' => $catatan,
-
         ];
 
+        $statusLower = strtolower($status);
 
-        $updated = $this->ticketModel
-            ->where(
-                'id',
-                $id
-            )
-            ->set(
-                $updateData
-            )
-            ->update();
+        /* =====================================================
+           WAKTU DIPROSES
+        ===================================================== */
 
+        if (
+            str_contains($statusLower, 'diproses') ||
+            str_contains($statusLower, 'processing') ||
+            str_contains($statusLower, 'process')
+        ) {
+            $data['processed_at'] = date('Y-m-d H:i:s');
+        }
 
-        if (!$updated) {
+        /* =====================================================
+           WAKTU SELESAI
+        ===================================================== */
 
+        if (
+            str_contains($statusLower, 'selesai') ||
+            str_contains($statusLower, 'completed') ||
+            str_contains($statusLower, 'complete')
+        ) {
+            $data['completed_at'] = date('Y-m-d H:i:s');
+        }
+
+        /* =====================================================
+           UPLOAD SURAT HASIL
+        ===================================================== */
+
+        $uploadedFile = null;
+
+        /*
+         * Prioritas 1:
+         * name="dokumen"
+         */
+
+        $dokumen = $this->request->getFile('dokumen');
+
+        if (
+            $dokumen &&
+            $dokumen->getError() !== UPLOAD_ERR_NO_FILE
+        ) {
+            $uploadedFile = $dokumen;
+        }
+
+        /*
+         * Prioritas 2:
+         * name="file_hasil[]"
+         */
+
+        if (!$uploadedFile) {
+            $files = $this->request->getFileMultiple('file_hasil');
+
+            if (!empty($files)) {
+                foreach ($files as $candidate) {
+                    if (
+                        $candidate &&
+                        $candidate->getError() !== UPLOAD_ERR_NO_FILE
+                    ) {
+                        $uploadedFile = $candidate;
+                        break;
+                    }
+                }
+            }
+        }
+
+        /* =====================================================
+           VALIDASI FILE
+        ===================================================== */
+
+        if ($uploadedFile) {
+
+            if (!$uploadedFile->isValid()) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'File surat hasil tidak valid.'
+                    );
+            }
+
+            /*
+             * Maksimal 5 MB
+             */
+
+            if ($uploadedFile->getSizeByUnit('mb') > 5) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Ukuran surat hasil maksimal 5 MB.'
+                    );
+            }
+
+            /*
+             * Extension yang diperbolehkan
+             */
+
+            $allowedExtensions = [
+                'pdf',
+                'jpg',
+                'jpeg',
+                'png',
+            ];
+
+            $extension = strtolower(
+                $uploadedFile->getClientExtension()
+            );
+
+            if (!in_array(
+                $extension,
+                $allowedExtensions,
+                true
+            )) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Format file hanya PDF, JPG, JPEG, atau PNG.'
+                    );
+            }
+
+            /* =================================================
+               FOLDER UPLOAD AKADEMIK
+            ================================================= */
+
+            $uploadPath = WRITEPATH . 'uploads/akademik';
+
+            if (!is_dir($uploadPath)) {
+                if (!mkdir($uploadPath, 0750, true)) {
+                    return redirect()
+                        ->back()
+                        ->withInput()
+                        ->with(
+                            'error',
+                            'Folder upload Akademik gagal dibuat.'
+                        );
+                }
+            }
+
+            /*
+             * Pastikan folder dapat ditulisi
+             */
+
+            if (!is_writable($uploadPath)) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Folder upload Akademik tidak dapat ditulisi.'
+                    );
+            }
+
+            /* =================================================
+               NAMA FILE BARU
+            ================================================= */
+
+            $newName = $uploadedFile->getRandomName();
+
+            /* =================================================
+               PINDAHKAN FILE
+            ================================================= */
+
+            try {
+                $uploadedFile->move(
+                    $uploadPath,
+                    $newName
+                );
+            } catch (\Throwable $e) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Surat hasil gagal disimpan.'
+                    );
+            }
+
+            /*
+             * Pastikan file benar-benar ada
+             */
+
+            $savedPath = $uploadPath . DIRECTORY_SEPARATOR . $newName;
+
+            if (!is_file($savedPath)) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'File berhasil diproses tetapi tidak ditemukan di server.'
+                    );
+            }
+
+            /*
+             * Simpan nama file ke database
+             */
+
+            $data['result_file'] = $newName;
+
+            $data['result_note'] =
+                'Surat hasil layanan Akademik berhasil diunggah.';
+        }
+
+        /* =====================================================
+           UPDATE DATABASE TIKET
+        ===================================================== */
+
+        if (!$this->tickets->update($id, $data)) {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with(
                     'error',
-                    'Status tiket gagal diperbarui.'
+                    'Data tiket gagal diperbarui.'
                 );
         }
 
+        /* =====================================================
+           LOG AKTIVITAS
+        ===================================================== */
 
-        /*
-         * LOG PERUBAHAN STATUS
-         */
-
-        $now = date(
-            'Y-m-d H:i:s'
-        );
-
-        $this->db
-            ->table('activity_logs')
-            ->insert(
-                [
-
-                    'user_id' =>
-                        session()->get('user_id')
-                        ?: null,
-
-                    'action' =>
-                        'Mengubah status tiket menjadi '
-                        . $this->statusLabel($status),
-
-                    'module' =>
-                        'Akademik',
-
-                    'reference_id' =>
-                        (string) $id,
-
-                    'old_data' =>
-                        json_encode(
-                            [
-                                'status' =>
-                                    $oldStatus,
-                            ]
-                        ),
-
-                    'new_data' =>
-                        json_encode(
-                            [
-                                'ticket_id' =>
-                                    $id,
-
-                                'ticket_number' =>
-                                    $ticket['ticket_number']
-                                    ?? null,
-
-                                'status' =>
-                                    $status,
-
-                                'status_label' =>
-                                    $this->statusLabel($status),
-
-                                'catatan' =>
-                                    $catatan,
-
-                                'waktu' =>
-                                    $now,
-                            ]
-                        ),
-
-                    'ip_address' =>
-                        $this->request
-                            ->getIPAddress(),
-
-                    'user_agent' =>
-                        $this->request
-                            ->getUserAgent()
-                            ->getAgentString(),
-
-                    'created_at' =>
-                        $now,
-
-                ]
+        $activityText = $uploadedFile
+            ? 'Surat hasil layanan diunggah.'
+            : (
+                $catatan !== ''
+                    ? $catatan
+                    : 'Status tiket diperbarui.'
             );
 
+        $this->writeActivityLog(
+            $ticket,
+            $status,
+            $activityText
+        );
+
+        /* =====================================================
+           REDIRECT DETAIL
+        ===================================================== */
 
         return redirect()
             ->to(
-                'akademik/detail/' . $id
+                base_url(
+                    'akademik/detail/' . $id
+                )
             )
             ->with(
                 'success',
-                'Perubahan tiket Akademik berhasil disimpan.'
+                $uploadedFile
+                    ? 'Proses tiket dan surat hasil berhasil disimpan.'
+                    : 'Proses tiket berhasil diperbarui.'
             );
     }
 
-
-    /* =====================================================
-       UPLOAD DOKUMEN
-    ===================================================== */
-
-    public function upload($id)
-    {
-        $ticket = $this->ticketsById(
-            (int) $id
-        );
-
-        if (!$ticket) {
-
-            return redirect()
-                ->to('akademik/data-tiket')
-                ->with(
-                    'error',
-                    'Tiket Akademik tidak ditemukan.'
-                );
-        }
-
-        return view(
-            'akademik/upload',
-            [
-                'tiket' => $ticket,
-                'unit' => 'Akademik',
-            ]
-        );
-    }
-
-
-    /* =====================================================
-       SIMPAN UPLOAD
-    ===================================================== */
+    /* =========================================================
+       UPLOAD DOKUMEN TERPISAH
+    ========================================================= */
 
     public function simpanUpload($id)
     {
         $id = (int) $id;
 
-        $ticket = $this->ticketsById($id);
+        $ticket = $this->tickets->find($id);
 
-        $file =
-            $this->request->getFile('dokumen');
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('akademik/data-tiket'))
+                ->with(
+                    'error',
+                    'Data tiket tidak ditemukan.'
+                );
+        }
+
+        $file = $this->request->getFile('dokumen');
 
         if (
-            !$ticket
-            ||
-            !$file
-            ||
+            !$file ||
+            $file->getError() === UPLOAD_ERR_NO_FILE ||
             !$file->isValid()
         ) {
-
             return redirect()
                 ->back()
                 ->with(
@@ -809,25 +746,114 @@ class Akademik extends BaseController
                 );
         }
 
-        $name =
-            $file->getRandomName();
+        if ($file->getSizeByUnit('mb') > 5) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Ukuran file maksimal 5 MB.'
+                );
+        }
 
-        $file->move(
-            WRITEPATH . 'uploads/hasil',
-            $name
+        $allowedExtensions = [
+            'pdf',
+            'jpg',
+            'jpeg',
+            'png',
+        ];
+
+        $extension = strtolower(
+            $file->getClientExtension()
         );
 
-        $this->dokumenHasilModel
-            ->insert(
-                [
-                    'penanganan_id' => $id,
-                    'nama_file' => $name,
-                ]
+        if (!in_array(
+            $extension,
+            $allowedExtensions,
+            true
+        )) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Format file hanya PDF, JPG, JPEG, atau PNG.'
+                );
+        }
+
+        $uploadPath =
+            WRITEPATH . 'uploads/akademik';
+
+        if (!is_dir($uploadPath)) {
+            if (!mkdir($uploadPath, 0750, true)) {
+                return redirect()
+                    ->back()
+                    ->with(
+                        'error',
+                        'Folder upload Akademik gagal dibuat.'
+                    );
+            }
+        }
+
+        if (!is_writable($uploadPath)) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Folder upload Akademik tidak dapat ditulisi.'
+                );
+        }
+
+        $newName = $file->getRandomName();
+
+        try {
+            $file->move(
+                $uploadPath,
+                $newName
             );
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Dokumen gagal disimpan.'
+                );
+        }
+
+        $savedPath =
+            $uploadPath .
+            DIRECTORY_SEPARATOR .
+            $newName;
+
+        if (!is_file($savedPath)) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Dokumen tidak ditemukan setelah proses upload.'
+                );
+        }
+
+        $this->tickets->update(
+            $id,
+            [
+                'result_file' =>
+                    $newName,
+
+                'result_note' =>
+                    'Dokumen hasil layanan diunggah.',
+            ]
+        );
+
+        $this->writeActivityLog(
+            $ticket,
+            $ticket['status'] ?? 'Selesai',
+            'Dokumen hasil layanan diunggah.'
+        );
 
         return redirect()
             ->to(
-                'akademik/detail/' . $id
+                base_url(
+                    'akademik/detail/' . $id
+                )
             )
             ->with(
                 'success',
@@ -835,312 +861,686 @@ class Akademik extends BaseController
             );
     }
 
+    /* =========================================================
+       LIHAT DOKUMEN LANGSUNG
+    ========================================================= */
 
-    /* =====================================================
-       KIRIM KE PETUGAS ULT
-    ===================================================== */
-
-    public function kirim($id)
+    public function lihat($filename)
     {
-        return $this->setStatus(
-            (int) $id,
-            'sent_to_ult'
+        $filename = basename(
+            urldecode((string) $filename)
         );
-    }
 
+        if ($filename === '' || $filename === '.') {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException(
+                'Nama dokumen tidak valid.'
+            );
+        }
 
-    /* =====================================================
-       KIRIM KE PEMOHON
-    ===================================================== */
+        $path =
+            WRITEPATH .
+            'uploads/akademik/' .
+            $filename;
 
-    public function kirimKePemohon($id)
-    {
-        return $this->setStatus(
-            (int) $id,
-            'sent_to_applicant'
-        );
-    }
+        if (!is_file($path)) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException(
+                'Dokumen tidak ditemukan.'
+            );
+        }
 
+        $mime = mime_content_type($path);
 
-    /* =====================================================
-       SET STATUS PENGIRIMAN
-       BERLAKU UNTUK SEMUA TIKET
-    ===================================================== */
-
-    protected function setStatus(
-        $id,
-        string $sentFlag
-    ) {
-        $id = (int) $id;
-
-
-        /*
-         * VALIDASI TUJUAN
-         */
-
-        if (
-            !in_array(
-                $sentFlag,
-                [
-                    'sent_to_ult',
-                    'sent_to_applicant'
-                ],
-                true
+        return $this->response
+            ->setHeader(
+                'Content-Type',
+                $mime ?: 'application/octet-stream'
             )
-        ) {
+            ->setHeader(
+                'Content-Disposition',
+                'inline; filename="' .
+                basename($filename) .
+                '"'
+            )
+            ->setBody(
+                file_get_contents($path)
+            );
+    }
 
-            return redirect()
-                ->back()
-                ->with(
-                    'error',
-                    'Tujuan pengiriman tidak valid.'
-                );
+    /* =========================================================
+       DOWNLOAD DOKUMEN LANGSUNG
+    ========================================================= */
+
+    public function download($filename)
+    {
+        $filename = basename(
+            urldecode((string) $filename)
+        );
+
+        if ($filename === '' || $filename === '.') {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException(
+                'Nama dokumen tidak valid.'
+            );
         }
 
+        $path =
+            WRITEPATH .
+            'uploads/akademik/' .
+            $filename;
 
-        /*
-         * AMBIL TIKET BERDASARKAN ID
-         *
-         * PENTING:
-         * Tidak menggunakan nomor tiket.
-         * Jadi tiket 1, tiket 2, tiket 3,
-         * semuanya berdiri sendiri.
-         */
-
-        $ticket = $this->ticketsById($id);
-
-
-        if (!$ticket) {
-
-            return redirect()
-                ->to('akademik/data-tiket')
-                ->with(
-                    'error',
-                    'Tiket Akademik tidak ditemukan.'
-                );
+        if (!is_file($path)) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException(
+                'Dokumen tidak ditemukan.'
+            );
         }
 
+        return $this->response->download(
+            $path,
+            null
+        );
+    }
 
-        /*
-         * NORMALISASI STATUS
-         */
+    /* =========================================================
+       LOG AKTIVITAS
+    ========================================================= */
 
-        $ticketStatus =
-            $this->normalizeStatus(
-                (string) (
-                    $ticket['status'] ?? ''
-                )
+    public function logAktivitas()
+    {
+        $keyword = trim(
+            (string) $this->request->getGet('keyword')
+        );
+
+        $unitFilter = trim(
+            (string) $this->request->getGet('unit')
+        );
+
+        $logs = $this->activityLogs
+            ->orderBy('id', 'DESC')
+            ->findAll();
+
+        $result = [];
+
+        foreach ($logs as $log) {
+
+            $ticketId = (int) (
+                $log['ticket_id']
+                ??
+                $log['tiket_id']
+                ??
+                0
             );
 
+            $ticket = null;
 
-        /*
-         * PENGIRIMAN HANYA BOLEH
-         * JIKA STATUS SELESAI
-         */
-
-        if ($ticketStatus !== 'completed') {
-
-            return redirect()
-                ->to(
-                    'akademik/detail/' . $id
-                )
-                ->with(
-                    'error',
-                    'Tiket harus berstatus Selesai terlebih dahulu.'
+            if ($ticketId > 0) {
+                $ticket = $this->tickets->find(
+                    $ticketId
                 );
+            }
+
+            /*
+             * Fallback nomor tiket
+             */
+
+            if (
+                !$ticket &&
+                !empty($log['ticket_number'])
+            ) {
+                $ticket = $this->tickets
+                    ->where(
+                        'ticket_number',
+                        $log['ticket_number']
+                    )
+                    ->first();
+            }
+
+            $noTiket =
+                $log['no_tiket']
+                ??
+                $log['ticket_number']
+                ??
+                ($ticket['ticket_number'] ?? '-');
+
+            $layanan =
+                $log['layanan']
+                ??
+                $log['service_name']
+                ??
+                ($ticket['service_name'] ?? '-');
+
+            $status =
+                $log['status']
+                ??
+                ($ticket['status'] ?? '-');
+
+            /*
+             * Ambil file dari tiket Akademik
+             */
+
+            $fileHasil =
+                $ticket['result_file']
+                ??
+                $log['file_hasil']
+                ??
+                $log['result_file']
+                ??
+                '';
+
+            $unit =
+                $log['unit']
+                ??
+                'Akademik';
+
+            $aktivitas =
+                $log['aktivitas']
+                ??
+                $log['activity']
+                ??
+                $log['action']
+                ??
+                '-';
+
+            $waktu =
+                $log['waktu']
+                ??
+                $log['tanggal']
+                ??
+                $log['created_at']
+                ??
+                '-';
+
+            /* =================================================
+               FILTER KEYWORD
+            ================================================= */
+
+            if ($keyword !== '') {
+
+                $haystack = strtolower(
+                    $noTiket . ' ' .
+                    $unit . ' ' .
+                    $layanan . ' ' .
+                    $aktivitas . ' ' .
+                    $status
+                );
+
+                if (!str_contains(
+                    $haystack,
+                    strtolower($keyword)
+                )) {
+                    continue;
+                }
+            }
+
+            /* =================================================
+               FILTER UNIT
+            ================================================= */
+
+            if (
+                $unitFilter !== '' &&
+                strtolower($unitFilter) !==
+                strtolower($unit)
+            ) {
+                continue;
+            }
+
+            /* =================================================
+               HASIL UNTUK VIEW
+            ================================================= */
+
+            $result[] = [
+
+                'log_id' =>
+                    (int) ($log['id'] ?? 0),
+
+                'ticket_id' =>
+                    $ticketId > 0
+                        ? $ticketId
+                        : (int) ($ticket['id'] ?? 0),
+
+                'no_tiket' =>
+                    $noTiket,
+
+                'unit' =>
+                    $unit,
+
+                'layanan' =>
+                    $layanan,
+
+                'aktivitas' =>
+                    $aktivitas,
+
+                'status' =>
+                    $status,
+
+                'waktu' =>
+                    $waktu,
+
+                'file_hasil' =>
+                    $fileHasil,
+
+                'result_file' =>
+                    $fileHasil,
+            ];
         }
 
-
-        /*
-         * WAKTU PENGIRIMAN
-         */
-
-        $now =
-            date(
-                'Y-m-d H:i:s'
-            );
-
-
-        /*
-         * DATA UPDATE
-         */
-
-        $update = [
-
-            $sentFlag => 1,
-
-            $sentFlag . '_at' => $now,
-
+        $units = [
+            'Akademik',
         ];
 
+        return view(
+            'akademik/log_aktivitas',
+            [
+                'title' =>
+                    'Log Aktivitas Akademik',
 
-        /*
-         * UPDATE BERDASARKAN ID TIKET
-         */
+                'unit' =>
+                    'Akademik',
 
-        $updated =
-            $this->ticketModel
-                ->where(
-                    'id',
-                    $id
-                )
-                ->set(
-                    $update
-                )
-                ->update();
+                'logs' =>
+                    $result,
 
+                'units' =>
+                    $units,
 
-        if (!$updated) {
-
-            return redirect()
-                ->back()
-                ->with(
-                    'error',
-                    'Tiket Akademik gagal diperbarui.'
-                );
-        }
-
-
-        /*
-         * LOG AKTIVITAS
-         */
-
-        $action =
-            $sentFlag === 'sent_to_ult'
-                ? 'Tiket dikirim ke Petugas ULT'
-                : 'Tiket dikirim ke Pemohon';
-
-
-        $this->db
-            ->table('activity_logs')
-            ->insert(
-                [
-
-                    'user_id' =>
-                        session()->get('user_id')
-                        ?: null,
-
-                    'action' =>
-                        $action,
-
-                    'module' =>
-                        'Akademik',
-
-                    'reference_id' =>
-                        (string) $id,
-
-                    'old_data' =>
-                        json_encode(
-                            [
-
-                                'status' =>
-                                    $ticket['status']
-                                    ?? null,
-
-                                'sent_to_ult' =>
-                                    $ticket['sent_to_ult']
-                                    ?? 0,
-
-                                'sent_to_applicant' =>
-                                    $ticket['sent_to_applicant']
-                                    ?? 0,
-
-                            ]
-                        ),
-
-                    'new_data' =>
-                        json_encode(
-                            [
-
-                                'ticket_id' =>
-                                    $id,
-
-                                'ticket_number' =>
-                                    $ticket['ticket_number']
-                                    ?? null,
-
-                                'unit' =>
-                                    $ticket['nama_unit']
-                                    ?? 'Bagian Akademik',
-
-                                'layanan' =>
-                                    $ticket['nama_layanan']
-                                    ?? null,
-
-                                'status' =>
-                                    'completed',
-
-                                'tujuan' =>
-                                    $sentFlag === 'sent_to_ult'
-                                        ? 'Petugas ULT'
-                                        : 'Pemohon',
-
-                                'waktu_pengiriman' =>
-                                    $now,
-
-                            ]
-                        ),
-
-                    'ip_address' =>
-                        $this->request
-                            ->getIPAddress(),
-
-                    'user_agent' =>
-                        $this->request
-                            ->getUserAgent()
-                            ->getAgentString(),
-
-                    'created_at' =>
-                        $now,
-
-                ]
-            );
-
-
-        /*
-         * PESAN BERHASIL
-         */
-
-        return redirect()
-            ->to(
-                'akademik/detail/' . $id
-            )
-            ->with(
-                'success',
-                $sentFlag === 'sent_to_ult'
-                    ? 'Tiket Akademik berhasil dikirim ke Petugas ULT.'
-                    : 'Tiket Akademik berhasil dikirim ke Pemohon.'
-            );
+                'keyword' =>
+                    $keyword,
+            ]
+        );
     }
 
+    /* =========================================================
+       LIHAT SURAT DARI LOG AKTIVITAS
+    ========================================================= */
 
-    /* =====================================================
-       HAPUS DOKUMEN
-    ===================================================== */
-
-    public function hapusDokumen($id)
+    public function lihatLog($logId)
     {
-        if (
-            !$this->dokumenHasilModel
-                ->deleteForUnit(
-                    (int) $id,
-                    'Akademik'
-                )
-        ) {
+        $logId = (int) $logId;
 
+        $log = $this->activityLogs->find($logId);
+
+        if (!$log) {
             return redirect()
-                ->back()
+                ->to(base_url('akademik/log-aktivitas'))
                 ->with(
                     'error',
-                    'Dokumen Akademik tidak ditemukan.'
+                    'Log aktivitas tidak ditemukan.'
                 );
         }
 
-        return redirect()
-            ->back()
-            ->with(
-                'success',
-                'Dokumen Akademik berhasil dihapus.'
-            );
+        /*
+         * Cari tiket berdasarkan ticket_id
+         */
+
+        $ticketId = (int) (
+            $log['ticket_id']
+            ??
+            $log['tiket_id']
+            ??
+            0
+        );
+
+        $ticket = null;
+
+        if ($ticketId > 0) {
+            $ticket = $this->tickets->find($ticketId);
+        }
+
+        /*
+         * Fallback berdasarkan nomor tiket
+         */
+
+        if (
+            !$ticket &&
+            !empty($log['ticket_number'])
+        ) {
+            $ticket = $this->tickets
+                ->where(
+                    'ticket_number',
+                    $log['ticket_number']
+                )
+                ->first();
+        }
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('akademik/log-aktivitas'))
+                ->with(
+                    'error',
+                    'Tiket Akademik terkait tidak ditemukan.'
+                );
+        }
+
+        /*
+         * Ambil result_file
+         */
+
+        $filename = trim(
+            (string) (
+                $ticket['result_file']
+                ??
+                $log['file_hasil']
+                ??
+                $log['result_file']
+                ??
+                ''
+            )
+        );
+
+        if ($filename === '') {
+            return redirect()
+                ->to(base_url('akademik/log-aktivitas'))
+                ->with(
+                    'error',
+                    'Surat hasil untuk tiket ini belum tersedia.'
+                );
+        }
+
+        /*
+         * Bersihkan nama file
+         */
+
+        $filename = basename(
+            urldecode($filename)
+        );
+
+        /*
+         * Lokasi file Akademik
+         */
+
+        $path =
+            WRITEPATH .
+            'uploads/akademik/' .
+            $filename;
+
+        /*
+         * Pastikan file benar-benar ada
+         */
+
+        if (!is_file($path)) {
+            return redirect()
+                ->to(base_url('akademik/log-aktivitas'))
+                ->with(
+                    'error',
+                    'File surat hasil tidak ditemukan di penyimpanan Akademik.'
+                );
+        }
+
+        /*
+         * Tampilkan dokumen
+         */
+
+        return $this->lihat($filename);
+    }
+
+    /* =========================================================
+       DOWNLOAD SURAT DARI LOG AKTIVITAS
+    ========================================================= */
+
+    public function downloadLog($logId)
+    {
+        $logId = (int) $logId;
+
+        $log = $this->activityLogs->find($logId);
+
+        if (!$log) {
+            return redirect()
+                ->to(base_url('akademik/log-aktivitas'))
+                ->with(
+                    'error',
+                    'Log aktivitas tidak ditemukan.'
+                );
+        }
+
+        /*
+         * Cari tiket berdasarkan ID
+         */
+
+        $ticketId = (int) (
+            $log['ticket_id']
+            ??
+            $log['tiket_id']
+            ??
+            0
+        );
+
+        $ticket = null;
+
+        if ($ticketId > 0) {
+            $ticket = $this->tickets->find($ticketId);
+        }
+
+        /*
+         * Fallback nomor tiket
+         */
+
+        if (
+            !$ticket &&
+            !empty($log['ticket_number'])
+        ) {
+            $ticket = $this->tickets
+                ->where(
+                    'ticket_number',
+                    $log['ticket_number']
+                )
+                ->first();
+        }
+
+        if (!$ticket) {
+            return redirect()
+                ->to(base_url('akademik/log-aktivitas'))
+                ->with(
+                    'error',
+                    'Tiket Akademik terkait tidak ditemukan.'
+                );
+        }
+
+        /*
+         * Ambil result_file
+         */
+
+        $filename = trim(
+            (string) (
+                $ticket['result_file']
+                ??
+                $log['file_hasil']
+                ??
+                $log['result_file']
+                ??
+                ''
+            )
+        );
+
+        if ($filename === '') {
+            return redirect()
+                ->to(base_url('akademik/log-aktivitas'))
+                ->with(
+                    'error',
+                    'Surat hasil untuk tiket ini belum tersedia.'
+                );
+        }
+
+        /*
+         * Bersihkan nama file
+         */
+
+        $filename = basename(
+            urldecode($filename)
+        );
+
+        /*
+         * Pastikan file ada
+         */
+
+        $path =
+            WRITEPATH .
+            'uploads/akademik/' .
+            $filename;
+
+        if (!is_file($path)) {
+            return redirect()
+                ->to(base_url('akademik/log-aktivitas'))
+                ->with(
+                    'error',
+                    'File surat hasil tidak ditemukan di penyimpanan Akademik.'
+                );
+        }
+
+        /*
+         * Download
+         */
+
+        return $this->download($filename);
+    }
+
+    /* =========================================================
+       ALIAS ROUTE LAMA
+       Supaya route yang masih menggunakan
+       lihatDokumenLog/downloadDokumenLog tetap aman
+    ========================================================= */
+
+    public function lihatDokumenLog($logId)
+    {
+        return $this->lihatLog($logId);
+    }
+
+    public function downloadDokumenLog($logId)
+    {
+        return $this->downloadLog($logId);
+    }
+
+    /* =========================================================
+       SIMPAN LOG AKTIVITAS
+    ========================================================= */
+
+    private function writeActivityLog(
+        array $ticket,
+        string $status,
+        string $activity
+    ): void {
+
+        $ticketId = (int) (
+            $ticket['id'] ?? 0
+        );
+
+        if ($ticketId <= 0) {
+            return;
+        }
+
+        $data = [
+            'ticket_id' =>
+                $ticketId,
+
+            'ticket_number' =>
+                $ticket['ticket_number']
+                ?? null,
+
+            'activity' =>
+                $activity,
+
+            'status' =>
+                $status,
+
+            'created_at' =>
+                date('Y-m-d H:i:s'),
+        ];
+
+        try {
+
+            $this->activityLogs->insert($data);
+
+        } catch (\Throwable $e) {
+
+            /*
+             * Error log tidak boleh
+             * menghentikan proses tiket.
+             */
+
+        }
+    }
+
+    /* =========================================================
+       DECORATE TICKET
+    ========================================================= */
+
+    private function decorateTicket(
+        array $ticket
+    ): array {
+
+        $resultFile = trim(
+            (string) (
+                $ticket['result_file']
+                ?? ''
+            )
+        );
+
+        /*
+         * Dokumen hasil
+         */
+
+        if ($resultFile !== '') {
+
+            $ticket['dokumen_hasil'] = [
+
+                [
+                    'nama_file' =>
+                        $resultFile,
+
+                    'nama_asli' =>
+                        $resultFile,
+                ],
+
+            ];
+
+        } else {
+
+            $ticket['dokumen_hasil'] = [];
+        }
+
+        /*
+         * Alias field
+         */
+
+        $ticket['no_tiket'] =
+            $ticket['ticket_number']
+            ??
+            $ticket['no_tiket']
+            ??
+            '-';
+
+        $ticket['nama_pemohon'] =
+            $ticket['applicant_name']
+            ??
+            $ticket['nama_pemohon']
+            ??
+            '-';
+
+        $ticket['nik'] =
+            $ticket['applicant_identifier']
+            ??
+            $ticket['nik']
+            ??
+            '-';
+
+        $ticket['nama_unit'] =
+            $ticket['unit_name']
+            ??
+            $ticket['nama_unit']
+            ??
+            'Akademik';
+
+        $ticket['nama_layanan'] =
+            $ticket['service_name']
+            ??
+            $ticket['nama_layanan']
+            ??
+            '-';
+
+        $ticket['deskripsi'] =
+            $ticket['description']
+            ??
+            $ticket['deskripsi']
+            ??
+            '-';
+
+        return $ticket;
     }
 }

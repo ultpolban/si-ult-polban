@@ -173,6 +173,32 @@ $tiket = $tiket ?? $ticket ?? [];
 
 
 /* =====================================================
+   HASIL FILE
+===================================================== */
+
+.result-file-item {
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 14px 16px;
+    background: #fff;
+    margin-bottom: 10px;
+}
+
+.result-file-name {
+    min-width: 0;
+    word-break: break-word;
+}
+
+.result-file-actions {
+    flex-shrink: 0;
+}
+
+.result-file-actions .btn {
+    border-radius: 8px;
+}
+
+
+/* =====================================================
    RESPONSIVE
 ===================================================== */
 
@@ -184,6 +210,18 @@ $tiket = $tiket ?? $ticket ?? [];
 
     .detail-card-body {
         padding: 20px;
+    }
+
+    .result-file-item {
+        align-items: flex-start !important;
+    }
+
+    .result-file-actions {
+        width: 100%;
+    }
+
+    .result-file-actions .btn {
+        flex: 1;
     }
 
 }
@@ -269,7 +307,9 @@ $tiket = $tiket ?? $ticket ?? [];
     <div class="detail-card-body">
 
 
-        <!-- NOMOR TIKET -->
+        <!-- =================================================
+             NOMOR TIKET
+        ================================================== -->
 
         <div class="detail-item">
 
@@ -290,7 +330,9 @@ $tiket = $tiket ?? $ticket ?? [];
         </div>
 
 
-        <!-- TANGGAL -->
+        <!-- =================================================
+             TANGGAL
+        ================================================== -->
 
         <div class="detail-item">
 
@@ -318,7 +360,9 @@ $tiket = $tiket ?? $ticket ?? [];
         </div>
 
 
-        <!-- NAMA PEMOHON -->
+        <!-- =================================================
+             NAMA PEMOHON
+        ================================================== -->
 
         <div class="detail-item">
 
@@ -339,7 +383,9 @@ $tiket = $tiket ?? $ticket ?? [];
         </div>
 
 
-        <!-- NIK -->
+        <!-- =================================================
+             NIK
+        ================================================== -->
 
         <div class="detail-item">
 
@@ -348,7 +394,9 @@ $tiket = $tiket ?? $ticket ?? [];
             </label>
 
             <?php
-            $nik = $tiket['nik'] ?? $tiket['nim'] ?? null;
+            $nik = $tiket['nik']
+                ?? $tiket['nim']
+                ?? null;
             ?>
 
             <p class="detail-value">
@@ -363,7 +411,9 @@ $tiket = $tiket ?? $ticket ?? [];
         </div>
 
 
-        <!-- UNIT -->
+        <!-- =================================================
+             UNIT
+        ================================================== -->
 
         <div class="detail-item">
 
@@ -375,6 +425,7 @@ $tiket = $tiket ?? $ticket ?? [];
 
                 <?= esc(
                     $tiket['nama_unit']
+                    ?? $tiket['unit_name']
                     ?? 'Unit layanan belum tersedia'
                 ) ?>
 
@@ -383,7 +434,38 @@ $tiket = $tiket ?? $ticket ?? [];
         </div>
 
 
-        <!-- LAYANAN -->
+        <!-- =================================================
+             KATEGORI
+        ================================================== -->
+
+        <?php if (
+            !empty($tiket['nama_kategori'])
+            || !empty($tiket['service_category'])
+        ): ?>
+
+            <div class="detail-item">
+
+                <label class="detail-label">
+                    Kategori Layanan
+                </label>
+
+                <p class="detail-value">
+
+                    <?= esc(
+                        $tiket['nama_kategori']
+                        ?? $tiket['service_category']
+                    ) ?>
+
+                </p>
+
+            </div>
+
+        <?php endif; ?>
+
+
+        <!-- =================================================
+             LAYANAN
+        ================================================== -->
 
         <div class="detail-item">
 
@@ -395,6 +477,7 @@ $tiket = $tiket ?? $ticket ?? [];
 
                 <?= esc(
                     $tiket['nama_layanan']
+                    ?? $tiket['service_name']
                     ?? 'Jenis layanan belum tersedia'
                 ) ?>
 
@@ -403,7 +486,38 @@ $tiket = $tiket ?? $ticket ?? [];
         </div>
 
 
-        <!-- DESKRIPSI -->
+        <!-- =================================================
+             JUDUL
+        ================================================== -->
+
+        <?php if (
+            !empty($tiket['judul'])
+            || !empty($tiket['title'])
+        ): ?>
+
+            <div class="detail-item">
+
+                <label class="detail-label">
+                    Judul Pengajuan
+                </label>
+
+                <p class="detail-value">
+
+                    <?= esc(
+                        $tiket['judul']
+                        ?? $tiket['title']
+                    ) ?>
+
+                </p>
+
+            </div>
+
+        <?php endif; ?>
+
+
+        <!-- =================================================
+             DESKRIPSI
+        ================================================== -->
 
         <div class="detail-item">
 
@@ -416,6 +530,7 @@ $tiket = $tiket ?? $ticket ?? [];
                 <?= nl2br(
                     esc(
                         $tiket['deskripsi']
+                        ?? $tiket['description']
                         ?? 'Deskripsi belum tersedia'
                     )
                 ) ?>
@@ -448,22 +563,40 @@ $tiket = $tiket ?? $ticket ?? [];
 
                 <?php
                 $filePendukung =
-                    $tiket['file_pendukung'] ?? null;
+                    $tiket['file_pendukung']
+                    ?? $tiket['supporting_file']
+                    ?? null;
                 ?>
+
 
                 <?php if (!empty($filePendukung)): ?>
 
+                    <?php
+                    $namaFilePendukung = basename(
+                        urldecode(
+                            (string) $filePendukung
+                        )
+                    );
+
+                    $urlFilePendukung = base_url(
+                        'uploads/pendukung/' .
+                        rawurlencode(
+                            $namaFilePendukung
+                        )
+                    );
+                    ?>
+
+
                     <a
-                        href="<?= base_url(
-                            'uploads/pendukung/' . $filePendukung
-                        ) ?>"
+                        href="<?= esc($urlFilePendukung) ?>"
                         target="_blank"
+                        rel="noopener noreferrer"
                         class="btn btn-info text-white file-btn"
                     >
 
                         <i class="fas fa-file me-1"></i>
 
-                        <?= esc($filePendukung) ?>
+                        <?= esc($namaFilePendukung) ?>
 
                     </a>
 
@@ -503,7 +636,9 @@ $tiket = $tiket ?? $ticket ?? [];
 
             $statusDatabase = strtolower(
                 trim(
-                    (string)($tiket['status'] ?? '')
+                    (string) (
+                        $tiket['status'] ?? ''
+                    )
                 )
             );
 
@@ -572,7 +707,7 @@ $tiket = $tiket ?? $ticket ?? [];
                     Status
                 </div>
 
-                <span class="badge <?= $statusClass ?>">
+                <span class="badge <?= esc($statusClass) ?>">
 
                     <?= esc($statusLabel) ?>
 
@@ -598,7 +733,9 @@ $tiket = $tiket ?? $ticket ?? [];
             </h6>
 
 
-            <!-- CATATAN -->
+            <!-- =================================================
+                 CATATAN
+            ================================================== -->
 
             <div class="detail-item">
 
@@ -610,21 +747,27 @@ $tiket = $tiket ?? $ticket ?? [];
                 $catatan =
                     $tiket['catatan']
                     ?? $tiket['admin_note']
+                    ?? $tiket['result_note']
                     ?? '';
                 ?>
+
 
                 <div class="detail-box">
 
                     <?php if (
-                        !empty(trim((string)$catatan))
+                        trim((string) $catatan) !== ''
                     ): ?>
 
-                        <?= nl2br(esc($catatan)) ?>
+                        <?= nl2br(
+                            esc($catatan)
+                        ) ?>
 
                     <?php else: ?>
 
                         <span class="text-muted">
+
                             Belum ada catatan
+
                         </span>
 
                     <?php endif; ?>
@@ -634,7 +777,410 @@ $tiket = $tiket ?? $ticket ?? [];
             </div>
 
 
+            <!-- =================================================
+                 HASIL LAYANAN
+            ================================================== -->
 
+            <div class="detail-section">
+
+                <h6 class="detail-section-title">
+
+                    <i class="fas fa-file-upload text-primary me-2"></i>
+
+                    Hasil Layanan
+
+                </h6>
+
+
+                <?php
+
+                /*
+                 * =================================================
+                 * AMBIL DATA DOKUMEN HASIL
+                 * =================================================
+                 *
+                 * Bisa menerima:
+                 *
+                 * 1. String:
+                 *    "file.pdf"
+                 *
+                 * 2. Array:
+                 *    [
+                 *       [
+                 *          'nama_file' => 'file.pdf',
+                 *          'nama_asli' => 'surat.pdf'
+                 *       ]
+                 *    ]
+                 *
+                 * 3. JSON:
+                 *    [{"nama_file":"file.pdf",...}]
+                 *
+                 * Kita normalisasi semuanya menjadi
+                 * array file sederhana.
+                 */
+
+                $hasilLayanan =
+                    $tiket['dokumen_hasil']
+                    ?? $tiket['result_file']
+                    ?? '';
+
+
+                $daftarFile = [];
+
+
+                /*
+                 * -------------------------------------------------
+                 * CASE 1: ARRAY
+                 * -------------------------------------------------
+                 */
+
+                if (is_array($hasilLayanan)) {
+
+                    foreach (
+                        $hasilLayanan
+                        as $file
+                    ) {
+
+                        /*
+                         * Array file
+                         */
+
+                        if (is_array($file)) {
+
+                            $namaFile = trim(
+                                (string) (
+                                    $file['nama_file']
+                                    ?? $file['filename']
+                                    ?? $file['file_name']
+                                    ?? ''
+                                )
+                            );
+
+                            $namaAsli = trim(
+                                (string) (
+                                    $file['nama_asli']
+                                    ?? $file['original_name']
+                                    ?? $namaFile
+                                )
+                            );
+
+                            if ($namaFile !== '') {
+
+                                $daftarFile[] = [
+                                    'nama_file' => basename(
+                                        urldecode(
+                                            $namaFile
+                                        )
+                                    ),
+                                    'nama_asli' => (
+                                        $namaAsli !== ''
+                                            ? $namaAsli
+                                            : $namaFile
+                                    ),
+                                ];
+
+                            }
+
+                        }
+
+                        /*
+                         * Array berisi string filename
+                         */
+
+                        elseif (
+                            is_string($file)
+                            && trim($file) !== ''
+                        ) {
+
+                            $namaFile = basename(
+                                urldecode(
+                                    trim($file)
+                                )
+                            );
+
+                            $daftarFile[] = [
+                                'nama_file' => $namaFile,
+                                'nama_asli' => $namaFile,
+                            ];
+
+                        }
+
+                    }
+
+                }
+
+
+                /*
+                 * -------------------------------------------------
+                 * CASE 2: STRING
+                 * -------------------------------------------------
+                 */
+
+                elseif (
+                    is_string($hasilLayanan)
+                    && trim($hasilLayanan) !== ''
+                ) {
+
+                    $hasilString = trim(
+                        $hasilLayanan
+                    );
+
+
+                    /*
+                     * Coba baca JSON.
+                     *
+                     * Ini menangani kondisi apabila
+                     * database/controller masih
+                     * mengirim JSON seperti:
+                     *
+                     * [{"nama_file":"file.pdf"}]
+                     */
+
+                    $jsonData = json_decode(
+                        $hasilString,
+                        true
+                    );
+
+
+                    if (
+                        json_last_error() === JSON_ERROR_NONE
+                        && is_array($jsonData)
+                    ) {
+
+                        /*
+                         * JSON berupa array file
+                         */
+
+                        foreach (
+                            $jsonData
+                            as $file
+                        ) {
+
+                            if (!is_array($file)) {
+                                continue;
+                            }
+
+                            $namaFile = trim(
+                                (string) (
+                                    $file['nama_file']
+                                    ?? $file['filename']
+                                    ?? $file['file_name']
+                                    ?? ''
+                                )
+                            );
+
+                            if ($namaFile === '') {
+                                continue;
+                            }
+
+                            $namaAsli = trim(
+                                (string) (
+                                    $file['nama_asli']
+                                    ?? $file['original_name']
+                                    ?? $namaFile
+                                )
+                            );
+
+                            $daftarFile[] = [
+                                'nama_file' => basename(
+                                    urldecode(
+                                        $namaFile
+                                    )
+                                ),
+                                'nama_asli' => (
+                                    $namaAsli !== ''
+                                        ? $namaAsli
+                                        : $namaFile
+                                ),
+                            ];
+
+                        }
+
+                    } else {
+
+                        /*
+                         * String biasa = langsung filename
+                         */
+
+                        $namaFile = basename(
+                            urldecode(
+                                $hasilString
+                            )
+                        );
+
+                        $daftarFile[] = [
+                            'nama_file' => $namaFile,
+                            'nama_asli' => $namaFile,
+                        ];
+
+                    }
+
+                }
+
+
+                /*
+                 * Hilangkan file kosong
+                 */
+
+                $daftarFile = array_values(
+                    array_filter(
+                        $daftarFile,
+                        static function ($file) {
+
+                            return !empty(
+                                $file['nama_file']
+                            );
+
+                        }
+                    )
+                );
+
+                ?>
+
+
+                <?php if (!empty($daftarFile)): ?>
+
+                    <div class="list-group">
+
+                        <?php foreach (
+                            $daftarFile
+                            as $file
+                        ): ?>
+
+                            <?php
+
+                            $namaFile = basename(
+                                (string) (
+                                    $file['nama_file']
+                                    ?? ''
+                                )
+                            );
+
+                            $namaAsli = trim(
+                                (string) (
+                                    $file['nama_asli']
+                                    ?? $namaFile
+                                )
+                            );
+
+
+                            if ($namaFile === '') {
+                                continue;
+                            }
+
+
+                            if ($namaAsli === '') {
+                                $namaAsli = $namaFile;
+                            }
+
+
+                            /*
+                             * URL HANYA menggunakan
+                             * nama file.
+                             *
+                             * Bukan array.
+                             * Bukan JSON.
+                             */
+
+                            $lihatUrl = base_url(
+                                'akademik/lihat/' .
+                                rawurlencode(
+                                    $namaFile
+                                )
+                            );
+
+
+                            $downloadUrl = base_url(
+                                'akademik/download/' .
+                                rawurlencode(
+                                    $namaFile
+                                )
+                            );
+
+                            ?>
+
+
+                            <div
+                                class="result-file-item d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3"
+                            >
+
+                                <!-- NAMA FILE -->
+
+                                <div
+                                    class="result-file-name d-flex align-items-center gap-2"
+                                >
+
+                                    <i
+                                        class="fas fa-file-alt text-primary"
+                                    ></i>
+
+                                    <span>
+
+                                        <?= esc(
+                                            $namaAsli
+                                        ) ?>
+
+                                    </span>
+
+                                </div>
+
+
+                                <!-- AKSI -->
+
+                                <div
+                                    class="result-file-actions d-flex flex-wrap gap-2"
+                                >
+
+                                    <a
+                                        href="<?= esc($lihatUrl) ?>"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="btn btn-sm btn-outline-primary"
+                                    >
+
+                                        <i class="fas fa-eye me-1"></i>
+
+                                        Lihat
+
+                                    </a>
+
+
+                                    <a
+                                        href="<?= esc($downloadUrl) ?>"
+                                        class="btn btn-sm btn-outline-success"
+                                    >
+
+                                        <i class="fas fa-download me-1"></i>
+
+                                        Download
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+
+                        <?php endforeach; ?>
+
+                    </div>
+
+
+                <?php else: ?>
+
+                    <p class="text-muted mb-0">
+
+                        <i class="fas fa-info-circle me-1"></i>
+
+                        Belum ada dokumen hasil layanan.
+
+                    </p>
+
+                <?php endif; ?>
+
+            </div>
+
+        </div>
 
 
         <!-- =================================================
@@ -671,7 +1217,9 @@ $tiket = $tiket ?? $ticket ?? [];
 
 
                         <?php if (
-                            (int)($tiket['sent_to_ult'] ?? 0) === 1
+                            (int) (
+                                $tiket['sent_to_ult'] ?? 0
+                            ) === 1
                         ): ?>
 
                             <span class="badge bg-success">
@@ -684,7 +1232,9 @@ $tiket = $tiket ?? $ticket ?? [];
 
 
                             <?php if (
-                                !empty($tiket['sent_to_ult_at'])
+                                !empty(
+                                    $tiket['sent_to_ult_at']
+                                )
                             ): ?>
 
                                 <div class="text-muted small mt-2">
@@ -694,7 +1244,9 @@ $tiket = $tiket ?? $ticket ?? [];
                                     <?= date(
                                         'd-m-Y H:i',
                                         strtotime(
-                                            $tiket['sent_to_ult_at']
+                                            $tiket[
+                                                'sent_to_ult_at'
+                                            ]
                                         )
                                     ) ?>
 
@@ -735,7 +1287,9 @@ $tiket = $tiket ?? $ticket ?? [];
 
 
                         <?php if (
-                            (int)($tiket['sent_to_applicant'] ?? 0) === 1
+                            (int) (
+                                $tiket['sent_to_applicant'] ?? 0
+                            ) === 1
                         ): ?>
 
                             <span class="badge bg-success">
@@ -748,7 +1302,11 @@ $tiket = $tiket ?? $ticket ?? [];
 
 
                             <?php if (
-                                !empty($tiket['sent_to_applicant_at'])
+                                !empty(
+                                    $tiket[
+                                        'sent_to_applicant_at'
+                                    ]
+                                )
                             ): ?>
 
                                 <div class="text-muted small mt-2">
@@ -758,7 +1316,9 @@ $tiket = $tiket ?? $ticket ?? [];
                                     <?= date(
                                         'd-m-Y H:i',
                                         strtotime(
-                                            $tiket['sent_to_applicant_at']
+                                            $tiket[
+                                                'sent_to_applicant_at'
+                                            ]
                                         )
                                     ) ?>
 
@@ -793,11 +1353,13 @@ $tiket = $tiket ?? $ticket ?? [];
 
         <div class="detail-actions">
 
+
             <!-- PROSES -->
 
             <a
                 href="<?= base_url(
-                    'akademik/proses/' . $tiket['id']
+                    'akademik/proses/' .
+                    (int) ($tiket['id'] ?? 0)
                 ) ?>"
                 class="btn btn-primary-custom"
             >
@@ -810,6 +1372,7 @@ $tiket = $tiket ?? $ticket ?? [];
 
 
             <?php
+
             $statusBisaKirim = in_array(
                 $statusDatabase,
                 [
@@ -819,6 +1382,7 @@ $tiket = $tiket ?? $ticket ?? [];
                 ],
                 true
             );
+
             ?>
 
 
@@ -829,7 +1393,8 @@ $tiket = $tiket ?? $ticket ?? [];
 
                 <a
                     href="<?= base_url(
-                        'akademik/kirim/' . $tiket['id']
+                        'akademik/kirim/' .
+                        (int) ($tiket['id'] ?? 0)
                     ) ?>"
                     class="btn btn-warning"
                     onclick="return confirm(
@@ -840,7 +1405,9 @@ $tiket = $tiket ?? $ticket ?? [];
                     <i class="fas fa-paper-plane me-1"></i>
 
                     <?= (
-                        (int)($tiket['sent_to_ult'] ?? 0) === 1
+                        (int) (
+                            $tiket['sent_to_ult'] ?? 0
+                        ) === 1
                     )
                         ? 'Kirim Lagi ke Petugas ULT'
                         : 'Kirim ke Petugas ULT'
@@ -853,7 +1420,8 @@ $tiket = $tiket ?? $ticket ?? [];
 
                 <a
                     href="<?= base_url(
-                        'akademik/kirim-pemohon/' . $tiket['id']
+                        'akademik/kirim-pemohon/' .
+                        (int) ($tiket['id'] ?? 0)
                     ) ?>"
                     class="btn btn-success"
                     onclick="return confirm(
@@ -864,7 +1432,11 @@ $tiket = $tiket ?? $ticket ?? [];
                     <i class="fas fa-paper-plane me-1"></i>
 
                     <?= (
-                        (int)($tiket['sent_to_applicant'] ?? 0) === 1
+                        (int) (
+                            $tiket[
+                                'sent_to_applicant'
+                            ] ?? 0
+                        ) === 1
                     )
                         ? 'Kirim Lagi ke Pemohon'
                         : 'Kirim ke Pemohon'
@@ -878,7 +1450,9 @@ $tiket = $tiket ?? $ticket ?? [];
             <!-- KEMBALI -->
 
             <a
-                href="<?= base_url('akademik/data-tiket') ?>"
+                href="<?= base_url(
+                    'akademik/data-tiket'
+                ) ?>"
                 class="btn btn-secondary"
             >
 

@@ -785,8 +785,10 @@
 
                                 <a
                                     href="<?= base_url(
-                                        'uploads/hasil/'
-                                        . $file['nama_file']
+                                        'kemahasiswaan/lihat/'
+                                        . rawurlencode(
+                                            $file['nama_file']
+                                        )
                                     ) ?>"
                                     target="_blank"
                                     class="btn btn-success document-link me-2"

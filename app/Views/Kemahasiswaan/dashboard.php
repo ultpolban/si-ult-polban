@@ -1,4 +1,3 @@
-```php
 <?= $this->extend('layouts/template') ?>
 
 <?= $this->section('content') ?>
@@ -28,217 +27,357 @@
 
 
 <!-- STATISTIK -->
+
 <div class="row g-4 mb-4">
 
     <div class="col-lg-3 col-md-6">
+
         <div class="stat-card bg-primary">
+
             <h2><?= $total ?? 0 ?></h2>
+
             <p>Total Tiket</p>
+
             <i class="fas fa-ticket-alt"></i>
+
         </div>
+
     </div>
 
+
     <div class="col-lg-3 col-md-6">
+
         <div class="stat-card bg-warning">
+
             <h2><?= $menunggu ?? 0 ?></h2>
+
             <p>Menunggu</p>
+
             <i class="fas fa-hourglass-half"></i>
+
         </div>
+
     </div>
 
+
     <div class="col-lg-3 col-md-6">
+
         <div class="stat-card bg-info">
+
             <h2><?= $diproses ?? 0 ?></h2>
+
             <p>Diproses</p>
+
             <i class="fas fa-spinner"></i>
+
         </div>
+
     </div>
 
+
     <div class="col-lg-3 col-md-6">
+
         <div class="stat-card bg-success">
+
             <h2><?= $selesai ?? 0 ?></h2>
+
             <p>Selesai</p>
+
             <i class="fas fa-check-circle"></i>
+
         </div>
+
     </div>
 
 </div>
 
 
-<!-- TIKET TERBARU -->
-<div class="card">
+<?php
 
-    <div class="card-header d-flex justify-content-between align-items-center">
+$totalTiket = (int) ($total ?? 0);
 
-        <h5 class="mb-0 fw-bold">
-            <i class="fas fa-list me-2 text-primary"></i>
-            Tiket Terbaru
-        </h5>
+$persenMenunggu = $totalTiket > 0
+    ? round((($menunggu ?? 0) / $totalTiket) * 100)
+    : 0;
 
-        <span class="badge bg-secondary">
-            <?= count($tiket ?? []) ?> Tiket
-        </span>
+$persenDiproses = $totalTiket > 0
+    ? round((($diproses ?? 0) / $totalTiket) * 100)
+    : 0;
+
+$persenSelesai = $totalTiket > 0
+    ? round((($selesai ?? 0) / $totalTiket) * 100)
+    : 0;
+
+?>
+
+
+<!-- DATA TIKET KEMAHASISWAAN -->
+
+<div class="card mb-4 dashboard-overview-card">
+
+    <div class="card-body d-flex justify-content-between align-items-center">
+
+        <div class="d-flex align-items-center gap-3">
+
+            <div class="overview-icon bg-primary">
+
+                <i class="fas fa-ticket-alt"></i>
+
+            </div>
+
+            <div>
+
+                <h5 class="mb-1 fw-bold">
+                    Data Tiket Kemahasiswaan
+                </h5>
+
+                <p class="mb-0 text-muted">
+                    Lihat dan kelola seluruh tiket yang masuk ke Unit Kemahasiswaan.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="<?= base_url('kemahasiswaan/data-tiket') ?>"
+            class="btn btn-primary"
+        >
+
+            <i class="fas fa-list me-1"></i>
+
+            Lihat Data Tiket
+
+        </a>
 
     </div>
 
+</div>
+
+
+<!-- STATISTIK TIKET -->
+
+<div class="card mb-4 dashboard-overview-card">
 
     <div class="card-body">
 
-        <div class="table-responsive">
+        <h5 class="mb-1 fw-bold">
+
+            <i class="fas fa-chart-bar text-primary me-2"></i>
+
+            Statistik Tiket
+
+        </h5>
 
 
-<table class="table align-middle table-hover">
-
-    <thead>
-        <tr>
-            <th>No Tiket</th>
-            <th>Nama Pengaju</th>
-            <th>NIK</th>
-            <th>Jenis Layanan</th>
-            <th>Unit Layanan</th>
-
-            <!-- TANGGAL -->
-            <th class="text-end text-nowrap" style="width: 120px;">
-                Tanggal
-            </th>
-
-            <th>Status</th>
-            <th class="text-center text-nowrap" style="width: 130px;">
-                Aksi
-            </th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        <?php foreach (($tiket ?? []) as $index => $t): ?>
-
-            <?php
-            $daftarNama = [
-                'Andi Setiawan',
-                'Budi Santoso',
-                'Citra Lestari',
-                'Dimas Pratama',
-                'Fajar Nugraha',
-                'Gilang Ramadhan',
-                'Intan Permata',
-                'Rizky Maulana',
-                'Siti Nurhaliza',
-                'Yoga Pratama'
-            ];
-
-            $namaPengaju = trim(
-                (string) ($t['nama_pemohon'] ?? '')
-            );
-
-            if ($namaPengaju === '') {
-                $namaPengaju =
-                    $daftarNama[$index % count($daftarNama)];
-            }
-
-            $nikPengaju = trim(
-                (string) ($t['nim'] ?? '')
-            );
-
-            if ($nikPengaju === '') {
-                $nikPengaju =
-                    str_pad(
-                        (string) rand(1000000000000000, 9999999999999999),
-                        16,
-                        '0',
-                        STR_PAD_LEFT
-                    );
-            }
-
-            $badge = 'secondary';
-
-            if (($t['status'] ?? '') === 'Menunggu') {
-                $badge = 'warning';
-            } elseif (($t['status'] ?? '') === 'Diproses') {
-                $badge = 'primary';
-            } elseif (($t['status'] ?? '') === 'Selesai') {
-                $badge = 'success';
-            } elseif (($t['status'] ?? '') === 'Ditolak') {
-                $badge = 'danger';
-            }
-            ?>
-
-            <tr>
-
-                <td>
-                    <strong>
-                        <?= esc($t['no_tiket'] ?? '-') ?>
-                    </strong>
-                </td>
-
-                <td class="text-nowrap">
-                    <?= esc($namaPengaju) ?>
-                </td>
-
-                <td class="text-nowrap">
-                    <?= esc($nikPengaju) ?>
-                </td>
-
-                <td class="text-nowrap">
-                    <?= esc($t['nama_layanan'] ?? '-') ?>
-                </td>
-
-                <td class="text-nowrap">
-                    <?= esc($t['nama_unit'] ?? 'Kemahasiswaan') ?>
-                </td>
-
-                <!-- TANGGAL TETAP SATU BARIS -->
-                <td
-                    class="text-end text-nowrap"
-                    style="width: 120px; min-width: 120px;">
-
-                    <?php if (!empty($t['created_at'])): ?>
-
-                        <?= date(
-                            'd-m-Y',
-                            strtotime($t['created_at'])
-                        ) ?>
-
-                    <?php else: ?>
-
-                        <?= date('d-m-Y') ?>
-
-                    <?php endif; ?>
-
-                </td>
-
-                <td class="text-nowrap">
-
-                    <span class="badge bg-<?= $badge ?>">
-                        <?= esc($t['status'] ?? '-') ?>
-                    </span>
-
-                </td>
-
-                <td class="text-center text-nowrap">
-
-                    <a
-                        href="<?= base_url(
-                            'kemahasiswaan/detail/' . ($t['id'] ?? 0)
-                        ) ?>"
-                        class="btn btn-primary btn-sm">
-
-                        <i class="fas fa-eye"></i>
-                        Detail
-
-                    </a>
-
-                </td>
-
-            </tr>
-
-        <?php endforeach; ?>
-
-    </tbody>
-
-</table>
+        <p class="text-muted small">
+            Ringkasan statistik tiket Unit Kemahasiswaan
+        </p>
 
 
+        <!-- ANGKA STATISTIK -->
+
+        <div class="row text-center py-3">
+
+            <div class="col-md-3">
+
+                <strong class="overview-number">
+
+                    <?= $totalTiket ?>
+
+                </strong>
+
+                <small>
+
+                    Total Tiket
+
+                </small>
+
+            </div>
+
+
+            <div class="col-md-3">
+
+                <strong class="overview-number">
+
+                    <?= $persenMenunggu ?>%
+
+                </strong>
+
+                <small>
+
+                    Tiket Menunggu
+
+                </small>
+
+            </div>
+
+
+            <div class="col-md-3">
+
+                <strong class="overview-number">
+
+                    <?= $persenDiproses ?>%
+
+                </strong>
+
+                <small>
+
+                    Tiket Diproses
+
+                </small>
+
+            </div>
+
+
+            <div class="col-md-3">
+
+                <strong class="overview-number">
+
+                    <?= $persenSelesai ?>%
+
+                </strong>
+
+                <small>
+
+                    Tiket Selesai
+
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <hr>
+
+
+        <!-- MENUNGGU -->
+
+        <div class="status-item">
+
+            <div class="status-left">
+
+                <span class="status-icon waiting">
+
+                    <i class="fas fa-hourglass-half"></i>
+
+                </span>
+
+                <span>
+
+                    Menunggu
+
+                </span>
+
+            </div>
+
+
+            <strong>
+
+                <?= $menunggu ?? 0 ?> tiket
+                (<?= $persenMenunggu ?>%)
+
+            </strong>
+
+        </div>
+
+
+        <div class="progress mb-3">
+
+            <div
+                class="progress-bar bg-warning"
+                role="progressbar"
+                style="width: <?= $persenMenunggu ?>%;"
+            >
+            </div>
+
+        </div>
+
+
+        <!-- DIPROSES -->
+
+        <div class="status-item">
+
+            <div class="status-left">
+
+                <span class="status-icon processing">
+
+                    <i class="fas fa-spinner"></i>
+
+                </span>
+
+                <span>
+
+                    Diproses
+
+                </span>
+
+            </div>
+
+
+            <strong>
+
+                <?= $diproses ?? 0 ?> tiket
+                (<?= $persenDiproses ?>%)
+
+            </strong>
+
+        </div>
+
+
+        <div class="progress mb-3">
+
+            <div
+                class="progress-bar bg-info"
+                role="progressbar"
+                style="width: <?= $persenDiproses ?>%;"
+            >
+            </div>
+
+        </div>
+
+
+        <!-- SELESAI -->
+
+        <div class="status-item">
+
+            <div class="status-left">
+
+                <span class="status-icon completed">
+
+                    <i class="fas fa-check-circle"></i>
+
+                </span>
+
+                <span>
+
+                    Selesai
+
+                </span>
+
+            </div>
+
+
+            <strong>
+
+                <?= $selesai ?? 0 ?> tiket
+                (<?= $persenSelesai ?>%)
+
+            </strong>
+
+        </div>
+
+
+        <div class="progress">
+
+            <div
+                class="progress-bar bg-success"
+                role="progressbar"
+                style="width: <?= $persenSelesai ?>%;"
+            >
+            </div>
 
         </div>
 

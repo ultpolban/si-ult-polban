@@ -12,6 +12,11 @@ class DokumenHasilModel extends Model
 
     protected $allowedFields = [
         'penanganan_id',
-        'nama_file'
+        'nama_file',
+        'nama_asli',
+        'ukuran_file',
+        'tipe_file',
+        'created_at',
+        'updated_at',
     ];
 }

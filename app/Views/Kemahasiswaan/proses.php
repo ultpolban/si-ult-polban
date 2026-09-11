@@ -699,8 +699,10 @@ textarea.process-control{
 
                                 <a
                                     href="<?= base_url(
-                                        'uploads/hasil/'
-                                        . $dokumen['nama_file']
+                                        'kemahasiswaan/lihat/'
+                                        . rawurlencode(
+                                            $dokumen['nama_file']
+                                        )
                                     ) ?>"
                                     target="_blank"
                                 >

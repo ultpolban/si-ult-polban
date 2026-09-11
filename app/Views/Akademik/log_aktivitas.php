@@ -187,59 +187,98 @@
 
 </style>
 
+
 <!-- =========================================================
      HEADER
 ========================================================= -->
 
 <div class="log-header">
+
     <h1 class="log-title">
         📋 Log Aktivitas <?= esc($unit ?? 'Unit Layanan') ?>
     </h1>
+
     <p class="log-subtitle">
         Pantau semua aktivitas dan perubahan status tiket di unit
         <?= esc($unit ?? 'Unit Layanan') ?>
     </p>
+
 </div>
+
 
 <!-- =========================================================
      FILTER SECTION
 ========================================================= -->
 
 <div class="filter-section">
+
     <form method="get" class="row g-3">
-        
+
         <div class="col-md-6">
-            <label for="keyword" class="form-label">🔍 Cari Aktivitas</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="keyword" 
+
+            <label for="keyword" class="form-label">
+                🔍 Cari Aktivitas
+            </label>
+
+            <input
+                type="text"
+                class="form-control"
+                id="keyword"
                 name="keyword"
                 placeholder="Cari tiket, unit, layanan, atau status..."
                 value="<?= esc($keyword ?? '') ?>"
             >
+
         </div>
+
 
         <div class="col-md-4">
-            <label for="unit_filter" class="form-label">🏢 Filter Unit</label>
-            <select class="form-select" id="unit_filter" name="unit">
-                <option value="">Semua Unit</option>
+
+            <label for="unit_filter" class="form-label">
+                🏢 Filter Unit
+            </label>
+
+            <select
+                class="form-select"
+                id="unit_filter"
+                name="unit"
+            >
+
+                <option value="">
+                    Semua Unit
+                </option>
+
                 <?php foreach($units as $u): ?>
-                    <option value="<?= esc($u) ?>" <?= (($unit ?? '') === $u) ? 'selected' : '' ?>>
+
+                    <option
+                        value="<?= esc($u) ?>"
+                        <?= (($unit ?? '') === $u) ? 'selected' : '' ?>
+                    >
                         <?= esc($u) ?>
                     </option>
+
                 <?php endforeach; ?>
+
             </select>
+
         </div>
 
+
         <div class="col-md-2 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100">
+
+            <button
+                type="submit"
+                class="btn btn-primary w-100"
+            >
                 Cari
             </button>
+
         </div>
 
     </form>
+
 </div>
+
 
 <!-- =========================================================
      CARD LOG AKTIVITAS
@@ -248,97 +287,345 @@
 <div class="card card-logs">
 
     <div class="card-header">
+
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">📝 Daftar Log Aktivitas</h5>
-            <small class="text-muted"><?= count($logs ?? []) ?> Aktivitas</small>
+
+            <h5 class="mb-0">
+                📝 Daftar Log Aktivitas
+            </h5>
+
+            <small class="text-muted">
+                <?= count($logs ?? []) ?> Aktivitas
+            </small>
+
         </div>
+
     </div>
+
 
     <div class="card-body">
 
         <?php if(empty($logs)): ?>
 
             <div class="empty-state">
-                <div class="empty-state-icon">📭</div>
+
+                <div class="empty-state-icon">
+                    📭
+                </div>
+
                 <p class="empty-state-text">
+
                     Belum ada log aktivitas.
+
                     <?php if($keyword || $unit): ?>
+
                         Coba ubah filter pencarian Anda.
+
                     <?php endif; ?>
+
                 </p>
+
             </div>
+
 
         <?php else: ?>
 
+
             <div class="table-responsive">
+
                 <table class="table table-hover">
 
                     <thead>
+
                         <tr>
-                            <th style="width: 12%;">No Tiket</th>
-                            <th style="width: 15%;">Unit</th>
-                            <th style="width: 15%;">Layanan</th>
-                            <th style="width: 35%;">Aktivitas</th>
-                            <th style="width: 12%;">Status</th>
-                            <th style="width: 11%;">Waktu</th>
+
+                            <th style="width: 12%;">
+                                No Tiket
+                            </th>
+
+                            <th style="width: 15%;">
+                                Unit
+                            </th>
+
+                            <th style="width: 15%;">
+                                Layanan
+                            </th>
+
+                            <th style="width: 30%;">
+                                Aktivitas
+                            </th>
+
+                            <th style="width: 12%;">
+                                Status
+                            </th>
+
+                            <th style="width: 11%;">
+                                Waktu
+                            </th>
+
+                            <th style="width: 15%;">
+                                Aksi
+                            </th>
+
                         </tr>
+
                     </thead>
 
+
                     <tbody>
+
                         <?php foreach($logs as $log): ?>
+
+                            <?php
+                                /*
+                                 * Ambil nama file hasil layanan.
+                                 *
+                                 * Prioritas:
+                                 * 1. file_hasil
+                                 * 2. result_file
+                                 *
+                                 * Ini digunakan hanya untuk informasi
+                                 * apakah log mempunyai dokumen hasil.
+                                 */
+
+                                $fileHasil = '';
+
+                                if (!empty($log['file_hasil'])) {
+
+                                    $fileHasil = $log['file_hasil'];
+
+                                } elseif (!empty($log['result_file'])) {
+
+                                    $fileHasil = $log['result_file'];
+
+                                }
+                            ?>
+
+
                             <tr>
-                                <td>
-                                    <strong><?= esc($log['no_tiket'] ?? '-') ?></strong>
-                                </td>
+
+                                <!-- NO TIKET -->
 
                                 <td>
+
+                                    <strong>
+                                        <?= esc($log['no_tiket'] ?? '-') ?>
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- UNIT -->
+
+                                <td>
+
                                     <span class="badge-unit">
+
                                         <?= esc($log['unit'] ?? '-') ?>
+
                                     </span>
+
                                 </td>
 
+
+                                <!-- LAYANAN -->
+
                                 <td>
+
                                     <?= esc($log['layanan'] ?? '-') ?>
+
                                 </td>
 
-                                <td>
-                                    <small><?= esc($log['aktivitas'] ?? '-') ?></small>
-                                </td>
+
+                                <!-- AKTIVITAS -->
 
                                 <td>
-                                    <?php
-                                        $status = strtolower($log['status'] ?? '');
-                                        $badge_class = 'badge-status status-pending';
-                                        
-                                        if(str_contains($status, 'menunggu')) {
-                                            $badge_class = 'badge-status status-pending';
-                                        } elseif(str_contains($status, 'diproses') || str_contains($status, 'processing')) {
-                                            $badge_class = 'badge-status status-processing';
-                                        } elseif(str_contains($status, 'selesai') || str_contains($status, 'completed')) {
-                                            $badge_class = 'badge-status status-completed';
-                                        }
-                                    ?>
-                                    <span class="<?= $badge_class ?>">
-                                        <?= esc($log['status'] ?? '-') ?>
-                                    </span>
-                                </td>
 
-                                <td>
-                                    <small class="text-muted">
-                                        <?= esc($log['waktu'] ?? $log['tanggal'] ?? '-') ?>
+                                    <small>
+                                        <?= esc($log['aktivitas'] ?? '-') ?>
                                     </small>
+
                                 </td>
+
+
+                                <!-- STATUS -->
+
+                                <td>
+
+                                    <?php
+
+                                        $status = strtolower(
+                                            $log['status'] ?? ''
+                                        );
+
+                                        $badge_class =
+                                            'badge-status status-pending';
+
+
+                                        if(
+                                            str_contains(
+                                                $status,
+                                                'menunggu'
+                                            )
+                                        ) {
+
+                                            $badge_class =
+                                                'badge-status status-pending';
+
+                                        } elseif(
+                                            str_contains(
+                                                $status,
+                                                'diproses'
+                                            )
+                                            ||
+                                            str_contains(
+                                                $status,
+                                                'processing'
+                                            )
+                                        ) {
+
+                                            $badge_class =
+                                                'badge-status status-processing';
+
+                                        } elseif(
+                                            str_contains(
+                                                $status,
+                                                'selesai'
+                                            )
+                                            ||
+                                            str_contains(
+                                                $status,
+                                                'completed'
+                                            )
+                                        ) {
+
+                                            $badge_class =
+                                                'badge-status status-completed';
+
+                                        }
+
+                                    ?>
+
+
+                                    <span class="<?= $badge_class ?>">
+
+                                        <?= esc(
+                                            $log['status'] ?? '-'
+                                        ) ?>
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- WAKTU -->
+
+                                <td>
+
+                                    <small class="text-muted">
+
+                                        <?= esc(
+                                            $log['waktu']
+                                            ??
+                                            $log['tanggal']
+                                            ??
+                                            '-'
+                                        ) ?>
+
+                                    </small>
+
+                                </td>
+
+
+                                <!-- =====================================================
+                                     AKSI
+                                ====================================================== -->
+
+                                <td>
+
+                                    <div class="d-flex flex-wrap gap-2">
+
+
+                                        <?php if (!empty($log['log_id'])): ?>
+
+
+                                            <!-- =================================================
+                                                 LIHAT SURAT HASIL
+                                            ================================================== -->
+
+                                            <a
+                                                href="<?= base_url(
+                                                    'akademik/log-aktivitas/lihat/'
+                                                    . (int)$log['log_id']
+                                                ) ?>"
+                                                class="btn btn-sm btn-outline-primary"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                title="Lihat surat hasil layanan"
+                                            >
+
+                                                <i class="fas fa-eye me-1"></i>
+
+                                                Lihat
+
+                                            </a>
+
+
+                                            <!-- =================================================
+                                                 DOWNLOAD SURAT HASIL
+                                            ================================================== -->
+
+                                            <a
+                                                href="<?= base_url(
+                                                    'akademik/log-aktivitas/download/'
+                                                    . (int)$log['log_id']
+                                                ) ?>"
+                                                class="btn btn-sm btn-outline-success"
+                                                title="Download surat hasil layanan"
+                                            >
+
+                                                <i class="fas fa-download me-1"></i>
+
+                                                Download
+
+                                            </a>
+
+
+                                        <?php else: ?>
+
+
+                                            <span class="text-muted small">
+
+                                                <i class="fas fa-file-circle-xmark me-1"></i>
+
+                                                Tidak ada dokumen
+
+                                            </span>
+
+
+                                        <?php endif; ?>
+
+
+                                    </div>
+
+                                </td>
+
                             </tr>
+
                         <?php endforeach; ?>
+
                     </tbody>
 
                 </table>
+
             </div>
+
 
         <?php endif; ?>
 
     </div>
 
 </div>
+
 
 <?= $this->endSection() ?>

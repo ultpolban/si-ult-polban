@@ -34,24 +34,52 @@ class RoleSeeder extends Seeder
             ],
 
             [
-                'code'        => 'PETUGAS_KEUANGAN',
-                'name'        => 'Petugas Keuangan',
-                'description' => 'Memverifikasi dan memproses layanan keuangan.',
+                'code'        => 'PETUGAS_TIK',
+                'name'        => 'Petugas UPT TIK',
+                'description' => 'Mengelola tiket layanan teknologi informasi dan komunikasi.',
                 'sort_order'  => 4,
             ],
 
             [
                 'code'        => 'PETUGAS_UMUM',
-                'name'        => 'Petugas Umum',
-                'description' => 'Memverifikasi dan memproses layanan umum.',
+                'name'        => 'Petugas Administrasi Umum',
+                'description' => 'Mengelola tiket layanan Bagian Administrasi Umum.',
                 'sort_order'  => 5,
+            ],
+
+            [
+                'code'        => 'PETUGAS_KEMAHASISWAAN',
+                'name'        => 'Petugas Kemahasiswaan',
+                'description' => 'Memverifikasi dan memproses layanan kemahasiswaan.',
+                'sort_order'  => 6,
+            ],
+
+            [
+                'code'        => 'PETUGAS_KEUANGAN',
+                'name'        => 'Petugas Keuangan',
+                'description' => 'Memverifikasi dan memproses layanan keuangan.',
+                'sort_order'  => 7,
+            ],
+
+            [
+                'code'        => 'PETUGAS_PERPUSTAKAAN',
+                'name'        => 'Petugas Perpustakaan',
+                'description' => 'Memverifikasi dan memproses layanan perpustakaan.',
+                'sort_order'  => 8,
+            ],
+
+            [
+                'code'        => 'PETUGAS_JURUSAN',
+                'name'        => 'Petugas Jurusan',
+                'description' => 'Memverifikasi dan memproses layanan jurusan.',
+                'sort_order'  => 9,
             ],
 
             [
                 'code'        => 'PEMOHON',
                 'name'        => 'Pemohon',
                 'description' => 'Pengguna yang mengajukan layanan.',
-                'sort_order'  => 6,
+                'sort_order'  => 10,
             ],
 
         ];
@@ -60,8 +88,21 @@ class RoleSeeder extends Seeder
             $role['is_active'] = true;
             $role['created_at'] = $now;
             $role['updated_at'] = $now;
-        }
 
-        $this->db->table('roles')->insertBatch($roles);
+            $existing = $this->db
+                ->table('roles')
+                ->where('code', $role['code'])
+                ->get()
+                ->getRowArray();
+
+            if ($existing) {
+                $this->db->table('roles')
+                    ->where('id', $existing['id'])
+                    ->update($role);
+                continue;
+            }
+
+            $this->db->table('roles')->insert($role);
+        }
     }
 }

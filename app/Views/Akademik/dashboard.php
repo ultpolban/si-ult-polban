@@ -6,7 +6,7 @@
 
     <div>
         <h2 class="dashboard-title mb-1">
-            Dashboard Unit Layanan
+            Dashboard Akademik
         </h2>
 
         <p class="dashboard-subtitle">
@@ -25,6 +25,9 @@
 
 </div>
 
+
+<!-- ================= STATISTIK UTAMA ================= -->
+
 <div class="row g-4 mb-4">
 
     <div class="col-lg-3 col-md-6">
@@ -41,6 +44,7 @@
 
     </div>
 
+
     <div class="col-lg-3 col-md-6">
 
         <div class="stat-card bg-warning">
@@ -55,6 +59,7 @@
 
     </div>
 
+
     <div class="col-lg-3 col-md-6">
 
         <div class="stat-card bg-info">
@@ -68,6 +73,7 @@
         </div>
 
     </div>
+
 
     <div class="col-lg-3 col-md-6">
 
@@ -85,197 +91,294 @@
 
 </div>
 
-<div class="card">
 
-    <div class="card-header d-flex justify-content-between align-items-center">
+<?php
 
-        <h5 class="mb-0 fw-bold">
+$totalTiket = (int) ($total ?? 0);
 
-            <i class="fas fa-list me-2 text-primary"></i>
+$persenMenunggu = $totalTiket > 0
+    ? round(($menunggu / $totalTiket) * 100)
+    : 0;
 
-            Tiket Terbaru
+$persenDiproses = $totalTiket > 0
+    ? round(($diproses / $totalTiket) * 100)
+    : 0;
 
-        </h5>
+$persenSelesai = $totalTiket > 0
+    ? round(($selesai / $totalTiket) * 100)
+    : 0;
 
-        <span class="badge bg-secondary">
+?>
 
-           <?= count($tiket ?? []) ?> Tiket
 
-        </span>
+<!-- ================= DATA TIKET ================= -->
+
+<div class="card mb-4 dashboard-overview-card">
+
+    <div class="card-body d-flex justify-content-between align-items-center">
+
+        <div class="d-flex align-items-center gap-3">
+
+            <div class="overview-icon bg-primary">
+
+                <i class="fas fa-ticket-alt"></i>
+
+            </div>
+
+            <div>
+
+                <h5 class="mb-1 fw-bold">
+                    Data Tiket Akademik
+                </h5>
+
+                <p class="mb-0 text-muted">
+                    Lihat dan kelola seluruh tiket yang masuk ke Unit Akademik.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <a href="<?= base_url('akademik/data-tiket') ?>"
+           class="btn btn-primary">
+
+            <i class="fas fa-list me-1"></i>
+
+            Lihat Data Tiket
+
+        </a>
 
     </div>
 
+</div>
+
+
+<!-- ================= STATISTIK TIKET ================= -->
+
+<div class="card mb-4 dashboard-overview-card">
+
     <div class="card-body">
 
-<div class="table-responsive">
+        <h5 class="mb-1 fw-bold">
 
-    <table class="table align-middle table-hover">
+            <i class="fas fa-chart-bar text-primary me-2"></i>
 
-        <thead>
+            Statistik Tiket
 
-            <tr>
+        </h5>
 
-                <th>No Tiket</th>
 
-                <th>Nama Pengaju</th>
+        <p class="text-muted small mb-3">
 
-                <th>NIK</th>
+            Ringkasan statistik tiket Unit Akademik
 
-                <th>Jenis Layanan</th>
+        </p>
 
-                <th>Unit Layanan</th>
 
-                <th>Tanggal</th>
+        <!-- ANGKA STATISTIK -->
 
-                <th>Status</th>
+        <div class="row text-center py-3">
 
-                <th width="130">Aksi</th>
+            <div class="col-md-3">
 
-            </tr>
+                <strong class="overview-number">
 
-        </thead>
+                    <?= $totalTiket ?>
 
+                </strong>
 
-        <tbody>
+                <small>
 
+                    Total Tiket
 
-            <?php if(empty($tiket)): ?>
+                </small>
 
+            </div>
 
-                <tr>
 
-                    <td colspan="8" class="text-center text-muted py-4">
+            <div class="col-md-3">
 
-                        <i class="fas fa-folder-open fa-2x mb-2"></i>
+                <strong class="overview-number">
 
-                        <br>
+                    <?= $persenMenunggu ?>%
 
-                        Belum ada data tiket.
+                </strong>
 
-                    </td>
+                <small>
 
-                </tr>
+                    Tiket Menunggu
 
+                </small>
 
-            <?php endif; ?>
+            </div>
 
 
-           <?php foreach(($tiket ?? []) as $t): ?>
+            <div class="col-md-3">
 
+                <strong class="overview-number">
 
-                <?php
+                    <?= $persenDiproses ?>%
 
-                $badge="secondary";
+                </strong>
 
-                if($t['status']=="Menunggu"){
+                <small>
 
-                    $badge="warning";
+                    Tiket Diproses
 
-                }elseif($t['status']=="Diproses"){
+                </small>
 
-                    $badge="primary";
+            </div>
 
-                }elseif($t['status']=="Selesai"){
 
-                    $badge="success";
+            <div class="col-md-3">
 
-                }elseif($t['status']=="Ditolak"){
+                <strong class="overview-number">
 
-                    $badge="danger";
+                    <?= $persenSelesai ?>%
 
-                }
+                </strong>
 
-                ?>
+                <small>
 
+                    Tiket Selesai
 
-                <tr>
+                </small>
 
+            </div>
 
-                    <td>
+        </div>
 
-                        <strong>
 
-                            <?= $t['no_tiket'] ?>
+        <hr>
 
-                        </strong>
 
-                    </td>
+        <!-- ================= STATUS MENUNGGU ================= -->
 
+        <div class="status-item">
 
-                    <td>
+            <div class="status-left">
 
-                        <?= $t['nama_pemohon'] ?? '-' ?>
+                <span class="status-icon waiting">
 
-                    </td>
+                    <i class="fas fa-hourglass-half"></i>
 
+                </span>
 
-<td>
-    <?= rand(1000000000000000,9999999999999999) ?>
-</td>
+                <span>
 
+                    Menunggu
 
-                    <td>
+                </span>
 
-                        <?= $t['nama_layanan'] ?? '-' ?>
+            </div>
 
-                    </td>
 
+            <strong>
 
-                    <td>
+                <?= $menunggu ?> tiket (<?= $persenMenunggu ?>%)
 
-                        <?= $t['nama_unit'] ?? '-' ?>
+            </strong>
 
-                    </td>
+        </div>
 
 
-                    <td>
+        <div class="progress mb-3">
 
-                       <?= date('d-m-Y', strtotime($t['created_at'])) ?>
-                    </td>
+            <div class="progress-bar bg-warning"
+                 role="progressbar"
+                 style="width: <?= $persenMenunggu ?>%;">
 
+            </div>
 
-                    <td>
+        </div>
 
-                        <span class="badge bg-<?= $badge ?>">
 
-                            <?= $t['status'] ?>
+        <!-- ================= STATUS DIPROSES ================= -->
 
-                        </span>
+        <div class="status-item">
 
-                    </td>
+            <div class="status-left">
 
+                <span class="status-icon processing">
 
-                    <td>
+                    <i class="fas fa-spinner"></i>
 
+                </span>
 
-                        <a href="<?= base_url('unit-layanan/detail/'.$t['id']) ?>"
+                <span>
 
-                           class="btn btn-primary btn-sm">
+                    Diproses
 
+                </span>
 
-                            <i class="fas fa-eye"></i>
+            </div>
 
-                            Detail
 
+            <strong>
 
-                        </a>
+                <?= $diproses ?> tiket (<?= $persenDiproses ?>%)
 
+            </strong>
 
-                    </td>
+        </div>
 
 
-                </tr>
+        <div class="progress mb-3">
 
+            <div class="progress-bar bg-info"
+                 role="progressbar"
+                 style="width: <?= $persenDiproses ?>%;">
 
-            <?php endforeach; ?>
+            </div>
 
+        </div>
 
-        </tbody>
 
+        <!-- ================= STATUS SELESAI ================= -->
 
-    </table>
+        <div class="status-item">
 
+            <div class="status-left">
+
+                <span class="status-icon completed">
+
+                    <i class="fas fa-check-circle"></i>
+
+                </span>
+
+                <span>
+
+                    Selesai
+
+                </span>
+
+            </div>
+
+
+            <strong>
+
+                <?= $selesai ?> tiket (<?= $persenSelesai ?>%)
+
+            </strong>
+
+        </div>
+
+
+        <div class="progress">
+
+            <div class="progress-bar bg-success"
+                 role="progressbar"
+                 style="width: <?= $persenSelesai ?>%;">
+
+            </div>
+
+        </div>
+
+
+    </div>
 
 </div>
+
 
 <?= $this->endSection() ?>

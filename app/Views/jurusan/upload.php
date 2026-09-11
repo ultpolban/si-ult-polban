@@ -1,0 +1,5 @@
+<?= $this->extend('layouts/template') ?>
+<?= $this->section('content') ?>
+<?php $viewData=get_defined_vars();$ticket=is_array($viewData['tiket']??null)?$viewData['tiket']:[]; ?>
+<div class="mb-4"><h2 class="dashboard-title mb-1">Upload Hasil Layanan Jurusan</h2><p class="dashboard-subtitle mb-0">Unggah hasil layanan untuk tiket Jurusan.</p></div><div class="card shadow-sm border-0"><div class="card-header text-white" style="background:#293582"><h5 class="mb-0"><i class="fas fa-upload me-2"></i><?= esc($ticket['ticket_number']??'-') ?></h5></div><div class="card-body"><form method="post" enctype="multipart/form-data" action="<?= base_url('jurusan/simpanUpload/'.($ticket['id']??0)) ?>"><div class="mb-4"><label class="form-label">Pilih Dokumen</label><input type="file" name="dokumen" class="form-control" required></div><button class="btn btn-success"><i class="fas fa-upload me-1"></i>Upload</button><a href="<?= base_url('jurusan/detail/'.($ticket['id']??0)) ?>" class="btn btn-secondary ms-2">Kembali</a></form></div></div>
+<?= $this->endSection() ?>

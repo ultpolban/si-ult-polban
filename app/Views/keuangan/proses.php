@@ -16,11 +16,12 @@
     font-size:30px;
     font-weight:700;
     color:#172033;
+    margin-bottom:5px;
 }
 
 .process-subtitle{
     color:#6c757d;
-    margin-top:5px;
+    margin:0;
 }
 
 
@@ -116,16 +117,43 @@ textarea.process-control{
    FILE LIST
 ===================================================== */
 
+.file-list{
+    margin-top:15px;
+}
+
 .file-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+
     background:#f8f9fa;
     border:1px solid #e5e7eb;
     border-radius:10px;
-    padding:10px 14px;
+
+    padding:12px 14px;
     margin-bottom:8px;
+}
+
+.file-item-left{
+    display:flex;
+    align-items:center;
+    min-width:0;
 }
 
 .file-item-name{
     word-break:break-all;
+    color:#172033;
+}
+
+.file-item-size{
+    color:#6c757d;
+    font-size:13px;
+    margin-left:8px;
+}
+
+.remove-file{
+    flex-shrink:0;
 }
 
 
@@ -174,23 +202,23 @@ textarea.process-control{
 .btn-process{
     background:#293582;
     border:none;
-    color:white;
+    color:#fff;
 }
 
 .btn-process:hover{
     background:#ff7f00;
-    color:white;
+    color:#fff;
 }
 
 .btn-back{
     background:#6c757d;
     border:none;
-    color:white;
+    color:#fff;
 }
 
 .btn-back:hover{
     background:#5a6268;
-    color:white;
+    color:#fff;
 }
 
 
@@ -218,6 +246,10 @@ textarea.process-control{
         padding:20px;
     }
 
+    .file-item{
+        align-items:flex-start;
+    }
+
 }
 
 </style>
@@ -234,7 +266,7 @@ textarea.process-control{
     </h2>
 
     <p class="process-subtitle">
-        Kelola status dan penanganan pengajuan tiket
+        Kelola status, catatan, dan dokumen hasil pengajuan tiket
     </p>
 
 </div>
@@ -271,14 +303,14 @@ textarea.process-control{
 
 
 <!-- =====================================================
-     CARD UTAMA
+     CARD
 ===================================================== -->
 
 <div class="process-card">
 
 
     <!-- =================================================
-         HEADER CARD
+         CARD HEADER
     ================================================== -->
 
     <div class="process-card-header">
@@ -295,16 +327,20 @@ textarea.process-control{
 
 
     <!-- =================================================
-         BODY
+         CARD BODY
     ================================================== -->
 
     <div class="process-card-body">
 
 
+        <!-- =================================================
+             SATU FORM UNTUK STATUS + CATATAN + DOKUMEN
+        ================================================== -->
+
         <form
             action="<?= base_url(
-                'keuangan/updateProses/'
-                . ($tiket['id'] ?? '')
+                'keuangan/updateProses/' .
+                (int)($tiket['id'] ?? 0)
             ) ?>"
             method="post"
             enctype="multipart/form-data"
@@ -313,9 +349,9 @@ textarea.process-control{
             <?= csrf_field() ?>
 
 
-            <!-- =============================================
+            <!-- =================================================
                  INFORMASI PENGAJUAN
-            ============================================== -->
+            ================================================== -->
 
             <div class="process-section">
 
@@ -328,9 +364,7 @@ textarea.process-control{
                 </h6>
 
 
-                <!-- =========================================
-                     NOMOR TIKET
-                ========================================== -->
+                <!-- NOMOR TIKET -->
 
                 <div class="mb-4">
 
@@ -343,6 +377,7 @@ textarea.process-control{
                         class="form-control process-control readonly-box"
                         value="<?= esc(
                             $tiket['no_tiket']
+                            ?? $tiket['ticket_number']
                             ?? '-'
                         ) ?>"
                         readonly
@@ -351,9 +386,7 @@ textarea.process-control{
                 </div>
 
 
-                <!-- =========================================
-                     UNIT LAYANAN
-                ========================================== -->
+                <!-- UNIT -->
 
                 <div class="mb-4">
 
@@ -366,7 +399,7 @@ textarea.process-control{
                         class="form-control process-control readonly-box"
                         value="<?= esc(
                             $tiket['nama_unit']
-                            ?? '-'
+                            ?? 'Keuangan'
                         ) ?>"
                         readonly
                     >
@@ -374,9 +407,7 @@ textarea.process-control{
                 </div>
 
 
-                <!-- =========================================
-                     KATEGORI LAYANAN
-                ========================================== -->
+                <!-- KATEGORI -->
 
                 <div class="mb-4">
 
@@ -397,9 +428,7 @@ textarea.process-control{
                 </div>
 
 
-                <!-- =========================================
-                     JENIS LAYANAN
-                ========================================== -->
+                <!-- LAYANAN -->
 
                 <div class="mb-4">
 
@@ -412,6 +441,7 @@ textarea.process-control{
                         class="form-control process-control readonly-box"
                         value="<?= esc(
                             $tiket['nama_layanan']
+                            ?? $tiket['service_name']
                             ?? '-'
                         ) ?>"
                         readonly
@@ -420,9 +450,7 @@ textarea.process-control{
                 </div>
 
 
-                <!-- =========================================
-                     JUDUL PENGAJUAN
-                ========================================== -->
+                <!-- JUDUL -->
 
                 <div class="mb-4">
 
@@ -435,6 +463,7 @@ textarea.process-control{
                         class="form-control process-control readonly-box"
                         value="<?= esc(
                             $tiket['judul']
+                            ?? $tiket['title']
                             ?? '-'
                         ) ?>"
                         readonly
@@ -443,9 +472,7 @@ textarea.process-control{
                 </div>
 
 
-                <!-- =========================================
-                     DESKRIPSI
-                ========================================== -->
+                <!-- DESKRIPSI -->
 
                 <div class="mb-4">
 
@@ -458,6 +485,7 @@ textarea.process-control{
                         readonly
                     ><?= esc(
                         $tiket['deskripsi']
+                        ?? $tiket['description']
                         ?? '-'
                     ) ?></textarea>
 
@@ -481,9 +509,7 @@ textarea.process-control{
                 </h6>
 
 
-                <!-- =========================================
-                     STATUS
-                ========================================== -->
+                <!-- STATUS -->
 
                 <div class="mb-4">
 
@@ -497,6 +523,34 @@ textarea.process-control{
                     </label>
 
 
+                    <?php
+                        $currentStatus =
+                            strtolower(
+                                (string)(
+                                    $tiket['status']
+                                    ?? 'submitted'
+                                )
+                            );
+
+                        $statusValue = match($currentStatus){
+                            'submitted',
+                            'menunggu'
+                                => 'Menunggu',
+
+                            'processing',
+                            'diproses'
+                                => 'Diproses',
+
+                            'completed',
+                            'selesai'
+                                => 'Selesai',
+
+                            default
+                                => 'Menunggu',
+                        };
+                    ?>
+
+
                     <select
                         name="status"
                         id="status"
@@ -504,57 +558,39 @@ textarea.process-control{
                         required
                     >
 
-
                         <option
                             value="Menunggu"
-                            <?= (
-                                ($tiket['status'] ?? '')
-                                === 'Menunggu'
-                            )
+                            <?= $statusValue === 'Menunggu'
                                 ? 'selected'
-                                : ''
-                            ?>
+                                : '' ?>
                         >
                             Menunggu
                         </option>
 
-
                         <option
                             value="Diproses"
-                            <?= (
-                                ($tiket['status'] ?? '')
-                                === 'Diproses'
-                            )
+                            <?= $statusValue === 'Diproses'
                                 ? 'selected'
-                                : ''
-                            ?>
+                                : '' ?>
                         >
                             Diproses
                         </option>
 
-
                         <option
                             value="Selesai"
-                            <?= (
-                                ($tiket['status'] ?? '')
-                                === 'Selesai'
-                            )
+                            <?= $statusValue === 'Selesai'
                                 ? 'selected'
-                                : ''
-                            ?>
+                                : '' ?>
                         >
                             Selesai
                         </option>
-
 
                     </select>
 
                 </div>
 
 
-                <!-- =========================================
-                     CATATAN
-                ========================================== -->
+                <!-- CATATAN -->
 
                 <div class="mb-4">
 
@@ -575,6 +611,7 @@ textarea.process-control{
                         placeholder="Masukkan catatan atau hasil penanganan tiket..."
                     ><?= esc(
                         $tiket['catatan']
+                        ?? $tiket['admin_note']
                         ?? ''
                     ) ?></textarea>
 
@@ -618,41 +655,38 @@ textarea.process-control{
                     </label>
 
 
-                    <!-- INPUT UNTUK MEMILIH FILE -->
+                    <!--
+                    IMPORTANT:
+                    Nama field HARUS file_hasil[]
+                    karena akan diproses oleh updateProses()
+                    -->
 
                     <input
                         type="file"
                         id="file_hasil"
+                        name="file_hasil[]"
                         class="form-control process-control"
                         accept=".pdf,.jpg,.jpeg,.png"
                         multiple
                     >
 
 
-                    <!-- INPUT SEBENARNYA YANG DIKIRIM KE SERVER -->
-
-                    <input
-                        type="file"
-                        name="file_hasil[]"
-                        id="file_storage"
-                        multiple
-                        hidden
-                    >
-
-
-                    <!-- DAFTAR FILE BARU -->
+                    <!-- DAFTAR FILE YANG DIPILIH -->
 
                     <div
                         id="list_file"
-                        class="mt-3"
+                        class="file-list"
                     ></div>
 
 
-                    <small class="text-muted">
+                    <small class="text-muted d-block mt-2">
 
-                        Bisa upload banyak file.<br>
+                        <i class="fas fa-info-circle me-1"></i>
 
-                        Format PDF, JPG, JPEG, PNG.<br>
+                        Bisa memilih beberapa dokumen sekaligus.
+
+                        Format:
+                        PDF, JPG, JPEG, PNG.
 
                         Maksimal 5 MB per file.
 
@@ -673,60 +707,54 @@ textarea.process-control{
 
                             <i class="fas fa-folder-open me-2"></i>
 
-                            Dokumen sebelumnya:
+                            Dokumen Hasil yang Sudah Tersimpan
 
                         </strong>
 
 
                         <ul class="mt-3">
 
-
                             <?php foreach(
                                 $tiket['dokumen_hasil']
-                                as $dokumen
+                                as $index => $dokumen
                             ): ?>
 
+                                <?php
+                                    $namaFile =
+                                        $dokumen['nama_file']
+                                        ?? $dokumen['file_name']
+                                        ?? '';
 
-                                <li class="mb-2">
-
-                                    <a
-                                        href="<?= base_url(
-                                            'uploads/hasil/'
-                                            . $dokumen['nama_file']
-                                        ) ?>"
-                                        target="_blank"
-                                    >
-
-                                        <i class="fas fa-file me-1"></i>
-
-                                        <?= esc(
-                                            $dokumen['nama_asli']
-                                            ?? $dokumen['nama_file']
-                                        ) ?>
-
-                                    </a>
+                                    $namaAsli =
+                                        $dokumen['nama_asli']
+                                        ?? $dokumen['original_name']
+                                        ?? $namaFile;
+                                ?>
 
 
-                                    <a
-                                        href="<?= base_url(
-                                            'keuangan/hapus-dokumen/'
-                                            . $dokumen['id']
-                                        ) ?>"
-                                        class="btn btn-danger btn-sm ms-2"
-                                        onclick="return confirm(
-                                            'Hapus dokumen ini?'
-                                        )"
-                                    >
+                                <?php if($namaFile !== ''): ?>
 
-                                        <i class="fas fa-trash"></i>
+                                    <li class="mb-2">
 
-                                    </a>
+                                        <a
+                                            href="<?= base_url(
+                                                'keuangan/lihat/' .
+                                                rawurlencode($namaFile)
+                                            ) ?>"
+                                            target="_blank"
+                                        >
 
-                                </li>
+                                            <i class="fas fa-file me-1"></i>
 
+                                            <?= esc($namaAsli) ?>
+
+                                        </a>
+
+                                    </li>
+
+                                <?php endif; ?>
 
                             <?php endforeach; ?>
-
 
                         </ul>
 
@@ -739,7 +767,7 @@ textarea.process-control{
 
 
             <!-- =================================================
-                 TOMBOL
+                 ACTION
             ================================================== -->
 
             <div class="process-actions">
@@ -759,8 +787,8 @@ textarea.process-control{
 
                 <a
                     href="<?= base_url(
-                        'keuangan/detail/'
-                        . ($tiket['id'] ?? '')
+                        'keuangan/detail/' .
+                        (int)($tiket['id'] ?? 0)
                     ) ?>"
                     class="btn btn-secondary"
                 >
@@ -784,199 +812,282 @@ textarea.process-control{
 
 
 <!-- =====================================================
-     JAVASCRIPT UPLOAD MULTIPLE FILE
+     JAVASCRIPT MULTIPLE FILE
 ===================================================== -->
 
 <script>
 
-let inputFile =
-    document.getElementById('file_hasil');
+document.addEventListener('DOMContentLoaded', function(){
 
-let storageFile =
-    document.getElementById('file_storage');
+    const inputFile =
+        document.getElementById('file_hasil');
 
-let listFile =
-    document.getElementById('list_file');
-
-
-let daftarFile = [];
+    const listFile =
+        document.getElementById('list_file');
 
 
-/* =====================================================
-   PILIH FILE
-===================================================== */
+    if(!inputFile || !listFile){
+        return;
+    }
 
-inputFile.addEventListener(
-    'change',
-    function(){
 
-        let fileBaru =
+    /*
+    |--------------------------------------------------------------------------
+    | Daftar file yang dipilih
+    |--------------------------------------------------------------------------
+    */
+
+    let daftarFile = [];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ketika user memilih file
+    |--------------------------------------------------------------------------
+    */
+
+    inputFile.addEventListener('change', function(){
+
+        const files =
             Array.from(this.files);
 
 
-        fileBaru.forEach(
-            function(file){
+        files.forEach(function(file){
 
-                /* Maksimal 5 MB */
+            /*
+            | Maksimal 5 MB
+            */
 
-                if(file.size > 5242880){
+            if(file.size > 5 * 1024 * 1024){
 
-                    alert(
-                        'Ukuran ' +
-                        file.name +
-                        ' maksimal 5 MB'
+                alert(
+                    'File "' +
+                    file.name +
+                    '" melebihi ukuran maksimal 5 MB.'
+                );
+
+                return;
+            }
+
+
+            /*
+            | Cek ekstensi
+            */
+
+            const extension =
+                file.name
+                    .split('.')
+                    .pop()
+                    .toLowerCase();
+
+
+            const allowed = [
+                'pdf',
+                'jpg',
+                'jpeg',
+                'png'
+            ];
+
+
+            if(!allowed.includes(extension)){
+
+                alert(
+                    'Format file "' +
+                    file.name +
+                    '" tidak diperbolehkan.'
+                );
+
+                return;
+            }
+
+
+            /*
+            | Cegah file yang sama masuk dua kali
+            */
+
+            const sudahAda =
+                daftarFile.some(function(existingFile){
+
+                    return (
+                        existingFile.name === file.name &&
+                        existingFile.size === file.size &&
+                        existingFile.lastModified === file.lastModified
                     );
 
-                    return;
-
-                }
+                });
 
 
-                /*
-                 * Cegah file yang sama
-                 * dimasukkan dua kali
-                 */
+            if(!sudahAda){
 
-                let sudahAda =
-                    daftarFile.some(
-                        function(existingFile){
-
-                            return (
-                                existingFile.name
-                                === file.name
-                                &&
-                                existingFile.size
-                                === file.size
-                            );
-
-                        }
-                    );
-
-
-                if(!sudahAda){
-
-                    daftarFile.push(file);
-
-                }
+                daftarFile.push(file);
 
             }
-        );
+
+        });
 
 
-        tampilkanFile();
-
-        simpanFile();
+        renderFileList();
 
 
         /*
-         * Reset input supaya
-         * file yang sama bisa dipilih kembali
-         */
+        | Penting:
+        | File input langsung menyimpan semua file.
+        */
 
-        this.value = '';
+        updateInputFiles();
 
-    }
-);
-
-
-/* =====================================================
-   TAMPILKAN DAFTAR FILE
-===================================================== */
-
-function tampilkanFile(){
-
-    listFile.innerHTML = '';
+    });
 
 
-    daftarFile.forEach(
-        function(file,index){
+    /*
+    |--------------------------------------------------------------------------
+    | Tampilkan daftar file
+    |--------------------------------------------------------------------------
+    */
 
-            let ukuran =
-                (file.size / 1024 / 1024)
-                .toFixed(2);
+    function renderFileList(){
+
+        listFile.innerHTML = '';
 
 
-            listFile.innerHTML += `
+        daftarFile.forEach(function(file,index){
 
-                <div class="file-item d-flex justify-content-between align-items-center">
+            const ukuran =
+                (
+                    file.size /
+                    1024 /
+                    1024
+                ).toFixed(2);
 
-                    <div class="file-item-name">
 
-                        <i class="fas fa-file me-2 text-primary"></i>
+            const item =
+                document.createElement('div');
+
+
+            item.className =
+                'file-item';
+
+
+            item.innerHTML = `
+
+                <div class="file-item-left">
+
+                    <i class="fas fa-file text-primary me-2"></i>
+
+                    <span class="file-item-name">
 
                         <strong>
-                            ${file.name}
+                            ${escapeHtml(file.name)}
                         </strong>
 
-                        <small class="text-muted ms-2">
+                        <span class="file-item-size">
                             (${ukuran} MB)
-                        </small>
+                        </span>
 
-                    </div>
-
-
-                    <button
-                        type="button"
-                        class="btn btn-danger btn-sm"
-                        onclick="hapusFile(${index})"
-                    >
-
-                        <i class="fas fa-times"></i>
-
-                    </button>
+                    </span>
 
                 </div>
 
+
+                <button
+                    type="button"
+                    class="btn btn-danger btn-sm remove-file"
+                    data-index="${index}"
+                >
+
+                    <i class="fas fa-times"></i>
+
+                </button>
+
             `;
 
-        }
-    );
 
-}
+            listFile.appendChild(item);
 
-
-/* =====================================================
-   SIMPAN FILE KE INPUT FORM
-===================================================== */
-
-function simpanFile(){
-
-    let dataTransfer =
-        new DataTransfer();
+        });
 
 
-    daftarFile.forEach(
-        function(file){
+        /*
+        | Tombol hapus file
+        */
+
+        document
+            .querySelectorAll('.remove-file')
+            .forEach(function(button){
+
+                button.addEventListener(
+                    'click',
+                    function(){
+
+                        const index =
+                            parseInt(
+                                this.dataset.index,
+                                10
+                            );
+
+
+                        daftarFile.splice(
+                            index,
+                            1
+                        );
+
+
+                        renderFileList();
+
+                        updateInputFiles();
+
+                    }
+                );
+
+            });
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Masukkan kembali file ke input
+    |--------------------------------------------------------------------------
+    */
+
+    function updateInputFiles(){
+
+        const dataTransfer =
+            new DataTransfer();
+
+
+        daftarFile.forEach(function(file){
 
             dataTransfer.items.add(file);
 
-        }
-    );
+        });
 
 
-    storageFile.files =
-        dataTransfer.files;
+        inputFile.files =
+            dataTransfer.files;
 
-}
-
-
-/* =====================================================
-   HAPUS FILE
-===================================================== */
-
-function hapusFile(index){
-
-    daftarFile.splice(
-        index,
-        1
-    );
+    }
 
 
-    tampilkanFile();
+    /*
+    |--------------------------------------------------------------------------
+    | Escape HTML
+    |--------------------------------------------------------------------------
+    */
 
-    simpanFile();
+    function escapeHtml(text){
 
-}
+        const div =
+            document.createElement('div');
+
+        div.textContent =
+            text;
+
+        return div.innerHTML;
+
+    }
+
+});
 
 </script>
 

@@ -234,6 +234,28 @@ class RolePermissionSeeder extends Seeder
     |--------------------------------------------------------------------------
     */
 
+            'PETUGAS_PERPUSTAKAAN' => [
+
+                'dashboard.view',
+                'request.view',
+                'request.update',
+                'request.verify',
+                'request.complete',
+                'notification.view',
+                'statistic.view',
+            ],
+
+            'PETUGAS_JURUSAN' => [
+
+                'dashboard.view',
+                'request.view',
+                'request.update',
+                'request.verify',
+                'request.complete',
+                'notification.view',
+                'statistic.view',
+            ],
+
             'PEMOHON' => [
 
                 'dashboard.view',

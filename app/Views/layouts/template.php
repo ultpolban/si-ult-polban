@@ -83,6 +83,95 @@ body{
 
 }
 
+.sidebar-brand {
+    border-bottom:1px solid rgba(255,255,255,.12);
+}
+
+.sidebar-user {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-height:70px;
+    padding:12px 16px;
+    color:#fff;
+    border-bottom:1px solid rgba(255,255,255,.12);
+}
+
+.sidebar-avatar {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:34px;
+    height:34px;
+    flex:0 0 34px;
+    border-radius:50%;
+    background:#6559e8;
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+}
+
+.sidebar-user-info {
+    min-width:0;
+    line-height:1.2;
+}
+
+.sidebar-user-info strong,
+.sidebar-user-info small {
+    display:block;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.sidebar-user-info strong {
+    font-size:12px;
+}
+
+.sidebar-user-info small {
+    margin-top:4px;
+    color:rgba(255,255,255,.58);
+    font-size:9px;
+}
+
+.sidebar-section {
+    padding:14px 12px 6px;
+    color:rgba(255,255,255,.58);
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+}
+
+.sidebar .nav-link {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:0 7px 2px;
+    padding:10px 9px;
+    border-radius:4px;
+    color:rgba(255,255,255,.9);
+    font-size:12px;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background:rgba(255,255,255,.12);
+    color:#fff;
+}
+
+.sidebar .nav-link i {
+    width:16px;
+    text-align:center;
+    font-size:12px;
+}
+
+.sidebar-logout {
+    margin-top:auto;
+    padding:8px 0 12px;
+    border-top:1px solid rgba(255,255,255,.12);
+}
+
 
 
 /* ================= TITLE SIDEBAR ================= */
@@ -165,6 +254,34 @@ body{
 
     transition:.3s;
 
+}
+
+.dashboard-overview-card {
+    border-radius: 8px;
+}
+
+.overview-icon {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:42px;
+    height:42px;
+    border-radius:6px;
+    color:#fff;
+    flex:0 0 42px;
+}
+
+.overview-number {
+    display:block;
+    color:#1267f5;
+    font-size:26px;
+    line-height:1.1;
+}
+
+.dashboard-overview-card small {
+    display:block;
+    color:#64748b;
+    margin-top:5px;
 }
 
 

@@ -12,13 +12,29 @@ $roleId = (int) session()->get('role_id');
 |--------------------------------------------------------------------------
 */
 
-if (str_contains($uriPath, 'kemahasiswaan')) {
+if (str_contains($uriPath, 'perpustakaan')) {
+
+    $menuType = 'perpustakaan';
+
+} elseif (str_contains($uriPath, 'jurusan')) {
+
+    $menuType = 'jurusan';
+
+} elseif (str_contains($uriPath, 'kemahasiswaan')) {
 
     $menuType = 'kemahasiswaan';
 
 } elseif (str_contains($uriPath, 'keuangan')) {
 
     $menuType = 'keuangan';
+
+} elseif (str_contains($uriPath, 'upt-tik')) {
+
+    $menuType = 'upt-tik';
+
+} elseif (str_contains($uriPath, 'administrasi-umum')) {
+
+    $menuType = 'administrasi-umum';
 
 } elseif (str_contains($uriPath, 'akademik')) {
 
@@ -39,13 +55,23 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
 
 ?>
 
+<?php
+$displayName = session()->get('full_name')
+    ?: session()->get('name')
+    ?: 'Petugas';
+$roleName = session()->get('role_name')
+    ?: session()->get('role_code')
+    ?: 'Authorized Operator';
+$initials = strtoupper(substr(trim($displayName), 0, 2));
+?>
+
 <div class="sidebar">
 
     <!-- ===================================================== -->
     <!-- LOGO -->
     <!-- ===================================================== -->
 
-    <div style="
+    <div class="sidebar-brand" style="
         display:flex;
         align-items:center;
         height:70px;
@@ -80,12 +106,108 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
 
     </div>
 
+    <div class="sidebar-user">
+        <div class="sidebar-avatar">
+            <?= esc($initials) ?>
+        </div>
+        <div class="sidebar-user-info">
+            <strong><?= esc($displayName) ?></strong>
+            <small><?= esc(ucwords(strtolower(str_replace('_', ' ', $roleName)))) ?></small>
+        </div>
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR ADMINISTRASI UMUM -->
+    <!-- ===================================================== -->
+
+    <?php if ($menuType === 'administrasi-umum'): ?>
+
+        <div class="sidebar-section">Dashboard</div>
+
+        <a href="<?= base_url('administrasi-umum/dashboard') ?>"
+           class="nav-link <?= url_is('administrasi-umum') || url_is('administrasi-umum/dashboard') ? 'active' : '' ?>">
+            <i class="fas fa-building"></i>
+            <span>Dashboard Utama</span>
+        </a>
+
+        <a href="<?= base_url('administrasi-umum/profile') ?>"
+           class="nav-link <?= url_is('administrasi-umum/profile') ? 'active' : '' ?>">
+            <i class="fas fa-user-circle"></i>
+            <span>Profil Petugas</span>
+        </a>
+
+        <div class="sidebar-section">Manajemen Tiket</div>
+
+        <a href="<?= base_url('administrasi-umum/data-tiket') ?>"
+           class="nav-link <?= url_is('administrasi-umum/data-tiket') ? 'active' : '' ?>">
+            <i class="fas fa-ticket-alt"></i>
+            <span>Data Tiket</span>
+        </a>
+
+        <div class="sidebar-section">Laporan &amp; Analitik</div>
+
+        <a href="<?= base_url('administrasi-umum/statistik') ?>"
+           class="nav-link <?= url_is('administrasi-umum/statistik') ? 'active' : '' ?>">
+            <i class="fas fa-chart-bar"></i>
+            <span>Statistik Layanan</span>
+        </a>
+
+        <a href="<?= base_url('administrasi-umum/log-aktivitas') ?>"
+           class="nav-link <?= url_is('administrasi-umum/log-aktivitas') ? 'active' : '' ?>">
+            <i class="fas fa-history"></i>
+            <span>Log Aktivitas</span>
+        </a>
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR UPT TIK -->
+    <!-- ===================================================== -->
+
+    <?php elseif ($menuType === 'upt-tik'): ?>
+
+        <div class="sidebar-section">Dashboard</div>
+
+        <a href="<?= base_url('upt-tik/dashboard') ?>"
+           class="nav-link <?= url_is('upt-tik') || url_is('upt-tik/dashboard') ? 'active' : '' ?>">
+            <i class="fas fa-network-wired"></i>
+            <span>Dashboard Utama</span>
+        </a>
+
+        <a href="<?= base_url('upt-tik/profile') ?>"
+           class="nav-link <?= url_is('upt-tik/profile') ? 'active' : '' ?>">
+            <i class="fas fa-user-circle"></i>
+            <span>Profil Petugas</span>
+        </a>
+
+        <div class="sidebar-section">Manajemen Tiket</div>
+
+        <a href="<?= base_url('upt-tik/data-tiket') ?>"
+           class="nav-link <?= url_is('upt-tik/data-tiket') ? 'active' : '' ?>">
+            <i class="fas fa-ticket-alt"></i>
+            <span>Data Tiket</span>
+        </a>
+
+        <div class="sidebar-section">Laporan &amp; Analitik</div>
+
+        <a href="<?= base_url('upt-tik/statistik') ?>"
+           class="nav-link <?= url_is('upt-tik/statistik') ? 'active' : '' ?>">
+            <i class="fas fa-chart-bar"></i>
+            <span>Statistik Layanan</span>
+        </a>
+
+        <a href="<?= base_url('upt-tik/log-aktivitas') ?>"
+           class="nav-link <?= url_is('upt-tik/log-aktivitas') ? 'active' : '' ?>">
+            <i class="fas fa-history"></i>
+            <span>Log Aktivitas</span>
+        </a>
 
     <!-- ===================================================== -->
     <!-- SIDEBAR AKADEMIK -->
     <!-- ===================================================== -->
 
-    <?php if ($menuType === 'akademik'): ?>
+    <?php elseif ($menuType === 'akademik'): ?>
+
+        <div class="sidebar-section">Dashboard</div>
 
         <!-- Dashboard Akademik -->
 
@@ -96,10 +218,26 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
 
             <i class="fas fa-building"></i>
 
-            <span>Dashboard</span>
+            <span>Dashboard Utama</span>
 
         </a>
 
+
+        <!-- Profil Akademik -->
+
+        <a
+            href="<?= base_url('akademik/profile') ?>"
+            class="nav-link <?= url_is('akademik/profile') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-user-circle"></i>
+
+            <span>Profil Petugas</span>
+
+        </a>
+
+
+        <div class="sidebar-section">Manajemen Tiket</div>
 
         <!-- Data Tiket Akademik -->
 
@@ -115,6 +253,8 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
         </a>
 
 
+        <div class="sidebar-section">Laporan &amp; Analitik</div>
+
         <!-- Statistik Akademik -->
 
         <a
@@ -124,21 +264,21 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
 
             <i class="fas fa-chart-bar"></i>
 
-            <span>Statistik</span>
+            <span>Statistik Layanan</span>
 
         </a>
 
 
-        <!-- Profil Akademik -->
+        <!-- Log Aktivitas Akademik -->
 
         <a
-            href="<?= base_url('akademik/profile') ?>"
-            class="nav-link <?= url_is('akademik/profile') ? 'active' : '' ?>"
+            href="<?= base_url('akademik/log-aktivitas') ?>"
+            class="nav-link <?= url_is('akademik/log-aktivitas') ? 'active' : '' ?>"
         >
 
-            <i class="fas fa-user-circle"></i>
+            <i class="fas fa-history"></i>
 
-            <span>Profil</span>
+            <span>Log Aktivitas</span>
 
         </a>
 
@@ -149,6 +289,8 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
 
     <?php elseif ($menuType === 'kemahasiswaan'): ?>
 
+        <div class="sidebar-section">Dashboard</div>
+
         <!-- Dashboard Kemahasiswaan -->
 
         <a
@@ -158,10 +300,25 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
 
             <i class="fas fa-user-graduate"></i>
 
-            <span>Dashboard</span>
+            <span>Dashboard Utama</span>
 
         </a>
 
+        <!-- Profil Kemahasiswaan -->
+
+        <a
+            href="<?= base_url('kemahasiswaan/profile') ?>"
+            class="nav-link <?= url_is('kemahasiswaan/profile') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-user-circle"></i>
+
+            <span>Profil Petugas</span>
+
+        </a>
+
+
+        <div class="sidebar-section">Manajemen Tiket</div>
 
         <!-- Data Tiket Kemahasiswaan -->
 
@@ -177,6 +334,8 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
         </a>
 
 
+        <div class="sidebar-section">Laporan &amp; Analitik</div>
+
         <!-- Statistik Kemahasiswaan -->
 
         <a
@@ -186,21 +345,21 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
 
             <i class="fas fa-chart-bar"></i>
 
-            <span>Statistik</span>
+            <span>Statistik Layanan</span>
 
         </a>
 
 
-        <!-- Profil Kemahasiswaan -->
+        <!-- Log Aktivitas Kemahasiswaan -->
 
         <a
-            href="<?= base_url('kemahasiswaan/profile') ?>"
-            class="nav-link <?= url_is('kemahasiswaan/profile') ? 'active' : '' ?>"
+            href="<?= base_url('kemahasiswaan/log-aktivitas') ?>"
+            class="nav-link <?= url_is('kemahasiswaan/log-aktivitas') ? 'active' : '' ?>"
         >
 
-            <i class="fas fa-user-circle"></i>
+            <i class="fas fa-history"></i>
 
-            <span>Profil</span>
+            <span>Log Aktivitas</span>
 
         </a>
 
@@ -211,6 +370,8 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
 
     <?php elseif ($menuType === 'keuangan'): ?>
 
+        <div class="sidebar-section">Dashboard</div>
+
         <!-- Dashboard Keuangan -->
 
         <a
@@ -220,10 +381,25 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
 
             <i class="fas fa-money-bill-wave"></i>
 
-            <span>Dashboard</span>
+            <span>Dashboard Utama</span>
 
         </a>
 
+        <!-- Profil Keuangan -->
+
+        <a
+            href="<?= base_url('keuangan/profile') ?>"
+            class="nav-link <?= url_is('keuangan/profile') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-user-circle"></i>
+
+            <span>Profil Petugas</span>
+
+        </a>
+
+
+        <div class="sidebar-section">Manajemen Tiket</div>
 
         <!-- Data Tiket Keuangan -->
 
@@ -239,6 +415,8 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
         </a>
 
 
+        <div class="sidebar-section">Laporan &amp; Analitik</div>
+
         <!-- Statistik Keuangan -->
 
         <a
@@ -248,24 +426,178 @@ if (str_contains($uriPath, 'kemahasiswaan')) {
 
             <i class="fas fa-chart-bar"></i>
 
-            <span>Statistik</span>
+            <span>Statistik Layanan</span>
 
         </a>
 
 
-        <!-- Profil Keuangan -->
+        <!-- Log Aktivitas Keuangan -->
 
         <a
-            href="<?= base_url('keuangan/profile') ?>"
-            class="nav-link <?= url_is('keuangan/profile') ? 'active' : '' ?>"
+            href="<?= base_url('keuangan/log-aktivitas') ?>"
+            class="nav-link <?= url_is('keuangan/log-aktivitas') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-history"></i>
+
+            <span>Log Aktivitas</span>
+
+        </a>
+
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR JURUSAN -->
+    <!-- ===================================================== -->
+
+    <?php elseif ($menuType === 'jurusan'): ?>
+
+        <div class="sidebar-section">Dashboard</div>
+
+        <a
+            href="<?= base_url('jurusan/dashboard') ?>"
+            class="nav-link <?= url_is('jurusan') || url_is('jurusan/dashboard') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-university"></i>
+
+            <span>Dashboard Utama</span>
+
+        </a>
+
+        <a
+            href="<?= base_url('jurusan/profile') ?>"
+            class="nav-link <?= url_is('jurusan/profile') ? 'active' : '' ?>"
         >
 
             <i class="fas fa-user-circle"></i>
 
-            <span>Profil</span>
+            <span>Profil Petugas</span>
 
         </a>
 
+
+        <div class="sidebar-section">Manajemen Tiket</div>
+
+        <a
+            href="<?= base_url('jurusan/data-tiket') ?>"
+            class="nav-link <?= url_is('jurusan/data-tiket') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-ticket-alt"></i>
+
+            <span>Data Tiket</span>
+
+        </a>
+
+
+        <div class="sidebar-section">Laporan &amp; Analitik</div>
+
+        <a
+            href="<?= base_url('jurusan/statistik') ?>"
+            class="nav-link <?= url_is('jurusan/statistik') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-chart-bar"></i>
+
+            <span>Statistik Layanan</span>
+
+        </a>
+
+        <a
+            href="<?= base_url('jurusan/log-aktivitas') ?>"
+            class="nav-link <?= url_is('jurusan/log-aktivitas') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-history"></i>
+
+            <span>Log Aktivitas</span>
+
+        </a>
+
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR PERPUSTAKAAN -->
+    <!-- ===================================================== -->
+
+    <?php elseif ($menuType === 'perpustakaan'): ?>
+
+        <div class="sidebar-section">Dashboard</div>
+
+        <a
+            href="<?= base_url('perpustakaan/dashboard') ?>"
+            class="nav-link <?= url_is('perpustakaan') || url_is('perpustakaan/dashboard') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-book"></i>
+
+            <span>Dashboard Utama</span>
+
+        </a>
+
+        <a
+            href="<?= base_url('perpustakaan/profile') ?>"
+            class="nav-link <?= url_is('perpustakaan/profile') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-user-circle"></i>
+
+            <span>Profil Petugas</span>
+
+        </a>
+
+
+        <div class="sidebar-section">Manajemen Tiket</div>
+
+        <a
+            href="<?= base_url('perpustakaan/data-tiket') ?>"
+            class="nav-link <?= url_is('perpustakaan/data-tiket') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-ticket-alt"></i>
+
+            <span>Data Tiket</span>
+
+        </a>
+
+
+
+
+        <div class="sidebar-section">Laporan &amp; Analitik</div>
+
+        <a
+            href="<?= base_url('perpustakaan/statistik') ?>"
+            class="nav-link <?= url_is('perpustakaan/statistik') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-chart-bar"></i>
+
+            <span>Statistik Layanan</span>
+
+        </a>
+
+        <a
+            href="<?= base_url('perpustakaan/log-aktivitas') ?>"
+            class="nav-link <?= url_is('perpustakaan/log-aktivitas') ? 'active' : '' ?>"
+        >
+
+            <i class="fas fa-history"></i>
+
+            <span>Log Aktivitas</span>
+
+        </a>
+
+
     <?php endif; ?>
+
+    <div class="sidebar-logout">
+        <a
+            href="<?= base_url('logout') ?>"
+            class="nav-link"
+            onclick="return confirm('Apakah Anda yakin ingin logout?')"
+        >
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </a>
+    </div>
 
 </div>

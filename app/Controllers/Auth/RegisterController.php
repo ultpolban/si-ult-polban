@@ -47,7 +47,7 @@ class RegisterController extends BaseController
     public function index()
     {
         if (session()->get('isLoggedIn')) {
-            return redirect()->to('/dashboard');
+            return redirect()->to('/akademik/dashboard');
         }
 
         return view('auth/register', [

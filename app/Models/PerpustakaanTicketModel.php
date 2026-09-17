@@ -31,6 +31,10 @@ class PerpustakaanTicketModel extends Model
         'admin_note',
         'result_note',
         'result_file',
+        'sent_to_ult',
+        'sent_to_ult_at',
+        'sent_to_applicant',
+        'sent_to_applicant_at',
     ];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';

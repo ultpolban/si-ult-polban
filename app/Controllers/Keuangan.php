@@ -626,9 +626,11 @@ class Keuangan extends BaseController
 
     public function kirim($id)
     {
-        return $this->updateStatus(
+        return $this->sendDelivery(
             (int) $id,
-            'processing'
+            'sent_to_ult',
+            'sent_to_ult_at',
+            'Tiket berhasil dikirim ke Petugas ULT.'
         );
     }
 
@@ -639,9 +641,11 @@ class Keuangan extends BaseController
 
     public function kirimKePemohon($id)
     {
-        return $this->updateStatus(
+        return $this->sendDelivery(
             (int) $id,
-            'completed'
+            'sent_to_applicant',
+            'sent_to_applicant_at',
+            'Hasil layanan berhasil dikirim ke Pemohon.'
         );
     }
 
@@ -1005,6 +1009,45 @@ class Keuangan extends BaseController
                 'success',
                 'Status tiket berhasil diperbarui.'
             );
+    }
+
+    private function sendDelivery(
+        int $id,
+        string $flag,
+        string $timestamp,
+        string $message
+    ) {
+        $ticket = $this->tickets->find($id);
+
+        if (!$ticket) {
+            return redirect()->back()->with('error', 'Tiket Keuangan tidak ditemukan.');
+        }
+
+        if (($ticket['status'] ?? '') !== 'completed') {
+            return redirect()
+                ->to(base_url('keuangan/detail/' . $id))
+                ->with('error', 'Tiket harus berstatus Selesai sebelum dikirim.');
+        }
+
+        if (!$this->tickets->update($id, [
+            $flag => 1,
+            $timestamp => date('Y-m-d H:i:s'),
+        ])) {
+            return redirect()
+                ->to(base_url('keuangan/detail/' . $id))
+                ->with('error', 'Status pengiriman gagal disimpan.');
+        }
+
+        $this->log(
+            'TICKET_SENT',
+            'Mengirim tiket ' . ($ticket['ticket_number'] ?? '-'),
+            $id,
+            $ticket['status'] ?? null
+        );
+
+        return redirect()
+            ->to(base_url('keuangan/detail/' . $id))
+            ->with('success', $message);
     }
 
 

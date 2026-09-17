@@ -123,6 +123,27 @@ class UptTik extends BaseController
         $newStatus = $statusMap[$statusInput];
         $adminNote = trim((string) $this->request->getPost('catatan'));
 
+        $resultFile = null;
+        $files = $this->request->getFileMultiple('file_hasil');
+        if (!empty($files)) {
+            foreach ($files as $file) {
+                if ($file && $file->isValid()) {
+                    if ($file->getSizeByUnit('mb') > 5 || !in_array(strtolower($file->getClientExtension()), ['pdf', 'jpg', 'jpeg', 'png'], true)) {
+                        return redirect()->back()->withInput()->with('error', 'Format dokumen hasil tidak valid atau melebihi 5 MB.');
+                    }
+
+                    $uploadPath = WRITEPATH . 'uploads/upt_tik';
+                    if (!is_dir($uploadPath) && !mkdir($uploadPath, 0750, true)) {
+                        return redirect()->back()->withInput()->with('error', 'Folder upload UPT TIK gagal dibuat.');
+                    }
+
+                    $resultFile = $file->getRandomName();
+                    $file->move($uploadPath, $resultFile);
+                    break;
+                }
+            }
+        }
+
         $data = [
             'status' => $newStatus,
             'admin_note' => $adminNote,
@@ -134,7 +155,18 @@ class UptTik extends BaseController
                 : ($ticket['completed_at'] ?? null),
         ];
 
-        $this->ticketModel->update($id, $data);
+        if ($resultFile !== null) {
+            $data['result_file'] = $resultFile;
+            $data['result_note'] = 'Dokumen hasil layanan diunggah.';
+        }
+
+        if (!$this->ticketModel->update($id, $data)) {
+            if ($resultFile !== null) {
+                @unlink(WRITEPATH . 'uploads/upt_tik/' . $resultFile);
+            }
+
+            return redirect()->back()->withInput()->with('error', 'Data tiket UPT TIK gagal diperbarui.');
+        }
 
         $this->writeActivity(
             'TICKET_PROCESSED',
@@ -241,6 +273,80 @@ class UptTik extends BaseController
     public function downloadFile(string $fileName)
     {
         return $this->serveUploadedFile($fileName, true);
+    }
+
+    public function kirim(int $id)
+    {
+        $ticket = $this->ticketModel->find($id);
+
+        if (!$ticket) {
+            return redirect()->to(base_url('upt-tik/data-tiket'))
+                ->with('error', 'Tiket UPT TIK tidak ditemukan.');
+        }
+
+        $status = strtolower(trim((string) ($ticket['status'] ?? '')));
+
+        if (!in_array($status, ['completed', 'complete', 'selesai'], true)) {
+            return redirect()->to(base_url('upt-tik/detail/' . $id))
+                ->with('error', 'Tiket harus berstatus Selesai sebelum dikirim ke Petugas ULT.');
+        }
+
+        $updated = $this->ticketModel->update($id, [
+            'sent_to_ult' => 1,
+            'sent_to_ult_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        if (!$updated) {
+            return redirect()->to(base_url('upt-tik/detail/' . $id))
+                ->with('error', 'Tiket gagal dikirim ke Petugas ULT.');
+        }
+
+        $this->writeActivity(
+            'TICKET_SENT_TO_ULT',
+            'Mengirim tiket ' . $ticket['ticket_number'] . ' ke Petugas ULT',
+            $id,
+            $ticket['status'] ?? null
+        );
+
+        return redirect()->to(base_url('upt-tik/detail/' . $id))
+            ->with('success', 'Tiket berhasil dikirim ke Petugas ULT.');
+    }
+
+    public function kirimKePemohon(int $id)
+    {
+        $ticket = $this->ticketModel->find($id);
+
+        if (!$ticket) {
+            return redirect()->to(base_url('upt-tik/data-tiket'))
+                ->with('error', 'Tiket UPT TIK tidak ditemukan.');
+        }
+
+        $status = strtolower(trim((string) ($ticket['status'] ?? '')));
+
+        if (!in_array($status, ['completed', 'complete', 'selesai'], true)) {
+            return redirect()->to(base_url('upt-tik/detail/' . $id))
+                ->with('error', 'Tiket harus berstatus Selesai sebelum dikirim ke Pemohon.');
+        }
+
+        $updated = $this->ticketModel->update($id, [
+            'sent_to_applicant' => 1,
+            'sent_to_applicant_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        if (!$updated) {
+            return redirect()->to(base_url('upt-tik/detail/' . $id))
+                ->with('error', 'Hasil layanan gagal dikirim ke Pemohon.');
+        }
+
+        $this->writeActivity(
+            'TICKET_SENT_TO_APPLICANT',
+            'Mengirim hasil layanan tiket ' . $ticket['ticket_number'] . ' ke Pemohon',
+            $id,
+            $ticket['status'] ?? null
+        );
+
+        return redirect()->to(base_url('upt-tik/detail/' . $id))
+            ->with('success', 'Hasil layanan berhasil dikirim ke Pemohon.');
     }
 
     private function serveUploadedFile(string $fileName, bool $download)

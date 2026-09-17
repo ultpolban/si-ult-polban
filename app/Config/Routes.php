@@ -258,6 +258,16 @@ $routes->group(
             'download/(:segment)',
             'UptTik::downloadFile/$1'
         );
+
+        $routes->get(
+            'kirim/(:num)',
+            'UptTik::kirim/$1'
+        );
+
+        $routes->get(
+            'kirim-pemohon/(:num)',
+            'UptTik::kirimKePemohon/$1'
+        );
     }
 );
 
@@ -416,6 +426,16 @@ $routes->group(
         $routes->get(
             'log-aktivitas',
             'AdministrasiUmum::logAktivitas'
+        );
+
+        $routes->get(
+            'kirim/(:num)',
+            'AdministrasiUmum::kirim/$1'
+        );
+
+        $routes->get(
+            'kirim-pemohon/(:num)',
+            'AdministrasiUmum::kirimPemohon/$1'
         );
     }
 );
@@ -1414,6 +1434,16 @@ $routes->group(
         $routes->get(
             'download/(:segment)',
             'Jurusan::downloadFile/$1'
+        );
+
+        $routes->get(
+            'kirim/(:num)',
+            'Jurusan::kirim/$1'
+        );
+
+        $routes->get(
+            'kirim-pemohon/(:num)',
+            'Jurusan::kirimKePemohon/$1'
         );
     }
 );

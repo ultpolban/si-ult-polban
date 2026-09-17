@@ -361,4 +361,39 @@ class Jurusan extends BaseController
         return redirect()->to('/jurusan/detail/' . (int) $id)
             ->with('success', 'Dokumen hasil layanan berhasil diunggah.');
     }
+
+    public function kirim($id)
+    {
+        return $this->sendDelivery((int) $id, 'sent_to_ult', 'sent_to_ult_at', 'Tiket berhasil dikirim ke Petugas ULT.');
+    }
+
+    public function kirimKePemohon($id)
+    {
+        return $this->sendDelivery((int) $id, 'sent_to_applicant', 'sent_to_applicant_at', 'Hasil layanan berhasil dikirim ke Pemohon.');
+    }
+
+    private function sendDelivery(int $id, string $flag, string $timestamp, string $message)
+    {
+        $ticket = $this->ticketModel->find($id);
+
+        if (!$ticket) {
+            return redirect()->back()->with('error', 'Data tiket tidak ditemukan.');
+        }
+
+        if (($ticket['status'] ?? '') !== 'completed') {
+            return redirect()->to('/jurusan/detail/' . $id)
+                ->with('error', 'Tiket harus berstatus Selesai sebelum dikirim.');
+        }
+
+        if (!$this->ticketModel->update($id, [
+            $flag => 1,
+            $timestamp => date('Y-m-d H:i:s'),
+        ])) {
+            return redirect()->to('/jurusan/detail/' . $id)
+                ->with('error', 'Status pengiriman gagal disimpan.');
+        }
+
+        return redirect()->to('/jurusan/detail/' . $id)
+            ->with('success', $message);
+    }
 }

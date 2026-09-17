@@ -237,10 +237,20 @@ class Akademik extends BaseController
                 );
         }
 
-        $this->tickets->update($id, [
+        if (!$this->isCompleted($ticket['status'] ?? null)) {
+            return redirect()
+                ->to(base_url('akademik/detail/' . $id))
+                ->with('error', 'Tiket harus berstatus Selesai sebelum dikirim ke Petugas ULT.');
+        }
+
+        if (!$this->tickets->update($id, [
             'sent_to_ult'    => 1,
             'sent_to_ult_at' => date('Y-m-d H:i:s'),
-        ]);
+        ])) {
+            return redirect()
+                ->to(base_url('akademik/detail/' . $id))
+                ->with('error', 'Tiket gagal dikirim ke Petugas ULT.');
+        }
 
         $this->writeActivityLog(
             $ticket,
@@ -275,10 +285,20 @@ class Akademik extends BaseController
                 );
         }
 
-        $this->tickets->update($id, [
+        if (!$this->isCompleted($ticket['status'] ?? null)) {
+            return redirect()
+                ->to(base_url('akademik/detail/' . $id))
+                ->with('error', 'Tiket harus berstatus Selesai sebelum dikirim ke Pemohon.');
+        }
+
+        if (!$this->tickets->update($id, [
             'sent_to_applicant'    => 1,
             'sent_to_applicant_at' => date('Y-m-d H:i:s'),
-        ]);
+        ])) {
+            return redirect()
+                ->to(base_url('akademik/detail/' . $id))
+                ->with('error', 'Hasil layanan gagal dikirim ke Pemohon.');
+        }
 
         $this->writeActivityLog(
             $ticket,
@@ -448,12 +468,32 @@ class Akademik extends BaseController
                 );
         }
 
+        $statusLower = strtolower($status);
+
+        $statusMap = [
+            'menunggu' => 'submitted',
+            'submitted' => 'submitted',
+            'diproses' => 'processing',
+            'processing' => 'processing',
+            'selesai' => 'completed',
+            'completed' => 'completed',
+        ];
+
+        $status = $statusMap[$statusLower] ?? null;
+
+        if ($status === null) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Status tiket tidak valid.');
+        }
+
         $data = [
             'status'     => $status,
             'admin_note' => $catatan,
         ];
 
-        $statusLower = strtolower($status);
+        $statusLower = $status;
 
         /* =====================================================
            WAKTU DIPROSES
@@ -832,7 +872,7 @@ class Akademik extends BaseController
                 );
         }
 
-        $this->tickets->update(
+        if (!$this->tickets->update(
             $id,
             [
                 'result_file' =>
@@ -841,7 +881,13 @@ class Akademik extends BaseController
                 'result_note' =>
                     'Dokumen hasil layanan diunggah.',
             ]
-        );
+        )) {
+            @unlink($savedPath);
+
+            return redirect()
+                ->back()
+                ->with('error', 'Dokumen gagal disimpan ke data tiket.');
+        }
 
         $this->writeActivityLog(
             $ticket,

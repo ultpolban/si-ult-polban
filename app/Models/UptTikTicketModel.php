@@ -25,8 +25,14 @@ class UptTikTicketModel extends Model
         'priority',
         'assigned_to',
         'admin_note',
+        'result_note',
+        'result_file',
         'submitted_at',
         'processed_at',
         'completed_at',
+        'sent_to_ult',
+        'sent_to_ult_at',
+        'sent_to_applicant',
+        'sent_to_applicant_at',
     ];
 }

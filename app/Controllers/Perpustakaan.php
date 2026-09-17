@@ -376,15 +376,48 @@ class Perpustakaan extends BaseController
             return redirect()->back()->with('error', 'Tiket tidak ditemukan.');
         }
 
-        $this->ticketModel->update($id, ['status' => 'completed', 'completed_at' => date('Y-m-d H:i:s')]);
-        $this->log('STATUS_CHANGED', 'Mengubah status tiket ' . $ticket['ticket_number'], (int) $id, 'completed');
+        if (($ticket['status'] ?? '') !== 'completed') {
+            return redirect()->to('perpustakaan/detail/' . $id)
+                ->with('error', 'Tiket harus berstatus Selesai sebelum dikirim.');
+        }
 
-        return redirect()->to('perpustakaan/detail/' . $id)->with('success', 'Tiket Perpustakaan dikirim ke pemohon.');
+        if (!$this->ticketModel->update($id, [
+            'sent_to_ult' => 1,
+            'sent_to_ult_at' => date('Y-m-d H:i:s'),
+        ])) {
+            return redirect()->to('perpustakaan/detail/' . $id)
+                ->with('error', 'Status pengiriman gagal disimpan.');
+        }
+
+        $this->log('TICKET_SENT', 'Mengirim tiket ' . $ticket['ticket_number'] . ' ke Petugas ULT', (int) $id, $ticket['status']);
+
+        return redirect()->to('perpustakaan/detail/' . $id)->with('success', 'Tiket berhasil dikirim ke Petugas ULT.');
     }
 
     public function kirimKePemohon($id)
     {
-        return $this->kirim($id);
+        $ticket = $this->queryTiket()->where('t.id', $id)->get()->getRowArray();
+
+        if (!$ticket) {
+            return redirect()->back()->with('error', 'Tiket tidak ditemukan.');
+        }
+
+        if (($ticket['status'] ?? '') !== 'completed') {
+            return redirect()->to('perpustakaan/detail/' . $id)
+                ->with('error', 'Tiket harus berstatus Selesai sebelum dikirim.');
+        }
+
+        if (!$this->ticketModel->update($id, [
+            'sent_to_applicant' => 1,
+            'sent_to_applicant_at' => date('Y-m-d H:i:s'),
+        ])) {
+            return redirect()->to('perpustakaan/detail/' . $id)
+                ->with('error', 'Status pengiriman gagal disimpan.');
+        }
+
+        $this->log('TICKET_SENT', 'Mengirim hasil tiket ' . $ticket['ticket_number'] . ' ke Pemohon', (int) $id, $ticket['status']);
+
+        return redirect()->to('perpustakaan/detail/' . $id)->with('success', 'Hasil layanan berhasil dikirim ke Pemohon.');
     }
 
     private function log(string $action, string $activity, ?int $ticketId = null, ?string $status = null, ?string $note = null): void

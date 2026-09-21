@@ -110,6 +110,7 @@ class PermissionSeeder extends Seeder
             'request' => [
                 'create'   => 'Buat Pengajuan',
                 'view'     => 'Lihat Pengajuan',
+                'update'   => 'Ubah Pengajuan',
                 'verify'   => 'Verifikasi Pengajuan',
                 'approve'  => 'Setujui Pengajuan',
                 'reject'   => 'Tolak Pengajuan',
@@ -132,6 +133,14 @@ class PermissionSeeder extends Seeder
 
             'statistic' => [
                 'view' => 'Lihat Statistik',
+            ],
+
+            'faq' => [
+                'view'    => 'Lihat FAQ',
+                'create'  => 'Tambah FAQ',
+                'update'  => 'Ubah FAQ',
+                'delete'  => 'Hapus FAQ',
+                'restore' => 'Pulihkan FAQ',
             ],
 
         ];

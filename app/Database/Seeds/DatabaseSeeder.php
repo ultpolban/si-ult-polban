@@ -63,6 +63,16 @@ class DatabaseSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
+        | MAPPING AKSES LAYANAN BERDASARKAN JENIS PEMOHON
+        |--------------------------------------------------------------------------
+        */
+
+        // membutuhkan layanan + jenis pemohon
+        $this->call(ServiceApplicantTypeSeeder::class);
+
+
+        /*
+        |--------------------------------------------------------------------------
         | REQUIREMENT
         |--------------------------------------------------------------------------
         */
@@ -77,7 +87,6 @@ class DatabaseSeeder extends Seeder
         */
 
         $this->call(AdminSeeder::class);
-        $this->call(PimpinanSeeder::class);
 
 
 echo PHP_EOL;
@@ -97,7 +106,7 @@ echo PHP_EOL;
         $tables = [
             'service_request_logs',
             'service_request_files',
-            'service_requests',
+            'tickets',
             'notifications',
             'activity_logs',
             'role_permissions',
@@ -113,6 +122,8 @@ echo PHP_EOL;
             'master_study_programs',
             'master_departments',
             'master_applicant_types',
+            'service_applicant_types',
+            'faqs',
         ];
 
         foreach ($tables as $table) {

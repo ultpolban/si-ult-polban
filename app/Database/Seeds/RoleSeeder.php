@@ -10,6 +10,12 @@ class RoleSeeder extends Seeder
     {
         $now = date('Y-m-d H:i:s');
 
+        /*
+        |--------------------------------------------------------------------------
+        | Role kanonik aplikasi (konsisten dengan RolePermissionSeeder & Routes)
+        |--------------------------------------------------------------------------
+        */
+
         $roles = [
 
             [
@@ -27,23 +33,23 @@ class RoleSeeder extends Seeder
             ],
 
             [
-                'code'        => 'PETUGAS_AKADEMIK',
-                'name'        => 'Petugas Akademik',
-                'description' => 'Memverifikasi dan memproses layanan akademik.',
+                'code'        => 'PETUGAS_ULT',
+                'name'        => 'Petugas ULT',
+                'description' => 'Memverifikasi dan memproses layanan Unit Layanan Terpadu.',
                 'sort_order'  => 3,
             ],
 
             [
-                'code'        => 'PETUGAS_KEUANGAN',
-                'name'        => 'Petugas Keuangan',
-                'description' => 'Memverifikasi dan memproses layanan keuangan.',
+                'code'        => 'UNIT_TUJUAN',
+                'name'        => 'Unit Tujuan',
+                'description' => 'Unit layanan tujuan yang menindaklanjuti tiket.',
                 'sort_order'  => 4,
             ],
 
             [
-                'code'        => 'PETUGAS_UMUM',
-                'name'        => 'Petugas Umum',
-                'description' => 'Memverifikasi dan memproses layanan umum.',
+                'code'        => 'PIMPINAN',
+                'name'        => 'Pimpinan',
+                'description' => 'Melihat laporan dan statistik layanan.',
                 'sort_order'  => 5,
             ],
 
@@ -54,21 +60,27 @@ class RoleSeeder extends Seeder
                 'sort_order'  => 6,
             ],
 
-            [
-                'code'        => 'PIMPINAN',
-                'name'        => 'Pimpinan',
-                'description' => 'Memantau ringkasan dan kinerja layanan.',
-                'sort_order'  => 7,
-            ],
-
         ];
 
-        foreach ($roles as &$role) {
-            $role['is_active'] = true;
-            $role['created_at'] = $now;
-            $role['updated_at'] = $now;
-        }
+        foreach ($roles as $role) {
+            $existing = $this->db->table('roles')
+                ->where('code', $role['code'])
+                ->get()
+                ->getRowArray();
 
-        $this->db->table('roles')->insertBatch($roles);
+            $role['is_active']  = true;
+            $role['updated_at'] = $now;
+
+            if ($existing) {
+                // Update agar sesuai definisi terbaru (tetap aktif)
+                unset($role['code']);
+                $this->db->table('roles')
+                    ->where('id', $existing['id'])
+                    ->update($role);
+            } else {
+                $role['created_at'] = $now;
+                $this->db->table('roles')->insert($role);
+            }
+        }
     }
 }

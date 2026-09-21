@@ -99,6 +99,18 @@ class TrackingController extends AdminController
             throw PageNotFoundException::forPageNotFound();
         }
 
+        // Pemohon hanya dapat melihat tiket miliknya
+        if (strtoupper((string) session()->get('role_code')) === 'PEMOHON') {
+            $profile = $this->profileModel->findByUser((int) session()->get('user_id'));
+            $ownProfileId = $profile ? (int) $profile['id'] : -1;
+
+            if ((int) $ticket['user_profile_id'] !== $ownProfileId) {
+                return redirect()
+                    ->to(site_url('tracking'))
+                    ->with('error', 'Anda tidak memiliki akses ke tiket tersebut.');
+            }
+        }
+
         $history = $this->ticketService->history($id);
 
         return view('tracking/show', $this->viewData([

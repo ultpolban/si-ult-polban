@@ -7,7 +7,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><?= esc($title ?? 'Login') ?> - SI ULT POLBAN</title>
+    <title><?= esc($title ?? 'Verifikasi Izin Registrasi') ?> - SI ULT POLBAN</title>
 
     <link rel="icon" href="<?= base_url('assets/img/favicon.svg') ?>">
 
@@ -42,27 +42,35 @@
 
                         <h1>
 
-                            Sistem Informasi<br>
+                            Izin<br>
 
-                            Layanan Terpadu<br>
-
-                            POLBAN
+                            Registrasi
 
                         </h1>
 
                         <p>
 
-                            Satu pintu untuk seluruh layanan akademik,
+                            Registrasi hanya dapat dilakukan
 
-                            administrasi, dan kemahasiswaan.
+                            setelah permintaan izin Anda disetujui admin.
 
                         </p>
+
+                        <div class="mt-3 alert alert-light border small">
+
+                            <i class="fas fa-shield-alt me-2"></i>
+
+                            Masukkan email yang digunakan saat
+
+                            mengajukan permintaan izin registrasi.
+
+                        </div>
 
                     </div>
 
                     <div class="auth-icon">
 
-                        <i class="fas fa-graduation-cap"></i>
+                        <i class="fas fa-shield-halved"></i>
 
                     </div>
 
@@ -77,13 +85,12 @@
                             alt="Logo"
                             width="72">
 
-                        <h2 class="mt-3 mb-1">Selamat Datang</h2>
+                        <h2 class="mt-3 mb-1">Verifikasi Izin</h2>
 
-                        <p>Silakan login untuk melanjutkan</p>
+                        <p>Periksa izin sebelum melanjutkan registrasi</p>
 
                     </div>
-
-                    <?php if (session()->getFlashdata('error')) : ?>
+<?php if (session()->getFlashdata('error')) : ?>
 
                         <div class="alert alert-danger">
 
@@ -95,7 +102,37 @@
 
                     <?php endif; ?>
 
-                    <form action="<?= base_url('login') ?>"
+                    <div class="card border shadow-sm mb-3">
+
+                        <div class="card-body">
+
+                            <p class="mb-2">
+
+                                Registrasi saat ini hanya dapat diakses oleh
+
+                                calon pengguna yang permintaan izinnya telah
+
+                                <strong>disetujui admin</strong>.
+
+                            </p>
+
+                            <p class="mb-0 text-muted small">
+
+                                Belum mendapatkan izin?
+
+                                <a href="<?= base_url('registration-request') ?>">
+
+                                    Ajukan permintaan izin registrasi di sini
+
+                                </a>
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <form action="<?= base_url('register/gate') ?>"
                         method="post">
 
                         <?= csrf_field(); ?>
@@ -104,7 +141,7 @@
 
                             <label class="form-label">
 
-                                Email / NIM / NIK
+                                Email yang Disetujui <span class="text-danger">*</span>
 
                             </label>
 
@@ -117,38 +154,12 @@
                                 </span>
 
                                 <input
-                                    type="text"
+                                    type="email"
                                     name="email"
                                     class="form-control"
-                                    placeholder="Masukkan email atau NIM"
+                                    placeholder="Masukkan email yang telah disetujui"
                                     value="<?= old('email') ?>"
-                                    required>
-
-                            </div>
-
-                        </div>
-
-                        <div class="mb-4">
-
-                            <label class="form-label">
-
-                                Password
-
-                            </label>
-
-                            <div class="input-group">
-
-                                <span class="input-group-text">
-
-                                    <i class="fas fa-lock"></i>
-
-                                </span>
-
-                                <input
-                                    type="password"
-                                    name="password"
-                                    class="form-control"
-                                    placeholder="Masukkan password"
+                                    maxlength="150"
                                     required>
 
                             </div>
@@ -159,9 +170,9 @@
                             type="submit"
                             class="btn btn-primary w-100">
 
-                            <i class="fas fa-sign-in-alt me-2"></i>
+                            <i class="fas fa-check-circle me-2"></i>
 
-                            Login
+                            Verifikasi
 
                         </button>
 
@@ -169,13 +180,13 @@
 
                     <div class="text-center mt-3">
 
-                        <small>
+                        <small class="text-muted">
 
-                            Belum punya akun?
+                            Sudah punya akun?
 
-                            <a href="<?= base_url('register') ?>">
+                            <a href="<?= base_url('login') ?>">
 
-                                Daftar sebagai pemohon
+                                Login di sini
 
                             </a>
 

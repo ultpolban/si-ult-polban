@@ -173,27 +173,89 @@
 
         <!-- LAYANAN -->
         <?php
+        $isPemohon = strtoupper((string) session('role_code')) === 'PEMOHON';
+
         $showLayanan =
             $can('request.view') ||
-            $can('request.verify');
+            $can('request.create') ||
+            $can('request.verify') ||
+            $can('report.view') ||
+            $can('statistic.view');
         ?>
 
         <?php if ($showLayanan): ?>
             <div class="ult-menu-header">Layanan</div>
 
+            <?php if ($isPemohon): ?>
+
+                <?php if ($can('request.create')): ?>
+                    <a href="<?= site_url('service-requests/create') ?>">
+                        <i class="fas fa-paper-plane"></i>
+                        Buat Pengajuan
+                    </a>
+                <?php endif; ?>
+
+                <?php if ($can('request.view')): ?>
+                    <a href="<?= site_url('service-requests') ?>">
+                        <i class="fas fa-list"></i>
+                        Pengajuan Saya
+                    </a>
+                <?php endif; ?>
+
+            <?php else: ?>
+
+                <?php if ($can('request.view')): ?>
+                    <a href="<?= site_url('tickets') ?>">
+                        <i class="fas fa-ticket-alt"></i>
+                        Manajemen Tiket
+                    </a>
+                <?php endif; ?>
+
+                <?php if ($can('request.create')): ?>
+                    <a href="<?= site_url('tickets/create') ?>">
+                        <i class="fas fa-plus-circle"></i>
+                        Buat Tiket
+                    </a>
+                <?php endif; ?>
+
+                <?php if ($can('request.verify')): ?>
+                    <a href="<?= site_url('verifications') ?>">
+                        <i class="fas fa-check-circle"></i>
+                        Verifikasi
+                    </a>
+                <?php endif; ?>
+
+            <?php endif; ?>
+
             <?php if ($can('request.view')): ?>
-                <a href="<?= site_url('service-requests') ?>">
-                    <i class="fas fa-paper-plane"></i>
-                    Pengajuan Layanan
+                <a href="<?= site_url('tracking') ?>">
+                    <i class="fas fa-search"></i>
+                    Lacak Tiket
                 </a>
             <?php endif; ?>
 
-            <?php if ($can('request.verify')): ?>
-                <a href="<?= site_url('verifications') ?>">
-                    <i class="fas fa-check-circle"></i>
-                    Verifikasi
+            <?php if ($can('report.view')): ?>
+                <a href="<?= site_url('reports') ?>">
+                    <i class="fas fa-file-alt"></i>
+                    Laporan
                 </a>
             <?php endif; ?>
+
+            <?php if ($can('statistic.view')): ?>
+                <a href="<?= site_url('statistics') ?>">
+                    <i class="fas fa-chart-pie"></i>
+                    Statistik
+                </a>
+            <?php endif; ?>
+        <?php endif; ?>
+<!-- REGISTRASI -->
+        <?php if ($can('registration_request.view')): ?>
+            <div class="ult-menu-header">Registrasi</div>
+
+            <a href="<?= site_url('registration-requests') ?>">
+                <i class="fas fa-user-plus"></i>
+                Permintaan Registrasi
+            </a>
         <?php endif; ?>
 
 
@@ -218,55 +280,6 @@
                 <a href="<?= site_url('activity-logs') ?>">
                     <i class="fas fa-history"></i>
                     Activity Log
-                </a>
-            <?php endif; ?>
-        <?php endif; ?>
-
-
-        <!-- TIKET -->
-        <?php
-        $showTicket =
-            $can('request.view') ||
-            $can('request.create') ||
-            $can('report.view') ||
-            $can('statistic.view');
-        ?>
-
-        <?php if ($showTicket): ?>
-            <div class="ult-menu-header">Tiket</div>
-
-            <?php if ($can('request.view')): ?>
-                <a href="<?= site_url('tickets') ?>">
-                    <i class="fas fa-ticket-alt"></i>
-                    Manajemen Tiket
-                </a>
-            <?php endif; ?>
-
-            <?php if ($can('request.create')): ?>
-                <a href="<?= site_url('tickets/create') ?>">
-                    <i class="fas fa-plus-circle"></i>
-                    Buat Tiket
-                </a>
-            <?php endif; ?>
-
-            <?php if ($can('request.view')): ?>
-                <a href="<?= site_url('tracking') ?>">
-                    <i class="fas fa-search"></i>
-                    Lacak Tiket
-                </a>
-            <?php endif; ?>
-
-            <?php if ($can('report.view')): ?>
-                <a href="<?= site_url('reports') ?>">
-                    <i class="fas fa-file-alt"></i>
-                    Laporan
-                </a>
-            <?php endif; ?>
-
-            <?php if ($can('statistic.view')): ?>
-                <a href="<?= site_url('statistics') ?>">
-                    <i class="fas fa-chart-pie"></i>
-                    Statistik
                 </a>
             <?php endif; ?>
         <?php endif; ?>

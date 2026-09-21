@@ -25,7 +25,8 @@ abstract class BaseController extends Controller
         'url',
         'form',
         'text',
-        'filesystem'
+        'filesystem',
+        'ticket_helper'
     ];
 
     /**

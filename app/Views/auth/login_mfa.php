@@ -73,7 +73,7 @@
 
                     <div class="text-center mb-4">
 
-                        <img src="<?= base_url('assets/images/logo.svg') ?>"
+                        <img src="<?= base_url('assets/img/logo.svg') ?>"
 
                             alt="Logo"
 

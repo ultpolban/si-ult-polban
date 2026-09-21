@@ -3,22 +3,19 @@
 namespace App\Controllers;
 
 use App\Controllers\AdminController;
-use App\Services\ServiceRequestService;
-use App\Services\NotificationService;
+use App\Services\TicketService;
 use App\Constants\Permissions;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class VerificationController extends AdminController
 {
-    protected ServiceRequestService $serviceRequestService;
-    protected NotificationService $notificationService;
+    protected TicketService $ticketService;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->serviceRequestService = new ServiceRequestService();
-        $this->notificationService   = service('notificationService');
+        $this->ticketService = new TicketService();
     }
 
     /**
@@ -30,14 +27,17 @@ class VerificationController extends AdminController
 
         $keyword = trim($this->request->getGet('keyword') ?? '');
 
-        $result = $this->serviceRequestService->getList($keyword);
+        $result = $this->ticketService->getList([
+            'keyword'  => $keyword,
+            'statuses' => ['submitted', 'revision'],
+        ]);
 
         return view('verifications/index', $this->viewData([
             'title'      => 'Verifikasi Pengajuan',
             'pageTitle'  => 'Verifikasi Pengajuan',
             'breadcrumb' => ['Verifikasi'],
             'keyword'    => $keyword,
-            'requests'   => $result['requests'],
+            'requests'   => $result['tickets'],
             'pager'      => $result['pager'],
         ]));
     }
@@ -49,7 +49,7 @@ class VerificationController extends AdminController
     {
         $this->authorize(Permissions::REQUEST_VERIFY);
 
-        $request = $this->serviceRequestService->getById($id);
+        $request = $this->ticketService->getById($id);
 
         if (! $request) {
             throw PageNotFoundException::forPageNotFound();
@@ -59,6 +59,7 @@ class VerificationController extends AdminController
             'title'      => 'Verifikasi Pengajuan',
             'pageTitle'  => 'Verifikasi Pengajuan',
             'request'    => $request,
+            'files'      => [],
         ]));
     }
 
@@ -71,10 +72,17 @@ class VerificationController extends AdminController
 
         $userId = (int) ($this->user['id'] ?? session()->get('user_id'));
 
-        $this->serviceRequestService->changeStatus($id, 'processing', $userId, 'Pengajuan diverifikasi dan diproses');
+        $request = $this->ticketService->getById($id);
 
-        // Notifikasi ke pemohon bahwa pengajuan diverifikasi
-        $request = $this->serviceRequestService->getById($id);
+        if (! $request) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $this->ticketService->changeStatus($id, 'processing', $userId, 'Pengajuan diverifikasi dan diproses');
+
+        $this->logActivity('verify_ticket', 'Memverifikasi tiket #' . $id, 'tickets', $id);
+
+        // Notifikasi real-time ke pemohon
         if ($request) {
             $this->notificationService->notifyProfileOwner(
                 (int) ($request['user_profile_id'] ?? 0),
@@ -82,7 +90,7 @@ class VerificationController extends AdminController
                 'Pengajuan ' . ($request['ticket_number'] ?? '#') . $id . ' telah diverifikasi dan sedang diproses.',
                 'success',
                 $id,
-                site_url('service-requests/show/' . $id)
+                site_url('tracking/show/' . $id)
             );
         }
 
@@ -102,20 +110,25 @@ class VerificationController extends AdminController
 
         $note = trim($this->request->getPost('note') ?? '');
 
-        $this->serviceRequestService->changeStatus($id, 'rejected', $userId, $note ?: 'Pengajuan ditolak');
+        $request = $this->ticketService->getById($id);
 
-        // Notifikasi ke pemohon bahwa pengajuan ditolak
-        $request = $this->serviceRequestService->getById($id);
-        if ($request) {
-            $this->notificationService->notifyProfileOwner(
-                (int) ($request['user_profile_id'] ?? 0),
-                'Pengajuan Ditolak',
-                'Pengajuan ' . ($request['ticket_number'] ?? '#') . $id . ' ditolak.' . ($note !== '' ? " Alasan: $note" : ''),
-                'danger',
-                $id,
-                site_url('service-requests/show/' . $id)
-            );
+        if (! $request) {
+            throw PageNotFoundException::forPageNotFound();
         }
+
+        $this->ticketService->changeStatus($id, 'rejected', $userId, $note ?: 'Pengajuan ditolak');
+
+        $this->logActivity('reject_ticket', 'Menolak tiket #' . $id, 'tickets', $id);
+
+        // Notifikasi real-time ke pemohon
+        $this->notificationService->notifyProfileOwner(
+            (int) ($request['user_profile_id'] ?? 0),
+            'Pengajuan Ditolak',
+            'Pengajuan ' . ($request['ticket_number'] ?? '#') . $id . ' ditolak.' . ($note !== '' ? " Alasan: $note" : ''),
+            'danger',
+            $id,
+            site_url('tracking/show/' . $id)
+        );
 
         return redirect()
             ->to(site_url('verifications'))

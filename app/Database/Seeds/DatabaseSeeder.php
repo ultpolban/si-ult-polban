@@ -106,7 +106,7 @@ echo PHP_EOL;
         $tables = [
             'service_request_logs',
             'service_request_files',
-            'service_requests',
+            'tickets',
             'notifications',
             'activity_logs',
             'role_permissions',

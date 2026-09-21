@@ -68,6 +68,14 @@ class TicketService extends BaseService
             $builder->where('tickets.status', $filters['status']);
         }
 
+        if (!empty($filters['statuses']) && is_array($filters['statuses'])) {
+            $builder->whereIn('tickets.status', $filters['statuses']);
+        }
+
+        if (!empty($filters['user_profile_id'])) {
+            $builder->where('tickets.user_profile_id', (int) $filters['user_profile_id']);
+        }
+
         if (!empty($filters['priority'])) {
             $builder->where('tickets.priority', $filters['priority']);
         }
@@ -127,20 +135,61 @@ class TicketService extends BaseService
 
     /**
      * Update tiket.
+     *
+     * Hanya field yang benar-benar dikirim yang diperbarui, sehingga
+     * pengeditan parsial (mis. form edit yang tidak menyertakan judul
+     * maupun pemilik tiket) tidak lagi menghapus judul atau memutus
+     * kepemilikan tiket.
      */
     public function update(int $id, array $data): bool
     {
-        $ticketData = [
-            'user_profile_id' => $data['user_profile_id'] ?? null,
-            'service_id'      => $data['service_id'] ?? null,
-            'title'           => $data['title'] ?? '',
-            'description'     => $data['description'] ?? null,
-            'priority'        => $data['priority'] ?? 'normal',
-            'assigned_to'     => $data['assigned_to'] ?? null,
-            'admin_note'      => $data['admin_note'] ?? null,
-        ];
+        $current = $this->ticketModel->find($id);
 
-        return $this->ticketModel->update($id, $ticketData);
+        if (! $current) {
+            return false;
+        }
+
+        $payload = [];
+
+        // Kepemilikan tiket tidak boleh berubah kecuali secara eksplisit dikirim
+        if (array_key_exists('user_profile_id', $data)) {
+            $payload['user_profile_id'] = $data['user_profile_id'] ?: null;
+        }
+
+        if (array_key_exists('service_id', $data)) {
+            $payload['service_id'] = $data['service_id'] ?: null;
+        }
+
+        if (array_key_exists('title', $data) && trim((string) $data['title']) !== '') {
+            $payload['title'] = trim((string) $data['title']);
+        } elseif (array_key_exists('service_id', $payload)
+            && (int) $payload['service_id'] !== (int) $current['service_id']) {
+            // Judul mengikuti nama layanan bila layanan diganti
+            // dan judul tidak ikut dikirim dari form.
+            $payload['title'] = $this->resolveTitle(['service_id' => $payload['service_id']]);
+        }
+
+        if (array_key_exists('description', $data)) {
+            $payload['description'] = $data['description'];
+        }
+
+        if (array_key_exists('priority', $data) && ($data['priority'] ?? '') !== '') {
+            $payload['priority'] = $data['priority'];
+        }
+
+        if (array_key_exists('assigned_to', $data)) {
+            $payload['assigned_to'] = $data['assigned_to'] ?: null;
+        }
+
+        if (array_key_exists('admin_note', $data)) {
+            $payload['admin_note'] = $data['admin_note'];
+        }
+
+        if ($payload === []) {
+            return true; // tidak ada field yang berubah
+        }
+
+        return $this->ticketModel->update($id, $payload);
     }
 
     /**
@@ -166,6 +215,12 @@ class TicketService extends BaseService
      */
     public function changeStatus(int $id, string $status, int $userId, ?string $note = null): bool
     {
+        $current = $this->ticketModel->find($id);
+
+        if (! $current) {
+            return false;
+        }
+
         // Petakan status ke kolom timestamp yang sesuai
         $timestampFields = [
             'submitted'    => 'submitted_at',
@@ -185,14 +240,23 @@ class TicketService extends BaseService
             $updateData[$timestampFields[$status]] = date('Y-m-d H:i:s');
         }
 
+        if ($status === 'rejected') {
+            $updateData['rejection_reason'] = $note;
+        }
+
         $updated = $this->ticketModel->update($id, $updateData);
 
         if ($updated) {
             $this->logModel->insert([
                 'service_request_id' => $id,
                 'user_id'            => $userId,
-                'action'             => 'status_change',
+                'old_status'         => $current['status'] ?? null,
+                'new_status'         => $status,
+                'action'             => 'STATUS_CHANGE',
                 'description'        => 'Status diubah menjadi ' . $status . ($note ? ' - ' . $note : ''),
+                'ip_address'         => service('request')->getIPAddress(),
+                'user_agent'         => service('request')->getUserAgent()->getAgentString(),
+                'created_at'         => date('Y-m-d H:i:s'),
             ]);
         }
 
@@ -208,13 +272,18 @@ class TicketService extends BaseService
     /**
      * Daftar tiket milik user (berdasarkan user profile id).
      */
-    public function myTickets(int $userProfileId): array
+    public function myTickets(int $userProfileId, ?int $limit = null): array
     {
-        return $this->ticketModel
+        $builder = $this->ticketModel
             ->getComplete()
             ->where('tickets.user_profile_id', $userProfileId)
-            ->orderBy('tickets.created_at', 'DESC')
-            ->findAll();
+            ->orderBy('tickets.created_at', 'DESC');
+
+        if ($limit !== null && $limit > 0) {
+            $builder->limit($limit);
+        }
+
+        return $builder->findAll();
     }
 
     /**
@@ -234,6 +303,58 @@ class TicketService extends BaseService
     public function history(int $requestId): array
     {
         return $this->logModel->getHistory($requestId);
+    }
+
+    /**
+     * Tiket terbaru (untuk dashboard / feed).
+     */
+    public function latest(int $limit = 5): array
+    {
+        $limit = max(1, min($limit, 25));
+
+        return $this->ticketModel
+            ->getComplete()
+            ->orderBy('tickets.created_at', 'DESC')
+            ->limit($limit)
+            ->findAll();
+    }
+
+    /**
+     * Ringkasan statistik tiket milik seorang pemohon.
+     */
+    public function summaryForProfile(int $userProfileId): array
+    {
+        $db = db_connect();
+
+        $count = static function (string $scope) use ($db, $userProfileId): int {
+            $builder = $db->table('tickets')
+                ->where('user_profile_id', $userProfileId);
+
+            switch ($scope) {
+                case 'pending':
+                    $builder->where('status', 'submitted');
+                    break;
+                case 'processing':
+                    $builder->whereIn('status', ['verification', 'processing']);
+                    break;
+                case 'completed':
+                    $builder->where('status', 'completed');
+                    break;
+                case 'rejected':
+                    $builder->where('status', 'rejected');
+                    break;
+            }
+
+            return (int) $builder->countAllResults();
+        };
+
+        return [
+            'total'      => $count('total'),
+            'pending'    => $count('pending'),
+            'processing' => $count('processing'),
+            'completed'  => $count('completed'),
+            'rejected'   => $count('rejected'),
+        ];
     }
 
     /**

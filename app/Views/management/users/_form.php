@@ -133,16 +133,17 @@ $formData['address'] = old('address', $formData['address'] ?? '');
                     name="password"
                     id="password"
                     class="form-control"
-                    minlength="8"
+                    minlength="10"
+                    maxlength="72"
+                    pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+"
+                    title="Minimal 10 karakter serta memuat huruf besar, huruf kecil, angka, dan simbol."
+                    autocomplete="new-password"
                     <?= $isEdit ? '' : 'required' ?>>
 
-                <?php if ($isEdit) : ?>
-
-                    <small class="text-muted">
-                        Kosongkan jika password tidak diubah.
-                    </small>
-
-                <?php endif; ?>
+                <small class="text-muted">
+                    Minimal 10 karakter dan harus memuat huruf besar, huruf kecil, angka, serta simbol.
+                    <?= $isEdit ? 'Kosongkan jika password tidak diubah.' : '' ?>
+                </small>
 
             </div>
 
@@ -157,7 +158,9 @@ $formData['address'] = old('address', $formData['address'] ?? '');
                     name="password_confirmation"
                     id="password_confirmation"
                     class="form-control"
-                    minlength="8"
+                    minlength="10"
+                    maxlength="72"
+                    autocomplete="new-password"
                     <?= $isEdit ? '' : 'required' ?>>
 
             </div>

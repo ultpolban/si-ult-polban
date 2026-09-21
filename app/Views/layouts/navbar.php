@@ -30,23 +30,20 @@
 
                 <i class="far fa-bell"></i>
 
-                <?php if (!empty($notificationCount) && $notificationCount > 0): ?>
+                <span class="ult-badge ult-badge-red rt-notif-badge"
+                    id="rt-notif-badge"
+                    style="position:absolute;top:4px;right:4px;padding:2px 6px;font-size:.65rem;<?= empty($notificationCount) ? 'display:none;' : '' ?>">
 
-                    <span class="ult-badge ult-badge-red"
-                        style="position:absolute;top:4px;right:4px;padding:2px 6px;font-size:.65rem;">
+                    <?= (int) ($notificationCount ?? 0) ?>
 
-                        <?= $notificationCount ?>
-
-                    </span>
-
-                <?php endif; ?>
+                </span>
 
             </button>
 
             <ul class="dropdown-menu dropdown-menu-end shadow"
                 style="min-width:320px; max-height:420px; overflow-y:auto;">
 
-                <li class="dropdown-header">
+                <li class="dropdown-header" id="rt-notif-count">
                     <?= $notificationCount ?? 0 ?> Notifikasi
                 </li>
 
@@ -54,28 +51,32 @@
                     <hr class="dropdown-divider">
                 </li>
 
-                <?php if (empty($notifications)): ?>
-                    <li>
-                        <a class="dropdown-item text-muted" href="<?= site_url('notifications') ?>">
-                            <em>Tidak ada notifikasi baru.</em>
-                        </a>
-                    </li>
-                <?php else: ?>
-                    <?php $nCount = 0; ?>
-                    <?php foreach ($notifications as $n): ?>
-                        <?php if ($nCount >= 8) { break; } $nCount++; ?>
+                <div id="rt-notif-items">
+
+                    <?php if (empty($notifications)): ?>
                         <li>
-                            <a class="dropdown-item"
-                                href="<?= site_url('notifications/read/' . $n['id']) ?>">
-                                <div class="d-flex justify-content-between">
-                                    <strong class="small"><?= esc($n['title']) ?></strong>
-                                    <small class="text-muted ms-2 text-nowrap"><?= esc(date('d/m H:i', strtotime($n['created_at'] ?? 'now'))) ?></small>
-                                </div>
-                                <div class="small text-muted text-truncate" style="max-width:260px;"><?= esc($n['message']) ?></div>
+                            <a class="dropdown-item text-muted" href="<?= site_url('notifications') ?>">
+                                <em>Tidak ada notifikasi baru.</em>
                             </a>
                         </li>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                    <?php else: ?>
+                        <?php $nCount = 0; ?>
+                        <?php foreach ($notifications as $n): ?>
+                            <?php if ($nCount >= 8) { break; } $nCount++; ?>
+                            <li>
+                                <a class="dropdown-item"
+                                    href="<?= !empty($n['url']) ? esc($n['url']) : site_url('notifications/read/' . $n['id']) ?>">
+                                    <div class="d-flex justify-content-between">
+                                        <strong class="small"><?= esc($n['title']) ?></strong>
+                                        <small class="text-muted ms-2 text-nowrap"><?= esc(date('d/m H:i', strtotime($n['created_at'] ?? 'now'))) ?></small>
+                                    </div>
+                                    <div class="small text-muted text-truncate" style="max-width:260px;"><?= esc($n['message']) ?></div>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+
+                </div>
 
                 <li>
                     <hr class="dropdown-divider">

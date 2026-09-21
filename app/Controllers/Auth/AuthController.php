@@ -247,9 +247,11 @@ class AuthController extends BaseController
      */
     public function unauthorized()
     {
-        return view('errors/unauthorized', [
-            'title' => 'Akses Ditolak',
-        ]);
+        return response()
+            ->setStatusCode(403)
+            ->setBody(view('errors/unauthorized', [
+                'title' => 'Akses Ditolak',
+            ]));
     }
 
     /**

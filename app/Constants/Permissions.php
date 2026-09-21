@@ -200,4 +200,14 @@ final class Permissions
     public const FAQ_UPDATE = 'faq.update';
     public const FAQ_DELETE = 'faq.delete';
     public const FAQ_RESTORE = 'faq.restore';
+
+    /*
+    |--------------------------------------------------------------------------
+    | Registration Request
+    |--------------------------------------------------------------------------
+    */
+
+    public const REGISTRATION_REQUEST_VIEW    = 'registration_request.view';
+    public const REGISTRATION_REQUEST_APPROVE = 'registration_request.approve';
+    public const REGISTRATION_REQUEST_REJECT  = 'registration_request.reject';
 }

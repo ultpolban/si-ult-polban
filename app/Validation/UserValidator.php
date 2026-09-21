@@ -63,7 +63,9 @@ class UserValidator
 
                 'label' => 'Password',
 
-                'rules' => 'required|min_length[8]',
+                'rules' => SecurityRules::password(),
+
+                'errors' => SecurityRules::passwordErrors(),
 
             ],
 
@@ -227,7 +229,9 @@ class UserValidator
 
                 'label' => 'Password',
 
-                'rules' => 'permit_empty|min_length[8]',
+                'rules' => SecurityRules::password(false),
+
+                'errors' => SecurityRules::passwordErrors(),
 
             ],
 

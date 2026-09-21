@@ -7,7 +7,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><?= esc($title ?? 'Registrasi') ?> - SI ULT POLBAN</title>
+    <title><?= esc($title ?? 'Permintaan Izin Registrasi') ?> - SI ULT POLBAN</title>
 
     <link rel="icon" href="<?= base_url('assets/img/favicon.svg') ?>">
 
@@ -42,29 +42,29 @@
 
                         <h1>
 
-                            Bergabung Dengan<br>
+                            Permintaan Izin<br>
 
-                            SI ULT POLBAN
+                            Registrasi
 
                         </h1>
 
                         <p>
 
-                            Daftar sebagai pemohon layanan.
+                            Lengkapi data Anda untuk mengajukan izin
 
-                            Lengkapi data sesuai jenis pemohon Anda.
+                            registrasi sebagai pemohon layanan.
 
                         </p>
 
                         <div class="mt-3 alert alert-light border small">
 
-                            <i class="fas fa-shield-hot me-2"></i>
+                            <i class="fas fa-shield-alt me-2"></i>
 
-                            Setelah mendaftar, pindai kode QR MFA
+                            Permintaan Anda akan diperiksa admin. Setelah disetujui,
 
-                            di aplikasi authenticator lalu masukkan
+                            akun pemohon dibuat dan Anda menyiapkan verifikasi dua
 
-                            kode verifikasi untuk mengaktifkan akun.
+                            langkah (MFA) sebelum dapat login.
 
                         </div>
 
@@ -72,7 +72,7 @@
 
                     <div class="auth-icon">
 
-                        <i class="fas fa-user-plus"></i>
+                        <i class="fas fa-user-lock"></i>
 
                     </div>
 
@@ -80,17 +80,42 @@
 
                 <!-- Right -->
                 <div class="auth-right">
-<div class="text-center mb-4">
 
-                        <img src="<?= base_url('assets/images/logo.svg') ?>"
+                    <div class="text-center mb-4">
+
+                        <img src="<?= base_url('assets/img/logo.svg') ?>"
                             alt="Logo"
                             width="64">
 
-                        <h2 class="mt-3 mb-1">Buat Akun Pemohon</h2>
+                        <h2 class="mt-3 mb-1">Minta Izin Registrasi</h2>
 
                         <p>Pilih jenis pemohon untuk menyesuaikan formulir</p>
 
                     </div>
+
+                    <?php if (session()->getFlashdata('info')) : ?>
+
+                        <div class="alert alert-info">
+
+                            <i class="fas fa-info-circle me-2"></i>
+
+                            <?= esc(session()->getFlashdata('info')) ?>
+
+                        </div>
+
+                    <?php endif; ?>
+
+                    <?php if (session()->getFlashdata('success')) : ?>
+
+                        <div class="alert alert-success">
+
+                            <i class="fas fa-check-circle me-2"></i>
+
+                            <?= esc(session()->getFlashdata('success')) ?>
+
+                        </div>
+
+                    <?php endif; ?>
 
                     <?php if (session()->getFlashdata('error')) : ?>
 
@@ -120,9 +145,9 @@
 
                     <?php endif; ?>
 
-                    <form action="<?= base_url('register') ?>"
+                    <form action="<?= base_url('registration-request') ?>"
                         method="post"
-                        id="registerForm">
+                        id="registrationRequestForm">
 
                         <?= csrf_field(); ?>
 
@@ -143,7 +168,7 @@
 
                                 <option value="">-- Pilih Jenis Pemohon --</option>
 
-                                <?php foreach ($applicantTypes as $at) : ?>
+                                <?php foreach (($applicantTypes ?? []) as $at) : ?>
 
                                     <option value="<?= $at['id'] ?>"
                                         data-code="<?= esc($at['code']) ?>"
@@ -162,7 +187,11 @@
                         <!-- Step 2: Form dinamis per jenis pemohon -->
                         <div id="dynamicFields">
 
-                            <?= $this->include('auth/_register_fields') ?>
+                            <p class="text-muted text-center py-3">
+
+                                Pilih jenis pemohon terlebih dahulu.
+
+                            </p>
 
                         </div>
 
@@ -170,15 +199,31 @@
                             type="submit"
                             class="btn btn-primary w-100 mt-2">
 
-                            <i class="fas fa-user-plus me-2"></i>
+                            <i class="fas fa-paper-plane me-2"></i>
 
-                            Daftar
+                            Kirim Permintaan
 
                         </button>
 
                     </form>
 
                     <div class="text-center mt-3">
+
+                        <small class="text-muted">
+
+                            Sudah mengajukan?
+
+                            <a href="<?= base_url('registration-request/status') ?>">
+
+                                Cek status di sini
+
+                            </a>
+
+                        </small>
+
+                    </div>
+
+                    <div class="text-center mt-2">
 
                         <small class="text-muted">
 
@@ -195,7 +240,8 @@
                     </div>
 
                 </div>
-</div>
+
+            </div>
 
         </div>
 
@@ -208,7 +254,7 @@
     <script>
         $(function() {
 
-            const fieldsUrl = "<?= base_url('register/fields') ?>";
+            const fieldsUrl = "<?= base_url('registration-request/fields') ?>";
 
             const $dynamicFields = $('#dynamicFields');
             const $applicantType = $('#applicantType');
@@ -222,11 +268,21 @@
                     return;
                 }
 
+                $dynamicFields.html(
+                    '<p class="text-muted text-center py-3">Memuat formulir...</p>'
+                );
+
                 $.get(fieldsUrl + '/' + id, function(res) {
 
                     if (res) {
                         $dynamicFields.html(res);
                     }
+
+                }).fail(function() {
+
+                    $dynamicFields.html(
+                        '<p class="text-danger text-center py-3">Gagal memuat formulir jenis pemohon.</p>'
+                    );
 
                 });
 
@@ -235,6 +291,9 @@
             $applicantType.on('change', function() {
                 loadFields($(this).val());
             });
+
+            // Muat ulang saat halaman kembali dari validasi gagal (old input terisi).
+            loadFields($applicantType.val());
 
         });
     </script>

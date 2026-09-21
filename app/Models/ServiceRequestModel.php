@@ -4,7 +4,11 @@ namespace App\Models;
 
 class ServiceRequestModel extends BaseModel
 {
-    protected $table = 'service_requests';
+    /**
+     * Kompatibilitas: model legacy tetap mengarah ke tabel `tickets`
+     * (tabel `service_requests` sudah disatukan ke `tickets`).
+     */
+    protected $table = 'tickets';
 
     protected $primaryKey = 'id';
 
@@ -56,22 +60,22 @@ class ServiceRequestModel extends BaseModel
     {
         return $this
             ->select("
-                service_requests.*,
+                tickets.*,
                 user_profiles.name AS applicant_name,
                 master_services.name AS service_name,
                 users.full_name AS assigned_name
             ")
             ->join(
                 'user_profiles',
-                'user_profiles.id = service_requests.user_profile_id'
+                'user_profiles.id = tickets.user_profile_id'
             )
             ->join(
                 'master_services',
-                'master_services.id = service_requests.service_id'
+                'master_services.id = tickets.service_id'
             )
             ->join(
                 'users',
-                'users.id = service_requests.assigned_to',
+                'users.id = tickets.assigned_to',
                 'left'
             );
     }

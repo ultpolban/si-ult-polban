@@ -82,15 +82,15 @@ class NotificationModel extends BaseModel
             ->select("
                 notifications.*,
                 users.full_name,
-                service_requests.ticket_number
+                tickets.ticket_number
             ")
             ->join(
                 'users',
                 'users.id = notifications.user_id'
             )
             ->join(
-                'service_requests',
-                'service_requests.id = notifications.service_request_id',
+                'tickets',
+                'tickets.id = notifications.service_request_id',
                 'left'
             );
     }

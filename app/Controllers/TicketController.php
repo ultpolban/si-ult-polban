@@ -42,15 +42,25 @@ class TicketController extends AdminController
     {
         $this->authorize(Permissions::REQUEST_VIEW);
 
-        $keyword = trim($this->request->getGet('keyword') ?? '');
-        $status  = trim($this->request->getGet('status') ?? '');
+        $keyword  = trim($this->request->getGet('keyword') ?? '');
+        $status   = trim($this->request->getGet('status') ?? '');
         $priority = trim($this->request->getGet('priority') ?? '');
 
-        $result = $this->ticketService->getList([
+        $roleCode = strtoupper((string) session()->get('role_code') ?? '');
+
+        $filters = [
             'keyword'  => $keyword,
             'status'   => $status,
             'priority' => $priority,
-        ]);
+        ];
+
+        // Pemohon hanya diperlihatkan tiket miliknya sendiri
+        if ($roleCode === 'PEMOHON') {
+            $profile = $this->profileModel->findByUser((int) session()->get('user_id'));
+            $filters['user_profile_id'] = $profile ? (int) $profile['id'] : -1;
+        }
+
+        $result = $this->ticketService->getList($filters);
 
         return view('tickets/index', $this->viewData([
             'title'      => 'Manajemen Tiket',
@@ -72,6 +82,14 @@ class TicketController extends AdminController
     public function create()
     {
         $this->authorize(Permissions::REQUEST_CREATE);
+
+        // Pemohon membuat pengajuan dari halaman "Pengajuan Layanan"
+        // (form pemohon otomatis terisi profil dirinya).
+        if (strtoupper((string) session()->get('role_code')) === 'PEMOHON') {
+            return redirect()
+                ->to(site_url('service-requests/create'))
+                ->with('info', 'Silakan buat pengajuan dari halaman Pengajuan Layanan.');
+        }
 
         $applicants = $this->profileModel
             ->getComplete()
@@ -168,6 +186,18 @@ class TicketController extends AdminController
             throw PageNotFoundException::forPageNotFound();
         }
 
+        // Pemohon hanya dapat membuka tiket miliknya
+        if (strtoupper((string) session()->get('role_code')) === 'PEMOHON') {
+            $profile = $this->profileModel->findByUser((int) session()->get('user_id'));
+            $ownProfileId = $profile ? (int) $profile['id'] : -1;
+
+            if ((int) $ticket['user_profile_id'] !== $ownProfileId) {
+                return redirect()
+                    ->to(site_url('tracking'))
+                    ->with('error', 'Anda tidak memiliki akses ke tiket tersebut.');
+            }
+        }
+
         $history = $this->ticketService->history($id);
 
         return view('tickets/show', $this->viewData([
@@ -232,6 +262,24 @@ class TicketController extends AdminController
     public function delete(int $id): \CodeIgniter\HTTP\RedirectResponse
     {
         $this->authorize(Permissions::REQUEST_CANCEL);
+
+        $ticket = $this->ticketService->getById($id);
+
+        if (! $ticket) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        // Pemohon hanya dapat menghapus/membatalkan tiket miliknya
+        if (strtoupper((string) session()->get('role_code')) === 'PEMOHON') {
+            $profile = $this->profileModel->findByUser((int) session()->get('user_id'));
+            $ownProfileId = $profile ? (int) $profile['id'] : -1;
+
+            if ((int) $ticket['user_profile_id'] !== $ownProfileId) {
+                return redirect()
+                    ->back()
+                    ->with('error', 'Anda tidak memiliki akses ke tiket tersebut.');
+            }
+        }
 
         $this->ticketService->delete($id);
 

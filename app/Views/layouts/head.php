@@ -4,6 +4,7 @@
 <meta name="description" content="Sistem Informasi Layanan Terpadu Politeknik Negeri Bandung">
 <meta name="author" content="SI ULT POLBAN">
 <meta name="csrf-token" content="<?= csrf_hash() ?>">
+<meta name="base-url" content="<?= base_url() ?>">
 <title><?= esc($title ?? 'SI ULT POLBAN') ?></title>
 <link rel="icon" href="<?= base_url('assets/img/favicon.svg') ?>">
 

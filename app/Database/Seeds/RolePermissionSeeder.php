@@ -68,9 +68,10 @@ class RolePermissionSeeder extends Seeder
 
             'PETUGAS_ULT' => [
 
+                // Dashboard
                 'dashboard.view',
 
-                // Tiket
+                // Tiket / Pengajuan
                 'request.view',
                 'request.create',
                 'request.update',
@@ -78,14 +79,30 @@ class RolePermissionSeeder extends Seeder
                 'request.approve',
                 'request.reject',
                 'request.complete',
+                'request.cancel',
+
+                // Master layanan (melihat & mengelola data layanan)
+                'service.view',
+                'service_unit.view',
+                'service_category.view',
+                'service_requirement.view',
 
                 // Notifikasi
                 'notification.view',
+
+                // Activity Log
+                'activity_log.view',
 
                 // Laporan & Statistik
                 'report.view',
                 'report.export',
                 'statistic.view',
+
+                // FAQ
+                'faq.view',
+
+                // Registrasi
+                'registration_request.view',
             ],
 
 
@@ -104,6 +121,9 @@ class RolePermissionSeeder extends Seeder
                 'request.update',
                 'request.complete',
                 'request.reject',
+
+                // Master layanan
+                'service.view',
 
                 // Notifikasi
                 'notification.view',
@@ -155,6 +175,14 @@ class RolePermissionSeeder extends Seeder
                 'notification.view',
             ],
         ];
+
+        /*
+        |--------------------------------------------------------------------------
+        | Kosongkan mapping lama agar idempoten
+        |--------------------------------------------------------------------------
+        */
+
+        $this->db->table('role_permissions')->truncate();
 
         $insertData = [];
 

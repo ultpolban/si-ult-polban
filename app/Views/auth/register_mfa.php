@@ -35,7 +35,7 @@
 
                             <div class="text-center mb-3">
 
-                                <img src="<?= base_url('assets/images/logo.svg') ?>"
+                                <img src="<?= base_url('assets/img/logo.svg') ?>"
                                     alt="Logo"
                                     width="64">
 

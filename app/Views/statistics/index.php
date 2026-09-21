@@ -24,7 +24,7 @@
 
                 <span class="info-box-text">Total Pengajuan</span>
 
-                <span class="info-box-number"><?= esc($summary['total']) ?></span>
+                <span class="info-box-number rt-value" data-rt-key="total"><?= esc($summary['total']) ?></span>
 
             </div>
 
@@ -46,7 +46,7 @@
 
                 <span class="info-box-text">Menunggu</span>
 
-                <span class="info-box-number"><?= esc($summary['pending']) ?></span>
+                <span class="info-box-number rt-value" data-rt-key="pending"><?= esc($summary['pending']) ?></span>
 
             </div>
 
@@ -68,7 +68,7 @@
 
                 <span class="info-box-text">Diproses</span>
 
-                <span class="info-box-number"><?= esc($summary['processing']) ?></span>
+                <span class="info-box-number rt-value" data-rt-key="processing"><?= esc($summary['processing']) ?></span>
 
             </div>
 
@@ -90,7 +90,7 @@
 
                 <span class="info-box-text">Selesai</span>
 
-                <span class="info-box-number"><?= esc($summary['completed']) ?></span>
+                <span class="info-box-number rt-value" data-rt-key="completed"><?= esc($summary['completed']) ?></span>
 
             </div>
 

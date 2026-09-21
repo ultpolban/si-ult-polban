@@ -20,6 +20,16 @@
 
         <table class="table table-bordered">
 
+            <?php
+            // new_data menyimpan meta terstruktur (description/email) sebagai
+            // JSON; bisa juga berupa string lama. Selalu render via esc().
+            $logMeta = [];
+            if (! empty($log['new_data'])) {
+                $decodedMeta = json_decode((string) $log['new_data'], true);
+                $logMeta     = is_array($decodedMeta) ? $decodedMeta : ['value' => $log['new_data']];
+            }
+            ?>
+
             <tr>
 
                 <th style="width:200px;">User</th>
@@ -57,6 +67,38 @@
                 <th>Modul</th>
 
                 <td><?= esc($log['module'] ?? '-') ?></td>
+
+            </tr>
+
+            <tr>
+
+                <th>Keterangan</th>
+
+                <td><?= esc($logMeta['description'] ?? $logMeta['value'] ?? '-') ?></td>
+
+            </tr>
+
+            <tr>
+
+                <th>Email Terkait</th>
+
+                <td><?= esc($logMeta['email'] ?? '-') ?></td>
+
+            </tr>
+
+            <tr>
+
+                <th>Data Lama</th>
+
+                <td><code><?= esc($log['old_data'] ?? '-') ?></code></td>
+
+            </tr>
+
+            <tr>
+
+                <th>Data Baru</th>
+
+                <td><code><?= esc($log['new_data'] ?? '-') ?></code></td>
 
             </tr>
 

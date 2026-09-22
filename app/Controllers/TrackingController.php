@@ -159,18 +159,39 @@ class TrackingController extends BaseController
     /**
      * Tiket yang sudah masuk tahap disposisi
      */
-    private function getTrackingTickets()
-    {
-        return $this->ticketModel
-            ->whereIn('status', [
-                'assigned',
-                'in_progress',
-                'in progress',
-                'completed'
-            ])
-            ->orderBy('updated_at', 'DESC')
-            ->findAll();
-    }
+private function getTrackingTickets()
+{
+    return $this->ticketModel
+        ->select('
+            tickets.*,
+            master_services.name AS service_name,
+            master_service_units.name AS unit_name,
+            user_profiles.student_name AS student_name
+        ')
+        ->join(
+            'master_services',
+            'master_services.id = tickets.service_id',
+            'left'
+        )
+        ->join(
+            'master_service_units',
+            'master_service_units.id = master_services.service_unit_id',
+            'left'
+        )
+        ->join(
+            'user_profiles',
+            'user_profiles.id = tickets.user_profile_id',
+            'left'
+        )
+        ->whereIn('tickets.status', [
+            'assigned',
+            'in_progress',
+            'in progress',
+            'completed'
+        ])
+        ->orderBy('tickets.updated_at', 'DESC')
+        ->findAll();
+}
 
     /**
      * ==========================================================

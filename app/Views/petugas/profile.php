@@ -948,21 +948,32 @@
         border: 1px solid #cbd5e1 !important;
     }
 
-    .profile-modal .btn-close {
-        width: 38px;
-        height: 38px;
-        background-color: rgba(255,255,255,0.15);
-        background-size: 14px;
-        border-radius: 12px;
-        opacity: 1;
-        filter: brightness(0) invert(1);
-        transition: all 0.2s ease;
-    }
+    .profile-modal .profile-modal-close {
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 1;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+}
 
-    .profile-modal .btn-close:hover {
-        background-color: rgba(255,255,255,0.3);
-        transform: scale(1.05);
-    }
+.profile-modal .profile-modal-close:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.45);
+    transform: rotate(90deg) scale(1.08);
+}
+
+.profile-modal .profile-modal-close:active {
+    transform: rotate(90deg) scale(0.95);
+}
 
     /* TOAST NOTIFICATION */
     .profile-toast-wrapper {
@@ -1410,7 +1421,14 @@
                     </h5>
                     <small>Pembaruan data petugas dan kustomisasi karakter film interaktif</small>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button
+    type="button"
+    class="profile-modal-close"
+    data-bs-dismiss="modal"
+    aria-label="Tutup"
+>
+    <i class="fas fa-times"></i>
+</button>
             </div>
 
             <div class="modal-body">
@@ -1797,13 +1815,18 @@ document.addEventListener('DOMContentLoaded', function () {
     if (modalPhotoInput) modalPhotoInput.addEventListener('change', function () { processPhoto(this.files[0]); });
 
     if (editForm) {
-        editForm.addEventListener('submit', function () {
-            const selectedTheme = themeSelector ? themeSelector.value : 'normal';
+    editForm.addEventListener('submit', function () {
+        const selectedTheme = themeSelector ? themeSelector.value : 'normal';
 
-            // Tema hanya untuk tampilan dan tetap disimpan di browser.
-            localStorage.setItem(THEME_KEY, selectedTheme);
-        });
-    }
+        // Tema tetap disimpan di browser
+        localStorage.setItem(THEME_KEY, selectedTheme);
+
+        // Tutup modal setelah tombol simpan ditekan
+        setTimeout(() => {
+            closeProfileEditModal();
+        }, 100);
+    });
+}
 });
 </script>
 

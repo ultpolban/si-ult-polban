@@ -86,41 +86,57 @@ class DataTicketController extends BaseController
         // ========================================================
         // MAPPING BACKEND3 → FRONTEND3
         // ========================================================
-        foreach ($tickets as &$ticket) {
+      foreach ($tickets as &$ticket) {
 
-            // Nomor tiket
-            $ticket['nomor_tiket'] =
-                $ticket['ticket_number'] ?? '-';
+    // Nomor tiket
+    $ticket['nomor_tiket'] =
+        $ticket['ticket_number']
+        ?? '-';
 
-            // Nama pemohon
-            $ticket['nama_pemohon'] =
-                $ticket['applicant_name'] ?? '-';
+    // Nama pemohon
+    $ticket['nama_pemohon'] =
+        $ticket['applicant_name']
+        ?? $ticket['student_name']
+        ?? $ticket['name']
+        ?? '-';
 
-            // Layanan
-            $ticket['layanan'] =
-                $ticket['service_name'] ?? '-';
+    // Layanan
+    $ticket['layanan'] =
+        $ticket['service_name']
+        ?? '-';
 
-            // Kategori
-            $ticket['kategori'] =
-                $ticket['category_name'] ?? '-';
+    // Unit layanan
+    $ticket['unit_layanan'] =
+        $ticket['unit_name']
+        ?? '-';
 
-            // Lampiran
-            $ticket['lampiran'] =
-                $ticket['lampiran'] ?? [];
+    // Kategori
+    $ticket['kategori'] =
+        $ticket['category_name']
+        ?? '-';
 
-            // Status lowercase
-            $ticket['status'] = strtolower(
-                trim($ticket['status'] ?? '')
-            );
+    // Status
+    $ticket['status'] =
+        strtolower(
+            trim(
+                $ticket['status']
+                ?? ''
+            )
+        );
 
-            // Created at
-            $ticket['created_at'] =
-                $ticket['created_at']
-                ?? $ticket['submitted_at']
-                ?? null;
-        }
+    // Created
+    $ticket['created_at'] =
+        $ticket['created_at']
+        ?? $ticket['submitted_at']
+        ?? null;
 
-        unset($ticket);
+    // ID
+    $ticket['id'] =
+        $ticket['id']
+        ?? null;
+}
+
+unset($ticket);
 
         // ========================================================
         // ADAPTER FRONTEND3
@@ -294,8 +310,11 @@ class DataTicketController extends BaseController
         $ticket['nomor_tiket'] =
             $ticket['ticket_number'] ?? '-';
 
-        $ticket['nama_pemohon'] =
-            $ticket['applicant_name'] ?? '-';
+       $ticket['nama_pemohon'] =
+    $ticket['applicant_name']
+    ?? $ticket['student_name']
+    ?? $ticket['name']
+    ?? '-';
 
         $ticket['layanan'] =
             $ticket['service_name'] ?? '-';
@@ -327,49 +346,53 @@ class DataTicketController extends BaseController
      * QUERY DATA TIKET
      * ============================================================
      */
-    private function buildTicketQuery()
-    {
-        return $this->ticketModel
-            ->select("
-                tickets.id,
-                tickets.ticket_number,
-                tickets.title,
-                tickets.description,
-                tickets.status,
-                tickets.priority,
-                tickets.submitted_at,
-                tickets.verified_at,
-                tickets.created_at,
+ private function buildTicketQuery()
+{
+    return $this->ticketModel
+        ->select("
+            tickets.*,
 
-                user_profiles.name AS applicant_name,
-                user_profiles.nim,
-                user_profiles.nik,
-                user_profiles.email,
-                user_profiles.phone,
+            COALESCE(
+                user_profiles.student_name,
+                user_profiles.name
+            ) AS applicant_name,
 
-                master_services.name AS service_name,
-                master_services.service_unit_id,
+            user_profiles.name,
+            user_profiles.student_name,
+            user_profiles.nim,
+            user_profiles.nik,
+            user_profiles.email,
+            user_profiles.phone,
+            user_profiles.applicant_type_id,
 
-                master_service_units.name AS unit_name
-            ")
-            ->join(
-                'user_profiles',
-                'user_profiles.id = tickets.user_profile_id',
-                'left'
-            )
-            ->join(
-                'master_services',
-                'master_services.id = tickets.service_id',
-                'left'
-            )
-            ->join(
-                'master_service_units',
-                'master_service_units.id = master_services.service_unit_id',
-                'left'
-            );
-    }
+            master_applicant_types.name AS applicant_type,
 
+            master_services.name AS service_name,
+            master_services.service_unit_id,
 
+            master_service_units.name AS unit_name
+        ")
+        ->join(
+            'user_profiles',
+            'user_profiles.id = tickets.user_profile_id',
+            'left'
+        )
+        ->join(
+            'master_applicant_types',
+            'master_applicant_types.id = user_profiles.applicant_type_id',
+            'left'
+        )
+        ->join(
+            'master_services',
+            'master_services.id = tickets.service_id',
+            'left'
+        )
+        ->join(
+            'master_service_units',
+            'master_service_units.id = master_services.service_unit_id',
+            'left'
+        );
+}
     /**
      * ============================================================
      * EXPORT DATA
@@ -398,15 +421,16 @@ class DataTicketController extends BaseController
 
         // SEARCH
         if ($keyword !== '') {
-            $builder
-                ->groupStart()
-                    ->like('tickets.ticket_number', $keyword)
-                    ->orLike('user_profiles.name', $keyword)
-                    ->orLike('user_profiles.nim', $keyword)
-                    ->orLike('user_profiles.nik', $keyword)
-                    ->orLike('master_services.name', $keyword)
-                ->groupEnd();
-        }
+    $builder
+        ->groupStart()
+            ->like('tickets.ticket_number', $keyword)
+            ->orLike('user_profiles.name', $keyword)
+            ->orLike('user_profiles.student_name', $keyword)
+            ->orLike('user_profiles.nim', $keyword)
+            ->orLike('user_profiles.nik', $keyword)
+            ->orLike('master_services.name', $keyword)
+        ->groupEnd();
+}
 
         // FILTER STATUS
         if ($status !== '') {

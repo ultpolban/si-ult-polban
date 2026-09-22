@@ -13,11 +13,17 @@ class NotificationModel extends Model
     protected $returnType = 'array';
 
     protected $allowedFields = [
-        'ticket_id',
+        'user_id',
+        'service_request_id',
         'title',
         'message',
+        'type',
         'is_read',
-        'created_at'
+        'read_at',
+        'url',
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
 
     protected $useTimestamps = false;

@@ -1,647 +1,686 @@
 <style>
-    /* ==============================
-       SIDEBAR SI ULT POLBAN
-    ============================== */
+    /* =========================================
+       SIDEBAR SI ULT POLBAN - FRONTEND3 STYLE
+    ========================================= */
 
-    .ult-sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-
-        width: 260px;
-
-        background: #293b8f;
-        color: #fff;
-
-        z-index: 1038;
-
-        overflow-y: auto;
-        overflow-x: hidden;
-
-        box-shadow: 3px 0 12px rgba(0, 0, 0, 0.08);
+    .main-sidebar {
+        background: #2b3990 !important;
+        border-right: none !important;
     }
 
-    .ult-sidebar::-webkit-scrollbar {
-        width: 5px;
-    }
+    /* =========================================
+       BRAND / LOGO POLBAN
+    ========================================= */
 
-    .ult-sidebar::-webkit-scrollbar-thumb {
-        background: rgba(255,255,255,.25);
-        border-radius: 10px;
-    }
+    .main-sidebar .brand-link {
+        height: 68px !important;
+        min-height: 68px !important;
 
+        display: flex !important;
+        align-items: center !important;
 
-    /* ==============================
-       BRAND
-    ============================== */
+        padding: 0 14px !important;
 
-    .ult-brand {
-        height: 80px;
+        background: #2b3990 !important;
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        text-decoration: none !important;
+        border-bottom: 1px solid rgba(255,255,255,.12) !important;
 
         color: #fff !important;
-
-        border-bottom: 1px solid rgba(255,255,255,.12);
     }
 
-    .ult-brand-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+    .main-sidebar .brand-link:hover {
+        background: #2b3990 !important;
     }
 
-    .ult-brand-icon {
+    .polban-sidebar-logo {
         width: 42px;
         height: 42px;
 
-        border-radius: 50%;
+        object-fit: contain;
 
-        background: rgba(255,255,255,.10);
+        margin-left: 2px;
+        margin-right: 10px;
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        font-size: 19px;
+        flex-shrink: 0;
     }
 
-    .ult-brand-text {
-        font-size: 18px;
+    .polban-brand-text {
+        color: #fff !important;
+
+        font-size: 17px;
         font-weight: 800;
 
-        letter-spacing: .3px;
+        letter-spacing: .4px;
+
+        line-height: 1.2;
     }
 
 
-    /* ==============================
-       PROFIL
-    ============================== */
+    /* =========================================
+       SIDEBAR CONTENT
+    ========================================= */
 
-    .ult-profile {
-        display: flex;
-        align-items: center;
+    .main-sidebar .sidebar {
+        background: #2b3990 !important;
 
-        padding: 18px 20px;
-
-        border-bottom: 1px solid rgba(255,255,255,.12);
+        padding-left: 8px !important;
+        padding-right: 8px !important;
     }
 
-    .ult-profile-avatar {
-        position: relative;
 
-        width: 46px;
-        height: 46px;
+    /* =========================================
+       USER PANEL
+    ========================================= */
 
-        min-width: 46px;
+    .main-sidebar .user-panel {
+        padding: 12px 6px 14px !important;
+
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+
+        border-bottom: 1px solid rgba(255,255,255,.12) !important;
+    }
+
+    .sidebar-user-avatar {
+        width: 40px;
+        height: 40px;
 
         border-radius: 50%;
 
-        background: #5147df;
+        background: #4f46e5;
+
+        color: #fff;
 
         display: flex;
         align-items: center;
         justify-content: center;
 
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 700;
 
-        margin-right: 12px;
+        box-shadow: 0 2px 5px rgba(0,0,0,.15);
     }
 
-    .ult-profile-avatar::after {
-        content: "";
-
+    .sidebar-online {
         position: absolute;
 
-        width: 9px;
-        height: 9px;
+        width: 10px;
+        height: 10px;
 
-        right: 1px;
-        bottom: 1px;
-
-        border-radius: 50%;
+        right: -1px;
+        bottom: 0;
 
         background: #2ecc71;
 
-        border: 2px solid #293b8f;
+        border: 2px solid #2b3990;
+
+        border-radius: 50%;
     }
 
-    .ult-profile-name {
-        font-size: 14px;
-        font-weight: 700;
-
-        color: #fff;
+    .main-sidebar .user-panel .info {
+        padding-left: 8px !important;
     }
 
-    .ult-profile-role {
-        margin-top: 3px;
+    .main-sidebar .user-panel .info a {
+        color: #fff !important;
+
+        font-size: 14px !important;
+        font-weight: 700 !important;
+    }
+
+    .sidebar-role {
+        display: block;
+
+        margin-top: 2px;
+
+        color: #a5b4fc !important;
 
         font-size: 11px;
-
-        color: #b6c1ec;
     }
 
-    .ult-profile-role i {
+    .sidebar-role i {
         color: #ffc107;
+
         margin-right: 4px;
     }
 
 
-    /* ==============================
-       MENU CONTAINER
-    ============================== */
+    /* =========================================
+       MENU
+    ========================================= */
 
-    .ult-menu {
-        padding: 14px 12px 25px;
+    .main-sidebar .nav-sidebar > .nav-item {
+        margin-bottom: 3px;
     }
 
+    .main-sidebar .nav-sidebar .nav-link {
+        margin: 0 2px;
 
-    /* ==============================
-       JUDUL MENU
-    ============================== */
-
-    .ult-menu-title {
-        padding: 14px 8px 8px;
-
-        font-size: 10px;
-
-        font-weight: 800;
-
-        letter-spacing: 1.1px;
-
-        color: rgba(255,255,255,.38);
-
-        text-transform: uppercase;
-    }
-
-
-    /* ==============================
-       MENU ITEM
-    ============================== */
-
-    .ult-menu-item {
-        position: relative;
-
-        display: flex;
-        align-items: center;
-
-        width: 100%;
-
-        min-height: 47px;
-
-        padding: 0 13px;
-
-        margin-bottom: 5px;
+        padding: 11px 12px;
 
         border-radius: 8px;
 
         color: #fff !important;
 
-        text-decoration: none !important;
-
-        transition: .2s ease;
+        transition: all .2s ease;
     }
 
-    .ult-menu-item i {
-        width: 27px;
-        min-width: 27px;
-
-        margin-right: 10px;
-
-        text-align: center;
-
-        font-size: 17px;
-    }
-
-    .ult-menu-text {
-        flex: 1;
-
-        font-size: 14px;
-
-        font-weight: 600;
-    }
-
-    .ult-menu-item:hover {
-        background: rgba(255,255,255,.10);
+    .main-sidebar .nav-sidebar .nav-link:hover {
+        background: rgba(255,255,255,.10) !important;
 
         color: #fff !important;
     }
 
-
-    /* ==============================
-       MENU AKTIF
-    ============================== */
-
-    .ult-menu-item.active {
-        background: #ff9800;
+    .main-sidebar .nav-sidebar .nav-link.active {
+        background: #ff9800 !important;
 
         color: #fff !important;
 
         box-shadow: 0 4px 10px rgba(255,152,0,.25);
     }
 
-    .ult-menu-item.active:hover {
-        background: #ff9800;
+    .main-sidebar .nav-sidebar .nav-icon {
+        font-size: 16px !important;
+
+        width: 25px !important;
+
+        margin-right: 7px !important;
+    }
+
+    .main-sidebar .nav-sidebar .nav-link p {
+        font-size: 14px;
+
+        font-weight: 600;
+
+        margin: 0;
     }
 
 
-    /* ==============================
+    /* =========================================
+       HEADER MENU
+    ========================================= */
+
+    .main-sidebar .nav-header {
+        padding: 13px 10px 5px !important;
+
+        margin-top: 2px;
+
+        color: rgba(255,255,255,.42) !important;
+
+        font-size: 10px !important;
+
+        font-weight: 800 !important;
+
+        letter-spacing: 1px;
+
+        text-transform: uppercase;
+    }
+
+
+    /* =========================================
        BADGE
-    ============================== */
+    ========================================= */
 
-    .ult-badge {
-        min-width: 30px;
-        height: 30px;
+    .sidebar-badge {
+        float: right;
 
-        padding: 0 7px;
+        min-width: 24px;
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        padding: 3px 6px;
 
         border-radius: 5px;
 
-        background: #fff;
+        text-align: center;
 
-        color: #293b8f;
+        font-size: 11px;
 
-        font-size: 12px;
-
-        font-weight: 800;
-
-        margin-left: 8px;
-    }
-
-    .ult-badge-orange {
-        background: #ffc107;
-        color: #fff;
-    }
-
-    .ult-badge-cyan {
-        background: #11a8d4;
-        color: #fff;
+        font-weight: 700;
     }
 
 
-    /* ==============================
+    /* =========================================
        LOGOUT
-    ============================== */
+    ========================================= */
 
-    .ult-logout {
-        margin-top: 12px;
+    .sidebar-logout {
+        margin-top: 12px !important;
 
-        padding-top: 5px;
+        margin-bottom: 20px !important;
+    }
 
-        border-top: 1px solid rgba(255,255,255,.08);
+    .sidebar-logout .nav-link {
+        background: rgba(239,68,68,.15) !important;
+
+        border: 1px solid rgba(239,68,68,.30);
+
+        color: #ff6b6b !important;
+    }
+
+    .sidebar-logout .nav-link:hover {
+        background: rgba(239,68,68,.23) !important;
     }
 
 
-    /* ==============================
-       CONTENT
-    ============================== */
+    /* =========================================
+       SCROLLBAR
+    ========================================= */
 
-    .ult-main-content {
-        margin-left: 260px;
+    .main-sidebar {
+        scrollbar-width: thin;
 
-        min-height: 100vh;
+        scrollbar-color: rgba(255,255,255,.25) transparent;
     }
 
+    .main-sidebar::-webkit-scrollbar {
+        width: 5px;
+    }
 
-    /* ==============================
-       MOBILE
-    ============================== */
+    .main-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,.25);
 
-    @media (max-width: 768px) {
-
-        .ult-sidebar {
-            transform: translateX(-100%);
-
-            transition: transform .25s ease;
-        }
-
-        .ult-sidebar.show {
-            transform: translateX(0);
-        }
-
-        .ult-main-content {
-            margin-left: 0;
-        }
+        border-radius: 10px;
     }
 </style>
 
 
-<aside class="ult-sidebar">
+<?php
+    $namaPetugas =
+        session()->get('name')
+        ?? session()->get('full_name')
+        ?? session()->get('username')
+        ?? 'Petugas ULT';
+
+    $inisial = strtoupper(
+        substr(trim($namaPetugas), 0, 2)
+    );
+?>
 
 
-    <!-- ==============================
-         BRAND
-    ============================== -->
+<!-- =========================================
+     MAIN SIDEBAR
+========================================= -->
 
-    <a
-        href="<?= base_url('dashboard') ?>"
-        class="ult-brand"
-    >
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
 
-        <div class="ult-brand-wrapper">
 
-            <div class="ult-brand-icon">
-                <i class="fas fa-layer-group"></i>
-            </div>
+    <!-- =====================================
+         BRAND POLBAN
+    ====================================== -->
 
-            <span class="ult-brand-text">
-                SI-ULT POLBAN
-            </span>
+    <a href="<?= base_url('dashboard') ?>"
+       class="brand-link text-decoration-none">
 
-        </div>
+        <img
+            src="<?= base_url('assets/img/logo-polban.png') ?>"
+            alt="Logo POLBAN"
+            class="polban-sidebar-logo"
+        >
+
+        <span class="polban-brand-text">
+            SI-ULT POLBAN
+        </span>
 
     </a>
 
 
-    <!-- ==============================
-         PROFIL PETUGAS
-    ============================== -->
+    <!-- =====================================
+         SIDEBAR
+    ====================================== -->
 
-    <?php
+    <div class="sidebar">
 
-        $namaPetugas =
-            session()->get('name')
-            ?? session()->get('username')
-            ?? 'Petugas ULT';
 
-        $inisial = strtoupper(
-            substr($namaPetugas, 0, 2)
-        );
+        <!-- =================================
+             USER PANEL
+        ================================== -->
 
-    ?>
+        <div class="user-panel d-flex align-items-center">
 
-    <div class="ult-profile">
+            <div class="image position-relative">
 
-        <div class="ult-profile-avatar">
-            <?= esc($inisial) ?>
-        </div>
+                <div class="sidebar-user-avatar">
+                    <?= esc($inisial) ?>
+                </div>
 
-        <div>
-
-            <div class="ult-profile-name">
-                <?= esc($namaPetugas) ?>
-            </div>
-
-            <div class="ult-profile-role">
-
-                <i class="fas fa-shield-alt"></i>
-
-                Authorized Operator
+                <span class="sidebar-online"></span>
 
             </div>
 
+
+            <div class="info">
+
+                <a
+                    href="<?= base_url('profile') ?>"
+                    class="d-block text-decoration-none"
+                >
+                    <?= esc($namaPetugas) ?>
+                </a>
+
+                <span class="sidebar-role">
+
+                    <i class="fas fa-shield-alt"></i>
+
+                    Authorized Operator
+
+                </span>
+
+            </div>
+
         </div>
+
+
+        <!-- =================================
+             NAVIGATION
+        ================================== -->
+
+        <nav class="mt-2">
+
+            <ul
+                class="nav nav-pills nav-sidebar flex-column"
+                role="menu"
+            >
+
+
+                <!-- =========================
+                     DASHBOARD
+                ========================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="<?= base_url('dashboard') ?>"
+                        class="nav-link <?= uri_string() == 'dashboard' || uri_string() == '' ? 'active' : '' ?>"
+                    >
+
+                        <i class="nav-icon fas fa-home"></i>
+
+                        <p>
+                            Dashboard Utama
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- =========================
+                     PROFILE
+                ========================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="<?= base_url('profile') ?>"
+                        class="nav-link <?= strpos(uri_string(), 'profile') === 0 ? 'active' : '' ?>"
+                    >
+
+                        <i class="nav-icon fas fa-user-cog"></i>
+
+                        <p>
+                            Profil Petugas
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- =========================
+                     HEADER
+                ========================== -->
+
+                <li class="nav-header">
+                    Manajemen Tiket ULT
+                </li>
+
+
+                <!-- =========================
+                     DATA TIKET
+                ========================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="<?= base_url('datatiket') ?>"
+                        class="nav-link <?= strpos(uri_string(), 'datatiket') === 0 ? 'active' : '' ?>"
+                    >
+
+                        <i class="nav-icon fas fa-ticket-alt"></i>
+
+                        <p>
+
+                            Data Tiket
+
+                            <?php if (isset($total_tiket) && $total_tiket > 0): ?>
+
+                                <span class="badge badge-light text-dark sidebar-badge">
+
+                                    <?= esc($total_tiket) ?>
+
+                                </span>
+
+                            <?php endif; ?>
+
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- =========================
+                     VERIFIKASI
+                ========================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="<?= base_url('verification') ?>"
+                        class="nav-link <?= strpos(uri_string(), 'verification') === 0 ? 'active' : '' ?>"
+                    >
+
+                        <i class="nav-icon fas fa-user-check"></i>
+
+                        <p>
+
+                            Verifikasi Tiket
+
+                            <?php if (isset($submitted) && $submitted > 0): ?>
+
+                                <span class="badge badge-warning sidebar-badge">
+
+                                    <?= esc($submitted) ?>
+
+                                </span>
+
+                            <?php endif; ?>
+
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- =========================
+                     DISPOSISI
+                ========================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="<?= base_url('disposition') ?>"
+                        class="nav-link <?= strpos(uri_string(), 'disposition') === 0 ? 'active' : '' ?>"
+                    >
+
+                        <i class="nav-icon fas fa-share-square"></i>
+
+                        <p>
+
+                            Disposisi Tiket
+
+                            <?php if (isset($total_disposisi) && $total_disposisi > 0): ?>
+
+                                <span class="badge badge-info sidebar-badge">
+
+                                    <?= esc($total_disposisi) ?>
+
+                                </span>
+
+                            <?php endif; ?>
+
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- =========================
+                     HEADER
+                ========================== -->
+
+                <li class="nav-header">
+                    Laporan & Analitik
+                </li>
+
+
+                <!-- =========================
+                     LAPORAN TAMU
+                ========================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="<?= base_url('guest-report') ?>"
+                        class="nav-link <?= strpos(uri_string(), 'guest-report') === 0 ? 'active' : '' ?>"
+                    >
+
+                        <i class="nav-icon fas fa-users"></i>
+
+                        <p>
+                            Laporan Tamu ULT
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- =========================
+                     STATISTIK
+                ========================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="<?= base_url('statistics') ?>"
+                        class="nav-link <?= strpos(uri_string(), 'statistics') === 0 ? 'active' : '' ?>"
+                    >
+
+                        <i class="nav-icon fas fa-chart-pie"></i>
+
+                        <p>
+                            Statistik Layanan
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- =========================
+                     LAPORAN TIKET
+                ========================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="<?= base_url('report') ?>"
+                        class="nav-link <?= strpos(uri_string(), 'report') === 0 ? 'active' : '' ?>"
+                    >
+
+                        <i class="nav-icon fas fa-file-invoice"></i>
+
+                        <p>
+                            Laporan Tiket
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- =========================
+                     TRACKING
+                ========================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="<?= base_url('tracking') ?>"
+                        class="nav-link <?= strpos(uri_string(), 'tracking') === 0 ? 'active' : '' ?>"
+                    >
+
+                        <i class="nav-icon fas fa-route"></i>
+
+                        <p>
+                            Tracking Tiket
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- =========================
+                     LOG AKTIVITAS
+                ========================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="<?= base_url('log-aktivitas') ?>"
+                        class="nav-link <?= strpos(uri_string(), 'log-aktivitas') === 0 ? 'active' : '' ?>"
+                    >
+
+                        <i class="nav-icon fas fa-history text-info"></i>
+
+                        <p>
+                            Log Aktivitas
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- =========================
+                     LOGOUT
+                ========================== -->
+
+                <li class="nav-item sidebar-logout">
+
+                    <a
+                        href="<?= base_url('logout') ?>"
+                        class="nav-link"
+                    >
+
+                        <i class="nav-icon fas fa-sign-out-alt text-danger"></i>
+
+                        <p class="font-weight-bold text-danger">
+                            Keluar Aplikasi
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+            </ul>
+
+        </nav>
 
     </div>
-
-
-    <!-- ==============================
-         MENU
-    ============================== -->
-
-    <nav class="ult-menu">
-
-
-        <!-- DASHBOARD -->
-
-        <a
-            href="<?= base_url('dashboard') ?>"
-            class="ult-menu-item <?= uri_string() == 'dashboard' || uri_string() == '' ? 'active' : '' ?>"
-        >
-
-            <i class="fas fa-home"></i>
-
-            <span class="ult-menu-text">
-                Dashboard Utama
-            </span>
-
-        </a>
-
-
-        <!-- PROFIL -->
-
-        <a
-            href="<?= base_url('profile') ?>"
-            class="ult-menu-item <?= strpos(uri_string(), 'profile') === 0 ? 'active' : '' ?>"
-        >
-
-            <i class="fas fa-user-cog"></i>
-
-            <span class="ult-menu-text">
-                Profil Petugas
-            </span>
-
-        </a>
-
-
-        <?php if (hasRole(1)): ?>
-
-
-            <!-- ==================================
-                 MANAJEMEN TIKET
-            ================================== -->
-
-            <div class="ult-menu-title">
-                Manajemen Tiket ULT
-            </div>
-
-
-            <!-- DATA TIKET -->
-
-            <a
-                href="<?= base_url('datatiket') ?>"
-                class="ult-menu-item <?= strpos(uri_string(), 'datatiket') === 0 ? 'active' : '' ?>"
-            >
-
-                <i class="fas fa-ticket-alt"></i>
-
-                <span class="ult-menu-text">
-                    Data Tiket
-                </span>
-
-                <?php if (isset($total_tiket) && $total_tiket > 0): ?>
-
-                    <span class="ult-badge">
-                        <?= $total_tiket ?>
-                    </span>
-
-                <?php endif; ?>
-
-            </a>
-
-
-            <!-- VERIFIKASI -->
-
-            <a
-                href="<?= base_url('verification') ?>"
-                class="ult-menu-item <?= strpos(uri_string(), 'verification') === 0 ? 'active' : '' ?>"
-            >
-
-                <i class="fas fa-user-check"></i>
-
-                <span class="ult-menu-text">
-                    Verifikasi Tiket
-                </span>
-
-                <?php if (isset($submitted) && $submitted > 0): ?>
-
-                    <span class="ult-badge ult-badge-orange">
-                        <?= $submitted ?>
-                    </span>
-
-                <?php endif; ?>
-
-            </a>
-
-
-            <!-- DISPOSISI -->
-
-            <a
-                href="<?= base_url('disposition') ?>"
-                class="ult-menu-item <?= strpos(uri_string(), 'disposition') === 0 ? 'active' : '' ?>"
-            >
-
-                <i class="fas fa-share-square"></i>
-
-                <span class="ult-menu-text">
-                    Disposisi Tiket
-                </span>
-
-                <?php if (isset($total_disposisi) && $total_disposisi > 0): ?>
-
-                    <span class="ult-badge ult-badge-cyan">
-                        <?= $total_disposisi ?>
-                    </span>
-
-                <?php endif; ?>
-
-            </a>
-
-
-            <!-- ==================================
-                 LAPORAN & ANALITIK
-            ================================== -->
-
-            <div class="ult-menu-title">
-                Laporan & Analitik
-            </div>
-
-
-            <!-- LAPORAN TAMU -->
-
-            <a
-                href="<?= base_url('guest-report') ?>"
-                class="ult-menu-item <?= strpos(uri_string(), 'guest-report') === 0 ? 'active' : '' ?>"
-            >
-
-                <i class="fas fa-users"></i>
-
-                <span class="ult-menu-text">
-                    Laporan Tamu ULT
-                </span>
-
-            </a>
-
-
-            <!-- STATISTIK -->
-
-            <a
-                href="<?= base_url('statistics') ?>"
-                class="ult-menu-item <?= strpos(uri_string(), 'statistics') === 0 ? 'active' : '' ?>"
-            >
-
-                <i class="fas fa-chart-pie"></i>
-
-                <span class="ult-menu-text">
-                    Statistik Layanan
-                </span>
-
-            </a>
-
-
-            <!-- LAPORAN TIKET -->
-
-            <a
-                href="<?= base_url('report') ?>"
-                class="ult-menu-item <?= strpos(uri_string(), 'report') === 0 ? 'active' : '' ?>"
-            >
-
-                <i class="fas fa-file-alt"></i>
-
-                <span class="ult-menu-text">
-                    Laporan Tiket
-                </span>
-
-            </a>
-
-
-            <!-- TRACKING -->
-
-            <a
-                href="<?= base_url('tracking') ?>"
-                class="ult-menu-item <?= strpos(uri_string(), 'tracking') === 0 ? 'active' : '' ?>"
-            >
-
-                <i class="fas fa-route"></i>
-
-                <span class="ult-menu-text">
-                    Tracking Tiket
-                </span>
-
-            </a>
-
-
-            <!-- LOG AKTIVITAS -->
-
-            <a
-                href="<?= base_url('log-aktivitas') ?>"
-                class="ult-menu-item <?= strpos(uri_string(), 'log-aktivitas') === 0 ? 'active' : '' ?>"
-            >
-
-                <i class="fas fa-history"></i>
-
-                <span class="ult-menu-text">
-                    Log Aktivitas
-                </span>
-
-            </a>
-
-
-        <?php endif; ?>
-
-
-        <!-- ==============================
-             LOGOUT
-        ============================== -->
-
-        <div class="ult-logout">
-
-            <a
-                href="<?= base_url('logout') ?>"
-                class="ult-menu-item"
-            >
-
-                <i class="fas fa-sign-out-alt"></i>
-
-                <span class="ult-menu-text">
-                    Logout
-                </span>
-
-            </a>
-
-        </div>
-
-
-    </nav>
 
 </aside>

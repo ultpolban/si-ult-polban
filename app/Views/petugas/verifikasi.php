@@ -100,8 +100,8 @@
         box-shadow: var(--ult-shadow-hover);
     }
 
-    .stat-tamu-card:hover::before {
-        transform: scale(1.25);
+    .stat-tamu-card:hover::before { 
+        transform: scale(1.25); 
     }
 
     .bg-tamu-navy { background: linear-gradient(135deg, #2b3990 0%, #3b4cca 100%) !important; }
@@ -401,9 +401,6 @@
                 Lakukan pemeriksaan data permohonan sebelum tiket diproses ke tahap selanjutnya.
             </p>
         </div>
-        <a href="<?= base_url('datatiket') ?>" class="btn btn-detail-back align-self-start align-self-md-auto">
-            <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar
-        </a>
     </div>
 
     <!-- 4 SUMMARY CARDS -->
@@ -696,10 +693,10 @@
 
                 <!-- TOMBOL AKSI -->
                 <div class="d-flex justify-content-between align-items-center mt-4">
-                    <a href="<?= base_url('datatiket') ?>" class="btn btn-action-back">
+                    <a href="<?= base_url('verification') ?>" class="btn btn-action-back">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
-
+                    
                     <button type="submit" id="btnSubmitForm" class="btn btn-action-submit d-none">
                         <i class="fas fa-save"></i> Simpan
                     </button>
@@ -719,7 +716,7 @@
 <!-- JAVASCRIPT -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-
+    
     /* 1. STAGGERED ENTRANCE ANIMATION */
     const animatedElements = document.querySelectorAll('.detail-animate');
     animatedElements.forEach(function (element, index) {
@@ -746,7 +743,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (navigator.clipboard) {
             navigator.clipboard.writeText(text).then(function () {
                 showToast('Nomor Tiket "' + text + '" Berhasil Disalin!');
-
+                
                 const copyBtn = document.getElementById('copyTicketBtn');
                 if (copyBtn) {
                     copyBtn.innerHTML = '<i class="fas fa-check text-success"></i>';

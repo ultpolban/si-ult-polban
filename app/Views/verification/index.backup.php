@@ -549,142 +549,160 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="ticket-title mb-1" style="font-size:1.75rem;">
-                Disposisi Tiket Permohonan
+                Data Tiket Permohonan
             </h1>
             <p class="ticket-subtitle mb-0">
-                Kelola dan teruskan tiket yang telah diverifikasi ke unit penanggung jawab.
+                Kelola dan pantau seluruh tiket permohonan layanan mahasiswa.
             </p>
         </div>
         <nav aria-label="breadcrumb" class="ticket-breadcrumb">
             <ol class="breadcrumb bg-transparent p-0 m-0">
                 <li class="breadcrumb-item">
-                    <a href="<?= base_url('dashboard') ?>">Dashboard</a>
+                    <a href="<?= base_url('petugas/dashboard') ?>">Dashboard</a>
                 </li>
                 <li class="breadcrumb-item active text-muted">Data Tiket</li>
             </ol>
         </nav>
     </div>
-
 <?php
 
-$tiket_list = !empty($tickets) && is_array($tickets) ? $tickets : [];
-
 /*
- * Halaman Disposisi hanya menampilkan tiket
- * yang sudah berstatus VERIFIED.
- */
-$tiket_list = array_values(array_filter($tiket_list, function ($ticket) {
-    return strtolower(trim($ticket['status'] ?? '')) === 'verified';
-}));
+|--------------------------------------------------------------------------
+| ADAPTER BACKEND3 -> FRONTEND3
+|--------------------------------------------------------------------------
+| Data tetap berasal dari VerificationController / database backend3.
+*/
+
+$sourceTickets = !empty($tickets) && is_array($tickets)
+    ? $tickets
+    : [];
+
+$tiket_list = [];
+
+foreach ($sourceTickets as $ticket) {
+
+    $status = strtolower(
+        trim($ticket['status'] ?? 'submitted')
+    );
+
+    $tiket_list[] = [
+
+        'id' => $ticket['id'] ?? null,
+
+        'nomor_tiket' =>
+            $ticket['ticket_number']
+            ?? $ticket['nomor_tiket']
+            ?? '-',
+
+        'nama_pemohon' =>
+            $ticket['applicant_name']
+            ?? $ticket['student_name']
+            ?? $ticket['name']
+            ?? '-',
+
+        'nik' =>
+            $ticket['nik']
+            ?? $ticket['identity_number']
+            ?? '-',
+
+        'layanan' =>
+            $ticket['service_name']
+            ?? $ticket['service_display_name']
+            ?? $ticket['layanan']
+            ?? '-',
+
+        'kategori' =>
+            $ticket['category_name']
+            ?? $ticket['kategori']
+            ?? 'Umum',
+
+        'dokumen' =>
+            $ticket['attachment']
+            ?? $ticket['lampiran']
+            ?? '',
+
+        'lampiran' =>
+            $ticket['attachment']
+            ?? $ticket['lampiran']
+            ?? '',
+
+        'status' => ucfirst($status),
+
+        'created_at' =>
+            $ticket['created_at']
+            ?? $ticket['submitted_at']
+            ?? '-'
+    ];
+}
 
 usort($tiket_list, function ($a, $b) {
-    return strtotime(
-        $b['verified_at']
-        ?? $b['updated_at']
-        ?? $b['created_at']
-        ?? '1970-01-01 00:00:00'
-    ) <=> strtotime(
-        $a['verified_at']
-        ?? $a['updated_at']
-        ?? $a['created_at']
-        ?? '1970-01-01 00:00:00'
-    );
+    return strtotime($b['created_at'] ?? '1970-01-01 00:00:00') <=> strtotime($a['created_at'] ?? '1970-01-01 00:00:00');
 });
 
-$searchValue   = trim($_GET['search'] ?? '');
-$statusValue   = 'Verified';
+$searchValue = trim($_GET['search'] ?? '');
+$statusValue = trim($_GET['status'] ?? 'Submitted');
 $kategoriValue = trim($_GET['kategori'] ?? '');
 
-$filteredTickets = array_filter($tiket_list, function ($ticket) use ($searchValue, $kategoriValue) {
-
+$filteredTickets = array_filter($tiket_list, function ($ticket) use ($searchValue, $statusValue, $kategoriValue) {
     $searchMatch = true;
+    $statusMatch = true;
     $kategoriMatch = true;
 
     if ($searchValue !== '') {
         $haystack = strtolower(
-            ($ticket['ticket_number'] ?? '') . ' ' .
-            ($ticket['title'] ?? '') . ' ' .
-            ($ticket['service_display_name'] ?? '') . ' ' .
-            ($ticket['service_name'] ?? '') . ' ' .
-            ($ticket['identity_number'] ?? '') . ' ' .
-            (($ticket['identity_number'] ?? $ticket['nik'] ?? $ticket['nim'] ?? '-') ?? '')
+            ($ticket['nomor_tiket'] ?? '') . ' ' .
+            ($ticket['nama_pemohon'] ?? '') . ' ' .
+            ($ticket['nik'] ?? '') . ' ' .
+            ($ticket['layanan'] ?? '')
         );
+        $searchMatch = str_contains($haystack, strtolower($searchValue));
+    }
 
-        $searchMatch = str_contains(
-            $haystack,
-            strtolower($searchValue)
-        );
+    if ($statusValue !== '') {
+        $statusMatch = strtolower($ticket['status'] ?? '') === strtolower($statusValue);
     }
 
     if ($kategoriValue !== '') {
-        $kategori = strtolower(
-            $ticket['category_name']
-            ?? ($ticket['category_name'] ?? $ticket['kategori'] ?? 'Umum')
-            ?? ''
-        );
-
-        $kategoriMatch = $kategori === strtolower($kategoriValue);
+        $kategoriMatch = strtolower($ticket['kategori'] ?? '') === strtolower($kategoriValue);
     }
 
-    return $searchMatch && $kategoriMatch;
+    return $searchMatch && $statusMatch && $kategoriMatch;
 });
 
 $filteredTickets = array_values($filteredTickets);
 
 $jumlahTiket = count($tiket_list);
 $jumlahSubmitted = 0;
-$jumlahVerified = count($tiket_list);
+$jumlahVerified = 0;
 $jumlahDisposisi = 0;
 
-$perPage = isset($_GET['limit']) && $_GET['limit'] !== ''
-    ? (int) $_GET['limit']
-    : 10;
-
-if ($perPage < 1) {
-    $perPage = 10;
+foreach ($tiket_list as $statRow) {
+    $statStatus = strtolower(trim($statRow['status'] ?? ''));
+    if ($statStatus === 'submitted') $jumlahSubmitted++;
+    if ($statStatus === 'verified') $jumlahVerified++;
+    if ($statStatus === 'disposisi' || $statStatus === 'in progress') $jumlahDisposisi++;
 }
 
+$perPage = isset($_GET['limit']) && $_GET['limit'] !== '' ? (int) $_GET['limit'] : 10;
+if ($perPage < 1) $perPage = 10;
+
 $totalData = count($filteredTickets);
-
-$totalPages = max(
-    1,
-    (int) ceil($totalData / $perPage)
-);
-
-$currentPage = isset($_GET['page'])
-    ? (int) $_GET['page']
-    : 1;
-
-$currentPage = max(
-    1,
-    min($currentPage, $totalPages)
-);
-
+$totalPages = max(1, (int) ceil($totalData / $perPage));
+$currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+$currentPage = max(1, min($currentPage, $totalPages));
 $offset = ($currentPage - 1) * $perPage;
-
-$paginatedList = array_slice(
-    $filteredTickets,
-    $offset,
-    $perPage
-);
-
+$paginatedList = array_slice($filteredTickets, $offset, $perPage);
 $no = $offset + 1;
 
 $queryParams = [];
+if ($searchValue !== '') $queryParams['search'] = $searchValue;
+if ($statusValue !== '') $queryParams['status'] = $statusValue;
+if ($kategoriValue !== '') $queryParams['kategori'] = $kategoriValue;
+if (isset($_GET['limit']) && $_GET['limit'] !== '') $queryParams['limit'] = $_GET['limit'];
 
-if ($searchValue !== '') {
-    $queryParams['search'] = $searchValue;
-}
-
-if ($kategoriValue !== '') {
-    $queryParams['kategori'] = $kategoriValue;
-}
-if (isset($_GET['limit']) && $_GET['limit'] !== '') {
-    $queryParams['limit'] = $_GET['limit'];
-}
 function ticketPageUrl($page, $queryParams = []) {
     $queryParams['page'] = $page;
-    return base_url('disposition?' . http_build_query($queryParams));
+   return base_url('verification?' . http_build_query($queryParams));
 }
 ?>
 
@@ -704,7 +722,7 @@ function ticketPageUrl($page, $queryParams = []) {
             <div class="card stat-tamu-card bg-tamu-orange p-3 shadow-sm reveal-item">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Menunggu Disposisi</span>
+                        <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Menunggu Verifikasi</span>
                         <h2 class="fw-extrabold mb-0 text-white mt-1"><?= $jumlahSubmitted ?></h2>
                     </div>
                     <div class="icon-tamu-circle text-white"><i class="fas fa-clock"></i></div>
@@ -737,7 +755,7 @@ function ticketPageUrl($page, $queryParams = []) {
 
     <div class="card ticket-filter-card mb-4 reveal-item">
         <div class="card-body">
-            <form id="ticketFilterForm" action="<?= base_url('disposition') ?>" method="GET">
+           <form id="ticketFilterForm" action="<?= base_url('verification') ?>" method="GET">
                 <div class="row g-2 align-items-center">
                     <div class="col-xl-3 col-lg-3 col-md-12">
                         <div class="input-group ticket-input-group">
@@ -769,7 +787,7 @@ function ticketPageUrl($page, $queryParams = []) {
                             <button type="submit" id="filterButton" class="btn btn-ticket-filter flex-grow-1">
                                 <i class="fas fa-filter mr-1"></i> Filter
                             </button>
-                            <a href="<?= base_url('disposition') ?>" class="btn btn-ticket-reset" title="Reset Filter">
+                           <a href="<?= base_url('verification') ?>" class="btn btn-ticket-reset"
                                 <i class="fas fa-undo"></i>
                             </a>
                         </div>
@@ -780,9 +798,9 @@ function ticketPageUrl($page, $queryParams = []) {
                                 <i class="fas fa-download mr-2"></i> Export Laporan <i class="fas fa-chevron-down ml-2"></i>
                             </button>
                             <div class="export-menu" id="exportMenu">
-                                <a class="dropdown-item" href="<?= base_url('datatiket/export/excel') ?>"><i class="fas fa-file-excel mr-2" style="color:#0B8F4D;"></i> Export Excel</a>
-                                <a class="dropdown-item" href="<?= base_url('datatiket/export/pdf') ?>"><i class="fas fa-file-pdf mr-2" style="color:#D93025;"></i> Export PDF</a>
-                                <a class="dropdown-item" href="<?= base_url('datatiket/export/csv') ?>"><i class="fas fa-file-csv mr-2" style="color:#005BAC;"></i> Export CSV</a>
+                                <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/excel') ?>"><i class="fas fa-file-excel mr-2" style="color:#0B8F4D;"></i> Export Excel</a>
+                                <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/pdf') ?>"><i class="fas fa-file-pdf mr-2" style="color:#D93025;"></i> Export PDF</a>
+                                <a class="dropdown-item" href="<?= base_url('petugas/laporan/export/csv') ?>"><i class="fas fa-file-csv mr-2" style="color:#005BAC;"></i> Export CSV</a>
                             </div>
                         </div>
                     </div>
@@ -824,23 +842,23 @@ function ticketPageUrl($page, $queryParams = []) {
                                 <td class="text-center fw-bold text-muted"><?= $no++ ?></td>
                                 <td>
                                     <!-- TOMBOL SALIN NO TIKET -->
-                                    <button type="button" class="ticket-copy-btn" onclick="copyTicketNumber('<?= esc(($ticket['ticket_number'] ?? $ticket['nomor_tiket'] ?? '-')) ?>')" title="Klik untuk menyalin nomor tiket">
-                                        <?= esc(($ticket['ticket_number'] ?? $ticket['nomor_tiket'] ?? '-')) ?>
+                                    <button type="button" class="ticket-copy-btn" onclick="copyTicketNumber('<?= esc($ticket['nomor_tiket']) ?>')" title="Klik untuk menyalin nomor tiket">
+                                        <?= esc($ticket['nomor_tiket']) ?>
                                         <i class="far fa-copy"></i>
                                     </button>
                                 </td>
                                 <td>
-                                    <div class="ticket-name"><?= esc(($ticket['full_name'] ?? $ticket['nama_pemohon'] ?? $ticket['student_name'] ?? '-')) ?></div>
+                                    <div class="ticket-name"><?= esc($ticket['nama_pemohon']) ?></div>
                                 </td>
                                 <td>
-                                    <div class="ticket-nik"><?= esc(($ticket['identity_number'] ?? $ticket['nik'] ?? $ticket['nim'] ?? '-') ?? '-') ?></div>
+                                    <div class="ticket-nik"><?= esc($ticket['nik'] ?? '-') ?></div>
                                 </td>
-                                <td><?= esc(($ticket['service_display_name'] ?? $ticket['service_name'] ?? $ticket['layanan'] ?? '-')) ?></td>
+                                <td><?= esc($ticket['layanan']) ?></td>
                                 <td>
-                                    <span class="ticket-category"><?= esc(($ticket['category_name'] ?? $ticket['kategori'] ?? 'Umum') ?? 'Umum') ?></span>
+                                    <span class="ticket-category"><?= esc($ticket['kategori'] ?? 'Umum') ?></span>
                                 </td>
                                 <td class="text-center">
-                                    <?php if (!empty($ticket['attachment']) || !empty($ticket['dokumen']) || !empty($ticket['lampiran'])): ?>
+                                    <?php if (!empty($ticket['dokumen']) || !empty($ticket['lampiran'])): ?>
                                         <span class="ticket-document document-available">
                                             <i class="fas fa-paperclip"></i> Ada
                                         </span>
@@ -872,18 +890,18 @@ function ticketPageUrl($page, $queryParams = []) {
                                 <td class="text-center">
                                     <div class="ticket-actions">
                                         <!-- AKSI DETAIL KAN SELALU ADA -->
-                                        <a href="<?= base_url('disposition/detail/' . esc($ticket['id'] ?? ($ticket['ticket_number'] ?? $ticket['nomor_tiket'] ?? '-'))) ?>" class="ticket-action action-detail" title="Detail Tiket">
+                                       <a href="<?= base_url('verification/detail/' . esc($ticket['id'] ?? '')) ?>"
                                             <i class="fas fa-eye"></i>
                                         </a>
 
                                         <?php if ($st === 'submitted'): ?>
                                             <!-- BELUM DIVERIFIKASI -> AKSI VERIFIKASI -->
-                                            <a href="<?= base_url('disposition/detail/' . esc($ticket['id'] ?? ($ticket['ticket_number'] ?? $ticket['nomor_tiket'] ?? '-'))) ?>" class="ticket-action action-verify" title="Verifikasi Tiket">
+                                           <a href="<?= base_url('verification/verify/' . esc($ticket['id'] ?? '')) ?>"
                                                 <i class="fas fa-user-check"></i>
                                             </a>
                                         <?php elseif ($st === 'verified'): ?>
                                             <!-- SUDAH DIVERIFIKASI -> AKSI DISPOSISI -->
-                                            <a href="<?= base_url('disposition/detail/' . esc($ticket['id'] ?? ($ticket['ticket_number'] ?? $ticket['nomor_tiket'] ?? '-'))) ?>" class="ticket-action action-disposition" title="Disposisi Tiket">
+                                            <a href="<?= base_url('petugas/tiket/disposisi/' . esc($ticket['id'] ?? $ticket['nomor_tiket'])) ?>" class="ticket-action action-disposition" title="Disposisi Tiket">
                                                 <i class="fas fa-share"></i>
                                             </a>
                                         <?php endif; ?>

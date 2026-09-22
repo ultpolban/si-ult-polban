@@ -430,5 +430,11 @@ $routes->group(
             'delete/(:num)',
             'UserController::delete/$1'
         );
+
+        $routes->post('notifications/read/(:num)', 'NotificationController::read/$1');
+$routes->post('notifications/read-all', 'NotificationController::readAll');
     }
+
+
+    
 );

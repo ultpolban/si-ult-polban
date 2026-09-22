@@ -378,10 +378,6 @@
                 Layanan Informasi & Verifikasi Data Permohonan Terpadu POLBAN
             </p>
         </div>
-        <!-- TOMBOL KEMBALI DIARAHKAN KE PETUGAS/TIKET (MENGATASI ERROR 404) -->
-        <a href="<?= base_url('datatiket') ?>" class="btn btn-detail-back align-self-start align-self-md-auto">
-            <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar
-        </a>
     </div>
 
     <!-- 1. INFORMASI TIKET -->

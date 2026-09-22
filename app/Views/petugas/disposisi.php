@@ -329,6 +329,12 @@
         outline: none;
     }
 
+    .custom-select-ultra[readonly] {
+        background-color: #ffffff !important;
+        color: #1e293b;
+        opacity: 1;
+    }
+
     /* =========================
        BUTTON
     ========================= */
@@ -434,11 +440,6 @@
 
         </div>
 
-        <a href="<?= base_url('datatiket') ?>"
-           class="btn btn-detail-back align-self-start align-self-md-auto">
-            <i class="fas fa-arrow-left me-2"></i>
-            Kembali ke Daftar
-        </a>
 
     </div>
 
@@ -706,44 +707,34 @@
                             </label>
 
 
-                            <!-- UNIT DARI DATABASE -->
-                            <select
-                                name="assigned_to"
+                            <!-- UNIT TUJUAN OTOMATIS DARI LAYANAN TIKET -->
+                            <?php
+                            /*
+                             * Unit tujuan tidak dipilih lagi oleh petugas.
+                             * Controller DispositionController menentukan unit
+                             * berdasarkan layanan yang dipilih saat pengajuan tiket.
+                             */
+                            $unitTujuan = trim((string) ($tiket['unit_name'] ?? ''));
+                            $unitTujuanId = $tiket['assigned_to'] ?? ($tiket['unit_id'] ?? '');
+                            ?>
+
+                            <input
+                                type="text"
                                 id="unit_tujuan"
-                                class="form-select custom-select-ultra shadow-sm"
+                                class="form-control custom-select-ultra shadow-sm bg-white"
+                                value="<?= esc($unitTujuan !== '' ? $unitTujuan : 'Unit tujuan belum tersedia') ?>"
+                                readonly
                                 required
+                                style="cursor: not-allowed;"
                             >
 
-                                <option value="" selected disabled>
-                                    -- Pilih Unit Tujuan Disposisi --
-                                </option>
-
-                                <?php if (!empty($units)): ?>
-
-                                    <?php foreach ($units as $unit): ?>
-
-                                        <option value="<?= esc($unit['id']) ?>">
-
-                                            <?= esc($unit['name']) ?>
-
-                                            <?php if (!empty($unit['code'])): ?>
-                                                - <?= esc($unit['code']) ?>
-                                            <?php endif; ?>
-
-                                        </option>
-
-                                    <?php endforeach; ?>
-
-                                <?php else: ?>
-
-                                    <option value="" disabled>
-                                        Belum ada unit aktif
-                                    </option>
-
-                                <?php endif; ?>
-
-                            </select>
-
+                            <?php if ($unitTujuanId !== ''): ?>
+                                <input
+                                    type="hidden"
+                                    name="assigned_to"
+                                    value="<?= esc($unitTujuanId) ?>"
+                                >
+                            <?php endif; ?>
 
                             <div
                                 class="d-flex align-items-center gap-2 mt-2 text-muted"
@@ -752,8 +743,8 @@
 
                                 <i class="fas fa-info-circle text-primary"></i>
 
-                                Tiket akan dialihkan ke antrean kerja unit
-                                yang Anda pilih di atas.
+                                Unit tujuan otomatis mengikuti unit penanggung jawab
+                                dari layanan yang dipilih saat pengajuan tiket.
 
                             </div>
 

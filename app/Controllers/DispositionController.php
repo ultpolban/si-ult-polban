@@ -21,8 +21,6 @@ class DispositionController extends BaseController
     /**
      * ============================================================
      * HALAMAN DISPOSISI
-     *
-     * Hanya menampilkan tiket dengan status VERIFIED.
      * ============================================================
      */
     public function index()
@@ -37,12 +35,18 @@ class DispositionController extends BaseController
 
     /**
      * ============================================================
-     * DETAIL TIKET
+     * DETAIL DISPOSISI
      *
-     * Menampilkan:
-     * - detail tiket
-     * - layanan
-     * - daftar unit layanan aktif
+     * Unit tujuan OTOMATIS.
+     *
+     * Prioritas:
+     * 1. assigned_to yang sudah tersimpan
+     * 2. Jika belum ada, ambil dari:
+     *    tickets.service_id
+     *        ↓
+     *    master_services.service_unit_id
+     *        ↓
+     *    master_service_units.id
      * ============================================================
      */
     public function detail($id = null)
@@ -53,9 +57,7 @@ class DispositionController extends BaseController
                 ->with('error', 'ID tiket tidak ditemukan.');
         }
 
-        /**
-         * Ambil detail tiket.
-         */
+        // Ambil detail tiket
         $ticket = $this->ticketModel->getTicketDetail($id);
 
         if (!$ticket) {
@@ -64,14 +66,9 @@ class DispositionController extends BaseController
                 ->with('error', 'Tiket tidak ditemukan.');
         }
 
-        /**
-         * Pastikan hanya tiket VERIFIED
-         * yang dapat didisposisikan.
-         */
+        // Pastikan tiket VERIFIED
         if (
-            strtolower(
-                trim($ticket['status'] ?? '')
-            ) !== 'verified'
+            strtolower(trim($ticket['status'] ?? '')) !== 'verified'
         ) {
             return redirect()
                 ->to(base_url('disposition'))
@@ -81,28 +78,130 @@ class DispositionController extends BaseController
                 );
         }
 
-        /**
-         * Ambil unit layanan aktif.
-         *
-         * tickets.assigned_to
-         *          ↓
-         * master_service_units.id
-         */
-        $units = $this->db
-            ->table('master_service_units')
-            ->select('id, code, name, description')
-            ->where('is_active', 1)
-            ->where('deleted_at IS NULL', null, false)
-            ->orderBy('sort_order', 'ASC')
-            ->orderBy('name', 'ASC')
-            ->get()
-            ->getResultArray();
 
+        /**
+         * ========================================================
+         * CARI UNIT TUJUAN
+         * ========================================================
+         */
+
+        $unit = null;
+
+
+        /**
+         * --------------------------------------------------------
+         * PRIORITAS 1
+         * --------------------------------------------------------
+         *
+         * Kalau assigned_to sudah diisi pada proses verifikasi,
+         * gunakan unit tersebut.
+         */
+        if (!empty($ticket['assigned_to'])) {
+
+            $unit = $this->db
+                ->table('master_service_units')
+                ->select('id, code, name, description')
+                ->where(
+                    'id',
+                    (int) $ticket['assigned_to']
+                )
+                ->where(
+                    'is_active',
+                    1
+                )
+                ->where(
+                    'deleted_at IS NULL',
+                    null,
+                    false
+                )
+                ->get()
+                ->getRowArray();
+        }
+
+
+        /**
+         * --------------------------------------------------------
+         * PRIORITAS 2
+         * --------------------------------------------------------
+         *
+         * Jika assigned_to belum ada, tentukan otomatis
+         * berdasarkan layanan tiket.
+         */
+        if (
+            !$unit
+            && !empty($ticket['service_id'])
+        ) {
+
+            $unit = $this->db
+                ->table('master_services ms')
+                ->select('
+                    ms.id AS service_id,
+                    ms.name AS service_name,
+                    ms.code AS service_code,
+                    ms.service_unit_id,
+
+                    su.id AS id,
+                    su.code AS code,
+                    su.name AS name,
+                    su.description AS description
+                ')
+                ->join(
+                    'master_service_units su',
+                    'su.id = ms.service_unit_id',
+                    'left'
+                )
+                ->where(
+                    'ms.id',
+                    (int) $ticket['service_id']
+                )
+                ->where(
+                    'su.is_active',
+                    1
+                )
+                ->where(
+                    'su.deleted_at IS NULL',
+                    null,
+                    false
+                )
+                ->get()
+                ->getRowArray();
+        }
+
+
+        /**
+         * ========================================================
+         * SIMPAN INFORMASI UNIT KE DATA TIKET
+         * ========================================================
+         */
+        if ($unit) {
+
+            $ticket['unit_id'] = $unit['id'];
+            $ticket['unit_code'] = $unit['code'];
+            $ticket['unit_name'] = $unit['name'];
+
+            // Jika assigned_to belum ada,
+            // gunakan ID unit otomatis.
+            if (empty($ticket['assigned_to'])) {
+                $ticket['assigned_to'] = $unit['id'];
+            }
+
+        } else {
+
+            $ticket['unit_id'] = null;
+            $ticket['unit_code'] = null;
+            $ticket['unit_name'] = null;
+        }
+
+
+        /**
+         * ========================================================
+         * KIRIM DATA KE VIEW
+         * ========================================================
+         */
         return view('petugas/disposisi', [
-    'tiket'  => $ticket,
-    'ticket' => $ticket,
-    'units'  => $units
-]);
+            'ticket' => $ticket,
+            'tiket'  => $ticket
+        ]);
     }
 
 
@@ -121,11 +220,9 @@ class DispositionController extends BaseController
      * ============================================================
      * PROSES DISPOSISI
      *
-     * VERIFIED
-     *     ↓
-     * ASSIGNED
+     * TIDAK ADA PILIH UNIT.
      *
-     * assigned_to = master_service_units.id
+     * Sistem mengambil unit otomatis dari tiket.
      * ============================================================
      */
     public function process($id = null)
@@ -136,8 +233,9 @@ class DispositionController extends BaseController
                 ->with('error', 'ID tiket tidak ditemukan.');
         }
 
+
         /**
-         * Ambil tiket terbaru.
+         * Ambil tiket terbaru
          */
         $ticket = $this->ticketModel->find($id);
 
@@ -147,13 +245,12 @@ class DispositionController extends BaseController
                 ->with('error', 'Tiket tidak ditemukan.');
         }
 
+
         /**
-         * Pastikan status masih VERIFIED.
+         * Pastikan status VERIFIED
          */
         if (
-            strtolower(
-                trim($ticket['status'] ?? '')
-            ) !== 'verified'
+            strtolower(trim($ticket['status'] ?? '')) !== 'verified'
         ) {
             return redirect()
                 ->to(base_url('disposition'))
@@ -163,66 +260,159 @@ class DispositionController extends BaseController
                 );
         }
 
-        /**
-         * Ambil unit tujuan.
-         */
-        $assignedTo = $this->request->getPost('assigned_to');
 
+        /**
+         * ========================================================
+         * TENTUKAN UNIT OTOMATIS
+         * ========================================================
+         */
+
+        $assignedTo = null;
+        $unit = null;
+
+
+        /**
+         * --------------------------------------------------------
+         * PRIORITAS 1:
+         * assigned_to yang sudah ada
+         * --------------------------------------------------------
+         */
+        if (!empty($ticket['assigned_to'])) {
+
+            $assignedTo = (int) $ticket['assigned_to'];
+
+            $unit = $this->db
+                ->table('master_service_units')
+                ->select('id, code, name')
+                ->where(
+                    'id',
+                    $assignedTo
+                )
+                ->where(
+                    'is_active',
+                    1
+                )
+                ->where(
+                    'deleted_at IS NULL',
+                    null,
+                    false
+                )
+                ->get()
+                ->getRowArray();
+        }
+
+
+        /**
+         * --------------------------------------------------------
+         * PRIORITAS 2:
+         * Ambil dari layanan
+         * --------------------------------------------------------
+         */
         if (
-            $assignedTo === null ||
-            $assignedTo === '' ||
-            !is_numeric($assignedTo)
+            !$unit
+            && !empty($ticket['service_id'])
         ) {
-            return redirect()
-                ->back()
-                ->with(
-                    'error',
-                    'Unit tujuan wajib dipilih.'
-                );
+
+            $unit = $this->db
+                ->table('master_services ms')
+                ->select('
+                    ms.id AS service_id,
+                    ms.name AS service_name,
+                    ms.code AS service_code,
+                    ms.service_unit_id,
+
+                    su.id AS id,
+                    su.code AS code,
+                    su.name AS name
+                ')
+                ->join(
+                    'master_service_units su',
+                    'su.id = ms.service_unit_id',
+                    'left'
+                )
+                ->where(
+                    'ms.id',
+                    (int) $ticket['service_id']
+                )
+                ->where(
+                    'su.is_active',
+                    1
+                )
+                ->where(
+                    'su.deleted_at IS NULL',
+                    null,
+                    false
+                )
+                ->get()
+                ->getRowArray();
+
+            if ($unit) {
+                $assignedTo = (int) $unit['id'];
+            }
         }
 
-        $assignedTo = (int) $assignedTo;
 
         /**
-         * Pastikan unit benar-benar ada
-         * dan masih aktif.
+         * ========================================================
+         * VALIDASI UNIT
+         * ========================================================
          */
-        $unit = $this->db
-            ->table('master_service_units')
-            ->select('id, code, name')
-            ->where('id', $assignedTo)
-            ->where('is_active', 1)
-            ->where('deleted_at IS NULL', null, false)
-            ->get()
-            ->getRowArray();
+        if (!$unit || empty($assignedTo)) {
 
-        if (!$unit) {
             return redirect()
                 ->back()
                 ->with(
                     'error',
-                    'Unit tujuan tidak ditemukan atau tidak aktif.'
+                    'Unit tujuan otomatis belum dapat ditentukan. Pastikan layanan tiket sudah memiliki unit tujuan.'
                 );
         }
 
-        $now = date('Y-m-d H:i:s');
+
+        /**
+         * ========================================================
+         * CATATAN DISPOSISI
+         * ========================================================
+         */
+        $note = trim(
+            (string) $this->request->getPost('note')
+        );
+
 
         /**
          * ========================================================
          * UPDATE TIKET
          * ========================================================
-         *
-         * assigned_to = ID master_service_units
-         * status      = assigned
-         * updated_at  = waktu disposisi
          */
-        $updated = $this->ticketModel->update($id, [
+        $updateData = [
             'assigned_to' => $assignedTo,
-            'status'      => 'assigned',
-            'updated_at'  => $now
-        ]);
+            'status'      => 'assigned'
+        ];
+
+
+        /**
+         * Simpan catatan jika kolom tersedia
+         */
+        $ticketFields = $this->db->getFieldNames('tickets');
+
+        if (
+            in_array('admin_note', $ticketFields, true)
+            && $note !== ''
+        ) {
+            $updateData['admin_note'] = $note;
+        }
+
+
+        /**
+         * Update database
+         */
+        $updated = $this->ticketModel->update(
+            $id,
+            $updateData
+        );
+
 
         if (!$updated) {
+
             return redirect()
                 ->back()
                 ->with(
@@ -231,26 +421,38 @@ class DispositionController extends BaseController
                 );
         }
 
+
         /**
          * ========================================================
          * SIMPAN LOG
          * ========================================================
          */
-       $this->ticketLogModel->addLog(
-    $id,
-    'Tiket didisposisikan ke unit: ' . $unit['name'],
-    session()->get('name') ?? 'Petugas ULT'
-);
+        $userName =
+            session()->get('name')
+            ?? session()->get('full_name')
+            ?? 'Petugas ULT';
+
+
+        $this->ticketLogModel->addLog(
+            $id,
+            'Tiket didisposisikan otomatis ke unit: '
+            . $unit['name'],
+            $userName
+        );
+
+
         /**
-         * Kembali ke halaman disposisi.
+         * ========================================================
+         * SELESAI
+         * ========================================================
          */
         return redirect()
             ->to(base_url('disposition'))
             ->with(
                 'success',
-                'Tiket berhasil didisposisikan ke unit ' .
-                $unit['name'] .
-                '.'
+                'Tiket berhasil didisposisikan otomatis ke unit '
+                . $unit['name']
+                . '.'
             );
     }
 }

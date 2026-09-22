@@ -290,7 +290,7 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
     <a class="nav-link position-relative px-2 d-flex align-items-center" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Notifikasi Tiket">
         <div class="notif-bell-wrapper">
             <i class="fas fa-bell notif-bell-icon"></i>
-
+            
             <!-- Pulse Effect & Badge Angka Notifikasi -->
             <?php if ($notifCount > 0): ?>
                 <span class="bell-pulse-ring" id="notifPulse"></span>
@@ -302,7 +302,7 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
     </a>
 
     <div class="dropdown-menu dropdown-menu-right border-0 py-0 shadow-lg" aria-labelledby="notificationDropdown">
-
+        
         <!-- Header Dropdown -->
         <div class="notif-header text-white">
             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -315,7 +315,7 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
                     </span>
                 <?php endif; ?>
             </div>
-
+            
             <div class="d-flex justify-content-between align-items-center mt-3">
                 <div class="btn-group">
                     <button type="button" class="notif-filter-btn active mr-1" onclick="filterNotif('all', this, event)">Semua</button>
@@ -333,12 +333,12 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
         <div class="list-group list-group-flush notif-scroll" id="notifContainer">
             <?php if (!empty($latestNotifs)): ?>
                 <?php foreach ($latestNotifs as $index => $notif): ?>
-                    <?php
+                    <?php 
                         $namaPemohon = esc($notif['nama_pemohon'] ?? 'Mahasiswa');
                         $inisial = strtoupper(substr($namaPemohon, 0, 1));
                     ?>
-                    <a href="<?= base_url('datatiket/detail/' . ($notif['id'] ?? 1)) ?>"
-                       class="list-group-item list-group-item-action p-3 notif-item unread"
+                    <a href="<?= base_url('petugas/detail/' . ($notif['id'] ?? 1)) ?>" 
+                       class="list-group-item list-group-item-action p-3 notif-item unread" 
                        data-index="<?= $index ?>"
                        onclick="markSingleAsRead(this)">
                         <div class="d-flex align-items-start">
@@ -358,7 +358,7 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
                                     </div>
                                 </div>
                                 <p class="mb-0 text-dark" style="font-size: 0.82rem; line-height: 1.4;">
-                                    <strong><?= $namaPemohon ?></strong> mengajukan
+                                    <strong><?= $namaPemohon ?></strong> mengajukan 
                                     <span class="text-primary font-weight-semibold"><?= esc($notif['layanan'] ?? 'Layanan') ?></span>
                                 </p>
                             </div>
@@ -378,7 +378,7 @@ if (!empty($tiket_list) && is_array($tiket_list)) {
 
         <!-- Footer Dropdown -->
         <div class="p-2.5 text-center bg-light border-top">
-            <a href="<?= base_url('datatiket') ?>" class="notif-footer-link d-block py-1">
+            <a href="<?= base_url('verification') ?>" class="notif-footer-link d-block py-1">
                 Lihat Semua Data Tiket <i class="fas fa-arrow-right ml-1"></i>
             </a>
         </div>
@@ -394,17 +394,17 @@ function playNotificationChime() {
         const ctx = new AudioContext();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-
+        
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(659.25, ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(987.77, ctx.currentTime + 0.15);
-
+        
         gain.gain.setValueAtTime(0.15, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
-
+        
         osc.connect(gain);
         gain.connect(ctx.destination);
-
+        
         osc.start();
         osc.stop(ctx.currentTime + 0.25);
     } catch(e) {}

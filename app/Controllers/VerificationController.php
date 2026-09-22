@@ -937,10 +937,35 @@ class VerificationController extends BaseController
             return;
         }
 
-        $fields = $this->db
-            ->getFieldNames('service_request_logs');
+        $fields = $this->db->getFieldNames('service_request_logs');
+
+        /*
+         * service_request_logs memiliki foreign key
+         * service_request_id -> service_requests.id.
+         *
+         * tickets.id tidak boleh langsung dimasukkan
+         * ke service_request_id karena keduanya bukan
+         * relasi yang sama.
+         */
+
+        if (in_array('service_request_id', $fields)) {
+            $serviceRequest = $this->db
+                ->table('service_requests')
+                ->select('id')
+                ->where('id', $ticketId)
+                ->get()
+                ->getRowArray();
+
+            if (!$serviceRequest) {
+                return;
+            }
+        }
 
         $data = [];
+
+        if (in_array('service_request_id', $fields)) {
+            $data['service_request_id'] = $serviceRequest['id'];
+        }
 
         if (in_array('ticket_id', $fields)) {
             $data['ticket_id'] = $ticketId;
@@ -951,7 +976,8 @@ class VerificationController extends BaseController
         }
 
         if (in_array('activity', $fields)) {
-            $data['activity'] = $status;
+            $data['activity'] =
+                'Status tiket berubah menjadi ' . $status;
         }
 
         if (in_array('description', $fields)) {

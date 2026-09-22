@@ -1,57 +1,49 @@
-<aside class="ult-sidebar" id="sidebar">
+<div class="sidebar">
 
-    <a href="<?= site_url('dashboard') ?>"
-        class="ult-brand">
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
 
-        <img src="<?= base_url('assets/img/logo.svg') ?>"
-            alt="Logo">
+        <div class="logo-icon">
 
-        <span>SI ULT POLBAN</span>
+            <i class="bi bi-buildings-fill"></i>
 
-    </a>
-
-    <div class="ult-user">
-
-        <img src="<?= base_url($user['photo'] ?? 'assets/img/avatar.svg') ?>"
-            alt="User">
+        </div>
 
         <div>
 
-            <a href="<?= site_url('profile') ?>"
-                class="name">
+            <h4>SI ULT</h4>
 
-                <?= esc($user['full_name'] ?? 'User') ?>
-
-            </a>
-
-            <div class="role">
-
-                <?= esc($user['role_name'] ?? '') ?>
-
-            </div>
+            <p>Politeknik Negeri Bandung</p>
 
         </div>
 
     </div>
 
-    <nav class="ult-menu">
+    <!-- Menu -->
+    <div class="sidebar-menu">
 
         <?php
         $permissionService = new \App\Services\PermissionService();
-
         $can = static function (string $permission) use ($permissionService): bool {
             return $permissionService->hasPermission($permission);
         };
+        $currentSegment1 = service('uri')->getSegment(1);
+        $currentSegment2 = service('uri')->getSegment(2);
         ?>
 
-        <!-- Dashboard -->
+        <!-- MAIN MENU -->
+        <span class="menu-title">MAIN MENU</span>
+
         <?php if ($can('dashboard.view')): ?>
-            <a href="<?= site_url('dashboard') ?>">
-                <i class="fas fa-home"></i>
+            <a href="<?= base_url('dashboard') ?>"
+                class="<?= $currentSegment1 == 'dashboard' ? 'active' : '' ?>">
+
+                <i class="bi bi-speedometer2"></i>
+
                 Dashboard
+
             </a>
         <?php endif; ?>
-
 
         <!-- MASTER DATA -->
         <?php
@@ -65,72 +57,75 @@
             'service.view',
             'service_requirement.view',
         ];
-
         $showMaster = false;
-
         foreach ($masterMenus as $permission) {
-            if ($can($permission)) {
-                $showMaster = true;
-                break;
-            }
+            if ($can($permission)) { $showMaster = true; break; }
         }
         ?>
 
         <?php if ($showMaster): ?>
-            <div class="ult-menu-header">Master Data</div>
+            <span class="menu-title">MASTER DATA</span>
 
             <?php if ($can('department.view')): ?>
-                <a href="<?= site_url('master/departments') ?>">
-                    <i class="fas fa-building"></i>
+                <a href="<?= base_url('master/departments') ?>"
+                    class="<?= ($currentSegment1 == 'master' && $currentSegment2 == 'departments') ? 'active' : '' ?>">
+                    <i class="bi bi-building"></i>
                     Department
                 </a>
             <?php endif; ?>
 
             <?php if ($can('study_program.view')): ?>
-                <a href="<?= site_url('master/study-programs') ?>">
-                    <i class="fas fa-university"></i>
+                <a href="<?= base_url('master/study-programs') ?>"
+                    class="<?= ($currentSegment1 == 'master' && $currentSegment2 == 'study-programs') ? 'active' : '' ?>">
+                    <i class="bi bi-mortarboard-fill"></i>
                     Program Studi
                 </a>
             <?php endif; ?>
 
             <?php if ($can('class.view')): ?>
-                <a href="<?= site_url('master/classes') ?>">
-                    <i class="fas fa-users"></i>
+                <a href="<?= base_url('master/classes') ?>"
+                    class="<?= ($currentSegment1 == 'master' && $currentSegment2 == 'classes') ? 'active' : '' ?>">
+                    <i class="bi bi-people-fill"></i>
                     Kelas
                 </a>
             <?php endif; ?>
 
             <?php if ($can('applicant_type.view')): ?>
-                <a href="<?= site_url('master/applicant-types') ?>">
-                    <i class="fas fa-user-tag"></i>
+                <a href="<?= base_url('master/applicant-types') ?>"
+                    class="<?= ($currentSegment1 == 'master' && $currentSegment2 == 'applicant-types') ? 'active' : '' ?>">
+                    <i class="bi bi-person-badge-fill"></i>
                     Jenis Pemohon
                 </a>
             <?php endif; ?>
 
             <?php if ($can('service_unit.view')): ?>
-                <a href="<?= site_url('master/service-units') ?>">
-                    <i class="fas fa-sitemap"></i>
+                <a href="<?= base_url('master/service-units') ?>"
+                    class="<?= ($currentSegment1 == 'master' && $currentSegment2 == 'service-units') ? 'active' : '' ?>">
+                    <i class="bi bi-diagram-3-fill"></i>
                     Unit Layanan
                 </a>
             <?php endif; ?>
 
             <?php if ($can('service_category.view')): ?>
-                <a href="<?= site_url('master/service-categories') ?>">
-                    <i class="fas fa-folder"></i>
+                <a href="<?= base_url('master/service-categories') ?>"
+                    class="<?= ($currentSegment1 == 'master' && $currentSegment2 == 'service-categories') ? 'active' : '' ?>">
+                    <i class="bi bi-folder-fill"></i>
                     Kategori Layanan
                 </a>
             <?php endif; ?>
 
             <?php if ($can('service.view')): ?>
-                <a href="<?= site_url('master/services') ?>">
-                    <i class="fas fa-concierge-bell"></i>
+                <a href="<?= base_url('master/services') ?>"
+                    class="<?= ($currentSegment1 == 'master' && $currentSegment2 == 'services') ? 'active' : '' ?>">
+                    <i class="bi bi-bell-fill"></i>
                     Layanan
                 </a>
             <?php endif; ?>
 
             <?php if ($can('service_requirement.view')): ?>
-                <a href="<?= site_url('master/service-requirements') ?>">
-                    <i class="fas fa-file-alt"></i>
+                <a href="<?= base_url('master/service-requirements') ?>"
+                    class="<?= ($currentSegment1 == 'master' && $currentSegment2 == 'service-requirements') ? 'active' : '' ?>">
+                    <i class="bi bi-file-earmark-text-fill"></i>
                     Persyaratan
                 </a>
             <?php endif; ?>
@@ -139,33 +134,41 @@
 
         <!-- MANAGEMENT -->
         <?php
-        $showManagement =
-            $can('user.view') ||
-            $can('role.view') ||
-            $can('permission.view');
+        $showManagement = $can('user.view') || $can('role.view') || $can('permission.view') || $can('role_permission.view');
         ?>
 
         <?php if ($showManagement): ?>
-            <div class="ult-menu-header">Management</div>
+            <span class="menu-title">MANAGEMENT</span>
 
             <?php if ($can('user.view')): ?>
-                <a href="<?= site_url('users') ?>">
-                    <i class="fas fa-user"></i>
-                    User
+                <a href="<?= base_url('users') ?>"
+                    class="<?= $currentSegment1 == 'users' ? 'active' : '' ?>">
+                    <i class="bi bi-people-fill"></i>
+                    Management User
                 </a>
             <?php endif; ?>
 
             <?php if ($can('role.view')): ?>
-                <a href="<?= site_url('roles') ?>">
-                    <i class="fas fa-user-shield"></i>
-                    Role
+                <a href="<?= base_url('roles') ?>"
+                    class="<?= $currentSegment1 == 'roles' ? 'active' : '' ?>">
+                    <i class="bi bi-person-badge-fill"></i>
+                    Management Role
                 </a>
             <?php endif; ?>
 
             <?php if ($can('permission.view')): ?>
-                <a href="<?= site_url('permissions') ?>">
-                    <i class="fas fa-key"></i>
+                <a href="<?= base_url('permissions') ?>"
+                    class="<?= $currentSegment1 == 'permissions' ? 'active' : '' ?>">
+                    <i class="bi bi-key-fill"></i>
                     Permission
+                </a>
+            <?php endif; ?>
+
+            <?php if ($can('role_permission.view')): ?>
+                <a href="<?= base_url('role-permissions') ?>"
+                    class="<?= $currentSegment1 == 'role-permissions' ? 'active' : '' ?>">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    Role-Permission
                 </a>
             <?php endif; ?>
         <?php endif; ?>
@@ -174,7 +177,6 @@
         <!-- LAYANAN -->
         <?php
         $isPemohon = strtoupper((string) session('role_code')) === 'PEMOHON';
-
         $showLayanan =
             $can('request.view') ||
             $can('request.create') ||
@@ -184,20 +186,22 @@
         ?>
 
         <?php if ($showLayanan): ?>
-            <div class="ult-menu-header">Layanan</div>
+            <span class="menu-title">LAYANAN</span>
 
             <?php if ($isPemohon): ?>
 
                 <?php if ($can('request.create')): ?>
-                    <a href="<?= site_url('service-requests/create') ?>">
-                        <i class="fas fa-paper-plane"></i>
+                    <a href="<?= base_url('service-requests/create') ?>"
+                        class="<?= ($currentSegment1 == 'service-requests' && $currentSegment2 == 'create') ? 'active' : '' ?>">
+                        <i class="bi bi-send-fill"></i>
                         Buat Pengajuan
                     </a>
                 <?php endif; ?>
 
                 <?php if ($can('request.view')): ?>
-                    <a href="<?= site_url('service-requests') ?>">
-                        <i class="fas fa-list"></i>
+                    <a href="<?= base_url('service-requests') ?>"
+                        class="<?= ($currentSegment1 == 'service-requests' && $currentSegment2 != 'create') ? 'active' : '' ?>">
+                        <i class="bi bi-list-task"></i>
                         Pengajuan Saya
                     </a>
                 <?php endif; ?>
@@ -205,22 +209,17 @@
             <?php else: ?>
 
                 <?php if ($can('request.view')): ?>
-                    <a href="<?= site_url('tickets') ?>">
-                        <i class="fas fa-ticket-alt"></i>
+                    <a href="<?= base_url('tickets') ?>"
+                        class="<?= $currentSegment1 == 'tickets' ? 'active' : '' ?>">
+                        <i class="bi bi-ticket-perforated-fill"></i>
                         Manajemen Tiket
                     </a>
                 <?php endif; ?>
 
-                <?php if ($can('request.create')): ?>
-                    <a href="<?= site_url('tickets/create') ?>">
-                        <i class="fas fa-plus-circle"></i>
-                        Buat Tiket
-                    </a>
-                <?php endif; ?>
-
                 <?php if ($can('request.verify')): ?>
-                    <a href="<?= site_url('verifications') ?>">
-                        <i class="fas fa-check-circle"></i>
+                    <a href="<?= base_url('verifications') ?>"
+                        class="<?= $currentSegment1 == 'verifications' ? 'active' : '' ?>">
+                        <i class="bi bi-check-circle-fill"></i>
                         Verifikasi
                     </a>
                 <?php endif; ?>
@@ -228,32 +227,38 @@
             <?php endif; ?>
 
             <?php if ($can('request.view')): ?>
-                <a href="<?= site_url('tracking') ?>">
-                    <i class="fas fa-search"></i>
+                <a href="<?= base_url('tracking') ?>"
+                    class="<?= $currentSegment1 == 'tracking' ? 'active' : '' ?>">
+                    <i class="bi bi-search"></i>
                     Lacak Tiket
                 </a>
             <?php endif; ?>
 
             <?php if ($can('report.view')): ?>
-                <a href="<?= site_url('reports') ?>">
-                    <i class="fas fa-file-alt"></i>
+                <a href="<?= base_url('reports') ?>"
+                    class="<?= $currentSegment1 == 'reports' ? 'active' : '' ?>">
+                    <i class="bi bi-bar-chart-fill"></i>
                     Laporan
                 </a>
             <?php endif; ?>
 
             <?php if ($can('statistic.view')): ?>
-                <a href="<?= site_url('statistics') ?>">
-                    <i class="fas fa-chart-pie"></i>
+                <a href="<?= base_url('statistics') ?>"
+                    class="<?= $currentSegment1 == 'statistics' ? 'active' : '' ?>">
+                    <i class="bi bi-pie-chart-fill"></i>
                     Statistik
                 </a>
             <?php endif; ?>
         <?php endif; ?>
-<!-- REGISTRASI -->
-        <?php if ($can('registration_request.view')): ?>
-            <div class="ult-menu-header">Registrasi</div>
 
-            <a href="<?= site_url('registration-requests') ?>">
-                <i class="fas fa-user-plus"></i>
+
+        <!-- REGISTRASI -->
+        <?php if ($can('registration_request.view')): ?>
+            <span class="menu-title">REGISTRASI</span>
+
+            <a href="<?= base_url('registration-requests') ?>"
+                class="<?= $currentSegment1 == 'registration-requests' ? 'active' : '' ?>">
+                <i class="bi bi-person-plus-fill"></i>
                 Permintaan Registrasi
             </a>
         <?php endif; ?>
@@ -261,46 +266,77 @@
 
         <!-- SYSTEM -->
         <?php
-        $showSystem =
-            $can('notification.view') ||
-            $can('activity_log.view');
+        $showSystem = $can('notification.view') || $can('activity_log.view');
         ?>
 
         <?php if ($showSystem): ?>
-            <div class="ult-menu-header">System</div>
+            <span class="menu-title">SYSTEM</span>
 
             <?php if ($can('notification.view')): ?>
-                <a href="<?= site_url('notifications') ?>">
-                    <i class="fas fa-bell"></i>
+                <a href="<?= base_url('notifications') ?>"
+                    class="<?= $currentSegment1 == 'notifications' ? 'active' : '' ?>">
+                    <i class="bi bi-bell-fill"></i>
                     Notifikasi
+                    <?php if (!empty($notificationCount) && $notificationCount > 0): ?>
+                        <span class="badge bg-danger ms-auto"><?= (int) $notificationCount ?></span>
+                    <?php endif; ?>
                 </a>
             <?php endif; ?>
 
             <?php if ($can('activity_log.view')): ?>
-                <a href="<?= site_url('activity-logs') ?>">
-                    <i class="fas fa-history"></i>
+                <a href="<?= base_url('activity-logs') ?>"
+                    class="<?= $currentSegment1 == 'activity-logs' ? 'active' : '' ?>">
+                    <i class="bi bi-clock-history"></i>
                     Activity Log
                 </a>
             <?php endif; ?>
         <?php endif; ?>
 
 
-        <!-- PROFIL -->
-        <a href="<?= site_url('profile') ?>">
-            <i class="fas fa-user-cog"></i>
-            Profil
-        </a>
-
-        <!-- KONTEN (FAQ) -->
+        <!-- KONTEN -->
         <?php if ($can('faq.view')): ?>
-            <div class="ult-menu-header">Konten</div>
+            <span class="menu-title">KONTEN</span>
 
-            <a href="<?= site_url('faqs') ?>">
-                <i class="fas fa-question-circle"></i>
+            <a href="<?= base_url('faqs') ?>"
+                class="<?= $currentSegment1 == 'faqs' ? 'active' : '' ?>">
+                <i class="bi bi-question-circle-fill"></i>
                 Manajemen FAQ
             </a>
         <?php endif; ?>
 
-    </nav>
+    </div>
 
-</aside>
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+
+        <a href="<?= base_url('profile') ?>"
+            class="<?= $currentSegment1 == 'profile' ? 'active' : '' ?>">
+
+            <div class="avatar">
+
+                <?= strtoupper(substr(session('full_name') ?? 'A', 0, 1)) ?>
+
+            </div>
+
+            <div>
+
+                <div class="fw-semibold small"><?= esc(session('full_name') ?? 'User') ?></div>
+
+                <div class="text-muted" style="font-size:11px;"><?= esc(session('role_name') ?? '') ?></div>
+
+            </div>
+
+        </a>
+
+        <a href="<?= base_url('logout') ?>"
+            class="text-danger"
+            data-bs-toggle="tooltip"
+            title="Logout">
+
+            <i class="bi bi-box-arrow-right"></i>
+
+        </a>
+
+    </div>
+
+</div>

@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
-
-class UserModel extends Model
+class UserModel extends BaseModel
 {
     protected $table = 'users';
 
@@ -12,25 +10,11 @@ class UserModel extends Model
 
     protected $returnType = 'array';
 
-    protected $useSoftDeletes = true;
+    protected $useAutoIncrement = true;
 
     protected $protectFields = true;
 
-    protected $allowedFields = [
-        'role_id',
-        'full_name',
-        'identity_number',
-        'phone_number',
-        'email',
-        'password',
-        'profile_photo',
-        'is_active',
-        'last_login',
-        'remember_token',
-        'email_verified_at',
-        'mfa_secret',
-        'mfa_enabled',
-    ];
+    protected $useSoftDeletes = true;
 
     protected $useTimestamps = true;
 
@@ -40,302 +24,150 @@ class UserModel extends Model
 
     protected $deletedField = 'deleted_at';
 
-    protected $skipValidation = false;
+    protected $allowedFields = [
+        'role_id',
+        'full_name',
+        'identity_number',
+        'phone_number',
+        'gender',
+        'email',
+        'password',
+        'profile_photo',
+        'is_active',
+        'last_login',
+        'remember_token',
+        'email_verified_at',
+        'mfa_enabled',
+        'mfa_secret',
+        'mfa_recovery_codes',
+        'mfa_confirmed_at'
+    ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Base Query
-    |--------------------------------------------------------------------------
-    */
+    protected $validationRules = [
 
-    protected function baseQuery()
-    {
-        return $this->select('users.*, users.email as personal_email, users.phone_number as phone, users.profile_photo as photo, roles.name as role_name, roles.code as role_code')
-            ->join('roles', 'roles.id = users.role_id', 'left');
-    }
+        'role_id' => 'required|integer',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Semua User
-    |--------------------------------------------------------------------------
-    */
+        'full_name' => 'required|max_length[150]',
 
-    public function getUsers()
-    {
-        return $this->baseQuery()
-            ->orderBy('users.created_at', 'DESC');
-    }
+        'identity_number' => 'permit_empty|max_length[30]',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Detail User
-    |--------------------------------------------------------------------------
-    */
+        'phone_number' => 'permit_empty|max_length[20]',
 
-    public function getUserById($id)
-    {
-        return $this->baseQuery()
-            ->select(
-                'users.*, users.email as personal_email, users.phone_number as phone, users.profile_photo as photo, user_profiles.nim, user_profiles.nik, user_profiles.study_program_id, user_profiles.class_id, '
-                    . 'master_study_programs.name as program_name, master_study_programs.degree as degree, master_study_programs.department_id as department_id, '
-                    . 'master_departments.name as department_name, master_classes.name as class_name, '
-                    . 'master_applicant_types.name as type_name, user_profiles.applicant_type_id as user_type_id, '
-                    . 'user_profiles.address, NULL as unit_name'
-            )
-            ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
-            ->join('master_applicant_types', 'master_applicant_types.id = user_profiles.applicant_type_id', 'left')
-            ->join('master_study_programs', 'master_study_programs.id = user_profiles.study_program_id', 'left')
-            ->join('master_departments', 'master_departments.id = master_study_programs.department_id', 'left')
-            ->join('master_classes', 'master_classes.id = user_profiles.class_id', 'left')
-            ->where('users.id', $id)
-            ->first();
-    }
+        'gender' => 'permit_empty|in_list[L,P]',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Login
-    |--------------------------------------------------------------------------
-    */
+        'email' => 'required|valid_email|max_length[150]|is_unique[users.email,id,{id}]',
 
-    public function getUserByEmail($email)
-    {
-        return $this->baseQuery()
-            ->select('user_profiles.applicant_type_id')
-            ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
-            ->where('users.email', $email)
-            ->first();
-    }
+        'password' => 'permit_empty|min_length[8]',
 
-    /*
-    |--------------------------------------------------------------------------
-    | User Terbaru
-    |--------------------------------------------------------------------------
-    */
+        'profile_photo' => 'permit_empty|max_length[255]',
 
-    public function getLatestUsers($limit = 5)
-    {
-        return $this->baseQuery()
-            ->orderBy('users.created_at', 'DESC')
-            ->findAll($limit);
-    }
+        'is_active' => 'required|in_list[0,1]',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Dashboard Statistics
-    |--------------------------------------------------------------------------
-    */
+    ];
 
-    public function getDashboardStatistics(): array
-    {
-        return [
-
-            'totalUser'      => $this->countAll(),
-
-            'activeUser'     => $this->countActiveUsers(),
-
-            'inactiveUser'   => $this->countInactiveUsers(),
-
-            'mahasiswa'      => $this->countMahasiswa(),
-
-            'dosen'          => $this->countDosen(),
-
-            'tendik'         => $this->countTendik(),
-
-            'alumni'         => $this->countAlumni(),
-
-            'orangTua'       => $this->countOrangTua(),
-
-            'mitra'          => $this->countMitra(),
-
-            'publik'         => $this->countPublik()
-
-        ];
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Search User
-    |--------------------------------------------------------------------------
-    */
-
-    public function searchUsers(
-        ?string $keyword = null,
-        ?int $role = null,
-        ?int $type = null
-    ) {
-        $builder = $this->baseQuery()
-            ->select('users.email as personal_email, users.phone_number as phone, users.profile_photo as photo, user_profiles.nim, user_profiles.nik, master_applicant_types.name as type_name')
-            ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
-            ->join('master_applicant_types', 'master_applicant_types.id = user_profiles.applicant_type_id', 'left');
-
-        if (!empty($keyword)) {
-
-            $builder->groupStart()
-
-                ->like('users.full_name', $keyword)
-
-                ->orLike('users.email', $keyword)
-
-                ->orLike('user_profiles.nim', $keyword)
-
-                ->orLike('user_profiles.nik', $keyword)
-
-                ->groupEnd();
-        }
-
-        if (!empty($role)) {
-
-            $builder->where('users.role_id', $role);
-        }
-
-        if (!empty($type)) {
-
-            $builder->where('user_profiles.applicant_type_id', $type);
-        }
-
-        return $builder->orderBy(
-            'users.created_at',
-            'DESC'
-        );
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Count Active User
-    |--------------------------------------------------------------------------
-    */
-
-    public function countActiveUsers(): int
+    /**
+     * Join Role
+     */
+    public function getWithRole()
     {
         return $this
+            ->select('
+                users.*,
+                roles.code AS role_code,
+                roles.name AS role_name
+            ')
+            ->join(
+                'roles',
+                'roles.id = users.role_id'
+            );
+    }
+
+    /**
+     * Join Profile
+     */
+    public function withProfile()
+    {
+        return $this
+            ->select('
+                users.*,
+                user_profiles.applicant_type_id,
+                user_profiles.study_program_id,
+                user_profiles.class_id,
+                user_profiles.nim,
+                user_profiles.nik,
+                user_profiles.name AS profile_name,
+                user_profiles.email AS profile_email,
+                user_profiles.phone,
+                user_profiles.address,
+                user_profiles.photo,
+                roles.name AS role_name
+            ')
+            ->join(
+                'user_profiles',
+                'user_profiles.user_id = users.id',
+                'left'
+            )
+            ->join(
+                'roles',
+                'roles.id = users.role_id',
+                'left'
+            );
+    }
+
+    /**
+     * Login by username or email
+     */
+    public function findByUsernameOrEmail(string $username)
+    {
+        return $this
+            ->groupStart()
+            ->where('email', $username)
+            ->orWhere('identity_number', $username)
+            ->groupEnd()
+            ->first();
+    }
+
+    /**
+     * User aktif
+     */
+    public function getActive()
+    {
+        return $this
+            ->where('users.is_active', 1)
+            ->orderBy('full_name', 'ASC')
+            ->findAll();
+    }
+
+    /**
+     * Login
+     */
+    public function findByEmail(string $email)
+    {
+        return $this
+            ->where('email', $email)
             ->where('is_active', 1)
-            ->countAllResults();
+            ->first();
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Count Inactive User
-    |--------------------------------------------------------------------------
-    */
+    /**
+     * Update login
+     */
+    public function updateLastLogin(int $id)
+    {
+        return $this->update($id, [
+            'last_login' => date('Y-m-d H:i:s')
+        ]);
+    }
 
-    public function countInactiveUsers(): int
+    /**
+     * Search
+     */
+    public function search(string $keyword)
     {
         return $this
-            ->where('is_active', 0)
-            ->countAllResults();
-    }
-
-    public function countMahasiswa(): int
-    {
-        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
-            ->where('user_profiles.applicant_type_id', 1)
-            ->countAllResults();
-    }
-
-    public function countDosen(): int
-    {
-        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
-            ->where('user_profiles.applicant_type_id', 2)
-            ->countAllResults();
-    }
-
-    public function countTendik(): int
-    {
-        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
-            ->where('user_profiles.applicant_type_id', 3)
-            ->countAllResults();
-    }
-
-    public function countAlumni(): int
-    {
-        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
-            ->where('user_profiles.applicant_type_id', 4)
-            ->countAllResults();
-    }
-
-    public function countOrangTua(): int
-    {
-        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
-            ->where('user_profiles.applicant_type_id', 5)
-            ->countAllResults();
-    }
-
-    public function countMitra(): int
-    {
-        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
-            ->where('user_profiles.applicant_type_id', 6)
-            ->countAllResults();
-    }
-
-    public function countPublik(): int
-    {
-        return $this->join('user_profiles', 'user_profiles.user_id = users.id')
-            ->where('user_profiles.applicant_type_id', 7)
-            ->countAllResults();
-    }
-
-    /*
-|--------------------------------------------------------------------------
-| Update Last Login
-|--------------------------------------------------------------------------
-*/
-
-    public function updateLastLogin(int $id): bool
-    {
-        return $this->update($id, [
-
-            'last_login' => date('Y-m-d H:i:s')
-
-        ]);
-    }
-
-    /*
-|--------------------------------------------------------------------------
-| Activate User
-|--------------------------------------------------------------------------
-*/
-
-    public function activateUser(int $id): bool
-    {
-        return $this->update($id, [
-
-            'is_active' => 1
-
-        ]);
-    }
-
-    /*
-|--------------------------------------------------------------------------
-| Deactivate User
-|--------------------------------------------------------------------------
-*/
-
-    public function deactivateUser(int $id): bool
-    {
-        return $this->update($id, [
-
-            'is_active' => 0
-
-        ]);
-    }
-
-    /*
-|--------------------------------------------------------------------------
-| Change Password
-|--------------------------------------------------------------------------
-*/
-
-    public function changePassword(
-        int $id,
-        string $password
-    ): bool {
-        return $this->update($id, [
-
-            'password' => password_hash(
-                $password,
-                PASSWORD_DEFAULT
-            )
-
-        ]);
+            ->like('users.full_name', $keyword)
+            ->orLike('users.email', $keyword)
+            ->orLike('users.identity_number', $keyword)
+            ->orLike('users.phone_number', $keyword);
     }
 }

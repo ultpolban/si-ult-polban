@@ -2,145 +2,102 @@
 
 namespace App\Controllers;
 
-class ProfileController extends BaseController
+use App\Controllers\AdminController;
+use App\Models\UserModel;
+use App\Models\UserProfileModel;
+use App\Models\MasterApplicantTypeModel;
+use App\Models\MasterStudyProgramModel;
+use App\Models\MasterClassModel;
+
+class ProfileController extends AdminController
 {
-    private function getUserData(int $userId): array
+    protected UserModel $userModel;
+    protected UserProfileModel $profileModel;
+
+    public function __construct()
     {
-        $db = \Config\Database::connect();
+        parent::__construct();
 
-        $user = $db->table('users')
-            ->select('users.id, users.email, users.full_name as name, users.profile_photo, roles.name as role_name, user_profiles.*')
-            ->join('roles', 'roles.id = users.role_id', 'left')
-            ->join('user_profiles', 'user_profiles.user_id = users.id', 'left')
-            ->where('users.id', $userId)
-            ->get()
-            ->getRowArray();
-
-        return $user ?: [];
+        $this->userModel    = new UserModel();
+        $this->profileModel = new UserProfileModel();
     }
 
-    private function getLookupData(): array
-    {
-        $db = \Config\Database::connect();
-        return [
-            'applicantTypes' => $db->table('master_applicant_types')->get()->getResultArray(),
-            'studyPrograms'  => $db->table('master_study_programs')->get()->getResultArray(),
-            'classes'        => $db->table('master_classes')->get()->getResultArray(),
-        ];
-    }
-
-    // ─── Halaman Tampilan Profil (read-only) ───────────────────────────────────
-
+    /**
+     * Halaman profil
+     */
     public function index()
     {
-        $userId = (int) (session()->get('user_id') ?? 0);
-        if ($userId <= 0) {
+        $userId = $this->user['id'] ?? session()->get('user_id');
+
+        if (! $userId) {
             return redirect()->to('/login');
         }
 
-        return view('profile/index', array_merge([
-            'title' => 'Profil Saya',
-            'user'  => $this->getUserData($userId),
-        ], $this->getLookupData()));
+        $profile = $this->profileModel->findByUser((int) $userId);
+
+        return view('profile/index', $this->viewData([
+            'title'      => 'Profil Saya',
+            'pageTitle'  => 'Profil Saya',
+            'breadcrumb' => ['Profil'],
+            'user'       => $this->user,
+            'profile'    => $profile,
+            'applicantTypes' => (new MasterApplicantTypeModel())->getActive(),
+            'studyPrograms'  => (new MasterStudyProgramModel())->getActive(),
+            'classes'        => (new MasterClassModel())->getActive(),
+        ]));
     }
 
-    // ─── Halaman Form Edit Profil ──────────────────────────────────────────────
-
-    public function edit()
-    {
-        $userId = (int) (session()->get('user_id') ?? 0);
-        if ($userId <= 0) {
-            return redirect()->to('/login');
-        }
-
-        return view('profile/edit', array_merge([
-            'title' => 'Ubah Profil',
-            'user'  => $this->getUserData($userId),
-        ], $this->getLookupData()));
-    }
-
-    // ─── Proses Simpan Profil ──────────────────────────────────────────────────
-
+    /**
+     * Update profil
+     */
     public function update()
     {
-        $userId = (int) (session()->get('user_id') ?? 0);
-        if ($userId <= 0) {
+        $userId = $this->user['id'] ?? session()->get('user_id');
+
+        if (! $userId) {
             return redirect()->to('/login');
         }
 
-        $fullName        = trim((string) $this->request->getPost('full_name'));
-        $email           = trim((string) $this->request->getPost('email'));
-        $phone           = trim((string) $this->request->getPost('phone'));
-        $nim             = trim((string) $this->request->getPost('nim'));
-        $nik             = trim((string) $this->request->getPost('nik'));
-        $address         = trim((string) $this->request->getPost('address'));
-        $studyProgramId  = $this->request->getPost('study_program_id') ? (int) $this->request->getPost('study_program_id') : null;
-        $classId         = $this->request->getPost('class_id') ? (int) $this->request->getPost('class_id') : null;
-        $applicantTypeId = $this->request->getPost('applicant_type_id') ? (int) $this->request->getPost('applicant_type_id') : null;
+        $fullName = trim($this->request->getPost('full_name') ?? '');
+        $email    = trim($this->request->getPost('email') ?? '');
+        $phone    = trim($this->request->getPost('phone') ?? '');
 
         if ($fullName === '' || $email === '') {
-            return redirect()->back()->withInput()->with('error', 'Nama dan email wajib diisi.');
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Nama dan email wajib diisi.');
         }
 
-        $db = \Config\Database::connect();
-        $db->transStart();
-
-        // Handle photo upload
-        $photoFile = $this->request->getFile('photo');
-        $photoName = null;
-        if ($photoFile && $photoFile->isValid() && !$photoFile->hasMoved()) {
-            $photoName = $photoFile->getRandomName();
-            $photoFile->move(FCPATH . 'uploads/profiles', $photoName);
-        }
-
-        $usersUpdate = [
-            'full_name'    => $fullName,
-            'email'        => $email,
-            'phone_number' => $phone !== '' ? $phone : null,
-            'updated_at'   => date('Y-m-d H:i:s'),
-        ];
-        if ($photoName) {
-            $usersUpdate['profile_photo'] = $photoName;
-        }
-
-        $db->table('users')
-            ->where('id', $userId)
-            ->update($usersUpdate);
-
-        $profile = $db->table('user_profiles')->where('user_id', $userId)->get()->getRow();
+        $this->userModel->update($userId, [
+            'full_name' => $fullName,
+            'email'     => $email,
+            'gender'    => in_array($this->request->getPost('gender') ?? '', ['L', 'P'], true)
+                ? $this->request->getPost('gender')
+                : null,
+        ]);
 
         $profileData = [
-            'name'              => $fullName,
-            'email'             => $email,
-            'phone'             => $phone,
-            'nim'               => $nim,
-            'nik'               => $nik,
-            'address'           => $address,
-            'study_program_id'  => $studyProgramId,
-            'class_id'          => $classId,
-            'applicant_type_id' => $applicantTypeId,
-            'updated_at'        => date('Y-m-d H:i:s'),
+            'user_id' => (int) $userId,
+            'name'    => $fullName,
+            'email'   => $email,
+            'phone'   => $phone,
+            'applicant_type_id' => $this->request->getPost('applicant_type_id') ?: null,
+            'study_program_id'  => $this->request->getPost('study_program_id') ?: null,
+            'class_id'          => $this->request->getPost('class_id') ?: null,
+            'nim'               => $this->request->getPost('nim') ?: null,
+            'nik'               => $this->request->getPost('nik') ?: null,
+            'address'           => $this->request->getPost('address') ?: null,
         ];
-        if ($photoName) {
-            $profileData['photo'] = $photoName;
-        }
 
-        if ($profile) {
-            $db->table('user_profiles')->where('user_id', $userId)->update($profileData);
+        $existing = $this->profileModel->findByUser((int) $userId);
+
+        if ($existing) {
+            $this->profileModel->update($existing['id'], $profileData);
         } else {
-            $profileData['user_id']    = $userId;
-            $profileData['created_at'] = date('Y-m-d H:i:s');
-            $db->table('user_profiles')->insert($profileData);
+            $this->profileModel->insert($profileData);
         }
 
-        $db->transComplete();
-
-        if ($db->transStatus() === false) {
-            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui profil.');
-        }
-
-        session()->set(['full_name' => $fullName, 'email' => $email]);
-
-        return redirect()->to('/profil')->with('success', 'Profil berhasil diperbarui.');
+        return redirect()->back()
+            ->with('success', 'Profil berhasil diperbarui.');
     }
 }

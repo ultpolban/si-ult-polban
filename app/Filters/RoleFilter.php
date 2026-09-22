@@ -10,34 +10,47 @@ class RoleFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        // Belum login
-        if (!session()->get('logged_in')) {
+        $session = session();
+
+        if (!$session->get('isLoggedIn')) {
             return redirect()->to('/login');
         }
 
-        // Role user yang login
-        $roleId = session()->get('role_id');
-
-        // Tidak ada role yang ditentukan
-        if (empty($arguments)) {
+        if ($arguments === null) {
             return;
         }
 
-        // Cek apakah role diizinkan
-        $roleCode = (string) session()->get('role_code');
-        $allowedRoles = array_map('strval', $arguments);
+        $roleCode = $session->get('role_code');
 
-        if (!in_array((string) $roleId, $allowedRoles, true)
-            && !in_array($roleCode, $allowedRoles, true)) {
+        // Fallback: ambil dari database bila role_code belum ada di session
+        if (empty($roleCode)) {
+            $roleId = (int) $session->get('role_id');
 
-            return redirect()
-                ->to('/dashboard')
-                ->with('error', 'Anda tidak memiliki hak akses ke halaman tersebut.');
+            if ($roleId > 0) {
+                $role = db_connect()
+                    ->table('roles')
+                    ->select('code')
+                    ->where('id', $roleId)
+                    ->get()
+                    ->getRowArray();
+
+                $roleCode = $role['code'] ?? '';
+            }
+        }
+
+        $allowedRoles = array_map(
+            static fn ($item) => strtoupper(trim((string) $item)),
+            (array) $arguments
+        );
+
+        if (!in_array(strtoupper((string) $roleCode), $allowedRoles, true)) {
+            return redirect()->to('/unauthorized');
         }
     }
 
-    public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
-    {
-        //
-    }
+    public function after(
+        RequestInterface $request,
+        ResponseInterface $response,
+        $arguments = null
+    ) {}
 }

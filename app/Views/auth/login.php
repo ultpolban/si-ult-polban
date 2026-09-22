@@ -3,147 +3,186 @@
 
 <head>
 
-    <?= $this->include('layouts/header') ?>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title><?= esc($title ?? 'Login') ?> - SI ULT POLBAN</title>
+
+    <link rel="icon" href="<?= base_url('assets/img/favicon.svg') ?>">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
 
 </head>
 
-<body class="auth-page">
+<body>
 
-    <div class="auth-container">
+    <div class="auth-page">
 
-        <div class="auth-card">
+        <div class="auth-container">
 
-            <!-- LEFT -->
+            <div class="auth-card">
 
-            <div class="auth-left">
+                <!-- Left -->
+                <div class="auth-left">
 
-                <div class="auth-brand">
-                    <img
-                        src="<?= base_url('assets/images/ULT POLBAN.png') ?>"
-                        alt="Logo Politeknik Negeri Bandung">
-                </div>
+                    <div>
 
-                <div>
+                        <span class="system-badge">
 
-                    <span class="system-badge">
+                            <i class="fas fa-star me-1"></i>
 
-                        SI ULT POLBAN
+                            Layanan Terpadu
 
-                    </span>
+                        </span>
 
-                    <h1>
+                        <h1>
 
-                        Sistem Informasi
-                        <br>
-                        Unit Layanan Terpadu
+                            Sistem Informasi<br>
 
-                    </h1>
+                            Layanan Terpadu<br>
 
-                    <p>
+                            POLBAN
 
-                        Politeknik Negeri Bandung
+                        </h1>
 
-                    </p>
+                        <p>
 
-                </div>
+                            Satu pintu untuk seluruh layanan akademik,
 
-            </div>
+                            administrasi, dan kemahasiswaan.
 
-            <!-- RIGHT -->
-
-            <div class="auth-right">
-
-                <h2>
-
-                    Login
-
-                </h2>
-
-                <p class="text-muted mb-4">
-
-                    Silakan login menggunakan akun Anda.
-
-                </p>
-
-                <?php if (session()->getFlashdata('error')): ?>
-
-                    <div class="alert alert-danger">
-
-                        <?= session()->getFlashdata('error') ?>
+                        </p>
 
                     </div>
 
-                <?php endif; ?>
+                    <div class="auth-icon">
 
-                <form action="<?= base_url('login') ?>" method="post">
-
-                    <?= csrf_field() ?>
-
-                    <div class="mb-3">
-
-                        <label class="form-label">
-
-                            Email
-
-                        </label>
-
-                        <input
-                            type="email"
-                            name="email"
-                            class="form-control"
-                            placeholder="Masukkan Email"
-                            required>
+                        <i class="fas fa-graduation-cap"></i>
 
                     </div>
 
-                    <div class="mb-4">
+                </div>
 
-                        <label class="form-label">
+                <!-- Right -->
+                <div class="auth-right">
 
-                            Password
+                    <div class="text-center mb-4">
 
-                        </label>
+                        <img src="<?= base_url('assets/img/logo.svg') ?>"
+                            alt="Logo"
+                            width="72">
 
-                        <div class="input-group">
+                        <h2 class="mt-3 mb-1">Selamat Datang</h2>
 
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                class="form-control"
-                                placeholder="Masukkan Password"
-                                required>
+                        <p>Silakan login untuk melanjutkan</p>
 
-                            <button
-                                type="button"
-                                class="btn btn-outline-secondary"
-                                onclick="togglePassword()">
+                    </div>
 
-                                <i
-                                    id="eye"
-                                    class="bi bi-eye">
+                    <?php if (session()->getFlashdata('error')) : ?>
 
-                                </i>
+                        <div class="alert alert-danger">
 
-                            </button>
+                            <i class="fas fa-exclamation-circle me-2"></i>
+
+                            <?= esc(session()->getFlashdata('error')) ?>
 
                         </div>
 
+                    <?php endif; ?>
+
+                    <form action="<?= base_url('login') ?>"
+                        method="post">
+
+                        <?= csrf_field(); ?>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Email / NIM / NIK
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+
+                                    <i class="fas fa-envelope"></i>
+
+                                </span>
+
+                                <input
+                                    type="text"
+                                    name="email"
+                                    class="form-control"
+                                    placeholder="Masukkan email atau NIM"
+                                    value="<?= old('email') ?>"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+
+                                Password
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+
+                                    <i class="fas fa-lock"></i>
+
+                                </span>
+
+                                <input
+                                    type="password"
+                                    name="password"
+                                    class="form-control"
+                                    placeholder="Masukkan password"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100">
+
+                            <i class="fas fa-sign-in-alt me-2"></i>
+
+                            Login
+
+                        </button>
+
+                    </form>
+
+                    <div class="text-center mt-3">
+
+                        <small>
+
+                            Belum punya akun?
+
+                            <a href="<?= base_url('register') ?>">
+
+                                Daftar sebagai pemohon
+
+                            </a>
+
+                        </small>
+
                     </div>
 
-                    <button
-                        class="btn btn-primary w-100">
-
-                        <i class="bi bi-box-arrow-in-right me-2"></i>
-
-                        Login
-
-                    </button>
-
-                </form>
-
-                <div class="mt-4 text-center">
-                    <p class="mb-0">Belum punya akun? <a href="<?= base_url('register') ?>" class="text-primary fw-bold">Daftar sekarang</a></p>
                 </div>
             </div>
 
@@ -151,31 +190,7 @@
 
     </div>
 
-    <script>
-        function togglePassword() {
-
-            let pass = document.getElementById('password');
-
-            let eye = document.getElementById('eye');
-
-            if (pass.type === "password") {
-
-                pass.type = "text";
-
-                eye.className = "bi bi-eye-slash";
-
-            } else {
-
-                pass.type = "password";
-
-                eye.className = "bi bi-eye";
-
-            }
-
-        }
-    </script>
-
-    <?= $this->include('layouts/footer') ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

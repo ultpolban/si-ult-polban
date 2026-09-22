@@ -2,15 +2,20 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
-
-class FaqModel extends Model
+class FaqModel extends BaseModel
 {
     protected $table = 'faqs';
+
     protected $primaryKey = 'id';
+
     protected $returnType = 'array';
+
+    protected $useAutoIncrement = true;
+
+    protected $protectFields = true;
+
     protected $useSoftDeletes = true;
-    
+
     protected $allowedFields = [
         'category',
         'question',
@@ -20,19 +25,37 @@ class FaqModel extends Model
     ];
 
     protected $useTimestamps = true;
+
+    protected $dateFormat = 'datetime';
+
     protected $createdField = 'created_at';
+
     protected $updatedField = 'updated_at';
+
     protected $deletedField = 'deleted_at';
 
-    public function getFaqs($activeOnly = false)
+    protected $validationRules = [
+
+        'category' => 'permit_empty|max_length[255]',
+
+        'question' => 'required|max_length[255]',
+
+        'answer' => 'required',
+
+        'sort_order' => 'required|integer',
+
+        'is_active' => 'required|in_list[0,1]',
+
+    ];
+
+    /**
+     * Ambil FAQ aktif.
+     */
+    public function getActive()
     {
-        $builder = $this->orderBy('sort_order', 'ASC')
-                        ->orderBy('created_at', 'DESC');
-        
-        if ($activeOnly) {
-            $builder->where('is_active', 1);
-        }
-        
-        return $builder->findAll();
+        return $this->where('is_active', 1)
+            ->orderBy('sort_order', 'ASC')
+            ->orderBy('id', 'ASC')
+            ->findAll();
     }
 }

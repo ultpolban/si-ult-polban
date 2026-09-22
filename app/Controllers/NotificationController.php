@@ -2,62 +2,65 @@
 
 namespace App\Controllers;
 
-class NotificationController extends BaseController
+use App\Controllers\AdminController;
+use App\Services\NotificationService;
+use App\Constants\Permissions;
+
+class NotificationController extends AdminController
 {
+    protected NotificationService $notificationService;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->notificationService = service('notificationService');
+    }
+
+    /**
+     * Daftar notifikasi
+     */
     public function index()
     {
-        $userId = (int) (session()->get('user_id') ?? 0);
-        if ($userId <= 0) {
-            return redirect()->to('/login');
-        }
+        $this->authorize(Permissions::NOTIFICATION_VIEW);
 
-        $notifications = db_connect()
-            ->table('notifications')
-            ->where('user_id', $userId)
-            ->where('deleted_at', null)
-            ->orderBy('created_at', 'DESC')
-            ->get()
-            ->getResultArray();
+        $userId = (int) ($this->user['id'] ?? session()->get('user_id'));
 
-        return view('notifications/index', [
-            'title' => 'Notifikasi',
-            'notifications' => $notifications,
-        ]);
+        $notifications = $this->notificationService->getNotifications($userId);
+
+        return view('notifications/index', $this->viewData([
+            'title'         => 'Notifikasi',
+            'pageTitle'     => 'Notifikasi',
+            'breadcrumb'    => ['Notifikasi'],
+            'notificationList' => $notifications,
+        ]));
     }
 
+    /**
+     * Tandai dibaca
+     */
     public function read(int $id)
     {
-        $userId = (int) (session()->get('user_id') ?? 0);
-        if ($userId <= 0) {
-            return redirect()->to('/login');
-        }
+        $this->notificationService->markAsRead($id);
 
-        db_connect()->table('notifications')
-            ->where('id', $id)
-            ->where('user_id', $userId)
-            ->update([
-                'is_read' => 1,
-                'read_at' => date('Y-m-d H:i:s'),
-            ]);
-
-        return redirect()->to('/notifikasi');
+        return redirect()->back();
     }
 
+    /**
+     * Tandai semua dibaca
+     */
     public function readAll()
     {
-        $userId = (int) (session()->get('user_id') ?? 0);
-        if ($userId <= 0) {
-            return redirect()->to('/login');
-        }
+        $userId = (int) ($this->user['id'] ?? session()->get('user_id'));
 
-        db_connect()->table('notifications')
-            ->where('user_id', $userId)
+        $model = $this->notificationService->getModel();
+
+        $model->where('user_id', $userId)
             ->where('is_read', 0)
-            ->update([
-                'is_read' => 1,
-                'read_at' => date('Y-m-d H:i:s'),
-            ]);
+            ->set(['is_read' => 1, 'read_at' => date('Y-m-d H:i:s')])
+            ->update();
 
-        return redirect()->to('/notifikasi');
+        return redirect()->back()
+            ->with('success', 'Semua notifikasi ditandai sudah dibaca.');
     }
 }

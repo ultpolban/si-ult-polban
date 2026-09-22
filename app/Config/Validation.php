@@ -54,7 +54,9 @@ class Validation extends BaseConfig
 
         'phone' => 'required|min_length[10]|max_length[15]',
 
-        'password' => 'required|min_length[8]',
+        // Selaras dengan App\Validation\SecurityRules::password().
+        // (Method statis tidak dapat dipanggil pada initializer properti.)
+        'password' => 'required|min_length[10]|max_length[72]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/]',
 
         'confirm_password' => 'required|matches[password]',
 

@@ -16,19 +16,9 @@ class Perpustakaan extends BaseController
         $this->ticketModel = new PerpustakaanTicketModel();
     }
 
-    private function queryTiket(): \CodeIgniter\Database\BaseBuilder
+    private function queryTiket(): PerpustakaanTicketModel
     {
-        return $this->db->table('perpustakaan_tickets t')
-            ->select(
-                't.*, t.ticket_number AS no_tiket,
-                 t.title AS judul,
-                 t.description AS deskripsi,
-                 t.service_name AS nama_layanan,
-                 t.service_category AS nama_kategori,
-                 t.unit_name AS nama_unit,
-                 t.applicant_name AS nama_pemohon'
-            )
-            ->groupBy('t.id');
+        return $this->ticketModel;
     }
 
     private function statusTampilan($status): string
@@ -92,7 +82,7 @@ class Perpustakaan extends BaseController
 
     public function dashboard()
     {
-        $tickets = $this->queryTiket()->orderBy('t.id', 'DESC')->get()->getResultArray();
+        $tickets = $this->queryTiket()->orderBy('tickets.id', 'DESC')->findAll();
         $counts = $this->statusCounts($tickets);
 
         $data = [
@@ -114,7 +104,7 @@ class Perpustakaan extends BaseController
     public function dataTiket()
     {
         $keyword = trim((string) $this->request->getGet('keyword'));
-        $tickets = $this->queryTiket()->orderBy('t.id', 'DESC')->get()->getResultArray();
+        $tickets = $this->queryTiket()->orderBy('tickets.id', 'DESC')->findAll();
 
         if ($keyword !== '') {
             $tickets = array_values(array_filter(
@@ -138,7 +128,7 @@ class Perpustakaan extends BaseController
 
     public function statistik()
     {
-        $tickets = $this->queryTiket()->orderBy('t.id', 'DESC')->get()->getResultArray();
+        $tickets = $this->queryTiket()->orderBy('tickets.id', 'DESC')->findAll();
         $counts = $this->statusCounts($tickets);
 
         return view('perpustakaan/statistik', [
@@ -162,15 +152,17 @@ class Perpustakaan extends BaseController
         $selectedUnit = trim((string) $this->request->getGet('unit'));
 
         $logs = $this->db->table('perpustakaan_activity_logs al')
-            ->select('al.ticket_id, t.ticket_number AS no_tiket, t.unit_name AS unit, t.service_name AS layanan, al.action AS aktivitas, al.status, al.created_at AS waktu')
-            ->join('perpustakaan_tickets t', 't.id = al.ticket_id', 'left');
+            ->select('al.ticket_id, t.ticket_number AS no_tiket, msu.name AS unit, ms.name AS layanan, al.action AS aktivitas, al.status, al.created_at AS waktu')
+            ->join('tickets t', 't.id = al.ticket_id', 'left')
+            ->join('master_services ms', 'ms.id = t.service_id', 'left')
+            ->join('master_service_units msu', 'msu.id = ms.service_unit_id', 'left');
 
         if ($keyword !== '') {
             $logs = $logs
                 ->groupStart()
                 ->like('t.ticket_number', $keyword)
-                ->orLike('t.unit_name', $keyword)
-                ->orLike('t.service_name', $keyword)
+                ->orLike('msu.name', $keyword)
+                ->orLike('ms.name', $keyword)
                 ->orLike('al.action', $keyword)
                 ->orLike('t.status', $keyword)
                 ->groupEnd();
@@ -195,7 +187,7 @@ class Perpustakaan extends BaseController
         return view('perpustakaan/profile', [
             'title' => 'Profil Petugas Perpustakaan',
             'name' => $session->get('name') ?: 'Petugas Perpustakaan',
-            'nip' => $session->get('nip') ?: '198705152024011001',
+            'nip' => $session->get('nip') ?: $session->get('identity_number') ?: '-',
             'email' => $session->get('email') ?: 'petugas.perpustakaan@polban.ac.id',
             'no_hp' => $session->get('no_hp') ?: '081234567890',
             'jabatan' => $session->get('jabatan') ?: 'Petugas Unit Layanan',
@@ -436,7 +428,7 @@ class Perpustakaan extends BaseController
     public function riwayat()
     {
         return view('perpustakaan/riwayat', [
-            'tickets' => $this->queryTiket()->orderBy('t.id', 'DESC')->get()->getResultArray(),
+            'tickets' => $this->queryTiket()->orderBy('tickets.id', 'DESC')->findAll(),
             'unit' => 'Perpustakaan',
         ]);
     }

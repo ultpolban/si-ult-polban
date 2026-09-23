@@ -16,19 +16,9 @@ class Jurusan extends BaseController
         $this->ticketModel = new JurusanTicketModel();
     }
 
-    protected function queryTiket(): \CodeIgniter\Database\BaseBuilder
+    protected function queryTiket(): JurusanTicketModel
     {
-        return $this->db->table('jurusan_tickets t')
-            ->select(
-                't.*, t.ticket_number AS no_tiket,
-                 t.title AS judul,
-                 t.description AS deskripsi,
-                  t.service_name AS nama_layanan,
-                  t.service_category AS nama_kategori,
-                  t.unit_name AS nama_unit,
-                  t.applicant_name AS nama_pemohon'
-            )
-            ->groupBy('t.id');
+        return $this->ticketModel;
     }
 
     protected function normalizeStatus(string $status): ?string
@@ -108,7 +98,7 @@ class Jurusan extends BaseController
 
     public function dashboard()
     {
-        $tickets = $this->queryTiket()->orderBy('t.id', 'DESC')->get()->getResultArray();
+        $tickets = $this->queryTiket()->orderBy('tickets.id', 'DESC')->findAll();
         $counts = $this->statusCounts($tickets);
         $data = [
             'title' => 'Dashboard Layanan Jurusan',
@@ -130,7 +120,7 @@ class Jurusan extends BaseController
     public function dataTiket()
     {
         $keyword = trim((string) $this->request->getGet('keyword'));
-        $tickets = $this->queryTiket()->orderBy('t.id', 'DESC')->get()->getResultArray();
+        $tickets = $this->queryTiket()->orderBy('tickets.id', 'DESC')->findAll();
 
         if ($keyword !== '') {
             $tickets = array_values(array_filter(
@@ -158,7 +148,7 @@ class Jurusan extends BaseController
 
     public function statistik()
     {
-        $tickets = $this->queryTiket()->orderBy('t.id', 'DESC')->get()->getResultArray();
+        $tickets = $this->queryTiket()->orderBy('tickets.id', 'DESC')->findAll();
         $counts = $this->statusCounts($tickets);
 
         return view('jurusan/statistik', [
@@ -182,15 +172,17 @@ class Jurusan extends BaseController
         $keyword = trim((string) $this->request->getGet('keyword'));
 
         $query = $this->db->table('jurusan_activity_logs al')
-            ->select('al.ticket_id, t.ticket_number AS no_tiket, t.unit_name AS unit, t.service_name AS layanan, al.action AS aktivitas, al.status, al.created_at AS waktu')
-            ->join('jurusan_tickets t', 't.id = al.ticket_id', 'left');
+            ->select('al.ticket_id, t.ticket_number AS no_tiket, msu.name AS unit, ms.name AS layanan, al.action AS aktivitas, al.status, al.created_at AS waktu')
+            ->join('tickets t', 't.id = al.ticket_id', 'left')
+            ->join('master_services ms', 'ms.id = t.service_id', 'left')
+            ->join('master_service_units msu', 'msu.id = ms.service_unit_id', 'left');
 
         if ($keyword !== '') {
             $query = $query
                 ->groupStart()
                 ->like('t.ticket_number', $keyword)
-                ->orLike('t.unit_name', $keyword)
-                ->orLike('t.service_name', $keyword)
+                ->orLike('msu.name', $keyword)
+                ->orLike('ms.name', $keyword)
                 ->orLike('al.action', $keyword)
                 ->orLike('t.status', $keyword)
                 ->groupEnd();
@@ -212,9 +204,9 @@ class Jurusan extends BaseController
         return view('jurusan/profile', [
             'title' => 'Profil Petugas Jurusan',
             'name' => $session->get('name') ?: 'Petugas Jurusan',
-            'nip' => $session->get('nip') ?: '198705152024011001',
-            'email' => $session->get('email') ?: 'petugas.jurusan@polban.ac.id',
-            'no_hp' => $session->get('no_hp') ?: '081234567890',
+            'nip' => $session->get('nip') ?: $session->get('identity_number') ?: '-',
+            'email' => $session->get('email') ?: '-',
+            'no_hp' => $session->get('no_hp') ?: $session->get('phone_number') ?: '-',
             'jabatan' => $session->get('jabatan') ?: 'Petugas Unit Layanan',
         ]);
     }
@@ -256,7 +248,7 @@ class Jurusan extends BaseController
 
     public function proses($id)
     {
-        $ticket = $this->ticketModel->queryTickets()->where('jurusan_tickets.id', (int) $id)->first();
+        $ticket = $this->ticketModel->where('tickets.id', (int) $id)->first();
         if (!$ticket) {
             return redirect()->to('/jurusan/data-tiket')->with('error', 'Data tiket tidak ditemukan.');
         }

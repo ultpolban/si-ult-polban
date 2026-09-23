@@ -92,9 +92,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(JurusanSeeder::class);
 
-        $this->call(UnitDummyTicketsSeeder::class);
-
-
 echo PHP_EOL;
         echo "======================================" . PHP_EOL;
         echo " DATABASE SEEDING SELESAI" . PHP_EOL;
@@ -116,19 +113,12 @@ echo PHP_EOL;
             'notifications',
             'activity_logs',
             'upt_tik_activity_logs',
-            'upt_tik_tickets',
             'administrasi_umum_activity_logs',
-            'administrasi_umum_tickets',
             'perpustakaan_activity_logs',
-            'perpustakaan_tickets',
             'jurusan_activity_logs',
-            'jurusan_tickets',
             'kemahasiswaan_activity_logs',
-            'kemahasiswaan_tickets',
             'keuangan_activity_logs',
-            'keuangan_tickets',
             'akademik_activity_logs',
-            'akademik_tickets',
             'role_permissions',
             'user_profiles',
             'users',

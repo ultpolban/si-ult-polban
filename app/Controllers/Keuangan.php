@@ -101,14 +101,16 @@ class Keuangan extends BaseController
             ->select(
                 'al.*,
                  t.ticket_number AS no_tiket,
-                 t.unit_name AS unit,
-                 t.service_name AS layanan'
+                 msu.name AS unit,
+                 ms.name AS layanan'
             )
             ->join(
-                'keuangan_tickets t',
+                'tickets t',
                 't.id = al.ticket_id',
                 'left'
             )
+            ->join('master_services ms', 'ms.id = t.service_id', 'left')
+            ->join('master_service_units msu', 'msu.id = ms.service_unit_id', 'left')
             ->orderBy('al.created_at', 'DESC');
 
         if ($keyword !== '') {
@@ -551,10 +553,7 @@ class Keuangan extends BaseController
 
         $db = db_connect();
 
-        $updated = $db
-            ->table('keuangan_tickets')
-            ->where('id', $id)
-            ->update([
+        $updated = $this->tickets->update($id, [
                 'result_file' => $newFileName,
                 'result_note' => 'Dokumen hasil layanan diunggah.',
             ]);
@@ -690,10 +689,7 @@ class Keuangan extends BaseController
             }
         }
 
-        db_connect()
-            ->table('keuangan_tickets')
-            ->where('id', $id)
-            ->update([
+        $this->tickets->update($id, [
                 'result_file' => null,
                 'result_note' => null,
             ]);
@@ -800,7 +796,7 @@ class Keuangan extends BaseController
     private function allTickets(): array
     {
         return $this->tickets
-            ->orderBy('id', 'DESC')
+            ->orderBy('tickets.id', 'DESC')
             ->findAll();
     }
 
@@ -827,7 +823,7 @@ class Keuangan extends BaseController
         | Dokumen hasil
         |--------------------------------------------------------------------------
         |
-        | result_file berasal dari kolom keuangan_tickets.
+        | result_file berasal dari kolom tickets.
         |
         */
 

@@ -7,12 +7,11 @@
 // DATA PETUGAS
 // =====================================================
 
-// Ambil data dari session.
-// Jika belum ada, gunakan data default.
-$namaPetugas  = session()->get('name') ?: 'Andi Pratama';
-$nipPetugas   = session()->get('nip') ?: '198705152024011001';
-$emailPetugas = session()->get('email') ?: 'andi.pratama@polban.ac.id';
-$noHpPetugas  = session()->get('no_hp') ?: '081234567890';
+// Ambil data dari session login.
+$namaPetugas  = session()->get('name') ?: session()->get('full_name') ?: '-';
+$nipPetugas   = session()->get('nip') ?: session()->get('identity_number') ?: '-';
+$emailPetugas = session()->get('email') ?: '-';
+$noHpPetugas  = session()->get('no_hp') ?: session()->get('phone_number') ?: '-';
 $jabatan      = session()->get('jabatan') ?: 'Petugas Unit Layanan';
 ?>
 

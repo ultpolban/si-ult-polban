@@ -1589,4 +1589,13 @@ class Akademik extends BaseController
 
         return $ticket;
     }
+
+    private function isCompleted(?string $status): bool
+    {
+        return in_array(
+            strtolower(trim((string) $status)),
+            ['selesai', 'completed', 'complete'],
+            true
+        );
+    }
 }

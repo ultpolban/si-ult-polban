@@ -3,13 +3,11 @@
 <?= $this->section('content') ?>
 
 <?php
-// Data petugas.
-// Jika session memiliki data, gunakan data session.
-// Jika belum ada, gunakan data dummy.
-$namaPetugas  = session()->get('name') ?: 'Budi Santoso';
-$nipPetugas   = session()->get('nip') ?: '198603122024011002';
-$emailPetugas = session()->get('email') ?: 'budi.santoso@polban.ac.id';
-$noHpPetugas  = session()->get('no_hp') ?: '081298765432';
+// Data petugas dari session login.
+$namaPetugas  = session()->get('name') ?: session()->get('full_name') ?: '-';
+$nipPetugas   = session()->get('nip') ?: session()->get('identity_number') ?: '-';
+$emailPetugas = session()->get('email') ?: '-';
+$noHpPetugas  = session()->get('no_hp') ?: session()->get('phone_number') ?: '-';
 $jabatan      = $jabatan ?? session()->get('jabatan') ?: 'Petugas Unit Layanan';
 ?>
 

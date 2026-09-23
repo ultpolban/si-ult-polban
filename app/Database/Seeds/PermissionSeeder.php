@@ -143,6 +143,14 @@ class PermissionSeeder extends Seeder
                 'restore' => 'Pulihkan FAQ',
             ],
 
+            'unit_profile' => [
+                'view'    => 'Lihat Deskripsi Unit',
+                'create'  => 'Tambah Deskripsi Unit',
+                'update'  => 'Ubah Deskripsi Unit',
+                'delete'  => 'Hapus Deskripsi Unit',
+                'restore' => 'Pulihkan Deskripsi Unit',
+            ],
+
         ];
 
         $permissions = [];

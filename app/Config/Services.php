@@ -261,4 +261,19 @@ class Services extends BaseService
 
         return new FaqService();
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Units Profile Service
+    |--------------------------------------------------------------------------
+    */
+
+    public static function unitsProfileService(bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('unitsProfileService');
+        }
+
+        return new \App\Services\UnitsProfileService();
+    }
 }

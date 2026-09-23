@@ -259,20 +259,28 @@ class AuthController extends BaseController
      */
     public function logout()
     {
-        $userId = (int) session()->get('user_id');
+        try {
+            $userId = (int) session()->get('user_id');
 
-        if ($userId > 0) {
-            $this->activityLogService->storeLog([
-                'action'       => 'LOGOUT',
-                'module'       => 'auth',
-                'reference_id' => $userId,
-                'user_id'      => $userId,
-                'ip_address'   => $this->request->getIPAddress(),
-                'user_agent'   => $this->request->getUserAgent()->getAgentString(),
-            ]);
+            if ($userId > 0) {
+                $this->activityLogService->storeLog([
+                    'action'       => 'LOGOUT',
+                    'module'       => 'auth',
+                    'reference_id' => $userId,
+                    'user_id'      => $userId,
+                    'ip_address'   => $this->request->getIPAddress(),
+                    'user_agent'   => $this->request->getUserAgent()->getAgentString(),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            log_message('error', 'Gagal mencatat activity logout: ' . $e->getMessage());
         }
 
-        session()->destroy();
+        try {
+            session()->destroy();
+        } catch (\Throwable $e) {
+            session()->remove(['isLoggedIn', 'user_id', 'role_id', 'role_code', 'full_name', 'email', 'role_name', 'user', 'login_pending']);
+        }
 
         return redirect()->to('/login');
     }

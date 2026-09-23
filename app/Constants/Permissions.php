@@ -203,6 +203,18 @@ final class Permissions
 
     /*
     |--------------------------------------------------------------------------
+    | Unit Profile (profil penerang tiap unit layanan)
+    |--------------------------------------------------------------------------
+    */
+
+    public const UNIT_PROFILE_VIEW   = 'unit_profile.view';
+    public const UNIT_PROFILE_CREATE = 'unit_profile.create';
+    public const UNIT_PROFILE_UPDATE = 'unit_profile.update';
+    public const UNIT_PROFILE_DELETE = 'unit_profile.delete';
+    public const UNIT_PROFILE_RESTORE = 'unit_profile.restore';
+
+    /*
+    |--------------------------------------------------------------------------
     | Registration Request
     |--------------------------------------------------------------------------
     */

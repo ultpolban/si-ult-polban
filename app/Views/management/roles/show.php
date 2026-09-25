@@ -1,8 +1,8 @@
-<?= $this->extend('layouts/main') ?>
+﻿<?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
 
-<div class="card">
+<div class="card card-premium">
 
     <div class="card-header">
 
@@ -16,7 +16,7 @@
 
     <div class="card-body">
 
-        <table class="table table-bordered">
+        <table class="table table-premium mb-0">
 
             <tr>
 
@@ -114,11 +114,11 @@
 
     </div>
 
-    <div class="card-footer">
+    <div class="card-footer bg-white border-top-0 pt-0 pb-4 px-4 text-end">
 
         <a
             href="<?= site_url('roles') ?>"
-            class="btn btn-secondary">
+            class="btn btn-light px-4">
 
             <i class="fas fa-arrow-left"></i>
 
@@ -141,3 +141,4 @@
 </div>
 
 <?= $this->endSection() ?>
+

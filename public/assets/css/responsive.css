@@ -18,13 +18,13 @@
 
 @media (max-width:1200px) {
 
-    .sidebar {
+    .ult-sidebar {
 
         width: 240px;
 
     }
 
-    .content {
+    .content, .ult-main {
 
         margin-left: 240px;
         width: calc(100% - 240px);
@@ -57,54 +57,53 @@
 
 @media (max-width:992px) {
 
-    .sidebar {
+    .ult-sidebar {
 
         width: 90px;
 
     }
 
-    .content {
+    .content, .ult-main {
 
         margin-left: 90px;
         width: calc(100% - 90px);
 
     }
 
-    .sidebar-header h4,
+    .ult-brand span,
 
-    .sidebar-header p,
+    .ult-user .name,
 
-    .menu-title,
+    .ult-user .role,
 
-    .sidebar-menu span {
+    .ult-menu-header {
 
         display: none;
 
     }
 
-    .sidebar-menu a {
+    .ult-menu a {
 
         justify-content: center;
-
         padding: 15px;
+        font-size: 0; /* Hides the text since it's not wrapped in a span */
 
     }
 
-    .sidebar-menu a i {
+    .ult-menu a i {
 
         margin: 0;
-
         font-size: 20px;
 
     }
 
-    .topbar {
+    .ult-topbar {
 
         padding: 0 20px;
 
     }
 
-    .page {
+    .page, .ult-content {
 
         padding: 20px;
 
@@ -146,20 +145,20 @@
 
 @media (max-width:768px) {
 
-    .sidebar {
+    .ult-sidebar {
 
         display: none;
 
     }
 
-    .content {
+    .content, .ult-main {
 
         margin-left: 0;
         width: 100%;
 
     }
 
-    .topbar {
+    .ult-topbar {
 
         height: auto;
 
@@ -173,7 +172,7 @@
 
     }
 
-    .topbar-right {
+    .ult-topbar-right {
 
         width: 100%;
 
@@ -181,7 +180,7 @@
 
     }
 
-    .page {
+    .page, .ult-content {
 
         padding: 15px;
 

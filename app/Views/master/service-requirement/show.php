@@ -1,8 +1,9 @@
-<?= $this->extend('layouts/main') ?>
+﻿<?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
+<div class="mb-4"><h4 class="fw-bold text-dark mb-1"><?= esc($pageTitle ?? 'Detail Data') ?></h4><p class="text-muted">Informasi lengkap data.</p></div>
 
-<div class="card">
+<div class="card card-premium">
 
     <div class="card-header">
 
@@ -16,7 +17,7 @@
 
     <div class="card-body">
 
-        <table class="table table-bordered">
+        <table class="table table-premium mb-0">
 
             <tr>
 
@@ -118,11 +119,11 @@
 
     </div>
 
-    <div class="card-footer">
+    <div class="card-footer bg-white border-top-0 pt-0 pb-4 px-4 text-end">
 
         <a
             href="<?= site_url('master/service-requirements') ?>"
-            class="btn btn-secondary">
+            class="btn btn-light px-4">
 
             Kembali
 
@@ -141,3 +142,4 @@
 </div>
 
 <?= $this->endSection() ?>
+

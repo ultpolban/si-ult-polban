@@ -1,8 +1,8 @@
-<div class="card">
+﻿<div class="card card-premium">
 
     <div class="card-body table-responsive p-0">
 
-        <table class="table table-bordered table-hover mb-0">
+        <table class="table table-premium mb-0">
 
             <thead class="table-light">
 

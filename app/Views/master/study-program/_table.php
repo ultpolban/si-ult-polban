@@ -1,10 +1,10 @@
-<div class="card">
+﻿<div class="card card-premium">
 
     <div class="card-body p-0">
 
         <div class="table-responsive">
 
-            <table class="table table-bordered table-hover mb-0">
+            <table class="table table-premium mb-0">
 
                 <thead>
 
@@ -52,7 +52,7 @@
 
                                     <?php if ($row['is_active']) : ?>
 
-                                        <span class="badge badge-success">
+                                        <span class="badge bg-success">
 
                                             Aktif
 
@@ -60,7 +60,7 @@
 
                                     <?php else : ?>
 
-                                        <span class="badge badge-danger">
+                                        <span class="badge bg-danger">
 
                                             Nonaktif
 
@@ -134,3 +134,4 @@
     <?php endif ?>
 
 </div>
+

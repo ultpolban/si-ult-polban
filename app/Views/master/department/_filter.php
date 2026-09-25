@@ -1,4 +1,4 @@
-<div class="card mb-3">
+﻿<div class="card card-premium mb-4">
 
     <div class="card-body">
 
@@ -11,7 +11,7 @@
                     <input
                         type="text"
                         name="keyword"
-                        class="form-control"
+                        class="form-control bg-light border-0 py-2"
                         placeholder="Cari kode, nama atau singkatan..."
                         value="<?= esc($keyword ?? '') ?>">
 
@@ -20,7 +20,7 @@
                 <div class="col-md-2 d-grid">
 
                     <button
-                        class="btn btn-primary">
+                        class="btn btn-primary px-4 shadow-sm">
 
                         Cari
 

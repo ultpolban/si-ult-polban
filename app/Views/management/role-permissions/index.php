@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/main') ?>
+﻿<?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
 
@@ -102,7 +102,7 @@
 
             <?= csrf_field() ?>
 
-            <div class="card">
+            <div class="card card-premium">
 
                 <div class="card-header">
 

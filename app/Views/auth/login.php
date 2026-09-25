@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -29,9 +29,8 @@
 
                 <!-- Left -->
                 <div class="auth-left">
-
                     <div>
-
+                        <img src="<?= base_url('assets/img/polban.png') ?>" alt="Logo Polban" style="height: 60px; object-fit: contain; margin-bottom: 1.5rem; filter: brightness(0) invert(1);">
                         <span class="system-badge">
 
                             <i class="fas fa-star me-1"></i>
@@ -195,4 +194,5 @@
 </body>
 
 </html>
+
 

@@ -1,8 +1,8 @@
-<?= $this->extend('layouts/main') ?>
+﻿<?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
 
     <div>
 
@@ -17,7 +17,7 @@
     </div>
 
     <a href="<?= site_url('users') ?>"
-        class="btn btn-secondary">
+        class="btn btn-light px-4">
 
         <i class="fas fa-arrow-left"></i>
 
@@ -27,11 +27,11 @@
 
 </div>
 
-<div class="card">
+<div class="card card-premium">
 
     <div class="card-body">
 
-        <table class="table table-bordered">
+        <table class="table table-premium mb-0">
 
             <tr>
 
@@ -219,7 +219,7 @@
 
         <a
             href="<?= site_url('users') ?>"
-            class="btn btn-secondary">
+            class="btn btn-light px-4">
 
             Kembali
 
@@ -230,3 +230,4 @@
 </div>
 
 <?= $this->endSection() ?>
+

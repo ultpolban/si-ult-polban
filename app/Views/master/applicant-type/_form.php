@@ -1,6 +1,6 @@
-<?= csrf_field() ?>
+﻿<?= csrf_field() ?>
 
-<div class="card">
+<div class="card card-premium">
 
     <div class="card-body">
 
@@ -109,9 +109,9 @@
 
     </div>
 
-    <div class="card-footer">
+    <div class="card-footer bg-white border-top-0 pt-0 pb-4 px-4 text-end">
 
-        <button class="btn btn-primary">
+        <button class="btn btn-primary px-4 shadow-sm">
 
             <i class="fas fa-save"></i>
 
@@ -121,7 +121,7 @@
 
         <a
             href="<?= site_url('master/applicant-types') ?>"
-            class="btn btn-secondary">
+            class="btn btn-light px-4">
 
             Kembali
 

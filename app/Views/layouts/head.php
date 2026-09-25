@@ -11,9 +11,6 @@
 <!-- Bootstrap 5 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
-<!-- Bootstrap Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
 <!-- Font Awesome 6 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
@@ -32,8 +29,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
 <!-- Custom CSS -->
-<link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
-<link rel="stylesheet" href="<?= base_url('assets/css/table.css') ?>">
-<link rel="stylesheet" href="<?= base_url('assets/css/responsive.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>?v=<?= time() ?>">
+<link rel="stylesheet" href="<?= base_url('assets/css/table.css') ?>?v=<?= time() ?>">
+<link rel="stylesheet" href="<?= base_url('assets/css/responsive.css') ?>?v=<?= time() ?>">
 
 <?= $this->renderSection('styles') ?>

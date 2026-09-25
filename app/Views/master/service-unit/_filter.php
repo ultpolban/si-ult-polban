@@ -1,4 +1,4 @@
-<div class="card mb-3">
+﻿<div class="card card-premium mb-4">
 
     <div class="card-body">
 
@@ -11,7 +11,7 @@
                     <input
                         type="text"
                         name="keyword"
-                        class="form-control"
+                        class="form-control bg-light border-0 py-2"
                         placeholder="Cari unit layanan..."
                         value="<?= esc($keyword ?? '') ?>">
 

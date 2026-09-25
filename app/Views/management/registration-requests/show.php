@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/main') ?>
+﻿<?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
 
@@ -9,7 +9,7 @@ $canApprove = $permissionService->hasPermission('registration_request.approve');
 $canReject  = $permissionService->hasPermission('registration_request.reject');
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
 
     <div>
 
@@ -27,7 +27,7 @@ $canReject  = $permissionService->hasPermission('registration_request.reject');
 
 <?= $this->include('components/alert') ?>
 
-<div class="card">
+<div class="card card-premium">
 
     <div class="card-header">
 
@@ -41,7 +41,7 @@ $canReject  = $permissionService->hasPermission('registration_request.reject');
 
     <div class="card-body">
 
-        <table class="table table-bordered">
+        <table class="table table-premium mb-0">
 
             <tr>
 
@@ -227,7 +227,7 @@ $canReject  = $permissionService->hasPermission('registration_request.reject');
 
     <div class="card-body">
 
-        <table class="table table-bordered">
+        <table class="table table-premium mb-0">
 
             <tr>
 
@@ -361,7 +361,7 @@ $canReject  = $permissionService->hasPermission('registration_request.reject');
 
         <a
             href="<?= site_url('registration-requests') ?>"
-            class="btn btn-secondary">
+            class="btn btn-light px-4">
 
             <i class="fas fa-arrow-left"></i>
 
@@ -483,7 +483,7 @@ $canReject  = $permissionService->hasPermission('registration_request.reject');
 
                         <button
                             type="button"
-                            class="btn btn-secondary"
+                            class="btn btn-light px-4"
                             data-bs-dismiss="modal">
 
                             Batal
@@ -513,3 +513,4 @@ $canReject  = $permissionService->hasPermission('registration_request.reject');
 <?php endif; ?>
 
 <?= $this->endSection() ?>
+

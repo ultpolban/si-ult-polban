@@ -1,4 +1,4 @@
-<?= csrf_field() ?>
+﻿<?= csrf_field() ?>
 
 <?php
 $isEdit = isset($item) && !empty($item['id']);
@@ -40,7 +40,7 @@ $formData['position'] = old('position', $formData['position'] ?? '');
 $formData['address'] = old('address', $formData['address'] ?? '');
 ?>
 
-<div class="card">
+<div class="card card-premium">
 
     <div class="card-body">
 
@@ -189,11 +189,11 @@ $formData['address'] = old('address', $formData['address'] ?? '');
 
     </div>
 
-    <div class="card-footer">
+    <div class="card-footer bg-white border-top-0 pt-0 pb-4 px-4 text-end">
 
         <button
             type="submit"
-            class="btn btn-primary">
+            class="btn btn-primary px-4 shadow-sm">
 
             <i class="fas fa-save"></i>
 
@@ -203,7 +203,7 @@ $formData['address'] = old('address', $formData['address'] ?? '');
 
         <a
             href="<?= site_url('users') ?>"
-            class="btn btn-secondary">
+            class="btn btn-light px-4">
 
             Kembali
 
@@ -294,3 +294,4 @@ $formData['address'] = old('address', $formData['address'] ?? '');
 </script>
 
 <?= $this->endSection() ?>
+

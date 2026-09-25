@@ -642,196 +642,93 @@ if ($limit > 500) {
                         </div>
 
                     </div>
-
-
                     <!-- STATUS -->
                     <div class="col-xl-2 col-lg-2 col-md-4">
-
-                        <select name="status"
-                                class="form-control ticket-select">
-
-                            <option value="">
-                                -- Semua Status --
-                            </option>
-
-                            <option value="submitted"
-                                <?= strtolower($statusFilter) === 'submitted' ? 'selected' : '' ?>>
-                                Submitted
-                            </option>
-
-                            <option value="verified"
-                                <?= strtolower($statusFilter) === 'verified' ? 'selected' : '' ?>>
-                                Verified
-                            </option>
-
-                            <option value="assigned"
-                                <?= strtolower($statusFilter) === 'assigned' ? 'selected' : '' ?>>
-                                Disposisi
-                            </option>
-
-                            <option value="in_progress"
-                                <?= strtolower($statusFilter) === 'in_progress' ? 'selected' : '' ?>>
-                                In Progress
-                            </option>
-
-                            <option value="completed"
-                                <?= strtolower($statusFilter) === 'completed' ? 'selected' : '' ?>>
-                                Completed
-                            </option>
-
-                            <option value="rejected"
-                                <?= strtolower($statusFilter) === 'rejected' ? 'selected' : '' ?>>
-                                Rejected
-                            </option>
-
+                        <select name="status" class="form-control ticket-select">
+                            <option value="">-- Semua Status --</option>
+                            <option value="Submitted" <?= strtolower($statusFilter ?? '') === 'submitted' ? 'selected' : '' ?>>Submitted</option>
+                            <option value="Verified" <?= strtolower($statusFilter ?? '') === 'verified' ? 'selected' : '' ?>>Verified</option>
+                            <option value="Disposisi" <?= strtolower($statusFilter ?? '') === 'disposisi' ? 'selected' : '' ?>>Disposisi</option>
                         </select>
-
                     </div>
 
-
-                    <!-- KATEGORI -->
+                    <!-- UNIT LAYANAN -->
                     <div class="col-xl-2 col-lg-2 col-md-4">
-
-                        <select name="kategori"
-                                class="form-control ticket-select">
-
-                            <option value="">
-                                -- Semua Kategori --
-                            </option>
-
-                            <option value="Akademik"
-                                <?= $kategori === 'Akademik' ? 'selected' : '' ?>>
-                                Akademik
-                            </option>
-
-                            <option value="Keuangan"
-                                <?= $kategori === 'Keuangan' ? 'selected' : '' ?>>
-                                Keuangan
-                            </option>
-
-                            <option value="Kemahasiswaan"
-                                <?= $kategori === 'Kemahasiswaan' ? 'selected' : '' ?>>
-                                Kemahasiswaan
-                            </option>
-
+                        <select name="unit_layanan" class="form-control ticket-select">
+                            <option value="">-- Semua Unit Layanan --</option>
+                            <option value="1" <?= (int) ($unitLayananValue ?? 0) === 1 ? 'selected' : '' ?>>Unit Layanan Terpadu</option>
+                            <option value="2" <?= (int) ($unitLayananValue ?? 0) === 2 ? 'selected' : '' ?>>Bagian Akademik</option>
+                            <option value="3" <?= (int) ($unitLayananValue ?? 0) === 3 ? 'selected' : '' ?>>Bagian Keuangan</option>
+                            <option value="4" <?= (int) ($unitLayananValue ?? 0) === 4 ? 'selected' : '' ?>>Bagian Kemahasiswaan</option>
+                            <option value="5" <?= (int) ($unitLayananValue ?? 0) === 5 ? 'selected' : '' ?>>Perpustakaan</option>
+                            <option value="6" <?= (int) ($unitLayananValue ?? 0) === 6 ? 'selected' : '' ?>>Jurusan</option>
+                            <option value="7" <?= (int) ($unitLayananValue ?? 0) === 7 ? 'selected' : '' ?>>UPT Teknologi Informasi dan Komunikasi</option>
+                            <option value="8" <?= (int) ($unitLayananValue ?? 0) === 8 ? 'selected' : '' ?>>Administrasi Umum</option>
                         </select>
-
                     </div>
-
 
                     <!-- JUMLAH -->
                     <div class="col-xl-1 col-lg-1 col-md-4">
-
                         <input
                             type="number"
                             name="limit"
-                            class="form-control ticket-number-input"
+                            class="form-control ticket-select text-center"
+                            placeholder="Jml"
                             min="1"
-                            max="500"
-                            value="<?= esc($limit) ?>"
-                            title="Atur jumlah baris tiket"
+                            value="<?= esc($limit ?? 10) ?>"
+                            title="Jumlah tiket per halaman"
                         >
-
                     </div>
-
 
                     <!-- BUTTON -->
                     <div class="col-xl-2 col-lg-2 col-md-6">
-
                         <div class="d-flex gap-2">
-
                             <button
                                 type="submit"
                                 class="btn btn-ticket-filter flex-grow-1">
-
-                                <i class="fas fa-filter mr-1"></i>
-                                Filter
-
+                                <i class="fas fa-filter mr-1"></i> Filter
                             </button>
-
 
                             <a
                                 href="<?= base_url('report') ?>"
                                 class="btn btn-ticket-reset"
                                 title="Reset Filter">
-
                                 <i class="fas fa-undo"></i>
-
                             </a>
-
                         </div>
-
                     </div>
-
 
                     <!-- EXPORT -->
                     <div class="col-xl-2 col-lg-2 col-md-6 export-action-group">
-
                         <div class="export-dropdown">
-
                             <button
                                 type="button"
                                 class="btn btn-export-green w-100 d-flex align-items-center justify-content-center"
                                 id="dropdownExport"
                                 onclick="toggleExportMenu(event)">
-
-                                <i class="fas fa-download mr-2"></i>
-                                Export Laporan
+                                <i class="fas fa-download mr-2"></i> Export Laporan
                                 <i class="fas fa-chevron-down ml-2"></i>
-
                             </button>
 
-
-                            <div
-                                class="export-menu"
-                                id="exportMenu">
-
-                                <a
-                                    class="dropdown-item"
-                                    href="<?= base_url('report/excel') ?>">
-
-                                    <i
-                                        class="fas fa-file-excel mr-2"
-                                        style="color:#0B8F4D;">
-                                    </i>
-
+                            <div class="export-menu" id="exportMenu">
+                                <a class="dropdown-item" href="<?= base_url('report/excel') ?>">
+                                    <i class="fas fa-file-excel mr-2" style="color:#0B8F4D;"></i>
                                     Export Excel
-
                                 </a>
 
-
-                                <a
-                                    class="dropdown-item"
-                                    href="<?= base_url('report/pdf') ?>">
-
-                                    <i
-                                        class="fas fa-file-pdf mr-2"
-                                        style="color:#D93025;">
-                                    </i>
-
+                                <a class="dropdown-item" href="<?= base_url('report/pdf') ?>">
+                                    <i class="fas fa-file-pdf mr-2" style="color:#D93025;"></i>
                                     Export PDF
-
                                 </a>
 
-
-                                <a
-                                    class="dropdown-item"
-                                    href="<?= base_url('report/csv') ?>">
-
-                                    <i
-                                        class="fas fa-file-csv mr-2"
-                                        style="color:#005BAC;">
-                                    </i>
-
+                                <a class="dropdown-item" href="<?= base_url('report/csv') ?>">
+                                    <i class="fas fa-file-csv mr-2" style="color:#005BAC;"></i>
                                     Export CSV
-
                                 </a>
-
                             </div>
-
                         </div>
-
                     </div>
+
 
                 </div>
 

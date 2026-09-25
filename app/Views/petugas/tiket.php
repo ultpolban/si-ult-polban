@@ -543,6 +543,62 @@
     .ticket-breadcrumb { display: none; }
     .ticket-filter-card .card-body { padding: 14px; }
 }
+
+    /* =========================================================
+       FILTER TIKET - SPACING & PROFESSIONAL LAYOUT
+       ========================================================= */
+    .ticket-filter-row {
+        row-gap: 14px !important;
+        column-gap: 0 !important;
+    }
+
+    .ticket-filter-row > [class*="col-"] {
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    .ticket-filter-card .ticket-input,
+    .ticket-filter-card .ticket-select {
+        min-height: 42px;
+    }
+
+    .ticket-filter-card .input-group {
+        min-height: 42px;
+    }
+
+    .ticket-filter-card .btn-ticket-filter,
+    .ticket-filter-card .btn-ticket-reset,
+    .ticket-filter-card .btn-export-green {
+        min-height: 42px;
+    }
+
+    .ticket-filter-card .export-action-group {
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    @media (max-width: 991.98px) {
+        .ticket-filter-row {
+            row-gap: 12px !important;
+        }
+
+        .ticket-filter-row > [class*="col-"] {
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .ticket-filter-row {
+            row-gap: 10px !important;
+        }
+
+        .ticket-filter-row > [class*="col-"] {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+
 </style>
 
 <div class="container-fluid px-4 py-4 ticket-page">
@@ -566,8 +622,8 @@
     </div>
 
 <?php
-$tiket_list = !empty($tiket_list) && is_array($tiket_list)
-    ? $tiket_list
+$tiket_list = !empty($tickets) && is_array($tickets)
+    ? $tickets
     : [];
 
 usort($tiket_list, function ($a, $b) {
@@ -576,32 +632,45 @@ usort($tiket_list, function ($a, $b) {
 
 $searchValue = trim($_GET['search'] ?? '');
 $statusValue = trim($_GET['status'] ?? '');
-$kategoriValue = trim($_GET['kategori'] ?? '');
+$unitLayananValue = trim($_GET['unit_layanan'] ?? '');
 
-$filteredTickets = array_filter($tiket_list, function ($ticket) use ($searchValue, $statusValue, $kategoriValue) {
+$filteredTickets = array_filter($tiket_list, function ($ticket) use ($searchValue, $statusValue, $unitLayananValue) {
     $searchMatch = true;
     $statusMatch = true;
-    $kategoriMatch = true;
+    $jenisTiketMatch = true;
 
     if ($searchValue !== '') {
         $haystack = strtolower(
             ($ticket['nomor_tiket'] ?? '') . ' ' .
             ($ticket['nama_pemohon'] ?? '') . ' ' .
+            ($ticket['nim'] ?? '') . ' ' .
             ($ticket['nik'] ?? '') . ' ' .
             ($ticket['layanan'] ?? '')
         );
-        $searchMatch = str_contains($haystack, strtolower($searchValue));
+
+        $searchMatch = str_contains(
+            $haystack,
+            strtolower($searchValue)
+        );
     }
 
     if ($statusValue !== '') {
-        $statusMatch = strtolower($ticket['status'] ?? '') === strtolower($statusValue);
+        $statusMatch =
+            strtolower($ticket['status'] ?? '') ===
+            strtolower($statusValue);
     }
 
-    if ($kategoriValue !== '') {
-        $kategoriMatch = strtolower($ticket['kategori'] ?? '') === strtolower($kategoriValue);
+    if ($unitLayananValue !== '') {
+        $unitLayananMatch =
+            (int) ($ticket['unit_id'] ?? 0) ===
+            (int) $unitLayananValue;
+    } else {
+        $unitLayananMatch = true;
     }
 
-    return $searchMatch && $statusMatch && $kategoriMatch;
+    return $searchMatch &&
+           $statusMatch &&
+           $unitLayananMatch;
 });
 
 $filteredTickets = array_values($filteredTickets);
@@ -630,10 +699,22 @@ $paginatedList = array_slice($filteredTickets, $offset, $perPage);
 $no = $offset + 1;
 
 $queryParams = [];
-if ($searchValue !== '') $queryParams['search'] = $searchValue;
-if ($statusValue !== '') $queryParams['status'] = $statusValue;
-if ($kategoriValue !== '') $queryParams['kategori'] = $kategoriValue;
-if (isset($_GET['limit']) && $_GET['limit'] !== '') $queryParams['limit'] = $_GET['limit'];
+
+if ($searchValue !== '') {
+    $queryParams['search'] = $searchValue;
+}
+
+if ($statusValue !== '') {
+    $queryParams['status'] = $statusValue;
+}
+
+if ($unitLayananValue !== '') {
+    $queryParams['unit_layanan'] = $unitLayananValue;
+}
+
+if (isset($_GET['limit']) && $_GET['limit'] !== '') {
+    $queryParams['limit'] = $_GET['limit'];
+}
 
 function ticketPageUrl($page, $queryParams = []) {
     $queryParams['page'] = $page;
@@ -691,7 +772,7 @@ function ticketPageUrl($page, $queryParams = []) {
     <div class="card ticket-filter-card mb-4 reveal-item">
         <div class="card-body">
             <form id="ticketFilterForm" action="<?= base_url('datatiket') ?>" method="GET">
-                <div class="row g-2 align-items-center">
+                <div class="row g-3 align-items-center ticket-filter-row">
                     <div class="col-xl-3 col-lg-3 col-md-12">
                         <div class="input-group ticket-input-group">
                             <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -707,11 +788,16 @@ function ticketPageUrl($page, $queryParams = []) {
                         </select>
                     </div>
                     <div class="col-xl-2 col-lg-2 col-md-4">
-                        <select name="kategori" class="form-control ticket-select">
-                            <option value="">-- Semua Kategori --</option>
-                            <option value="Akademik" <?= $kategoriValue === 'Akademik' ? 'selected' : '' ?>>Akademik</option>
-                            <option value="Keuangan" <?= $kategoriValue === 'Keuangan' ? 'selected' : '' ?>>Keuangan</option>
-                            <option value="Kemahasiswaan" <?= $kategoriValue === 'Kemahasiswaan' ? 'selected' : '' ?>>Kemahasiswaan</option>
+                        <select name="unit_layanan" class="form-control ticket-select">
+                            <option value="">-- Semua Unit Layanan --</option>
+                            <option value="1" <?= (int) $unitLayananValue === 1 ? 'selected' : '' ?>>Unit Layanan Terpadu</option>
+                            <option value="2" <?= (int) $unitLayananValue === 2 ? 'selected' : '' ?>>Bagian Akademik</option>
+                            <option value="3" <?= (int) $unitLayananValue === 3 ? 'selected' : '' ?>>Bagian Keuangan</option>
+                            <option value="4" <?= (int) $unitLayananValue === 4 ? 'selected' : '' ?>>Bagian Kemahasiswaan</option>
+                            <option value="5" <?= (int) $unitLayananValue === 5 ? 'selected' : '' ?>>Perpustakaan</option>
+                            <option value="6" <?= (int) $unitLayananValue === 6 ? 'selected' : '' ?>>Jurusan</option>
+                            <option value="7" <?= (int) $unitLayananValue === 7 ? 'selected' : '' ?>>UPT Teknologi Informasi dan Komunikasi</option>
+                            <option value="8" <?= (int) $unitLayananValue === 8 ? 'selected' : '' ?>>Administrasi Umum</option>
                         </select>
                     </div>
                     <div class="col-xl-1 col-lg-1 col-md-4">
@@ -761,7 +847,7 @@ function ticketPageUrl($page, $queryParams = []) {
                         <th class="text-center" style="width: 50px;">No</th>
                         <th>Nomor Tiket</th>
                         <th>Nama Pemohon</th>
-                        <th>NIK / Identitas</th>
+                        <th>NIM / NIK</th>
                         <th>Layanan</th>
                         <th>Kategori</th>
                         <th class="text-center">Lampiran</th>
@@ -786,22 +872,24 @@ function ticketPageUrl($page, $queryParams = []) {
                                     <div class="ticket-name"><?= esc($ticket['nama_pemohon']) ?></div>
                                 </td>
                                 <td>
-                                    <div class="ticket-nik"><?= esc($ticket['nik'] ?? '-') ?></div>
+                                    <div class="ticket-nik"><?= esc(!empty($ticket['nim']) ? $ticket['nim'] : (!empty($ticket['nik']) ? $ticket['nik'] : '-')) ?></div>
                                 </td>
                                 <td><?= esc($ticket['layanan']) ?></td>
                                 <td>
                                     <span class="ticket-category"><?= esc($ticket['kategori'] ?? 'Umum') ?></span>
                                 </td>
                                 <td class="text-center">
-                                    <?php if (!empty($ticket['dokumen']) || !empty($ticket['lampiran'])): ?>
-                                        <span class="ticket-document document-available">
-                                            <i class="fas fa-paperclip"></i> Ada
-                                        </span>
-                                    <?php else: ?>
-                                        <span class="ticket-document document-none">
-                                            <i class="fas fa-times"></i> Tidak Ada
-                                        </span>
-                                    <?php endif; ?>
+                                   <?php if ((int) ($ticket['jumlah_lampiran'] ?? 0) > 0): ?>
+    <span class="ticket-document document-available">
+        <i class="fas fa-paperclip"></i>
+        Ada
+    </span>
+<?php else: ?>
+    <span class="ticket-document document-none">
+        <i class="fas fa-times"></i>
+        Tidak Ada
+    </span>
+<?php endif; ?>
                                 </td>
                                 <td class="text-center">
                                     <?php
@@ -819,7 +907,10 @@ function ticketPageUrl($page, $queryParams = []) {
                                 <td>
                                     <div class="ticket-date">
                                         <i class="far fa-clock me-1"></i>
-                                        <?= date('d-m-Y H:i', strtotime($ticket['created_at'])) ?>
+                                        <?= \CodeIgniter\I18n\Time::parse(
+    $ticket['created_at'],
+    'UTC'
+)->setTimezone('Asia/Jakarta')->format('d-m-Y H:i') ?>
                                     </div>
                                 </td>
                                 <td class="text-center">

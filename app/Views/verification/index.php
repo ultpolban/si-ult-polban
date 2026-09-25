@@ -20,13 +20,8 @@
     --text-muted: #6c757d;
 }
 
-/* =========================================================
-   PAGE
-========================================================= */
-
 .ticket-page {
     animation: pageFadeIn .45s ease;
-    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .ticket-title {
@@ -50,19 +45,14 @@
     font-weight: 600;
 }
 
-/* =========================================================
-   STAT CARD
-========================================================= */
-
 .stat-tamu-card {
     border-radius: 18px;
     border: none;
-    color: #fff;
-    transition: all .35s cubic-bezier(.165,.84,.44,1);
+    color: #ffffff;
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
     position: relative;
     overflow: hidden;
     z-index: 1;
-    min-height: 96px;
 }
 
 .stat-tamu-card::before {
@@ -72,15 +62,15 @@
     right: -30%;
     width: 180px;
     height: 180px;
-    background: rgba(255,255,255,.12);
+    background: rgba(255, 255, 255, 0.12);
     border-radius: 50%;
     z-index: -1;
-    transition: transform .5s ease;
+    transition: transform 0.5s ease;
 }
 
 .stat-tamu-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 14px 30px rgba(0,0,0,.15) !important;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15) !important;
 }
 
 .stat-tamu-card:hover::before {
@@ -88,53 +78,33 @@
 }
 
 .bg-tamu-navy {
-    background: linear-gradient(
-        135deg,
-        #1a237e 0%,
-        #283593 100%
-    ) !important;
+    background: linear-gradient(135deg, #1a237e 0%, #283593 100%) !important;
 }
 
 .bg-tamu-orange {
-    background: linear-gradient(
-        135deg,
-        #ff8c00 0%,
-        #f57c00 100%
-    ) !important;
+    background: linear-gradient(135deg, #ff8c00 0%, #f57c00 100%) !important;
 }
 
 .bg-tamu-yellow {
-    background: linear-gradient(
-        135deg,
-        #f4c400 0%,
-        #fb8c00 100%
-    ) !important;
+    background: linear-gradient(135deg, #f4c400 0%, #fb8c00 100%) !important;
 }
 
 .bg-tamu-green {
-    background: linear-gradient(
-        135deg,
-        #10b981 0%,
-        #059669 100%
-    ) !important;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
 }
 
 .icon-tamu-circle {
     width: 54px;
     height: 54px;
     border-radius: 14px;
-    background: rgba(255,255,255,.22);
+    background: rgba(255, 255, 255, 0.22);
     backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.4rem;
-    box-shadow: inset 0 0 12px rgba(255,255,255,.25);
+    box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
 }
-
-/* =========================================================
-   FILTER
-========================================================= */
 
 .ticket-filter-card {
     border: 0;
@@ -142,7 +112,7 @@
     background: #fff;
     box-shadow: 0 4px 16px rgba(0,0,0,.06);
     position: relative;
-    z-index: 100;
+    z-index: 100 !important;
     overflow: visible !important;
 }
 
@@ -178,84 +148,69 @@
     font-size: .9rem;
 }
 
-/* =========================================================
-   FILTER BUTTON
-========================================================= */
-
 .btn-ticket-filter {
     height: 44px;
-    min-width: 145px;
     border: 0;
     border-radius: 8px;
     background: var(--polban-navy);
-    color: #fff !important;
+    color: #fff;
     font-weight: 700;
     transition: .25s ease;
 }
 
 .btn-ticket-filter:hover {
     background: #11185f;
-    color: #fff !important;
+    color: #fff;
     transform: translateY(-1px);
     box-shadow: 0 5px 12px rgba(26,35,126,.25);
 }
 
-/* =========================================================
-   RESET BUTTON
-========================================================= */
-
 .btn-ticket-reset {
     height: 44px;
     width: 46px;
-    min-width: 46px;
     border-radius: 8px;
     background: #6c757d;
-    color: #fff !important;
+    color: #fff;
     border: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     transition: .25s ease;
-    text-decoration: none !important;
 }
 
 .btn-ticket-reset:hover {
     background: #545b62;
-    color: #fff !important;
+    color: #fff;
     transform: translateY(-1px);
 }
 
-/* =========================================================
-   EXPORT
-========================================================= */
+.btn-export-green {
+    background-color: #198754;
+    border-color: #198754;
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 8px;
+    height: 44px;
+    padding: 0 20px;
+    transition: all 0.25s ease-in-out;
+}
+.btn-export-green:hover {
+    background-color: #146c43;
+    border-color: #13653f;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.35);
+    transform: translateY(-1px);
+}
 
 .export-action-group {
     position: relative;
-    z-index: 105;
+    z-index: 105 !important;
 }
 
 .export-dropdown {
     position: relative;
+    display: inline-block;
     width: 100%;
-}
-
-.btn-export-green {
-    background: #198754;
-    border: 1px solid #198754;
-    color: #fff !important;
-    font-weight: 700;
-    border-radius: 8px;
-    height: 44px;
-    padding: 0 18px;
-    transition: all .25s ease-in-out;
-}
-
-.btn-export-green:hover {
-    background: #146c43;
-    border-color: #13653f;
-    color: #fff !important;
-    box-shadow: 0 4px 12px rgba(25,135,84,.35);
-    transform: translateY(-1px);
 }
 
 .export-menu {
@@ -264,12 +219,12 @@
     right: 0;
     top: calc(100% + 8px);
     min-width: 210px;
-    background: #fff;
+    background: #ffffff;
     border: 1px solid #dee2e6;
     border-radius: 8px;
     padding: 6px 0;
-    box-shadow: 0 8px 25px rgba(0,0,0,.18);
-    z-index: 9999;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+    z-index: 9999 !important;
 }
 
 .export-menu.show {
@@ -281,10 +236,10 @@
     align-items: center;
     padding: 11px 15px;
     color: #212529;
-    font-size: .9rem;
+    font-size: 0.9rem;
     text-decoration: none;
     white-space: nowrap;
-    transition: background-color .2s ease;
+    transition: background-color 0.2s ease;
 }
 
 .export-menu .dropdown-item:hover {
@@ -295,10 +250,6 @@
     width: 22px;
     text-align: center;
 }
-
-/* =========================================================
-   TABLE
-========================================================= */
 
 .ticket-table-card {
     border: 0;
@@ -355,10 +306,7 @@
     background-color: #f8f9ff;
 }
 
-/* =========================================================
-   TICKET NUMBER
-========================================================= */
-
+/* KUSTOMISASI COPY NO TIKET */
 .ticket-copy-btn {
     background: transparent;
     border: none;
@@ -367,7 +315,7 @@
     cursor: pointer;
     padding: 4px 8px;
     border-radius: 6px;
-    transition: all .2s ease;
+    transition: all 0.2s ease;
     white-space: nowrap;
     display: inline-flex;
     align-items: center;
@@ -375,13 +323,13 @@
 }
 
 .ticket-copy-btn:hover {
-    background: rgba(0,91,172,.1);
+    background: rgba(0, 91, 172, 0.1);
     color: var(--polban-navy);
 }
 
 .ticket-copy-btn i {
-    font-size: .8rem;
-    opacity: .7;
+    font-size: 0.8rem;
+    opacity: 0.7;
 }
 
 .ticket-name {
@@ -395,10 +343,6 @@
     font-weight: 500;
 }
 
-/* =========================================================
-   CATEGORY
-========================================================= */
-
 .ticket-category {
     display: inline-flex;
     align-items: center;
@@ -410,10 +354,6 @@
     font-size: .76rem;
     font-weight: 700;
 }
-
-/* =========================================================
-   ATTACHMENT
-========================================================= */
 
 .ticket-document {
     display: inline-flex;
@@ -435,10 +375,6 @@
     background: #f8d7da;
     color: #842029;
 }
-
-/* =========================================================
-   STATUS
-========================================================= */
 
 .ticket-status {
     display: inline-flex;
@@ -481,10 +417,6 @@
     color: #842029;
 }
 
-/* =========================================================
-   DATE
-========================================================= */
-
 .ticket-date {
     color: #59636e;
     font-size: .82rem;
@@ -492,17 +424,12 @@
     white-space: nowrap;
 }
 
-/* =========================================================
-   ACTION
-   FRONTEND 3 STYLE
-========================================================= */
-
 .ticket-actions {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 6px;
-    min-width: 90px;
+    min-width: 125px;
 }
 
 .ticket-action {
@@ -524,21 +451,9 @@
     box-shadow: 0 5px 10px rgba(0,0,0,.15);
 }
 
-.action-detail {
-    background: #17a2b8;
-}
-
-.action-verify {
-    background: #198754;
-}
-
-.action-disposition {
-    background: #ff8c00;
-}
-
-/* =========================================================
-   EMPTY
-========================================================= */
+.action-detail { background: #17a2b8; }
+.action-verify { background: var(--polban-green); }
+.action-disposition { background: var(--polban-orange); }
 
 .ticket-empty {
     padding: 50px 20px !important;
@@ -557,10 +472,6 @@
     justify-content: center;
     font-size: 1.6rem;
 }
-
-/* =========================================================
-   PAGINATION
-========================================================= */
 
 .ticket-pagination {
     padding: 16px 20px;
@@ -585,29 +496,16 @@
     color: #adb5bd;
 }
 
-/* =========================================================
-   TOAST
-========================================================= */
-
-.copy-toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #198754;
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,.15);
-    font-weight: 600;
-    z-index: 10000;
-    display: none;
-    align-items: center;
-    gap: 8px;
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
-
-/* =========================================================
-   ANIMATION
-========================================================= */
 
 .reveal-item {
     opacity: 0;
@@ -620,148 +518,93 @@
     transition: all .4s ease;
 }
 
-@keyframes pageFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Toast Salin */
+.copy-toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #198754;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-weight: 600;
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    gap: 8px;
 }
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
 @media (max-width: 991px) {
-
-    .ticket-actions {
-        flex-wrap: wrap;
-    }
-
-    .ticket-table {
-        min-width: 1100px;
-    }
-
+    .ticket-actions { flex-wrap: wrap; }
+    .ticket-table { min-width: 1100px; }
 }
 
 @media (max-width: 767px) {
-
-    .ticket-page {
-        padding-left: 8px;
-        padding-right: 8px;
-    }
-
-    .ticket-title {
-        font-size: 1.45rem;
-    }
-
-    .ticket-breadcrumb {
-        display: none;
-    }
-
-    .ticket-filter-card .card-body {
-        padding: 14px;
-    }
-
+    .ticket-page { padding-left: 8px; padding-right: 8px; }
+    .ticket-title { font-size: 1.45rem; }
+    .ticket-breadcrumb { display: none; }
+    .ticket-filter-card .card-body { padding: 14px; }
 }
+
+    /* =========================================================
+       FILTER TIKET - SPACING & PROFESSIONAL LAYOUT
+       ========================================================= */
+    .ticket-filter-row {
+        row-gap: 14px !important;
+        column-gap: 0 !important;
+    }
+
+    .ticket-filter-row > [class*="col-"] {
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    .ticket-filter-card .ticket-input,
+    .ticket-filter-card .ticket-select {
+        min-height: 42px;
+    }
+
+    .ticket-filter-card .input-group {
+        min-height: 42px;
+    }
+
+    .ticket-filter-card .btn-ticket-filter,
+    .ticket-filter-card .btn-ticket-reset,
+    .ticket-filter-card .btn-export-green {
+        min-height: 42px;
+    }
+
+    .ticket-filter-card .export-action-group {
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    @media (max-width: 991.98px) {
+        .ticket-filter-row {
+            row-gap: 12px !important;
+        }
+
+        .ticket-filter-row > [class*="col-"] {
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .ticket-filter-row {
+            row-gap: 10px !important;
+        }
+
+        .ticket-filter-row > [class*="col-"] {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+
 </style>
 
-
 <?php
-/* =========================================================
-   DATA BACKEND3
-========================================================= */
-
-$sourceTickets = (
-    !empty($tickets) &&
-    is_array($tickets)
-)
-    ? $tickets
-    : [];
-
-$tiket_list = [];
-
-foreach ($sourceTickets as $ticket) {
-
-    $status = strtolower(
-        trim($ticket['status'] ?? 'submitted')
-    );
-
-    $tiket_list[] = [
-
-        'id' => $ticket['id'] ?? null,
-
-        'nomor_tiket' =>
-            $ticket['ticket_number']
-            ?? $ticket['nomor_tiket']
-            ?? '-',
-
-        'nama_pemohon' =>
-            $ticket['applicant_name']
-            ?? $ticket['student_name']
-            ?? $ticket['name']
-            ?? '-',
-
-        'nik' =>
-            $ticket['nik']
-            ?? $ticket['identity_number']
-            ?? '-',
-
-        'layanan' =>
-            $ticket['service_name']
-            ?? $ticket['service_display_name']
-            ?? $ticket['layanan']
-            ?? '-',
-
-        'kategori' =>
-            $ticket['category_name']
-            ?? $ticket['kategori']
-            ?? 'Umum',
-
-        'dokumen' =>
-            $ticket['attachment']
-            ?? $ticket['lampiran']
-            ?? '',
-
-        'lampiran' =>
-            $ticket['attachment']
-            ?? $ticket['lampiran']
-            ?? '',
-
-        'status' => ucfirst($status),
-
-        'created_at' =>
-            $ticket['submitted_at']
-            ?? $ticket['created_at']
-            ?? '-'
-    ];
-}
-
-
-/* =========================================================
-   SORT TERBARU
-========================================================= */
-
-usort(
-    $tiket_list,
-    function ($a, $b) {
-
-        $dateA = strtotime(
-            $a['created_at'] ?? '1970-01-01 00:00:00'
-        );
-
-        $dateB = strtotime(
-            $b['created_at'] ?? '1970-01-01 00:00:00'
-        );
-
-        return $dateB <=> $dateA;
-    }
-);
-
 
 /* =========================================================
    FILTER
@@ -772,11 +615,11 @@ $searchValue = trim(
 );
 
 $statusValue = trim(
-    $_GET['status'] ?? 'Submitted'
+    $_GET['status'] ?? ''
 );
 
-$kategoriValue = trim(
-    $_GET['kategori'] ?? ''
+$unitLayananValue = trim(
+    $_GET['unit_layanan'] ?? ''
 );
 
 
@@ -789,12 +632,12 @@ $filteredTickets = array_filter(
     function ($ticket) use (
         $searchValue,
         $statusValue,
-        $kategoriValue
+        $unitLayananValue
     ) {
 
         $searchMatch = true;
         $statusMatch = true;
-        $kategoriMatch = true;
+        $unitLayananMatch = true;
 
 
         /* SEARCH */
@@ -830,23 +673,20 @@ $filteredTickets = array_filter(
         }
 
 
-        /* KATEGORI */
+        /* UNIT LAYANAN */
 
-        if ($kategoriValue !== '') {
+        if ($unitLayananValue !== '') {
 
-            $kategoriMatch =
-                strtolower(
-                    $ticket['kategori'] ?? ''
-                )
-                ===
-                strtolower($kategoriValue);
+            $unitLayananMatch =
+                (int) ($ticket['unit_id'] ?? 0) ===
+                (int) $unitLayananValue;
         }
 
 
         return
             $searchMatch &&
             $statusMatch &&
-            $kategoriMatch;
+            $unitLayananMatch;
     }
 );
 
@@ -961,9 +801,9 @@ if ($statusValue !== '') {
         $statusValue;
 }
 
-if ($kategoriValue !== '') {
-    $queryParams['kategori'] =
-        $kategoriValue;
+if ($unitLayananValue !== '') {
+    $queryParams['unit_layanan'] =
+        $unitLayananValue;
 }
 
 if (
@@ -1010,9 +850,9 @@ if ($statusValue !== '') {
         $statusValue;
 }
 
-if ($kategoriValue !== '') {
-    $exportParams['kategori'] =
-        $kategoriValue;
+if ($unitLayananValue !== '') {
+    $exportParams['unit_layanan'] =
+        $unitLayananValue;
 }
 
 $exportQuery =
@@ -1242,7 +1082,7 @@ $exportQuery =
                 method="GET"
             >
 
-                <div class="row g-2 align-items-center">
+                <div class="row ticket-filter-row align-items-center">
 
 
                     <!-- SEARCH -->
@@ -1299,31 +1139,10 @@ $exportQuery =
                             </option>
 
                             <option
-                                value="Assigned"
-                                <?= $statusValue === 'Assigned' ? 'selected' : '' ?>
+                                value="Disposisi"
+                                <?= $statusValue === 'Disposisi' ? 'selected' : '' ?>
                             >
-                                Assigned
-                            </option>
-
-                            <option
-                                value="Processing"
-                                <?= $statusValue === 'Processing' ? 'selected' : '' ?>
-                            >
-                                Processing
-                            </option>
-
-                            <option
-                                value="Completed"
-                                <?= $statusValue === 'Completed' ? 'selected' : '' ?>
-                            >
-                                Completed
-                            </option>
-
-                            <option
-                                value="Rejected"
-                                <?= $statusValue === 'Rejected' ? 'selected' : '' ?>
-                            >
-                                Rejected
+                                Disposisi
                             </option>
 
                         </select>
@@ -1331,38 +1150,73 @@ $exportQuery =
                     </div>
 
 
-                    <!-- KATEGORI -->
+                    <!-- UNIT LAYANAN -->
 
                     <div class="col-xl-2 col-lg-2 col-md-4">
 
                         <select
-                            name="kategori"
+                            name="unit_layanan"
                             class="form-control ticket-select"
                         >
 
                             <option value="">
-                                -- Semua Kategori --
+                                -- Semua Unit Layanan --
                             </option>
 
                             <option
-                                value="Akademik"
-                                <?= $kategoriValue === 'Akademik' ? 'selected' : '' ?>
+                                value="1"
+                                <?= $unitLayananValue === '1' ? 'selected' : '' ?>
                             >
-                                Akademik
+                                Unit Layanan Terpadu
                             </option>
 
                             <option
-                                value="Keuangan"
-                                <?= $kategoriValue === 'Keuangan' ? 'selected' : '' ?>
+                                value="2"
+                                <?= $unitLayananValue === '2' ? 'selected' : '' ?>
                             >
-                                Keuangan
+                                Bagian Akademik
                             </option>
 
                             <option
-                                value="Kemahasiswaan"
-                                <?= $kategoriValue === 'Kemahasiswaan' ? 'selected' : '' ?>
+                                value="3"
+                                <?= $unitLayananValue === '3' ? 'selected' : '' ?>
                             >
-                                Kemahasiswaan
+                                Bagian Keuangan
+                            </option>
+
+                            <option
+                                value="4"
+                                <?= $unitLayananValue === '4' ? 'selected' : '' ?>
+                            >
+                                Bagian Kemahasiswaan
+                            </option>
+
+                            <option
+                                value="5"
+                                <?= $unitLayananValue === '5' ? 'selected' : '' ?>
+                            >
+                                Perpustakaan
+                            </option>
+
+                            <option
+                                value="6"
+                                <?= $unitLayananValue === '6' ? 'selected' : '' ?>
+                            >
+                                Jurusan
+                            </option>
+
+                            <option
+                                value="7"
+                                <?= $unitLayananValue === '7' ? 'selected' : '' ?>
+                            >
+                                UPT Teknologi Informasi dan Komunikasi
+                            </option>
+
+                            <option
+                                value="8"
+                                <?= $unitLayananValue === '8' ? 'selected' : '' ?>
+                            >
+                                Administrasi Umum
                             </option>
 
                         </select>
@@ -1563,452 +1417,215 @@ $exportQuery =
         <div class="table-responsive">
 
             <table class="table ticket-table align-middle">
+    <thead>
+        <tr>
+            <th class="text-center" style="width: 50px;">No</th>
+            <th>Nomor Tiket</th>
+            <th>Nama Pemohon</th>
+            <th>NIM / NIK</th>
+            <th>Layanan</th>
+            <th>Kategori</th>
+            <th class="text-center">Lampiran</th>
+            <th class="text-center">Status</th>
+            <th>Tanggal Dibuat</th>
+            <th class="text-center" style="width: 140px;">Aksi</th>
+        </tr>
+    </thead>
 
+    <tbody>
+        <?php if (!empty($paginatedList)): ?>
+            <?php foreach ($paginatedList as $ticket): ?>
 
-                <thead>
+                <?php
+                $st = strtolower(trim($ticket['status'] ?? ''));
 
-                    <tr>
+                $statusClass = 'status-submitted';
 
-                        <th
-                            class="text-center"
-                            style="width:50px;"
+                if ($st === 'verified') {
+                    $statusClass = 'status-verified';
+                } elseif ($st === 'disposisi' || $st === 'assigned') {
+                    $statusClass = 'status-disposisi';
+                } elseif ($st === 'processing' || $st === 'in progress') {
+                    $statusClass = 'status-progress';
+                } elseif ($st === 'completed') {
+                    $statusClass = 'status-completed';
+                } elseif ($st === 'rejected') {
+                    $statusClass = 'status-rejected';
+                }
+
+                $nomorTiket = $ticket['nomor_tiket']
+                    ?? $ticket['ticket_number']
+                    ?? '-';
+
+                $namaPemohon = $ticket['nama_pemohon']
+                    ?? $ticket['applicant_name']
+                    ?? $ticket['student_name']
+                    ?? $ticket['name']
+                    ?? '-';
+
+                $identitas = !empty($ticket['nim'])
+                    ? $ticket['nim']
+                    : (!empty($ticket['nik']) ? $ticket['nik'] : '-');
+
+                $layanan = !empty($ticket['layanan'])
+                    ? $ticket['layanan']
+                    : (!empty($ticket['service_name'])
+                        ? $ticket['service_name']
+                        : ((int) ($ticket['unit_id'] ?? 0) === 1
+                            ? 'Unit Layanan Terpadu'
+                            : '-'));
+
+                $kategori = $ticket['kategori']
+                    ?? $ticket['category_name']
+                    ?? 'Umum';
+
+                $lampiran = (int) ($ticket['jumlah_lampiran'] ?? 0);
+
+                $ticketId = $ticket['id']
+                    ?? $ticket['ticket_number']
+                    ?? $ticket['nomor_tiket']
+                    ?? '-';
+                ?>
+
+                <tr>
+                    <td class="text-center fw-bold text-muted">
+                        <?= $no++ ?>
+                    </td>
+
+                    <td>
+                        <button
+                            type="button"
+                            class="ticket-copy-btn"
+                            onclick="copyTicketNumber('<?= esc($nomorTiket) ?>')"
+                            title="Klik untuk menyalin nomor tiket"
                         >
-                            No
-                        </th>
+                            <?= esc($nomorTiket) ?>
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </td>
 
-                        <th>
-                            Nomor Tiket
-                        </th>
+                    <td>
+                        <div class="ticket-name">
+                            <?= esc($namaPemohon) ?>
+                        </div>
+                    </td>
 
-                        <th>
-                            Nama Pemohon
-                        </th>
+                    <td>
+                        <div class="ticket-nik">
+                            <?= esc($identitas) ?>
+                        </div>
+                    </td>
 
-                        <th>
-                            NIK / Identitas
-                        </th>
+                    <td>
+                        <?= esc($layanan) ?>
+                    </td>
 
-                        <th>
-                            Layanan
-                        </th>
+                    <td>
+                        <span class="ticket-category">
+                            <?= esc($kategori) ?>
+                        </span>
+                    </td>
 
-                        <th>
-                            Kategori
-                        </th>
+                    <td class="text-center">
+                        <?php if ($lampiran > 0): ?>
+                            <span class="ticket-document document-available">
+                                <i class="fas fa-paperclip"></i>
+                                Ada
+                            </span>
+                        <?php else: ?>
+                            <span class="ticket-document document-none">
+                                <i class="fas fa-times"></i>
+                                Tidak Ada
+                            </span>
+                        <?php endif; ?>
+                    </td>
 
-                        <th class="text-center">
-                            Lampiran
-                        </th>
+                    <td class="text-center">
+                        <span class="ticket-status <?= $statusClass ?>">
+                            <?= esc($ticket['status'] ?? '-') ?>
+                        </span>
+                    </td>
 
-                        <th class="text-center">
-                            Status
-                        </th>
-
-                        <th>
-                            Tanggal Dibuat
-                        </th>
-
-                        <th
-                            class="text-center"
-                            style="width:100px;"
-                        >
-                            Aksi
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody>
-
-
-                    <?php if (!empty($paginatedList)): ?>
-
-
-                        <?php foreach ($paginatedList as $ticket): ?>
-
+                    <td>
+                        <div class="ticket-date">
+                            <i class="far fa-clock me-1"></i>
 
                             <?php
-
-                            $st = strtolower(
-                                trim(
-                                    $ticket['status'] ?? ''
-                                )
-                            );
-
-                            $statusClass =
-                                'status-submitted';
-
-
-                            if ($st === 'verified') {
-
-                                $statusClass =
-                                    'status-verified';
-
-                            } elseif (
-                                $st === 'disposisi' ||
-                                $st === 'assigned'
-                            ) {
-
-                                $statusClass =
-                                    'status-disposisi';
-
-                            } elseif (
-                                $st === 'processing' ||
-                                $st === 'in progress'
-                            ) {
-
-                                $statusClass =
-                                    'status-progress';
-
-                            } elseif (
-                                $st === 'completed'
-                            ) {
-
-                                $statusClass =
-                                    'status-completed';
-
-                            } elseif (
-                                $st === 'rejected'
-                            ) {
-
-                                $statusClass =
-                                    'status-rejected';
-
-                            }
-
+                            $createdAt = $ticket['created_at']
+                                ?? $ticket['submitted_at']
+                                ?? null;
                             ?>
 
-
-                            <tr>
-
-
-                                <!-- NO -->
-
-                                <td class="text-center fw-bold text-muted">
-
-                                    <?= $no++ ?>
-
-                                </td>
-
-
-                                <!-- NOMOR TIKET -->
-
-                                <td>
-
-                                    <button
-                                        type="button"
-                                        class="ticket-copy-btn"
-                                        onclick="copyTicketNumber('<?= esc($ticket['nomor_tiket'], 'js') ?>')"
-                                        title="Klik untuk menyalin nomor tiket"
-                                    >
-
-                                        <?= esc(
-                                            $ticket['nomor_tiket']
-                                        ) ?>
-
-                                        <i class="far fa-copy"></i>
-
-                                    </button>
-
-                                </td>
-
-
-                                <!-- PEMOHON -->
-
-                                <td>
-
-                                    <div class="ticket-name">
-
-                                        <?= esc(
-                                            $ticket['nama_pemohon']
-                                        ) ?>
-
-                                    </div>
-
-                                </td>
-
-
-                                <!-- NIK -->
-
-                                <td>
-
-                                    <div class="ticket-nik">
-
-                                        <?= esc(
-                                            $ticket['nik'] ?? '-'
-                                        ) ?>
-
-                                    </div>
-
-                                </td>
-
-
-                                <!-- LAYANAN -->
-
-                                <td>
-
-                                    <?= esc(
-                                        $ticket['layanan']
-                                    ) ?>
-
-                                </td>
-
-
-                                <!-- KATEGORI -->
-
-                                <td>
-
-                                    <span class="ticket-category">
-
-                                        <?= esc(
-                                            $ticket['kategori']
-                                            ?? 'Umum'
-                                        ) ?>
-
-                                    </span>
-
-                                </td>
-
-
-                                <!-- LAMPIRAN -->
-
-                                <td class="text-center">
-
-
-                                    <?php if (
-                                        !empty(
-                                            $ticket['dokumen']
-                                        ) ||
-                                        !empty(
-                                            $ticket['lampiran']
-                                        )
-                                    ): ?>
-
-
-                                        <span class="ticket-document document-available">
-
-                                            <i class="fas fa-paperclip"></i>
-
-                                            Ada
-
-                                        </span>
-
-
-                                    <?php else: ?>
-
-
-                                        <span class="ticket-document document-none">
-
-                                            <i class="fas fa-times"></i>
-
-                                            Tidak Ada
-
-                                        </span>
-
-
-                                    <?php endif; ?>
-
-
-                                </td>
-
-
-                                <!-- STATUS -->
-
-                                <td class="text-center">
-
-                                    <span
-                                        class="ticket-status <?= $statusClass ?>"
-                                    >
-
-                                        <?= esc(
-                                            $ticket['status']
-                                        ) ?>
-
-                                    </span>
-
-                                </td>
-
-
-                                <!-- TANGGAL -->
-
-                                <td>
-
-                                    <div class="ticket-date">
-
-                                        <i class="far fa-clock mr-1"></i>
-
-
-                                        <?php
-
-                                        $createdAt =
-                                            $ticket['created_at']
-                                            ?? '';
-
-                                        if (
-                                            !empty($createdAt) &&
-                                            strtotime($createdAt)
-                                            !== false
-                                        ):
-
-                                        ?>
-
-
-                                            <?= date(
-                                                'd-m-Y H:i',
-                                                strtotime($createdAt)
-                                            ) ?>
-
-
-                                        <?php else: ?>
-
-
-                                            -
-
-
-                                        <?php endif; ?>
-
-
-                                    </div>
-
-                                </td>
-
-
-                                <!-- =================================================
-                                     AKSI
-                                ================================================== -->
-
-                                <td class="text-center">
-
-                                    <div class="ticket-actions">
-
-
-                                        <!-- DETAIL -->
-
-                                        <?php if (
-                                            !empty(
-                                                $ticket['id']
-                                            )
-                                        ): ?>
-
-
-                                            <a
-                                                href="<?= base_url(
-                                                    'verification/detail/' .
-                                                    (int) $ticket['id']
-                                                ) ?>"
-                                                class="ticket-action action-detail"
-                                                title="Lihat Detail"
-                                            >
-
-                                                <i class="fas fa-eye"></i>
-
-                                            </a>
-
-
-                                        <?php endif; ?>
-
-
-                                        <!-- VERIFIKASI -->
-
-                                        <?php if (
-                                            $st === 'submitted' &&
-                                            !empty(
-                                                $ticket['id']
-                                            )
-                                        ): ?>
-
-
-                                            <a
-                                                href="<?= base_url(
-                                                    'verification/verify/' .
-                                                    (int) $ticket['id']
-                                                ) ?>"
-                                                class="ticket-action action-verify"
-                                                title="Verifikasi Tiket"
-                                            >
-
-                                                <i class="fas fa-user-check"></i>
-
-                                            </a>
-
-
-                                        <?php elseif (
-                                            $st === 'verified' &&
-                                            !empty(
-                                                $ticket['id']
-                                            )
-                                        ): ?>
-
-
-                                            <!-- DISPOSISI -->
-
-                                            <a
-                                                href="<?= base_url('disposition') ?>"
-                                                class="ticket-action action-disposition"
-                                                title="Disposisi Tiket"
-                                            >
-
-                                                <i class="fas fa-share"></i>
-
-                                            </a>
-
-
-                                        <?php endif; ?>
-
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-
-                        <?php endforeach; ?>
-
-
-                    <?php else: ?>
-
-
-                        <!-- EMPTY -->
-
-                        <tr>
-
-                            <td
-                                colspan="10"
-                                class="text-center ticket-empty"
+                            <?= $createdAt
+                                ? \CodeIgniter\I18n\Time::parse(
+                                    $createdAt,
+                                    'UTC'
+                                )->setTimezone('Asia/Jakarta')->format('d-m-Y H:i')
+                                : '-'
+                            ?>
+                        </div>
+                    </td>
+
+                    <td class="text-center">
+                        <div class="ticket-actions">
+
+                            <a
+                                href="<?= base_url('datatiket/detail/' . esc($ticketId)) ?>"
+                                class="ticket-action action-detail"
+                                title="Detail Tiket"
                             >
+                                <i class="fas fa-eye"></i>
+                            </a>
 
-                                <div class="ticket-empty-icon">
+                            <?php if ($st === 'submitted'): ?>
 
-                                    <i class="fas fa-folder-open"></i>
+                                <a
+                                    href="<?= base_url('verification/verify/' . esc($ticketId)) ?>"
+                                    class="ticket-action action-verify"
+                                    title="Verifikasi Tiket"
+                                >
+                                    <i class="fas fa-user-check"></i>
+                                </a>
 
-                                </div>
+                            <?php elseif ($st === 'verified'): ?>
 
-                                <h5 class="fw-bold">
+                                <a
+                                    href="<?= base_url('disposition/create/' . esc($ticketId)) ?>"
+                                    class="ticket-action action-disposition"
+                                    title="Disposisi Tiket"
+                                >
+                                    <i class="fas fa-share"></i>
+                                </a>
 
-                                    Tidak ada data tiket
+                            <?php endif; ?>
 
-                                </h5>
+                        </div>
+                    </td>
+                </tr>
 
-                                <p class="text-muted small mb-0">
+            <?php endforeach; ?>
 
-                                    Silakan sesuaikan filter pencarian Anda.
+        <?php else: ?>
 
-                                </p>
+            <tr>
+                <td colspan="10" class="text-center ticket-empty">
+                    <div class="ticket-empty-icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
 
-                            </td>
+                    <h5 class="fw-bold">
+                        Tidak ada data tiket
+                    </h5>
 
-                        </tr>
+                    <p class="text-muted small">
+                        Silakan sesuaikan filter pencarian Anda.
+                    </p>
+                </td>
+            </tr>
 
-
-                    <?php endif; ?>
-
-
-                </tbody>
-
-            </table>
+        <?php endif; ?>
+    </tbody>
+</table>
 
         </div>
 

@@ -551,19 +551,14 @@ body,
                             Semua Role
                         </option>
 
-                        <option value="Admin"
-                            <?= ($role ?? '') === 'Admin' ? 'selected' : '' ?>>
-                            Admin
+                        <option value="Super Administrator"
+                            <?= ($role ?? '') === 'Super Administrator' ? 'selected' : '' ?>>
+                            Super Administrator
                         </option>
 
-                        <option value="Petugas"
-                            <?= ($role ?? '') === 'Petugas' ? 'selected' : '' ?>>
-                            Petugas
-                        </option>
-
-                        <option value="Pengguna"
-                            <?= ($role ?? '') === 'Pengguna' ? 'selected' : '' ?>>
-                            Pengguna
+                        <option value="Pemohon"
+                            <?= ($role ?? '') === 'Pemohon' ? 'selected' : '' ?>>
+                            Pemohon
                         </option>
 
                     </select>

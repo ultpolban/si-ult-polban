@@ -50,6 +50,7 @@ class LogAktivitasController extends BaseController
             'al.created_at',
             'al.ip_address',
 
+            'u.full_name',
             'u.username',
             'u.email',
 
@@ -76,7 +77,8 @@ class LogAktivitasController extends BaseController
 
             $builder->groupStart();
 
-            $builder->like('u.username', $keyword);
+            $builder->like('u.full_name', $keyword);
+            $builder->orLike('u.username', $keyword);
             $builder->orLike('u.email', $keyword);
             $builder->orLike('al.action', $keyword);
             $builder->orLike('al.module', $keyword);
@@ -91,19 +93,10 @@ class LogAktivitasController extends BaseController
         // FILTER ROLE
         // ==========================================
         if ($role !== '') {
-
-            $roleMap = [
-                'Admin'    => 'admin',
-                'Petugas'  => 'petugas',
-                'Pengguna' => 'pengguna',
-            ];
-
-            if (isset($roleMap[$role])) {
-                $builder->where(
-                    'LOWER(r.name)',
-                    strtolower($roleMap[$role])
-                );
-            }
+            $builder->where(
+                'LOWER(r.name)',
+                strtolower($role)
+            );
         }
 
 
@@ -123,7 +116,7 @@ class LogAktivitasController extends BaseController
             } elseif ($aksi === 'Aktivitas Data') {
 
                 $builder->whereNotIn(
-                    'UPPER(al.action)',
+                    'al.action',
                     ['LOGIN', 'LOGOUT']
                 );
             }
@@ -160,26 +153,17 @@ class LogAktivitasController extends BaseController
             // ------------------------------
             // AKTOR
             // ------------------------------
-            $log['aktor'] = !empty($log['username'])
-                ? $log['username']
-                : 'User';
+            $log['aktor'] = !empty($log['full_name'])
+                ? $log['full_name']
+                : (!empty($log['email']) ? $log['email'] : 'User');
 
 
             // ------------------------------
             // ROLE
             // ------------------------------
-            $roleName = strtolower(
-                trim($log['role_name'] ?? '')
-            );
-
-            $roleLabels = [
-                'admin'    => 'Administrator',
-                'petugas'  => 'Petugas',
-                'pengguna' => 'Pengguna',
-            ];
-
-            $log['role'] = $roleLabels[$roleName]
-                ?? ($log['role_name'] ?? '-');
+            $log['role'] = !empty($log['role_name'])
+                ? $log['role_name']
+                : '-';
 
 
             // ------------------------------
@@ -259,7 +243,10 @@ class LogAktivitasController extends BaseController
 
                 default:
 
-                    $log['aksi_label'] = 'Aktivitas Data';
+                    $log['aksi_label'] = $action !== ''
+                        ? $action
+                        : '-';
+
                     $log['aksi_icon']  = 'fa-database';
                     $log['aksi_class'] = 'badge-export';
 
@@ -286,28 +273,29 @@ class LogAktivitasController extends BaseController
 
 
             // ------------------------------
-            // DETAIL
+            // DETAIL SESUAI DATABASE
             // ------------------------------
-            if ($action === 'LOGIN') {
+            $detailParts = [];
 
-                $log['detail'] =
-                    'Pengguna berhasil login ke dalam sistem.';
-
-            } elseif ($action === 'LOGOUT') {
-
-                $log['detail'] =
-                    'Pengguna berhasil logout dari sistem.';
-
-            } elseif ($module !== '') {
-
-                $log['detail'] =
-                    'Aktivitas ' . $module . ' dilakukan oleh pengguna.';
-
-            } else {
-
-                $log['detail'] =
-                    'Pengguna melakukan aktivitas pada sistem.';
+            if ($action !== '') {
+                $detailParts[] = $action;
             }
+
+            if ($module !== '') {
+                $detailParts[] = 'Module: ' . $module;
+            }
+
+            if (
+                isset($log['reference_id']) &&
+                $log['reference_id'] !== null &&
+                $log['reference_id'] !== ''
+            ) {
+                $detailParts[] = 'Referensi: #' . $log['reference_id'];
+            }
+
+            $log['detail'] = !empty($detailParts)
+                ? implode(' • ', $detailParts)
+                : '-';
         }
 
         unset($log);
@@ -322,12 +310,12 @@ class LogAktivitasController extends BaseController
 
         $totalLogin = $db
             ->table('activity_logs')
-            ->where('UPPER(action)', 'LOGIN')
+            ->where('action', 'LOGIN')
             ->countAllResults();
 
         $totalLogout = $db
             ->table('activity_logs')
-            ->where('UPPER(action)', 'LOGOUT')
+            ->where('action', 'LOGOUT')
             ->countAllResults();
 
         $totalLainnya = max(

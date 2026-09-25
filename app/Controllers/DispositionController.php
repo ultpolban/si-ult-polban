@@ -25,7 +25,69 @@ class DispositionController extends BaseController
      */
     public function index()
     {
-        $tickets = $this->ticketModel->getByStatus('verified');
+        $tickets = $this->db
+            ->table('tickets t')
+            ->select('
+                t.id,
+                t.ticket_number,
+                t.status,
+                t.priority,
+                t.submitted_at,
+                t.created_at,
+                t.unit_id,
+                t.assigned_to,
+                ms.name AS service_name,
+                ms.service_unit_id,
+                COALESCE(msu.name, unit_direct.name) AS unit_name,
+                master_service_categories.name AS category_name,
+                COUNT(service_request_files.id) AS jumlah_lampiran,
+                up.name AS applicant_name,
+                up.student_name,
+                up.nim,
+                up.nik,
+                up.email,
+                up.phone
+            ', false)
+            ->join(
+                'master_services ms',
+                'ms.id = t.service_id',
+                'left'
+            )
+            ->join(
+                'master_service_units msu',
+                'msu.id = ms.service_unit_id',
+                'left'
+            )
+            ->join(
+                'master_service_units unit_direct',
+                'unit_direct.id = t.unit_id',
+                'left'
+            )
+            ->join(
+                'user_profiles up',
+                'up.id = t.user_profile_id',
+                'left'
+            )
+            ->join(
+                'master_service_categories',
+                'master_service_categories.id = ms.service_category_id',
+                'left'
+            )
+            ->join(
+                'service_requests',
+                'service_requests.ticket_number = t.ticket_number',
+                'left'
+            )
+            ->join(
+                'service_request_files',
+                'service_request_files.service_request_id = service_requests.id',
+                'left'
+            )
+            ->where('LOWER(t.status)', 'verified')
+            ->groupBy('t.id')
+            ->orderBy('t.submitted_at', 'DESC')
+            ->get()
+            ->getResultArray();
 
         return view('disposition/index', [
             'tickets' => $tickets
@@ -353,6 +415,47 @@ class DispositionController extends BaseController
 
 
         /**
+         * --------------------------------------------------------
+         * PRIORITAS 3:
+         * Ambil langsung dari unit_id tiket
+         * Khusus tiket offline Unit Layanan Terpadu
+         * --------------------------------------------------------
+         */
+        if (
+            !$unit
+            && !empty($ticket['unit_id'])
+        ) {
+
+            $unit = $this->db
+                ->table('master_service_units')
+                ->select('
+                    id,
+                    code,
+                    name
+                ')
+                ->where(
+                    'id',
+                    (int) $ticket['unit_id']
+                )
+                ->where(
+                    'is_active',
+                    1
+                )
+                ->where(
+                    'deleted_at IS NULL',
+                    null,
+                    false
+                )
+                ->get()
+                ->getRowArray();
+
+            if ($unit) {
+                $assignedTo = (int) $unit['id'];
+            }
+        }
+
+
+        /**
          * ========================================================
          * VALIDASI UNIT
          * ========================================================
@@ -384,9 +487,9 @@ class DispositionController extends BaseController
          * ========================================================
          */
         $updateData = [
-            'assigned_to' => $assignedTo,
-            'status'      => 'assigned'
-        ];
+    'unit_id' => $assignedTo,
+    'status'  => 'assigned'
+];
 
 
         /**

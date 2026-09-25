@@ -36,6 +36,8 @@ class UserProfileModel extends BaseModel
 
         'nim',
 
+        'nim_anak',
+
         'nik',
 
         'student_name',

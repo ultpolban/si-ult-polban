@@ -2096,13 +2096,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             ${description}
 
-                            <input
-                                type="file"
-                                name="requirement_${requirement.id}"
-                                class="form-control"
-                                accept=".pdf,.jpg,.jpeg,.png"
-                                ${wajib ? 'required' : ''}
-                            >
+                          <input
+    type="file"
+    name="requirement_${requirement.id}[]"
+    class="form-control"
+    accept=".pdf,.jpg,.jpeg,.png"
+    multiple
+    ${wajib ? 'required' : ''}
+>
 
                             <div class="small text-muted mt-2">
 

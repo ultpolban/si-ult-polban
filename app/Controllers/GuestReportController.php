@@ -4,20 +4,23 @@ namespace App\Controllers;
 
 use App\Models\TicketModel;
 use App\Models\NotificationModel;
+use App\Models\TicketAttachmentModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class GuestReportController extends BaseController
 {
     protected $ticketModel;
     protected $notificationModel;
+    protected $ticketAttachmentModel;
     protected $db;
 
-   public function __construct()
-{
-    $this->ticketModel = new TicketModel();
-    $this->notificationModel = new NotificationModel();
-    $this->db = \Config\Database::connect();
-}
+    public function __construct()
+    {
+        $this->ticketModel = new TicketModel();
+        $this->notificationModel = new NotificationModel();
+        $this->ticketAttachmentModel = new TicketAttachmentModel();
+        $this->db = \Config\Database::connect();
+    }
 
     // =========================================================
     // LIST DATA
@@ -31,6 +34,7 @@ class GuestReportController extends BaseController
         $builder = $this->ticketModel
             ->select('
                 tickets.*,
+                tickets.created_at AS ticket_created_at,
                 COALESCE(
                     user_profiles.name,
                     user_profiles.student_name
@@ -62,10 +66,6 @@ class GuestReportController extends BaseController
                 'left'
             );
 
-        // =====================================================
-        // SEARCH
-        // =====================================================
-
         if ($keyword !== '') {
             $builder
                 ->groupStart()
@@ -77,16 +77,12 @@ class GuestReportController extends BaseController
                 ->groupEnd();
         }
 
-        // =====================================================
-        // FILTER STATUS
-        // =====================================================
-
         if ($status !== '') {
             $builder->where('tickets.status', $status);
         }
 
         // =====================================================
-        // STATISTIK DATABASE
+        // STATISTIK
         // =====================================================
 
         $countTickets = function (?array $statuses = null) {
@@ -103,10 +99,7 @@ class GuestReportController extends BaseController
             }
 
             if ($statuses !== null) {
-                $countBuilder->whereIn(
-                    'status',
-                    $statuses
-                );
+                $countBuilder->whereIn('status', $statuses);
             }
 
             return $countBuilder->countAllResults();
@@ -133,14 +126,11 @@ class GuestReportController extends BaseController
         // =====================================================
 
         $tickets = $builder
-            ->orderBy(
-                'tickets.submitted_at',
-                'DESC'
-            )
+            ->orderBy('tickets.submitted_at', 'DESC')
             ->paginate(10);
 
         // =====================================================
-        // DATA UNIT UNTUK MODAL DISPOSISI
+        // DATA UNIT
         // =====================================================
 
         $units = [];
@@ -155,10 +145,7 @@ class GuestReportController extends BaseController
             );
 
             if (in_array('is_active', $unitColumns, true)) {
-                $unitBuilder->where(
-                    'is_active',
-                    1
-                );
+                $unitBuilder->where('is_active', 1);
             }
 
             if (in_array('deleted_at', $unitColumns, true)) {
@@ -170,20 +157,13 @@ class GuestReportController extends BaseController
             }
 
             if (in_array('name', $unitColumns, true)) {
-                $unitBuilder->orderBy(
-                    'name',
-                    'ASC'
-                );
+                $unitBuilder->orderBy('name', 'ASC');
             }
 
             $units = $unitBuilder
                 ->get()
                 ->getResultArray();
         }
-
-        // =====================================================
-        // VIEW FRONTEND3
-        // =====================================================
 
         return view(
             'petugas/laporan_tamu',
@@ -221,10 +201,7 @@ class GuestReportController extends BaseController
             );
 
             if (in_array('is_active', $columns, true)) {
-                $builder->where(
-                    'is_active',
-                    1
-                );
+                $builder->where('is_active', 1);
             }
 
             if (in_array('deleted_at', $columns, true)) {
@@ -236,10 +213,7 @@ class GuestReportController extends BaseController
             }
 
             if (in_array('name', $columns, true)) {
-                $builder->orderBy(
-                    'name',
-                    'ASC'
-                );
+                $builder->orderBy('name', 'ASC');
             }
 
             $units = $builder
@@ -256,8 +230,7 @@ class GuestReportController extends BaseController
     }
 
     // =========================================================
-    // AJAX
-    // JENIS LAYANAN BERDASARKAN UNIT
+    // AJAX - JENIS LAYANAN BERDASARKAN UNIT
     // =========================================================
 
     public function servicesByUnit($unitId)
@@ -273,13 +246,6 @@ class GuestReportController extends BaseController
                     'data'    => []
                 ]);
         }
-
-        /*
-         * Database project menggunakan:
-         * master_services
-         * master_services.service_unit_id
-         * master_services.name
-         */
 
         if (!$this->db->tableExists('master_services')) {
             return $this->response
@@ -300,10 +266,6 @@ class GuestReportController extends BaseController
                     'data'    => []
                 ]);
         }
-
-        // =====================================================
-        // RESOLVE UNIT
-        // =====================================================
 
         $resolvedUnitId = null;
 
@@ -326,11 +288,7 @@ class GuestReportController extends BaseController
                 'service_unit_name'
             ] as $column) {
 
-                if (in_array(
-                    $column,
-                    $unitColumns,
-                    true
-                )) {
+                if (in_array($column, $unitColumns, true)) {
                     $unitNameColumn = $column;
                     break;
                 }
@@ -349,10 +307,7 @@ class GuestReportController extends BaseController
             $unit = $this->db
                 ->table('master_service_units')
                 ->select('id')
-                ->where(
-                    $unitNameColumn,
-                    $unitId
-                )
+                ->where($unitNameColumn, $unitId)
                 ->get()
                 ->getRowArray();
 
@@ -379,33 +334,9 @@ class GuestReportController extends BaseController
                 ]);
         }
 
-        // =====================================================
-        // AMBIL LAYANAN
-        // =====================================================
-
         $columns = $this->db->getFieldNames(
             'master_services'
         );
-
-        if (!in_array('service_unit_id', $columns, true)) {
-            return $this->response
-                ->setStatusCode(500)
-                ->setJSON([
-                    'status'  => 'error',
-                    'message' => 'Kolom service_unit_id tidak ditemukan.',
-                    'data'    => []
-                ]);
-        }
-
-        if (!in_array('name', $columns, true)) {
-            return $this->response
-                ->setStatusCode(500)
-                ->setJSON([
-                    'status'  => 'error',
-                    'message' => 'Kolom nama layanan tidak ditemukan.',
-                    'data'    => []
-                ]);
-        }
 
         $builder = $this->db
             ->table('master_services')
@@ -416,10 +347,7 @@ class GuestReportController extends BaseController
             );
 
         if (in_array('is_active', $columns, true)) {
-            $builder->where(
-                'is_active',
-                1
-            );
+            $builder->where('is_active', 1);
         }
 
         if (in_array('deleted_at', $columns, true)) {
@@ -430,12 +358,8 @@ class GuestReportController extends BaseController
             );
         }
 
-        $builder->orderBy(
-            'name',
-            'ASC'
-        );
-
         $services = $builder
+            ->orderBy('name', 'ASC')
             ->get()
             ->getResultArray();
 
@@ -449,8 +373,7 @@ class GuestReportController extends BaseController
     }
 
     // =========================================================
-    // AJAX
-    // PERSYARATAN BERDASARKAN LAYANAN
+    // AJAX - PERSYARATAN BERDASARKAN LAYANAN
     // =========================================================
 
     public function requirements($serviceId)
@@ -483,29 +406,33 @@ class GuestReportController extends BaseController
             'master_service_requirements'
         );
 
+        $select = [
+            'id',
+            'service_id',
+            'name'
+        ];
+
+        foreach ([
+            'description',
+            'file_type',
+            'max_file_size',
+            'is_required',
+            'allowed_extensions',
+            'sort_order'
+        ] as $column) {
+
+            if (in_array($column, $columns, true)) {
+                $select[] = $column;
+            }
+        }
+
         $builder = $this->db
             ->table('master_service_requirements')
-            ->select([
-                'id',
-                'service_id',
-                'name',
-                'description',
-                'file_type',
-                'max_file_size',
-                'is_required',
-                'allowed_extensions',
-                'sort_order'
-            ])
-            ->where(
-                'service_id',
-                $serviceId
-            );
+            ->select(implode(', ', $select))
+            ->where('service_id', $serviceId);
 
         if (in_array('is_active', $columns, true)) {
-            $builder->where(
-                'is_active',
-                1
-            );
+            $builder->where('is_active', 1);
         }
 
         if (in_array('deleted_at', $columns, true)) {
@@ -516,15 +443,11 @@ class GuestReportController extends BaseController
             );
         }
 
-        $builder
-            ->orderBy(
-                'sort_order',
-                'ASC'
-            )
-            ->orderBy(
-                'id',
-                'ASC'
-            );
+        if (in_array('sort_order', $columns, true)) {
+            $builder->orderBy('sort_order', 'ASC');
+        }
+
+        $builder->orderBy('id', 'ASC');
 
         $requirements = $builder
             ->get()
@@ -537,6 +460,314 @@ class GuestReportController extends BaseController
                 'message' => 'Persyaratan berhasil dimuat.',
                 'data'    => $requirements
             ]);
+    }
+
+    // =========================================================
+    // AMBIL REQUIREMENT
+    // =========================================================
+
+    private function getServiceRequirements(
+        int $serviceId
+    ): array {
+
+        if (
+            $serviceId <= 0 ||
+            !$this->db->tableExists(
+                'master_service_requirements'
+            )
+        ) {
+            return [];
+        }
+
+        $columns = $this->db->getFieldNames(
+            'master_service_requirements'
+        );
+
+        $select = ['id'];
+
+        foreach ([
+            'service_id',
+            'name',
+            'description',
+            'file_type',
+            'max_file_size',
+            'is_required',
+            'allowed_extensions',
+            'sort_order',
+            'is_active',
+            'deleted_at'
+        ] as $column) {
+
+            if (in_array($column, $columns, true)) {
+                $select[] = $column;
+            }
+        }
+
+        $builder = $this->db
+            ->table('master_service_requirements')
+            ->select(implode(', ', $select))
+            ->where('service_id', $serviceId);
+
+        if (in_array('is_active', $columns, true)) {
+            $builder->where('is_active', 1);
+        }
+
+        if (in_array('deleted_at', $columns, true)) {
+            $builder->where(
+                'deleted_at IS NULL',
+                null,
+                false
+            );
+        }
+
+        if (in_array('sort_order', $columns, true)) {
+            $builder->orderBy('sort_order', 'ASC');
+        }
+
+        $builder->orderBy('id', 'ASC');
+
+        return $builder
+            ->get()
+            ->getResultArray();
+    }
+
+    // =========================================================
+    // NORMALISASI EXTENSION
+    // =========================================================
+
+    private function normalizeAllowedExtensions($value): array
+    {
+        if (is_array($value)) {
+
+            $items = $value;
+
+        } elseif (
+            is_string($value) &&
+            trim($value) !== ''
+        ) {
+
+            $decoded = json_decode(
+                $value,
+                true
+            );
+
+            if (is_array($decoded)) {
+                $items = $decoded;
+            } else {
+                $items = preg_split(
+                    '/[,;|\s]+/',
+                    trim($value)
+                );
+            }
+
+        } else {
+
+            $items = [];
+        }
+
+        $extensions = [];
+
+        foreach ($items as $item) {
+
+            $item = strtolower(
+                trim((string) $item)
+            );
+
+            $item = ltrim(
+                $item,
+                '.'
+            );
+
+            if ($item !== '') {
+                $extensions[] = $item;
+            }
+        }
+
+        return array_values(
+            array_unique($extensions)
+        );
+    }
+
+    // =========================================================
+    // UPLOAD FILE
+    // =========================================================
+
+    private function uploadAttachmentFile(
+        $file,
+        array $requirement = []
+    ): array {
+
+        if (
+            !$file ||
+            !$file->isValid() ||
+            $file->hasMoved()
+        ) {
+            throw new \RuntimeException(
+                'File tidak valid atau sudah dipindahkan.'
+            );
+        }
+
+        $allowed =
+            $this->normalizeAllowedExtensions(
+                $requirement['allowed_extensions'] ?? null
+            );
+
+        if (empty($allowed)) {
+            $allowed = [
+                'pdf',
+                'jpg',
+                'jpeg',
+                'png'
+            ];
+        }
+
+        $extension = strtolower(
+            $file->getExtension()
+        );
+
+        if (!in_array(
+            $extension,
+            $allowed,
+            true
+        )) {
+
+            throw new \RuntimeException(
+                'Format file untuk "' .
+                ($requirement['name'] ?? 'lampiran') .
+                '" tidak diperbolehkan. Format: ' .
+                strtoupper(
+                    implode(', ', $allowed)
+                ) . '.'
+            );
+        }
+
+        $maxMb = (float) (
+            $requirement['max_file_size'] ?? 5
+        );
+
+        if ($maxMb <= 0) {
+            $maxMb = 5;
+        }
+
+        $maxBytes =
+            (int) round(
+                $maxMb * 1024 * 1024
+            );
+
+        if (
+            $file->getSize() >
+            $maxBytes
+        ) {
+
+            throw new \RuntimeException(
+                'Ukuran file untuk "' .
+                ($requirement['name'] ?? 'lampiran') .
+                '" maksimal ' .
+                rtrim(
+                    rtrim(
+                        number_format(
+                            $maxMb,
+                            2,
+                            '.',
+                            ''
+                        ),
+                        '0'
+                    ),
+                    '.'
+                ) .
+                ' MB.'
+            );
+        }
+
+        $uploadPath =
+            FCPATH . 'uploads';
+
+        if (
+            !is_dir($uploadPath) &&
+            !mkdir(
+                $uploadPath,
+                0777,
+                true
+            ) &&
+            !is_dir($uploadPath)
+        ) {
+
+            throw new \RuntimeException(
+                'Folder uploads tidak dapat dibuat.'
+            );
+        }
+
+        $storedName =
+            $file->getRandomName();
+
+        $originalName =
+            $file->getClientName();
+
+        $mimeType =
+            $file->getClientMimeType();
+
+        $fileSize =
+            (int) $file->getSize();
+
+        $file->move(
+            $uploadPath,
+            $storedName
+        );
+
+        return [
+            'original_name' =>
+                $originalName,
+
+            'file_name' =>
+                $storedName,
+
+            'file_path' =>
+                'uploads/' . $storedName,
+
+            'file_extension' =>
+                $extension,
+
+            'mime_type' =>
+                $mimeType,
+
+            'file_size' =>
+                $fileSize,
+
+            'stored_name' =>
+                $storedName,
+        ];
+    }
+
+    // =========================================================
+    // BERSIHKAN FILE FISIK JIKA TRANSAKSI GAGAL
+    // =========================================================
+
+    private function cleanupUploadedFiles(
+        array $storedFiles
+    ): void {
+
+        foreach ($storedFiles as $stored) {
+
+            $filePath =
+                (string) (
+                    $stored['file_path'] ?? ''
+                );
+
+            if ($filePath === '') {
+                continue;
+            }
+
+            $physicalPath =
+                FCPATH .
+                ltrim(
+                    $filePath,
+                    '/\\'
+                );
+
+            if (is_file($physicalPath)) {
+                @unlink($physicalPath);
+            }
+        }
     }
 
     // =========================================================
@@ -555,21 +786,16 @@ class GuestReportController extends BaseController
             ],
 
             'Dosen' => [
-                'type'   => 'NIP',
-                'column' => 'nim'
-            ],
-
-            'Tendik' => [
-                'type'   => 'NIP',
-                'column' => 'nim'
-            ],
-
-            'Orang Tua' => [
                 'type'   => 'NIK',
                 'column' => 'nik'
             ],
 
-            'Orang Tua / Wali' => [
+            'Tendik' => [
+                'type'   => 'NIK',
+                'column' => 'nik'
+            ],
+
+            'Orang Tua' => [
                 'type'   => 'NIK',
                 'column' => 'nik'
             ],
@@ -580,21 +806,11 @@ class GuestReportController extends BaseController
             ],
 
             'Mitra' => [
-                'type'   => 'NIK / Identitas',
-                'column' => 'nik'
+                'type'   => null,
+                'column' => null
             ],
 
-            'Public' => [
-                'type'   => 'NIK',
-                'column' => 'nik'
-            ],
-
-            'Masyarakat' => [
-                'type'   => 'NIK',
-                'column' => 'nik'
-            ],
-
-            'Masyarakat Umum' => [
+            'Umum' => [
                 'type'   => 'NIK',
                 'column' => 'nik'
             ],
@@ -602,8 +818,8 @@ class GuestReportController extends BaseController
 
         return $map[$applicantType]
             ?? [
-                'type'   => 'NIM / NIP / NIK',
-                'column' => 'nim'
+                'type'   => null,
+                'column' => null
             ];
     }
 
@@ -625,7 +841,11 @@ class GuestReportController extends BaseController
             'master_applicant_types'
         );
 
-        if (!in_array('name', $columns, true)) {
+        if (!in_array(
+            'name',
+            $columns,
+            true
+        )) {
             return null;
         }
 
@@ -650,12 +870,13 @@ class GuestReportController extends BaseController
             $builder = $this->db
                 ->table('master_applicant_types')
                 ->select('id')
-                ->where(
-                    'name',
-                    $name
-                );
+                ->where('name', $name);
 
-            if (in_array('deleted_at', $columns, true)) {
+            if (in_array(
+                'deleted_at',
+                $columns,
+                true
+            )) {
                 $builder->where(
                     'deleted_at IS NULL',
                     null,
@@ -686,44 +907,37 @@ class GuestReportController extends BaseController
 
         $table = 'user_profiles';
 
-        $columns = $this->db->getFieldNames(
-            $table
-        );
+        $columns =
+            $this->db->getFieldNames($table);
 
-        $identityConfig = $this->identityConfig(
-            $applicantType
-        );
+        $identityConfig =
+            $this->identityConfig(
+                $applicantType
+            );
 
-        $identityNumber = trim(
-            (string) (
+        $identityNumber =
+            trim((string) (
                 $formData['identity_number'] ?? ''
-            )
-        );
+            ));
 
-        $name = trim(
-            (string) (
+        $name =
+            trim((string) (
                 $formData['applicant_name'] ?? ''
-            )
-        );
+            ));
 
-        $email = trim(
-            (string) (
+        $email =
+            trim((string) (
                 $formData['email'] ?? ''
-            )
-        );
+            ));
 
-        $phone = trim(
-            (string) (
+        $phone =
+            trim((string) (
                 $formData['phone'] ?? ''
-            )
-        );
-
-        // =====================================================
-        // CARI PROFILE BERDASARKAN EMAIL
-        // =====================================================
+            ));
 
         $existing = null;
 
+        // Cari berdasarkan email
         if (
             $email !== '' &&
             in_array(
@@ -740,7 +954,11 @@ class GuestReportController extends BaseController
                     $email
                 );
 
-            if (in_array('deleted_at', $columns, true)) {
+            if (in_array(
+                'deleted_at',
+                $columns,
+                true
+            )) {
                 $builder->where(
                     'deleted_at IS NULL',
                     null,
@@ -753,10 +971,7 @@ class GuestReportController extends BaseController
                 ->getRowArray();
         }
 
-        // =====================================================
-        // CARI PROFILE BERDASARKAN IDENTITAS
-        // =====================================================
-
+        // Cari berdasarkan identitas
         if (
             !$existing &&
             $identityNumber !== '' &&
@@ -774,7 +989,11 @@ class GuestReportController extends BaseController
                     $identityNumber
                 );
 
-            if (in_array('deleted_at', $columns, true)) {
+            if (in_array(
+                'deleted_at',
+                $columns,
+                true
+            )) {
                 $builder->where(
                     'deleted_at IS NULL',
                     null,
@@ -787,10 +1006,7 @@ class GuestReportController extends BaseController
                 ->getRowArray();
         }
 
-        // =====================================================
-        // UPDATE PROFILE YANG SUDAH ADA
-        // =====================================================
-
+        // Update profile lama
         if (
             $existing &&
             isset($existing['id'])
@@ -798,9 +1014,10 @@ class GuestReportController extends BaseController
 
             $updates = [];
 
-            $typeId = $this->resolveApplicantTypeId(
-                $applicantType
-            );
+            $typeId =
+                $this->resolveApplicantTypeId(
+                    $applicantType
+                );
 
             if (
                 $typeId &&
@@ -810,7 +1027,9 @@ class GuestReportController extends BaseController
                     true
                 )
             ) {
-                $updates['applicant_type_id'] = $typeId;
+                $updates[
+                    'applicant_type_id'
+                ] = $typeId;
             }
 
             if (
@@ -845,7 +1064,9 @@ class GuestReportController extends BaseController
                     true
                 )
             ) {
-                $updates['student_name'] = $name;
+                $updates[
+                    'student_name'
+                ] = $name;
             }
 
             if (
@@ -876,13 +1097,18 @@ class GuestReportController extends BaseController
                     $columns,
                     true
                 ) &&
-                !empty($formData['institution_name'])
+                !empty(
+                    $formData['institution_name']
+                )
             ) {
-                $updates['institution_name'] =
-                    trim(
-                        (string)
-                        $formData['institution_name']
-                    );
+                $updates[
+                    'institution_name'
+                ] = trim(
+                    (string)
+                    $formData[
+                        'institution_name'
+                    ]
+                );
             }
 
             if (
@@ -891,7 +1117,9 @@ class GuestReportController extends BaseController
                     $columns,
                     true
                 ) &&
-                !empty($formData['position'])
+                !empty(
+                    $formData['position']
+                )
             ) {
                 $updates['position'] =
                     trim(
@@ -925,10 +1153,7 @@ class GuestReportController extends BaseController
             return (int) $existing['id'];
         }
 
-        // =====================================================
-        // PROFILE BARU
-        // =====================================================
-
+        // Profile baru
         $profile = [];
 
         $sessionUserId =
@@ -951,7 +1176,6 @@ class GuestReportController extends BaseController
                 true
             )
         ) {
-
             $profile['user_id'] =
                 (int) $sessionUserId;
         }
@@ -964,42 +1188,35 @@ class GuestReportController extends BaseController
                 true
             )
         ) {
-
             throw new \RuntimeException(
                 'User login tidak ditemukan. Silakan login kembali sebelum menambahkan Walk In.'
             );
         }
 
-        if (
-            in_array(
-                'name',
-                $columns,
-                true
-            )
-        ) {
+        if (in_array(
+            'name',
+            $columns,
+            true
+        )) {
             $profile['name'] = $name;
         }
 
-        if (
-            in_array(
-                'student_name',
-                $columns,
-                true
-            )
-        ) {
+        if (in_array(
+            'student_name',
+            $columns,
+            true
+        )) {
             $profile['student_name'] =
                 $name !== ''
                     ? $name
                     : null;
         }
 
-        if (
-            in_array(
-                'nim',
-                $columns,
-                true
-            )
-        ) {
+        if (in_array(
+            'nim',
+            $columns,
+            true
+        )) {
             $profile['nim'] =
                 $identityConfig['column'] === 'nim' &&
                 $identityNumber !== ''
@@ -1007,13 +1224,24 @@ class GuestReportController extends BaseController
                     : null;
         }
 
-        if (
-            in_array(
-                'nik',
-                $columns,
-                true
-            )
-        ) {
+        if (in_array(
+            'nim_anak',
+            $columns,
+            true
+        )) {
+            $profile['nim_anak'] =
+                trim(
+                    (string) (
+                        $formData['nim_anak'] ?? ''
+                    )
+                ) ?: null;
+        }
+
+        if (in_array(
+            'nik',
+            $columns,
+            true
+        )) {
             $profile['nik'] =
                 $identityConfig['column'] === 'nik' &&
                 $identityNumber !== ''
@@ -1021,39 +1249,33 @@ class GuestReportController extends BaseController
                     : null;
         }
 
-        if (
-            in_array(
-                'email',
-                $columns,
-                true
-            )
-        ) {
+        if (in_array(
+            'email',
+            $columns,
+            true
+        )) {
             $profile['email'] =
                 $email !== ''
                     ? $email
                     : null;
         }
 
-        if (
-            in_array(
-                'phone',
-                $columns,
-                true
-            )
-        ) {
+        if (in_array(
+            'phone',
+            $columns,
+            true
+        )) {
             $profile['phone'] =
                 $phone !== ''
                     ? $phone
                     : null;
         }
 
-        if (
-            in_array(
-                'address',
-                $columns,
-                true
-            )
-        ) {
+        if (in_array(
+            'address',
+            $columns,
+            true
+        )) {
             $profile['address'] =
                 trim(
                     (string) (
@@ -1062,32 +1284,32 @@ class GuestReportController extends BaseController
                 ) ?: null;
         }
 
-        if (
-            in_array(
-                'institution_name',
-                $columns,
-                true
-            )
-        ) {
+        if (in_array(
+            'institution_name',
+            $columns,
+            true
+        )) {
             $profile['institution_name'] =
                 trim(
                     (string) (
-                        $formData['institution_name'] ?? ''
+                        $formData[
+                            'institution_name'
+                        ] ?? ''
                     )
                 ) ?: null;
         }
 
-        if (
-            in_array(
-                'position',
-                $columns,
-                true
-            )
-        ) {
+        if (in_array(
+            'position',
+            $columns,
+            true
+        )) {
             $profile['position'] =
                 trim(
                     (string) (
-                        $formData['position'] ?? ''
+                        $formData[
+                            'position'
+                        ] ?? ''
                     )
                 ) ?: null;
         }
@@ -1105,8 +1327,9 @@ class GuestReportController extends BaseController
                 true
             )
         ) {
-            $profile['applicant_type_id'] =
-                $typeId;
+            $profile[
+                'applicant_type_id'
+            ] = $typeId;
         }
 
         if (
@@ -1123,9 +1346,12 @@ class GuestReportController extends BaseController
                 true
             )
         ) {
-            $profile['study_program_id'] =
-                (int)
-                $formData['study_program_id'];
+            $profile[
+                'study_program_id'
+            ] = (int)
+                $formData[
+                    'study_program_id'
+                ];
         }
 
         if (
@@ -1142,44 +1368,39 @@ class GuestReportController extends BaseController
                 true
             )
         ) {
-            $profile['class_id'] =
-                (int)
-                $formData['class_id'];
+            $profile[
+                'class_id'
+            ] = (int)
+                $formData[
+                    'class_id'
+                ];
         }
 
-        if (
-            in_array(
-                'created_at',
-                $columns,
-                true
-            )
-        ) {
+        if (in_array(
+            'created_at',
+            $columns,
+            true
+        )) {
             $profile['created_at'] =
                 date('Y-m-d H:i:s');
         }
 
-        if (
-            in_array(
-                'updated_at',
-                $columns,
-                true
-            )
-        ) {
+        if (in_array(
+            'updated_at',
+            $columns,
+            true
+        )) {
             $profile['updated_at'] =
                 date('Y-m-d H:i:s');
         }
 
-        // =====================================================
-        // INSERT PROFILE
-        // =====================================================
-
-        if (
-            !$this->db
-                ->table($table)
-                ->insert($profile)
+        if (!$this->db
+            ->table($table)
+            ->insert($profile)
         ) {
 
-            $error = $this->db->error();
+            $error =
+                $this->db->error();
 
             throw new \RuntimeException(
                 'Profil pemohon gagal disimpan: ' .
@@ -1187,7 +1408,8 @@ class GuestReportController extends BaseController
             );
         }
 
-        return (int) $this->db->insertID();
+        return (int)
+            $this->db->insertID();
     }
 
     // =========================================================
@@ -1200,22 +1422,9 @@ class GuestReportController extends BaseController
         string $identityNumber,
         string $serviceName,
         int $unitId,
-        int $serviceId,
+        ?int $serviceId,
         ?string $attachment
     ): array {
-
-        /*
-         * Form frontend3 menggunakan:
-         * nama
-         * email
-         * hp
-         * unit_layanan
-         * jenis_layanan
-         *
-         * Bukan:
-         * applicant_name
-         * phone
-         */
 
         $email = trim(
             (string)
@@ -1223,16 +1432,14 @@ class GuestReportController extends BaseController
         );
 
         $phone = trim(
-            (string)
-            (
+            (string) (
                 $this->request->getPost('hp')
                 ?: $this->request->getPost('phone')
             )
         );
 
         $applicantName = trim(
-            (string)
-            (
+            (string) (
                 $this->request->getPost('nama')
                 ?: $this->request->getPost('applicant_name')
             )
@@ -1270,24 +1477,14 @@ class GuestReportController extends BaseController
             'description' =>
                 trim(
                     (string)
-                    $this->request
-                        ->getPost(
-                            'ticket_description'
-                        )
+                    $this->request->getPost(
+                        'ticket_description'
+                    )
                 ),
 
-            /*
-             * attachment hanya disimpan di formData
-             * untuk kebutuhan kode lama.
-             * Tidak dimasukkan ke tabel tickets.
-             */
             'attachment' =>
                 $attachment,
         ];
-
-        // =====================================================
-        // FIELD TAMBAHAN FRONTEND3
-        // =====================================================
 
         $fieldMap = [
 
@@ -1300,26 +1497,17 @@ class GuestReportController extends BaseController
             ],
 
             'Dosen' => [
-                'prodi_dosen',
-                'fakultas',
-                'jabatan_dosen'
+                'instansi',
+                'jabatan'
             ],
 
             'Tendik' => [
-                'unit_kerja',
-                'jabatan_tendik'
+                'instansi',
+                'jabatan'
             ],
 
             'Orang Tua' => [
-                'nama_mahasiswa',
-                'nim_mahasiswa',
-                'hubungan'
-            ],
-
-            'Orang Tua / Wali' => [
-                'nama_mahasiswa',
-                'nim_mahasiswa',
-                'hubungan'
+                'nim_anak'
             ],
 
             'Alumni' => [
@@ -1329,24 +1517,11 @@ class GuestReportController extends BaseController
 
             'Mitra' => [
                 'instansi',
-                'pic',
-                'jabatan_mitra'
+                'jabatan'
             ],
 
-            'Public' => [
-                'instansi_public',
-                'alamat_public'
-            ],
+            'Umum' => [],
 
-            'Masyarakat' => [
-                'alamat',
-                'pekerjaan'
-            ],
-
-            'Masyarakat Umum' => [
-                'alamat',
-                'pekerjaan'
-            ],
         ];
 
         foreach (
@@ -1355,7 +1530,9 @@ class GuestReportController extends BaseController
         ) {
 
             $value =
-                $this->request->getPost($field);
+                $this->request->getPost(
+                    $field
+                );
 
             if (
                 $value !== null &&
@@ -1369,10 +1546,6 @@ class GuestReportController extends BaseController
             }
         }
 
-        // =====================================================
-        // ALIAS TAMBAHAN
-        // =====================================================
-
         $data['address'] =
             $data['alamat']
             ?? $data['alamat_public']
@@ -1383,11 +1556,14 @@ class GuestReportController extends BaseController
             ?? $data['instansi_public']
             ?? trim(
                 (string)
-                $this->request->getPost('instansi')
+                $this->request->getPost(
+                    'instansi'
+                )
             );
 
         $data['position'] =
-            $data['pekerjaan']
+            $data['jabatan']
+            ?? $data['pekerjaan']
             ?? $data['jabatan_dosen']
             ?? $data['jabatan_tendik']
             ?? $data['jabatan_mitra']
@@ -1397,18 +1573,12 @@ class GuestReportController extends BaseController
     }
 
     // =========================================================
-    // SIAPKAN DATA TIKET UNTUK VIEW
+    // SIAPKAN DATA TIKET
     // =========================================================
 
     private function prepareTicketForView(
         array $ticket
     ): array {
-
-        /*
-         * form_data hanya dipakai kalau memang ada
-         * dari data lama. Database tickets sekarang
-         * tidak mempunyai kolom form_data.
-         */
 
         $formData = [];
 
@@ -1417,27 +1587,21 @@ class GuestReportController extends BaseController
             is_string($ticket['form_data'])
         ) {
 
-            $decoded = json_decode(
-                $ticket['form_data'],
-                true
-            );
+            $decoded =
+                json_decode(
+                    $ticket['form_data'],
+                    true
+                );
 
             if (is_array($decoded)) {
                 $formData = $decoded;
             }
         }
 
-        /*
-         * Data query database menjadi prioritas.
-         */
         $ticket = array_merge(
             $formData,
             $ticket
         );
-
-        // =====================================================
-        // ALIAS FRONTEND3
-        // =====================================================
 
         $ticket['applicant_name'] =
             $ticket['applicant_name']
@@ -1478,10 +1642,6 @@ class GuestReportController extends BaseController
             $ticket['attachment']
             ?? null;
 
-        // =====================================================
-        // NORMALISASI JENIS PEMOHON
-        // =====================================================
-
         if (
             $ticket['applicant_type'] ===
             'Orang Tua / Wali'
@@ -1502,7 +1662,7 @@ class GuestReportController extends BaseController
     }
 
     // =========================================================
-    // DETAIL TIKET
+    // AMBIL DETAIL TIKET
     // =========================================================
 
     private function getPreparedTicket(
@@ -1516,6 +1676,132 @@ class GuestReportController extends BaseController
         if (!$ticket) {
             throw PageNotFoundException
                 ::forPageNotFound();
+        }
+
+        if (
+            !empty(
+                $ticket['user_profile_id']
+            ) &&
+            $this->db->tableExists(
+                'user_profiles'
+            )
+        ) {
+
+            $profile = $this->db
+                ->table('user_profiles')
+                ->where(
+                    'id',
+                    (int)
+                    $ticket['user_profile_id']
+                )
+                ->get()
+                ->getRowArray();
+
+            if ($profile) {
+                $ticket = array_merge(
+                    $profile,
+                    $ticket
+                );
+            }
+        }
+
+        if (
+            empty(
+                $ticket['applicant_type']
+            ) &&
+            !empty(
+                $ticket['applicant_type_id']
+            ) &&
+            $this->db->tableExists(
+                'master_applicant_types'
+            )
+        ) {
+
+            $typeBuilder =
+                $this->db
+                    ->table(
+                        'master_applicant_types'
+                    )
+                    ->where(
+                        'id',
+                        (int)
+                        $ticket[
+                            'applicant_type_id'
+                        ]
+                    );
+
+            $typeColumns =
+                $this->db->getFieldNames(
+                    'master_applicant_types'
+                );
+
+            if (
+                in_array(
+                    'deleted_at',
+                    $typeColumns,
+                    true
+                )
+            ) {
+                $typeBuilder->where(
+                    'deleted_at IS NULL',
+                    null,
+                    false
+                );
+            }
+
+            $type =
+                $typeBuilder
+                    ->get()
+                    ->getRowArray();
+
+            if (
+                $type &&
+                isset($type['name'])
+            ) {
+                $ticket['applicant_type'] =
+                    $type['name'];
+            }
+        }
+
+        if (
+            empty($ticket['unit_name']) &&
+            !empty($ticket['service_id']) &&
+            $this->db->tableExists(
+                'master_services'
+            ) &&
+            $this->db->tableExists(
+                'master_service_units'
+            )
+        ) {
+
+            $unit =
+                $this->db
+                    ->table(
+                        'master_services ms'
+                    )
+                    ->select(
+                        'su.id AS unit_id, su.name AS unit_name'
+                    )
+                    ->join(
+                        'master_service_units su',
+                        'su.id = ms.service_unit_id',
+                        'left'
+                    )
+                    ->where(
+                        'ms.id',
+                        (int)
+                        $ticket['service_id']
+                    )
+                    ->get()
+                    ->getRowArray();
+
+            if ($unit) {
+                $ticket['unit_id'] =
+                    $unit['unit_id'] ?? null;
+
+                $ticket['unit_name'] =
+                    $unit['unit_name'] ?? '';
+            }
         }
 
         return $this->prepareTicketForView(
@@ -1532,19 +1818,23 @@ class GuestReportController extends BaseController
         helper(['form']);
 
         // =====================================================
-        // AMBIL DATA DARI FORM FRONTEND3
+        // DATA FORM
         // =====================================================
 
         $applicantName = trim(
             (string) (
                 $this->request->getPost('nama')
-                ?: $this->request->getPost('applicant_name')
+                ?: $this->request->getPost(
+                    'applicant_name'
+                )
             )
         );
 
         $applicantType = trim(
             (string)
-            $this->request->getPost('applicant_type')
+            $this->request->getPost(
+                'applicant_type'
+            )
         );
 
         $unitId = (int)
@@ -1557,6 +1847,10 @@ class GuestReportController extends BaseController
                 'jenis_layanan'
             );
 
+        if ($unitId === 1) {
+            $serviceId = null;
+        }
+
         $ticketDescription = trim(
             (string)
             $this->request->getPost(
@@ -1565,7 +1859,7 @@ class GuestReportController extends BaseController
         );
 
         // =====================================================
-        // VALIDASI
+        // VALIDASI DASAR
         // =====================================================
 
         $errors = [];
@@ -1585,7 +1879,7 @@ class GuestReportController extends BaseController
                 'Unit layanan wajib dipilih.';
         }
 
-        if ($serviceId <= 0) {
+        if ($unitId !== 1 && $serviceId <= 0) {
             $errors['jenis_layanan'] =
                 'Jenis layanan wajib dipilih.';
         }
@@ -1596,7 +1890,6 @@ class GuestReportController extends BaseController
         }
 
         if (!empty($errors)) {
-
             return redirect()
                 ->back()
                 ->withInput()
@@ -1615,178 +1908,208 @@ class GuestReportController extends BaseController
                 $applicantType
             );
 
-        /*
-         * Mahasiswa / Dosen / Tendik / Alumni
-         * menggunakan NIM/NIP.
-         *
-         * Orang Tua / Mitra / Public / Masyarakat
-         * menggunakan NIK.
-         */
-
         if (
-            $identityConfig['column'] === 'nik'
+            $identityConfig['column'] ===
+            'nik'
         ) {
 
             $identityNumber = trim(
-                (string) (
-                    $this->request->getPost('nik')
-                    ?: $this->request->getPost('nim')
-                )
+                (string) $this->request->getPost('nik')
+            );
+
+        } elseif (
+            $identityConfig['column'] ===
+            'nim'
+        ) {
+
+            $identityNumber = trim(
+                (string) $this->request->getPost('nim')
             );
 
         } else {
 
-            $identityNumber = trim(
-                (string) (
-                    $this->request->getPost('nim')
-                    ?: $this->request->getPost('nik')
-                )
-            );
+            $identityNumber = '';
         }
 
         // =====================================================
-        // SERVICE
+        // VALIDASI IDENTITAS PEMOHON
         // =====================================================
 
-        if (!$this->db->tableExists(
-            'master_services'
-        )) {
+        if (
+            in_array(
+                $applicantType,
+                [
+                    'Mahasiswa',
+                    'Alumni'
+                ],
+                true
+            ) &&
+            $identityNumber === ''
+        ) {
+            $errors['nim'] =
+                'NIM wajib diisi.';
+        }
 
+        if (
+            in_array(
+                $applicantType,
+                [
+                    'Dosen',
+                    'Tendik',
+                    'Orang Tua',
+                    'Umum'
+                ],
+                true
+            ) &&
+            $identityNumber === ''
+        ) {
+            $errors['nik'] =
+                'NIK wajib diisi.';
+        }
+
+        if (
+            $applicantType === 'Orang Tua' &&
+            trim(
+                (string) (
+                    $this->request->getPost(
+                        'nim_anak'
+                    ) ?? ''
+                )
+            ) === ''
+        ) {
+            $errors['nim_anak'] =
+                'NIM anak wajib diisi.';
+        }
+
+        if (
+            $applicantType === 'Mitra'
+        ) {
+            $instansi = trim(
+                (string) (
+                    $this->request->getPost(
+                        'instansi'
+                    ) ?? ''
+                )
+            );
+
+            $jabatan = trim(
+                (string) (
+                    $this->request->getPost(
+                        'jabatan'
+                    ) ?? ''
+                )
+            );
+
+            if ($instansi === '') {
+                $errors['instansi'] =
+                    'Instansi wajib diisi.';
+            }
+
+            if ($jabatan === '') {
+                $errors['jabatan'] =
+                    'Jabatan wajib diisi.';
+            }
+        }
+
+        if (!empty($errors)) {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with(
                     'errors',
-                    [
-                        'jenis_layanan' =>
-                            'Tabel layanan tidak ditemukan.'
-                    ]
+                    $errors
                 );
         }
 
-        $serviceBuilder = $this->db
-            ->table('master_services')
-            ->where(
-                'id',
-                $serviceId
-            )
-            ->where(
-                'service_unit_id',
-                $unitId
-            );
+        // =====================================================
+        // CEK SERVICE
+        // =====================================================
 
-        $serviceColumns =
-            $this->db->getFieldNames(
+        $service = null;
+        $serviceName = '';
+
+        /*
+         * Unit Layanan Terpadu (ID 1) tidak mempunyai
+         * jenis layanan. Karena itu service boleh kosong
+         * khusus untuk unit ini.
+         *
+         * Unit lainnya tetap menggunakan validasi service
+         * seperti sebelumnya.
+         */
+        if ($unitId !== 1) {
+
+            if (!$this->db->tableExists(
                 'master_services'
-            );
+            )) {
 
-        if (
-            in_array(
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'errors',
+                        [
+                            'jenis_layanan' =>
+                                'Tabel layanan tidak ditemukan.'
+                        ]
+                    );
+            }
+
+            $serviceColumns =
+                $this->db->getFieldNames(
+                    'master_services'
+                );
+
+            $serviceBuilder =
+                $this->db
+                    ->table('master_services')
+                    ->where(
+                        'id',
+                        $serviceId
+                    );
+
+            if (in_array(
+                'service_unit_id',
+                $serviceColumns,
+                true
+            )) {
+
+                $serviceBuilder->where(
+                    'service_unit_id',
+                    $unitId
+                );
+            }
+
+            if (in_array(
                 'is_active',
                 $serviceColumns,
                 true
-            )
-        ) {
-            $serviceBuilder->where(
-                'is_active',
-                1
-            );
-        }
+            )) {
 
-        if (
-            in_array(
+                $serviceBuilder->where(
+                    'is_active',
+                    1
+                );
+            }
+
+            if (in_array(
                 'deleted_at',
                 $serviceColumns,
                 true
-            )
-        ) {
-            $serviceBuilder->where(
-                'deleted_at IS NULL',
-                null,
-                false
-            );
-        }
+            )) {
 
-        $service = $serviceBuilder
-            ->get()
-            ->getRowArray();
-
-        if (!$service) {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'errors',
-                    [
-                        'jenis_layanan' =>
-                            'Jenis layanan tidak sesuai dengan unit layanan yang dipilih.'
-                    ]
+                $serviceBuilder->where(
+                    'deleted_at IS NULL',
+                    null,
+                    false
                 );
-        }
+            }
 
-        $serviceName =
-            (string) (
-                $service['name'] ?? ''
-            );
+            $service =
+                $serviceBuilder
+                    ->get()
+                    ->getRowArray();
 
-        if ($serviceName === '') {
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'errors',
-                    [
-                        'jenis_layanan' =>
-                            'Nama layanan tidak ditemukan.'
-                    ]
-                );
-        }
-
-        // =====================================================
-        // NOMOR TIKET
-        // =====================================================
-
-        $ticketNumber =
-            'ULT-' .
-            date('YmdHis') .
-            random_int(100, 999);
-
-        // =====================================================
-        // ATTACHMENT
-        // =====================================================
-
-        $attachment = null;
-
-        $file =
-            $this->request
-                ->getFile('attachment');
-
-        if (
-            $file &&
-            $file->isValid() &&
-            !$file->hasMoved()
-        ) {
-
-            $allowed = [
-                'pdf',
-                'jpg',
-                'jpeg',
-                'png'
-            ];
-
-            $ext = strtolower(
-                $file->getExtension()
-            );
-
-            if (
-                !in_array(
-                    $ext,
-                    $allowed,
-                    true
-                )
-            ) {
+            if (!$service) {
 
                 return redirect()
                     ->back()
@@ -1794,16 +2117,19 @@ class GuestReportController extends BaseController
                     ->with(
                         'errors',
                         [
-                            'attachment' =>
-                                'Format file harus PDF, JPG, JPEG atau PNG.'
+                            'jenis_layanan' =>
+                                'Jenis layanan tidak sesuai dengan unit layanan yang dipilih.'
                         ]
                     );
             }
 
-            if (
-                $file->getSize() >
-                5 * 1024 * 1024
-            ) {
+            $serviceName =
+                trim(
+                    (string)
+                    ($service['name'] ?? '')
+                );
+
+            if ($serviceName === '') {
 
                 return redirect()
                     ->back()
@@ -1811,30 +2137,11 @@ class GuestReportController extends BaseController
                     ->with(
                         'errors',
                         [
-                            'attachment' =>
-                                'Ukuran file maksimal 5 MB.'
+                            'jenis_layanan' =>
+                                'Nama layanan tidak ditemukan.'
                         ]
                     );
             }
-
-            $uploadPath =
-                FCPATH . 'uploads';
-
-            if (!is_dir($uploadPath)) {
-                mkdir(
-                    $uploadPath,
-                    0777,
-                    true
-                );
-            }
-
-            $attachment =
-                $file->getRandomName();
-
-            $file->move(
-                $uploadPath,
-                $attachment
-            );
         }
 
         // =====================================================
@@ -1849,28 +2156,264 @@ class GuestReportController extends BaseController
                 $serviceName,
                 $unitId,
                 $serviceId,
-                $attachment
+                null
             );
-
-        /*
-         * Pastikan nama yang berasal dari input frontend3
-         * benar-benar masuk ke formData.
-         */
 
         $formData['applicant_name'] =
             $applicantName;
 
         // =====================================================
-        // TRANSACTION
+        // PERSYARATAN
         // =====================================================
+
+        $requirements =
+            $serviceId === null
+                ? []
+                : $this->getServiceRequirements(
+                    $serviceId
+                );
+
+        $storedFiles = [];
+        $requirementFiles = [];
+
+        /*
+         * Setiap requirement dibaca menggunakan:
+         *
+         * syarat_ID
+         *
+         * Contoh:
+         *
+         * syarat_1
+         * syarat_2
+         *
+         * Ini mendukung 2, 3, 4, dst. lampiran.
+         */
 
         try {
 
-            $this->db->transBegin();
+           foreach ($requirements as $requirement) {
+
+    $requirementId = (int) ($requirement['id'] ?? 0);
+
+    if ($requirementId <= 0) {
+        continue;
+    }
+
+    $fieldName = 'syarat_' . $requirementId;
+
+    /*
+     * Ambil multiple file.
+     * Frontend baru:
+     * name="syarat_ID[]"
+     *
+     * Backend tetap fallback ke file tunggal
+     * supaya form lama tidak rusak.
+     */
+    $files = $this->request->getFileMultiple($fieldName);
+
+    if (empty($files)) {
+        $singleFile = $this->request->getFile($fieldName);
+
+        if ($singleFile) {
+            $files = [$singleFile];
+        }
+    }
+
+    /*
+     * Fallback untuk form lama:
+     * requirement_ID
+     */
+    if (empty($files)) {
+
+        $oldFieldName = 'requirement_' . $requirementId;
+
+        $files = $this->request->getFileMultiple($oldFieldName);
+
+        if (empty($files)) {
+            $singleFile = $this->request->getFile($oldFieldName);
+
+            if ($singleFile) {
+                $files = [$singleFile];
+            }
+        }
+    }
+
+    $validFiles = [];
+
+    foreach ($files as $file) {
+
+        if (
+            $file &&
+            $file->isValid() &&
+            !$file->hasMoved()
+        ) {
+            $validFiles[] = $file;
+        }
+    }
+
+    $isRequired =
+        (int) ($requirement['is_required'] ?? 0) === 1;
+
+    /*
+     * Kalau requirement wajib tetapi tidak ada
+     * file sama sekali.
+     */
+    if (empty($validFiles)) {
+
+        if ($isRequired) {
+
+            throw new \RuntimeException(
+                'Dokumen wajib "' .
+                (
+                    $requirement['name']
+                    ?? 'Persyaratan'
+                ) .
+                '" belum diunggah.'
+            );
+        }
+
+        continue;
+    }
+
+    /*
+     * Simpan SEMUA file yang diupload.
+     */
+    foreach ($validFiles as $file) {
+
+        $uploaded =
+            $this->uploadAttachmentFile(
+                $file,
+                $requirement
+            );
+
+        $storedFiles[] = $uploaded;
+
+        $requirementFiles[] = [
+
+            'requirement_id' =>
+                $requirementId,
+
+            'requirement_name' =>
+                $requirement['name']
+                ??
+                'Persyaratan',
+
+            'original_name' =>
+                $uploaded['original_name'],
+
+            'file_name' =>
+                $uploaded['file_name'],
+
+            'file_path' =>
+                $uploaded['file_path'],
+
+            'file_extension' =>
+                $uploaded['file_extension'],
+
+            'mime_type' =>
+                $uploaded['mime_type'],
+
+            'file_size' =>
+                $uploaded['file_size'],
+        ];
+    }
+}
 
             // =================================================
-            // USER PROFILE
+            // LAMPIRAN TAMBAHAN
             // =================================================
+
+            $genericFile =
+                $this->request
+                    ->getFile(
+                        'attachment'
+                    );
+
+            if (
+                $genericFile &&
+                $genericFile->isValid() &&
+                !$genericFile->hasMoved()
+            ) {
+
+                $uploaded =
+                    $this->uploadAttachmentFile(
+                        $genericFile,
+                        [
+                            'name' =>
+                                'Lampiran Tambahan',
+
+                            'allowed_extensions' =>
+                                null,
+
+                            'max_file_size' =>
+                                5,
+                        ]
+                    );
+
+                $storedFiles[] =
+                    $uploaded;
+
+                $requirementFiles[] = [
+
+                    'requirement_id' =>
+                        null,
+
+                    'requirement_name' =>
+                        'Lampiran Tambahan',
+
+                    'original_name' =>
+                        $uploaded[
+                            'original_name'
+                        ],
+
+                    'file_name' =>
+                        $uploaded[
+                            'file_name'
+                        ],
+
+                    'file_path' =>
+                        $uploaded[
+                            'file_path'
+                        ],
+
+                    'file_extension' =>
+                        $uploaded[
+                            'file_extension'
+                        ],
+
+                    'mime_type' =>
+                        $uploaded[
+                            'mime_type'
+                        ],
+
+                    'file_size' =>
+                        $uploaded[
+                            'file_size'
+                        ],
+                ];
+            }
+
+            // =====================================================
+            // NOMOR TIKET
+            // =====================================================
+
+            $ticketNumber =
+                'ULT-' .
+                date('YmdHis') .
+                random_int(100, 999);
+
+            $now =
+                date('Y-m-d H:i:s');
+
+            // =====================================================
+            // TRANSACTION
+            // =====================================================
+
+            $this->db->transBegin();
+
+            // =====================================================
+            // USER PROFILE
+            // =====================================================
 
             $userProfileId =
                 $this->getOrCreateUserProfileId(
@@ -1885,13 +2428,195 @@ class GuestReportController extends BaseController
                 );
             }
 
-            // =================================================
-            // DATA TIKET
-            // HANYA KOLOM YANG ADA DI tickets
-            // =================================================
+            // =====================================================
+            // SERVICE REQUEST
+            //
+            // PENTING:
+            // service_request_files membutuhkan
+            // service_request_id.
+            // =====================================================
 
-            $now =
-                date('Y-m-d H:i:s');
+            $serviceRequestId = null;
+
+            if (
+                $this->db->tableExists(
+                    'service_requests'
+                )
+            ) {
+
+                $serviceRequestColumns =
+                    $this->db->getFieldNames(
+                        'service_requests'
+                    );
+
+                $serviceRequestData = [];
+
+                if (in_array(
+                    'ticket_number',
+                    $serviceRequestColumns,
+                    true
+                )) {
+                    $serviceRequestData[
+                        'ticket_number'
+                    ] = $ticketNumber;
+                }
+
+                if (in_array(
+                    'user_profile_id',
+                    $serviceRequestColumns,
+                    true
+                )) {
+                    $serviceRequestData[
+                        'user_profile_id'
+                    ] = $userProfileId;
+                }
+
+                if (in_array(
+                    'service_id',
+                    $serviceRequestColumns,
+                    true
+                )) {
+                    $serviceRequestData[
+                        'service_id'
+                    ] = $serviceId;
+                }
+
+                if (in_array(
+                    'unit_id',
+                    $serviceRequestColumns,
+                    true
+                )) {
+                    $serviceRequestData[
+                        'unit_id'
+                    ] = $unitId;
+                }
+
+                if (in_array(
+                    'title',
+                    $serviceRequestColumns,
+                    true
+                )) {
+                    $serviceRequestData[
+                        'title'
+                    ] = $serviceName;
+                }
+
+                if (in_array(
+                    'description',
+                    $serviceRequestColumns,
+                    true
+                )) {
+                    $serviceRequestData[
+                        'description'
+                    ] = $ticketDescription;
+                }
+
+                if (in_array(
+                    'status',
+                    $serviceRequestColumns,
+                    true
+                )) {
+                    $serviceRequestData[
+                        'status'
+                    ] = 'submitted';
+                }
+
+                if (in_array(
+                    'priority',
+                    $serviceRequestColumns,
+                    true
+                )) {
+                    $serviceRequestData[
+                        'priority'
+                    ] = 'normal';
+                }
+
+                if (in_array(
+                    'submitted_at',
+                    $serviceRequestColumns,
+                    true
+                )) {
+                    $serviceRequestData[
+                        'submitted_at'
+                    ] = $now;
+                }
+
+                if (in_array(
+                    'created_at',
+                    $serviceRequestColumns,
+                    true
+                )) {
+                    $serviceRequestData[
+                        'created_at'
+                    ] = $now;
+                }
+
+                if (in_array(
+                    'updated_at',
+                    $serviceRequestColumns,
+                    true
+                )) {
+                    $serviceRequestData[
+                        'updated_at'
+                    ] = $now;
+                }
+
+                if (
+                    !$this->db
+                        ->table(
+                            'service_requests'
+                        )
+                        ->insert(
+                            $serviceRequestData
+                        )
+                ) {
+
+                    $error =
+                        $this->db->error();
+
+                    throw new \RuntimeException(
+                        'Service request gagal disimpan: ' .
+                        (
+                            $error['message']
+                            ??
+                            'Unknown database error'
+                        )
+                    );
+                }
+
+                $serviceRequestId =
+                    (int)
+                    $this->db->insertID();
+
+                if (
+                    $serviceRequestId <= 0
+                ) {
+
+                    throw new \RuntimeException(
+                        'ID service request gagal diperoleh.'
+                    );
+                }
+            }
+
+            /*
+             * Kalau ada lampiran tetapi tabel
+             * service_requests tidak tersedia,
+             * jangan lanjut karena file tidak akan
+             * mempunyai parent.
+             */
+            if (
+                !empty($requirementFiles) &&
+                $serviceRequestId <= 0
+            ) {
+
+                throw new \RuntimeException(
+                    'Lampiran tidak dapat disimpan karena service_requests tidak tersedia.'
+                );
+            }
+
+            // =====================================================
+            // TICKET
+            // =====================================================
 
             $ticketData = [
 
@@ -1903,6 +2628,9 @@ class GuestReportController extends BaseController
 
                 'service_id' =>
                     $serviceId,
+
+                'unit_id' =>
+                    $unitId,
 
                 'title' =>
                     $serviceName,
@@ -1926,10 +2654,6 @@ class GuestReportController extends BaseController
                     $now,
             ];
 
-            // =================================================
-            // INSERT TICKET
-            // =================================================
-
             $inserted =
                 $this->ticketModel
                     ->insert(
@@ -1939,7 +2663,8 @@ class GuestReportController extends BaseController
             if (!$inserted) {
 
                 $modelErrors =
-                    $this->ticketModel->errors();
+                    $this->ticketModel
+                        ->errors();
 
                 throw new \RuntimeException(
                     !empty($modelErrors)
@@ -1951,9 +2676,120 @@ class GuestReportController extends BaseController
                 );
             }
 
-            // =================================================
+            $ticketId =
+                (int)
+                $this->ticketModel
+                    ->getInsertID();
+
+            if ($ticketId <= 0) {
+
+                throw new \RuntimeException(
+                    'ID tiket gagal diperoleh setelah penyimpanan.'
+                );
+            }
+
+            // =====================================================
+            // SIMPAN SEMUA ATTACHMENT
+            // =====================================================
+
+            foreach (
+                $requirementFiles
+                as $attachment
+            ) {
+
+                $attachmentData = [
+
+                    'service_request_id' =>
+                        $serviceRequestId,
+
+                    'requirement_id' =>
+                        $attachment[
+                            'requirement_id'
+                        ],
+
+                    'original_name' =>
+                        $attachment[
+                            'original_name'
+                        ],
+
+                    'file_name' =>
+                        $attachment[
+                            'file_name'
+                        ],
+
+                    'file_path' =>
+                        $attachment[
+                            'file_path'
+                        ],
+
+                    'file_extension' =>
+                        $attachment[
+                            'file_extension'
+                        ],
+
+                    'mime_type' =>
+                        $attachment[
+                            'mime_type'
+                        ],
+
+                    'file_size' =>
+                        $attachment[
+                            'file_size'
+                        ],
+
+                    'is_verified' =>
+                        0,
+
+                    'verified_by' =>
+                        null,
+
+                    'verified_at' =>
+                        null,
+
+                    'notes' =>
+                        null,
+
+                    'created_at' =>
+                        $now,
+
+                    'updated_at' =>
+                        $now,
+                ];
+
+                /*
+                 * Jangan menggunakan:
+                 *
+                 * ticket_id
+                 *
+                 * karena kolom tersebut memang
+                 * tidak ada di service_request_files.
+                 */
+
+                if (
+                    !$this->ticketAttachmentModel
+                        ->insert(
+                            $attachmentData
+                        )
+                ) {
+
+                    $attachmentErrors =
+                        $this->ticketAttachmentModel
+                            ->errors();
+
+                    throw new \RuntimeException(
+                        !empty($attachmentErrors)
+                            ? implode(
+                                ', ',
+                                $attachmentErrors
+                            )
+                            : 'Data lampiran gagal disimpan.'
+                    );
+                }
+            }
+
+            // =====================================================
             // CEK TRANSAKSI
-            // =================================================
+            // =====================================================
 
             if (
                 $this->db->transStatus() === false
@@ -1966,39 +2802,98 @@ class GuestReportController extends BaseController
 
             $this->db->transCommit();
 
-            $staffUsers = $this->db->table('users')
-    ->select('users.id')
-    ->join('roles', 'roles.id = users.role_id')
-    ->where('users.is_active', 1)
-    ->whereIn('roles.code', [
-        'SUPER_ADMIN',
-        'ADMIN_ULT',
-        'PETUGAS_AKADEMIK',
-        'PETUGAS_KEUANGAN',
-        'PETUGAS_UMUM'
-    ])
-    ->get()
-    ->getResultArray();
+            // =====================================================
+            // NOTIFIKASI PETUGAS
+            // =====================================================
 
-foreach ($staffUsers as $staff) {
-    $this->notificationModel->insert([
-        'user_id'            => (int) $staff['id'],
-        'service_request_id' => null,
-        'title'              => 'Tiket Walk In Baru',
-        'message'            => 'Tiket ' . $ticketNumber . ' dari ' . $applicantName . ' telah masuk melalui Laporan Tamu.',
-        'type'               => 'info',
-        'is_read'            => 0,
-        'read_at'            => null,
-        'url'                => base_url('datatiket'),
-        'created_at'         => $now,
-        'updated_at'         => $now,
-        'deleted_at'         => null
-    ]);
-}
+            $staffUsers =
+                $this->db
+                    ->table('users')
+                    ->select('users.id')
+                    ->join(
+                        'roles',
+                        'roles.id = users.role_id'
+                    )
+                    ->where(
+                        'users.is_active',
+                        1
+                    )
+                    ->whereIn(
+                        'roles.code',
+                        [
+                            'SUPER_ADMIN',
+                            'ADMIN_ULT',
+                            'PETUGAS_AKADEMIK',
+                            'PETUGAS_KEUANGAN',
+                            'PETUGAS_UMUM'
+                        ]
+                    )
+                    ->get()
+                    ->getResultArray();
+
+            foreach (
+                $staffUsers
+                as $staff
+            ) {
+
+                $notificationData = [
+
+                    'user_id' =>
+                        (int)
+                        $staff['id'],
+
+                    'service_request_id' =>
+                        $serviceRequestId > 0
+                            ? $serviceRequestId
+                            : null,
+
+                    'title' =>
+                        'Tiket Walk In Baru',
+
+                    'message' =>
+                        'Tiket ' .
+                        $ticketNumber .
+                        ' dari ' .
+                        $applicantName .
+                        ' telah masuk melalui Laporan Tamu.',
+
+                    'type' =>
+                        'info',
+
+                    'is_read' =>
+                        0,
+
+                    'read_at' =>
+                        null,
+
+                    'url' =>
+                        base_url(
+                            'datatiket'
+                        ),
+
+                    'created_at' =>
+                        $now,
+
+                    'updated_at' =>
+                        $now,
+
+                    'deleted_at' =>
+                        null
+                ];
+
+                $this->notificationModel
+                    ->insert(
+                        $notificationData
+                    );
+            }
 
         } catch (\Throwable $e) {
 
             $this->db->transRollback();
+
+            $this->cleanupUploadedFiles(
+                $storedFiles
+            );
 
             log_message(
                 'error',
@@ -2019,13 +2914,11 @@ foreach ($staffUsers as $staff) {
                 );
         }
 
-        // =====================================================
-        // BERHASIL
-        // =====================================================
-
         return redirect()
             ->to(
-                base_url('guest-report')
+                base_url(
+                    'guest-report'
+                )
             )
             ->with(
                 'success',
@@ -2042,10 +2935,61 @@ foreach ($staffUsers as $staff) {
         $ticket =
             $this->getPreparedTicket($id);
 
+        $attachments = [];
+
+        /*
+         * Cari service_request berdasarkan
+         * ticket_number, bukan tickets.id.
+         */
+        if (
+            $this->db->tableExists(
+                'service_requests'
+            ) &&
+            $this->db->tableExists(
+                'service_request_files'
+            )
+        ) {
+
+            $serviceRequest =
+                $this->db
+                    ->table(
+                        'service_requests'
+                    )
+                    ->select('id')
+                    ->where(
+                        'ticket_number',
+                        $ticket[
+                            'ticket_number'
+                        ] ?? ''
+                    )
+                    ->get()
+                    ->getRowArray();
+
+            if ($serviceRequest) {
+
+                $attachments =
+                    $this->ticketAttachmentModel
+                        ->where(
+                            'service_request_id',
+                            (int)
+                            $serviceRequest['id']
+                        )
+                        ->orderBy(
+                            'id',
+                            'ASC'
+                        )
+                        ->findAll();
+            }
+        }
+
         return view(
             'guest_report/detail',
             [
-                'ticket' => $ticket
+                'ticket' =>
+                    $ticket,
+
+                'attachments' =>
+                    $attachments,
             ]
         );
     }
@@ -2078,7 +3022,9 @@ foreach ($staffUsers as $staff) {
 
         $profileId =
             (int) (
-                $ticket['user_profile_id'] ?? 0
+                $ticket[
+                    'user_profile_id'
+                ] ?? 0
             );
 
         if ($profileId <= 0) {
@@ -2095,20 +3041,17 @@ foreach ($staffUsers as $staff) {
                 );
         }
 
-        // =====================================================
-        // DATA POST
-        // =====================================================
-
         $applicantName =
             trim(
-                (string)
-                (
+                (string) (
                     $this->request
                         ->getPost(
                             'applicant_name'
                         )
                     ?: $this->request
-                        ->getPost('nama')
+                        ->getPost(
+                            'nama'
+                        )
                 )
             );
 
@@ -2116,17 +3059,22 @@ foreach ($staffUsers as $staff) {
             trim(
                 (string)
                 $this->request
-                    ->getPost('email')
+                    ->getPost(
+                        'email'
+                    )
             );
 
         $phone =
             trim(
-                (string)
-                (
+                (string) (
                     $this->request
-                        ->getPost('phone')
+                        ->getPost(
+                            'phone'
+                        )
                     ?: $this->request
-                        ->getPost('hp')
+                        ->getPost(
+                            'hp'
+                        )
                 )
             );
 
@@ -2134,14 +3082,32 @@ foreach ($staffUsers as $staff) {
             trim(
                 (string)
                 $this->request
-                    ->getPost('nim')
+                    ->getPost(
+                        'nim'
+                    )
             );
 
         $nik =
             trim(
                 (string)
                 $this->request
-                    ->getPost('nik')
+                    ->getPost(
+                        'nik'
+                    )
+            );
+
+        $institutionName =
+            trim(
+                (string) (
+                    $this->request
+                        ->getPost(
+                            'instansi'
+                        )
+                    ?: $this->request
+                        ->getPost(
+                            'institution_name'
+                        )
+                )
             );
 
         $ticketTitle =
@@ -2162,89 +3128,193 @@ foreach ($staffUsers as $staff) {
                     )
             );
 
-        // =====================================================
-        // SERVICE
-        // =====================================================
-
-        $serviceId =
+        $unitId =
             (int) (
                 $this->request
                     ->getPost(
-                        'service_id'
+                        'unit_id'
                     )
                 ?: (
-                    $ticket['service_id'] ?? 0
+                    $ticket[
+                        'unit_id'
+                    ] ?? 0
                 )
             );
 
+        $currentServiceId =
+            (int) (
+                $ticket[
+                    'service_id'
+                ] ?? 0
+            );
+
+        $serviceId = null;
         $service = null;
 
-        if ($serviceId > 0) {
+        /*
+         * UNIT LAYANAN TERPADU
+         * Tidak memiliki master_services.
+         */
+        if ($unitId === 1) {
 
-            $serviceBuilder =
-                $this->db
-                    ->table('master_services')
-                    ->where(
-                        'id',
-                        $serviceId
+            $serviceId = null;
+
+        } elseif ($unitId > 1) {
+
+            /*
+             * Jika unit yang dipilih sama dengan unit layanan
+             * dari service lama, pertahankan service lama.
+             */
+            if ($currentServiceId > 0) {
+
+                $currentServiceBuilder =
+                    $this->db
+                        ->table(
+                            'master_services'
+                        )
+                        ->where(
+                            'id',
+                            $currentServiceId
+                        )
+                        ->where(
+                            'service_unit_id',
+                            $unitId
+                        );
+
+                $currentServiceColumns =
+                    $this->db
+                        ->getFieldNames(
+                            'master_services'
+                        );
+
+                if (
+                    in_array(
+                        'is_active',
+                        $currentServiceColumns,
+                        true
+                    )
+                ) {
+
+                    $currentServiceBuilder->where(
+                        'is_active',
+                        1
                     );
+                }
 
-            $serviceColumns =
-                $this->db->getFieldNames(
-                    'master_services'
-                );
+                if (
+                    in_array(
+                        'deleted_at',
+                        $currentServiceColumns,
+                        true
+                    )
+                ) {
 
-            if (
-                in_array(
-                    'is_active',
-                    $serviceColumns,
-                    true
-                )
-            ) {
-                $serviceBuilder->where(
-                    'is_active',
-                    1
-                );
+                    $currentServiceBuilder->where(
+                        'deleted_at IS NULL',
+                        null,
+                        false
+                    );
+                }
+
+                $service =
+                    $currentServiceBuilder
+                        ->get()
+                        ->getRowArray();
+
+                if (!empty($service)) {
+
+                    $serviceId =
+                        $currentServiceId;
+                }
             }
 
-            if (
-                in_array(
-                    'deleted_at',
-                    $serviceColumns,
-                    true
-                )
-            ) {
-                $serviceBuilder->where(
-                    'deleted_at IS NULL',
-                    null,
-                    false
-                );
-            }
+            /*
+             * Jika service lama tidak sesuai dengan unit baru,
+             * ambil service aktif pertama dari unit tersebut.
+             */
+            if ($serviceId === null) {
 
-            $service =
-                $serviceBuilder
-                    ->get()
-                    ->getRowArray();
+                $serviceBuilder =
+                    $this->db
+                        ->table(
+                            'master_services'
+                        )
+                        ->where(
+                            'service_unit_id',
+                            $unitId
+                        );
+
+                $serviceColumns =
+                    $this->db
+                        ->getFieldNames(
+                            'master_services'
+                        );
+
+                if (
+                    in_array(
+                        'is_active',
+                        $serviceColumns,
+                        true
+                    )
+                ) {
+
+                    $serviceBuilder->where(
+                        'is_active',
+                        1
+                    );
+                }
+
+                if (
+                    in_array(
+                        'deleted_at',
+                        $serviceColumns,
+                        true
+                    )
+                ) {
+
+                    $serviceBuilder->where(
+                        'deleted_at IS NULL',
+                        null,
+                        false
+                    );
+                }
+
+                $service =
+                    $serviceBuilder
+                        ->orderBy(
+                            'sort_order',
+                            'ASC'
+                        )
+                        ->orderBy(
+                            'id',
+                            'ASC'
+                        )
+                        ->get()
+                        ->getRowArray();
+
+                if (!empty($service)) {
+
+                    $serviceId =
+                        (int) $service['id'];
+                }
+            }
         }
-
-        // =====================================================
-        // TRANSACTION
-        // =====================================================
 
         $this->db->transBegin();
 
         try {
 
             // =================================================
-            // UPDATE USER PROFILE
+            // UPDATE PROFILE
             // =================================================
 
             $profileData = [];
 
             $profileColumns =
-                $this->db->getFieldNames(
-                    'user_profiles'
-                );
+                $this->db
+                    ->getFieldNames(
+                        'user_profiles'
+                    );
 
             if (
                 $applicantName !== '' &&
@@ -2268,8 +3338,9 @@ foreach ($staffUsers as $staff) {
                 )
             ) {
 
-                $profileData['student_name'] =
-                    $applicantName;
+                $profileData[
+                    'student_name'
+                ] = $applicantName;
             }
 
             if (
@@ -2325,6 +3396,20 @@ foreach ($staffUsers as $staff) {
             }
 
             if (
+                $institutionName !== '' &&
+                in_array(
+                    'institution_name',
+                    $profileColumns,
+                    true
+                )
+            ) {
+
+                $profileData[
+                    'institution_name'
+                ] = $institutionName;
+            }
+
+            if (
                 in_array(
                     'updated_at',
                     $profileColumns,
@@ -2332,14 +3417,20 @@ foreach ($staffUsers as $staff) {
                 )
             ) {
 
-                $profileData['updated_at'] =
-                    date('Y-m-d H:i:s');
+                $profileData[
+                    'updated_at'
+                ] =
+                    date(
+                        'Y-m-d H:i:s'
+                    );
             }
 
             if (!empty($profileData)) {
 
                 $this->db
-                    ->table('user_profiles')
+                    ->table(
+                        'user_profiles'
+                    )
                     ->where(
                         'id',
                         $profileId
@@ -2356,13 +3447,12 @@ foreach ($staffUsers as $staff) {
             $ticketUpdate = [];
 
             $ticketColumns =
-                $this->db->getFieldNames(
-                    'tickets'
-                );
+                $this->db
+                    ->getFieldNames(
+                        'tickets'
+                    );
 
             if (
-                $serviceId > 0 &&
-                $service &&
                 in_array(
                     'service_id',
                     $ticketColumns,
@@ -2370,8 +3460,23 @@ foreach ($staffUsers as $staff) {
                 )
             ) {
 
-                $ticketUpdate['service_id'] =
-                    $serviceId;
+                $ticketUpdate[
+                    'service_id'
+                ] = $serviceId;
+            }
+
+            if (
+                $unitId > 0 &&
+                in_array(
+                    'unit_id',
+                    $ticketColumns,
+                    true
+                )
+            ) {
+
+                $ticketUpdate[
+                    'unit_id'
+                ] = $unitId;
             }
 
             if (
@@ -2383,8 +3488,9 @@ foreach ($staffUsers as $staff) {
                 )
             ) {
 
-                $ticketUpdate['title'] =
-                    $ticketTitle;
+                $ticketUpdate[
+                    'title'
+                ] = $ticketTitle;
             }
 
             if (
@@ -2396,8 +3502,9 @@ foreach ($staffUsers as $staff) {
                 )
             ) {
 
-                $ticketUpdate['description'] =
-                    $ticketDescription;
+                $ticketUpdate[
+                    'description'
+                ] = $ticketDescription;
             }
 
             if (
@@ -2408,20 +3515,13 @@ foreach ($staffUsers as $staff) {
                 )
             ) {
 
-                $ticketUpdate['updated_at'] =
-                    date('Y-m-d H:i:s');
+                $ticketUpdate[
+                    'updated_at'
+                ] =
+                    date(
+                        'Y-m-d H:i:s'
+                    );
             }
-
-            /*
-             * PENTING:
-             *
-             * Jangan update:
-             * attachment
-             * form_data
-             *
-             * karena kolom tersebut tidak ada
-             * di tabel tickets saat ini.
-             */
 
             if (!empty($ticketUpdate)) {
 
@@ -2434,7 +3534,8 @@ foreach ($staffUsers as $staff) {
                 ) {
 
                     $errors =
-                        $this->ticketModel->errors();
+                        $this->ticketModel
+                            ->errors();
 
                     throw new \RuntimeException(
                         !empty($errors)
@@ -2446,10 +3547,6 @@ foreach ($staffUsers as $staff) {
                     );
                 }
             }
-
-            // =================================================
-            // CEK TRANSAKSI
-            // =================================================
 
             if (
                 $this->db->transStatus() === false
@@ -2487,7 +3584,9 @@ foreach ($staffUsers as $staff) {
 
         return redirect()
             ->to(
-                base_url('guest-report')
+                base_url(
+                    'guest-report'
+                )
             )
             ->with(
                 'success',
@@ -2505,17 +3604,15 @@ foreach ($staffUsers as $staff) {
 
             return redirect()
                 ->to(
-                    base_url('guest-report')
+                    base_url(
+                        'guest-report'
+                    )
                 )
                 ->with(
                     'error',
                     'ID tiket tidak ditemukan.'
                 );
         }
-
-        // =====================================================
-        // CARI TIKET
-        // =====================================================
 
         $ticket =
             $this->ticketModel
@@ -2525,7 +3622,9 @@ foreach ($staffUsers as $staff) {
 
             return redirect()
                 ->to(
-                    base_url('guest-report')
+                    base_url(
+                        'guest-report'
+                    )
                 )
                 ->with(
                     'error',
@@ -2535,39 +3634,201 @@ foreach ($staffUsers as $staff) {
                 );
         }
 
-        // =====================================================
-        // HAPUS TIKET
-        // =====================================================
-
         /*
-         * TicketModel menggunakan soft delete.
-         *
-         * Karena tabel tickets mempunyai deleted_at,
-         * delete() akan menggunakan soft delete.
+         * Cari service_request berdasarkan
+         * ticket_number.
          */
+        $serviceRequest = null;
 
         if (
-            $this->ticketModel
-                ->delete($id)
+            $this->db->tableExists(
+                'service_requests'
+            )
         ) {
+
+            $serviceRequest =
+                $this->db
+                    ->table(
+                        'service_requests'
+                    )
+                    ->select('id')
+                    ->where(
+                        'ticket_number',
+                        $ticket[
+                            'ticket_number'
+                        ] ?? ''
+                    )
+                    ->get()
+                    ->getRowArray();
+        }
+
+        $attachments = [];
+
+        if (
+            $serviceRequest &&
+            $this->db->tableExists(
+                'service_request_files'
+            )
+        ) {
+
+            $attachments =
+                $this->ticketAttachmentModel
+                    ->where(
+                        'service_request_id',
+                        (int)
+                        $serviceRequest['id']
+                    )
+                    ->findAll();
+        }
+
+        $this->db->transBegin();
+
+        try {
+
+            // =================================================
+            // HAPUS FILE DATABASE
+            // =================================================
+
+            if (
+                $serviceRequest &&
+                !empty($attachments)
+            ) {
+
+                $deleted =
+                    $this->ticketAttachmentModel
+                        ->where(
+                            'service_request_id',
+                            (int)
+                            $serviceRequest['id']
+                        )
+                        ->delete();
+
+                if (!$deleted) {
+
+                    throw new \RuntimeException(
+                        'Data lampiran gagal dihapus.'
+                    );
+                }
+            }
+
+            // =================================================
+            // HAPUS SERVICE REQUEST
+            // =================================================
+
+            if (
+                $serviceRequest &&
+                $this->db->tableExists(
+                    'service_requests'
+                )
+            ) {
+
+                $this->db
+                    ->table(
+                        'service_requests'
+                    )
+                    ->where(
+                        'id',
+                        (int)
+                        $serviceRequest['id']
+                    )
+                    ->delete();
+            }
+
+            // =================================================
+            // HAPUS TICKET
+            // =================================================
+
+            if (
+                !$this->ticketModel
+                    ->delete($id, true)
+            ) {
+
+                throw new \RuntimeException(
+                    'Data tiket gagal dihapus.'
+                );
+            }
+
+            if (
+                $this->db->transStatus() === false
+            ) {
+
+                throw new \RuntimeException(
+                    'Transaksi penghapusan gagal.'
+                );
+            }
+
+            $this->db->transCommit();
+
+            // =================================================
+            // HAPUS FILE FISIK
+            // =================================================
+
+            foreach (
+                $attachments as $attachment
+            ) {
+
+                $filePath =
+                    (string) (
+                        $attachment[
+                            'file_path'
+                        ] ?? ''
+                    );
+
+                if ($filePath === '') {
+                    continue;
+                }
+
+                $physicalPath =
+                    FCPATH .
+                    ltrim(
+                        $filePath,
+                        '/\\'
+                    );
+
+                if (
+                    is_file(
+                        $physicalPath
+                    )
+                ) {
+
+                    @unlink(
+                        $physicalPath
+                    );
+                }
+            }
 
             return redirect()
                 ->to(
-                    base_url('guest-report')
+                    base_url(
+                        'guest-report'
+                    )
                 )
                 ->with(
                     'success',
                     'Laporan tamu berhasil dihapus.'
                 );
-        }
 
-        return redirect()
-            ->to(
-                base_url('guest-report')
-            )
-            ->with(
+        } catch (\Throwable $e) {
+
+            $this->db->transRollback();
+
+            log_message(
                 'error',
-                'Gagal menghapus laporan tamu.'
+                'GuestReport delete error: ' .
+                $e->getMessage()
             );
+
+            return redirect()
+                ->to(
+                    base_url(
+                        'guest-report'
+                    )
+                )
+                ->with(
+                    'error',
+                    'Gagal menghapus laporan tamu: ' .
+                    $e->getMessage()
+                );
+        }
     }
 }

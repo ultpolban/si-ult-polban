@@ -15,6 +15,7 @@ class TicketModel extends Model
         'ticket_number',
         'user_profile_id',
         'service_id',
+        'unit_id',
         'title',
         'description',
         'status',

@@ -31,15 +31,19 @@ class VerificationController extends BaseController
                 t.priority,
                 t.submitted_at,
                 t.created_at,
+                t.unit_id,
                 ms.name AS service_name,
                 ms.service_unit_id,
-                msu.name AS unit_name,
+                COALESCE(msu.name, unit_direct.name) AS unit_name,
+                master_service_categories.name AS category_name,
+                COUNT(service_request_files.id) AS jumlah_lampiran,
                 up.name AS applicant_name,
+                up.student_name,
                 up.nim,
                 up.nik,
                 up.email,
                 up.phone
-            ')
+            ', false)
             ->join(
                 'master_services ms',
                 'ms.id = t.service_id',
@@ -51,17 +55,73 @@ class VerificationController extends BaseController
                 'left'
             )
             ->join(
+                'master_service_units unit_direct',
+                'unit_direct.id = t.unit_id',
+                'left'
+            )
+            ->join(
                 'user_profiles up',
                 'up.id = t.user_profile_id',
                 'left'
             )
-            ->where('t.status', 'submitted')
+            ->join(
+                'master_service_categories',
+                'master_service_categories.id = ms.service_category_id',
+                'left'
+            )
+            ->join(
+                'service_requests',
+                'service_requests.ticket_number = t.ticket_number',
+                'left'
+            )
+            ->join(
+                'service_request_files',
+                'service_request_files.service_request_id = service_requests.id',
+                'left'
+            )
+            ->where('LOWER(t.status)', 'submitted')
+            ->groupBy('t.id')
             ->orderBy('t.submitted_at', 'DESC')
             ->get()
             ->getResultArray();
 
+        foreach ($tickets as &$ticket) {
+            $ticket['nomor_tiket'] = $ticket['ticket_number'] ?? '-';
+
+            $ticket['nama_pemohon'] =
+                $ticket['applicant_name']
+                ?? $ticket['student_name']
+                ?? $ticket['name']
+                ?? '-';
+
+            $ticket['layanan'] =
+                !empty($ticket['service_name'])
+                    ? $ticket['service_name']
+                    : ((int) ($ticket['unit_id'] ?? 0) === 1
+                        ? 'Unit Layanan Terpadu'
+                        : '-');
+
+            $ticket['unit_layanan'] =
+                $ticket['unit_name'] ?? '-';
+
+            $ticket['kategori'] =
+                $ticket['category_name'] ?? '-';
+
+            $ticket['jumlah_lampiran'] =
+                (int) ($ticket['jumlah_lampiran'] ?? 0);
+
+            $ticket['status'] =
+                strtolower(trim($ticket['status'] ?? ''));
+
+            $ticket['created_at'] =
+                $ticket['submitted_at']
+                ?? $ticket['created_at']
+                ?? null;
+        }
+        unset($ticket);
+
         return view('verification/index', [
-            'tickets' => $tickets
+            'tiket_list' => $tickets
         ]);
     }
 

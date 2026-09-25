@@ -7,10 +7,12 @@ use App\Models\TicketModel;
 class DataTicketController extends BaseController
 {
     protected $ticketModel;
+    protected $db;
 
     public function __construct()
     {
         $this->ticketModel = new TicketModel();
+        $this->db = \Config\Database::connect();
     }
 
     /**
@@ -29,10 +31,10 @@ class DataTicketController extends BaseController
             ?? ''
         ));
 
-        $status = trim((string) (
+        $status = strtolower(trim((string) (
             $this->request->getGet('status')
             ?? ''
-        ));
+        )));
 
         $category = trim((string) (
             $this->request->getGet('kategori')
@@ -61,6 +63,7 @@ class DataTicketController extends BaseController
                 ->groupStart()
                     ->like('tickets.ticket_number', $keyword)
                     ->orLike('user_profiles.name', $keyword)
+                    ->orLike('user_profiles.student_name', $keyword)
                     ->orLike('user_profiles.nim', $keyword)
                     ->orLike('user_profiles.nik', $keyword)
                     ->orLike('master_services.name', $keyword)
@@ -69,149 +72,121 @@ class DataTicketController extends BaseController
 
         // FILTER STATUS
         if ($status !== '') {
-            $builder->where('tickets.status', $status);
+            $builder->where(
+                'LOWER(tickets.status)',
+                $status
+            );
         }
-
-        // FILTER KATEGORI
-        // Belum digunakan karena kategori belum tersedia
-        // langsung pada query backend3.
 
         // ========================================================
         // DATA TIKET
         // ========================================================
         $tickets = $builder
             ->orderBy('tickets.submitted_at', 'DESC')
-            ->paginate($perPage, 'datatiket');
+            ->get()
+            ->getResultArray();
+
+        log_message('error', 'DEBUG TICKET: ' . print_r($tickets, true));
 
         // ========================================================
-        // MAPPING BACKEND3 → FRONTEND3
+        // MAPPING BACKEND → FRONTEND
         // ========================================================
-      foreach ($tickets as &$ticket) {
+        foreach ($tickets as &$ticket) {
 
-    // Nomor tiket
-    $ticket['nomor_tiket'] =
-        $ticket['ticket_number']
-        ?? '-';
+            $ticket['nomor_tiket'] =
+                $ticket['ticket_number']
+                ?? '-';
 
-    // Nama pemohon
-    $ticket['nama_pemohon'] =
-        $ticket['applicant_name']
-        ?? $ticket['student_name']
-        ?? $ticket['name']
-        ?? '-';
+            $ticket['nama_pemohon'] =
+                $ticket['applicant_name']
+                ?? $ticket['student_name']
+                ?? $ticket['name']
+                ?? '-';
 
-    // Layanan
-    $ticket['layanan'] =
-        $ticket['service_name']
-        ?? '-';
+            $ticket['layanan'] =
+                !empty($ticket['service_name'])
+                ? $ticket['service_name']
+                : ((int) ($ticket['unit_id'] ?? 0) === 1 ? 'Unit Layanan Terpadu' : '-');
 
-    // Unit layanan
-    $ticket['unit_layanan'] =
-        $ticket['unit_name']
-        ?? '-';
+            $ticket['unit_layanan'] =
+                $ticket['unit_name']
+                ?? '-';
 
-    // Kategori
-    $ticket['kategori'] =
-        $ticket['category_name']
-        ?? '-';
+            $ticket['kategori'] =
+                $ticket['category_name']
+                ?? '-';
 
-    // Status
-    $ticket['status'] =
-        strtolower(
-            trim(
-                $ticket['status']
-                ?? ''
-            )
-        );
+            $ticket['jumlah_lampiran'] =
+    (int) ($ticket['jumlah_lampiran'] ?? 0);
 
-    // Created
-    $ticket['created_at'] =
-        $ticket['created_at']
-        ?? $ticket['submitted_at']
-        ?? null;
+            $ticket['status'] =
+                strtolower(
+                    trim(
+                        $ticket['status']
+                        ?? ''
+                    )
+                );
 
-    // ID
-    $ticket['id'] =
-        $ticket['id']
-        ?? null;
-}
+            $ticket['created_at'] =
+    $ticket['submitted_at']
+    ?? $ticket['created_at']
+    ?? null;
 
-unset($ticket);
+            $ticket['id'] =
+                $ticket['id']
+                ?? null;
+        }
+
+        unset($ticket);
 
         // ========================================================
         // ADAPTER FRONTEND3
         // ========================================================
-        $totalData = count($tickets);
-
-        // Tidak ada dummy data
         $realTickets = $tickets;
         $dummyTickets = [];
-
         $filteredTickets = $tickets;
         $tiket_list = $tickets;
-
-        // Pagination frontend3
-        $currentPage = (int) (
-            $this->request->getGet('page')
-            ?? $this->request->getGet('page_datatiket')
-            ?? 1
-        );
-
-        if ($currentPage < 1) {
-            $currentPage = 1;
-        }
-
-        $offset = ($currentPage - 1) * $perPage;
-
-        $paginatedList = array_slice(
-            $tickets,
-            $offset,
-            $perPage
-        );
-
-        $totalPages = $perPage > 0
-            ? (int) ceil($totalData / $perPage)
-            : 1;
-
-        if ($totalPages < 1) {
-            $totalPages = 1;
-        }
 
         // ========================================================
         // STATISTIK
         // ========================================================
-        $jumlahTiket = $this->ticketModel->countAll();
+        $jumlahTiket =
+            $this->ticketModel
+                ->countAllResults();
 
-        $jumlahSubmitted = $this->ticketModel
-            ->where('status', 'submitted')
-            ->countAllResults();
+        $jumlahSubmitted =
+            $this->ticketModel
+                ->where('status', 'submitted')
+                ->countAllResults();
 
-        $jumlahVerified = $this->ticketModel
-            ->whereIn('status', [
-                'verified',
-                'assigned',
-                'processing',
-                'completed'
-            ])
-            ->countAllResults();
+        $jumlahVerified =
+            $this->ticketModel
+                ->whereIn('status', [
+                    'verified',
+                    'assigned',
+                    'processing',
+                    'in_progress',
+                    'completed'
+                ])
+                ->countAllResults();
 
-        $jumlahDisposisi = $this->ticketModel
-            ->whereIn('status', [
-                'assigned',
-                'processing'
-            ])
-            ->countAllResults();
+        $jumlahDisposisi =
+            $this->ticketModel
+                ->whereIn('status', [
+                    'assigned',
+                    'processing',
+                    'in_progress'
+                ])
+                ->countAllResults();
 
         // ========================================================
-        // KIRIM KE VIEW FRONTEND3
+        // KIRIM KE VIEW
         // ========================================================
         return view('petugas/tiket', [
 
             // Data utama
             'tickets' => $tickets,
 
-            // Pager CI4
-            'pager' => $this->ticketModel->pager,
 
             // Filter
             'perPage' => $perPage,
@@ -219,9 +194,8 @@ unset($ticket);
             'status' => $status,
             'category' => $category,
 
-            // Statistik backend3
-            'totalTickets' =>
-                $this->ticketModel->countAll(),
+            // Statistik
+            'totalTickets' => $jumlahTiket,
 
             'totalPending' =>
                 $this->ticketModel
@@ -232,50 +206,42 @@ unset($ticket);
                     ->countAllResults(),
 
             'totalVerified' =>
-                $this->ticketModel
-                    ->whereIn('status', [
-                        'verified',
-                        'assigned',
-                        'processing',
-                        'completed'
-                    ])
-                    ->countAllResults(),
+                $jumlahVerified,
 
             'totalProcessed' =>
-                $this->ticketModel
-                    ->whereIn('status', [
-                        'assigned',
-                        'processing'
-                    ])
-                    ->countAllResults(),
+                $jumlahDisposisi,
 
             'total_tiket' =>
-                $this->ticketModel->countAll(),
+                $jumlahTiket,
 
             'submitted' =>
-                $this->ticketModel
-                    ->where('status', 'submitted')
-                    ->countAllResults(),
+                $jumlahSubmitted,
 
-            // ====================================================
-            // ADAPTER FRONTEND3
-            // ====================================================
-            'realTickets' => $realTickets,
-            'dummyTickets' => $dummyTickets,
-            'filteredTickets' => $filteredTickets,
-            'tiket_list' => $tiket_list,
+            // Adapter frontend3
+            'realTickets' =>
+                $realTickets,
 
-            'currentPage' => $currentPage,
-            'offset' => $offset,
-            'paginatedList' => $paginatedList,
-            'totalData' => $totalData,
-            'totalPages' => $totalPages,
+            'dummyTickets' =>
+                $dummyTickets,
+
+            'filteredTickets' =>
+                $filteredTickets,
+
+            'tiket_list' =>
+                $tiket_list,
 
             // Statistik frontend3
-            'jumlahTiket' => $jumlahTiket,
-            'jumlahSubmitted' => $jumlahSubmitted,
-            'jumlahVerified' => $jumlahVerified,
-            'jumlahDisposisi' => $jumlahDisposisi,
+            'jumlahTiket' =>
+                $jumlahTiket,
+
+            'jumlahSubmitted' =>
+                $jumlahSubmitted,
+
+            'jumlahVerified' =>
+                $jumlahVerified,
+
+            'jumlahDisposisi' =>
+                $jumlahDisposisi,
         ]);
     }
 
@@ -285,7 +251,7 @@ unset($ticket);
      * DETAIL DATA TIKET
      * ============================================================
      *
-     * GET /datatiket/detail/25
+     * GET /datatiket/detail/38
      */
     public function detail($id = null)
     {
@@ -295,8 +261,14 @@ unset($ticket);
             );
         }
 
-        // Ambil data dari database backend3
-        $ticket = $this->ticketModel->getTicketDetail($id);
+        // ========================================================
+        // AMBIL DATA TIKET
+        // ========================================================
+        $ticket =
+            $this->ticketModel
+                ->getTicketDetail($id);
+
+        log_message('error', 'DEBUG DETAIL TICKET: ' . print_r($ticket, true));
 
         if (!$ticket) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
@@ -305,26 +277,56 @@ unset($ticket);
         }
 
         // ========================================================
-        // MAPPING BACKEND3 → FRONTEND3
+        // NORMALISASI DATA TIKET
         // ========================================================
-        $ticket['nomor_tiket'] =
-            $ticket['ticket_number'] ?? '-';
 
-       $ticket['nama_pemohon'] =
-    $ticket['applicant_name']
-    ?? $ticket['student_name']
-    ?? $ticket['name']
-    ?? '-';
+        // Nomor tiket
+        $ticket['nomor_tiket'] =
+            $ticket['ticket_number']
+            ?? '-';
+
+        // Nama pemohon
+        $ticket['nama_pemohon'] =
+            $ticket['applicant_name']
+            ?? $ticket['student_name']
+            ?? $ticket['name']
+            ?? '-';
 
         $ticket['layanan'] =
-            $ticket['service_name'] ?? '-';
+            !empty($ticket['service_name'])
+            ? $ticket['service_name']
+            : ((int) ($ticket['unit_id'] ?? 0) === 1 ? 'Unit Layanan Terpadu' : '-');
+        // Unit layanan
+        $ticket['unit_layanan'] =
+            $ticket['unit_name']
+            ?? '-';
 
+        // Kategori
         $ticket['kategori'] =
-            $ticket['category_name'] ?? '-';
+            $ticket['category_name']
+            ?? $ticket['applicant_type']
+            ?? '-';
 
-        $ticket['status'] = strtolower(
-            trim($ticket['status'] ?? '')
-        );
+        // Status
+        $ticket['status'] =
+            strtolower(
+                trim(
+                    $ticket['status']
+                    ?? 'submitted'
+                )
+            );
+
+        // Prioritas
+        $ticket['priority'] =
+            $ticket['priority']
+            ?? 'normal';
+
+        $ticket['prioritas'] =
+            $ticket['priority'];
+
+        // ========================================================
+        // TANGGAL
+        // ========================================================
 
         $ticket['created_at'] =
             $ticket['created_at']
@@ -332,12 +334,505 @@ unset($ticket);
             ?? null;
 
         // ========================================================
-        // VIEW FRONTEND3
+        // IDENTITAS PEMOHON
         // ========================================================
+
+        $ticket['nim'] =
+            $ticket['nim']
+            ?? null;
+
+        $ticket['nik'] =
+            $ticket['nik']
+            ?? null;
+
+        $ticket['email'] =
+            $ticket['email']
+            ?? $ticket['applicant_email']
+            ?? null;
+
+        $ticket['phone'] =
+            $ticket['phone']
+            ?? $ticket['applicant_phone']
+            ?? null;
+
+        $ticket['no_hp'] =
+            $ticket['phone']
+            ?? '-';
+
+        // ========================================================
+        // JUDUL & DESKRIPSI
+        // ========================================================
+
+        $ticket['title'] =
+            $ticket['title']
+            ?? '';
+
+        $ticket['judul_permohonan'] =
+            $ticket['title']
+            ?? '-';
+
+        $ticket['description'] =
+            $ticket['description']
+            ?? '';
+
+        $ticket['keterangan'] =
+            $ticket['description']
+            ?? '';
+
+        // ========================================================
+        // TIMELINE
+        // ========================================================
+
+        $timeline =
+            $this->buildTimeline($ticket);
+
+        // ========================================================
+        // FILE PERSYARATAN
+        // ========================================================
+
+        /*
+         * PENTING:
+         *
+         * tickets.id = 38
+         *
+         * bukan berarti
+         *
+         * service_request_files.service_request_id = 38
+         *
+         * Relasinya:
+         *
+         * tickets.ticket_number
+         *        ↓
+         * service_requests.ticket_number
+         *        ↓
+         * service_requests.id
+         *        ↓
+         * service_request_files.service_request_id
+         */
+        $attachments =
+            $this->getTicketFiles(
+                (int) $id,
+                $ticket['ticket_number'] ?? null
+            );
+
+        // ========================================================
+        // KIRIM KE VIEW
+        // ========================================================
+
         return view('petugas/detail', [
-            'ticket' => $ticket,
-            'tiket' => $ticket,
+
+            'title' =>
+                'Detail Informasi Tiket',
+
+            'ticket' =>
+                $ticket,
+
+            'tiket' =>
+                $ticket,
+
+            'timeline' =>
+                $timeline,
+
+            'attachments' =>
+                $attachments,
+
+            'lampiran' =>
+                $attachments,
         ]);
+    }
+
+
+    /**
+     * ============================================================
+     * BUILD TIMELINE
+     * ============================================================
+     */
+    private function buildTimeline(array $ticket): array
+    {
+        $timeline = [];
+
+        $steps = [
+            [
+                'field' => 'submitted_at',
+                'title' => 'Tiket Berhasil Diajukan',
+                'icon'  => 'fa-paper-plane',
+            ],
+            [
+                'field' => 'verified_at',
+                'title' => 'Tiket Telah Diverifikasi',
+                'icon'  => 'fa-check-circle',
+            ],
+            [
+                'field' => 'processed_at',
+                'title' => 'Tiket Sedang Diproses',
+                'icon'  => 'fa-cogs',
+            ],
+            [
+                'field' => 'completed_at',
+                'title' => 'Permohonan Selesai',
+                'icon'  => 'fa-check-double',
+            ],
+            [
+                'field' => 'rejected_at',
+                'title' => 'Permohonan Ditolak',
+                'icon'  => 'fa-times-circle',
+            ],
+            [
+                'field' => 'cancelled_at',
+                'title' => 'Permohonan Dibatalkan',
+                'icon'  => 'fa-ban',
+            ],
+        ];
+
+        foreach ($steps as $step) {
+
+            if (
+                isset($ticket[$step['field']])
+                && !empty($ticket[$step['field']])
+            ) {
+
+                $timestamp =
+                    strtotime(
+                        $ticket[$step['field']]
+                    );
+
+                $timeline[] = [
+                    'title' =>
+                        $step['title'],
+
+                    'date' =>
+                        $ticket[$step['field']],
+
+                    'icon' =>
+                        $step['icon'],
+
+                    '_timestamp' =>
+                        $timestamp ?: 0,
+                ];
+            }
+        }
+
+        // Urut berdasarkan waktu
+        usort(
+            $timeline,
+            function ($a, $b) {
+                return
+                    $a['_timestamp']
+                    <=>
+                    $b['_timestamp'];
+            }
+        );
+
+        // Hapus field internal
+        foreach ($timeline as &$item) {
+            unset($item['_timestamp']);
+        }
+
+        unset($item);
+
+        return $timeline;
+    }
+
+
+    /**
+     * ============================================================
+     * AMBIL FILE TIKET
+     * ============================================================
+     *
+     * RELASI DATABASE:
+     *
+     * tickets
+     *    ↓ ticket_number
+     *
+     * service_requests
+     *    ↓ id
+     *
+     * service_request_files
+     *
+     * Nama persyaratan:
+     *
+     * master_service_requirements
+     */
+    private function getTicketFiles(
+        int $ticketId,
+        ?string $ticketNumber = null
+    ): array {
+
+        $db =
+            $this->db;
+
+        // ========================================================
+        // CEK TABLE
+        // ========================================================
+
+        if (
+            !$db->tableExists(
+                'service_request_files'
+            )
+        ) {
+            return [];
+        }
+
+        if (
+            !$db->tableExists(
+                'service_requests'
+            )
+        ) {
+            return [];
+        }
+
+        // ========================================================
+        // JIKA TICKET NUMBER TIDAK DIKIRIM
+        // AMBIL DARI TABEL TICKETS
+        // ========================================================
+
+        if (
+            empty($ticketNumber)
+            && $db->tableExists('tickets')
+        ) {
+
+            $ticketRow =
+                $db
+                    ->table('tickets')
+                    ->select('ticket_number')
+                    ->where(
+                        'id',
+                        $ticketId
+                    )
+                    ->get()
+                    ->getRowArray();
+
+            if ($ticketRow) {
+
+                $ticketNumber =
+                    $ticketRow['ticket_number']
+                    ?? null;
+            }
+        }
+
+        // ========================================================
+        // TICKET NUMBER WAJIB ADA
+        // ========================================================
+
+        if (empty($ticketNumber)) {
+            return [];
+        }
+
+        // ========================================================
+        // CARI SERVICE REQUEST
+        // ========================================================
+
+        $serviceRequest =
+            $db
+                ->table('service_requests')
+                ->select('id')
+                ->where(
+                    'ticket_number',
+                    $ticketNumber
+                )
+                ->get()
+                ->getRowArray();
+
+        if (!$serviceRequest) {
+            return [];
+        }
+
+        $serviceRequestId =
+            (int) $serviceRequest['id'];
+
+        // ========================================================
+        // QUERY FILE
+        // ========================================================
+
+        $builder =
+            $db
+                ->table(
+                    'service_request_files'
+                )
+                ->select('
+                    service_request_files.*,
+                    master_service_requirements.name AS requirement_name
+                ')
+                ->join(
+                    'master_service_requirements',
+                    'master_service_requirements.id = service_request_files.requirement_id',
+                    'left'
+                )
+                ->where(
+                    'service_request_files.service_request_id',
+                    $serviceRequestId
+                );
+
+        // ========================================================
+        // SOFT DELETE
+        // ========================================================
+
+        $fields =
+            $db->getFieldNames(
+                'service_request_files'
+            );
+
+        if (
+            in_array(
+                'deleted_at',
+                $fields,
+                true
+            )
+        ) {
+
+            $builder->where(
+                'service_request_files.deleted_at',
+                null
+            );
+        }
+
+        // ========================================================
+        // URUTKAN FILE
+        // ========================================================
+
+        if (
+            in_array(
+                'created_at',
+                $fields,
+                true
+            )
+        ) {
+
+            $builder->orderBy(
+                'service_request_files.created_at',
+                'ASC'
+            );
+
+        } else {
+
+            $builder->orderBy(
+                'service_request_files.id',
+                'ASC'
+            );
+        }
+
+        // ========================================================
+        // EKSEKUSI
+        // ========================================================
+
+        $files =
+            $builder
+                ->get()
+                ->getResultArray();
+
+        if (empty($files)) {
+            return [];
+        }
+
+        // ========================================================
+        // NORMALISASI
+        // ========================================================
+
+        $result = [];
+
+        foreach ($files as $file) {
+
+            // ----------------------------------------------------
+            // NAMA FILE
+            // ----------------------------------------------------
+
+            $fileName =
+                !empty($file['original_name'])
+                    ? $file['original_name']
+                    : (
+                        !empty($file['file_name'])
+                            ? $file['file_name']
+                            : 'File persyaratan'
+                    );
+
+            // ----------------------------------------------------
+            // PATH
+            // ----------------------------------------------------
+
+            $filePath =
+                $file['file_path']
+                ?? '';
+
+            // ----------------------------------------------------
+            // NAMA PERSYARATAN
+            // ----------------------------------------------------
+
+            $requirementName =
+                $file['requirement_name']
+                ?? 'Persyaratan';
+
+            // ----------------------------------------------------
+            // DATA UNTUK VIEW
+            // ----------------------------------------------------
+
+            $result[] = [
+
+                // ID file
+                'id' =>
+                    $file['id']
+                    ?? null,
+
+                // ID tiket
+                'ticket_id' =>
+                    $ticketId,
+
+                // ID service request
+                'service_request_id' =>
+                    $serviceRequestId,
+
+                // ID requirement
+                'requirement_id' =>
+                    !empty(
+                        $file['requirement_id']
+                    )
+                        ? (int)
+                            $file['requirement_id']
+                        : null,
+
+                // Nama requirement
+                'requirement_name' =>
+                    $requirementName,
+
+                // Nama file asli
+                'file_name' =>
+                    $fileName,
+
+                'original_name' =>
+                    $file['original_name']
+                    ?? $fileName,
+
+                // Nama file tersimpan
+                'stored_name' =>
+                    $file['file_name']
+                    ?? null,
+
+                // Path file
+                'file_path' =>
+                    $filePath,
+
+                // Extension
+                'file_extension' =>
+                    $file['file_extension']
+                    ?? '',
+
+                // MIME
+                'mime_type' =>
+                    $file['mime_type']
+                    ?? '',
+
+                // Ukuran
+                'file_size' =>
+                    $file['file_size']
+                    ?? null,
+
+                // Waktu upload
+                'created_at' =>
+                    $file['created_at']
+                    ?? null,
+            ];
+        }
+
+        return $result;
     }
 
 
@@ -346,7 +841,7 @@ unset($ticket);
      * QUERY DATA TIKET
      * ============================================================
      */
- private function buildTicketQuery()
+    private function buildTicketQuery()
 {
     return $this->ticketModel
         ->select("
@@ -363,6 +858,7 @@ unset($ticket);
             user_profiles.nik,
             user_profiles.email,
             user_profiles.phone,
+            user_profiles.address,
             user_profiles.applicant_type_id,
 
             master_applicant_types.name AS applicant_type,
@@ -370,29 +866,69 @@ unset($ticket);
             master_services.name AS service_name,
             master_services.service_unit_id,
 
-            master_service_units.name AS unit_name
-        ")
+            COALESCE(
+                master_service_units.name,
+                unit_direct.name
+            ) AS unit_name,
+
+            master_service_categories.id AS category_id,
+            master_service_categories.name AS category_name,
+
+            COUNT(service_request_files.id) AS jumlah_lampiran
+        ", false)
+
         ->join(
             'user_profiles',
             'user_profiles.id = tickets.user_profile_id',
             'left'
         )
+
         ->join(
             'master_applicant_types',
             'master_applicant_types.id = user_profiles.applicant_type_id',
             'left'
         )
+
         ->join(
             'master_services',
             'master_services.id = tickets.service_id',
             'left'
         )
+
         ->join(
             'master_service_units',
             'master_service_units.id = master_services.service_unit_id',
             'left'
-        );
+        )
+
+        ->join(
+            'master_service_units unit_direct',
+            'unit_direct.id = tickets.unit_id',
+            'left'
+        )
+
+        ->join(
+            'master_service_categories',
+            'master_service_categories.id = master_services.service_category_id',
+            'left'
+        )
+
+        ->join(
+            'service_requests',
+            'service_requests.ticket_number = tickets.ticket_number',
+            'left'
+        )
+
+        ->join(
+            'service_request_files',
+            'service_request_files.service_request_id = service_requests.id',
+            'left'
+        )
+
+        ->groupBy('tickets.id');
 }
+
+
     /**
      * ============================================================
      * EXPORT DATA
@@ -406,10 +942,10 @@ unset($ticket);
             ?? ''
         ));
 
-        $status = trim((string) (
+        $status = strtolower(trim((string) (
             $this->request->getGet('status')
             ?? ''
-        ));
+        )));
 
         $category = trim((string) (
             $this->request->getGet('kategori')
@@ -417,31 +953,62 @@ unset($ticket);
             ?? ''
         ));
 
-        $builder = $this->buildTicketQuery();
+        $builder =
+            $this->buildTicketQuery();
 
         // SEARCH
         if ($keyword !== '') {
-    $builder
-        ->groupStart()
-            ->like('tickets.ticket_number', $keyword)
-            ->orLike('user_profiles.name', $keyword)
-            ->orLike('user_profiles.student_name', $keyword)
-            ->orLike('user_profiles.nim', $keyword)
-            ->orLike('user_profiles.nik', $keyword)
-            ->orLike('master_services.name', $keyword)
-        ->groupEnd();
-}
+
+            $builder
+                ->groupStart()
+
+                    ->like(
+                        'tickets.ticket_number',
+                        $keyword
+                    )
+
+                    ->orLike(
+                        'user_profiles.name',
+                        $keyword
+                    )
+
+                    ->orLike(
+                        'user_profiles.student_name',
+                        $keyword
+                    )
+
+                    ->orLike(
+                        'user_profiles.nim',
+                        $keyword
+                    )
+
+                    ->orLike(
+                        'user_profiles.nik',
+                        $keyword
+                    )
+
+                    ->orLike(
+                        'master_services.name',
+                        $keyword
+                    )
+
+                ->groupEnd();
+        }
 
         // FILTER STATUS
         if ($status !== '') {
-            $builder->where('tickets.status', $status);
+
+            $builder->where(
+                'LOWER(tickets.status)',
+                $status
+            );
         }
 
-        // Kategori belum digunakan
-        // karena relasi kategori belum tersedia.
-
         return $builder
-            ->orderBy('tickets.submitted_at', 'DESC')
+            ->orderBy(
+                'tickets.submitted_at',
+                'DESC'
+            )
             ->findAll();
     }
 
@@ -453,7 +1020,8 @@ unset($ticket);
      */
     public function exportCsv()
     {
-        $tickets = $this->getExportData();
+        $tickets =
+            $this->getExportData();
 
         $filename =
             'data-tiket-' .
@@ -472,47 +1040,82 @@ unset($ticket);
             '"'
         );
 
-        $output = fopen('php://output', 'w');
+        $output =
+            fopen(
+                'php://output',
+                'w'
+            );
 
-        // BOM UTF-8
-        fwrite($output, "\xEF\xBB\xBF");
+        fwrite(
+            $output,
+            "\xEF\xBB\xBF"
+        );
 
-        // HEADER
-        fputcsv($output, [
-            'No',
-            'No. Tiket',
-            'Nama Pemohon',
-            'NIM',
-            'NIK',
-            'Email',
-            'No. HP',
-            'Layanan',
-            'Unit Layanan',
-            'Status',
-            'Prioritas',
-            'Tanggal Pengajuan',
-            'Tanggal Verifikasi'
-        ]);
+        fputcsv(
+            $output,
+            [
+                'No',
+                'No. Tiket',
+                'Nama Pemohon',
+                'NIM',
+                'NIK',
+                'Email',
+                'No. HP',
+                'Layanan',
+                'Unit Layanan',
+                'Status',
+                'Prioritas',
+                'Tanggal Pengajuan',
+                'Tanggal Verifikasi'
+            ]
+        );
 
         $no = 1;
 
         foreach ($tickets as $ticket) {
 
-            fputcsv($output, [
-                $no++,
-                $ticket['ticket_number'] ?? '-',
-                $ticket['applicant_name'] ?? '-',
-                $ticket['nim'] ?? '-',
-                $ticket['nik'] ?? '-',
-                $ticket['email'] ?? '-',
-                $ticket['phone'] ?? '-',
-                $ticket['service_name'] ?? '-',
-                $ticket['unit_name'] ?? '-',
-                $ticket['status'] ?? '-',
-                $ticket['priority'] ?? '-',
-                $ticket['submitted_at'] ?? '-',
-                $ticket['verified_at'] ?? '-'
-            ]);
+            fputcsv(
+                $output,
+                [
+                    $no++,
+
+                    $ticket['ticket_number']
+                    ?? '-',
+
+                    $ticket['applicant_name']
+                    ?? '-',
+
+                    $ticket['nim']
+                    ?? '-',
+
+                    $ticket['nik']
+                    ?? '-',
+
+                    $ticket['email']
+                    ?? '-',
+
+                    $ticket['phone']
+                    ?? '-',
+
+                    $ticket['service_name']
+                    ?? '-',
+
+                    $ticket['unit_name']
+                    ?? '-',
+
+                    $ticket['status']
+                    ?? '-',
+
+                    $ticket['priority']
+                    ?? '-',
+
+                    $ticket['submitted_at']
+                    ?? '-',
+
+                    $ticket['verified_at']
+                    ?? '-'
+                ]
+            );
         }
 
         fclose($output);
@@ -528,7 +1131,8 @@ unset($ticket);
      */
     public function exportExcel()
     {
-        $tickets = $this->getExportData();
+        $tickets =
+            $this->getExportData();
 
         $filename =
             'data-tiket-' .
@@ -551,9 +1155,11 @@ unset($ticket);
         <!DOCTYPE html>
         <html>
         <head>
+
             <meta charset="UTF-8">
 
             <style>
+
                 table {
                     border-collapse: collapse;
                     width: 100%;
@@ -571,7 +1177,9 @@ unset($ticket);
                     border: 1px solid #000;
                     padding: 6px;
                 }
+
             </style>
+
         </head>
 
         <body>
@@ -580,13 +1188,17 @@ unset($ticket);
 
         <p>
             Tanggal Export:
-            ' . date('d-m-Y H:i:s') . '
+            ' .
+            date('d-m-Y H:i:s') .
+            '
         </p>
 
         <table>
 
             <thead>
+
                 <tr>
+
                     <th>No</th>
                     <th>No. Tiket</th>
                     <th>Nama Pemohon</th>
@@ -600,7 +1212,9 @@ unset($ticket);
                     <th>Prioritas</th>
                     <th>Tanggal Pengajuan</th>
                     <th>Tanggal Verifikasi</th>
+
                 </tr>
+
             </thead>
 
             <tbody>
@@ -618,51 +1232,87 @@ unset($ticket);
                     '</td>
 
                     <td>' .
-                        esc($ticket['ticket_number'] ?? '-') .
+                        esc(
+                            $ticket['ticket_number']
+                            ?? '-'
+                        ) .
                     '</td>
 
                     <td>' .
-                        esc($ticket['applicant_name'] ?? '-') .
+                        esc(
+                            $ticket['applicant_name']
+                            ?? '-'
+                        ) .
                     '</td>
 
                     <td>' .
-                        esc($ticket['nim'] ?? '-') .
+                        esc(
+                            $ticket['nim']
+                            ?? '-'
+                        ) .
                     '</td>
 
                     <td>' .
-                        esc($ticket['nik'] ?? '-') .
+                        esc(
+                            $ticket['nik']
+                            ?? '-'
+                        ) .
                     '</td>
 
                     <td>' .
-                        esc($ticket['email'] ?? '-') .
+                        esc(
+                            $ticket['email']
+                            ?? '-'
+                        ) .
                     '</td>
 
                     <td>' .
-                        esc($ticket['phone'] ?? '-') .
+                        esc(
+                            $ticket['phone']
+                            ?? '-'
+                        ) .
                     '</td>
 
                     <td>' .
-                        esc($ticket['service_name'] ?? '-') .
+                        esc(
+                            $ticket['service_name']
+                            ?? '-'
+                        ) .
                     '</td>
 
                     <td>' .
-                        esc($ticket['unit_name'] ?? '-') .
+                        esc(
+                            $ticket['unit_name']
+                            ?? '-'
+                        ) .
                     '</td>
 
                     <td>' .
-                        esc($ticket['status'] ?? '-') .
+                        esc(
+                            $ticket['status']
+                            ?? '-'
+                        ) .
                     '</td>
 
                     <td>' .
-                        esc($ticket['priority'] ?? '-') .
+                        esc(
+                            $ticket['priority']
+                            ?? '-'
+                        ) .
                     '</td>
 
                     <td>' .
-                        esc($ticket['submitted_at'] ?? '-') .
+                        esc(
+                            $ticket['submitted_at']
+                            ?? '-'
+                        ) .
                     '</td>
 
                     <td>' .
-                        esc($ticket['verified_at'] ?? '-') .
+                        esc(
+                            $ticket['verified_at']
+                            ?? '-'
+                        ) .
                     '</td>
 
                 </tr>
@@ -675,10 +1325,12 @@ unset($ticket);
         </table>
 
         </body>
+
         </html>
         ';
 
-        return $this->response->setBody($html);
+        return $this->response
+            ->setBody($html);
     }
 
 
@@ -689,11 +1341,18 @@ unset($ticket);
      */
     public function exportPdf()
     {
-        $tickets = $this->getExportData();
+        $tickets =
+            $this->getExportData();
 
-        return view('datatiket/export_pdf', [
-            'tickets' => $tickets,
-            'tanggal' => date('d-m-Y H:i:s')
-        ]);
+        return view(
+            'datatiket/export_pdf',
+            [
+                'tickets' =>
+                    $tickets,
+
+                'tanggal' =>
+                    date('d-m-Y H:i:s')
+            ]
+        );
     }
 }

@@ -756,7 +756,7 @@ function cosmicMarkSingleAsRead(item) {
         return;
     }
 
-    fetch('<?= base_url('notifications/read/') ?>' + notificationId, {
+    fetch('<?= base_url('admin-users/notifications/read/') ?>' + notificationId, {
         method: 'POST',
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
@@ -801,7 +801,7 @@ function cosmicMarkAllAsRead(e) {
         e.stopPropagation();
     }
 
-    fetch('<?= base_url('notifications/read-all') ?>', {
+    fetch('<?= base_url('admin-users/notifications/read-all') ?>', {
         method: 'POST',
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
@@ -816,6 +816,7 @@ function cosmicMarkAllAsRead(e) {
         }
 
         return response.json();
+
     })
     .then(data => {
 
@@ -823,24 +824,45 @@ function cosmicMarkAllAsRead(e) {
             return;
         }
 
-        const items =
-            document.querySelectorAll('.cosmic-notif-item.unread');
+        const items = document.querySelectorAll('.cosmic-notif-item.unread');
 
         items.forEach(item => {
 
             item.classList.remove('unread');
 
-            const dot =
-                item.querySelector('.cosmic-dot-indicator');
+            const dot = item.querySelector('.cosmic-dot-indicator');
 
             if (dot) {
                 dot.style.transform = 'scale(0)';
                 dot.style.opacity = '0';
             }
 
+            item.remove();
         });
 
         cosmicUpdateCounters(true);
+
+        const container = document.querySelector('#cosmicNotifListContainer');
+
+        if (container && !container.querySelector('.cosmic-notif-item')) {
+
+            container.innerHTML = `
+                <div class="text-center p-4 cosmic-empty-notification">
+
+                    <i class="fas fa-check-circle mb-2"
+                       style="font-size:2rem; color:#2b3990;"></i>
+
+                    <div class="font-weight-bold">
+                        Semua notifikasi sudah dibaca
+                    </div>
+
+                    <small class="text-muted">
+                        Belum ada notifikasi baru.
+                    </small>
+
+                </div>
+            `;
+        }
 
     })
     .catch(error => {
@@ -849,25 +871,58 @@ function cosmicMarkAllAsRead(e) {
 }
 
 
+/* FILTER NOTIFIKASI */
+
+function cosmicFilter(type, button, e) {
+
+    if (e) {
+        e.stopPropagation();
+    }
+
+    const items = document.querySelectorAll('.cosmic-notif-item');
+
+    document.querySelectorAll('.cosmic-filter-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    if (button) {
+        button.classList.add('active');
+    }
+
+    items.forEach(item => {
+
+        if (type === 'all') {
+
+            item.style.display = '';
+
+        } else if (type === 'unread') {
+
+            if (item.classList.contains('unread')) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+
+        }
+
+    });
+}
+
+
+/* UPDATE JUMLAH NOTIFIKASI */
+
 function cosmicUpdateCounters(allCleared = false) {
 
-    const unreadList =
-        document.querySelectorAll('.cosmic-notif-item.unread');
+    const unreadList = document.querySelectorAll(
+        '.cosmic-notif-item.unread'
+    );
 
-    const count =
-        allCleared ? 0 : unreadList.length;
+    const count = allCleared ? 0 : unreadList.length;
 
-    const badge =
-        document.getElementById('cosmicBadgeCount');
-
-    const pulse =
-        document.querySelector('.cosmic-pulse-ring');
-
-    const header =
-        document.getElementById('cosmicHeaderStatusCount');
-
-    const tab =
-        document.getElementById('cosmicUnreadTabCount');
+    const badge = document.getElementById('cosmicBadgeCount');
+    const pulse = document.querySelector('.cosmic-pulse-ring');
+    const header = document.getElementById('cosmicHeaderStatusCount');
+    const tab = document.getElementById('cosmicUnreadTabCount');
 
     if (badge) {
 
@@ -878,7 +933,6 @@ function cosmicUpdateCounters(allCleared = false) {
         } else {
             badge.style.display = '';
         }
-
     }
 
     if (pulse) {
@@ -888,17 +942,25 @@ function cosmicUpdateCounters(allCleared = false) {
         } else {
             pulse.style.display = '';
         }
-
     }
 
     if (header) {
-        header.innerText = count + ' Belum Dibaca';
+
+        if (count === 0) {
+            header.innerText = 'Semua Sudah Dibaca';
+        } else {
+            header.innerText = count + ' Belum Dibaca';
+        }
     }
 
     if (tab) {
-        tab.innerText = '(' + count + ')';
-    }
 
+        if (count === 0) {
+            tab.innerText = '';
+        } else {
+            tab.innerText = '(' + count + ')';
+        }
+    }
 }
 
 </script>

@@ -612,7 +612,7 @@ body, .container-fluid {
                     </div>
                 </div>
 
-                <div class="col-xl-6 col-lg-6 col-md-12 d-flex align-items-center justify-content-md-end gap-2 flex-wrap mt-2 mt-lg-0">
+                <div class="col-xl-6 col-lg-6 col-md-12 d-flex align-items-center justify-content-md-end gap-3 flex-wrap mt-2 mt-lg-0">
                     <div class="text-muted fw-semibold me-2" style="font-size: 0.85rem;">
                         Total Data: <span id="totalDataBadge" class="badge bg-primary text-white fs-6 ms-1 px-2 py-1" style="border-radius: 8px;"><?= (int) ($totalTiket ?? 0) ?> Tiket</span>
                     </div>
@@ -736,10 +736,12 @@ body, .container-fluid {
             $email = $d['email'] ?? '';
             $phone = $d['phone'] ?? '';
             $description = $d['description'] ?? '';
-            $createdAt = $d['submitted_at'] ?? $d['created_at'] ?? null;
+            $createdAt = $d['ticket_created_at'] ?? null;
 
             $tanggal = $createdAt
-                ? date('d-m-Y H:i', strtotime($createdAt))
+                ? (new DateTime($createdAt, new DateTimeZone('UTC')))
+                    ->setTimezone(new DateTimeZone('Asia/Jakarta'))
+                    ->format('d-m-Y H:i')
                 : '-';
         ?>
 
@@ -864,6 +866,7 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                             data-nama="<?= esc($namaPemohon) ?>"
                             data-email="<?= esc($d['applicant_email'] ?? $d['email'] ?? '') ?>"
                             data-service-id="<?= esc($d['service_id'] ?? '') ?>"
+                            data-unit-id="<?= esc($d['unit_id'] ?? $d['service_unit_id'] ?? '') ?>"
                             data-hp="<?= esc($d['applicant_phone'] ?? $d['phone'] ?? '') ?>"
                             data-instansi="<?= esc($instansiUnit) ?>"
                             data-layanan="<?= esc($layanan) ?>"
@@ -943,12 +946,11 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                                     <option value="" selected disabled>-- Pilih Jenis Pemohon --</option>
                                     <option value="Mahasiswa">Mahasiswa</option>
                                     <option value="Dosen">Dosen</option>
-                                    <option value="Tenaga Kependidikan">Tenaga Kependidikan</option>
+                                    <option value="Tendik">Tenaga Kependidikan</option>
                                     <option value="Orang Tua">Orang Tua</option>
                                     <option value="Alumni">Alumni</option>
                                     <option value="Mitra">Mitra</option>
-                                    <option value="Publik">Publik</option>
-                                    <option value="Masyarakat">Masyarakat</option>
+                                    <option value="Umum">Umum</option>
                                 </select>
                             </div>
                         </div>
@@ -1279,6 +1281,7 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                 </button>
             </div>
             <form id="formEditTiket">
+                <input type="hidden" id="editTicketId" name="ticket_id">
                 <div class="modal-body offline-modal-body">
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -1287,23 +1290,23 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                         </div>
                         <div class="col-md-6">
                             <label class="offline-form-label">Nama Pemohon <span class="required">*</span></label>
-                            <input type="text" id="editNama" class="offline-input" required style="padding-left: 16px !important;">
+                            <input type="text" id="editNama" name="applicant_name" class="offline-input" required style="padding-left: 16px !important;">
                         </div>
                         <div class="col-md-6">
                             <label class="offline-form-label">Email <span class="required">*</span></label>
-                            <input type="email" id="editEmail" class="offline-input" required style="padding-left: 16px !important;">
+                            <input type="email" id="editEmail" name="email" class="offline-input" required style="padding-left: 16px !important;">
                         </div>
                         <div class="col-md-6">
                             <label class="offline-form-label">Nomor HP / WhatsApp <span class="required">*</span></label>
-                            <input type="text" id="editHp" class="offline-input" required style="padding-left: 16px !important;">
+                            <input type="text" id="editHp" name="phone" class="offline-input" required style="padding-left: 16px !important;">
                         </div>
                         <div class="col-md-6">
                             <label class="offline-form-label">Instansi / Unit <span class="required">*</span></label>
-                            <input type="text" id="editInstansi" class="offline-input" required style="padding-left: 16px !important;">
+                            <input type="text" id="editInstansi" name="instansi" class="offline-input" required style="padding-left: 16px !important;">
                         </div>
                         <div class="col-md-6">
                             <label class="offline-form-label">Layanan Tujuan <span class="required">*</span></label>
-                            <select id="editLayanan" class="offline-select" required style="padding-left: 16px !important;">
+                            <select id="editLayanan" name="unit_id" class="offline-select" required style="padding-left: 16px !important;">
                                 <option value="1">Unit Layanan Terpadu</option>
                                 <option value="2">Bagian Akademik</option>
                                 <option value="3">Bagian Keuangan</option>
@@ -1317,7 +1320,7 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                         </div>
                         <div class="col-12">
                             <label class="offline-form-label">Deskripsi Keperluan <span class="required">*</span></label>
-                            <textarea id="editDeskripsi" class="offline-textarea" required style="padding-left: 16px !important; min-height: 100px;"></textarea>
+                            <textarea id="editDeskripsi" name="ticket_description" class="offline-textarea" required style="padding-left: 16px !important; min-height: 100px;"></textarea>
                         </div>
                     </div>
                 </div>
@@ -1349,6 +1352,7 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                 </button>
             </div>
             <div class="modal-body p-4 text-center">
+                <input type="hidden" id="deleteTicketId" value="">
                 <p class="text-muted mb-2">Apakah Anda yakin ingin menghapus data laporan tamu berikut?</p>
                 <h5 id="deleteNoTiketSpan" class="fw-bold text-dark mb-1">-</h5>
                 <p class="fw-semibold text-primary mb-0" id="deleteNamaSpan">-</p>
@@ -1644,6 +1648,23 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                             </div>
 
                             <div class="col-md-6">
+    <label class="offline-form-label">
+        NIM <span class="required">*</span>
+    </label>
+
+    <div class="offline-input-group">
+        <i class="fas fa-id-card offline-input-icon"></i>
+        <input
+            type="text"
+            name="nim"
+            class="offline-input"
+            placeholder="Masukkan NIM"
+            required
+        >
+    </div>
+</div>
+
+                            <div class="col-md-6">
                                 <label class="offline-form-label">
                                     KELAS / ANGKATAN
                                     <span class="required">*</span>
@@ -1876,7 +1897,7 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                     }
 
                     /* =========================
-                     * SELAIN MAHASISWA
+                     * JENIS PEMOHON LAINNYA
                      * ========================= */
                     else if (val) {
 
@@ -1900,6 +1921,127 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                                 </div>
                             </div>
 
+                            ${
+                                val === 'Dosen' ||
+                                val === 'Tendik' ||
+                                val === 'Orang Tua' ||
+                                val === 'Umum'
+                                    ? `
+                            <div class="col-md-6">
+                                <label class="offline-form-label">
+                                    NIK <span class="required">*</span>
+                                </label>
+
+                                <div class="offline-input-group">
+                                    <i class="fas fa-id-card offline-input-icon"></i>
+
+                                    <input
+                                        type="text"
+                                        name="nik"
+                                        class="offline-input"
+                                        placeholder="Masukkan NIK"
+                                        required
+                                    >
+                                </div>
+                            </div>
+                                    `
+                                    : ''
+                            }
+
+                            ${
+                                val === 'Orang Tua'
+                                    ? `
+                            <div class="col-md-6">
+                                <label class="offline-form-label">
+                                    NIM ANAK <span class="required">*</span>
+                                </label>
+
+                                <div class="offline-input-group">
+                                    <i class="fas fa-id-card offline-input-icon"></i>
+
+                                    <input
+                                        type="text"
+                                        name="nim_anak"
+                                        class="offline-input"
+                                        placeholder="Masukkan NIM Anak"
+                                        required
+                                    >
+                                </div>
+                            </div>
+                                    `
+                                    : ''
+                            }
+
+                            ${
+                                val === 'Alumni'
+                                    ? `
+                            <div class="col-md-6">
+                                <label class="offline-form-label">
+                                    NIM <span class="required">*</span>
+                                </label>
+
+                                <div class="offline-input-group">
+                                    <i class="fas fa-id-card offline-input-icon"></i>
+
+                                    <input
+                                        type="text"
+                                        name="nim"
+                                        class="offline-input"
+                                        placeholder="Masukkan NIM"
+                                        required
+                                    >
+                                </div>
+                            </div>
+                                    `
+                                    : ''
+                            }
+
+                            ${
+                                val === 'Mitra'
+                                    ? `
+                            <div class="col-md-6">
+                                <label class="offline-form-label">
+                                    INSTANSI <span class="required">*</span>
+                                </label>
+
+                                <div class="offline-input-group">
+                                    <i class="fas fa-building offline-input-icon"></i>
+
+                                    <input
+                                        type="text"
+                                        name="instansi"
+                                        class="offline-input"
+                                        placeholder="Masukkan Instansi"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="offline-form-label">
+                                    JABATAN <span class="required">*</span>
+                                </label>
+
+                                <div class="offline-input-group">
+                                    <i class="fas fa-briefcase offline-input-icon"></i>
+
+                                    <input
+                                        type="text"
+                                        name="jabatan"
+                                        class="offline-input"
+                                        placeholder="Masukkan Jabatan"
+                                        required
+                                    >
+                                </div>
+                            </div>
+                                    `
+                                    : ''
+                            }
+
+                            ${
+                                val === 'Dosen' ||
+                                val === 'Tendik'
+                                    ? `
                             <div class="col-md-6">
                                 <label class="offline-form-label">
                                     INSTANSI / UNIT ASAL
@@ -1913,11 +2055,14 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                                         type="text"
                                         name="instansi"
                                         class="offline-input"
-                                        placeholder="Masukkan Instansi / Perusahaan"
+                                        placeholder="Masukkan Instansi / Unit Asal"
                                         required
                                     >
                                 </div>
                             </div>
+                                    `
+                                    : ''
+                            }
 
                             <div class="col-md-6">
                                 <label class="offline-form-label">
@@ -1970,7 +2115,6 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                                         <div class="row g-3">
 
                                             <div class="col-md-4">
-
                                                 <label class="offline-form-label">
                                                     Unit Layanan
                                                     <span class="required">*</span>
@@ -1987,52 +2131,22 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                                                         -- Pilih Unit Layanan --
                                                     </option>
 
-                                                    <option value="1">
-                                                        Unit Layanan Terpadu
-                                                    </option>
-
-                                                    <option value="2">
-                                                        Bagian Akademik
-                                                    </option>
-
-                                                    <option value="3">
-                                                        Bagian Keuangan
-                                                    </option>
-
-                                                    <option value="4">
-                                                        Bagian Kemahasiswaan
-                                                    </option>
-
-                                                    <option value="5">
-                                                        Perpustakaan
-                                                    </option>
-
-                                                    <option value="6">
-                                                        Jurusan
-                                                    </option>
-
-                                                    <option value="7">
-                                                        UPT Teknologi Informasi dan Komunikasi
-                                                    </option>
-
-                                                    <option value="9">
-                                                        Bagian Administrasi Umum
-                                                    </option>
-
-                                                    <option value="8">
-                                                        Administrasi Umum
-                                                    </option>
+                                                    <option value="1">Unit Layanan Terpadu</option>
+                                                    <option value="2">Bagian Akademik</option>
+                                                    <option value="3">Bagian Keuangan</option>
+                                                    <option value="4">Bagian Kemahasiswaan</option>
+                                                    <option value="5">Perpustakaan</option>
+                                                    <option value="6">Jurusan</option>
+                                                    <option value="7">UPT Teknologi Informasi dan Komunikasi</option>
+                                                    <option value="8">Administrasi Umum</option>
                                                 </select>
-
                                             </div>
-
 
                                             <div
                                                 class="col-md-4"
                                                 id="wrapperJurusan"
                                                 style="display: none;"
                                             >
-
                                                 <label class="offline-form-label">
                                                     Jurusan
                                                     <span class="required">*</span>
@@ -2048,47 +2162,21 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                                                         -- Pilih Jurusan --
                                                     </option>
 
-                                                    <option value="Teknik Komputer dan Informatika">
-                                                        Teknik Komputer dan Informatika
-                                                    </option>
-
-                                                    <option value="Teknik Elektro">
-                                                        Teknik Elektro
-                                                    </option>
-
-                                                    <option value="Teknik Mesin">
-                                                        Teknik Mesin
-                                                    </option>
-
-                                                    <option value="Teknik Sipil">
-                                                        Teknik Sipil
-                                                    </option>
-
-                                                    <option value="Teknik Kimia">
-                                                        Teknik Kimia
-                                                    </option>
-
-                                                    <option value="Akuntansi">
-                                                        Akuntansi
-                                                    </option>
-
-                                                    <option value="Administrasi Niaga">
-                                                        Administrasi Niaga
-                                                    </option>
-
-                                                    <option value="Bahasa Inggris">
-                                                        Bahasa Inggris
-                                                    </option>
+                                                    <option value="Teknik Komputer dan Informatika">Teknik Komputer dan Informatika</option>
+                                                    <option value="Teknik Elektro">Teknik Elektro</option>
+                                                    <option value="Teknik Mesin">Teknik Mesin</option>
+                                                    <option value="Teknik Sipil">Teknik Sipil</option>
+                                                    <option value="Teknik Kimia">Teknik Kimia</option>
+                                                    <option value="Akuntansi">Akuntansi</option>
+                                                    <option value="Administrasi Niaga">Administrasi Niaga</option>
+                                                    <option value="Bahasa Inggris">Bahasa Inggris</option>
                                                 </select>
-
                                             </div>
-
 
                                             <div
                                                 class="col-md-4"
                                                 id="wrapperJenisLayananCol"
                                             >
-
                                                 <label class="offline-form-label">
                                                     Jenis Layanan
                                                     <span class="required">*</span>
@@ -2106,17 +2194,14 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                                                         -- Pilih Jenis Layanan --
                                                     </option>
                                                 </select>
-
                                             </div>
 
                                         </div>
-
 
                                         <div
                                             id="persyaratanContainer"
                                             class="mt-4 d-none"
                                         >
-
                                             <div
                                                 class="fw-bold text-dark mb-1"
                                                 style="font-size: 0.92rem;"
@@ -2130,7 +2215,6 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
                                             </p>
 
                                             <div id="persyaratanContent"></div>
-
                                         </div>
 
                                     </div>
@@ -2307,6 +2391,22 @@ data-unit-name="<?= esc($d['unit_name'] ?? '') ?>">
 
 
                             if (!unitId) return;
+
+
+                            // Unit Layanan Terpadu tidak memiliki Jenis Layanan.
+                            // Biarkan kosong dan izinkan form untuk disubmit.
+                            if (unitId === '1') {
+                                jenisSelect.value = '';
+                                jenisSelect.disabled = true;
+                                jenisSelect.required = false;
+
+                                if (wrapperJenisLayananCol) {
+                                    wrapperJenisLayananCol.className =
+                                        'col-md-6';
+                                }
+
+                                return;
+                            }
 
 
                             jenisSelect.disabled =
@@ -3392,15 +3492,9 @@ document
                             ) || '';
 
 
-                        const serviceName =
+                        const unitId =
                             this.getAttribute(
-                                'data-layanan'
-                            ) || '';
-
-
-                        const serviceId =
-                            this.getAttribute(
-                                'data-service-id'
+                                'data-unit-id'
                             ) || '';
 
 
@@ -3451,132 +3545,400 @@ document
 
                         if (layananSelect) {
 
-                            let matchedOption =
-                                null;
+                            layananSelect.value =
+                                unitId;
 
-
-                            /* Cari berdasarkan ID */
                             if (
-                                serviceId !== ''
+                                layananSelect.value !==
+                                unitId
                             ) {
-
-                                matchedOption =
-                                    Array.from(
-                                        layananSelect.options
-                                    ).find(
-                                        option =>
-                                            option.value ===
-                                            serviceId
-                                    );
-                            }
-
-
-                            /* Cari berdasarkan nama */
-                            if (
-                                !matchedOption &&
-                                serviceName !== ''
-                            ) {
-
-                                matchedOption =
-                                    Array.from(
-                                        layananSelect.options
-                                    ).find(
-                                        option =>
-                                            option.textContent
-                                                .trim()
-                                                .toLowerCase() ===
-                                            serviceName
-                                                .trim()
-                                                .toLowerCase()
-                                    );
-                            }
-
-
-                            /* Tambahkan jika belum ada */
-                            if (
-                                !matchedOption &&
-                                serviceName !== ''
-                            ) {
-
-                                matchedOption =
-                                    document.createElement(
-                                        'option'
-                                    );
-
-                                matchedOption.value =
-                                    serviceId !== ''
-                                        ? serviceId
-                                        : serviceName;
-
-                                matchedOption.textContent =
-                                    serviceName;
-
-                                layananSelect.appendChild(
-                                    matchedOption
-                                );
-                            }
-
-
-                            if (matchedOption) {
-
-                                layananSelect.value =
-                                    matchedOption.value;
-
-                            } else {
-
                                 layananSelect.value =
                                     '';
                             }
                         }
 
 
-                        /* HIDDEN SERVICE ID */
-                        let serviceIdField =
+                        /* SIMPAN ID TIKET */
+                        const editTicketId =
                             document.getElementById(
-                                'editServiceId'
+                                'editTicketId'
                             );
 
-
-                        if (!serviceIdField) {
-
-                            serviceIdField =
-                                document.createElement(
-                                    'input'
-                                );
-
-                            serviceIdField.type =
-                                'hidden';
-
-                            serviceIdField.id =
-                                'editServiceId';
-
-                            serviceIdField.name =
-                                'service_id';
-
-
-                            const editForm =
-                                document.getElementById(
-                                    'formEditTiket'
-                                );
-
-
-                            if (editForm) {
-
-                                editForm.appendChild(
-                                    serviceIdField
-                                );
-                            }
-                        }
-
-
-                        if (serviceIdField) {
-
-                            serviceIdField.value =
-                                serviceId;
+                        if (editTicketId) {
+                            editTicketId.value =
+                                this.getAttribute(
+                                    'data-id'
+                                ) || '';
                         }
                     }
                 );
             });
+
+
+        /* =====================================================
+         * SUBMIT EDIT TIKET
+         * ===================================================== */
+        const formEditTiket =
+            document.getElementById(
+                'formEditTiket'
+            );
+
+        if (formEditTiket) {
+
+            formEditTiket.addEventListener(
+                'submit',
+                function (event) {
+
+                    event.preventDefault();
+
+                    const ticketId =
+                        document.getElementById(
+                            'editTicketId'
+                        )?.value || '';
+
+                    if (!ticketId) {
+                        alert(
+                            'ID tiket tidak ditemukan.'
+                        );
+                        return;
+                    }
+
+                    const formData =
+                        new FormData(
+                            formEditTiket
+                        );
+
+                    fetch(
+                        '<?= base_url('guest-report/update') ?>/' +
+                        ticketId,
+                        {
+                            method: 'POST',
+                            body: formData
+                        }
+                    )
+                    .then(response => {
+
+                        if (!response.ok) {
+                            throw new Error(
+                                'Gagal mengirim data edit tiket.'
+                            );
+                        }
+
+                        window.location.reload();
+                    })
+                    .catch(error => {
+
+                        console.error(
+                            'Edit tiket error:',
+                            error
+                        );
+
+                        alert(
+                            'Gagal menyimpan perubahan tiket.'
+                        );
+                    });
+                }
+            );
+        }
+
+
+        /* =====================================================
+         * SUBMIT VERIFIKASI TIKET
+         * ===================================================== */
+        document
+            .querySelectorAll(
+                '.btn-verifikasi-tamu'
+            )
+            .forEach(btn => {
+
+                btn.addEventListener(
+                    'click',
+                    function () {
+
+                        let ticketId =
+                            this.getAttribute(
+                                'data-id'
+                            ) || '';
+
+                        const form =
+                            document.getElementById(
+                                'formVerifikasiTamu'
+                            );
+
+                        if (form) {
+
+                            let idField =
+                                form.querySelector(
+                                    '#verifTicketId'
+                                );
+
+                            if (!idField) {
+
+                                idField =
+                                    document.createElement(
+                                        'input'
+                                    );
+
+                                idField.type =
+                                    'hidden';
+
+                                idField.id =
+                                    'verifTicketId';
+
+                                idField.name =
+                                    'ticket_id';
+
+                                form.appendChild(
+                                    idField
+                                );
+                            }
+
+                            idField.value =
+                                ticketId;
+                        }
+                    }
+                );
+            });
+
+
+        const formVerifikasiTamu =
+            document.getElementById(
+                'formVerifikasiTamu'
+            );
+
+        if (formVerifikasiTamu) {
+
+            formVerifikasiTamu.addEventListener(
+                'submit',
+                function (event) {
+
+                    event.preventDefault();
+
+                    const ticketId =
+                        document.getElementById(
+                            'verifTicketId'
+                        )?.value || '';
+
+                    const statusSelect =
+                        document.getElementById(
+                            'verifStatusSelect'
+                        );
+
+                    const prioritas =
+                        document.getElementById(
+                            'verifPrioritas'
+                        );
+
+                    if (!ticketId) {
+                        alert(
+                            'ID tiket tidak ditemukan.'
+                        );
+                        return;
+                    }
+
+                    if (
+                        !statusSelect ||
+                        !statusSelect.value
+                    ) {
+                        alert(
+                            'Hasil verifikasi wajib dipilih.'
+                        );
+                        return;
+                    }
+
+                    if (
+                        !prioritas ||
+                        !prioritas.value
+                    ) {
+                        alert(
+                            'Prioritas wajib dipilih.'
+                        );
+                        return;
+                    }
+
+                    const statusMap = {
+                        'Verified': 'verify',
+                        'Need Revision': 'revision',
+                        'Rejected': 'reject'
+                    };
+
+                   const formData = new FormData(formVerifikasiTamu);
+formData.delete('assigned_to');
+formData.set('hasil_verifikasi', statusMap[statusSelect.value] || '');
+
+                    formData.set(
+                        'priority',
+                        prioritas.value
+                    );
+
+                   
+                    const catatan =
+                        formVerifikasiTamu.querySelector(
+                            'textarea'
+                        )?.value || '';
+
+                    if (catatan) {
+                        formData.set(
+                            'catatan_verifikasi',
+                            catatan
+                        );
+                    }
+
+                    fetch(
+                        '<?= base_url('verification/process') ?>/' +
+                        ticketId,
+                        {
+                            method: 'POST',
+                            body: formData
+                        }
+                    )
+                    .then(response => {
+
+                        if (!response.ok) {
+                            throw new Error(
+                                'Gagal memproses verifikasi tiket.'
+                            );
+                        }
+
+                        window.location.reload();
+                    })
+                    .catch(error => {
+
+                        console.error(
+                            'Verifikasi tiket error:',
+                            error
+                        );
+
+                        alert(
+                            'Gagal memproses verifikasi tiket.'
+                        );
+                    });
+                }
+            );
+        }
+
+
+        /* =====================================================
+         * SUBMIT DISPOSISI TIKET
+         * ===================================================== */
+        document
+            .querySelectorAll(
+                '.btn-disposisi-tamu'
+            )
+            .forEach(btn => {
+
+                btn.addEventListener(
+                    'click',
+                    function () {
+
+                        const ticketId =
+                            this.getAttribute(
+                                'data-id'
+                            ) || '';
+
+                        const form =
+                            document.getElementById(
+                                'formDisposisiTamu'
+                            );
+
+                        if (form) {
+
+                            let idField =
+                                form.querySelector(
+                                    '#dispTicketId'
+                                );
+
+                            if (!idField) {
+
+                                idField =
+                                    document.createElement(
+                                        'input'
+                                    );
+
+                                idField.type =
+                                    'hidden';
+
+                                idField.id =
+                                    'dispTicketId';
+
+                                idField.name =
+                                    'ticket_id';
+
+                                form.appendChild(
+                                    idField
+                                );
+                            }
+
+                            idField.value =
+                                ticketId;
+                        }
+                    }
+                );
+            });
+
+
+        const formDisposisiTamu =
+            document.getElementById(
+                'formDisposisiTamu'
+            );
+
+        if (formDisposisiTamu) {
+
+            formDisposisiTamu.addEventListener(
+                'submit',
+                function (event) {
+
+                    event.preventDefault();
+
+                    const ticketId =
+                        document.getElementById(
+                            'dispTicketId'
+                        )?.value || '';
+
+                    if (!ticketId) {
+                        alert(
+                            'ID tiket tidak ditemukan.'
+                        );
+                        return;
+                    }
+
+                    const formData =
+                        new FormData(
+                            formDisposisiTamu
+                        );
+
+                    fetch(
+                        '<?= base_url('disposition/process') ?>/' +
+                        ticketId,
+                        {
+                            method: 'POST',
+                            body: formData
+                        }
+                    )
+                    .then(response => {
+
+                        if (!response.ok) {
+                            throw new Error(
+                                'Gagal memproses disposisi tiket.'
+                            );
+                        }
+
+                        window.location.reload();
+                    })
+                    .catch(error => {
+
+                        console.error(
+                            'Disposisi tiket error:',
+                            error
+                        );
+
+                        alert(
+                            'Gagal memproses disposisi tiket.'
+                        );
+                    });
+                }
+            );
+        }
 
 
         /* =====================================================
@@ -3661,6 +4023,57 @@ document
                 );
             });
 
+
+        /* =====================================================
+         * KONFIRMASI HAPUS TIKET
+         * ===================================================== */
+        const confirmDeleteBtn =
+            document.getElementById(
+                'confirmDeleteBtn'
+            );
+
+        if (confirmDeleteBtn) {
+
+            confirmDeleteBtn.addEventListener(
+                'click',
+                function () {
+
+                    const ticketId =
+                        document.getElementById(
+                            'deleteTicketId'
+                        )?.value || '';
+
+                    if (!ticketId) {
+                        alert(
+                            'ID tiket tidak ditemukan.'
+                        );
+                        return;
+                    }
+
+                    window.location.href =
+                        '<?= base_url('guest-report/delete') ?>/' +
+                        ticketId;
+                }
+            );
+        }
+
     });
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const addDeskripsi = document.getElementById('addDeskripsi');
+    const charCount = document.getElementById('charCount');
+
+    if (addDeskripsi && charCount) {
+        const updateCharCount = function () {
+            charCount.textContent = addDeskripsi.value.length + ' / 500 Karakter';
+        };
+
+        addDeskripsi.addEventListener('input', updateCharCount);
+        updateCharCount();
+    }
+});
+</script>
+
 <?= $this->endSection() ?>

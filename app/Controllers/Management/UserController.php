@@ -91,8 +91,9 @@ class UserController extends CrudController
                 'title'     => $this->title,
                 'pageTitle' => $this->title,
                 'items'     => $items,
-                'pager'     => $this->service->getModel()->pager,
-                'keyword'   => $keyword,
+                'pager'      => $this->service->getModel()->pager,
+                'keyword'    => $keyword,
+                'breadcrumb' => ['Manajemen', 'Manajemen User'],
             ])
         );
     }

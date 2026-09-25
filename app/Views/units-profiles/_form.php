@@ -1,4 +1,13 @@
 <?= csrf_field() ?>
+<?php if (session()->has('_ci_validation_errors')) : ?>
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            <?php foreach (session('_ci_validation_errors') as $error) : ?>
+                <li><?= esc($error) ?></li>
+            <?php endforeach ?>
+        </ul>
+    </div>
+<?php endif ?>
 <div class="card"><div class="card-body">
 <div class="mb-3"><label>Unit Layanan *</label>
 <select name="service_unit_id" class="form-control">
@@ -13,6 +22,6 @@
 <option value="1" <?= old('is_active', $profile['is_active'] ?? '1') == '1' ? 'selected' : '' ?>>Aktif</option>
 <option value="0" <?= old('is_active', $profile['is_active'] ?? '1') == '0' ? 'selected' : '' ?>>Nonaktif</option></select></div>
 </div><div class="card-footer">
-<button class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
 <a href="<?= site_url('units-profiles') ?>" class="btn btn-secondary">Kembali</a>
 </div></div>

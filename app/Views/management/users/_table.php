@@ -1,4 +1,4 @@
-﻿<div class="card card-premium">
+<div class="card card-premium">
 
     <div class="card-body table-responsive p-0">
 
@@ -74,34 +74,50 @@
 
                             <td class="text-center">
 
-                                <a
-                                    href="<?= site_url('users/show/' . $row['id']) ?>"
-                                    class="btn btn-info btn-sm"
-                                    title="Detail">
+                                <div class="d-flex justify-content-center gap-1">
 
-                                    <i class="fas fa-eye"></i>
+                                    <a
+                                        href="<?= site_url('users/show/' . $row['id']) ?>"
+                                        class="btn btn-info btn-sm"
+                                        title="Detail">
 
-                                </a>
+                                        <i class="fas fa-eye"></i>
 
-                                <a
-                                    href="<?= site_url('users/edit/' . $row['id']) ?>"
-                                    class="btn btn-warning btn-sm"
-                                    title="Edit">
+                                    </a>
 
-                                    <i class="fas fa-edit"></i>
+                                    <a
+                                        href="<?= site_url('users/edit/' . $row['id']) ?>"
+                                        class="btn btn-warning btn-sm"
+                                        title="Edit">
 
-                                </a>
+                                        <i class="fas fa-edit"></i>
 
-                                <button
-                                    type="button"
-                                    class="btn btn-danger btn-sm btn-delete-user"
-                                    data-id="<?= $row['id'] ?>"
-                                    data-name="<?= esc($row['full_name'] ?? '-') ?>"
-                                    title="Hapus">
+                                    </a>
 
-                                    <i class="fas fa-trash"></i>
+                                    <?php if (in_array($row['role_code'] ?? '', ['SUPER_ADMIN', 'ADMIN_ULT'], true)) : ?>
+                                        <button
+                                            type="button"
+                                            class="btn btn-secondary btn-sm"
+                                            disabled
+                                            title="Tidak bisa dihapus">
 
-                                </button>
+                                            <i class="fas fa-lock"></i>
+
+                                        </button>
+                                    <?php else : ?>
+                                        <button
+                                            type="button"
+                                            class="btn btn-danger btn-sm btn-delete-user"
+                                            data-id="<?= $row['id'] ?>"
+                                            data-name="<?= esc($row['full_name'] ?? '-') ?>"
+                                            title="Hapus">
+
+                                            <i class="fas fa-trash"></i>
+
+                                        </button>
+                                    <?php endif; ?>
+
+                                </div>
 
                             </td>
 

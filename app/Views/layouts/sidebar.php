@@ -3,8 +3,8 @@
     <a href="<?= site_url('dashboard') ?>"
         class="ult-brand">
 
-        <img src="<?= base_url('assets/img/logo.svg') ?>"
-            alt="Logo">
+        <img src="<?= base_url('assets/img/polban.png') ?>"
+            alt="Logo" class="ult-brand-polban">
 
         <span>SI ULT POLBAN</span>
 

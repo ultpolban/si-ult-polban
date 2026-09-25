@@ -68,13 +68,14 @@ class ProfileController extends AdminController
                 ->with('error', 'Nama dan email wajib diisi.');
         }
 
-        $this->userModel->update($userId, [
+        $genderPost = $this->request->getPost('gender') ?? '';
+        $updateData = [
             'full_name' => $fullName,
             'email'     => $email,
-            'gender'    => in_array($this->request->getPost('gender') ?? '', ['L', 'P'], true)
-                ? $this->request->getPost('gender')
-                : null,
-        ]);
+            'gender'    => in_array($genderPost, ['L', 'P'], true) ? $genderPost : '',
+        ];
+
+        $this->userModel->skipValidation(true)->update($userId, $updateData);
 
         $profileData = [
             'user_id' => (int) $userId,
@@ -88,6 +89,18 @@ class ProfileController extends AdminController
             'nik'               => $this->request->getPost('nik') ?: null,
             'address'           => $this->request->getPost('address') ?: null,
         ];
+
+        // Handle photo upload
+        $photo = $this->request->getFile('photo');
+        if ($photo && $photo->isValid() && !$photo->hasMoved()) {
+            $newName = $photo->getRandomName();
+            // Cek dan buat folder jika belum ada
+            if (!is_dir(FCPATH . 'uploads/profiles')) {
+                mkdir(FCPATH . 'uploads/profiles', 0777, true);
+            }
+            $photo->move(FCPATH . 'uploads/profiles', $newName);
+            $profileData['photo'] = 'uploads/profiles/' . $newName;
+        }
 
         $existing = $this->profileModel->findByUser((int) $userId);
 

@@ -24,6 +24,24 @@ class UnitsProfileController extends AdminController
     public function index()
     {
         $this->authorize(Permissions::UNIT_PROFILE_VIEW);
+        
+        // TEST INSERT
+        if ($this->request->getGet('test_insert')) {
+            $data = [
+                'service_unit_id' => 99, // some ID
+                'description' => 'Test description directly in index',
+                'is_active' => '1',
+                'created_by' => 1
+            ];
+            try {
+                $res = $this->profileService->create($data);
+                dd("Success: " . $res);
+            } catch (\Exception $e) {
+                dd("Error: " . $e->getMessage());
+            }
+        }
+        // END TEST
+        
         $keyword = trim($this->request->getGet('keyword') ?? '');
         $result = $this->profileService->getList($keyword);
         return view('units-profiles/index', $this->viewData([

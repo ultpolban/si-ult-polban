@@ -48,7 +48,12 @@ class UnitsProfileService
 
     public function create(array $data): bool
     {
-        return (bool) $this->model->insert($this->filter($data));
+        $filtered = $this->filter($data);
+        $result = $this->model->insert($filtered);
+        if ($result === false) {
+            throw new \Exception('Gagal insert database: ' . json_encode($this->model->errors()));
+        }
+        return true;
     }
 
     public function update(int $id, array $data): bool

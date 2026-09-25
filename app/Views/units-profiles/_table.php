@@ -23,9 +23,11 @@
                                 <?php else : ?><span class="badge bg-danger">Nonaktif</span><?php endif ?>
                             </td>
                             <td class="text-center">
-                                <a href="<?= site_url('units-profiles/show/' . $row['id']) ?>" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                                <a href="<?= site_url('units-profiles/edit/' . $row['id']) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                <button type="button" class="btn btn-danger btn-sm btn-delete" data-id="<?= $row['id'] ?>" data-name="<?= esc($row['unit_name'] ?? 'Profil') ?>"><i class="fas fa-trash"></i></button>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a href="<?= site_url('units-profiles/show/' . $row['id']) ?>" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                    <a href="<?= site_url('units-profiles/edit/' . $row['id']) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                    <button type="button" class="btn btn-danger btn-sm btn-delete" data-id="<?= $row['id'] ?>" data-name="<?= esc($row['unit_name'] ?? 'Profil') ?>"><i class="fas fa-trash"></i></button>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach ?>

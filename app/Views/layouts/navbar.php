@@ -10,7 +10,7 @@
 
         </button>
 
-        <span class="fw-bold d-none d-sm-inline" style="color:var(--ult-primary);">
+        <span class="fw-bold d-none d-sm-inline" style="color:#fff;">
 
             Sistem Informasi Layanan Terpadu
 

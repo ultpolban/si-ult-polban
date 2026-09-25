@@ -16,14 +16,22 @@
 
         <div class="card-tools">
 
-            <a href="<?= site_url('reports/export?' . http_build_query(array_filter($filters))) ?>"
+            <a href="<?= site_url('reports/export?' . http_build_query(array_merge(array_filter($filters), ['format' => 'pdf']))) ?>"
+                class="btn btn-danger btn-sm">
+                <i class="fas fa-file-pdf"></i>
+                Export PDF
+            </a>
 
+            <a href="<?= site_url('reports/export?' . http_build_query(array_merge(array_filter($filters), ['format' => 'excel']))) ?>"
                 class="btn btn-success btn-sm">
+                <i class="fas fa-file-excel"></i>
+                Export Excel
+            </a>
 
-                <i class="fas fa-download"></i>
-
+            <a href="<?= site_url('reports/export?' . http_build_query(array_merge(array_filter($filters), ['format' => 'csv']))) ?>"
+                class="btn btn-info btn-sm">
+                <i class="fas fa-file-csv"></i>
                 Export CSV
-
             </a>
 
         </div>

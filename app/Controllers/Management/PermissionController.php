@@ -42,7 +42,9 @@ class PermissionController extends AdminController
 
                 'pager' => $result['pager'],
 
-                'keyword' => $keyword
+                'keyword' => $keyword,
+
+                'breadcrumb' => ['Manajemen', 'Manajemen Permission']
 
             ])
         );

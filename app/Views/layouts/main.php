@@ -15,8 +15,6 @@
 
             <?= $this->include('layouts/navbar') ?>
 
-            <?= $this->include('layouts/breadcrumb') ?>
-
             <main class="ult-content">
 
                 <?= $this->renderSection('content') ?>

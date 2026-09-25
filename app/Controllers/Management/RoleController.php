@@ -38,8 +38,9 @@ class RoleController extends AdminController
                 'title'     => 'Master Role',
                 'pageTitle' => 'Master Role',
                 'roles'     => $result['roles'],
-                'pager'     => $result['pager'],
-                'keyword'   => $keyword,
+                'pager'      => $result['pager'],
+                'keyword'    => $keyword,
+                'breadcrumb' => ['Manajemen', 'Master Role'],
             ])
         );
     }

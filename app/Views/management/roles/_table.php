@@ -1,4 +1,4 @@
-﻿<div class="card card-premium">
+<div class="card card-premium">
 
     <div class="card-body table-responsive p-0">
 
@@ -54,32 +54,36 @@
 
                             </td>
 
-                            <td>
+                            <td class="text-center">
 
-                                <a
-                                    href="<?= site_url('roles/show/' . $row['id']) ?>"
-                                    class="btn btn-info btn-sm">
+                                <div class="d-flex justify-content-center gap-1">
 
-                                    <i class="fas fa-eye"></i>
+                                    <a
+                                        href="<?= site_url('roles/show/' . $row['id']) ?>"
+                                        class="btn btn-info btn-sm">
 
-                                </a>
+                                        <i class="fas fa-eye"></i>
 
-                                <a
-                                    href="<?= site_url('roles/edit/' . $row['id']) ?>"
-                                    class="btn btn-warning btn-sm">
+                                    </a>
 
-                                    <i class="fas fa-edit"></i>
+                                    <a
+                                        href="<?= site_url('roles/edit/' . $row['id']) ?>"
+                                        class="btn btn-warning btn-sm">
 
-                                </a>
+                                        <i class="fas fa-edit"></i>
 
-                                <button
-                                    class="btn btn-danger btn-sm btn-delete"
-                                    data-id="<?= $row['id'] ?>"
-                                    data-name="<?= esc($row['name']) ?>">
+                                    </a>
 
-                                    <i class="fas fa-trash"></i>
+                                    <button
+                                        class="btn btn-danger btn-sm btn-delete"
+                                        data-id="<?= $row['id'] ?>"
+                                        data-name="<?= esc($row['name']) ?>">
 
-                                </button>
+                                        <i class="fas fa-trash"></i>
+
+                                    </button>
+
+                                </div>
 
                             </td>
 

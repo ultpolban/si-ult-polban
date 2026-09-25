@@ -2,16 +2,49 @@
 (function () {
     'use strict';
 
-    // Sidebar toggle (for mobile)
+    // Sidebar toggle (desktop + mobile)
     const sidebarToggle = document.getElementById('sidebarToggle');
+    const wrapper = document.querySelector('.ult-wrapper');
     const sidebar = document.getElementById('sidebar');
 
-    if (sidebarToggle && sidebar) {
+    if (sidebarToggle && wrapper) {
+        sidebarToggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            wrapper.classList.toggle('sidebar-collapsed');
+            try { localStorage.setItem('ult-sidebar-collapsed', wrapper.classList.contains('sidebar-collapsed') ? '1' : '0'); } catch (err) {}
+        });
+        try {
+            if (localStorage.getItem('ult-sidebar-collapsed') === '1') wrapper.classList.add('sidebar-collapsed');
+        } catch (err) {}
+    } else if (sidebarToggle && sidebar) {
         sidebarToggle.addEventListener('click', function (e) {
             e.preventDefault();
             sidebar.classList.toggle('collapsed');
         });
     }
+
+    // Konfirmasi logout (dipakai link dengan [data-confirm-logout])
+    document.querySelectorAll('a[data-confirm-logout]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            try { sessionStorage.removeItem('ult-sidebar-scroll'); } catch (err) {}
+            if (window.Swal && typeof window.Swal.fire === 'function') {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                window.Swal.fire({
+                    title: 'Yakin ingin logout?',
+                    text: 'Sesi Anda akan diakhiri.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Logout',
+                    cancelButtonText: 'Batal'
+                }).then(function (result) {
+                    if (result && result.isConfirmed) window.location.href = href;
+                });
+            } else if (!window.confirm('Yakin ingin logout?')) {
+                e.preventDefault();
+            }
+        });
+    });
 
     // Auto-close flash alerts after 5 seconds
     document.querySelectorAll('.alert-auto-dismiss').forEach(function (alert) {

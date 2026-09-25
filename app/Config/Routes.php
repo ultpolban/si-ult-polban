@@ -311,6 +311,17 @@ $routes->group('faqs', ['filter' => 'auth'], function ($routes) {
 
     $routes->post('change-status/(:num)', 'Content\FaqController::changeStatus/$1', ['filter' => 'permission:faq.update']);
 });
+$routes->group('units-profiles', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'Content\UnitsProfileController::index', ['filter' => 'permission:unit_profile.view']);
+    $routes->get('create', 'Content\UnitsProfileController::create', ['filter' => 'permission:unit_profile.create']);
+    $routes->post('store', 'Content\UnitsProfileController::store', ['filter' => 'permission:unit_profile.create']);
+    $routes->get('show/(:num)', 'Content\UnitsProfileController::show/$1', ['filter' => 'permission:unit_profile.view']);
+    $routes->get('edit/(:num)', 'Content\UnitsProfileController::edit/$1', ['filter' => 'permission:unit_profile.update']);
+    $routes->post('update/(:num)', 'Content\UnitsProfileController::update/$1', ['filter' => 'permission:unit_profile.update']);
+    $routes->post('delete/(:num)', 'Content\UnitsProfileController::delete/$1', ['filter' => 'permission:unit_profile.delete']);
+    $routes->get('restore/(:num)', 'Content\UnitsProfileController::restore/$1', ['filter' => 'permission:unit_profile.restore']);
+    $routes->post('change-status/(:num)', 'Content\UnitsProfileController::changeStatus/$1', ['filter' => 'permission:unit_profile.update']);
+});
 $routes->group('registration-requests', ['filter' => 'auth'], function ($routes) {
 
     $routes->get('/', 'Management\RegistrationRequestController::index', ['filter' => 'permission:registration_request.view']);

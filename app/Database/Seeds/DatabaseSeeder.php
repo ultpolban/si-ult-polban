@@ -82,6 +82,15 @@ class DatabaseSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
+        | DESKRIPSI UNIT (units_profiles, butuh master_service_units)
+        |--------------------------------------------------------------------------
+        */
+
+        $this->call(UnitsProfileSeeder::class);
+
+
+        /*
+        |--------------------------------------------------------------------------
         | ADMIN DEFAULT
         |--------------------------------------------------------------------------
         */
@@ -124,6 +133,7 @@ echo PHP_EOL;
             'master_applicant_types',
             'service_applicant_types',
             'faqs',
+            'units_profiles',
         ];
 
         foreach ($tables as $table) {

@@ -1,0 +1,90 @@
+        // =====================================================
+        // VALIDASI IDENTITAS PEMOHON
+        // =====================================================
+
+        if (
+            in_array(
+                $applicantType,
+                [
+                    'Mahasiswa',
+                    'Alumni'
+                ],
+                true
+            ) &&
+            $identityNumber === ''
+        ) {
+            $errors['nim'] =
+                'NIM wajib diisi.';
+        }
+
+        if (
+            in_array(
+                $applicantType,
+                [
+                    'Dosen',
+                    'Tendik',
+                    'Orang Tua',
+                    'Umum'
+                ],
+                true
+            ) &&
+            $identityNumber === ''
+        ) {
+            $errors['nik'] =
+                'NIK wajib diisi.';
+        }
+
+        if (
+            $applicantType === 'Orang Tua' &&
+            trim(
+                (string) (
+                    $this->request->getPost(
+                        'nim_anak'
+                    ) ?? ''
+                )
+            ) === ''
+        ) {
+            $errors['nim_anak'] =
+                'NIM anak wajib diisi.';
+        }
+
+        if (
+            $applicantType === 'Mitra'
+        ) {
+            $instansi = trim(
+                (string) (
+                    $this->request->getPost(
+                        'instansi'
+                    ) ?? ''
+                )
+            );
+
+            $jabatan = trim(
+                (string) (
+                    $this->request->getPost(
+                        'jabatan'
+                    ) ?? ''
+                )
+            );
+
+            if ($instansi === '') {
+                $errors['instansi'] =
+                    'Instansi wajib diisi.';
+            }
+
+            if ($jabatan === '') {
+                $errors['jabatan'] =
+                    'Jabatan wajib diisi.';
+            }
+        }
+
+        if (!empty($errors)) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'errors',
+                    $errors
+                );
+        }
+

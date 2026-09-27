@@ -57,7 +57,97 @@ class RolePermissionSeeder extends Seeder
     |--------------------------------------------------------------------------
     */
 
-            'ADMIN_ULT' => ['*'],
+            'ADMIN_ULT' => [
+
+                'dashboard.view',
+
+                // User
+                'user.view',
+                'user.create',
+                'user.update',
+                'user.delete',
+                'user.restore',
+                'user.reset_password',
+
+                // Applicant Type
+                'applicant_type.view',
+                'applicant_type.create',
+                'applicant_type.update',
+                'applicant_type.delete',
+                'applicant_type.restore',
+
+                // Department
+                'department.view',
+                'department.create',
+                'department.update',
+                'department.delete',
+                'department.restore',
+
+                // Study Program
+                'study_program.view',
+                'study_program.create',
+                'study_program.update',
+                'study_program.delete',
+                'study_program.restore',
+
+                // Class
+                'class.view',
+                'class.create',
+                'class.update',
+                'class.delete',
+                'class.restore',
+
+                // Service Unit
+                'service_unit.view',
+                'service_unit.create',
+                'service_unit.update',
+                'service_unit.delete',
+                'service_unit.restore',
+
+                // Service Category
+                'service_category.view',
+                'service_category.create',
+                'service_category.update',
+                'service_category.delete',
+                'service_category.restore',
+
+                // Service
+                'service.view',
+                'service.create',
+                'service.update',
+                'service.delete',
+                'service.restore',
+
+                // Service Requirement
+                'service_requirement.view',
+                'service_requirement.create',
+                'service_requirement.update',
+                'service_requirement.delete',
+                'service_requirement.restore',
+
+                // Ticket
+                'request.view',
+                'request.create',
+                'request.update',
+                'request.verify',
+                'request.approve',
+                'request.reject',
+                'request.complete',
+                'request.cancel',
+
+                // Notification
+                'notification.view',
+
+                // Activity Log
+                'activity_log.view',
+
+                // Report
+                'report.view',
+                'report.export',
+
+                // Statistic
+                'statistic.view',
+            ],
 
 
             /*
@@ -68,10 +158,9 @@ class RolePermissionSeeder extends Seeder
 
             'PETUGAS_ULT' => [
 
-                // Dashboard
                 'dashboard.view',
 
-                // Tiket / Pengajuan
+                // Tiket
                 'request.view',
                 'request.create',
                 'request.update',
@@ -79,30 +168,14 @@ class RolePermissionSeeder extends Seeder
                 'request.approve',
                 'request.reject',
                 'request.complete',
-                'request.cancel',
-
-                // Master layanan (melihat & mengelola data layanan)
-                'service.view',
-                'service_unit.view',
-                'service_category.view',
-                'service_requirement.view',
 
                 // Notifikasi
                 'notification.view',
-
-                // Activity Log
-                'activity_log.view',
 
                 // Laporan & Statistik
                 'report.view',
                 'report.export',
                 'statistic.view',
-
-                // FAQ
-                'faq.view',
-
-                // Registrasi
-                'registration_request.view',
             ],
 
 
@@ -121,9 +194,6 @@ class RolePermissionSeeder extends Seeder
                 'request.update',
                 'request.complete',
                 'request.reject',
-
-                // Master layanan
-                'service.view',
 
                 // Notifikasi
                 'notification.view',
@@ -164,6 +234,28 @@ class RolePermissionSeeder extends Seeder
     |--------------------------------------------------------------------------
     */
 
+            'PETUGAS_PERPUSTAKAAN' => [
+
+                'dashboard.view',
+                'request.view',
+                'request.update',
+                'request.verify',
+                'request.complete',
+                'notification.view',
+                'statistic.view',
+            ],
+
+            'PETUGAS_JURUSAN' => [
+
+                'dashboard.view',
+                'request.view',
+                'request.update',
+                'request.verify',
+                'request.complete',
+                'notification.view',
+                'statistic.view',
+            ],
+
             'PEMOHON' => [
 
                 'dashboard.view',
@@ -175,14 +267,6 @@ class RolePermissionSeeder extends Seeder
                 'notification.view',
             ],
         ];
-
-        /*
-        |--------------------------------------------------------------------------
-        | Kosongkan mapping lama agar idempoten
-        |--------------------------------------------------------------------------
-        */
-
-        $this->db->table('role_permissions')->truncate();
 
         $insertData = [];
 

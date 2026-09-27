@@ -1,35 +1,46 @@
-<!DOCTYPE html>
-<html lang="id">
+<?= $this->include('layouts/header') ?>
 
-<head>
-    <?= $this->include('layouts/head') ?>
-</head>
 
-<body>
+<body class="hold-transition sidebar-mini">
 
-    <div class="ult-wrapper">
 
-        <?= $this->include('layouts/sidebar') ?>
+<div class="wrapper">
 
-        <div class="ult-main">
 
-            <?= $this->include('layouts/navbar') ?>
+    <?= $this->include('layouts/navbar') ?>
 
-            <?= $this->include('layouts/breadcrumb') ?>
 
-            <main class="ult-content">
+    <?= $this->include('layouts/sidebar') ?>
+
+
+
+    <div class="content-wrapper">
+
+
+        <section class="content">
+
+
+            <div class="container-fluid pt-3">
+
 
                 <?= $this->renderSection('content') ?>
 
-            </main>
 
-            <?= $this->include('layouts/footer') ?>
+            </div>
 
-        </div>
+
+        </section>
+
 
     </div>
 
-    <?= $this->include('layouts/scripts') ?>
+
+
+    <?= $this->include('layouts/footer') ?>
+
+
+</div>
+
 
 </body>
 

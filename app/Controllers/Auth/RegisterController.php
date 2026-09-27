@@ -3,134 +3,183 @@
 namespace App\Controllers\Auth;
 
 use App\Controllers\BaseController;
+use App\Models\MasterApplicantTypeModel;
+use App\Models\MasterClassModel;
+use App\Models\MasterRoleModel;
+use App\Models\MasterStudyProgramModel;
 use App\Models\UserModel;
+use App\Models\UserProfileModel;
 use App\Services\MfaService;
-use App\Services\RegistrationRequestService;
 use App\Validation\RegisterValidator;
 
-/**
- * Registrasi lanjutan (pending-approval).
- *
- * Alur:
- * 1. /registration-request  : pemohon mengirim payload lengkap -> PENDING.
- * 2. Admin approve          : user + profile dibuat di DB utama (is_active = 0).
- * 3. /register (gate)       : pemohon verifikasi email yang telah disetujui.
- * 4. /register/mfa          : scan QR + simpan recovery codes.
- * 5. /register/mfa/verify   : verifikasi kode -> akun aktif -> login.
- */
 class RegisterController extends BaseController
 {
     protected UserModel $userModel;
 
-    protected MfaService $mfaService;
+    protected UserProfileModel $profileModel;
 
-    protected RegistrationRequestService $registrationRequestService;
+    protected MasterRoleModel $roleModel;
+
+    protected MasterApplicantTypeModel $applicantTypeModel;
+
+    protected MasterStudyProgramModel $studyProgramModel;
+
+    protected MasterClassModel $classModel;
+
+    protected MfaService $mfaService;
 
     public function __construct()
     {
-        helper(['form', 'url']);
+        helper(['form', 'url', 'text']);
 
-        $this->userModel                  = new UserModel();
-        $this->mfaService                 = new MfaService();
-        $this->registrationRequestService = new RegistrationRequestService();
+        $this->userModel          = new UserModel();
+        $this->profileModel       = new UserProfileModel();
+        $this->roleModel          = new MasterRoleModel();
+        $this->applicantTypeModel = new MasterApplicantTypeModel();
+        $this->studyProgramModel  = new MasterStudyProgramModel();
+        $this->classModel         = new MasterClassModel();
+        $this->mfaService         = new MfaService();
     }
 
     /**
-     * Halaman Registrasi (gerbang verifikasi izin)
+     * Halaman Registrasi
      */
     public function index()
     {
         if (session()->get('isLoggedIn')) {
-            return redirect()->to('/dashboard');
+            return redirect()->to('/akademik/dashboard');
         }
 
-        // Lanjutkan setup MFA yang belum selesai (mis. halaman di-refresh).
-        $pending = session()->get('mfa_pending');
-
-        if ($pending && ! empty($pending['user_id']) && $this->isPendingActivation((int) $pending['user_id'])) {
-            return redirect()->to('/register/mfa');
-        }
-
-        session()->remove('mfa_pending');
-        session()->remove('registration_approved_email');
-
-        return view('auth/register_gate', [
-            'title' => 'Verifikasi Izin Registrasi',
+        return view('auth/register', [
+            'title'          => 'Registrasi',
+            'applicantTypes' => $this->applicantTypeModel->getActive(),
+            'studyPrograms'  => $this->studyProgramModel->getActive(),
+            'classes'        => $this->classModel->getActive(),
+            'applicantCode'  => 'UMUM',
+            'applicantType'  => null,
+            'data'           => [],
         ]);
     }
 
     /**
-     * Verifikasi email yang sudah disetujui + siapkan MFA.
-     * Akun (user + profile) sudah dibuat saat admin approve, jadi di sini
-     * hanya menyiapkan secret MFA; aktivasi dilakukan pada verify().
+     * Form dinamis berdasarkan jenis pemohon (AJAX)
      */
-    public function gate()
+    public function fields(int $applicantTypeId)
     {
-        if (session()->get('isLoggedIn')) {
-            return redirect()->to('/dashboard');
+        $applicantType = $this->applicantTypeModel->find($applicantTypeId);
+
+        if (! $applicantType) {
+            return $this->response->setBody(
+                '<p class="text-muted text-center py-3">Jenis pemohon tidak ditemukan.</p>'
+            );
         }
 
-        $email = strtolower(trim((string) $this->request->getPost('email')));
+        $code = strtoupper($applicantType['code'] ?? '');
 
-        if ($email === '') {
+        $data = [
+            'applicantCode' => $code,
+            'applicantType' => $applicantType,
+            'studyPrograms' => $this->studyProgramModel->getActive(),
+            'classes'       => $this->classModel->getActive(),
+            'data'          => [],
+        ];
+
+        return view('auth/_register_fields', $data);
+    }
+
+    /**
+     * Proses Registrasi
+     * Step 1: create pending account
+     */
+    public function store()
+    {
+        $data = $this->request->getPost();
+
+        if (! $this->validate(RegisterValidator::store())) {
             return redirect()
-                ->to('/register')
-                ->with('error', 'Masukkan email yang telah disetujui.');
+                ->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors());
         }
 
-        if (! $this->hasApprovedRegistrationRequest($email)) {
-            session()->remove('registration_approved_email');
-            session()->remove('mfa_pending');
-
+        if ((int) ($data['applicant_type_id'] ?? 0) <= 0) {
             return redirect()
-                ->to('/register')
-                ->with('error', 'Anda belum mendapatkan izin untuk melakukan registrasi. Silakan mengajukan permintaan izin registrasi terlebih dahulu.');
+                ->back()
+                ->withInput()
+                ->with('error', 'Pilih jenis pemohon.');
         }
 
-        $user = $this->userModel->where('email', $email)->first();
-
-        if (! $user) {
+        if ($this->userModel->where('email', $data['email'])->first()) {
             return redirect()
-                ->to('/register')
-                ->with('error', 'Data akun untuk email tersebut belum tersedia. Hubungi administrator.');
+                ->back()
+                ->withInput()
+                ->with('error', 'Email sudah registrasi silakan login.');
         }
 
-        if ((int) ($user['is_active'] ?? 0) === 1) {
+        $role = $this->roleModel
+            ->where('code', 'PEMOHON')
+            ->where('is_active', 1)
+            ->first();
+
+        $roleId = $role ? (int) $role['id'] : 0;
+
+        if ($roleId <= 0) {
             return redirect()
-                ->to('/login')
-                ->with('info', 'Akun Anda sudah aktif. Silakan login.');
+                ->back()
+                ->withInput()
+                ->with('error', 'Role Pemohon tidak ditemukan. Hubungi administrator.');
         }
 
-        // Siapkan secret + recovery codes (mfa_enabled tetap 0 sampai diverifikasi).
-        $secret        = $this->mfaService->generateSecret();
+        // Generate secret MFA
+        $secret = $this->mfaService->generateSecret();
+
+        // Simpan akun sebagai pending
+        // Catatan: gender tidak disimpan karena kolom tersebut
+        // tidak tersedia pada tabel users Backend2.
+        $userId = $this->userModel->insert([
+            'role_id'         => $roleId,
+            'full_name'       => $data['full_name'],
+            'identity_number' => $this->nullable($data['identity_number'] ?? null),
+            'phone_number'    => $this->nullable($data['phone_number'] ?? null),
+            'email'           => $data['email'],
+            'password'        => password_hash($data['password'], PASSWORD_DEFAULT),
+            'is_active'       => 0,
+            'mfa_secret'      => $secret,
+        ]);
+
+        if (! $userId) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Gagal proses registrasi. Silakan coba lagi.');
+        }
+
+        // Simpan profile pemohon
+        $this->saveProfile((int) $userId, $data);
+
+        // Generate recovery codes MFA
         $recoveryCodes = $this->mfaService->generateRecoveryCodes();
 
-        if (! $this->mfaService->beginSetup((int) $user['id'], $secret, $recoveryCodes)) {
-            return redirect()
-                ->to('/register')
-                ->with('error', 'Gagal menyiapkan MFA. Silakan coba lagi.');
-        }
+        // Simpan secret + recovery codes
+        // Akun belum diaktifkan sampai MFA berhasil diverifikasi.
+        $this->mfaService->beginSetup(
+            (int) $userId,
+            $secret,
+            $recoveryCodes
+        );
 
-        session()->set('registration_approved_email', $email);
         session()->set('mfa_pending', [
-            'user_id'   => (int) $user['id'],
-            'full_name' => $user['full_name'] ?? '',
-            'email'     => $email,
+            'user_id'   => (int) $userId,
+            'full_name' => $data['full_name'],
+            'email'     => $data['email'],
         ]);
 
         return redirect()->to('/register/mfa');
     }
 
     /**
-     * Kompatibilitas endpoint lama (POST /register) = verifikasi izin.
-     */
-    public function store()
-    {
-        return $this->gate();
-    }
-
-    /**
-     * Halaman Setup MFA (QR + recovery codes)
+     * Halaman Setup MFA
+     * Step 2: QR + recovery codes
      */
     public function mfaSetup()
     {
@@ -142,16 +191,25 @@ class RegisterController extends BaseController
 
         $user = $this->userModel->find($pending['user_id']);
 
-        if (! $user || empty($user['mfa_secret']) || (int) ($user['is_active'] ?? 0) === 1) {
+        if (! $user || empty($user['mfa_secret'])) {
             return redirect()->to('/register');
         }
 
         $secret = $user['mfa_secret'];
 
-        $uri = $this->mfaService->provisioningUri($secret, (string) $user['email']);
+        $uri = $this->mfaService->provisioningUri(
+            $secret,
+            $user['email']
+        );
 
-        $recoveryCodes = json_decode($user['mfa_recovery_codes'] ?? '[]', true);
-        $recoveryCodes = is_array($recoveryCodes) ? $recoveryCodes : [];
+        $recoveryCodes = json_decode(
+            $user['mfa_recovery_codes'] ?? '[]',
+            true
+        );
+
+        $recoveryCodes = is_array($recoveryCodes)
+            ? $recoveryCodes
+            : [];
 
         return view('auth/register_mfa', [
             'title'         => 'Setup MFA',
@@ -163,7 +221,8 @@ class RegisterController extends BaseController
     }
 
     /**
-     * Verify MFA Code (aktivasi akun)
+     * Verify MFA Code
+     * Step 3: activate account
      */
     public function verify()
     {
@@ -182,17 +241,22 @@ class RegisterController extends BaseController
                 ->with('errors', $this->validator->getErrors());
         }
 
-        if (! $this->mfaService->verifyCode((int) $pending['user_id'], (string) $data['mfa_code'])) {
+        if (! $this->mfaService->verifyCode(
+            (int) $pending['user_id'],
+            $data['mfa_code']
+        )) {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with('error', 'Kode MFA tidak valid. Silakan coba lagi.');
         }
 
-        $this->mfaService->activate((int) $pending['user_id']);
+        // Aktifkan MFA dan akun
+        $this->mfaService->activate(
+            (int) $pending['user_id']
+        );
 
         session()->remove('mfa_pending');
-        session()->remove('registration_approved_email');
 
         return redirect()
             ->to('/login')
@@ -200,22 +264,64 @@ class RegisterController extends BaseController
     }
 
     /**
-     * Cek apakah email memiliki permintaan izin registrasi berstatus approved.
+     * Simpan profile pemohon
      */
-    protected function hasApprovedRegistrationRequest(string $email): bool
+    protected function saveProfile(int $userId, array $data): void
     {
-        return $this->registrationRequestService->hasApproved($email);
+        $this->profileModel->insert([
+            'user_id'           => $userId,
+            'applicant_type_id' => (int) ($data['applicant_type_id'] ?? 0),
+            'study_program_id'  => $this->nullableInt(
+                $data['study_program_id'] ?? 0
+            ),
+            'class_id'          => $this->nullableInt(
+                $data['class_id'] ?? 0
+            ),
+            'nim'               => $this->nullable(
+                $data['nim'] ?? null
+            ),
+            'nik'               => $this->nullable(
+                $data['nik'] ?? null
+            ),
+            'student_name'      => $this->nullable(
+                $data['student_name'] ?? null
+            ),
+            'institution_name'  => $this->nullable(
+                $data['institution_name'] ?? null
+            ),
+            'position'          => $this->nullable(
+                $data['position'] ?? null
+            ),
+            'name'              => $data['full_name'] ?? '',
+            'email'             => $this->nullable(
+                $data['email'] ?? null
+            ),
+            'phone'             => $this->nullable(
+                $data['phone_number'] ?? null
+            ),
+            'address'           => $this->nullable(
+                $data['address'] ?? null
+            ),
+        ]);
     }
 
     /**
-     * Apakah user masih menunggu aktivasi (dibuat saat approve, is_active = 0).
+     * Helper: kosong menjadi null
      */
-    protected function isPendingActivation(int $userId): bool
+    protected function nullable($value): ?string
     {
-        $user = $this->userModel->find($userId);
+        $value = trim((string) $value);
 
-        return $user
-            && (int) ($user['is_active'] ?? 0) === 0
-            && ! empty($user['mfa_secret']);
+        return $value === '' ? null : $value;
+    }
+
+    /**
+     * Helper: integer nullable
+     */
+    protected function nullableInt($value): ?int
+    {
+        $value = (int) $value;
+
+        return $value > 0 ? $value : null;
     }
 }

@@ -40,7 +40,7 @@ class AdminSeeder extends Seeder
 
             'full_name' => 'Super Administrator',
 
-            'identity_number' => 'ADM001', // NIK / nomor identitas admin
+            'identity_number' => 'ADM001',
 
             'phone_number' => '081234567890',
 

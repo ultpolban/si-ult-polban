@@ -32,9 +32,8 @@ class RegisterValidator
             ],
 
             'password' => [
-                'label'  => 'Password',
-                'rules'  => SecurityRules::password(),
-                'errors' => SecurityRules::passwordErrors(),
+                'label' => 'Password',
+                'rules' => 'required|min_length[8]',
             ],
 
             'password_confirmation' => [

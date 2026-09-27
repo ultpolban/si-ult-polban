@@ -164,7 +164,7 @@ class PermissionBackfillSeeder extends Seeder
                 'notification.view',
             ],
 
-            'PETUGAS_UMUM' => [
+            'PETUGAS_PERPUSTAKAAN' => [
                 'dashboard.view',
                 'request.view',
                 'request.verify',

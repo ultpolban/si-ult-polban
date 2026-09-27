@@ -73,7 +73,7 @@
 
                     <div class="text-center mb-4">
 
-                        <img src="<?= base_url('assets/img/logo.svg') ?>"
+                        <img src="<?= base_url('assets/images/logo.svg') ?>"
                             alt="Logo"
                             width="72">
 
@@ -104,7 +104,7 @@
 
                             <label class="form-label">
 
-                                Email / NIM / NIK
+                                Email / NIM / NIP
 
                             </label>
 

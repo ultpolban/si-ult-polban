@@ -10,12 +10,6 @@ class RoleSeeder extends Seeder
     {
         $now = date('Y-m-d H:i:s');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Role kanonik aplikasi (konsisten dengan RolePermissionSeeder & Routes)
-        |--------------------------------------------------------------------------
-        */
-
         $roles = [
 
             [
@@ -33,54 +27,82 @@ class RoleSeeder extends Seeder
             ],
 
             [
-                'code'        => 'PETUGAS_ULT',
-                'name'        => 'Petugas ULT',
-                'description' => 'Memverifikasi dan memproses layanan Unit Layanan Terpadu.',
+                'code'        => 'PETUGAS_AKADEMIK',
+                'name'        => 'Petugas Akademik',
+                'description' => 'Memverifikasi dan memproses layanan akademik.',
                 'sort_order'  => 3,
             ],
 
             [
-                'code'        => 'UNIT_TUJUAN',
-                'name'        => 'Unit Tujuan',
-                'description' => 'Unit layanan tujuan yang menindaklanjuti tiket.',
+                'code'        => 'PETUGAS_TIK',
+                'name'        => 'Petugas UPT TIK',
+                'description' => 'Mengelola tiket layanan teknologi informasi dan komunikasi.',
                 'sort_order'  => 4,
             ],
 
             [
-                'code'        => 'PIMPINAN',
-                'name'        => 'Pimpinan',
-                'description' => 'Melihat laporan dan statistik layanan.',
+                'code'        => 'PETUGAS_UMUM',
+                'name'        => 'Petugas Administrasi Umum',
+                'description' => 'Mengelola tiket layanan Bagian Administrasi Umum.',
                 'sort_order'  => 5,
+            ],
+
+            [
+                'code'        => 'PETUGAS_KEMAHASISWAAN',
+                'name'        => 'Petugas Kemahasiswaan',
+                'description' => 'Memverifikasi dan memproses layanan kemahasiswaan.',
+                'sort_order'  => 6,
+            ],
+
+            [
+                'code'        => 'PETUGAS_KEUANGAN',
+                'name'        => 'Petugas Keuangan',
+                'description' => 'Memverifikasi dan memproses layanan keuangan.',
+                'sort_order'  => 7,
+            ],
+
+            [
+                'code'        => 'PETUGAS_PERPUSTAKAAN',
+                'name'        => 'Petugas Perpustakaan',
+                'description' => 'Memverifikasi dan memproses layanan perpustakaan.',
+                'sort_order'  => 8,
+            ],
+
+            [
+                'code'        => 'PETUGAS_JURUSAN',
+                'name'        => 'Petugas Jurusan',
+                'description' => 'Memverifikasi dan memproses layanan jurusan.',
+                'sort_order'  => 9,
             ],
 
             [
                 'code'        => 'PEMOHON',
                 'name'        => 'Pemohon',
                 'description' => 'Pengguna yang mengajukan layanan.',
-                'sort_order'  => 6,
+                'sort_order'  => 10,
             ],
 
         ];
 
-        foreach ($roles as $role) {
-            $existing = $this->db->table('roles')
+        foreach ($roles as &$role) {
+            $role['is_active'] = true;
+            $role['created_at'] = $now;
+            $role['updated_at'] = $now;
+
+            $existing = $this->db
+                ->table('roles')
                 ->where('code', $role['code'])
                 ->get()
                 ->getRowArray();
 
-            $role['is_active']  = true;
-            $role['updated_at'] = $now;
-
             if ($existing) {
-                // Update agar sesuai definisi terbaru (tetap aktif)
-                unset($role['code']);
                 $this->db->table('roles')
                     ->where('id', $existing['id'])
                     ->update($role);
-            } else {
-                $role['created_at'] = $now;
-                $this->db->table('roles')->insert($role);
+                continue;
             }
+
+            $this->db->table('roles')->insert($role);
         }
     }
 }

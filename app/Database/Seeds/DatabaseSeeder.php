@@ -63,30 +63,11 @@ class DatabaseSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | MAPPING AKSES LAYANAN BERDASARKAN JENIS PEMOHON
-        |--------------------------------------------------------------------------
-        */
-
-        // membutuhkan layanan + jenis pemohon
-        $this->call(ServiceApplicantTypeSeeder::class);
-
-
-        /*
-        |--------------------------------------------------------------------------
         | REQUIREMENT
         |--------------------------------------------------------------------------
         */
 
         $this->call(ServiceRequirementSeeder::class);
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | DESKRIPSI UNIT (units_profiles, butuh master_service_units)
-        |--------------------------------------------------------------------------
-        */
-
-        $this->call(UnitsProfileSeeder::class);
 
 
         /*
@@ -97,6 +78,19 @@ class DatabaseSeeder extends Seeder
 
         $this->call(AdminSeeder::class);
 
+        $this->call(AkademikSeeder::class);
+
+        $this->call(UptTikSeeder::class);
+
+        $this->call(AdministrasiUmumSeeder::class);
+
+        $this->seedExistingUnitUsers();
+
+        $this->call(FinanceSeeder::class);
+
+        $this->call(PerpustakaanSeeder::class);
+
+        $this->call(JurusanSeeder::class);
 
 echo PHP_EOL;
         echo "======================================" . PHP_EOL;
@@ -115,9 +109,16 @@ echo PHP_EOL;
         $tables = [
             'service_request_logs',
             'service_request_files',
-            'tickets',
+            'service_requests',
             'notifications',
             'activity_logs',
+            'upt_tik_activity_logs',
+            'administrasi_umum_activity_logs',
+            'perpustakaan_activity_logs',
+            'jurusan_activity_logs',
+            'kemahasiswaan_activity_logs',
+            'keuangan_activity_logs',
+            'akademik_activity_logs',
             'role_permissions',
             'user_profiles',
             'users',
@@ -131,9 +132,6 @@ echo PHP_EOL;
             'master_study_programs',
             'master_departments',
             'master_applicant_types',
-            'service_applicant_types',
-            'faqs',
-            'units_profiles',
         ];
 
         foreach ($tables as $table) {
@@ -141,5 +139,48 @@ echo PHP_EOL;
         }
 
         $this->db->query('SET FOREIGN_KEY_CHECKS = 1');
+    }
+
+    protected function seedExistingUnitUsers(): void
+    {
+        $users = [
+            [
+                'role_code' => 'PETUGAS_KEMAHASISWAAN',
+                'full_name' => 'Petugas Kemahasiswaan',
+                'identity_number' => 'KMS001',
+                'email' => 'petugas.kemahasiswaan@polban.ac.id',
+                'password' => 'Kemahasiswaan123',
+            ],
+        ];
+
+        foreach ($users as $user) {
+            $role = $this->db
+                ->table('roles')
+                ->where('code', $user['role_code'])
+                ->get()
+                ->getRowArray();
+
+            if (!$role) {
+                continue;
+            }
+
+            $now = date('Y-m-d H:i:s');
+
+            $this->db->table('users')->insert([
+                'role_id' => $role['id'],
+                'full_name' => $user['full_name'],
+                'identity_number' => $user['identity_number'],
+                'phone_number' => null,
+                'email' => $user['email'],
+                'password' => password_hash($user['password'], PASSWORD_DEFAULT),
+                'profile_photo' => null,
+                'is_active' => true,
+                'last_login' => null,
+                'remember_token' => null,
+                'email_verified_at' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+        }
     }
 }

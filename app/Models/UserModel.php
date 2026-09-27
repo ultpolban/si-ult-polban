@@ -124,6 +124,7 @@ class UserModel extends BaseModel
             ->where('email', $username)
             ->orWhere('identity_number', $username)
             ->groupEnd()
+            ->where('is_active', 1)
             ->first();
     }
 

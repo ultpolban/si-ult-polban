@@ -113,7 +113,7 @@ $routes->get(
 
 $routes->get(
     'dashboard',
-    'DashboardController::index'
+    'Dashboard\DashboardController::index', ['filter' => 'permission:dashboard.view']
 );
 
 

@@ -1,151 +1,148 @@
-<?= $this->include('layouts/header') ?>
+<!DOCTYPE html>
+<html lang="id">
 
-<style>
-    body {
-        background: linear-gradient(135deg, #0d6efd, #4f8dfd);
-        min-height: 100vh;
-    }
+<head>
 
-    .login-card {
-        border: none;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, .15);
-    }
+    <meta charset="UTF-8">
 
-    .left-side {
-        background: #0d6efd;
-        color: white;
-        padding: 60px 45px;
-    }
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    .left-side h1 {
-        font-weight: 700;
-    }
+    <title><?= esc($title ?? 'Login') ?> - SI ULT POLBAN</title>
 
-    .left-side p {
-        opacity: .9;
-        font-size: 17px;
-        line-height: 28px;
-    }
+    <link rel="icon" href="<?= base_url('assets/img/favicon.svg') ?>">
 
-    .right-side {
-        background: white;
-        padding: 55px;
-    }
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
-    .form-control {
-        height: 50px;
-        border-radius: 12px;
-    }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    .btn-login {
-        height: 50px;
-        border-radius: 12px;
-        font-weight: 600;
-    }
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
 
-    @media(max-width:768px) {
+</head>
 
-        .left-side {
-            display: none;
-        }
+<body>
 
-        .right-side {
-            padding: 35px;
-        }
+    <div class="auth-page">
 
-    }
-</style>
+        <div class="auth-container">
 
-<div class="container">
+            <div class="auth-card">
 
-    <div class="row justify-content-center align-items-center"
-        style="min-height:100vh;">
+                <!-- Left -->
+                <div class="auth-left">
 
-        <div class="col-lg-10">
+                    <div>
 
-            <div class="card login-card">
+                        <span class="system-badge">
 
-                <div class="row g-0">
+                            <i class="fas fa-star me-1"></i>
 
-                    <div class="col-lg-5 left-side d-flex flex-column justify-content-center">
+                            Layanan Terpadu
 
-                        <h1>SI ULT POLBAN</h1>
+                        </span>
 
-                        <hr class="border-light">
+                        <h1>
 
-                        <h4>Unit Layanan Terpadu</h4>
+                            Sistem Informasi<br>
 
-                        <p class="mt-4">
+                            Layanan Terpadu<br>
 
-                            Selamat datang di Sistem Informasi
-                            Unit Layanan Terpadu
-                            Politeknik Negeri Bandung.
+                            POLBAN
 
-                        </p>
+                        </h1>
 
                         <p>
 
-                            Silakan login menggunakan akun yang telah
-                            terdaftar untuk mengakses layanan sistem.
+                            Satu pintu untuk seluruh layanan akademik,
+
+                            administrasi, dan kemahasiswaan.
 
                         </p>
 
                     </div>
 
-                    <div class="col-lg-7 right-side">
+                    <div class="auth-icon">
 
-                        <h2 class="fw-bold">
+                        <i class="fas fa-graduation-cap"></i>
 
-                            Login
+                    </div>
 
-                        </h2>
+                </div>
 
-                        <p class="text-muted mb-4">
+                <!-- Right -->
+                <div class="auth-right">
 
-                            Masukkan email dan password Anda.
+                    <div class="text-center mb-4">
 
-                        </p>
+                        <img src="<?= base_url('assets/img/logo.svg') ?>"
+                            alt="Logo"
+                            width="72">
 
-                        <?php if (session()->getFlashdata('error')) : ?>
+                        <h2 class="mt-3 mb-1">Selamat Datang</h2>
 
-                            <div class="alert alert-danger">
+                        <p>Silakan login untuk melanjutkan</p>
 
-                                <?= session()->getFlashdata('error') ?>
+                    </div>
 
-                            </div>
+                    <?php if (session()->getFlashdata('error')) : ?>
 
-                        <?php endif; ?>
+                        <div class="alert alert-danger">
 
-                        <form action="<?= base_url('login') ?>" method="post">
+                            <i class="fas fa-exclamation-circle me-2"></i>
 
-                            <?= csrf_field() ?>
+                            <?= esc(session()->getFlashdata('error')) ?>
 
-                            <div class="mb-3">
+                        </div>
 
-                                <label class="form-label">
+                    <?php endif; ?>
 
-                                    Email
+                    <form action="<?= base_url('login') ?>"
+                        method="post">
 
-                                </label>
+                        <?= csrf_field(); ?>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Email / NIM / NIK
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+
+                                    <i class="fas fa-envelope"></i>
+
+                                </span>
 
                                 <input
-                                    type="email"
+                                    type="text"
                                     name="email"
                                     class="form-control"
-                                    placeholder="Masukkan email"
+                                    placeholder="Masukkan email atau NIM"
+                                    value="<?= old('email') ?>"
                                     required>
 
                             </div>
 
-                            <div class="mb-4">
+                        </div>
 
-                                <label class="form-label">
+                        <div class="mb-4">
 
-                                    Password
+                            <label class="form-label">
 
-                                </label>
+                                Password
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+
+                                    <i class="fas fa-lock"></i>
+
+                                </span>
 
                                 <input
                                     type="password"
@@ -156,25 +153,33 @@
 
                             </div>
 
-                            <button class="btn btn-primary btn-login w-100">
+                        </div>
 
-                                Login
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100">
 
-                            </button>
+                            <i class="fas fa-sign-in-alt me-2"></i>
 
-                        </form>
+                            Login
 
-                        <div class="text-center mt-4">
+                        </button>
 
-                            Belum memiliki akun?
+                    </form>
+
+                    <div class="text-center mt-3">
+
+                        <small>
+
+                            Belum punya akun?
 
                             <a href="<?= base_url('register') ?>">
 
-                                Daftar Sekarang
+                                Daftar sebagai pemohon
 
                             </a>
 
-                        </div>
+                        </small>
 
                     </div>
 
@@ -186,6 +191,8 @@
 
     </div>
 
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<?= $this->include('layouts/footer') ?>
+</body>
+
+</html>

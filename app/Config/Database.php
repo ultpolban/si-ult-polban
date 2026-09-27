@@ -51,6 +51,47 @@ class Database extends Config
         ],
     ];
 
+    /**
+     * Registrations database connection (Opsi A: separate physical DB).
+     *
+     * Holds ONLY `registration_requests` (full applicant payload, PENDING).
+     * No FK to main DB tables (users / masters) — cross-DB FK is not
+     * possible. Master / user data is snapshotted as *_code / *_name
+     * columns + resolved via second query to the default group.
+     *
+     * Configure via .env:
+     *   database.registrations.hostname / database / username /
+     *   password / DBDriver / DBPrefix / port
+     *
+     * @var array<string, mixed>
+     */
+    public array $registrations = [
+        'DSN'          => '',
+        'hostname'     => 'localhost',
+        'username'     => '',
+        'password'     => '',
+        'database'     => '',
+        'DBDriver'     => 'MySQLi',
+        'DBPrefix'     => '',
+        'pConnect'     => false,
+        'DBDebug'      => true,
+        'charset'      => 'utf8mb4',
+        'DBCollat'     => 'utf8mb4_general_ci',
+        'swapPre'      => '',
+        'encrypt'      => false,
+        'compress'     => false,
+        'strictOn'     => false,
+        'failover'     => [],
+        'port'         => 3306,
+        'numberNative' => false,
+        'foundRows'    => false,
+        'dateFormat'   => [
+            'date'     => 'Y-m-d',
+            'datetime' => 'Y-m-d H:i:s',
+            'time'     => 'H:i:s',
+        ],
+    ];
+
     //    /**
     //     * Sample database connection for SQLite3.
     //     *

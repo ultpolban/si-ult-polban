@@ -1,31 +1,151 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<header class="ult-topbar">
 
-    <ul class="navbar-nav">
+    <div class="ult-topbar-left">
 
-        <li class="nav-item">
+        <button type="button" class="btn-icon"
+            id="sidebarToggle"
+            aria-label="Toggle Sidebar">
 
-            <a class="nav-link" data-widget="pushmenu" href="#">
+            <i class="fas fa-bars"></i>
 
-                <i class="fas fa-bars"></i>
+        </button>
+
+        <span class="fw-bold d-none d-sm-inline" style="color:var(--ult-primary);">
+
+            Sistem Informasi Layanan Terpadu
+
+        </span>
+
+    </div>
+
+    <div class="ult-topbar-right">
+
+        <!-- Notification -->
+        <div class="dropdown">
+
+            <button type="button"
+                class="btn-icon"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+
+                <i class="far fa-bell"></i>
+
+                <span class="ult-badge ult-badge-red rt-notif-badge"
+                    id="rt-notif-badge"
+                    style="position:absolute;top:4px;right:4px;padding:2px 6px;font-size:.65rem;<?= empty($notificationCount) ? 'display:none;' : '' ?>">
+
+                    <?= (int) ($notificationCount ?? 0) ?>
+
+                </span>
+
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow"
+                style="min-width:320px; max-height:420px; overflow-y:auto;">
+
+                <li class="dropdown-header" id="rt-notif-count">
+                    <?= $notificationCount ?? 0 ?> Notifikasi
+                </li>
+
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <div id="rt-notif-items">
+
+                    <?php if (empty($notifications)): ?>
+                        <li>
+                            <a class="dropdown-item text-muted" href="<?= site_url('notifications') ?>">
+                                <em>Tidak ada notifikasi baru.</em>
+                            </a>
+                        </li>
+                    <?php else: ?>
+                        <?php $nCount = 0; ?>
+                        <?php foreach ($notifications as $n): ?>
+                            <?php if ($nCount >= 8) { break; } $nCount++; ?>
+                            <li>
+                                <a class="dropdown-item"
+                                    href="<?= !empty($n['url']) ? esc($n['url']) : site_url('notifications/read/' . $n['id']) ?>">
+                                    <div class="d-flex justify-content-between">
+                                        <strong class="small"><?= esc($n['title']) ?></strong>
+                                        <small class="text-muted ms-2 text-nowrap"><?= esc(date('d/m H:i', strtotime($n['created_at'] ?? 'now'))) ?></small>
+                                    </div>
+                                    <div class="small text-muted text-truncate" style="max-width:260px;"><?= esc($n['message']) ?></div>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+
+                </div>
+
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <li>
+                    <a class="dropdown-item text-center"
+                        href="<?= site_url('notifications') ?>">
+
+                        Lihat Semua Notifikasi
+
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- User -->
+        <div class="dropdown">
+
+            <a href="#"
+                class="ult-user-menu"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+
+                <img src="<?= base_url($user['photo'] ?? 'assets/img/avatar.svg') ?>"
+                    alt="User">
+
+                <span class="d-none d-md-inline">
+
+                    <?= esc($user['full_name'] ?? 'User') ?>
+
+                </span>
+
+                <i class="fas fa-chevron-down small"></i>
 
             </a>
 
-        </li>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
 
-    </ul>
+                <li>
+                    <a class="dropdown-item"
+                        href="<?= site_url('profile') ?>">
 
-    <ul class="navbar-nav ml-auto">
+                        <i class="fas fa-user me-2"></i>
+                        Profil
 
-        <li class="nav-item">
+                    </a>
+                </li>
 
-            <span class="nav-link">
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
 
-                SI-ULT POLBAN
+                <li>
+                    <a class="dropdown-item text-danger"
+                        href="<?= site_url('logout') ?>">
 
-            </span>
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        Logout
 
-        </li>
+                    </a>
+                </li>
 
-    </ul>
+            </ul>
 
-</nav>
+        </div>
+
+    </div>
+
+</header>

@@ -124,3 +124,20 @@ _modules/*
 
 /results/
 /phpunit.xml
+
+# -------------------------
+# Project Temporary / Debug Files
+# -------------------------
+
+.env.bak
+cookies.txt
+a
+dash.html
+err.html
+login.html
+perm.html
+post.html
+routes.txt
+
+# User uploaded files
+/public/uploads/*

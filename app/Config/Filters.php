@@ -25,18 +25,21 @@ class Filters extends BaseFilters
      * or [filter_name => [classname1, classname2, ...]]
      */
     public array $aliases = [
-        'csrf'          => CSRF::class,
-        'toolbar'       => DebugToolbar::class,
-        'honeypot'      => Honeypot::class,
-        'invalidchars'  => InvalidChars::class,
-        'secureheaders' => SecureHeaders::class,
-        'cors'          => Cors::class,
-        'forcehttps'    => ForceHTTPS::class,
-        'pagecache'     => PageCache::class,
-        'performance'   => PerformanceMetrics::class,
-        'jwt'           => \App\Filters\JwtFilter::class,
-        'role'          => \App\Filters\RoleFilter::class,
-        'auth'          => \App\Filters\AuthFilter::class,
+        'csrf'            => CSRF::class,
+        'toolbar'         => DebugToolbar::class,
+        'honeypot'        => Honeypot::class,
+        'invalidchars'    => InvalidChars::class,
+        'secureheaders'   => SecureHeaders::class,
+        'cors'            => Cors::class,
+        'forcehttps'      => ForceHTTPS::class,
+        'pagecache'       => PageCache::class,
+        'performance'     => PerformanceMetrics::class,
+        'role'            => \App\Filters\RoleFilter::class,
+        'auth'            => \App\Filters\AuthFilter::class,
+        'permission'      => \App\Filters\PermissionFilter::class,
+        'sanitize'        => \App\Filters\SanitizeInputFilter::class,
+        'ratelimit'       => \App\Filters\RateLimitFilter::class,
+        'securityheaders' => \App\Filters\SecurityHeadersFilter::class,
     ];
 
     /**
@@ -60,7 +63,7 @@ class Filters extends BaseFilters
         'after' => [
             'pagecache',   // Web Page Caching
             'performance', // Performance Metrics
-            'toolbar',     // Debug Toolbar
+            // 'toolbar',     // Debug Toolbar — dinonaktifkan di production
         ],
     ];
 
@@ -75,11 +78,18 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
+            // Rate limit dievaluasi lebih dulu (didahului filter wajib
+            // forcehttps & pagecache) supaya flood, brute force, dan spam
+            // tertahan sebelum sesi/CSRF diproses. Filter ini hanya
+            // membatasi endpoint pada $rateLimitPaths di bawah.
+            'ratelimit',
+            'csrf',     // Validasi token CSRF untuk semua request POST/PUT/PATCH/DELETE
+            'sanitize', // Netralkan payload XSS & tolak signature injection
             // 'honeypot',
-            // 'csrf',
             // 'invalidchars',
         ],
         'after' => [
+            'securityheaders', // X-Frame-Options, nosniff, Referrer-Policy, CSP report-only
             // 'honeypot',
             // 'secureheaders',
         ],
@@ -110,4 +120,24 @@ class Filters extends BaseFilters
      * @var array<string, array<string, list<string>>>
      */
     public array $filters = [];
+
+    /**
+     * Endpoint yang dibatasi RateLimitFilter (per alamat IP).
+     *
+     * Daftar ini dipakai filter untuk memutuskan apakah request perlu
+     * dibatasi, karena `ratelimit` dijalankan sebagai filter global agar
+     * dievaluasi lebih dahulu daripada `csrf`. Pola harus cocok PENUH dengan
+     * URI relatif terhadap baseURL dan mendukung tanda bintang (*),
+     * contoh: 'register/*'.
+     *
+     * @var list<string>
+     */
+    public array $rateLimitPaths = [
+        'login',
+        'login/mfa/verify',
+        'register',
+        'register/gate',
+        'register/mfa/verify',
+        'registration-request',
+    ];
 }

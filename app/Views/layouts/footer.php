@@ -1,9 +1,15 @@
-<footer class="main-footer">
+<footer class="ult-footer">
 
-    <strong>
+    <span>
 
-        SI-ULT POLBAN © <?= date('Y') ?>
+        © <?= date('Y') ?> SI ULT POLBAN
 
-    </strong>
+    </span>
+
+    <span>
+
+        Politeknik Negeri Bandung
+
+    </span>
 
 </footer>

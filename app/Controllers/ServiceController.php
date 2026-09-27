@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\ServiceModel;
 use App\Models\RequirementModel;
+use App\Models\MasterServiceUnitModel;
+use App\Models\UnitProfileModel;
 
 class ServiceController extends BaseController
 {
@@ -23,21 +25,38 @@ class ServiceController extends BaseController
 public function keuangan()
 {
     $model = new ServiceModel();
+    $serviceUnitModel = new MasterServiceUnitModel();
+    $unitProfileModel = new UnitProfileModel();
 
     $data['title'] = 'Layanan Keuangan';
 
+    // Ambil layanan Keuangan
     $data['services'] = $model
         ->where('service_unit_id', 3)
         ->where('is_active', 1)
         ->findAll();
 
+   $data['unit'] = $serviceUnitModel
+    ->where('code', 'KEU')
+    ->first();
+
+    // Ambil profil unit Keuangan
+    $data['profile'] = null;
+
+    if ($data['unit']) {
+        $data['profile'] = $unitProfileModel
+            ->where('service_unit_id', $data['unit']['id'])
+            ->first();
+    }
+
     return view('services/keuangan', $data);
 }
 
-// Menampilkan layanan kategori Akademik
 public function akademik()
 {
     $model = new ServiceModel();
+    $serviceUnitModel = new MasterServiceUnitModel();
+    $unitProfileModel = new UnitProfileModel();
 
     $data['title'] = 'Layanan Akademik';
 
@@ -45,6 +64,18 @@ public function akademik()
         ->where('service_unit_id', 2)
         ->where('is_active', 1)
         ->findAll();
+
+    $data['unit'] = $serviceUnitModel
+        ->where('code', 'AKD')
+        ->first();
+
+    $data['profile'] = null;
+
+    if ($data['unit']) {
+        $data['profile'] = $unitProfileModel
+            ->where('service_unit_id', $data['unit']['id'])
+            ->first();
+    }
 
     return view('services/akademik', $data);
 }
@@ -92,6 +123,8 @@ public function upa()
 public function kemahasiswaan()
 {
     $model = new ServiceModel();
+    $serviceUnitModel = new MasterServiceUnitModel();
+    $unitProfileModel = new UnitProfileModel();
 
     $data['title'] = 'Layanan Kemahasiswaan';
 
@@ -99,6 +132,18 @@ public function kemahasiswaan()
         ->where('service_unit_id', 4)
         ->where('is_active', 1)
         ->findAll();
+
+    $data['unit'] = $serviceUnitModel
+        ->where('code', 'KEMHS')
+        ->first();
+
+    $data['profile'] = null;
+
+    if ($data['unit']) {
+        $data['profile'] = $unitProfileModel
+            ->where('service_unit_id', $data['unit']['id'])
+            ->first();
+    }
 
     return view('services/kemahasiswaan', $data);
 }

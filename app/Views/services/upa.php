@@ -13,7 +13,7 @@
 
     <div class="list-group shadow-sm">
 
-        <a href="<?= base_url('layanan/upa/tik') ?>"
+        <a href="<?= url_to('layanan/upa') ?>"
             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
 
             💻 UPT Teknologi Informasi dan Komunikasi

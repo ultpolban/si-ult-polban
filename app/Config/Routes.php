@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use CodeIgniter\Router\RouteCollection;
 
@@ -9,13 +9,21 @@ use CodeIgniter\Router\RouteCollection;
 // ==============================
 $routes->get('/', 'Home::index');
 
-$routes->get('/login', 'AuthController::login');
-$routes->post('/login', 'AuthController::authenticate');
+$routes->get('/login', 'Auth\AuthController::index');
+$routes->post('/login', 'Auth\AuthController::authenticate');
 
-$routes->get('/register', 'AuthController::register');
-$routes->post('/register', 'AuthController::storeRegister');
+$routes->get('/login/mfa', 'Auth\AuthController::mfa');
+$routes->post('/login/mfa/verify', 'Auth\AuthController::verifyMfa');
 
-$routes->get('/logout', 'AuthController::logout');
+$routes->get('/register', 'Auth\RegisterController::index');
+$routes->post('/register', 'Auth\RegisterController::store');
+
+$routes->get('/register/fields/(:num)', 'Auth\RegisterController::fields/$1');
+
+$routes->get('/register/mfa', 'Auth\RegisterController::mfaSetup');
+$routes->post('/register/mfa/verify', 'Auth\RegisterController::verify');
+
+$routes->get('/logout', 'Auth\AuthController::logout');
 
 $routes->get('services', 'ServiceController::index');
 $routes->get('layanan/akademik', 'ServiceController::akademik');

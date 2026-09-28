@@ -36,6 +36,10 @@ $routes->get(
     'Auth\RegisterController::fields/$1'
 );
 
+$routes->get('registration-request', 'Auth\RegistrationRequestController::index');
+$routes->post('registration-request', 'Auth\RegistrationRequestController::store');
+$routes->get('registration-request/fields/(:num)', 'Auth\RegistrationRequestController::fields/$1');
+$routes->get('registration-request/status', 'Auth\RegistrationRequestController::status');
 $routes->get('logout', 'Auth\AuthController::logout');
 
 

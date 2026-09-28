@@ -841,55 +841,138 @@ class GuestReportController extends BaseController
             'master_applicant_types'
         );
 
-        if (!in_array(
-            'name',
-            $columns,
-            true
-        )) {
+        if (!in_array('name', $columns, true)) {
             return null;
         }
 
-        $aliases = [
-            $applicantType
-        ];
+        $normalizedInput = strtolower(
+            preg_replace(
+                '/[^a-z0-9]/i',
+                '',
+                trim($applicantType)
+            )
+        );
 
-        if ($applicantType === 'Orang Tua') {
-            $aliases[] = 'Orang Tua / Wali';
+        if ($normalizedInput === '') {
+            return null;
         }
 
-        if ($applicantType === 'Masyarakat') {
-            $aliases[] = 'Masyarakat Umum';
+        $builder = $this->db
+            ->table('master_applicant_types')
+            ->select('id, name');
+
+        if (in_array('deleted_at', $columns, true)) {
+            $builder->where(
+                'deleted_at IS NULL',
+                null,
+                false
+            );
         }
 
-        foreach ($aliases as $name) {
+        $rows = $builder
+            ->get()
+            ->getResultArray();
 
-            if (!$name) {
-                continue;
-            }
+        foreach ($rows as $row) {
 
-            $builder = $this->db
-                ->table('master_applicant_types')
-                ->select('id')
-                ->where('name', $name);
+            $normalizedName = strtolower(
+                preg_replace(
+                    '/[^a-z0-9]/i',
+                    '',
+                    trim($row['name'] ?? '')
+                )
+            );
 
-            if (in_array(
-                'deleted_at',
-                $columns,
-                true
-            )) {
-                $builder->where(
-                    'deleted_at IS NULL',
-                    null,
-                    false
-                );
-            }
-
-            $row = $builder
-                ->get()
-                ->getRowArray();
-
-            if ($row) {
+            if (
+                $normalizedName !== '' &&
+                $normalizedName === $normalizedInput
+            ) {
                 return (int) $row['id'];
+            }
+        }
+
+        /*
+         * Alias khusus Orang Tua / Wali.
+         */
+        if (
+            in_array(
+                $normalizedInput,
+                [
+                    'orangtua',
+                    'orangtuawali'
+                ],
+                true
+            )
+        ) {
+
+            foreach ($rows as $row) {
+
+                $normalizedName = strtolower(
+                    preg_replace(
+                        '/[^a-z0-9]/i',
+                        '',
+                        trim($row['name'] ?? '')
+                    )
+                );
+
+                if (
+                    (
+                        $normalizedInput === 'orangtua' &&
+                        in_array(
+                            $normalizedName,
+                            [
+                                'orangtua',
+                                'orangtuawali'
+                            ],
+                            true
+                        )
+                    ) ||
+                    (
+                        $normalizedInput === 'orangtuawali' &&
+                        $normalizedName === 'orangtuawali'
+                    )
+                ) {
+                    return (int) $row['id'];
+                }
+            }
+        }
+
+        /*
+         * Alias Masyarakat / Masyarakat Umum.
+         */
+        if (
+            in_array(
+                $normalizedInput,
+                [
+                    'masyarakat',
+                    'masyarakatumum'
+                ],
+                true
+            )
+        ) {
+
+            foreach ($rows as $row) {
+
+                $normalizedName = strtolower(
+                    preg_replace(
+                        '/[^a-z0-9]/i',
+                        '',
+                        trim($row['name'] ?? '')
+                    )
+                );
+
+                if (
+                    in_array(
+                        $normalizedName,
+                        [
+                            'masyarakat',
+                            'masyarakatumum'
+                        ],
+                        true
+                    )
+                ) {
+                    return (int) $row['id'];
+                }
             }
         }
 

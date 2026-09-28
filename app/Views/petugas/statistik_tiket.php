@@ -321,6 +321,7 @@
 <?php
 $totalTiket   = (int) ($total_tiket ?? 0);
 $submitted    = (int) ($submitted ?? 0);
+$verified     = (int) ($verified ?? 0);
 $assigned     = (int) ($assigned ?? 0);
 $inProgress   = (int) ($in_progress ?? 0);
 $completed    = (int) ($completed ?? 0);
@@ -899,6 +900,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const labelsArray = [
         'Submitted',
+        'Verified',
         'Assigned',
         'In Progress',
         'Completed',
@@ -908,6 +910,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const colorPalette = [
         '#ff8c00',
+        '#10b981',
         '#f4c400',
         '#0284c7',
         '#10b981',
@@ -1191,6 +1194,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const updatedArray = [
 
             Number(data.submitted ?? 0),
+
+            Number(data.verified ?? 0),
 
             Number(data.assigned ?? 0),
 
@@ -1508,6 +1513,8 @@ document.addEventListener("DOMContentLoaded", function () {
     initCharts([
 
         <?= $submitted ?>,
+
+        <?= $verified ?>,
 
         <?= $assigned ?>,
 

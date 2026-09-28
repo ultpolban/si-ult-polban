@@ -18,6 +18,7 @@ class ReportController extends BaseController
             ->table('tickets t')
             ->select("
                 t.id,
+                t.unit_id,
                 t.ticket_number,
                 t.title,
                 t.description,
@@ -187,6 +188,9 @@ class ReportController extends BaseController
             $result[] = [
                 'id' => $ticket['id'],
 
+                'unit_id' =>
+                    $ticket['unit_id'] ?? '',
+
                 'ticket_number' =>
                     $ticket['ticket_number'] ?? '',
 
@@ -338,11 +342,7 @@ class ReportController extends BaseController
         // ==========================
         // LIMIT DATA
         // ==========================
-        $laporanList = array_slice(
-            $allTickets,
-            0,
-            $limit
-        );
+        $laporanList = $allTickets;
 
         return view('petugas/laporan_tiket', [
 

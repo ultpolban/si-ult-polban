@@ -72,6 +72,129 @@ if ($limit < 1) {
 if ($limit > 500) {
     $limit = 500;
 }
+
+/*
+|--------------------------------------------------------------------------
+| FILTER & PAGINATION
+|--------------------------------------------------------------------------
+*/
+$tiket_list = !empty($tickets) && is_array($tickets)
+    ? $tickets
+    : [];
+
+usort($tiket_list, function ($a, $b) {
+    $dateA = $a['submitted_at'] ?? $a['created_at'] ?? '1970-01-01 00:00:00';
+    $dateB = $b['submitted_at'] ?? $b['created_at'] ?? '1970-01-01 00:00:00';
+
+    return strtotime($dateB) <=> strtotime($dateA);
+});
+
+$searchValue = trim($_GET['keyword'] ?? '');
+$statusValue = trim($_GET['status'] ?? '');
+$unitLayananValue = trim($_GET['unit_layanan'] ?? '');
+
+$filteredTickets = array_filter(
+    $tiket_list,
+    function ($ticket) use ($searchValue, $statusValue, $unitLayananValue) {
+        $searchMatch = true;
+        $statusMatch = true;
+        $unitLayananMatch = true;
+
+        if ($searchValue !== '') {
+            $haystack = strtolower(
+                ($ticket['ticket_number'] ?? '') . ' ' .
+                ($ticket['applicant_name'] ?? '') . ' ' .
+                ($ticket['nim'] ?? '') . ' ' .
+                ($ticket['nik'] ?? '') . ' ' .
+                ($ticket['service_name'] ?? '')
+            );
+
+            $searchMatch = str_contains(
+                $haystack,
+                strtolower($searchValue)
+            );
+        }
+
+        if ($statusValue !== '') {
+            $statusMatch =
+                strtolower($ticket['status'] ?? '') ===
+                strtolower($statusValue);
+        }
+
+        if ($unitLayananValue !== '') {
+            $unitLayananMatch =
+                (int) ($ticket['unit_id'] ?? 0) ===
+                (int) $unitLayananValue;
+        }
+
+        return $searchMatch &&
+               $statusMatch &&
+               $unitLayananMatch;
+    }
+);
+
+$filteredTickets = array_values($filteredTickets);
+
+$perPage = isset($_GET['limit']) && $_GET['limit'] !== ''
+    ? (int) $_GET['limit']
+    : 10;
+
+if ($perPage < 1) {
+    $perPage = 10;
+}
+
+$totalData = count($filteredTickets);
+
+$totalPages = max(
+    1,
+    (int) ceil($totalData / $perPage)
+);
+
+$currentPage = isset($_GET['page'])
+    ? (int) $_GET['page']
+    : 1;
+
+$currentPage = max(
+    1,
+    min($currentPage, $totalPages)
+);
+
+$offset = ($currentPage - 1) * $perPage;
+
+$paginatedList = array_slice(
+    $filteredTickets,
+    $offset,
+    $perPage
+);
+
+$no = $offset + 1;
+
+$queryParams = [];
+
+if ($searchValue !== '') {
+    $queryParams['keyword'] = $searchValue;
+}
+
+if ($statusValue !== '') {
+    $queryParams['status'] = $statusValue;
+}
+
+if ($unitLayananValue !== '') {
+    $queryParams['unit_layanan'] = $unitLayananValue;
+}
+
+if (isset($_GET['limit']) && $_GET['limit'] !== '') {
+    $queryParams['limit'] = $_GET['limit'];
+}
+
+function laporanTiketPageUrl($page, $queryParams = [])
+{
+    $queryParams['page'] = $page;
+
+    return base_url(
+        'report?' . http_build_query($queryParams)
+    );
+}
 ?>
 
 <style>
@@ -467,6 +590,30 @@ if ($limit > 500) {
     transform: translateY(0);
     transition: all .4s ease;
 }
+
+.ticket-pagination {
+    padding: 16px 20px;
+    border-top: 1px solid #edf0f4;
+    background: #fff;
+}
+
+.ticket-pagination .page-link {
+    color: var(--polban-navy);
+    border-radius: 7px !important;
+    margin: 0 3px;
+    font-weight: 600;
+}
+
+.ticket-pagination .page-item.active .page-link {
+    background: var(--polban-navy);
+    border-color: var(--polban-navy);
+    color: #fff;
+}
+
+.ticket-pagination .page-item.disabled .page-link {
+    color: #adb5bd;
+}
+
 </style>
 
 <div class="container-fluid px-4 py-4 ticket-page">
@@ -618,7 +765,7 @@ if ($limit > 500) {
 
         <div class="card-body">
 
-            <form action="<?= base_url('report') ?>" method="GET">
+            <form action="<?= base_url('report') ?>" method="GET" autocomplete="off">
 
                 <div class="row g-2 align-items-center">
 
@@ -645,7 +792,7 @@ if ($limit > 500) {
                     <!-- STATUS -->
                     <div class="col-xl-2 col-lg-2 col-md-4">
                         <select name="status" class="form-control ticket-select">
-                            <option value="">-- Semua Status --</option>
+                            <option value="" <?= empty($statusFilter) ? 'selected' : '' ?>>-- Semua Status --</option>
                             <option value="Submitted" <?= strtolower($statusFilter ?? '') === 'submitted' ? 'selected' : '' ?>>Submitted</option>
                             <option value="Verified" <?= strtolower($statusFilter ?? '') === 'verified' ? 'selected' : '' ?>>Verified</option>
                             <option value="Disposisi" <?= strtolower($statusFilter ?? '') === 'disposisi' ? 'selected' : '' ?>>Disposisi</option>
@@ -817,7 +964,7 @@ if ($limit > 500) {
                     <?php
                     $no = 1;
 
-                    foreach ($tickets as $row):
+                    foreach ($paginatedList as $row):
 
                         /*
                         |--------------------------------------------------------------------------
@@ -1005,6 +1152,48 @@ if ($limit > 500) {
                 </tbody>
 
             </table>
+
+            <?php if ($totalData > 0): ?>
+
+                <div class="ticket-pagination d-flex justify-content-between align-items-center flex-wrap gap-2">
+
+                    <div class="text-muted small">
+                        Halaman <strong><?= $currentPage ?></strong> dari <strong><?= $totalPages ?></strong>
+                    </div>
+
+                    <ul class="pagination pagination-sm m-0">
+
+                        <li class="page-item <?= $currentPage <= 1 ? 'disabled' : '' ?>">
+                            <a
+                                class="page-link"
+                                href="<?= $currentPage > 1 ? laporanTiketPageUrl($currentPage - 1, $queryParams) : '#' ?>">
+                                Prev
+                            </a>
+                        </li>
+
+                        <?php for ($p = 1; $p <= $totalPages; $p++): ?>
+                            <li class="page-item <?= $p === $currentPage ? 'active' : '' ?>">
+                                <a
+                                    class="page-link"
+                                    href="<?= laporanTiketPageUrl($p, $queryParams) ?>">
+                                    <?= $p ?>
+                                </a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <li class="page-item <?= $currentPage >= $totalPages ? 'disabled' : '' ?>">
+                            <a
+                                class="page-link"
+                                href="<?= $currentPage < $totalPages ? laporanTiketPageUrl($currentPage + 1, $queryParams) : '#' ?>">
+                                Next
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            <?php endif; ?>
 
         </div>
 

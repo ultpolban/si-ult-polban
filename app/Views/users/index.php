@@ -1,77 +1,142 @@
-<!DOCTYPE html>
-<html>
+<?= $this->extend('layouts/template') ?>
 
-<head>
-    <title>Data User</title>
-</head>
+<?= $this->section('content') ?>
 
-<body>
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
 
-    <h2>Data User</h2>
+    <div>
 
-    <?php if (session()->getFlashdata('success')): ?>
+        <h2 class="mb-1">Manajemen User</h2>
 
-        <div class="alert alert-success">
-            <?= session()->getFlashdata('success') ?>
-        </div>
+        <p class="text-muted mb-0">Kelola akun pengguna yang terdaftar pada sistem.</p>
 
-    <?php endif; ?>
+    </div>
 
-    <a href="<?= base_url('users/create') ?>">
-        <button>Tambah User</button>
+    <a href="<?= base_url('users/create') ?>" class="btn btn-primary btn-sm">
+
+        <i class="fas fa-user-plus me-1"></i> Tambah User
+
     </a>
 
-    <br><br>
+</div>
 
-    <table border="1" cellpadding="10">
+<?php if (session()->getFlashdata('success')): ?>
 
-        <tr>
+    <div class="alert alert-success"><?= esc(session()->getFlashdata('success')) ?></div>
 
-            <th>No</th>
-            <th>Nama</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Aksi</th>
+<?php endif; ?>
 
-        </tr>
+<?php if (session()->getFlashdata('error')): ?>
 
-        <?php $no = 1; ?>
+    <div class="alert alert-danger"><?= esc(session()->getFlashdata('error')) ?></div>
 
-        <?php foreach ($users as $user): ?>
+<?php endif; ?>
 
-            <tr>
+<div class="card">
 
-                <td><?= $no++ ?></td>
+    <div class="card-header"><h3 class="card-title">Daftar User</h3></div>
 
-                <td><?= $user['name'] ?></td>
+    <div class="card-body">
 
-                <td><?= $user['email'] ?></td>
+        <?php if (empty($users)): ?>
 
-                <td><?= $user['role_name'] ?></td>
+            <div class="alert alert-info mb-0">Belum ada user yang terdaftar.</div>
 
-                <td>
+        <?php else: ?>
 
-                    <a href="<?= base_url('users/edit/' . $user['id']) ?>">
+            <div class="table-responsive">
 
-                        <button>Edit</button>
+                <table class="table table-bordered table-hover">
 
-                    </a>
+                    <thead class="table-primary">
 
-                    <a href="<?= base_url('users/delete/' . $user['id']) ?>"
-                        onclick="return confirm('Yakin hapus user?')">
+                        <tr>
 
-                        <button>Hapus</button>
+                            <th>No</th>
 
-                    </a>
+                            <th>Nama Lengkap</th>
 
-                </td>
+                            <th>Email</th>
 
-            </tr>
+                            <th>No. HP</th>
 
-        <?php endforeach; ?>
+                            <th>Role</th>
 
-    </table>
+                            <th>Status</th>
 
-</body>
+                            <th class="text-center">Aksi</th>
 
-</html>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    <?php foreach ($users as $no => $user): ?>
+
+                        <tr>
+
+                            <td><?= $no + 1 ?></td>
+
+                            <td><?= esc($user['full_name'] ?? '-') ?></td>
+
+                            <td><?= esc($user['email'] ?? '-') ?></td>
+
+                            <td><?= esc($user['phone_number'] ?? '-') ?></td>
+
+                            <td><?= esc($user['role_name'] ?? '-') ?></td>
+
+                            <td>
+
+                                <?php if ((int) ($user['is_active'] ?? 0) === 1): ?>
+
+                                    <span class="badge bg-success">Aktif</span>
+
+                                <?php else: ?>
+
+                                    <span class="badge bg-secondary">Nonaktif</span>
+
+                                <?php endif; ?>
+
+                            </td>
+
+                            <td class="text-center">
+
+                                <a
+                                    href="<?= base_url('users/edit/' . $user['id']) ?>"
+                                    class="btn btn-sm btn-primary"
+                                    title="Edit">
+
+                                    <i class="fas fa-edit"></i>
+
+                                </a>
+
+                                <a
+                                    href="<?= base_url('users/delete/' . $user['id']) ?>"
+                                    class="btn btn-sm btn-danger"
+                                    data-confirm-link="Yakin ingin menghapus user ini?"
+                                    title="Hapus">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    <?php endforeach; ?>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        <?php endif; ?>
+
+    </div>
+
+</div>
+
+<?= $this->endSection() ?>

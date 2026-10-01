@@ -2,231 +2,346 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
-use App\Models\TicketModel;
-use App\Models\TicketAttachmentModel;
+use App\Controllers\AdminController;
+use App\Services\TicketService;
+use App\Services\ServiceService;
+use App\Services\ServiceUnitService;
+use App\Models\UserProfileModel;
+use App\Models\UserModel;
+use App\Models\ServiceApplicantTypeModel;
+use App\Constants\Permissions;
+use CodeIgniter\Exceptions\PageNotFoundException;
 
-class TicketController extends BaseController
+class TicketController extends AdminController
 {
-    protected $ticketModel;
-    protected $attachmentModel;
+    protected TicketService $ticketService;
+    protected ServiceService $serviceService;
+    protected ServiceUnitService $serviceUnitService;
+    protected UserProfileModel $profileModel;
+    protected UserModel $userModel;
+    protected ServiceApplicantTypeModel $serviceApplicantTypeModel;
 
     public function __construct()
     {
-        $this->ticketModel     = new TicketModel();
-        $this->attachmentModel = new TicketAttachmentModel();
+        parent::__construct();
+
+        $this->ticketService   = new TicketService();
+        $this->serviceService  = new ServiceService();
+        $this->serviceUnitService = new ServiceUnitService();
+        $this->profileModel    = new UserProfileModel();
+        $this->userModel       = new UserModel();
+        $this->serviceApplicantTypeModel = new ServiceApplicantTypeModel();
     }
 
     /**
-     * ============================================================
-     * DETAIL TIKET
-     * ============================================================
-     * GET /ticket/detail/(:num)
+     * ==========================================
+     * INDEX (Daftar Tiket)
+     * ==========================================
      */
-    public function detail($id = null)
+    public function index()
     {
-        if ($id === null || !is_numeric($id)) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
-                'ID tiket tidak ditemukan.'
+        $this->authorize(Permissions::REQUEST_VIEW);
+
+        $keyword  = trim($this->request->getGet('keyword') ?? '');
+        $status   = trim($this->request->getGet('status') ?? '');
+        $priority = trim($this->request->getGet('priority') ?? '');
+
+        $roleCode = strtoupper((string) session()->get('role_code') ?? '');
+
+        $filters = [
+            'keyword'  => $keyword,
+            'status'   => $status,
+            'priority' => $priority,
+        ];
+
+        // Pemohon hanya diperlihatkan tiket miliknya sendiri
+        if ($roleCode === 'PEMOHON') {
+            $profile = $this->profileModel->findByUser((int) session()->get('user_id'));
+            $filters['user_profile_id'] = $profile ? (int) $profile['id'] : -1;
+        }
+
+        $result = $this->ticketService->getList($filters);
+
+        return view('tickets/index', $this->viewData([
+            'title'      => 'Manajemen Tiket',
+            'pageTitle'  => 'Manajemen Tiket',
+            'breadcrumb' => ['Tiket', 'Manajemen'],
+            'tickets'    => $result['tickets'],
+            'pager'      => $result['pager'],
+            'keyword'    => $keyword,
+            'status'     => $status,
+            'priority'   => $priority,
+        ]));
+    }
+
+    /**
+     * ==========================================
+     * CREATE (Form Tambah Tiket)
+     * ==========================================
+     */
+    public function create()
+    {
+        $this->authorize(Permissions::REQUEST_CREATE);
+
+        // Pemohon membuat pengajuan dari halaman "Pengajuan Layanan"
+        // (form pemohon otomatis terisi profil dirinya).
+        if (strtoupper((string) session()->get('role_code')) === 'PEMOHON') {
+            return redirect()
+                ->to(site_url('service-requests/create'))
+                ->with('info', 'Silakan buat pengajuan dari halaman Pengajuan Layanan.');
+        }
+
+        $applicants = $this->profileModel
+            ->getComplete()
+            ->where('roles.code', 'PEMOHON')
+            ->orderBy('user_profiles.name', 'ASC')
+            ->findAll();
+
+        return view('tickets/create', $this->viewData([
+            'title'      => 'Buat Tiket',
+            'pageTitle'  => 'Buat Tiket',
+            'breadcrumb' => ['Tiket', 'Buat'],
+            'services'   => $this->serviceService->getActive(),
+            'serviceUnits' => $this->serviceUnitService->getActive(),
+            'applicants' => $applicants,
+            'assignees'  => $this->userModel->getActive(),
+            'ticket'     => [],
+            'serviceApplicantTypes' => $this->serviceApplicantTypeModel->findAll(),
+        ]));
+    }
+
+    /**
+     * ==========================================
+     * STORE (Simpan Tiket)
+     * ==========================================
+     */
+    public function store(): \CodeIgniter\HTTP\RedirectResponse
+    {
+        $this->authorize(Permissions::REQUEST_CREATE);
+
+        $data = $this->request->getPost();
+
+        // Validasi akses layanan berdasarkan jenis pemohon yang dipilih
+        $applicantId = (int) ($data['user_profile_id'] ?? 0);
+        $serviceId   = (int) ($data['service_id'] ?? 0);
+
+        $applicantProfile = $applicantId > 0
+            ? $this->profileModel->find($applicantId)
+            : null;
+
+        $applicantTypeId = isset($applicantProfile['applicant_type_id'])
+            ? (int) $applicantProfile['applicant_type_id']
+            : null;
+
+        if (! $this->serviceService->isAllowedForApplicantType($serviceId, $applicantTypeId)) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Layanan tidak tersedia untuk jenis pemohon yang dipilih.');
+        }
+
+        $ticketId = $this->ticketService->create($data);
+
+        $this->logActivity('create_ticket', 'Membuat tiket baru #' . $ticketId, 'tickets', $ticketId);
+
+        // Notifikasi ke pemohon yang bersangkutan
+        $this->notificationService->notifyProfileOwner(
+            (int) ($data['user_profile_id'] ?? 0),
+            'Tiket Baru Dibuat',
+            'Tiket #' . $ticketId . ' telah dibuat untuk Anda.',
+            'info',
+            null,
+            site_url('tickets/show/' . $ticketId)
+        );
+
+        // Notifikasi ke petugas yang ditugaskan
+        if (!empty($data['assigned_to'])) {
+            $this->notificationService->notify(
+                (int) $data['assigned_to'],
+                'Tiket Ditugaskan',
+                'Anda ditugaskan menangani tiket #' . $ticketId . '.',
+                'info',
+                null,
+                site_url('tickets/show/' . $ticketId)
             );
         }
 
-        // ========================================================
-        // AMBIL DATA TIKET
-        // ========================================================
-        $ticket = $this->ticketModel->getTicketDetail((int) $id);
+        return redirect()
+            ->to(site_url('tickets'))
+            ->with('success', 'Tiket berhasil dibuat.');
+    }
 
-        if (!$ticket) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
-                'Data tiket tidak ditemukan.'
+    /**
+     * ==========================================
+     * SHOW (Detail Tiket)
+     * ==========================================
+     */
+    public function show(int $id)
+    {
+        $this->authorize(Permissions::REQUEST_VIEW);
+
+        $ticket = $this->ticketService->getById($id);
+
+        if (! $ticket) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        // Pemohon hanya dapat membuka tiket miliknya
+        if (strtoupper((string) session()->get('role_code')) === 'PEMOHON') {
+            $profile = $this->profileModel->findByUser((int) session()->get('user_id'));
+            $ownProfileId = $profile ? (int) $profile['id'] : -1;
+
+            if ((int) $ticket['user_profile_id'] !== $ownProfileId) {
+                return redirect()
+                    ->to(site_url('tracking'))
+                    ->with('error', 'Anda tidak memiliki akses ke tiket tersebut.');
+            }
+        }
+
+        $history = $this->ticketService->history($id);
+
+        return view('tickets/show', $this->viewData([
+            'title'      => 'Detail Tiket',
+            'pageTitle'  => 'Detail Tiket',
+            'breadcrumb' => ['Tiket', 'Detail'],
+            'ticket'     => $ticket,
+            'history'    => $history,
+        ]));
+    }
+
+    /**
+     * ==========================================
+     * EDIT (Form Edit Tiket)
+     * ==========================================
+     */
+    public function edit(int $id)
+    {
+        $this->authorize(Permissions::REQUEST_UPDATE);
+
+        $ticket = $this->ticketService->getById($id);
+
+        if (! $ticket) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        return view('tickets/edit', $this->viewData([
+            'title'      => 'Edit Tiket',
+            'pageTitle'  => 'Edit Tiket',
+            'breadcrumb' => ['Tiket', 'Edit'],
+            'ticket'     => $ticket,
+            'services'   => $this->serviceService->getActive(),
+            'serviceUnits' => $this->serviceUnitService->getActive(),
+            'applicants' => $this->profileModel->findAll(),
+            'assignees'  => $this->userModel->getActive(),
+        ]));
+    }
+
+    /**
+     * ==========================================
+     * UPDATE (Update Tiket)
+     * ==========================================
+     */
+    public function update(int $id): \CodeIgniter\HTTP\RedirectResponse
+    {
+        $this->authorize(Permissions::REQUEST_UPDATE);
+
+        $this->ticketService->update($id, $this->request->getPost());
+
+        $this->logActivity('update_ticket', 'Memperbarui tiket #' . $id, 'tickets', $id);
+
+        return redirect()
+            ->to(site_url('tickets/show/' . $id))
+            ->with('success', 'Tiket berhasil diperbarui.');
+    }
+
+    /**
+     * ==========================================
+     * DELETE (Hapus Tiket)
+     * ==========================================
+     */
+    public function delete(int $id): \CodeIgniter\HTTP\RedirectResponse
+    {
+        $this->authorize(Permissions::REQUEST_CANCEL);
+
+        $ticket = $this->ticketService->getById($id);
+
+        if (! $ticket) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        // Pemohon hanya dapat menghapus/membatalkan tiket miliknya
+        if (strtoupper((string) session()->get('role_code')) === 'PEMOHON') {
+            $profile = $this->profileModel->findByUser((int) session()->get('user_id'));
+            $ownProfileId = $profile ? (int) $profile['id'] : -1;
+
+            if ((int) $ticket['user_profile_id'] !== $ownProfileId) {
+                return redirect()
+                    ->back()
+                    ->with('error', 'Anda tidak memiliki akses ke tiket tersebut.');
+            }
+        }
+
+        $this->ticketService->delete($id);
+
+        $this->logActivity('delete_ticket', 'Menghapus tiket #' . $id, 'tickets', $id);
+
+        return redirect()
+            ->to(site_url('tickets'))
+            ->with('success', 'Tiket berhasil dihapus.');
+    }
+
+    /**
+     * ==========================================
+     * CHANGE STATUS (Ubah Status Tiket)
+     * ==========================================
+     */
+    public function changeStatus(int $id): \CodeIgniter\HTTP\RedirectResponse
+    {
+        $this->authorize(Permissions::REQUEST_UPDATE);
+
+        $status = trim($this->request->getPost('status') ?? '');
+        $note   = trim($this->request->getPost('note') ?? '');
+
+        $allowed = ['submitted', 'verification', 'revision', 'processing', 'completed', 'rejected', 'cancelled'];
+
+        if (! in_array($status, $allowed, true)) {
+            return redirect()->back()->with('error', 'Status tidak valid.');
+        }
+
+        $this->ticketService->changeStatus(
+            $id,
+            $status,
+            (int) ($this->user['id'] ?? session()->get('user_id')),
+            $note
+        );
+
+        $this->logActivity('change_ticket_status', 'Ubah status tiket #' . $id . ' menjadi ' . $status, 'tickets', $id);
+
+        $statusLabels = [
+            'submitted'    => 'Diajukan',
+            'verification' => 'Verifikasi',
+            'revision'     => 'Revisi',
+            'processing'   => 'Diproses',
+            'completed'    => 'Selesai',
+            'rejected'     => 'Ditolak',
+            'cancelled'    => 'Dibatalkan',
+        ];
+        $label = $statusLabels[$status] ?? ucfirst($status);
+
+        // Notifikasi ke pemohon pemilik tiket
+        $ticket = $this->ticketService->getById($id);
+        if ($ticket) {
+            $this->notificationService->notifyProfileOwner(
+                (int) ($ticket['user_profile_id'] ?? 0),
+                'Status Tiket Berubah',
+                'Tiket ' . ($ticket['ticket_number'] ?? '#') . $id . ' kini berstatus: ' . $label .
+                    ($note !== '' ? " - $note" : ''),
+                $status === 'completed' ? 'success' : ($status === 'rejected' || $status === 'cancelled' ? 'danger' : 'info'),
+                $id,
+                site_url('tickets/show/' . $id)
             );
         }
 
-        // ========================================================
-        // AMBIL LAMPIRAN
-        // ========================================================
-        $attachments = [];
-
-        if (class_exists(TicketAttachmentModel::class)) {
-            $attachments = $this->attachmentModel
-                ->where('ticket_id', (int) $id)
-                ->orderBy('id', 'ASC')
-                ->findAll();
-        }
-
-        // ========================================================
-        // NORMALISASI DATA UNTUK VIEW DETAIL
-        // ========================================================
-        $tiket = [
-            'id' => $ticket['id'] ?? $id,
-
-            // Nomor tiket
-            'ticket_number' =>
-                $ticket['ticket_number']
-                ?? '-',
-
-            // Status
-            'status' =>
-                strtolower(
-                    trim(
-                        $ticket['status']
-                        ?? 'submitted'
-                    )
-                ),
-
-            // Prioritas
-            'priority' =>
-                $ticket['priority']
-                ?? 'normal',
-
-            // Layanan
-            'service_name' =>
-                $ticket['service_name']
-                ?? '-',
-
-            // Unit layanan
-            'unit_name' =>
-                $ticket['unit_name']
-                ?? $ticket['service_unit_name']
-                ?? '-',
-
-            // Jenis pemohon
-            'applicant_type' =>
-                $ticket['applicant_type']
-                ?? $ticket['applicant_type_name']
-                ?? '-',
-
-            // Nama pemohon
-            'applicant_name' =>
-                $ticket['applicant_name']
-                ?? $ticket['student_name']
-                ?? $ticket['name']
-                ?? '-',
-
-            // NIM / NIK
-            'nim' =>
-                $ticket['nim']
-                ?? null,
-
-            'nik' =>
-                $ticket['nik']
-                ?? null,
-
-            // Email
-            'email' =>
-                $ticket['email']
-                ?? '-',
-
-            // Nomor HP
-            'phone' =>
-                $ticket['phone']
-                ?? '-',
-
-            // Judul
-            'title' =>
-                $ticket['title']
-                ?? $ticket['service_name']
-                ?? '-',
-
-            // Deskripsi
-            'description' =>
-                $ticket['description']
-                ?? '',
-
-            // Timeline
-            'submitted_at' =>
-                $ticket['submitted_at']
-                ?? null,
-
-            'verified_at' =>
-                $ticket['verified_at']
-                ?? null,
-
-            'processed_at' =>
-                $ticket['processed_at']
-                ?? null,
-
-            'completed_at' =>
-                $ticket['completed_at']
-                ?? null,
-
-            'rejected_at' =>
-                $ticket['rejected_at']
-                ?? null,
-
-            'cancelled_at' =>
-                $ticket['cancelled_at']
-                ?? null,
-        ];
-
-        // ========================================================
-        // TIMELINE
-        // ========================================================
-        $timeline = [];
-
-        if (!empty($tiket['submitted_at'])) {
-            $timeline[] = [
-                'title' => 'Tiket Berhasil Diajukan',
-                'date'  => $tiket['submitted_at'],
-                'icon'  => 'fa-paper-plane',
-            ];
-        }
-
-        if (!empty($tiket['verified_at'])) {
-            $timeline[] = [
-                'title' => 'Tiket Telah Diverifikasi',
-                'date'  => $tiket['verified_at'],
-                'icon'  => 'fa-check-circle',
-            ];
-        }
-
-        /*
-         * processed_at digunakan untuk proses tiket.
-         */
-        if (!empty($tiket['processed_at'])) {
-            $timeline[] = [
-                'title' => 'Tiket Sedang Diproses',
-                'date'  => $tiket['processed_at'],
-                'icon'  => 'fa-cogs',
-            ];
-        }
-
-        if (!empty($tiket['completed_at'])) {
-            $timeline[] = [
-                'title' => 'Permohonan Selesai',
-                'date'  => $tiket['completed_at'],
-                'icon'  => 'fa-check-double',
-            ];
-        }
-
-        if (!empty($tiket['rejected_at'])) {
-            $timeline[] = [
-                'title' => 'Permohonan Ditolak',
-                'date'  => $tiket['rejected_at'],
-                'icon'  => 'fa-times-circle',
-            ];
-        }
-
-        if (!empty($tiket['cancelled_at'])) {
-            $timeline[] = [
-                'title' => 'Permohonan Dibatalkan',
-                'date'  => $tiket['cancelled_at'],
-                'icon'  => 'fa-ban',
-            ];
-        }
-
-        // ========================================================
-        // DATA VIEW
-        // ========================================================
-        $data = [
-            'title'       => 'Detail Informasi Tiket',
-            'ticket'      => $ticket,
-            'tiket'       => $tiket,
-            'timeline'    => $timeline,
-            'attachments' => $attachments,
-            'lampiran'    => $attachments,
-        ];
-
-        return view('petugas/detail', $data);
+        return redirect()->back()->with('success', 'Status tiket berhasil diperbarui.');
     }
 }

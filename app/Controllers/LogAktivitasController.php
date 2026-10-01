@@ -51,7 +51,6 @@ class LogAktivitasController extends BaseController
             'al.ip_address',
 
             'u.full_name',
-            'u.username',
             'u.email',
 
             'r.name AS role_name'
@@ -78,7 +77,6 @@ class LogAktivitasController extends BaseController
             $builder->groupStart();
 
             $builder->like('u.full_name', $keyword);
-            $builder->orLike('u.username', $keyword);
             $builder->orLike('u.email', $keyword);
             $builder->orLike('al.action', $keyword);
             $builder->orLike('al.module', $keyword);

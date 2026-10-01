@@ -1,13 +1,17 @@
 <?php
 /*
- |--------------------------------------------------------------
- | Form dinamis berdasarkan jenis pemohon (Registration Request)
- | Variabel: $applicantCode, $applicantType, $studyPrograms, $classes
- |--------------------------------------------------------------
- */
-?>
+|--------------------------------------------------------------
+| Form dinamis berdasarkan jenis pemohon (Registration Request)
+| Variabel: $applicantCode, $applicantType, $studyPrograms, $classes
+|
+| Atribut panjang password diambil dari SecurityRules lewat helper
+| 'security', sehingga angka di form selalu sama dengan validasi
+| di server.
+|--------------------------------------------------------------
+*/
 
-<?php
+helper('security');
+
 // Pastikan variabel default tersedia
 $data = $data ?? [];
 ?>
@@ -20,15 +24,14 @@ $data = $data ?? [];
         type="password"
         name="password"
         class="form-control"
-        placeholder="Minimal 10 karakter"
-        minlength="10"
-        maxlength="72"
-        pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+"
-        title="Minimal 10 karakter serta memuat huruf besar, huruf kecil, angka, dan simbol."
+        placeholder="Minimal <?= password_min_length() ?> karakter"
+        minlength="<?= password_min_length() ?>"
+        maxlength="<?= password_max_length() ?>"
+        title="<?= password_hint() ?>"
         autocomplete="new-password"
         required>
     <small class="text-muted">
-        Minimal 10 karakter dan harus memuat huruf besar, huruf kecil, angka, serta simbol.
+        <?= password_hint() ?>
     </small>
 </div>
 
@@ -39,18 +42,8 @@ $data = $data ?? [];
         name="password_confirmation"
         class="form-control"
         placeholder="Ulangi password"
-        minlength="10"
-        maxlength="72"
+        minlength="<?= password_min_length() ?>"
+        maxlength="<?= password_max_length() ?>"
         autocomplete="new-password"
         required>
-</div>
-
-<div class="mb-3">
-    <label class="form-label">Keperluan</label>
-    <textarea
-        name="purpose"
-        class="form-control"
-        rows="3"
-        placeholder="Jelaskan alasan / keperluan meminta akses registrasi"
-        maxlength="1000"><?= esc(old('purpose') ?? ($data['purpose'] ?? '')) ?></textarea>
 </div>

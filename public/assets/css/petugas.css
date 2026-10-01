@@ -1,0 +1,174 @@
+/* ==========================================================
+   SI ULT POLBAN - GAYA PETUGAS
+   Dipakai oleh halaman dashboard & proses petugas ULT.
+   ========================================================== */
+
+/* ==========================================================
+   KARTU RINGKASAN
+   ========================================================== */
+
+.petugas-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.petugas-summary .card {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .07);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform .2s, box-shadow .2s;
+}
+
+.petugas-summary .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, .12);
+}
+
+.petugas-summary .summary-icon {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #fff;
+}
+
+.petugas-summary .summary-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #293582;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.petugas-summary .summary-label {
+    color: #6b7280;
+    font-size: .85rem;
+    margin: 2px 0 0;
+}
+
+/* ==========================================================
+   TABEL TIKET
+   ========================================================== */
+
+.ticket-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.ticket-table thead th {
+    background: #293582;
+    color: #fff;
+    font-size: .82rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    padding: 12px 14px;
+    white-space: nowrap;
+}
+
+.ticket-table thead th:first-child {
+    border-top-left-radius: 12px;
+}
+
+.ticket-table thead th:last-child {
+    border-top-right-radius: 12px;
+}
+
+.ticket-table tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #eef1f6;
+    vertical-align: middle;
+}
+
+.ticket-table tbody tr:hover {
+    background: #f7f9fd;
+}
+
+/* ==========================================================
+   BADGER STATUS
+   ========================================================== */
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 30px;
+    font-size: .78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-badge.submitted {
+    background: rgba(255, 127, 0, .12);
+    color: #e36f00;
+}
+
+.status-badge.verified {
+    background: rgba(23, 162, 184, .12);
+    color: #0f7d8f;
+}
+
+.status-badge.processing {
+    background: rgba(66, 88, 204, .12);
+    color: #293582;
+}
+
+.status-badge.completed {
+    background: rgba(46, 204, 113, .14);
+    color: #1e8449;
+}
+
+.status-badge.rejected {
+    background: rgba(231, 76, 60, .12);
+    color: #c0392b;
+}
+
+/* ==========================================================
+   FILTER
+   ========================================================== */
+
+.petugas-filter {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .05);
+    margin-bottom: 18px;
+}
+
+/* ==========================================================
+   QUICK ACTION
+   ========================================================== */
+
+.quick-action {
+    display: block;
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    text-decoration: none;
+    color: #293582;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .05);
+    transition: transform .2s, background .2s, color .2s;
+}
+
+.quick-action:hover {
+    transform: translateY(-3px);
+    background: #293582;
+    color: #fff;
+}
+
+.quick-action i {
+    display: block;
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+}

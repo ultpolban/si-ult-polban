@@ -3,43 +3,225 @@
 namespace App\Controllers;
 
 use CodeIgniter\Controller;
+use CodeIgniter\HTTP\CLIRequest;
+use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * BaseController provides a convenient place for loading components
- * and performing functions that are needed by all your controllers.
- *
- * Extend this class in any new controllers:
- * ```
- *     class Home extends BaseController
- * ```
- *
- * For security, be sure to declare any new methods as protected or private.
- */
 abstract class BaseController extends Controller
 {
     /**
-     * Be sure to declare properties for any property fetch you initialized.
-     * The creation of dynamic property is deprecated in PHP 8.2.
+     * Request Instance
+     *
+     * @var CLIRequest|IncomingRequest
      */
-
-    // protected $session;
+    protected $request;
 
     /**
-     * @return void
+     * Helpers
      */
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    protected $helpers = [
+        'url',
+        'form',
+        'text',
+        'filesystem',
+        'ticket_helper'
+    ];
+
+    /**
+     * Service
+     */
+    protected $session;
+    protected $validation;
+    protected $db;
+
+    /**
+     * Login User
+     */
+    protected ?array $currentUser = null;
+
+    /**
+     * initialize
+     */
+    public function initController(
+        RequestInterface $request,
+        ResponseInterface $response,
+        LoggerInterface $logger
+    ) {
+        parent::initController(
+            $request,
+            $response,
+            $logger
+        );
+
+        $this->session = session();
+
+        $this->validation = service('validation');
+
+        $this->db = db_connect();
+
+        $this->currentUser = $this->session->get('user');
+    }
+
+    /**
+     * Login Check
+     */
+    protected function requireLogin()
     {
-        // Load here all helpers you want to be available in your controllers that extend BaseController.
-        // Caution: Do not put the this below the parent::initController() call below.
-        // $this->helpers = ['form', 'url'];
+        if (!$this->session->has('user')) {
 
-        // Caution: Do not edit this line.
-        parent::initController($request, $response, $logger);
+            return redirect()->to('/login');
 
-        // Preload any models, libraries, etc, here.
-        // $this->session = service('session');
+        }
+
+        return null;
+    }
+
+    /**
+     * JSON Success
+     *
+     * Dinamai jsonSuccess() (bukan success()) agar tidak bertabrakan dengan
+     * action bernama success() pada controller frontend.
+     */
+    protected function jsonSuccess(
+        string $message = '',
+        array $data = [],
+        int $code = 200
+    ) {
+        return $this->response
+            ->setStatusCode($code)
+            ->setJSON([
+                'status' => true,
+                'message' => $message,
+                'data' => $data,
+            ]);
+    }
+
+    /**
+     * JSON Error
+     *
+     * Dinamai jsonError() (bukan error()) agar tidak bertabrakan dengan
+     * action bernama error() pada controller frontend.
+     */
+    protected function jsonError(
+        string $message = '',
+        array $errors = [],
+        int $code = 400
+    ) {
+        return $this->response
+            ->setStatusCode($code)
+            ->setJSON([
+                'status' => false,
+                'message' => $message,
+                'errors' => $errors,
+            ]);
+    }
+
+    /**
+     * Flash Success
+     */
+    protected function flashSuccess(string $message)
+    {
+        session()->setFlashdata(
+            'success',
+            $message
+        );
+    }
+
+    /**
+     * Flash Error
+     */
+    protected function flashError(string $message)
+    {
+        session()->setFlashdata(
+            'error',
+            $message
+        );
+    }
+
+    /**
+     * Validation Error
+     */
+    protected function validationErrors()
+    {
+        return $this->validation->getErrors();
+    }
+
+    /**
+     * Current User
+     */
+    protected function user()
+    {
+        return $this->currentUser;
+    }
+
+    /**
+     * User ID
+     */
+    protected function userId()
+    {
+        return $this->currentUser['id'] ?? null;
+    }
+
+    /**
+     * User Role
+     */
+    protected function roleId()
+    {
+        return $this->currentUser['role_id'] ?? null;
+    }
+
+    /**
+     * Is Ajax
+     */
+    protected function isAjax()
+    {
+        return $this->request->isAJAX();
+    }
+
+    /**
+     * Upload File
+     */
+    protected function uploadFile(
+        string $field,
+        string $path
+    ) {
+        $file = $this->request->getFile($field);
+
+        if (!$file || !$file->isValid()) {
+            return null;
+        }
+
+        $name = $file->getRandomName();
+
+        $file->move(
+            WRITEPATH . '../public/uploads/' . $path,
+            $name
+        );
+
+        return $name;
+    }
+
+    /**
+     * Delete Upload
+     */
+    protected function deleteFile(
+        string $path,
+        ?string $filename
+    ) {
+        if (!$filename) {
+            return;
+        }
+
+        $file = WRITEPATH .
+            '../public/uploads/' .
+            $path .
+            '/' .
+            $filename;
+
+        if (is_file($file)) {
+            unlink($file);
+        }
     }
 }

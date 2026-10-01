@@ -1,4 +1,12 @@
-<?= $this->extend('layout/main') ?> <!-- Adjust layout if needed -->
+<?php
+/**
+ * Data Tiket.
+ *
+ * Catatan: sebelumnya file ini menulis extend('layout/main') (tanpa "s")
+ * padahal layout-nya 'layouts/main' -> halaman selalu error.
+ */
+?>
+<?= $this->extend('layouts/template') ?>
 
 <?= $this->section('content') ?>
 <div class="container-fluid px-4 py-3">
@@ -56,17 +64,17 @@
                     </button>
                     <ul class="dropdown-menu shadow" aria-labelledby="dropdownExport">
                         <li>
-                            <a class="dropdown-item py-2" href="<?= base_url('tickets/export/pdf') ?>">
+                            <a class="dropdown-item py-2" href="<?= base_url('datatiket/export/pdf') ?>">
                                 <i class="far fa-file-pdf text-danger me-2 fa-lg"></i> Export PDF
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item py-2" href="<?= base_url('tickets/export/excel') ?>">
+                            <a class="dropdown-item py-2" href="<?= base_url('datatiket/export/excel') ?>">
                                 <i class="far fa-file-excel text-success me-2 fa-lg"></i> Export Excel
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item py-2" href="<?= base_url('tickets/export/csv') ?>">
+                            <a class="dropdown-item py-2" href="<?= base_url('datatiket/export/csv') ?>">
                                 <i class="fas fa-file-csv text-primary me-2 fa-lg"></i> Export CSV
                             </a>
                         </li>
@@ -121,7 +129,7 @@
                                     </td>
                                     <td class="text-center"><?= isset($row['created_at']) ? date('d-m-Y H:i', strtotime($row['created_at'])) : '-' ?></td>
                                     <td class="text-center">
-                                        <a href="<?= base_url('tickets/detail/' . ($row['id'] ?? '')) ?>" class="btn btn-sm btn-info text-white" title="Detail">
+                                        <a href="<?= base_url('datatiket/detail/' . ($row['id'] ?? '')) ?>" class="btn btn-sm btn-info text-white" title="Detail">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>

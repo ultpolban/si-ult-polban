@@ -1,89 +1,178 @@
-<!DOCTYPE html>
-<html>
+<?= $this->extend('layouts/template') ?>
 
-<head>
-    <title>Edit User</title>
-</head>
+<?= $this->section('content') ?>
 
-<body>
+<div class="mb-3">
 
-    <h2>Edit User</h2>
+    <h2 class="mb-1">Edit User</h2>
 
-    <?php if (session()->getFlashdata('errors')): ?>
+    <p class="text-muted mb-0">
 
-        <div class="alert alert-danger">
+        <?= esc($user['full_name'] ?? '') ?> &mdash; <?= esc($user['email'] ?? '') ?>
 
-            <ul>
+    </p>
 
-                <?php foreach (session()->getFlashdata('errors') as $error): ?>
+</div>
 
-                    <li><?= $error ?></li>
+<?php if (session()->getFlashdata('error')): ?>
 
-                <?php endforeach; ?>
+    <div class="alert alert-danger"><?= esc(session()->getFlashdata('error')) ?></div>
 
-            </ul>
+<?php endif; ?>
 
-        </div>
+<?php $errors = session()->getFlashdata('errors'); ?>
 
-    <?php endif; ?>
+<?php if (is_array($errors) && $errors !== []): ?>
 
-    <form action="<?= base_url('users/update/' . $user['id']) ?>" method="post">
+    <?php foreach ($errors as $error): ?>
 
-        Nama
+        <div class="alert alert-danger"><?= esc($error) ?></div>
 
-        <input
-            type="text"
-            name="name"
-            value="<?= $user['name'] ?>">
+    <?php endforeach; ?>
 
-        <br><br>
+<?php endif; ?>
 
-        Email
+<div class="card">
 
-        <input
-            type="email"
-            name="email"
-            value="<?= $user['email'] ?>">
+    <div class="card-body">
 
-        <br><br>
+        <form
+            method="post"
+            action="<?= base_url('users/update/' . $user['id']) ?>"
+            data-lock-submit>
 
-        No HP
+            <?= csrf_field() ?>
 
-        <input
-            type="text"
-            name="phone"
-            value="<?= $user['phone'] ?>">
+            <div class="form-group">
 
-        <br><br>
+                <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
 
-        Role
+                <input
+                    type="text"
+                    name="full_name"
+                    class="form-control"
+                    value="<?= old('full_name', $user['full_name'] ?? '') ?>"
+                    maxlength="150"
+                    required>
 
-        <select name="role_id">
+            </div>
 
-            <?php foreach ($roles as $role): ?>
+            <div class="form-group">
 
-                <option
-                    value="<?= $role['id'] ?>"
-                    <?= ($role['id'] == $user['role_id']) ? 'selected' : '' ?>>
+                <label class="form-label">Email <span class="text-danger">*</span></label>
 
-                    <?= $role['role_name'] ?>
+                <input
+                    type="email"
+                    name="email"
+                    class="form-control"
+                    value="<?= old('email', $user['email'] ?? '') ?>"
+                    maxlength="150"
+                    required>
 
-                </option>
+            </div>
 
-            <?php endforeach; ?>
+            <div class="form-group">
 
-        </select>
+                <label class="form-label">Nomor HP</label>
 
-        <br><br>
+                <input
+                    type="text"
+                    name="phone_number"
+                    class="form-control"
+                    value="<?= old('phone_number', $user['phone_number'] ?? '') ?>"
+                    maxlength="20">
 
-        <button type="submit">
+            </div>
 
-            Update
+            <div class="form-group">
 
-        </button>
+                <label class="form-label">Nomor Identitas (NIK/NIM/NIP)</label>
 
-    </form>
+                <input
+                    type="text"
+                    name="identity_number"
+                    class="form-control"
+                    value="<?= old('identity_number', $user['identity_number'] ?? '') ?>"
+                    maxlength="30">
 
-</body>
+            </div>
 
-</html>
+            <div class="form-group">
+
+                <label class="form-label">Role <span class="text-danger">*</span></label>
+
+                <select name="role_id" class="form-select" required>
+
+                    <?php foreach ($roles as $role): ?>
+
+                        <option
+                            value="<?= esc($role['id']) ?>"
+                            <?= (string) old('role_id', $user['role_id'] ?? '') === (string) $role['id'] ? 'selected' : '' ?>>
+
+                            <?= esc($role['name']) ?>
+
+                        </option>
+
+                    <?php endforeach; ?>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">Status Akun</label>
+
+                <select name="is_active" class="form-select">
+
+                    <option
+                        value="1"
+                        <?= (int) old('is_active', $user['is_active'] ?? 0) === 1 ? 'selected' : '' ?>>
+
+                        Aktif
+
+                    </option>
+
+                    <option
+                        value="0"
+                        <?= (int) old('is_active', $user['is_active'] ?? 0) === 0 ? 'selected' : '' ?>>
+
+                        Nonaktif
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">Password Baru</label>
+
+                <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    minlength="<?= password_min_length() ?>"
+                    maxlength="<?= password_max_length() ?>"
+                    title="<?= password_hint() ?>"
+                    autocomplete="new-password"
+                    placeholder="Kosongkan bila tidak diubah">
+
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+
+                <i class="fas fa-save me-1"></i> Simpan Perubahan
+
+            </button>
+
+            <a href="<?= base_url('users') ?>" class="btn btn-secondary">Batal</a>
+
+        </form>
+
+    </div>
+
+</div>
+
+<?= $this->endSection() ?>

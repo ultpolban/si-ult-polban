@@ -26,7 +26,7 @@ Form Laporan Tamu
 
 <?php endif ?>
 
-<form action="<?= base_url('guest-ticket/store') ?>" method="post">
+<form action="<?= base_url('guest-report/store') ?>" method="post">
 
 <?= csrf_field() ?>
 

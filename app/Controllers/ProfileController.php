@@ -28,12 +28,30 @@ class ProfileController extends BaseController
                 ->with('error', 'Data pengguna tidak ditemukan.');
         }
 
+        helper('role');
+
+        // Semua role kini memakai tampilan profil bersama (tema ULT).
+        // Pemilihan view hanya untuk menyesuaikan label peran.
+        $group = ult_role_group();
+
         $data = [
-            'title' => 'Profil Petugas',
+            'title' => 'Profil Saya',
             'user'  => $user,
         ];
 
-        return view('petugas/profile', $data);
+        if ($group === 'unit') {
+            return view('unit/profile/index', $data);
+        }
+
+        if ($group === 'pemohon') {
+            $view = ult_applicant_menu_prefix() . '/profile/index';
+
+            if (is_file(APPPATH . 'Views/' . $view . '.php')) {
+                return view($view, $data);
+            }
+        }
+
+        return view('profile/index', $data);
     }
 
     // =========================================================

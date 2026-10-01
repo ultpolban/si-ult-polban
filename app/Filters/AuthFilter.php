@@ -10,19 +10,10 @@ class AuthFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        $isLoggedIn = session()->get('isLoggedIn');
-        $loggedIn   = session()->get('logged_in');
-
-        // Anggap user sudah login jika salah satu session login bernilai true.
-        if (!$isLoggedIn && !$loggedIn) {
-            return redirect()->to('/login');
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login/form')
+                ->with('error', 'Silakan login terlebih dahulu.');
         }
-
-        // Sinkronkan kedua session agar seluruh aplikasi konsisten.
-        session()->set([
-            'isLoggedIn' => true,
-            'logged_in'  => true,
-        ]);
     }
 
     public function after(
@@ -30,6 +21,6 @@ class AuthFilter implements FilterInterface
         ResponseInterface $response,
         $arguments = null
     ) {
-        // Tidak ada tindakan setelah request.
+        // Tidak digunakan
     }
 }

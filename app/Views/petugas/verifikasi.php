@@ -11,18 +11,17 @@
        ULT POLBAN - SYSTEM VERIFICATION STYLING
     ========================================================= */
 
-    :root {
-        --ult-navy-dark: #2b3990;
-        --ult-navy: #2b3990;
-        --ult-blue-accent: #3b4cca;
-        --ult-orange: #ff8c00;
-        --ult-green: #10b981;
-        --ult-yellow: #f59e0b;
-        --ult-cyan: #06b6d4;
-        --ult-light-bg: #f8fafc;
-        --ult-card-border: rgba(226, 232, 240, 0.8);
-        --ult-shadow-sm: 0 4px 20px -2px rgba(43, 57, 144, 0.05);
-        --ult-shadow-hover: 0 20px 35px -10px rgba(43, 57, 144, 0.12);
+        :root {
+        /* Hanya variabel KHUSUS halaman ini. Warna, radius, dan
+           bayangan diambil dari design system supaya seragam. */
+        --ult-blue-accent:   var(--ult-navy-light);
+        --ult-cyan:          var(--ult-info);
+        --ult-yellow:        var(--ult-warning);
+        --ult-green:         var(--ult-success);
+        --ult-light-bg:      var(--ult-body);
+        --ult-card-border:   var(--ult-border);
+        --ult-shadow-sm:     var(--ult-shadow);
+        --ult-shadow-hover:  var(--ult-shadow-lg);
     }
 
     body, .container-fluid {

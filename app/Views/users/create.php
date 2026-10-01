@@ -1,84 +1,152 @@
-<!DOCTYPE html>
-<html>
+<?= $this->extend('layouts/template') ?>
 
-<head>
-    <title>Tambah User</title>
-</head>
+<?= $this->section('content') ?>
 
-<body>
+<div class="mb-3">
 
-    <h2>Tambah User</h2>
+    <h2 class="mb-1">Tambah User</h2>
 
-    <?php if (session()->getFlashdata('errors')): ?>
+    <p class="text-muted mb-0">Buat akun pengguna baru pada sistem.</p>
 
-        <div class="alert alert-danger">
+</div>
 
-            <ul>
+<?php if (session()->getFlashdata('error')): ?>
 
-                <?php foreach (session()->getFlashdata('errors') as $error): ?>
+    <div class="alert alert-danger"><?= esc(session()->getFlashdata('error')) ?></div>
 
-                    <li><?= $error ?></li>
+<?php endif; ?>
 
-                <?php endforeach; ?>
+<?php $errors = session()->getFlashdata('errors'); ?>
 
-            </ul>
+<?php if (is_array($errors) && $errors !== []): ?>
 
-        </div>
+    <?php foreach ($errors as $error): ?>
 
-    <?php endif; ?>
+        <div class="alert alert-danger"><?= esc($error) ?></div>
 
-    <form action="<?= base_url('users/store') ?>" method="post">
+    <?php endforeach; ?>
 
-        Nama
+<?php endif; ?>
 
-        <input type="text" name="name">
+<div class="card">
 
-        <br><br>
+    <div class="card-body">
 
-        Email
+        <form
+            method="post"
+            action="<?= base_url('users/store') ?>"
+            data-lock-submit>
 
-        <input type="email" name="email">
+            <?= csrf_field() ?>
 
-        <br><br>
+            <div class="form-group">
 
-        No HP
+                <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
 
-        <input type="text" name="phone">
+                <input
+                    type="text"
+                    name="full_name"
+                    class="form-control"
+                    value="<?= old('full_name') ?>"
+                    maxlength="150"
+                    required>
 
-        <br><br>
+            </div>
 
-        Password
+            <div class="form-group">
 
-        <input type="password" name="password">
+                <label class="form-label">Email <span class="text-danger">*</span></label>
 
-        <br><br>
+                <input
+                    type="email"
+                    name="email"
+                    class="form-control"
+                    value="<?= old('email') ?>"
+                    maxlength="150"
+                    required>
 
-        Role
+            </div>
 
-        <select name="role_id">
+            <div class="form-group">
 
-            <?php foreach ($roles as $role): ?>
+                <label class="form-label">Nomor HP</label>
 
-                <option value="<?= $role['id'] ?>">
+                <input
+                    type="text"
+                    name="phone_number"
+                    class="form-control"
+                    value="<?= old('phone_number') ?>"
+                    maxlength="20">
 
-                    <?= $role['role_name'] ?>
+            </div>
 
-                </option>
+            <div class="form-group">
 
-            <?php endforeach; ?>
+                <label class="form-label">Nomor Identitas (NIK/NIM/NIP)</label>
 
-        </select>
+                <input
+                    type="text"
+                    name="identity_number"
+                    class="form-control"
+                    value="<?= old('identity_number') ?>"
+                    maxlength="30">
 
-        <br><br>
+            </div>
 
-        <button type="submit">
+            <div class="form-group">
 
-            Simpan
+                <label class="form-label">Role <span class="text-danger">*</span></label>
 
-        </button>
+                <select name="role_id" class="form-select" required>
 
-    </form>
+                    <option value="">-- Pilih Role --</option>
 
-</body>
+                    <?php foreach ($roles as $role): ?>
 
-</html>
+                        <option
+                            value="<?= esc($role['id']) ?>"
+                            <?= (string) old('role_id') === (string) $role['id'] ? 'selected' : '' ?>>
+
+                            <?= esc($role['name']) ?>
+
+                        </option>
+
+                    <?php endforeach; ?>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">Password <span class="text-danger">*</span></label>
+
+                <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    minlength="<?= password_min_length() ?>"
+                    maxlength="<?= password_max_length() ?>"
+                    title="<?= password_hint() ?>"
+                    autocomplete="new-password"
+                    required>
+
+                <small class="text-muted"><?= password_hint() ?></small>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+
+                <i class="fas fa-save me-1"></i> Simpan
+
+            </button>
+
+            <a href="<?= base_url('users') ?>" class="btn btn-secondary">Batal</a>
+
+        </form>
+
+    </div>
+
+</div>
+
+<?= $this->endSection() ?>

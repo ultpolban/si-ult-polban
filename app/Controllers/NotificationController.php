@@ -14,6 +14,23 @@ class NotificationController extends BaseController
     }
 
     /**
+     * Daftar notifikasi milik user yang sedang login.
+     */
+    public function index()
+    {
+        $userId = (int) session()->get('user_id');
+
+        if ($userId <= 0) {
+            return redirect()->to('/login');
+        }
+
+        return view('notifications/index', [
+            'title'            => 'Notifikasi',
+            'notificationList' => $this->notificationModel->getUserNotifications($userId),
+        ]);
+    }
+
+    /**
      * Tandai satu notifikasi sebagai sudah dibaca.
      */
     public function read($id)

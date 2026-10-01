@@ -8,16 +8,19 @@
 
 <style>
 
-:root {
-    --polban-navy: #1a237e;
-    --polban-blue: #005bac;
-    --polban-orange: #ff8c00;
-    --polban-yellow: #f4c400;
-    --polban-green: #198754;
-    --soft-bg: #f4f6f9;
-    --text-dark: #263238;
-    --text-muted: #6c757d;
-}
+    :root {
+        /* Palet diseragamkan ke design system (ult-dashboard.css).
+           Nama variabel lokal sengaja dipertahankan supaya seluruh
+           pemakaian var(--polban-*) di halaman ini tetap bekerja. */
+        --polban-navy:   var(--ult-navy);
+        --polban-blue:   var(--ult-navy-light);
+        --polban-orange: var(--ult-orange);
+        --polban-yellow: var(--ult-warning);
+        --polban-green:  var(--ult-success);
+        --soft-bg:       var(--ult-body);
+        --text-dark:     var(--ult-text);
+        --text-muted:    var(--ult-muted);
+    }
 
 body {
     font-family: 'Plus Jakarta Sans', sans-serif !important;

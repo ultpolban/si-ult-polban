@@ -1,0 +1,12 @@
+1	superadmin@polban.ac.id	Super Administrator	SUPER_ADMIN	-
+8	adminult@polban.ac.id	Admin ULT	ADMIN_ULT	-
+9	petugasult@polban.ac.id	Petugas ULT	PETUGAS_ULT	-
+10	unittujuan@polban.ac.id	Unit Tujuan	UNIT_TUJUAN	-
+11	pimpinan@polban.ac.id	Pimpinan	PIMPINAN	-
+12	mhs@polban.ac.id	Budi Mahasiswa	PEMOHON	MHS
+13	dosen@polban.ac.id	Dina Dosen	PEMOHON	DOSEN
+14	tendik@polban.ac.id	Eka Tendik	PEMOHON	TENDIK
+15	alumni@polban.ac.id	Fajar Alumni	PEMOHON	ALUMNI
+16	mitra@polban.ac.id	Gita Mitra	PEMOHON	MITRA
+17	wali@polban.ac.id	Hadi Wali	PEMOHON	WALI
+18	umum@polban.ac.id	Indah Umum	PEMOHON	UMUM

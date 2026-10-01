@@ -6,6 +6,77 @@
 
     <div class="card-header">
         <h3 class="card-title">Daftar Tiket Unit</h3>
+
+        <div class="card-tools">
+
+            <a href="<?= base_url('unit/dashboard') ?>" class="btn btn-primary btn-sm">
+
+                <i class="fas fa-home me-1"></i> Dashboard
+
+            </a>
+
+            <a href="<?= base_url('unit/laporan') ?>" class="btn btn-outline-primary btn-sm">
+
+                <i class="fas fa-chart-bar me-1"></i> Laporan
+
+            </a>
+
+            <!-- EXPORT -->
+            <div class="btn-group">
+
+                <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                >
+
+                    <i class="fas fa-download mr-1"></i> Export
+
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-right">
+
+                    <a
+                        class="dropdown-item"
+                        href="<?= base_url('unit/tiket/export/pdf') ?>"
+                    >
+
+                        <i class="fas fa-file-pdf text-danger mr-2"></i>
+
+                        Export PDF
+
+                    </a>
+
+                    <a
+                        class="dropdown-item"
+                        href="<?= base_url('unit/tiket/export/excel') ?>"
+                    >
+
+                        <i class="fas fa-file-excel text-success mr-2"></i>
+
+                        Export Excel
+
+                    </a>
+
+                    <a
+                        class="dropdown-item"
+                        href="<?= base_url('unit/tiket/export/csv') ?>"
+                    >
+
+                        <i class="fas fa-file-csv text-primary mr-2"></i>
+
+                        Export CSV
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
     <div class="card-body">

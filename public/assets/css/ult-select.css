@@ -1,0 +1,446 @@
+/* =====================================================================
+   ULT SELECT / DROPDOWN - SI ULT POLBAN
+   ---------------------------------------------------------------------
+   Satu-satunya sumber gaya untuk SEMUA elemen drop-down & select:
+   landing page, halaman auth (login, registrasi, MFA), dan seluruh
+   dashboard (admin, petugas, unit, pimpinan, pemohon).
+
+   Tujuan: lebih JELAS & MUDAH DIBACA
+     - area klik lebih besar (tidak mudah salah pilih)
+     - panah pembuka selalu terlihat & tidak menimpa teks
+     - pilihan aktif terlihat jelas
+     - opsi di dalam list diberi jarak + highlight saat hover
+     - disabled / error mudah dibedakan
+   ===================================================================== */
+
+:root {
+    --ultsel-border: #dbe0ec;
+    --ultsel-border-hover: #c2cbe0;
+    --ultsel-focus: #4258cc;
+    --ultsel-radius: 10px;
+    --ultsel-min-h: 44px;
+    --ultsel-option-hover: #eef2ff;
+    --ultsel-navy: #2b3990;
+    --ultsel-placeholder: #94a3b8;
+}
+
+/* ============================================================
+   1. SELECT NATIF
+   ============================================================ */
+select.form-control,
+select.form-select,
+select.custom-select,
+.form-group > select,
+select:not([class]) {
+    width: 100%;
+    min-height: var(--ultsel-min-h);
+    padding: 10px 42px 10px 14px;
+    font-size: .95rem;
+    line-height: 1.5;
+    color: #1f2937;
+    background-color: #fff;
+    border: 1.5px solid var(--ultsel-border);
+    border-radius: var(--ultsel-radius);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 12px 8px;
+    /* Panah custom: tidak ketimpa teks panjang */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M1.4 0 6 4.6 10.6 0 12 1.4 6 7.4 0 1.4z'/%3E%3C/svg%3E");
+    transition: border-color .18s, box-shadow .18s;
+    cursor: pointer;
+    text-overflow: ellipsis;
+}
+
+/* Varian kecil (filter compact) */
+select.form-control-sm,
+select.form-select-sm,
+select.custom-select-sm {
+    min-height: 34px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: .85rem;
+    background-position: right 11px center;
+}
+
+select.form-control:hover,
+select.form-select:hover,
+select.custom-select:hover,
+.form-group > select:hover {
+    border-color: var(--ultsel-border-hover);
+}
+
+select.form-control:focus,
+select.form-select:focus,
+select.custom-select:focus,
+.form-group > select:focus {
+    border-color: var(--ultsel-focus);
+    box-shadow: 0 0 0 4px rgba(66, 88, 204, .13);
+    outline: none;
+}
+
+/* Placeholder / opsi kosong ("-- Pilih ... --") */
+select option[value=""] { color: var(--ultsel-placeholder); }
+
+select option {
+    color: #1f2937;
+    background: #fff;
+    font-size: .95rem;
+    padding: 8px 10px;
+}
+
+/* Opsi yang sedang dipilih */
+select option:checked,
+select option:selected {
+    background: #2b3990;
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Group opsi (optgroup) */
+select optgroup {
+    background: #f4f6fb;
+    color: #2b3990;
+    font-style: normal;
+    font-weight: 700;
+    font-size: .85rem;
+}
+
+select optgroup option {
+    background: #fff;
+    color: #1f2937;
+    font-weight: 400;
+}
+
+/* Disabled / readonly */
+select:disabled,
+select[readonly],
+select.disabled {
+    background-color: #f1f4f9;
+    color: #9aa3b5;
+    cursor: not-allowed;
+    border-style: dashed;
+}
+
+/* Error */
+select.is-invalid,
+select.form-control.is-invalid,
+select.form-select.is-invalid {
+    border-color: #dc2626;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%23dc2626' d='M1.4 0 6 4.6 10.6 0 12 1.4 6 7.4 0 1.4z'/%3E%3C/svg%3E");
+}
+
+select.is-invalid:focus { box-shadow: 0 0 0 4px rgba(220, 38, 38, .13); }
+select.is-valid,
+select.form-control.is-valid { border-color: #16a34a; }
+
+
+/* ============================================================
+   2. SELECT2 (dropdown searchable)
+   ------------------------------------------------------------
+   HANYA dipakai untuk <select> yang diberi data-ult-search
+   (daftar panjang). Select lain tetap <select> biasa pada
+   bagian 1, jadi tampilan default aplikasi tetap polos.
+   ============================================================ */
+.select2-container { width: 100% !important; }
+
+.select2-container--default .select2-selection--single {
+    height: auto;
+    min-height: var(--ultsel-min-h);
+    padding: 5px 36px 5px 12px;
+    border: 1.5px solid var(--ultsel-border);
+    border-radius: var(--ultsel-radius);
+    background-color: #fff;
+    box-shadow: none;
+    transition: border-color .18s, box-shadow .18s;
+}
+
+.select2-container--default .select2-selection--single:hover { border-color: var(--ultsel-border-hover); }
+
+.select2-container--default.select2-container--focus .select2-selection--single,
+.select2-container--default.select2-container--open .select2-selection--single {
+    border-color: var(--ultsel-focus);
+    box-shadow: 0 0 0 4px rgba(66, 88, 204, .13);
+    outline: none;
+}
+
+/* Teks yang tampil di kolom — WAJIB punya warna & ukuran yang jelas */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding: 0;
+    line-height: 1.5;
+    color: #1f2937 !important;
+    font-size: .95rem;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Teks placeholder / opsi kosong -> abu-abu, tapi TETAP terlihat */
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: var(--ultsel-placeholder) !important;
+    font-style: normal;
+    font-weight: 400;
+}
+
+/* Panah buka / tutup */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    height: auto;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #6b7280 transparent transparent transparent;
+    border-width: 5px 4px 0;
+}
+
+.select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #6b7280 transparent;
+    border-width: 0 4px 5px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__clear {
+    top: 50%;
+    right: 32px;
+    transform: translateY(-50%);
+    color: #9aa3b5;
+    font-size: 1.1rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__clear:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* --- Daftar opsi yang membentang --- */
+.select2-container--default .select2-dropdown {
+    margin-top: 6px;
+    border: 1.5px solid var(--ultsel-border);
+    border-radius: 12px;
+    box-shadow: 0 18px 40px rgba(16, 24, 40, .14);
+    overflow: hidden;
+    background: #fff;
+    z-index: 1080;
+}
+
+.select2-container--default .select2-search--inline .select2-search__field {
+    padding: 10px 12px;
+    margin: 0;
+    border-bottom: 1px solid #eef1f7;
+    font-size: .93rem;
+    color: #1f2937;
+}
+
+.select2-container--default .select2-search--inline .select2-search__field:focus {
+    outline: none;
+    box-shadow: none;
+    border-bottom: 2px solid var(--ultsel-focus);
+}
+
+.select2-container--default .select2-results__options {
+    padding: 6px;
+    max-height: 300px;
+    font-size: .93rem;
+}
+
+/* Baris pilihan: jarak lega + mudah dibaca.
+   Teks panjang boleh membungkus, bukan dipotong — supaya tetap utuh
+   dan tidak bertumpuk dengan baris di atasnya. */
+.select2-container--default .select2-results__option {
+    padding: 8px 11px;
+    margin: 1px 0;
+    border-radius: 7px;
+    color: #1f2937;
+    line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    transition: background .12s, color .12s;
+}
+
+.select2-container--default .select2-results__option--highlighted,
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background: var(--ultsel-option-hover);
+    color: var(--ultsel-navy);
+    font-weight: 600;
+}
+
+.select2-container--default .select2-results__option--selected,
+.select2-container--default .select2-results__option[aria-selected="true"] {
+    background: #e8edff;
+    color: var(--ultsel-navy);
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   3. CEGAH SCROLLBAR HALAMAN UTAMA MUNCUL
+   ============================================================ */
+/* Dipasang oleh ult-select.js saat dropdown Select2 dibuka.
+   <html> ikut dikunci karena scrollbar desktop biasanya menempel
+   di sana, bukan di <body>. */
+html.ult-select-lock,
+body.ult-select-opened {
+    /* Sembunyikan scrollbar halaman utama selagi dropdown terbuka. */
+    overflow: hidden !important;
+    overscroll-behavior: none;
+}
+
+/* Dropdown tidak boleh melebihi tinggi layar, supaya tidak memaksa
+   halaman utama ikut memanjang / muncul scrollbar. */
+.select2-container--default .select2-results__options {
+    max-height: min(280px, 38vh);
+}
+
+.select2-container--default .select2-dropdown {
+    max-height: min(320px, 46vh);
+}
+
+/* Hilangkan outline biru bawaan browser pada area hasil pencarian */
+.select2-container--default .select2-results:focus {
+    outline: none;
+}
+
+/* ============================================================
+   4. DROPDOWN MENU (menu klik, bukan select)
+   ============================================================ */
+.dropdown-menu {
+    border: 1px solid #e5e9f2;
+    border-radius: 14px;
+    box-shadow: 0 16px 38px rgba(16, 24, 40, .13);
+    padding: 6px;
+    font-size: .9rem;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.dropdown-item {
+    border-radius: 9px;
+    padding: 9px 12px;
+    font-weight: 600;
+    color: #1f2937;
+    line-height: 1.45;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    transition: background .14s, color .14s;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background: var(--ultsel-option-hover);
+    color: var(--ultsel-navy);
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    background: var(--ultsel-navy);
+    color: #fff;
+}
+
+.dropdown-item i,
+.dropdown-item .bi {
+    color: var(--ultsel-placeholder);
+    width: 16px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.dropdown-item:hover i,
+.dropdown-item:hover .bi,
+.dropdown-item.active i,
+.dropdown-item.active .bi { color: inherit; }
+
+.dropdown-divider {
+    margin: 6px 4px;
+    border-top: 1px solid #eef1f7;
+}
+
+.dropdown-header {
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    color: #6b7280;
+    padding: 8px 12px 4px;
+}
+
+.arrow::after { border-top-color: #6b7280; }
+
+/* ============================================================
+   5. PETUNJUK KECIL DI BAWAH SELECT
+   ============================================================ */
+.ult-select-hint {
+    display: block;
+    margin-top: 6px;
+    font-size: .78rem;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.ult-select-hint i { color: var(--ultsel-focus); margin-right: 3px; }
+
+/* ============================================================
+   6. AKSESIBILITAS & PERANGKAT SENTUH
+   ============================================================ */
+@media (hover: none) {
+    select.form-control,
+    select.form-select,
+    select.custom-select {
+        min-height: 48px;
+        font-size: 1rem;
+        -webkit-text-size-adjust: 100%; /* cegah zoom otomatis iOS */
+    }
+
+    .select2-container--default .select2-selection--single { min-height: 48px; }
+    .select2-container--default .select2-results__option { padding: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    select.form-control,
+    select.form-select,
+    select.custom-select,
+    .select2-container--default .select2-selection--single,
+    .dropdown-item { transition: none !important; }
+}
+
+@media print {
+    select.form-control,
+    select.form-select {
+        border: 1px solid #999 !important;
+        background: none !important;
+    }
+}
+
+.select2-container--default .select2-results__group {
+    padding: 8px 12px 4px;
+    color: #6b7280;
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+}
+
+.select2-container--default .select2-results__message {
+    padding: 14px 12px;
+    color: #6b7280;
+    font-size: .88rem;
+}
+
+/* Select2 di halaman auth */
+.auth-right .select2-container--default .select2-selection--single,
+.auth-container .select2-container--default .select2-selection--single {
+    min-height: 44px;
+}
+
+/* Select di dalam input-group */
+.input-group > select.form-control,
+.input-group > .form-select {
+    border-radius: 0 10px 10px 0;
+    border-left: 0;
+}

@@ -10,111 +10,23 @@ class DashboardController extends BaseController
      * =========================================================
      * DASHBOARD UTAMA
      * =========================================================
+     *
+     * /dashboard hanya berperan sebagai "pintu masuk" dan
+     * mengarahkan pengguna ke dashboard sesuai role & jenis
+     * pemohon. Logika pemetaan berada di helper `ult_role_dashboard()`
+     * sehingga sama dengan yang dipakai pada proses login.
      */
     public function index()
     {
-        $ticketModel = new TicketModel();
+        helper(['role']);
 
-        /*
-        |---------------------------------------------------------
-        | Ambil seluruh tiket
-        |---------------------------------------------------------
-        */
-        $tickets = $ticketModel->getTickets();
-
-        if (!is_array($tickets)) {
-            $tickets = [];
+        if (! session()->get('isLoggedIn')) {
+            return redirect()
+                ->to('/login/form')
+                ->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        /*
-        |---------------------------------------------------------
-        | Hitung statistik dashboard utama
-        | Statistik utama menggunakan SEMUA tiket.
-        |---------------------------------------------------------
-        */
-        $jumlahTiket       = count($tickets);
-        $jumlahSubmitted   = 0;
-        $jumlahVerified    = 0;
-        $jumlahDisposisi   = 0;
-        $jumlahCompleted   = 0;
-        $jumlahRejected    = 0;
-        $jumlahRevision    = 0;
-
-        foreach ($tickets as $ticket) {
-
-            $status = strtolower(
-                trim($ticket['status'] ?? '')
-            );
-
-            switch ($status) {
-
-                case 'submitted':
-                    $jumlahSubmitted++;
-                    break;
-
-                case 'verified':
-                    $jumlahVerified++;
-                    break;
-
-                case 'assigned':
-                    $jumlahDisposisi++;
-                    break;
-
-                case 'in progress':
-                case 'in_progress':
-                case 'processing':
-                    $jumlahDisposisi++;
-                    break;
-
-                case 'completed':
-                    $jumlahCompleted++;
-                    break;
-
-                case 'rejected':
-                    $jumlahRejected++;
-                    break;
-
-                case 'revision':
-                case 'need revision':
-                case 'need_revision':
-                    $jumlahRevision++;
-                    break;
-            }
-        }
-
-        /*
-        |---------------------------------------------------------
-        | Data Dashboard Utama
-        |---------------------------------------------------------
-        */
-        $data = [
-
-            'jumlahTiket' =>
-                $jumlahTiket,
-
-            'jumlahSubmitted' =>
-                $jumlahSubmitted,
-
-            'jumlahVerified' =>
-                $jumlahVerified,
-
-            'jumlahDisposisi' =>
-                $jumlahDisposisi,
-
-            'jumlahCompleted' =>
-                $jumlahCompleted,
-
-            'jumlahRejected' =>
-                $jumlahRejected,
-
-            'jumlahRevision' =>
-                $jumlahRevision,
-        ];
-
-        return view(
-            'petugas/dashboard',
-            $data
-        );
+        return redirect()->to(ult_redirect_url());
     }
 
 

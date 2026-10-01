@@ -17,6 +17,11 @@
 
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
 
+    <link rel="stylesheet" href="<?= base_url('assets/css/auth.css') ?>">
+
+    <!-- Drop-down / select: gaya ULT (harus setelah auth.css) -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/ult-select.css') ?>">
+
 </head>
 
 <body>
@@ -35,7 +40,7 @@
 
                             <div class="text-center mb-3">
 
-                                <img src="<?= base_url('assets/images/logo.svg') ?>"
+                                <img src="<?= base_url('assets/img/logo-polban.png') ?>"
                                     alt="Logo"
                                     width="64">
 

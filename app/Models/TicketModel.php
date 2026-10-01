@@ -2,20 +2,32 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
-
-class TicketModel extends Model
+class TicketModel extends BaseModel
 {
-    protected $table            = 'tickets';
-    protected $primaryKey       = 'id';
-    protected $returnType       = 'array';
+    protected $table = 'tickets';
+
+    protected $primaryKey = 'id';
+
+    protected $returnType = 'array';
+
     protected $useAutoIncrement = true;
+
+    protected $protectFields = true;
+
+    protected $useSoftDeletes = true;
+
+    protected $useTimestamps = true;
+
+    protected $createdField = 'created_at';
+
+    protected $updatedField = 'updated_at';
+
+    protected $deletedField = 'deleted_at';
 
     protected $allowedFields = [
         'ticket_number',
         'user_profile_id',
         'service_id',
-        'unit_id',
         'title',
         'description',
         'status',
@@ -28,370 +40,170 @@ class TicketModel extends Model
         'rejected_at',
         'cancelled_at',
         'admin_note',
-        'rejection_reason',
-        'created_at',
-        'updated_at',
+        'rejection_reason'
     ];
 
-    protected $useTimestamps = false;
-    protected $useSoftDeletes = true;
-    protected $deletedField   = 'deleted_at';
+    protected $validationRules = [
+        'ticket_number'   => 'required|max_length[30]',
+        'user_profile_id' => 'required|integer',
+        'service_id'      => 'required|integer',
+        'title'           => 'permit_empty|max_length[200]',
+        'description'     => 'permit_empty',
+        'status'          => 'required',
+        'priority'        => 'required',
+        'assigned_to'     => 'permit_empty|integer'
+    ];
 
+    protected $validationMessages = [];
 
-    // =========================================================
-    // QUERY UTAMA TIKET
-    // =========================================================
+    protected $skipValidation = false;
 
-    private function ticketQuery()
-    {
-        return $this->db
-            ->table('tickets t')
-            ->select('
-                t.*,
+    protected $cleanValidationRules = true;
 
-                COALESCE(
-                    up.student_name,
-                    up.name
-                ) AS applicant_name,
-
-                up.name AS name,
-                up.student_name AS student_name,
-                up.nim AS nim,
-                up.nik AS nik,
-                up.email AS applicant_email,
-                up.phone AS applicant_phone,
-                up.applicant_type_id AS applicant_type_id,
-
-                mat.name AS applicant_type,
-
-                ms.name AS service_name,
-                ms.name AS service_display_name,
-                ms.code AS service_code,
-                ms.service_unit_id AS service_unit_id,
-
-                su.name AS unit_name,
-                su.code AS unit_code
-            ')
-            ->join(
-                'user_profiles up',
-                'up.id = t.user_profile_id',
-                'left'
-            )
-            ->join(
-                'master_applicant_types mat',
-                'mat.id = up.applicant_type_id',
-                'left'
-            )
-            ->join(
-                'master_services ms',
-                'ms.id = t.service_id',
-                'left'
-            )
-            ->join(
-                'master_service_units su',
-                'su.id = ms.service_unit_id',
-                'left'
-            );
-    }
-
-
-    // =========================================================
-    // SEMUA TIKET
-    // =========================================================
-
-    public function getTickets()
+    /**
+     * ======================================
+     * Data Tiket Lengkap
+     * ======================================
+     */
+    public function getComplete()
     {
         return $this
             ->select('
                 tickets.*,
-
-                COALESCE(
-                    user_profiles.student_name,
-                    user_profiles.name
-                ) AS applicant_name,
-
-                user_profiles.name AS name,
-                user_profiles.student_name AS student_name,
-                user_profiles.nim AS nim,
-                user_profiles.nik AS nik,
-                user_profiles.email AS applicant_email,
-                user_profiles.phone AS applicant_phone,
-
+                user_profiles.name AS applicant_name,
+                user_profiles.nim AS applicant_nim,
+                user_profiles.nik AS applicant_nik,
+                master_applicant_types.name AS applicant_type,
                 master_services.name AS service_name,
-                master_services.name AS service_display_name,
                 master_services.code AS service_code,
-                master_services.service_unit_id AS service_unit_id,
-
-                master_service_units.name AS unit_name,
-                master_service_units.code AS unit_code
+                master_service_units.name AS service_unit_name,
+                users.full_name AS assigned_name
             ')
+            ->join('user_profiles', 'user_profiles.id = tickets.user_profile_id')
+            ->join('master_applicant_types', 'master_applicant_types.id = user_profiles.applicant_type_id', 'left')
+            ->join('master_services', 'master_services.id = tickets.service_id')
+            ->join('master_service_units', 'master_service_units.id = master_services.service_unit_id', 'left')
+            ->join('users', 'users.id = tickets.assigned_to', 'left');
+    }
+
+    /**
+     * ======================================
+     * Search
+     * ======================================
+     */
+    public function search(string $keyword)
+    {
+        return $this
+            ->groupStart()
+            ->like('tickets.ticket_number', $keyword)
+            ->orLike('tickets.title', $keyword)
+            ->orLike('user_profiles.name', $keyword)
+            ->orLike('master_services.name', $keyword)
+            ->groupEnd();
+    }
+
+    /**
+     * ======================================
+     * Cari Berdasarkan Nomor Tiket
+     * ======================================
+     */
+    public function findByTicket(string $ticket)
+    {
+        return $this
+            ->where('tickets.ticket_number', $ticket)
+            ->first();
+    }
+
+    /**
+     * ======================================
+     * Daftar Tiket Lengkap
+     *
+     * Dipakai DashboardController, DataTicketController,
+     * DispositionController, dan StatisticsController.
+     * ======================================
+     */
+    public function getTickets(?string $status = null, int $limit = 0, int $offset = 0): array
+    {
+        $builder = $this->completeQuery();
+
+        if ($status !== null && $status !== '') {
+            $builder->where('tickets.status', $status);
+        }
+
+        $builder->orderBy('tickets.created_at', 'DESC');
+
+        if ($limit > 0) {
+            $builder->limit($limit, $offset);
+        }
+
+        return $builder->findAll();
+    }
+
+    /**
+     * ======================================
+     * Detail Satu Tiket
+     * ======================================
+     */
+    public function getTicketDetail($id)
+    {
+        return $this->completeQuery()->find($id);
+    }
+
+    /**
+     * Query dasar yang dipakai bersama oleh getTickets() dan
+     * getTicketDetail() agar tidak terjadi duplikasi definisi.
+     */
+    protected function completeQuery()
+    {
+        return $this->select('
+                tickets.*,
+                user_profiles.name AS applicant_name,
+                user_profiles.nim AS applicant_nim,
+                user_profiles.nik AS applicant_nik,
+                user_profiles.email AS applicant_email,
+                master_applicant_types.name AS applicant_type,
+                master_services.name AS service_name,
+                master_services.code AS service_code,
+                master_services.service_unit_id,
+                master_service_units.name AS service_unit_name,
+                users.full_name AS assigned_name
+            ')
+            ->join('user_profiles', 'user_profiles.id = tickets.user_profile_id', 'left')
             ->join(
-                'user_profiles',
-                'user_profiles.id = tickets.user_profile_id',
+                'master_applicant_types',
+                'master_applicant_types.id = user_profiles.applicant_type_id',
                 'left'
             )
-            ->join(
-                'master_services',
-                'master_services.id = tickets.service_id',
-                'left'
-            )
+            ->join('master_services', 'master_services.id = tickets.service_id', 'left')
             ->join(
                 'master_service_units',
                 'master_service_units.id = master_services.service_unit_id',
                 'left'
             )
-            ->orderBy(
-                'tickets.submitted_at',
-                'DESC'
-            )
-            ->findAll();
+            ->join('users', 'users.id = tickets.assigned_to', 'left');
     }
 
-
-    // =========================================================
-    // DETAIL TIKET
-    // =========================================================
-
-    public function getTicketDetail($id)
+    /**
+     * ======================================
+     * Generate Nomor Tiket
+     * ======================================
+     */
+    public function generateTicketNumber(): string
     {
-        return $this->ticketQuery()
-            ->where(
-                't.id',
-                $id
-            )
-            ->get()
-            ->getRowArray();
-    }
+        $prefix = 'TKT';
 
+        $year = date('Y');
 
-    // =========================================================
-    // BERDASARKAN STATUS
-    // =========================================================
+        $month = date('m');
 
-    public function getByStatus($status)
-    {
-        return $this->ticketQuery()
-            ->where(
-                'LOWER(t.status)',
-                strtolower(
-                    trim($status)
-                )
-            )
-            ->orderBy(
-                't.id',
-                'DESC'
-            )
-            ->get()
-            ->getResultArray();
-    }
+        // Hitung jumlah tiket bulan ini
+        $count = $this
+            ->where('created_at >=', $year . '-' . $month . '-01 00:00:00')
+            ->where('created_at <=', $year . '-' . $month . '-31 23:59:59')
+            ->countAllResults();
 
+        $sequence = str_pad($count + 1, 5, '0', STR_PAD_LEFT);
 
-    // =========================================================
-    // TIKET VERIFIED
-    // =========================================================
-
-    public function getVerifiedTickets()
-    {
-        return $this->ticketQuery()
-            ->where(
-                'LOWER(t.status)',
-                'verified'
-            )
-            ->orderBy(
-                't.verified_at',
-                'DESC'
-            )
-            ->get()
-            ->getResultArray();
-    }
-
-
-    // =========================================================
-    // TIKET ASSIGNED
-    // =========================================================
-
-    public function getAssignedTickets()
-    {
-        return $this->db
-            ->table('tickets t')
-            ->select('
-                t.*,
-
-                up.name AS applicant_name,
-                up.student_name AS student_name,
-                up.nim AS nim,
-                up.nik AS nik,
-                up.email AS applicant_email,
-                up.phone AS applicant_phone,
-                up.applicant_type_id AS applicant_type_id,
-
-                mat.name AS applicant_type,
-
-                ms.name AS service_name,
-                ms.name AS service_display_name,
-                ms.code AS service_code,
-                ms.service_unit_id AS service_unit_id,
-
-                su.name AS unit_name,
-                su.code AS unit_code
-            ')
-            ->join(
-                'user_profiles up',
-                'up.id = t.user_profile_id',
-                'left'
-            )
-            ->join(
-                'master_applicant_types mat',
-                'mat.id = up.applicant_type_id',
-                'left'
-            )
-            ->join(
-                'master_services ms',
-                'ms.id = t.service_id',
-                'left'
-            )
-            ->join(
-                'master_service_units su',
-                'su.id = t.assigned_to',
-                'left'
-            )
-            ->where(
-                'LOWER(t.status)',
-                'assigned'
-            )
-            ->orderBy(
-                't.updated_at',
-                'DESC'
-            )
-            ->get()
-            ->getResultArray();
-    }
-
-
-    // =========================================================
-    // TIKET BERDASARKAN UNIT
-    // =========================================================
-
-    public function getTicketsByUnit($unitId)
-    {
-        return $this->db
-            ->table('tickets t')
-            ->select('
-                t.*,
-
-                up.name AS applicant_name,
-                up.student_name AS student_name,
-                up.nim AS nim,
-                up.nik AS nik,
-                up.email AS applicant_email,
-                up.phone AS applicant_phone,
-                up.applicant_type_id AS applicant_type_id,
-
-                mat.name AS applicant_type,
-
-                ms.name AS service_name,
-                ms.name AS service_display_name,
-                ms.code AS service_code,
-                ms.service_unit_id AS service_unit_id,
-
-                su.name AS unit_name,
-                su.code AS unit_code
-            ')
-            ->join(
-                'user_profiles up',
-                'up.id = t.user_profile_id',
-                'left'
-            )
-            ->join(
-                'master_applicant_types mat',
-                'mat.id = up.applicant_type_id',
-                'left'
-            )
-            ->join(
-                'master_services ms',
-                'ms.id = t.service_id',
-                'left'
-            )
-            ->join(
-                'master_service_units su',
-                'su.id = t.assigned_to',
-                'left'
-            )
-            ->where(
-                't.assigned_to',
-                $unitId
-            )
-            ->whereIn(
-                'LOWER(t.status)',
-                [
-                    'assigned',
-                    'processing',
-                    'in_progress'
-                ]
-            )
-            ->orderBy(
-                't.id',
-                'DESC'
-            )
-            ->get()
-            ->getResultArray();
-    }
-
-
-    // =========================================================
-    // DETAIL TIKET + UNIT
-    // =========================================================
-
-    public function getTicketDetailWithUnit($id)
-    {
-        return $this->db
-            ->table('tickets t')
-            ->select('
-                t.*,
-
-                up.name AS applicant_name,
-                up.student_name AS student_name,
-                up.nim AS nim,
-                up.nik AS nik,
-                up.email AS applicant_email,
-                up.phone AS applicant_phone,
-                up.applicant_type_id AS applicant_type_id,
-
-                mat.name AS applicant_type,
-
-                ms.name AS service_name,
-                ms.name AS service_display_name,
-                ms.code AS service_code,
-                ms.service_unit_id AS service_unit_id,
-
-                su.name AS unit_name,
-                su.code AS unit_code
-            ')
-            ->join(
-                'user_profiles up',
-                'up.id = t.user_profile_id',
-                'left'
-            )
-            ->join(
-                'master_applicant_types mat',
-                'mat.id = up.applicant_type_id',
-                'left'
-            )
-            ->join(
-                'master_services ms',
-                'ms.id = t.service_id',
-                'left'
-            )
-            ->join(
-                'master_service_units su',
-                'su.id = t.assigned_to',
-                'left'
-            )
-            ->where(
-                't.id',
-                $id
-            )
-            ->get()
-            ->getRowArray();
+        return $prefix . '-' . $year . $month . '-' . $sequence;
     }
 }

@@ -5,6 +5,7 @@
  | Variabel: $applicantCode, $applicantType, $studyPrograms, $classes
  |--------------------------------------------------------------
  */
+helper('security');
 ?>
 
 <?php
@@ -20,9 +21,15 @@ $data = $data ?? [];
         type="password"
         name="password"
         class="form-control"
-        placeholder="Minimal 8 karakter"
-        minlength="8"
+        placeholder="Minimal <?= password_min_length() ?> karakter"
+        minlength="<?= password_min_length() ?>"
+        maxlength="<?= password_max_length() ?>"
+        title="<?= password_hint() ?>"
+        autocomplete="new-password"
         required>
+    <small class="text-muted">
+        <?= password_hint() ?>
+    </small>
 </div>
 
 <div class="mb-3">
@@ -32,6 +39,8 @@ $data = $data ?? [];
         name="password_confirmation"
         class="form-control"
         placeholder="Ulangi password"
-        minlength="8"
+        minlength="<?= password_min_length() ?>"
+        maxlength="<?= password_max_length() ?>"
+        autocomplete="new-password"
         required>
 </div>

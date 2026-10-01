@@ -36,8 +36,6 @@ class UserProfileModel extends BaseModel
 
         'nim',
 
-        'nim_anak',
-
         'nik',
 
         'student_name',
@@ -103,6 +101,8 @@ class UserProfileModel extends BaseModel
 
                 roles.name AS role_name,
 
+                master_applicant_types.id AS applicant_type_id,
+                master_applicant_types.code AS applicant_type_code,
                 master_applicant_types.name AS applicant_type,
 
                 master_departments.name AS department_name,

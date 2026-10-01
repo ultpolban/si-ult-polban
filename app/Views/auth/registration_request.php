@@ -1,303 +1,119 @@
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title><?= esc($title ?? 'Permintaan Izin Registrasi') ?> - SI ULT POLBAN</title>
-
-    <link rel="icon" href="<?= base_url('assets/img/favicon.svg') ?>">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
-
-</head>
-
-<body>
-
-    <div class="auth-page">
-
-        <div class="auth-container auth-register">
-
-            <div class="auth-card">
-
-                <!-- Left -->
-                <div class="auth-left">
-
-                    <div>
-
-                        <span class="system-badge">
-
-                            <i class="fas fa-star me-1"></i>
-
-                            Layanan Terpadu
-
-                        </span>
-
-                        <h1>
-
-                            Permintaan Izin<br>
-
-                            Registrasi
-
-                        </h1>
-
-                        <p>
-
-                            Lengkapi data Anda untuk mengajukan izin
-
-                            registrasi sebagai pemohon layanan.
-
-                        </p>
-
-                        <div class="mt-3 alert alert-light border small">
-
-                            <i class="fas fa-shield-alt me-2"></i>
-
-                            Permintaan Anda akan diperiksa admin. Setelah disetujui,
-
-                            akun pemohon dibuat dan Anda menyiapkan verifikasi dua
-
-                            langkah (MFA) sebelum dapat login.
-
-                        </div>
-
-                    </div>
-
-                    <div class="auth-icon">
-
-                        <i class="fas fa-user-lock"></i>
-
-                    </div>
-
-                </div>
-
-                <!-- Right -->
-                <div class="auth-right">
-
-                    <div class="text-center mb-4">
-
-                        <img src="<?= base_url('assets/img/logo.svg') ?>"
-                            alt="Logo"
-                            width="64">
-
-                        <h2 class="mt-3 mb-1">Minta Izin Registrasi</h2>
-
-                        <p>Pilih jenis pemohon untuk menyesuaikan formulir</p>
-
-                    </div>
-
-                    <?php if (session()->getFlashdata('info')) : ?>
-
-                        <div class="alert alert-info">
-
-                            <i class="fas fa-info-circle me-2"></i>
-
-                            <?= esc(session()->getFlashdata('info')) ?>
-
-                        </div>
-
-                    <?php endif; ?>
-
-                    <?php if (session()->getFlashdata('success')) : ?>
-
-                        <div class="alert alert-success">
-
-                            <i class="fas fa-check-circle me-2"></i>
-
-                            <?= esc(session()->getFlashdata('success')) ?>
-
-                        </div>
-
-                    <?php endif; ?>
-
-                    <?php if (session()->getFlashdata('error')) : ?>
-
-                        <div class="alert alert-danger">
-
-                            <i class="fas fa-exclamation-circle me-2"></i>
-
-                            <?= esc(session()->getFlashdata('error')) ?>
-
-                        </div>
-
-                    <?php endif; ?>
-
-                    <?php if (session()->getFlashdata('errors')) : ?>
-
-                        <?php foreach (session()->getFlashdata('errors') as $error) : ?>
-
-                            <div class="alert alert-danger py-2">
-
-                                <i class="fas fa-exclamation-circle me-2"></i>
-
-                                <?= esc($error) ?>
-
-                            </div>
-
-                        <?php endforeach; ?>
-
-                    <?php endif; ?>
-
-                    <form action="<?= base_url('registration-request') ?>"
-                        method="post"
-                        id="registrationRequestForm">
-
-                        <?= csrf_field(); ?>
-
-                        <!-- Step 1: Pilih Jenis Pemohon -->
-                        <div class="mb-3">
-
-                            <label class="form-label fw-bold">
-
-                                Jenis Pemohon <span class="text-danger">*</span>
-
-                            </label>
-
-                            <select
-                                name="applicant_type_id"
-                                id="applicantType"
-                                class="form-select"
-                                required>
-
-                                <option value="">-- Pilih Jenis Pemohon --</option>
-
-                                <?php foreach (($applicantTypes ?? []) as $at) : ?>
-
-                                    <option value="<?= $at['id'] ?>"
-                                        data-code="<?= esc($at['code']) ?>"
-                                        <?= (string) old('applicant_type_id') === (string) $at['id'] ? 'selected' : '' ?>>
-
-                                        <?= esc($at['name']) ?>
-
-                                    </option>
-
-                                <?php endforeach; ?>
-
-                            </select>
-
-                        </div>
-
-                        <!-- Step 2: Form dinamis per jenis pemohon -->
-                        <div id="dynamicFields">
-
-                            <p class="text-muted text-center py-3">
-
-                                Pilih jenis pemohon terlebih dahulu.
-
-                            </p>
-
-                        </div>
-
-                        <button
-                            type="submit"
-                            class="btn btn-primary w-100 mt-2">
-
-                            <i class="fas fa-paper-plane me-2"></i>
-
-                            Kirim Permintaan
-
-                        </button>
-
-                    </form>
-
-                    <div class="text-center mt-3">
-
-                        <small class="text-muted">
-
-                            Sudah mengajukan?
-
-                            <a href="<?= base_url('registration-request/status') ?>">
-
-                                Cek status di sini
-
-                            </a>
-
-                        </small>
-
-                    </div>
-
-                    <div class="text-center mt-2">
-
-                        <small class="text-muted">
-
-                            Sudah punya akun?
-
-                            <a href="<?= base_url('login') ?>">
-
-                                Login di sini
-
-                            </a>
-
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+<?php
+/**
+ * Halaman pengajuan izin registrasi.
+ *
+ * Memakai layout auth bersama (auth/_header + auth/_footer) supaya:
+ *   - tema, warna, dan tinggi kartu konsisten dengan login/registrasi
+ *   - <select> "Jenis Pemohon" dapat kotak pencarian (Select2)
+ */
+$title      = $title ?? 'Permintaan Izin Registrasi';
+$authHeader = 'Permintaan Izin Registrasi';
+?>
+
+<?= $this->include('auth/_header') ?>
+
+    <h2>Minta Izin Registrasi</h2>
+    <p>Pilih jenis pemohon untuk menyesuaikan formulir.</p>
+
+    <?= $this->include('auth/_flash') ?>
+
+    <form action="<?= base_url('registration-request') ?>" method="post" id="registrationRequestForm">
+
+        <?= csrf_field() ?>
+
+        <!-- Step 1: Pilih Jenis Pemohon -->
+        <div class="mb-3">
+            <label class="form-label" for="applicantType">
+                Jenis Pemohon <span class="text-danger">*</span>
+            </label>
+
+            <select
+                name="applicant_type_id"
+                id="applicantType"
+                class="form-select"
+                data-ult-search="1"
+                data-ult-placeholder="-- Pilih Jenis Pemohon --"
+                required>
+
+                <option value="">-- Pilih Jenis Pemohon --</option>
+
+                <?php foreach (($applicantTypes ?? []) as $at): ?>
+                    <option value="<?= $at['id'] ?>"
+                        data-code="<?= esc($at['code']) ?>"
+                        <?= (string) old('applicant_type_id') === (string) $at['id'] ? 'selected' : '' ?>>
+                        <?= esc($at['name']) ?>
+                    </option>
+                <?php endforeach ?>
+            </select>
         </div>
 
-    </div>
+        <!-- Step 2: Form dinamis per jenis pemohon -->
+        <div id="dynamicFields">
+            <p class="text-muted text-center py-3">
+                Pilih jenis pemohon terlebih dahulu.
+            </p>
+        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-send me-1"></i> Ajukan Izin
+        </button>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    </form>
 
-    <script>
-        $(function() {
+    <p class="text-center mt-3 mb-0" style="font-size:.86rem;">
+        Sudah punya akun? <a href="<?= base_url('login/form') ?>">Login di sini</a>
+    </p>
 
-            const fieldsUrl = "<?= base_url('registration-request/fields') ?>";
+    <p class="text-center mt-2 mb-0" style="font-size:.86rem;">
+        <a href="<?= base_url('/') ?>" style="font-weight:500;">
+            <i class="bi bi-arrow-left me-1"></i> Kembali ke Beranda
+        </a>
+    </p>
 
-            const $dynamicFields = $('#dynamicFields');
-            const $applicantType = $('#applicantType');
+<?= $this->section('scripts') ?>
 
-            function loadFields(id) {
+<script>
+    (function ($) {
+        if (! $) { return; }
 
-                if (!id) {
-                    $dynamicFields.html(
-                        '<p class="text-muted text-center py-3">Pilih jenis pemohon terlebih dahulu.</p>'
-                    );
-                    return;
-                }
+        var fieldsUrl   = <?= json_encode(base_url('registration-request/fields')) ?>;
+        var $dynamic    = $('#dynamicFields');
+        var $applicant  = $('#applicantType');
 
-                $dynamicFields.html(
-                    '<p class="text-muted text-center py-3">Memuat formulir...</p>'
+        function loadFields(id) {
+            if (! id) {
+                if (window.ultSelects) { window.ultSelects.destroy('#dynamicFields'); }
+
+                $dynamic.html(
+                    '<p class="text-muted text-center py-3">Pilih jenis pemohon terlebih dahulu.</p>'
                 );
 
-                $.get(fieldsUrl + '/' + id, function(res) {
-
-                    if (res) {
-                        $dynamicFields.html(res);
-                    }
-
-                }).fail(function() {
-
-                    $dynamicFields.html(
-                        '<p class="text-danger text-center py-3">Gagal memuat formulir jenis pemohon.</p>'
-                    );
-
-                });
-
+                return;
             }
 
-            $applicantType.on('change', function() {
-                loadFields($(this).val());
+            $dynamic.html('<p class="text-muted text-center py-3">Memuat formulir...</p>');
+
+            $.get(fieldsUrl + '/' + id, function (res) {
+                if (! res) { return; }
+
+                $dynamic.html(res);
+
+                // Form baru memuat <select> -> pastikan bisa dicari
+                if (window.ultSelects) { window.ultSelects.refresh('#dynamicFields'); }
+            }).fail(function () {
+                $dynamic.html(
+                    '<p class="text-danger text-center py-3">Gagal memuat formulir jenis pemohon.</p>'
+                );
             });
+        }
 
-            // Muat ulang saat halaman kembali dari validasi gagal (old input terisi).
-            loadFields($applicantType.val());
+        $applicant.on('change', function () { loadFields($(this).val()); });
 
-        });
-    </script>
+        // Muat ulang saat halaman kembali dari validasi gagal
+        loadFields($applicant.val());
+    })(window.jQuery);
+</script>
 
-</body>
+<?= $this->endSection() ?>
 
-</html>
+<?= $this->include('auth/_footer') ?>

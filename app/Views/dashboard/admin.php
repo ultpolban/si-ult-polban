@@ -2,67 +2,89 @@
 
 <?= $this->section('content') ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <h1>Dashboard Admin SI-ULT POLBAN</h1>
-    </div>
-</div>
+<?php
+helper('role');
 
-<div class="row">
+$summary = $summary ?? ['total' => 0, 'pending' => 0, 'processing' => 0, 'completed' => 0, 'rejected' => 0];
 
-    <!-- Total User -->
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-info">
+$statusLabel = [
+    'submitted'  => ['Submitted', 'badge-warning'],
+    'verified'   => ['Verified', 'badge-info'],
+    'verification' => ['Verifikasi', 'badge-info'],
+    'assigned'   => ['Disposisi', 'badge-primary'],
+    'processing' => ['Diproses', 'badge-primary'],
+    'completed'  => ['Selesai', 'badge-success'],
+    'rejected'   => ['Ditolak', 'badge-danger'],
+    'revision'   => ['Revisi', 'badge-secondary'],
+];
+?>
+
+<?php
+$ultPageTitle    = 'Dashboard Admin';
+$ultPageIcon     = 'fa-user-shield';
+$ultPageSubtitle = 'Selamat datang, ' . ult_user_display_name() . ' - ringkasan Sistem Informasi Unit Layanan Terpadu POLBAN.';
+$ultBreadcrumb   = ['Beranda', 'Dashboard Admin'];
+
+ob_start();
+?>
+    <a href="<?= base_url('master/services') ?>" class="btn btn-primary">
+        <i class="fas fa-plus me-1"></i> Kelola Layanan
+    </a>
+    <a href="<?= base_url('report') ?>" class="btn btn-outline-primary">
+        <i class="fas fa-file-invoice me-1"></i> Laporan
+    </a>
+<?php
+$ultPageActions = ob_get_clean();
+?>
+
+<?= view('layouts/page_header', [
+    'ultPageTitle'    => $ultPageTitle,
+    'ultPageIcon'     => $ultPageIcon,
+    'ultPageSubtitle' => $ultPageSubtitle,
+    'ultBreadcrumb'   => $ultBreadcrumb,
+    'ultPageActions'  => $ultPageActions,
+]) ?>
+
+<!-- ============================================================
+     STATISTIK UTAMA
+============================================================ -->
+<div class="row"><div class="col-lg-3 col-6 mb-3">
+        <div class="small-box bg-gradient-navy">
             <div class="inner">
-                <h3><?= $totalUser ?></h3>
-                <p>Total User</p>
-            </div>
-
-            <div class="icon">
-                <i class="fas fa-users"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Total Tiket -->
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-primary">
-            <div class="inner">
-                <h3><?= $totalTicket ?></h3>
+                <h3><?= (int) ($summary['total'] ?? 0) ?></h3>
                 <p>Total Tiket</p>
             </div>
-
-            <div class="icon">
-                <i class="fas fa-ticket-alt"></i>
-            </div>
+            <div class="icon"><i class="fas fa-ticket-alt"></i></div>
         </div>
     </div>
 
-    <!-- Submitted -->
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-3 col-6 mb-3">
         <div class="small-box bg-warning">
             <div class="inner">
-                <h3><?= $submitted ?></h3>
-                <p>Tiket Submitted</p>
+                <h3><?= (int) ($summary['pending'] ?? 0) ?></h3>
+                <p>Menunggu Verifikasi</p>
             </div>
-
-            <div class="icon">
-                <i class="fas fa-clock"></i>
-            </div>
+            <div class="icon"><i class="fas fa-hourglass-half"></i></div>
         </div>
     </div>
 
-    <!-- Verified -->
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-3 col-6 mb-3">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3><?= (int) ($summary['processing'] ?? 0) ?></h3>
+                <p>Sedang Diproses</p>
+            </div>
+            <div class="icon"><i class="fas fa-spinner"></i></div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6 mb-3">
         <div class="small-box bg-success">
             <div class="inner">
-                <h3><?= $verified ?></h3>
-                <p>Tiket Verified</p>
+                <h3><?= (int) ($summary['completed'] ?? 0) ?></h3>
+                <p>Selesai</p>
             </div>
-
-            <div class="icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
+            <div class="icon"><i class="fas fa-check-double"></i></div>
         </div>
     </div>
 
@@ -70,84 +92,167 @@
 
 <div class="row">
 
-    <!-- Completed -->
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-3 col-6 mb-3">
         <div class="small-box bg-secondary">
             <div class="inner">
-                <h3><?= $completed ?></h3>
-                <p>Tiket Completed</p>
+                <h3><?= (int) ($summary['rejected'] ?? 0) ?></h3>
+                <p>Ditolak</p>
             </div>
+            <div class="icon"><i class="fas fa-times-circle"></i></div>
+        </div>
+    </div>
 
-            <div class="icon">
-                <i class="fas fa-check-double"></i>
+    <div class="col-lg-3 col-6 mb-3">
+        <div class="small-box bg-light border">
+            <div class="inner">
+                <h3><?= (int) ($totalUsers ?? 0) ?></h3>
+                <p>Pengguna Terdaftar</p>
+            </div>
+            <div class="icon"><i class="fas fa-users"></i></div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6 mb-3">
+        <div class="small-box bg-light border">
+            <div class="inner">
+                <h3><?= (int) ($totalServices ?? 0) ?></h3>
+                <p>Layanan Aktif</p>
+            </div>
+            <div class="icon"><i class="fas fa-bell-concierge"></i></div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6 mb-3">
+        <div class="small-box bg-light border">
+            <div class="inner">
+                <h3><?= (int) ($totalUnits ?? 0) ?></h3>
+                <p>Unit Layanan</p>
+            </div>
+            <div class="icon"><i class="fas fa-building"></i></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ============================================================
+     GRAFIK & RINGKASAN
+============================================================ -->
+<div class="row">
+
+    <div class="col-lg-6 mb-3">
+        <div class="card card-outline card-primary h-100">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-chart-pie mr-1"></i> Tiket per Status</h3>
+            </div>
+            <div class="card-body">
+                <?php if (empty($statsByStatus)): ?>
+                    <p class="text-center text-muted py-4 mb-0">Belum ada data tiket.</p>
+                <?php else: ?>
+                    <?php $ultMax = max(array_map(static fn ($r) => (int) ($r['total'] ?? 0), $statsByStatus)); ?>
+                    <?php foreach ($statsByStatus as $ultRow): ?>
+                        <?php
+                        $ultStatus = strtolower((string) ($ultRow['status'] ?? ''));
+                        $ultMeta   = $statusLabel[$ultStatus] ?? [ucfirst($ultStatus), 'badge-secondary'];
+                        $ultTotal  = (int) ($ultRow['total'] ?? 0);
+                        $ultPct    = $ultMax > 0 ? round($ultTotal / $ultMax * 100) : 0;
+                        ?>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between small mb-1">
+                                <span><span class="badge <?= esc($ultMeta[1]) ?>"><?= esc($ultMeta[0]) ?></span></span>
+                                <span class="font-weight-bold"><?= $ultTotal ?></span>
+                            </div>
+                            <div class="progress" style="height:8px;">
+                                <div class="progress-bar bg-primary" style="width:<?= $ultPct ?>%"></div>
+                            </div>
+                        </div>
+                    <?php endforeach ?>
+                <?php endif ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-3">
+        <div class="card card-outline card-info h-100">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-users mr-1"></i> Tiket per Jenis Pemohon</h3>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-sm table-bordered mb-0">
+                    <thead>
+                        <tr>
+                            <th>Jenis Pemohon</th>
+                            <th class="text-center">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($statsByType)): ?>
+                            <tr><td colspan="2" class="text-center text-muted">Belum ada data.</td></tr>
+                        <?php else: ?>
+                            <?php foreach ($statsByType as $ultRow): ?>
+                                <tr>
+                                    <td><?= esc($ultRow['applicant_type'] ?? '-') ?></td>
+                                    <td class="text-center font-weight-bold"><?= (int) ($ultRow['total'] ?? 0) ?></td>
+                                </tr>
+                            <?php endforeach ?>
+                        <?php endif ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
 </div>
 
-<div class="card">
-
+<!-- ============================================================
+     TIKET TERBARU
+============================================================ -->
+<div class="card card-outline card-primary mb-3">
     <div class="card-header">
-        <h3 class="card-title">Daftar Tiket Terbaru</h3>
+        <h3 class="card-title"><i class="fas fa-list mr-1"></i> Tiket Terbaru</h3>
+        <div class="card-tools">
+            <a href="<?= base_url('datatiket') ?>" class="btn btn-sm btn-primary">
+                Lihat Semua
+            </a>
+        </div>
     </div>
 
-    <div class="card-body table-responsive">
-
-        <table class="table table-bordered table-striped">
-
+    <div class="card-body table-responsive p-0">
+        <table class="table table-hover table-striped mb-0">
             <thead>
-
                 <tr>
                     <th>No</th>
                     <th>Nomor Tiket</th>
+                    <th>Layanan</th>
                     <th>Status</th>
                     <th>Prioritas</th>
-                    <th>Tanggal & Jam</th>
+                    <th>Dibuat</th>
                 </tr>
-
             </thead>
-
             <tbody>
-
-            <?php if(empty($tickets)): ?>
-
-                <tr>
-                    <td colspan="5" class="text-center">
-                        Belum ada tiket.
-                    </td>
-                </tr>
-
-            <?php else: ?>
-
-                <?php $no=1; ?>
-
-                <?php foreach($tickets as $ticket): ?>
-
+                <?php if (empty($latestTickets)): ?>
                     <tr>
-
-                        <td><?= $no++ ?></td>
-
-                        <td><?= esc($ticket['ticket_number']) ?></td>
-
-                        <td><?= esc($ticket['status']) ?></td>
-
-                        <td><?= esc($ticket['priority']) ?></td>
-
-                        <td><?= date('d-m-Y H:i:s', strtotime($ticket['submitted_at'])) ?></td>
-
+                        <td colspan="6" class="text-center text-muted py-4">Belum ada tiket masuk.</td>
                     </tr>
-
-                <?php endforeach; ?>
-
-            <?php endif; ?>
-
+                <?php else: ?>
+                    <?php $ultNo = 1; ?>
+                    <?php foreach ($latestTickets as $ultTicket): ?>
+                        <?php
+                        $ultStatus = strtolower((string) ($ultTicket['status'] ?? ''));
+                        $ultMeta   = $statusLabel[$ultStatus] ?? [ucfirst($ultStatus), 'badge-secondary'];
+                        ?>
+                        <tr>
+                            <td><?= $ultNo++ ?></td>
+                            <td class="font-weight-bold"><?= esc($ultTicket['ticket_number'] ?? '-') ?></td>
+                            <td><?= esc($ultTicket['service_name'] ?? ($ultTicket['title'] ?? '-')) ?></td>
+                            <td><span class="badge <?= esc($ultMeta[1]) ?>"><?= esc($ultMeta[0]) ?></span></td>
+                            <td><?= esc(ucfirst((string) ($ultTicket['priority'] ?? 'normal'))) ?></td>
+                            <td class="text-nowrap"><?= esc($ultTicket['created_at'] ?? '-') ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                <?php endif ?>
             </tbody>
-
         </table>
-
     </div>
-
 </div>
 
 <?= $this->endSection() ?>

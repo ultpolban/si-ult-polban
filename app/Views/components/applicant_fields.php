@@ -140,6 +140,8 @@ $selectedClass        = $getValue('class_id');
                 name="study_program_id"
                 id="study_program_id"
                 class="form-select <?= validation_show_error('study_program_id') ? 'is-invalid' : '' ?>"
+                data-ult-search="1"
+                data-ult-placeholder="-- Pilih Program Studi --"
                 required>
 
                 <option value="">
@@ -188,6 +190,8 @@ $selectedClass        = $getValue('class_id');
                 name="class_id"
                 id="class_id"
                 class="form-select <?= validation_show_error('class_id') ? 'is-invalid' : '' ?>"
+                data-ult-search="1"
+                data-ult-placeholder="-- Pilih Kelas --"
                 required>
 
                 <option value="">
@@ -257,7 +261,9 @@ $selectedClass        = $getValue('class_id');
             <select
                 name="study_program_id"
                 id="study_program_id"
-                class="form-select <?= validation_show_error('study_program_id') ? 'is-invalid' : '' ?>">
+                class="form-select <?= validation_show_error('study_program_id') ? 'is-invalid' : '' ?>"
+                data-ult-search="1"
+                data-ult-placeholder="-- Pilih Program Studi --">
 
                 <option value="">
                     -- Pilih Program Studi --
@@ -307,7 +313,7 @@ $selectedClass        = $getValue('class_id');
     <div class="mb-3">
 
         <label for="identity_number" class="form-label">
-            NIP/NIDN <span class="text-danger">*</span>
+            NIK <span class="text-danger">*</span>
         </label>
 
         <input
@@ -316,7 +322,7 @@ $selectedClass        = $getValue('class_id');
             id="identity_number"
             class="form-control <?= validation_show_error('identity_number') ? 'is-invalid' : '' ?>"
             value="<?= esc($getValue('identity_number')) ?>"
-            placeholder="Nomor Induk Pegawai / NIDN"
+            placeholder="Nomor Induk Kependudukan"
             required>
 
         <div class="invalid-feedback">

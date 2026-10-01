@@ -1,0 +1,127 @@
+/* ==========================================================
+   SI ULT POLBAN - TEMA POLBAN (AdminLTE)
+   Override warna & komponen agar konsisten dengan identitas
+   POLBAN (Biru #2B3990, Oranye #FF7F00).
+   ========================================================== */
+
+:root {
+    --ult-primary: #2b3990;
+    --ult-secondary: #4258cc;
+    --ult-accent: #ff7f00;
+    --ult-success: #2ecc71;
+    --ult-info: #17a2b8;
+    --ult-warning: #f1c40f;
+    --ult-danger: #e74c3c;
+    --ult-body-bg: #f4f6fb;
+    --ult-body-color: #1f2937;
+}
+
+body {
+    background-color: var(--ult-body-bg);
+}
+
+.main-sidebar {
+    background: var(--ult-primary) !important;
+}
+
+.brand-link,
+.main-sidebar .brand-link {
+    background-color: var(--ult-primary) !important;
+    color: #fff !important;
+    border-bottom: 1px solid rgba(255, 255, 255, .12) !important;
+}
+
+.main-sidebar .nav-sidebar .nav-link {
+    color: rgba(255, 255, 255, .82) !important;
+    border-radius: 10px;
+    margin: 2px 10px;
+    transition: background .2s, color .2s;
+}
+
+.main-sidebar .nav-sidebar .nav-link:hover {
+    background: rgba(255, 255, 255, .08) !important;
+    color: #fff !important;
+}
+
+.main-sidebar .nav-sidebar .nav-link.active {
+    background: linear-gradient(90deg, var(--ult-primary), var(--ult-secondary)) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(41, 53, 130, .45);
+}
+
+.main-header.navbar {
+    background-color: var(--ult-primary) !important;
+}
+
+.main-header .nav-link,
+.main-header .navbar-brand {
+    color: #fff !important;
+}
+
+.content-header h1,
+.content-header h2 {
+    color: var(--ult-primary) !important;
+    font-weight: 700;
+}
+
+.btn-primary {
+    background-color: var(--ult-primary);
+    border-color: var(--ult-primary);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #1e2768;
+    border-color: #1e2768;
+}
+
+.badge-primary {
+    background-color: var(--ult-primary) !important;
+}
+
+.page-link {
+    color: var(--ult-primary) !important;
+}
+
+.active > .page-link {
+    background-color: var(--ult-primary) !important;
+    border-color: var(--ult-primary) !important;
+}
+
+.table thead th {
+    background-color: var(--ult-primary);
+    color: #fff;
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(43, 57, 144, .04);
+}
+
+.card {
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, .06);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .05);
+}
+
+.small-box {
+    border-radius: 14px;
+}
+
+.info-box {
+    border-radius: 14px;
+}
+
+.ult-badge {
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
+    border-radius: 999px;
+    background: var(--ult-accent);
+    color: #fff;
+    font-size: .72rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

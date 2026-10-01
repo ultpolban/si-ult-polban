@@ -17,6 +17,11 @@
 
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
 
+    <link rel="stylesheet" href="<?= base_url('assets/css/auth.css') ?>">
+
+    <!-- Drop-down / select: gaya ULT (harus setelah auth.css) -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/ult-select.css') ?>">
+
 </head>
 
 <body>
@@ -71,7 +76,7 @@
 
                     <div class="text-center mb-4">
 
-                        <img src="<?= base_url('assets/img/logo.svg') ?>"
+                        <img src="<?= base_url('assets/img/logo-polban.png') ?>"
                             alt="Logo"
                             width="72">
 
@@ -193,7 +198,7 @@
 
                                             <i class="fas fa-user-plus me-2"></i>
 
-                                            Lanjutkan Registrasi
+                                            Verifikasi Email &amp; Lanjutkan
 
                                         </a>
 

@@ -8,80 +8,84 @@ class PetugasController extends BaseController
 {
     private function getAllTiket()
     {
-        $session = session();
-        
-        if (!$session->has('list_tiket_temp')) {
-            $initialData = [
-                [
-                    'id' => 1,
-                    'nomor_tiket' => 'ULT-20260720-0001',
-                    'nama_pemohon' => 'Rafi Putra',
-                    'nim' => '231511001',
-                    'nik' => '3201123456780001',
-                    'layanan' => 'Surat Aktif Kuliah',
-                    'kategori' => 'Akademik',
-                    'prioritas' => 'High',
-                    'status' => 'Submitted',
-                    'dokumen' => '',
-                    'tanggal' => '20 Juli 2026',
-                    'created_at' => '2026-07-20 08:30:00',
-                    'email' => 'rafi@student.polban.ac.id',
-                    'no_hp' => '081234567890',
-                    'deskripsi' => 'Saya mengajukan Surat Aktif Kuliah untuk keperluan beasiswa.'
-                ],
-                [
-                    'id' => 2,
-                    'nomor_tiket' => 'ULT-20260721-0002',
-                    'nama_pemohon' => 'Siti Nurhaliza',
-                    'nim' => '231511002',
-                    'nik' => '3201123456780002',
-                    'layanan' => 'Bantuan UKT',
-                    'kategori' => 'Keuangan',
-                    'prioritas' => 'Medium',
-                    'status' => 'Verified',
-                    'dokumen' => '',
-                    'tanggal' => '21 Juli 2026',
-                    'created_at' => '2026-07-21 09:15:00',
-                    'email' => 'siti@student.polban.ac.id',
-                    'no_hp' => '081298765432',
-                    'deskripsi' => 'Mengajukan bantuan pembayaran UKT semester ganjil.'
-                ],
-                [
-                    'id' => 3,
-                    'nomor_tiket' => 'ULT-20260722-0003',
-                    'nama_pemohon' => 'Ahmad Fauzi',
-                    'nim' => '231511003',
-                    'nik' => '3201123456780003',
-                    'layanan' => 'Beasiswa Prestasi',
-                    'kategori' => 'Kemahasiswaan',
-                    'prioritas' => 'Low',
-                    'status' => 'Disposisi',
-                    'dokumen' => '',
-                    'tanggal' => '22 Juli 2026',
-                    'created_at' => '2026-07-22 10:00:00',
-                    'email' => 'ahmad@student.polban.ac.id',
-                    'no_hp' => '081377788899',
-                    'deskripsi' => 'Mengajukan beasiswa prestasi akademik.'
-                ]
-            ];
-            $session->set('list_tiket_temp', $initialData);
+        $db = db_connect();
+
+        $tickets = $db->table('tickets t')
+            ->select('
+                t.id,
+                t.ticket_number AS nomor_tiket,
+                t.status,
+                t.priority AS prioritas,
+                t.created_at,
+                t.submitted_at,
+                t.title AS layanan,
+                t.description AS deskripsi,
+                u.full_name AS nama_pemohon,
+                u.email,
+                u.phone_number AS no_hp
+            ')
+            ->join('user_profiles up', 'up.id = t.user_profile_id', 'left')
+            ->join('users u', 'u.id = up.user_id', 'left')
+            ->orderBy('t.id', 'DESC')
+            ->get()
+            ->getResultArray();
+
+        foreach ($tickets as &$ticket) {
+            $status = strtolower($ticket['status'] ?? 'submitted');
+
+$ticket['status'] = match ($status) {
+    'submitted'   => 'Submitted',
+    'verified'    => 'Verified',
+    'assigned'    => 'Disposisi',
+    'in_progress' => 'In Progress',
+    'completed'   => 'Completed',
+    'rejected'    => 'Rejected',
+    'need_revision' => 'Need Revision',
+    default       => ucfirst($status),
+};
+
+            $ticket['prioritas'] = ucfirst(
+                strtolower($ticket['prioritas'] ?? 'normal')
+            );
+
+            $ticket['tanggal'] = !empty($ticket['created_at'])
+                ? date('d F Y', strtotime($ticket['created_at']))
+                : '-';
         }
 
-        return $session->get('list_tiket_temp');
+        return $tickets;
     }
 
     public function dashboard()
     {
         $dataTiket = $this->getAllTiket();
-        
+
         $data = [
             'total_tiket'   => count($dataTiket),
-            'submitted'     => count(array_filter($dataTiket, fn($t) => $t['status'] === 'Submitted')),
-            'assigned'      => count(array_filter($dataTiket, fn($t) => $t['status'] === 'Verified')),
-            'in_progress'   => count(array_filter($dataTiket, fn($t) => $t['status'] === 'Disposisi')),
-            'completed'     => count(array_filter($dataTiket, fn($t) => $t['status'] === 'Completed')),
-            'need_revision' => count(array_filter($dataTiket, fn($t) => $t['status'] === 'Need Revision')),
-            'rejected'      => count(array_filter($dataTiket, fn($t) => $t['status'] === 'Rejected')),
+            'submitted'     => count(array_filter(
+                $dataTiket,
+                fn($t) => $t['status'] === 'Submitted'
+            )),
+            'assigned'      => count(array_filter(
+                $dataTiket,
+                fn($t) => $t['status'] === 'Verified'
+            )),
+            'in_progress'   => count(array_filter(
+                $dataTiket,
+                fn($t) => $t['status'] === 'Disposisi'
+            )),
+            'completed'     => count(array_filter(
+                $dataTiket,
+                fn($t) => $t['status'] === 'Completed'
+            )),
+            'need_revision' => count(array_filter(
+                $dataTiket,
+                fn($t) => $t['status'] === 'Need Revision'
+            )),
+            'rejected'      => count(array_filter(
+                $dataTiket,
+                fn($t) => $t['status'] === 'Rejected'
+            )),
         ];
 
         return view('petugas/dashboard', $data);
@@ -90,7 +94,7 @@ class PetugasController extends BaseController
     public function tiket()
     {
         return view('petugas/tiket', [
-            'tiket_list' => $this->getAllTiket()
+            'tickets' => $this->getAllTiket()
         ]);
     }
 
@@ -120,23 +124,30 @@ class PetugasController extends BaseController
         ]);
     }
 
-    public function simpanVerifikasi($id = null)
-    {
-        $id = $id ?? $this->request->getPost('id');
-        
-        $session = session();
-        $allTiket = $this->getAllTiket();
-        foreach ($allTiket as &$tiket) {
-            if ((int)$tiket['id'] === (int)$id) {
-                $tiket['status'] = 'Verified';
-            }
-        }
-        $session->set('list_tiket_temp', $allTiket);
+public function simpanVerifikasi($id = null)
+{
+    $id = $id ?? $this->request->getPost('id');
 
+    if ($id === null) {
         return redirect()
             ->to(base_url('petugas/tiket'))
-            ->with('success', 'Verifikasi tiket berhasil disimpan!');
+            ->with('error', 'ID tiket tidak ditemukan.');
     }
+
+    $db = db_connect();
+
+    $db->table('tickets')
+        ->where('id', $id)
+        ->update([
+            'status'      => 'verified',
+            'verified_at' => date('Y-m-d H:i:s'),
+            'updated_at'  => date('Y-m-d H:i:s'),
+        ]);
+
+    return redirect()
+        ->to(base_url('petugas/tiket'))
+        ->with('success', 'Verifikasi tiket berhasil disimpan!');
+}
 
     public function disposisi($id = null)
     {
@@ -154,41 +165,84 @@ class PetugasController extends BaseController
         ]);
     }
 
-    public function kirimDisposisi($id = null)
-    {
-        $id = $id ?? $this->request->getPost('id');
+   public function kirimDisposisi($id = null)
+{
+    $id = $id ?? $this->request->getPost('id');
 
-        $session = session();
-        $allTiket = $this->getAllTiket();
-        foreach ($allTiket as &$tiket) {
-            if ((int)$tiket['id'] === (int)$id) {
-                $tiket['status'] = 'Disposisi';
-            }
-        }
-        $session->set('list_tiket_temp', $allTiket);
-
+    if ($id === null) {
         return redirect()
             ->to(base_url('petugas/tiket'))
-            ->with('success', 'Disposisi tiket berhasil dikirim!');
+            ->with('error', 'ID tiket tidak ditemukan.');
     }
 
-    private function findTiket($id)
-    {
-        if ($id === null) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        }
+    $db = db_connect();
 
-        $allTiket = $this->getAllTiket();
+    $db->table('tickets')
+        ->where('id', $id)
+        ->update([
+            'status'     => 'assigned',
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
 
-        foreach ($allTiket as $tiket) {
-            if ((int) $tiket['id'] === (int) $id) {
-                return $tiket;
-            }
-        }
-
-        return $allTiket[0];
+    return redirect()
+        ->to(base_url('tracking'))
+        ->with('success', 'Disposisi tiket berhasil dikirim!');
+}
+private function findTiket($id)
+{
+    if ($id === null) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
     }
 
+    $db = db_connect();
+
+    $tiket = $db->table('tickets t')
+        ->select('
+            t.id,
+            t.ticket_number AS nomor_tiket,
+            t.status,
+            t.priority AS prioritas,
+            t.created_at,
+            t.submitted_at,
+            t.title AS layanan,
+            t.description AS deskripsi,
+            u.full_name AS nama_pemohon,
+            u.email,
+            u.phone_number AS no_hp
+        ')
+        ->join('user_profiles up', 'up.id = t.user_profile_id', 'left')
+        ->join('users u', 'u.id = up.user_id', 'left')
+        ->where('t.id', $id)
+        ->get()
+        ->getRowArray();
+
+    if (!$tiket) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+    }
+
+    $status = strtolower($tiket['status'] ?? 'submitted');
+
+    $tiket['status'] = match ($status) {
+        'submitted'     => 'Submitted',
+        'verified'      => 'Verified',
+        'assigned'      => 'Disposisi',
+        'in_progress'   => 'In Progress',
+        'completed'     => 'Completed',
+        'rejected'      => 'Rejected',
+        'need_revision' => 'Need Revision',
+        default         => ucfirst($status),
+    };
+
+    $tiket['prioritas'] = ucfirst(
+        strtolower($tiket['prioritas'] ?? 'normal')
+    );
+
+    $tiket['tanggal'] = !empty($tiket['created_at'])
+        ? date('d F Y', strtotime($tiket['created_at']))
+        : '-';
+
+    return $tiket;
+}
     public function laporanTamu()
     {
         return view('petugas/laporan_tamu');

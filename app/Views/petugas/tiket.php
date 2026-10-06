@@ -925,7 +925,7 @@ function ticketPageUrl($page, $queryParams = []) {
 
                                         <?php if ($st === 'submitted'): ?>
                                             <!-- BELUM DIVERIFIKASI -> AKSI VERIFIKASI -->
-                                            <a href="<?= base_url('verification/verify/' . esc($ticket['id'] ?? $ticket['nomor_tiket'])) ?>" class="ticket-action action-verify" title="Verifikasi Tiket">
+                                           <a href="<?= base_url('petugas/verifikasi/' . esc($ticket['id'] ?? $ticket['nomor_tiket'])) ?>" class="ticket-action action-verify" title="Verifikasi Tiket">
                                                 <i class="fas fa-user-check"></i>
                                             </a>
                                         <?php elseif ($st === 'verified'): ?>

@@ -85,6 +85,7 @@
 
         </form>
 
+        <div class="table-responsive">
         <table class="table table-bordered table-striped">
 
             <thead style="background:#293582;color:#fff;">
@@ -171,6 +172,7 @@
             </tbody>
 
         </table>
+        </div>
 
         <div class="mt-3">
             <?= $pager->links() ?>

@@ -18,18 +18,6 @@
 
 @media (max-width:1200px){
 
-    .sidebar{
-
-        width:240px;
-
-    }
-
-    .content{
-
-        margin-left:240px;
-
-    }
-
     .auth-left{
 
         padding:45px;
@@ -55,18 +43,6 @@
 ========================================================== */
 
 @media (max-width:992px){
-
-    .sidebar{
-
-        width:90px;
-
-    }
-
-    .content{
-
-        margin-left:90px;
-
-    }
 
     .sidebar-header h4,
 
@@ -143,18 +119,6 @@
 ========================================================== */
 
 @media (max-width:768px){
-
-    .sidebar{
-
-        display:none;
-
-    }
-
-    .content{
-
-        margin-left:0;
-
-    }
 
     .topbar{
 

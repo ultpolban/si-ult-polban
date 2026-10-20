@@ -29,6 +29,8 @@ Riwayat Tiket Unit Layanan
 </h3>
 
 
+<div class="table-responsive">
+
 <table class="table table-bordered">
 
 
@@ -110,6 +112,8 @@ Tidak Ada
 
 
 </table>
+
+</div>
 
 
 <a href="<?= base_url('akademik') ?>"

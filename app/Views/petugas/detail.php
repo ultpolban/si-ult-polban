@@ -723,35 +723,45 @@
         ?? $tiket['layanan']
         ?? '-';
 
+
     // Nama pemohon
     $applicantName =
-        $tiket['applicant_name']
-        ?? $tiket['nama_pemohon']
+        $tiket['nama_pemohon']
+        ?? $tiket['applicant_name']
         ?? $tiket['student_name']
         ?? $tiket['name']
+        ?? $tiket['full_name']
         ?? '-';
 
     // NIM / NIK
-    $identity =
-        !empty($tiket['nim'])
-        ? $tiket['nim']
-        : (!empty($tiket['nik']) ? $tiket['nik'] : '-');
+    $identity = '-';
+    $identityLabel = 'Identitas';
 
-    $identityLabel =
-        !empty($tiket['nim'])
-        ? 'NIM'
-        : (!empty($tiket['nik']) ? 'NIK' : 'Identitas');
+    if (!empty($tiket['nim'])) {
+        $identity = $tiket['nim'];
+        $identityLabel = 'NIM';
+    } elseif (!empty($tiket['nik'])) {
+        $identity = $tiket['nik'];
+        $identityLabel = 'NIK';
+    } elseif (!empty($tiket['identity_number'])) {
+        $identity = $tiket['identity_number'];
+        $identityLabel = 'Identitas';
+    }
 
     // Email
     $email =
-        $tiket['email']
+        $tiket['email_profil']
+        ?? $tiket['email']
         ?? '-';
 
-    // No HP
+    // No HP / WhatsApp
     $phone =
-        $tiket['phone']
+        $tiket['no_hp_profil']
         ?? $tiket['no_hp']
+        ?? $tiket['phone']
         ?? '-';
+
+
 
     // Judul
     $title =

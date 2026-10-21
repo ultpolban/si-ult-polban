@@ -69,9 +69,11 @@ class ServiceRequirementController extends AdminController
                 ->withInput();
         }
 
-        $this->serviceRequirementService->create(
-            $this->request->getPost()
-        );
+        $data = $this->request->getPost();
+$data['max_file_size'] = ((int) $data['max_file_size']) * 1024;
+
+$this->serviceRequirementService->create($data);
+                     
 
         return redirect()
             ->to(site_url('master/service-requirements'))
@@ -132,10 +134,10 @@ class ServiceRequirementController extends AdminController
                 ->withInput();
         }
 
-        $this->serviceRequirementService->update(
-            $id,
-            $this->request->getPost()
-        );
+        $data = $this->request->getPost();
+$data['max_file_size'] = ((int) $data['max_file_size']) * 1024;
+
+$this->serviceRequirementService->update($id, $data);
 
         return redirect()
             ->to(site_url('master/service-requirements'))

@@ -1249,18 +1249,38 @@ public function saveDraft()
     // 2. USER PROFILE
     // ==========================================
 
-    $userProfileId = session()->get('user_profile_id');
+   
+$userProfileId = session()->get('user_profile_id');
 
-    if (empty($userProfileId)) {
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with(
-                'error',
-                'Data profil alumni tidak ditemukan.'
-            );
+if (empty($userProfileId)) {
+    $userId = (int) (
+        session()->get('user_id')
+        ?? (session()->get('user')['id'] ?? 0)
+    );
+
+    if ($userId > 0) {
+        $profile = $db->table('user_profiles')
+            ->where('user_id', $userId)
+            ->where('deleted_at', null)
+            ->get()
+            ->getRowArray();
+
+        if ($profile) {
+            $userProfileId = (int) $profile['id'];
+
+            session()->set([
+                'user_profile_id' => $userProfileId,
+                'alumni_profile'  => $profile,
+            ]);
+        }
     }
+}
 
+if (empty($userProfileId)) {
+    return redirect()
+        ->to(base_url('alumni/ticket/history'))
+        ->with('error', 'Data profil alumni tidak ditemukan.');
+}
     // ==========================================
     // 3. PASTIKAN SERVICE AKTIF
     // ==========================================

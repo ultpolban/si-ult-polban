@@ -768,12 +768,15 @@ body {
                                 ?? '-';
 
 
-                            $namaPemohon =
-                                $ticket['nama_pemohon']
-                                ?? $ticket['student_name']
-                                ?? $ticket['profile_name']
-                                ?? $ticket['name']
-                                ?? '-';
+                           $namaPemohon =
+    $ticket['nama_pemohon']
+    ?? $ticket['student_name']
+    ?? $ticket['profile_name']
+    ?? $ticket['full_name']
+    ?? $ticket['nama_lengkap']
+    ?? $ticket['nama']
+    ?? $ticket['name']
+    ?? '-';
 
 
                             $layanan =
@@ -796,11 +799,12 @@ body {
                                 ?? '-';
 
 
-                            $submittedAt =
-                                $ticket['submitted_at']
-                                ?? $ticket['created_at']
-                                ?? null;
+                          $submittedAt =
+    $ticket['submitted_at']
+    ?? $ticket['created_at']
+    ?? null;
 
+$tanggalTiket = tanggalIndonesia($submittedAt);
                             ?>
 
                             <tr
@@ -876,7 +880,7 @@ body {
 
                                         data-catatan="<?= esc($catatan) ?>"
 
-                                        data-tanggal="<?= esc($submittedAt ?? '-') ?>"
+                                       data-tanggal="<?= esc($tanggalTiket) ?>"
                                     >
 
                                         <i class="fas fa-route me-1"></i>

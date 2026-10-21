@@ -52,7 +52,7 @@
 
                             <td><?= esc($row['file_type']) ?></td>
 
-                            <td><?= esc($row['max_file_size']) ?> MB</td>
+                            <td><?= esc((int) ($row['max_file_size'] / 1024)) ?> MB</td>
 
                             <td>
 
@@ -153,7 +153,7 @@
 
     <div class="card-footer">
 
-        <?= $pager->links() ?>
+        <?= $pager->links('default', 'service_requirement') ?>
 
     </div>
 

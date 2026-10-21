@@ -141,7 +141,10 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // VERIFIKASI TIKET
     // ========================================================
 
-    $routes->group('verification', function ($routes) {
+    $routes->group(
+    'verification',
+    ['filter' => ['auth', 'role:PETUGAS_ULT,SUPER_ADMIN,ADMIN_ULT']],
+    function ($routes) {
 
         $routes->get(
             '/',
@@ -180,7 +183,10 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // DISPOSISI TIKET
     // ========================================================
 
-    $routes->group('disposition', function ($routes) {
+    $routes->group(
+    'disposition',
+    ['filter' => ['auth', 'role:PETUGAS_ULT,SUPER_ADMIN,ADMIN_ULT']],
+    function ($routes) {
 
         $routes->get(
             '/',
@@ -204,79 +210,91 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     });
 
 
+
     // ========================================================
     // UNIT LAYANAN
     // ========================================================
 
+    $unitFilter = ['auth', 'role:UNIT_TUJUAN,SUPER_ADMIN,ADMIN_ULT'];
+
     $routes->get(
         'unit',
-        'UnitController::index'
+        'UnitController::index',
+        ['filter' => $unitFilter]
     );
 
     $routes->get(
         'unit/process/(:num)',
-        'UnitController::process/$1'
+        'UnitController::process/$1',
+        ['filter' => $unitFilter]
     );
 
     $routes->get(
         'unit/complete/(:num)',
-        'UnitController::complete/$1'
+        'UnitController::complete/$1',
+        ['filter' => $unitFilter]
     );
 
-    // Alias "Data Tiket Unit" (dipakai menu sidebar unit)
+    // Data tiket unit
     $routes->get(
         'unit/tiket',
-        'UnitController::tiket'
+        'UnitController::tiket',
+        ['filter' => $unitFilter]
     );
 
-    // Export Data Tiket Unit (CSV / Excel / PDF)
+    // Export data tiket
     $routes->get(
         'unit/tiket/export/csv',
-        'UnitController::exportCsv'
+        'UnitController::exportCsv',
+        ['filter' => $unitFilter]
     );
 
     $routes->get(
         'unit/tiket/export/excel',
-        'UnitController::exportExcel'
+        'UnitController::exportExcel',
+        ['filter' => $unitFilter]
     );
 
     $routes->get(
         'unit/tiket/export/pdf',
-        'UnitController::exportPdf'
+        'UnitController::exportPdf',
+        ['filter' => $unitFilter]
     );
 
+    // Dashboard unit
     $routes->get(
         'unit/dashboard',
-        'UnitController::dashboard'
+        'UnitController::dashboard',
+        ['filter' => $unitFilter]
     );
 
-    // Laporan / rekap tiket unit
+    // Laporan dan log aktivitas
     $routes->get(
         'unit/laporan',
-        'UnitController::laporan'
+        'UnitController::laporan',
+        ['filter' => $unitFilter]
     );
 
-    // Log aktivitas unit (dipakai menu sidebar unit)
     $routes->get(
         'unit/log-aktivitas',
-        'UnitController::logAktivitas'
+        'UnitController::logAktivitas',
+        ['filter' => $unitFilter]
     );
 
-    // Update status tiket unit
+    // Update status tiket
     $routes->get(
         'unit/update-status/(:num)',
-        'UnitController::updateStatusForm/$1'
+        'UnitController::updateStatusForm/$1',
+        ['filter' => $unitFilter]
     );
 
     $routes->post(
         'unit/update-status/(:num)',
-        'UnitController::updateStatus/$1'
+        'UnitController::updateStatus/$1',
+        ['filter' => $unitFilter]
     );
 
-    $routes->get(
-        'unit/detail/(:num)',
-        'UnitController::detail/$1'
-    );
+
 
 
     // ========================================================
@@ -476,22 +494,22 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ============================================================
     // administrasi-umum
     // ============================================================
-    $routes->get('administrasi-umum', 'AdministrasiUmum::dashboard', ['filter' => 'auth']);
-    $routes->get('administrasi-umum/dashboard', 'AdministrasiUmum::dashboard', ['filter' => 'auth']);
-    $routes->get('administrasi-umum/data-tiket', 'AdministrasiUmum::dataTiket', ['filter' => 'auth']);
-    $routes->get('administrasi-umum/detail/([0-9]+)', 'AdministrasiUmum::detail/$1', ['filter' => 'auth']);
-    $routes->get('administrasi-umum/download/([^/]+)', 'AdministrasiUmum::downloadFile/$1', ['filter' => 'auth']);
-    $routes->get('administrasi-umum/kirim/([0-9]+)', 'AdministrasiUmum::kirim/$1', ['filter' => 'auth']);
-    $routes->get('administrasi-umum/kirim-pemohon/([0-9]+)', 'AdministrasiUmum::kirimPemohon/$1', ['filter' => 'auth']);
-    $routes->get('administrasi-umum/lihat/([^/]+)', 'AdministrasiUmum::lihatFile/$1', ['filter' => 'auth']);
-    $routes->get('administrasi-umum/log-aktivitas', 'AdministrasiUmum::logAktivitas', ['filter' => 'auth']);
-    $routes->get('administrasi-umum/profile', 'AdministrasiUmum::profile', ['filter' => 'auth']);
-    $routes->post('administrasi-umum/profile/update', 'AdministrasiUmum::updateProfile', ['filter' => 'auth']);
-    $routes->get('administrasi-umum/proses/([0-9]+)', 'AdministrasiUmum::proses/$1', ['filter' => 'auth']);
-    $routes->post('administrasi-umum/proses/update/([0-9]+)', 'AdministrasiUmum::updateProses/$1', ['filter' => 'auth']);
-    $routes->get('administrasi-umum/statistik', 'AdministrasiUmum::statistik', ['filter' => 'auth']);
-    $routes->get('administrasi-umum/upload/([0-9]+)', 'AdministrasiUmum::upload/$1', ['filter' => 'auth']);
-    $routes->post('administrasi-umum/upload/([0-9]+)', 'AdministrasiUmum::simpanUpload/$1', ['filter' => 'auth']);
+    $routes->get('administrasi-umum', 'AdministrasiUmum::dashboard', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->get('administrasi-umum/dashboard', 'AdministrasiUmum::dashboard',['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->get('administrasi-umum/data-tiket', 'AdministrasiUmum::dataTiket', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->get('administrasi-umum/detail/([0-9]+)', 'AdministrasiUmum::detail/$1', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->get('administrasi-umum/download/([^/]+)', 'AdministrasiUmum::downloadFile/$1',['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->get('administrasi-umum/kirim/([0-9]+)', 'AdministrasiUmum::kirim/$1', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->get('administrasi-umum/kirim-pemohon/([0-9]+)', 'AdministrasiUmum::kirimPemohon/$1', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->get('administrasi-umum/lihat/([^/]+)', 'AdministrasiUmum::lihatFile/$1', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->get('administrasi-umum/log-aktivitas', 'AdministrasiUmum::logAktivitas', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->get('administrasi-umum/profile', 'AdministrasiUmum::profile', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->post('administrasi-umum/profile/update', 'AdministrasiUmum::updateProfile', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->get('administrasi-umum/proses/([0-9]+)', 'AdministrasiUmum::proses/$1', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->post('administrasi-umum/proses/update/([0-9]+)', 'AdministrasiUmum::updateProses/$1', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->get('administrasi-umum/statistik', 'AdministrasiUmum::statistik', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->get('administrasi-umum/upload/([0-9]+)', 'AdministrasiUmum::upload/$1', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
+    $routes->post('administrasi-umum/upload/([0-9]+)', 'AdministrasiUmum::simpanUpload/$1', ['filter' => ['auth', 'role:PETUGAS_UMUM,SUPER_ADMIN,ADMIN_ULT']]);
     
     // ============================================================
     // akademik
@@ -876,34 +894,43 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ============================================================
     // petugas
     // ============================================================
-    $routes->get('petugas', 'PetugasController::dashboard', ['filter' => 'auth']);
-    $routes->get('petugas/api/statistik-data', 'PetugasController::apiStatistikData', ['filter' => 'auth']);
-    $routes->get('petugas/dashboard', 'PetugasController::dashboard', ['filter' => 'auth']);
-    $routes->get('petugas/detail/([0-9]+)', 'PetugasController::detail/$1', ['filter' => 'auth']);
-    $routes->get('petugas/disposisi', 'PetugasController::disposisi', ['filter' => 'auth']);
-    $routes->get('petugas/disposisi/([0-9]+)', 'PetugasController::disposisi/$1', ['filter' => 'auth']);
-    $routes->post('petugas/disposisi/([0-9]+)', 'PetugasController::kirimDisposisi/$1', ['filter' => 'auth']);
-    $routes->post('petugas/disposisi/kirim', 'PetugasController::kirimDisposisi', ['filter' => 'auth']);
-    $routes->post('petugas/disposisi/kirim/([0-9]+)', 'PetugasController::kirimDisposisi/$1', ['filter' => 'auth']);
-    $routes->get('petugas/laporan-tamu', 'PetugasController::laporanTamu', ['filter' => 'auth']);
-    $routes->get('petugas/laporan-tiket', 'PetugasController::laporanTiket', ['filter' => 'auth']);
-    $routes->get('petugas/log_aktivitas', 'PetugasController::log_aktivitas', ['filter' => 'auth']);
-    $routes->get('petugas/log-aktivitas', 'PetugasController::log_aktivitas', ['filter' => 'auth']);
-    $routes->get('petugas/mfa', 'Auth\AuthController::mfaSetup', ['filter' => 'auth']);
-    $routes->post('petugas/mfa/verify', 'Auth\AuthController::verifyMfaSetup', ['filter' => 'auth']);
-    $routes->get('petugas/profile', 'PetugasController::profile', ['filter' => 'auth']);
-    $routes->get('petugas/statistik-tiket', 'PetugasController::statistikTiket', ['filter' => 'auth']);
-    $routes->get('petugas/tiket', 'PetugasController::tiket', ['filter' => 'auth']);
-    $routes->get('petugas/tiket/detail/([0-9]+)', 'PetugasController::detail/$1', ['filter' => 'auth']);
-    $routes->get('petugas/tiket/disposisi/([0-9]+)', 'PetugasController::disposisi/$1', ['filter' => 'auth']);
-    $routes->get('petugas/tiket/verifikasi/([0-9]+)', 'PetugasController::verifikasi/$1', ['filter' => 'auth']);
-    $routes->get('petugas/tracking-tiket', 'PetugasController::trackingTiket', ['filter' => 'auth']);
-    $routes->get('petugas/verifikasi', 'PetugasController::verifikasi', ['filter' => 'auth']);
-    $routes->get('petugas/verifikasi/([0-9]+)', 'PetugasController::verifikasi/$1', ['filter' => 'auth']);
-    $routes->post('petugas/verifikasi/([0-9]+)', 'PetugasController::simpanVerifikasi/$1', ['filter' => 'auth']);
-    $routes->post('petugas/verifikasi/simpan', 'PetugasController::simpanVerifikasi', ['filter' => 'auth']);
-    $routes->post('petugas/verifikasi/simpan/([0-9]+)', 'PetugasController::simpanVerifikasi/$1', ['filter' => 'auth']);
-    
+$petugasFilter = ['auth', 'role:PETUGAS_ULT,SUPER_ADMIN,ADMIN_ULT'];
+
+$routes->get('petugas', 'PetugasController::dashboard', ['filter' => $petugasFilter]);
+$routes->get('petugas/api/statistik-data', 'PetugasController::apiStatistikData', ['filter' => $petugasFilter]);
+$routes->get('petugas/dashboard', 'PetugasController::dashboard', ['filter' => $petugasFilter]);
+$routes->get('petugas/detail/([0-9]+)', 'PetugasController::detail/$1', ['filter' => $petugasFilter]);
+
+$routes->get('petugas/disposisi', 'PetugasController::disposisi', ['filter' => $petugasFilter]);
+$routes->get('petugas/disposisi/([0-9]+)', 'PetugasController::disposisi/$1', ['filter' => $petugasFilter]);
+$routes->post('petugas/disposisi/([0-9]+)', 'PetugasController::kirimDisposisi/$1', ['filter' => $petugasFilter]);
+$routes->post('petugas/disposisi/kirim', 'PetugasController::kirimDisposisi', ['filter' => $petugasFilter]);
+$routes->post('petugas/disposisi/kirim/([0-9]+)', 'PetugasController::kirimDisposisi/$1', ['filter' => $petugasFilter]);
+
+$routes->get('petugas/laporan-tamu', 'PetugasController::laporanTamu', ['filter' => $petugasFilter]);
+$routes->get('petugas/laporan-tiket', 'PetugasController::laporanTiket', ['filter' => $petugasFilter]);
+$routes->get('petugas/log_aktivitas', 'PetugasController::log_aktivitas', ['filter' => $petugasFilter]);
+$routes->get('petugas/log-aktivitas', 'PetugasController::log_aktivitas', ['filter' => $petugasFilter]);
+
+// MFA tetap memakai auth agar alur pengaturan keamanan akun tidak berubah.
+$routes->get('petugas/mfa', 'Auth\AuthController::mfaSetup', ['filter' => 'auth']);
+$routes->post('petugas/mfa/verify', 'Auth\AuthController::verifyMfaSetup', ['filter' => 'auth']);
+
+$routes->get('petugas/profile', 'PetugasController::profile', ['filter' => $petugasFilter]);
+$routes->get('petugas/statistik-tiket', 'PetugasController::statistikTiket', ['filter' => $petugasFilter]);
+$routes->get('petugas/tiket', 'PetugasController::tiket', ['filter' => $petugasFilter]);
+$routes->get('petugas/tiket/detail/([0-9]+)', 'PetugasController::detail/$1', ['filter' => $petugasFilter]);
+$routes->get('petugas/tiket/disposisi/([0-9]+)', 'PetugasController::disposisi/$1', ['filter' => $petugasFilter]);
+$routes->get('petugas/tiket/verifikasi/([0-9]+)', 'PetugasController::verifikasi/$1', ['filter' => $petugasFilter]);
+
+$routes->get('petugas/tracking-tiket', 'PetugasController::trackingTiket', ['filter' => $petugasFilter]);
+$routes->get('petugas/verifikasi', 'PetugasController::verifikasi', ['filter' => $petugasFilter]);
+$routes->get('petugas/verifikasi/([0-9]+)', 'PetugasController::verifikasi/$1', ['filter' => $petugasFilter]);
+$routes->post('petugas/verifikasi/([0-9]+)', 'PetugasController::simpanVerifikasi/$1', ['filter' => $petugasFilter]);
+$routes->post('petugas/verifikasi/simpan', 'PetugasController::simpanVerifikasi', ['filter' => $petugasFilter]);
+$routes->post('petugas/verifikasi/simpan/([0-9]+)', 'PetugasController::simpanVerifikasi/$1', ['filter' => $petugasFilter]);
+
+
     // ============================================================
     // realtime
     // ============================================================
@@ -934,7 +961,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // ============================================================
     // reset-password-mhs
     // ============================================================
-    $routes->get('reset-password-mhs', 'ResetPasswordController::reset');
+   // SEMENTARA DINONAKTIFKAN: reset password hardcoded
+// $routes->get('reset-password-mhs', 'ResetPasswordController::reset');
     
     // ============================================================
     // roles
@@ -1083,7 +1111,7 @@ $routes->get('upt-tik/hapus-dokumen/([0-9]+)', 'UptTik::hapusDokumen/$1', ['filt
 
 $routes->group(
     'admin-users',
-    ['filter' => 'role'],
+    ['filter' => ['auth', 'role:SUPER_ADMIN,ADMIN_ULT']],
     function ($routes) {
 
         $routes->get(

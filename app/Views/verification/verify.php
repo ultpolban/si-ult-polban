@@ -504,7 +504,7 @@
 
                         <select
                             id="verification_action"
-                            name="action"
+                            name="hasil_verifikasi"
                             class="form-control"
                             required
                         >

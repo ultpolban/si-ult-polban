@@ -72,16 +72,18 @@
             </div>
 
             <div class="col-md-3">
+    <label>Maks File (MB)</label>
 
-                <label>Maks File (MB)</label>
+    <input
+        type="number"
+        name="max_file_size"
+        class="form-control"
+        min="1"
+        max="5"
+        step="1"
+        value="<?= old('max_file_size', isset($requirement['max_file_size']) ? (int) ($requirement['max_file_size'] / 1024) : 5) ?>">
+</div>
 
-                <input
-                    type="number"
-                    name="max_file_size"
-                    class="form-control"
-                    value="<?= old('max_file_size', $requirement['max_file_size'] ?? 5) ?>">
-
-            </div>
 
             <div class="col-md-3">
 

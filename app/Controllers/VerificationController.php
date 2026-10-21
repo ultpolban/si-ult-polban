@@ -360,16 +360,43 @@ class VerificationController extends BaseController
         ) {
             $updateData['priority'] = strtolower($priority);
         }
+/**
+ * UNIT TUJUAN
+ * Simpan ID unit ke unit_id, bukan assigned_to.
+ */
+if (
+    $assignedTo !== '' &&
+    in_array('unit_id', $ticketFields)
+) {
+    $unitId = filter_var(
+        $assignedTo,
+        FILTER_VALIDATE_INT,
+        ['options' => ['min_range' => 1]]
+    );
 
-        /**
-         * UNIT TUJUAN / PETUGAS YANG DITUGASKAN
-         */
-        if (
-            $assignedTo !== '' &&
-            in_array('assigned_to', $ticketFields)
-        ) {
-            $updateData['assigned_to'] = $assignedTo;
-        }
+    if ($unitId === false) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Unit tujuan tidak valid.');
+    }
+
+    $unit = $this->db
+        ->table('master_service_units')
+        ->select('id')
+        ->where('id', $unitId)
+        ->where('is_active', 1)
+        ->where('deleted_at IS NULL', null, false)
+        ->get()
+        ->getRowArray();
+
+    if (!$unit) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Unit tujuan tidak ditemukan atau tidak aktif.');
+    }
+
+    $updateData['unit_id'] = $unitId;
+}
 
         /**
          * CATATAN VERIFIKASI
@@ -447,10 +474,12 @@ class VerificationController extends BaseController
                 );
         }
 
-        $updated = $this->ticketModel->update(
-            $id,
-            $updateData
-        );
+     
+
+$updated = $this->ticketModel->update(
+    $id,
+    $updateData
+);
 
         if (!$updated) {
             return redirect()

@@ -32,9 +32,9 @@ class ServiceRequirementValidator
             ],
 
             'max_file_size' => [
-                'label' => 'Ukuran Maksimum File',
-                'rules' => 'required|integer'
-            ],
+    'label' => 'Ukuran Maksimum File',
+    'rules' => 'required|integer|greater_than[0]|less_than_equal_to[5]'
+],
 
             'allowed_extensions' => [
                 'label' => 'Ekstensi File',

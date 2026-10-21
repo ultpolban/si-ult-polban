@@ -38,19 +38,18 @@ class TrackingController extends BaseController
     public function search()
     {
         $ticketNumber = trim(
-            $this->request->getPost('ticket_number')
-                ?: $this->request->getGet('ticket_number')
-                ?: ''
-        );
-
+    (string) (
+        $this->request->getPost('ticket_number')
+        ?: $this->request->getGet('ticket_number')
+        ?: $this->request->getGet('q')
+        ?: ''
+    )
+);
         if ($ticketNumber === '') {
             return redirect()->to(base_url('tracking'));
         }
 
-        $ticket = $this->ticketModel
-            ->where('ticket_number', $ticketNumber)
-            ->first();
-
+       $ticket = $this->findAccessibleTicket($ticketNumber);
         if (!$ticket) {
             return view('petugas/tracking_tiket', [
                 'ticket'   => null,
@@ -79,10 +78,7 @@ class TrackingController extends BaseController
             return redirect()->to(base_url('tracking'));
         }
 
-        $ticket = $this->ticketModel
-            ->where('ticket_number', $ticketNumber)
-            ->first();
-
+       $ticket = $this->findAccessibleTicket((string) $ticketNumber);
         if (!$ticket) {
             return redirect()
                 ->to(base_url('tracking'))
@@ -159,36 +155,43 @@ class TrackingController extends BaseController
     /**
      * Tiket yang sudah masuk tahap disposisi
      */
+
 private function getTrackingTickets()
 {
-    return $this->ticketModel
-        ->select('
-            tickets.*,
-            master_services.name AS service_name,
-            master_service_units.name AS unit_name,
-            user_profiles.student_name AS student_name
-        ')
-        ->join(
-            'master_services',
-            'master_services.id = tickets.service_id',
-            'left'
-        )
-        ->join(
-            'master_service_units',
-            'master_service_units.id = master_services.service_unit_id',
-            'left'
-        )
-        ->join(
-            'user_profiles',
-            'user_profiles.id = tickets.user_profile_id',
-            'left'
-        )
+    $builder = $this->ticketModel
+        ->select('tickets.*')
+        ->join('master_services', 'master_services.id = tickets.service_id', 'left')
+        ->join('master_service_units', 'master_service_units.id = tickets.unit_id', 'left')
+        ->join('user_profiles', 'user_profiles.id = tickets.user_profile_id', 'left')
         ->whereIn('tickets.status', [
             'assigned',
             'in_progress',
             'in progress',
-            'completed'
-        ])
+            'completed',
+        ]);
+
+    if (! $this->canViewAllTickets()) {
+        $userId = (int) session()->get('user_id');
+
+        if ($userId <= 0) {
+            return [];
+        }
+
+        $profile = (new \App\Models\UserProfileModel())
+            ->where('user_id', $userId)
+            ->first();
+
+        if (! $profile) {
+            return [];
+        }
+
+        $builder->where(
+            'tickets.user_profile_id',
+            (int) $profile['id']
+        );
+    }
+
+    return $builder
         ->orderBy('tickets.updated_at', 'DESC')
         ->findAll();
 }
@@ -244,6 +247,72 @@ private function getTrackingTickets()
             base_url('tracking/detail/' . $ticketNumber)
         );
     }
+
+    
+/**
+ * Menentukan apakah akun boleh melihat semua tiket.
+ */
+private function canViewAllTickets(): bool
+{
+    log_message(
+    'debug',
+    'Tracking debug: user_id=' . session()->get('user_id')
+    . ', role_code=' . session()->get('role_code')
+);
+    $roleCode = strtoupper(trim((string) session()->get('role_code')));
+
+    return in_array($roleCode, [
+        'PETUGAS_ULT',
+        'ADMIN_ULT',
+        'SUPER_ADMIN',
+    ], true);
+}
+
+/**
+ * Mengambil tiket hanya jika pengguna berhak melihatnya.
+ */
+private function findAccessibleTicket(string $ticketNumber): ?array
+{
+    $builder = $this->ticketModel
+        ->where('ticket_number', $ticketNumber);
+
+    if (! $this->canViewAllTickets()) {
+        log_message(
+    'debug',
+    'Tracking filter: user_id=' . $userId
+    . ', profile_id=' . $profile['id']
+);
+        if (! session()->get('isLoggedIn')) {
+            return null;
+        }
+
+        $userId = (int) session()->get('user_id');
+
+        if ($userId <= 0) {
+            return null;
+        }
+
+        $profile = (new \App\Models\UserProfileModel())
+            ->where('user_id', $userId)
+            ->first();
+
+        if (! $profile) {
+            return null;
+        }
+
+        log_message(
+    'debug',
+    'Tracking filter: user_id=' . $userId
+    . ', profile_id=' . $profile['id']
+);
+        $builder->where(
+            'user_profile_id',
+            (int) $profile['id']
+        );
+    }
+
+    return $builder->first();
+}
 
     /**
      * Hitung lama proses

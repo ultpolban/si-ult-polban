@@ -157,25 +157,15 @@ class DispositionController extends BaseController
          *
          * Kalau assigned_to sudah diisi pada proses verifikasi,
          * gunakan unit tersebut.
-         */
-        if (!empty($ticket['assigned_to'])) {
-
+                */
+            // PRIORITAS 1: gunakan unit_id pada tiket.
+        if (!empty($ticket['unit_id'])) {
             $unit = $this->db
                 ->table('master_service_units')
                 ->select('id, code, name, description')
-                ->where(
-                    'id',
-                    (int) $ticket['assigned_to']
-                )
-                ->where(
-                    'is_active',
-                    1
-                )
-                ->where(
-                    'deleted_at IS NULL',
-                    null,
-                    false
-                )
+                ->where('id', (int) $ticket['unit_id'])
+                ->where('is_active', 1)
+                ->where('deleted_at IS NULL', null, false)
                 ->get()
                 ->getRowArray();
         }
@@ -241,11 +231,11 @@ class DispositionController extends BaseController
             $ticket['unit_code'] = $unit['code'];
             $ticket['unit_name'] = $unit['name'];
 
-            // Jika assigned_to belum ada,
-            // gunakan ID unit otomatis.
-            if (empty($ticket['assigned_to'])) {
-                $ticket['assigned_to'] = $unit['id'];
-            }
+           // Jika assigned_to belum ada,
+// gunakan ID unit otomatis.
+if (empty($ticket['assigned_to'])) {
+    $ticket['assigned_to'] = $unit['id'];
+}
 
         } else {
 
@@ -333,37 +323,21 @@ class DispositionController extends BaseController
         $unit = null;
 
 
-        /**
-         * --------------------------------------------------------
-         * PRIORITAS 1:
-         * assigned_to yang sudah ada
-         * --------------------------------------------------------
-         */
-        if (!empty($ticket['assigned_to'])) {
+      // PRIORITAS 1: gunakan unit_id pada tiket.
+if (!empty($ticket['unit_id'])) {
+    $unit = $this->db
+        ->table('master_service_units')
+        ->select('id, code, name')
+        ->where('id', (int) $ticket['unit_id'])
+        ->where('is_active', 1)
+        ->where('deleted_at IS NULL', null, false)
+        ->get()
+        ->getRowArray();
 
-            $assignedTo = (int) $ticket['assigned_to'];
-
-            $unit = $this->db
-                ->table('master_service_units')
-                ->select('id, code, name')
-                ->where(
-                    'id',
-                    $assignedTo
-                )
-                ->where(
-                    'is_active',
-                    1
-                )
-                ->where(
-                    'deleted_at IS NULL',
-                    null,
-                    false
-                )
-                ->get()
-                ->getRowArray();
-        }
-
-
+    if ($unit) {
+        $assignedTo = (int) $unit['id'];
+    }
+}
         /**
          * --------------------------------------------------------
          * PRIORITAS 2:
@@ -508,11 +482,10 @@ class DispositionController extends BaseController
         /**
          * Update database
          */
-        $updated = $this->ticketModel->update(
-            $id,
-            $updateData
-        );
-
+       $updated = $this->ticketModel->update(
+    $id,
+    $updateData
+);
 
         if (!$updated) {
 

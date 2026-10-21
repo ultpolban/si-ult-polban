@@ -25,23 +25,24 @@ class TicketModel extends BaseModel
     protected $deletedField = 'deleted_at';
 
     protected $allowedFields = [
-        'ticket_number',
-        'user_profile_id',
-        'service_id',
-        'title',
-        'description',
-        'status',
-        'priority',
-        'assigned_to',
-        'submitted_at',
-        'verified_at',
-        'processed_at',
-        'completed_at',
-        'rejected_at',
-        'cancelled_at',
-        'admin_note',
-        'rejection_reason'
-    ];
+    'ticket_number',
+    'user_profile_id',
+    'service_id',
+    'title',
+    'description',
+    'status',
+    'priority',
+    'assigned_to',
+    'unit_id',
+    'submitted_at',
+    'verified_at',
+    'processed_at',
+    'completed_at',
+    'rejected_at',
+    'cancelled_at',
+    'admin_note',
+    'rejection_reason'
+];
 
     protected $validationRules = [
         'ticket_number'   => 'required|max_length[30]',

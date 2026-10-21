@@ -426,8 +426,8 @@ if (! function_exists('ult_petugas_menu')) {
                 'label' => 'Petugas ULT',
                 'items' => [
                     ['label' => 'Dashboard',     'icon' => 'fa-tachometer-alt',   'url' => 'petugas/dashboard'],
-                    ['label' => 'Verifikasi',    'icon' => 'fa-check-double',     'url' => 'petugas/verifikasi'],
-                    ['label' => 'Disposisi',     'icon' => 'fa-share-nodes',      'url' => 'petugas/disposisi'],
+                    ['label' => 'Verifikasi',    'icon' => 'fa-check-double',     'url' => 'verification'],
+                    ['label' => 'Disposisi',     'icon' => 'fa-share-nodes',      'url' => 'disposition'],
                     ['label' => 'Data Tiket',    'icon' => 'fa-ticket-alt',       'url' => 'petugas/tiket'],
                     ['label' => 'Tracking Tiket', 'icon' => 'fa-route',           'url' => 'petugas/tracking-tiket'],
                 ],

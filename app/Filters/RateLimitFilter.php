@@ -59,9 +59,10 @@ class RateLimitFilter implements FilterInterface
         // Filter ini didaftarkan sebagai filter GLOBAL pada Config\Filters
         // (posisi sebelum `csrf`) supaya flood/brute force tertahan lebih
         // dahulu. Karena itu endpoint yang dibatasi diverifikasi di sini.
-        if (! $this->isLimitedEndpoint($request)) {
-            return null;
-        }
+       if (! $this->isLimitedEndpoint($request)) {
+    return null;
+}
+
 
         // Hanya batasi request yang mengubah data / berpotensi disalahgunakan.
         if (! in_array(strtoupper($request->getMethod()), ['POST', 'PUT', 'PATCH', 'DELETE'], true)) {
@@ -131,7 +132,13 @@ class RateLimitFilter implements FilterInterface
             return false;
         }
 
-        $uri = strtolower(trim($request->getUri()->getPath(), '/ '));
+       $uri = strtolower(trim($request->getUri()->getPath(), '/ '));
+
+if (str_starts_with($uri, 'index.php/')) {
+    $uri = substr($uri, strlen('index.php/'));
+} elseif ($uri === 'index.php') {
+    $uri = '';
+}
 
         foreach ($paths as $path) {
             $pattern = strtolower(trim((string) $path, '/ '));

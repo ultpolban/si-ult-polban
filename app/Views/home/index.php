@@ -630,9 +630,9 @@ $unitIcons = [
 
         <div class="text-center mb-5 reveal">
             <span class="section-badge">Statistik</span>
-            <h2 class="section-title">Statistik Layanan</h2>
+            <h2 class="section-title">Statistik Pengunjung</h2>
             <div class="eyebrow-line"></div>
-            <p class="section-sub">Rekapulasi kunjungan dan penggunaan layanan ULT POLBAN.</p>
+            <p class="section-sub">Statistik Pengguna Yang Mengunjungi Website Ini.</p>
         </div>
 
         <div class="row g-4 mb-5">
@@ -681,19 +681,20 @@ $unitIcons = [
         <?php if ($ultHasData): ?>
 
             <!-- ========== 6a. PALING BANYAK DIACCESSED ========== -->
-            <div class="text-center mb-4 mt-5 reveal">
-                <h3 class="section-title" style="font-size:1.5rem;">
-                    <i class="bi bi-eye"></i> Layanan Paling Banyak Diakses
-                </h3>
-                <p class="section-sub" style="margin:0;">
-                    Layanan yang paling sering dibuka oleh pengunjung.
-                </p>
-            </div>
-
+           <div class="text-center mb-4 mt-5 reveal" style="width:100%; text-align:center;">
+    <h3 class="section-title" style="font-size:1.5rem; text-align:center;">
+        <i class="bi bi-eye"></i> Layanan Paling Banyak Diakses
+    </h3>
+   <p class="section-sub"
+   style="display:block; width:100%; margin:0 auto; text-align:center !important;">
+    Layanan yang paling sering dibuka oleh pengunjung.
+</p>
+</div>
             <?php if ($ultViewed === []): ?>
                 <p class="stat-empty reveal">Belum ada data kunjungan layanan.</p>
             <?php else: ?>
-                <div class="row g-4 mb-5">
+                
+<div class="row g-4 mb-5 justify-content-center">
                     <?php foreach ($ultViewed as $i => $row): ?>
                         <?php $ultVal = (int) ($row['view_count'] ?? 0); ?>
                         <div class="col-lg-3 col-md-6">
@@ -720,120 +721,12 @@ $unitIcons = [
                 </div>
             <?php endif ?>
 
-            <!-- ========== 6b. PALING BANYAK DIGUNAKAN ========== -->
-            <div class="text-center mb-4 mt-5 reveal">
-                <h3 class="section-title" style="font-size:1.5rem;">
-                    <i class="bi bi-send-check"></i> Layanan Paling Banyak Digunakan
-                </h3>
-                <p class="section-sub" style="margin:0;">
-                    Layanan yang paling sering diajukan oleh pemohon.
-                </p>
-            </div>
-
-            <?php if ($ultUsed === []): ?>
-                <p class="stat-empty reveal">Belum ada pengajuan layanan tercatat.</p>
-            <?php else: ?>
-                <div class="row g-4">
-                    <?php foreach ($ultUsed as $i => $row): ?>
-                        <?php $ultUsedVal = $ultUsedTotal($row); ?>
-                        <div class="col-lg-3 col-md-6">
-                            <a href="<?= base_url('layanan/detail/' . (int) ($row['service_id'] ?? 0)) ?>"
-                               class="stat-card stat-card-link reveal">
-
-                                <div class="stat-icon stat-icon-orange">
-                                    <i class="bi bi-send-check"></i>
-                                    <span class="stat-rank"><?= $i + 1 ?></span>
-                                </div>
-
-                                <p class="counter"><?= number_format($ultUsedVal, 0, ',', '.') ?></p>
-                                <h5><?= esc($row['service_name'] ?? 'Layanan') ?></h5>
-                                <p>
-                                    <?= number_format($ultUsedVal, 0, ',', '.') ?> pengajuan
-                                    &middot; <?= esc($row['unit_name'] ?? 'Unit Layanan') ?>
-                                </p>
-                                <span class="stat-more">
-                                    <i class="bi bi-arrow-right-circle"></i> Lihat layanan
-                                </span>
-                            </a>
-                        </div>
-                    <?php endforeach ?>
-                </div>
-            <?php endif ?>
-
-        <?php else: ?>
-
-            <!-- ========== KONDISI BELUM ADA DATA ========== -->
-            <div class="stat-empty-state reveal">
-                <i class="bi bi-bar-chart-line"></i>
-                <h4>Statistik sedang dikumpulkan</h4>
-                <p>
-                    Daftar layanan yang paling banyak diakses &amp; digunakan akan
-                    muncul di sini secara otomatis begitu ada kunjungan dan
-                    pengajuan masuk.
-                </p>
-                <a href="<?= base_url('services') ?>" class="btn-ajukan">
-                    <i class="bi bi-grid"></i> Lihat Semua Layanan
-                </a>
-            </div>
 
         <?php endif ?>
 
     </div>
 </section>
 
-<!-- ============================================================
-     7. TENTANG POLBAN
-============================================================ -->
-<section id="tentang" class="py-5">
-    <div class="container">
-
-        <div class="text-center mb-5 reveal">
-            <span class="section-badge">Tentang</span>
-            <h2 class="section-title">Tentang Politeknik Negeri Bandung</h2>
-            <div class="eyebrow-line"></div>
-            <p class="section-sub">
-               cate            </p>
-        </div>
-
-        <div class="row g-4">
-
-            <div class="col-md-4">
-                <div class="about-card reveal">
-                    <div class="about-icon"><i class="bi bi-building"></i></div>
-                    <h4>Sejarah</h4>
-                    <p>Perjalanan berdirinya POLBAN, dari Politeknik ITB hingga institusi mandiri.</p>
-                    <button class="btn-outline-soft" data-bs-toggle="modal" data-bs-target="#sejarahModal">
-                        Baca Selengkapnya <i class="bi bi-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="about-card reveal">
-                    <div class="about-icon"><i class="bi bi-bullseye"></i></div>
-                    <h4>Visi</h4>
-                    Arah POLBAN sebagai institusi pendidikan vokasi unggulan.
-                    <button class="btn-outline-soft" data-bs-toggle="modal" data-bs-target="#visiModal">
-                        Lihat Visi <i class="bi bi-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="about-card reveal">
-                    <div class="about-icon"><i class="bi bi-flag"></i></div>
-                    <h4>Misi</h4>
-                    <p>Empat pilar: pendidikan, penelitian, pengabdian, dan tata kelola.</p>
-                    <button class="btn-outline-soft" data-bs-toggle="modal" data-bs-target="#misiModal">
-                        Lihat Misi <i class="bi bi-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-</section>
 
 <!-- ============================================================
      8. FAQ

@@ -9,7 +9,6 @@ use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\ForceHTTPS;
 use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
-use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
 
@@ -29,7 +28,7 @@ class Filters extends BaseFilters
         'secureheaders' => SecureHeaders::class,
         'cors'          => Cors::class,
         'forcehttps'      => ForceHTTPS::class,
-        'pagecache'       => PageCache::class,
+        'pagecache'       => \App\Filters\ConditionalPageCacheFilter::class,
         'performance'     => PerformanceMetrics::class,
         'auth'            => \App\Filters\AuthFilter::class,
         'role'            => \App\Filters\RoleFilter::class,
@@ -105,6 +104,9 @@ class Filters extends BaseFilters
         'register',
         'register/gate',
         'register/mfa/verify',
+
+        'password/forgot',
+        'password/reset/*',
 
         // Daftar langung sudah ditutup (route dihapus), tetap
         // dicantumkan agar terlindungi bila suatu saat diaktifkan lagi.

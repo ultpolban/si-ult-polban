@@ -42,9 +42,22 @@ class SecurityHeadersFilter implements FilterInterface
         ResponseInterface $response,
         $arguments = null
     ) {
+        $isPasswordReset = preg_match(
+            '#(?:^|/)password/reset/[^/]+/?$#',
+            $request->getUri()->getPath()
+        ) === 1;
+
         $response->setHeader('X-Content-Type-Options', 'nosniff');
         $response->setHeader('X-Frame-Options', 'SAMEORIGIN');
-        $response->setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+        $response->setHeader(
+            'Referrer-Policy',
+            $isPasswordReset ? 'no-referrer' : 'strict-origin-when-cross-origin'
+        );
+        if ($isPasswordReset) {
+            $response->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+            $response->setHeader('Pragma', 'no-cache');
+            $response->setHeader('Expires', '0');
+        }
         $response->setHeader('X-Permitted-Cross-Domain-Policies', 'none');
         $response->setHeader('Cross-Origin-Opener-Policy', 'same-origin');
         $response->setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=(), payment=(), usb=()');

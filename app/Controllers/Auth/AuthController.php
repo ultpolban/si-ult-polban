@@ -88,6 +88,8 @@ class AuthController extends BaseController
         }
 
         if (!password_verify($password, $user['password'])) {
+            session()->remove('login_pending');
+
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Password salah.');

@@ -27,6 +27,11 @@ $routes->get('login/masuk', 'Auth\AuthController::showLoginForm');
 $routes->get('login/mfa', 'Auth\AuthController::mfa');
 $routes->post('login/mfa/verify', 'Auth\AuthController::verifyMfa');
 
+$routes->get('password/forgot', 'Auth\PasswordResetController::requestForm');
+$routes->post('password/forgot', 'Auth\PasswordResetController::sendLink', ['filter' => 'csrf']);
+$routes->get('password/reset/(:segment)', 'Auth\PasswordResetController::resetForm/$1');
+$routes->post('password/reset/(:segment)', 'Auth\PasswordResetController::updatePassword/$1', ['filter' => 'csrf']);
+
 
 // ============================================================
 // REGISTER

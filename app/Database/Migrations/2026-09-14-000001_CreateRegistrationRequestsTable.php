@@ -6,6 +6,8 @@ use CodeIgniter\Database\Migration;
 
 class CreateRegistrationRequestsTable extends Migration
 {
+    protected $DBGroup = 'registrations';
+
     public function up()
     {
         $this->forge->addField([

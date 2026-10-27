@@ -26,11 +26,11 @@ class Database extends Config
      */
     public array $default = [
         'DSN'          => '',
-        'hostname'     => 'localhost',
-        'username'     => '',
-        'password'     => '',
-        'database'     => '',
-        'DBDriver'     => 'MySQLi',
+        'hostname' => 'localhost',
+        'username' => '',
+        'password' => '',
+        'database' => '',
+        'DBDriver' => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
         'DBDebug'      => true,
@@ -41,7 +41,7 @@ class Database extends Config
         'compress'     => false,
         'strictOn'     => false,
         'failover'     => [],
-        'port'         => 3306,
+        'port' => 3306,
         'numberNative' => false,
         'foundRows'    => false,
         'dateFormat'   => [
@@ -231,13 +231,30 @@ class Database extends Config
         ],
     ];
 
+
     public function __construct()
     {
         parent::__construct();
 
-        // Ensure that we always set the database group to 'tests' if
-        // we are currently running an automated test suite, so that
-        // we don't overwrite live data on accident.
+              // Override koneksi database ketika berjalan di Docker.
+        if (getenv('DB_HOST') !== false) {
+            $this->default['hostname'] = getenv('DB_HOST');
+            $this->default['database'] = getenv('DB_NAME') ?: $this->default['database'];
+            $this->default['username'] = getenv('DB_USER') ?: $this->default['username'];
+            $this->default['password'] = getenv('DB_PASS') ?: $this->default['password'];
+            $this->default['DBDriver'] = getenv('DB_DRIVER') ?: $this->default['DBDriver'];
+            $this->default['port'] = (int) (getenv('DB_PORT') ?: $this->default['port']);
+        }
+        // Override koneksi registrasi ketika berjalan di Docker.
+        if (getenv('REGISTRATIONS_DB_HOST') !== false) {
+            $this->registrations['hostname'] = getenv('REGISTRATIONS_DB_HOST');
+            $this->registrations['database'] = getenv('REGISTRATIONS_DB_NAME') ?: $this->registrations['database'];
+            $this->registrations['username'] = getenv('REGISTRATIONS_DB_USER') ?: $this->registrations['username'];
+            $this->registrations['password'] = getenv('REGISTRATIONS_DB_PASS') ?: $this->registrations['password'];
+            $this->registrations['port'] = (int) (getenv('DB_PORT') ?: $this->registrations['port']);
+        }
+
+        // Pertahankan perilaku bawaan CodeIgniter saat testing.
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }

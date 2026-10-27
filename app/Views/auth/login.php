@@ -47,6 +47,10 @@ $authHeader = 'Selamat Datang di ULT POLBAN';
             </div>
         </div>
 
+        <p class="text-end mt-n2 mb-3" style="font-size:.86rem;">
+            <a href="<?= base_url('password/forgot') ?>">Lupa Password?</a>
+        </p>
+
         <button type="submit" class="btn btn-primary w-100">
             <i class="bi bi-box-arrow-in-right me-1"></i> Masuk
         </button>

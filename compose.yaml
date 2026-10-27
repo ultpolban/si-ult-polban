@@ -1,0 +1,48 @@
+
+services:
+  app:
+    build: .
+    container_name: si-ult-polban-app
+    ports:
+      - "8081:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+    environment:
+      CI_ENVIRONMENT: development
+      app.baseURL: "http://localhost:8081/"
+      DB_HOST: host.docker.internal
+      DB_NAME: si-ult-polban
+      DB_USER: siult_docker
+      DB_PASS: "${DOCKER_DB_PASSWORD:?Isi DOCKER_DB_PASSWORD di file .env.docker}"
+      DB_DRIVER: MySQLi
+      DB_PORT: "3306"
+      REGISTRATIONS_DB_HOST: host.docker.internal
+      REGISTRATIONS_DB_NAME: si_ult_registrations
+      REGISTRATIONS_DB_USER: siult_docker
+      REGISTRATIONS_DB_PASS: "${DOCKER_DB_PASSWORD:?Isi DOCKER_DB_PASSWORD di file .env.docker}"
+
+      EMAIL_SMTP_HOST: "${EMAIL_SMTP_HOST}"
+      EMAIL_SMTP_USER: "${EMAIL_SMTP_USER}"
+      EMAIL_SMTP_PASS: "${EMAIL_SMTP_PASS}"
+      EMAIL_SMTP_PORT: "${EMAIL_SMTP_PORT}"
+      EMAIL_SMTP_CRYPTO: "${EMAIL_SMTP_CRYPTO}"
+      EMAIL_SMTP_TIMEOUT: "${EMAIL_SMTP_TIMEOUT}"
+      EMAIL_FROM_EMAIL: "${EMAIL_FROM_EMAIL}"
+      EMAIL_FROM_NAME: "${EMAIL_FROM_NAME}"
+
+      email.protocol: "${EMAIL_PROTOCOL}"
+      email.fromEmail: "${EMAIL_FROM_EMAIL}"
+      email.fromName: "${EMAIL_FROM_NAME}"
+      email.SMTPHost: "${EMAIL_SMTP_HOST}"
+      email.SMTPUser: "${EMAIL_SMTP_USER}"
+      email.SMTPPass: "${EMAIL_SMTP_PASS}"
+      email.SMTPPort: "${EMAIL_SMTP_PORT}"
+      email.SMTPCrypto: "${EMAIL_SMTP_CRYPTO}"
+      email.SMTPTimeout: "${EMAIL_SMTP_TIMEOUT}"
+
+    volumes:
+      - ./writable:/var/www/html/writable
+      - ./public/uploads:/var/www/html/public/uploads
+    restart: unless-stopped

@@ -54,7 +54,7 @@ $badge   = [
             $fields = [
                 'Nomor Tiket'  => $ticket['ticket_number'] ?? '-',
                 'Layanan'      => $ticket['service_name'] ?? '-',
-                'Deskripsi'    => $ticket['description'] ?? '-',
+                'Unit Tujuan'  => $ticket['unit_name'] ?? '-',
                 'Prioritas'    => $ticket['priority'] ?? '-',
                 'Diajukan'     => $ticket['submitted_at'] ?? ($ticket['created_at'] ?? '-'),
                 'Diproses'     => $ticket['processed_at'] ?? '-',
@@ -74,6 +74,14 @@ $badge   = [
 
             <?php endforeach; ?>
 
+            <div class="col-12 mb-3">
+
+                <div class="text-muted small">Deskripsi Permohonan</div>
+
+                <div class="border rounded p-3 bg-light" style="white-space: pre-wrap"><?= esc($ticket['description'] ?? '-') ?></div>
+
+            </div>
+
             <div class="col-md-6 mb-3">
 
                 <div class="text-muted small">Status</div>
@@ -83,6 +91,59 @@ $badge   = [
             </div>
 
         </div>
+
+    </div>
+
+</div>
+
+<div class="card mb-3">
+
+    <div class="card-header"><h3 class="card-title">Lampiran Permohonan</h3></div>
+
+    <div class="card-body">
+
+        <?php if (empty($attachments)): ?>
+
+            <div class="alert alert-info mb-0">Pemohon tidak menyertakan lampiran.</div>
+
+        <?php else: ?>
+
+            <ul class="list-group">
+
+                <?php foreach ($attachments as $attachment): ?>
+
+                    <?php $filePath = ltrim((string) ($attachment['file_path'] ?? ''), '/'); ?>
+
+                    <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
+
+                        <div>
+
+                            <div class="fw-semibold"><?= esc($attachment['original_name'] ?? $attachment['file_name'] ?? 'Lampiran') ?></div>
+
+                            <?php if (!empty($attachment['requirement_name'])): ?>
+                                <small class="text-muted"><?= esc($attachment['requirement_name']) ?></small>
+                            <?php endif; ?>
+
+                        </div>
+
+                        <?php if ($filePath !== ''): ?>
+                            <a
+                                href="<?= esc(base_url($filePath)) ?>"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="btn btn-outline-primary btn-sm"
+                            >
+                                <i class="fas fa-external-link-alt me-1"></i> Buka / Unduh
+                            </a>
+                        <?php endif; ?>
+
+                    </li>
+
+                <?php endforeach; ?>
+
+            </ul>
+
+        <?php endif; ?>
 
     </div>
 

@@ -52,7 +52,10 @@ foreach ($allTickets as $ticket) {
             $ticket['nim'] ?? '',
 
         'nik' =>
-            $ticket['nik'] ?? ''
+            $ticket['applicant_identifier']
+            ?? $ticket['identity_number']
+            ?? $ticket['nik']
+            ?? ''
 
     ];
 }

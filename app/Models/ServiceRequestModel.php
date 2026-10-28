@@ -62,20 +62,41 @@ class ServiceRequestModel extends BaseModel
             ->select("
                 tickets.*,
                 user_profiles.name AS applicant_name,
+                user_profiles.nim AS nim,
+                user_profiles.nik AS nik,
+                applicant_users.identity_number AS identity_number,
+                COALESCE(
+                    NULLIF(TRIM(user_profiles.nim), ''),
+                    NULLIF(TRIM(user_profiles.nik), ''),
+                    NULLIF(TRIM(applicant_users.identity_number), '')
+                ) AS applicant_identifier,
+                COALESCE(
+                    NULLIF(TRIM(user_profiles.phone), ''),
+                    NULLIF(TRIM(applicant_users.phone_number), '')
+                ) AS phone,
+                COALESCE(
+                    NULLIF(TRIM(user_profiles.phone), ''),
+                    NULLIF(TRIM(applicant_users.phone_number), '')
+                ) AS applicant_phone,
                 master_services.name AS service_name,
-                users.full_name AS assigned_name
+                assigned_users.full_name AS assigned_name
             ")
             ->join(
                 'user_profiles',
                 'user_profiles.id = tickets.user_profile_id'
             )
             ->join(
+                'users applicant_users',
+                'applicant_users.id = user_profiles.user_id',
+                'left'
+            )
+            ->join(
                 'master_services',
                 'master_services.id = tickets.service_id'
             )
             ->join(
-                'users',
-                'users.id = tickets.assigned_to',
+                'users assigned_users',
+                'assigned_users.id = tickets.assigned_to',
                 'left'
             );
     }

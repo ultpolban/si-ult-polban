@@ -382,7 +382,8 @@ $statusBisaKirim = in_array(
 
             <?php
 
-            $nik = $tiket['nik']
+            $nik = $tiket['applicant_identifier']
+                ?? $tiket['nik']
                 ?? $tiket['nim']
                 ?? $tiket['identity_number']
                 ?? null;

@@ -86,8 +86,6 @@ class DataTicketController extends BaseController
             ->get()
             ->getResultArray();
 
-        log_message('error', 'DEBUG TICKET: ' . print_r($tickets, true));
-
         // ========================================================
         // MAPPING BACKEND → FRONTEND
         // ========================================================
@@ -267,8 +265,6 @@ class DataTicketController extends BaseController
         $ticket =
             $this->ticketModel
                 ->getTicketDetail($id);
-
-        log_message('error', 'DEBUG DETAIL TICKET: ' . print_r($ticket, true));
 
         if (!$ticket) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
@@ -848,16 +844,30 @@ class DataTicketController extends BaseController
             tickets.*,
 
             COALESCE(
-                user_profiles.student_name,
-                user_profiles.name
+                NULLIF(TRIM(user_profiles.student_name), ''),
+                NULLIF(TRIM(user_profiles.name), ''),
+                applicant_users.full_name
             ) AS applicant_name,
 
             user_profiles.name,
             user_profiles.student_name,
             user_profiles.nim,
             user_profiles.nik,
-            user_profiles.email,
-            user_profiles.phone,
+            applicant_users.identity_number AS identity_number,
+            COALESCE(
+                NULLIF(TRIM(user_profiles.nim), ''),
+                NULLIF(TRIM(user_profiles.nik), ''),
+                NULLIF(TRIM(applicant_users.identity_number), '')
+            ) AS applicant_identifier,
+            COALESCE(
+                NULLIF(TRIM(user_profiles.email), ''),
+                NULLIF(TRIM(applicant_users.email), '')
+            ) AS email,
+            COALESCE(
+                NULLIF(TRIM(user_profiles.phone), ''),
+                NULLIF(TRIM(applicant_users.phone_number), '')
+            ) AS phone,
+            applicant_users.phone_number AS phone_number,
             user_profiles.address,
             user_profiles.applicant_type_id,
 
@@ -880,6 +890,12 @@ class DataTicketController extends BaseController
         ->join(
             'user_profiles',
             'user_profiles.id = tickets.user_profile_id',
+            'left'
+        )
+
+        ->join(
+            'users applicant_users',
+            'applicant_users.id = user_profiles.user_id',
             'left'
         )
 

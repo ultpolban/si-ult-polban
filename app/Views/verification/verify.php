@@ -201,12 +201,12 @@
 
                             <tr>
                                 <th>
-                                    NIK
+                                    NIK / NIP / Identitas
                                 </th>
 
                                 <td>
-                                    <?= !empty($ticket['nik'])
-                                        ? esc($ticket['nik'])
+                                    <?= !empty($ticket['nik']) || !empty($ticket['identity_number'])
+                                        ? esc(!empty($ticket['nik']) ? $ticket['nik'] : $ticket['identity_number'])
                                         : '-' ?>
                                 </td>
                             </tr>

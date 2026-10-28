@@ -30,19 +30,35 @@ abstract class UnitTicketModel extends Model
     protected function prepareUnitQuery(array $data): array
     {
         $this->select(
-            'tickets.*,
+            "tickets.*,
              tickets.ticket_number AS no_tiket,
              tickets.title AS judul,
              tickets.description AS deskripsi,
              COALESCE(user_profiles.name, users.full_name) AS applicant_name,
-             COALESCE(user_profiles.nik, users.identity_number) AS applicant_identifier,
+             user_profiles.nim AS nim,
+             user_profiles.nik AS nik,
+             users.identity_number AS identity_number,
+             COALESCE(
+                 NULLIF(TRIM(user_profiles.nim), ''),
+                 NULLIF(TRIM(user_profiles.nik), ''),
+                 NULLIF(TRIM(users.identity_number), '')
+             ) AS applicant_identifier,
+             COALESCE(
+                 NULLIF(TRIM(user_profiles.phone), ''),
+                 NULLIF(TRIM(users.phone_number), '')
+             ) AS phone,
+             COALESCE(
+                 NULLIF(TRIM(user_profiles.phone), ''),
+                 NULLIF(TRIM(users.phone_number), '')
+             ) AS applicant_phone,
+             users.phone_number AS phone_number,
              master_services.name AS service_name,
              master_service_categories.name AS service_category,
              master_service_units.name AS unit_name,
              master_services.name AS nama_layanan,
              master_service_categories.name AS nama_kategori,
              master_service_units.name AS nama_unit,
-             COALESCE(user_profiles.name, users.full_name) AS nama_pemohon'
+             COALESCE(user_profiles.name, users.full_name) AS nama_pemohon"
         )
             ->join('user_profiles', 'user_profiles.id = tickets.user_profile_id', 'left')
             ->join('users', 'users.id = user_profiles.user_id', 'left')

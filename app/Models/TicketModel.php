@@ -69,18 +69,43 @@ class TicketModel extends BaseModel
     public function getComplete()
     {
         return $this
-            ->select('
+            ->select("
                 tickets.*,
-                user_profiles.name AS applicant_name,
+                COALESCE(
+                    NULLIF(TRIM(user_profiles.name), ''),
+                    applicant_users.full_name
+                ) AS applicant_name,
                 user_profiles.nim AS applicant_nim,
                 user_profiles.nik AS applicant_nik,
+                user_profiles.nim AS nim,
+                user_profiles.nik AS nik,
+                applicant_users.identity_number AS identity_number,
+                COALESCE(
+                    NULLIF(TRIM(user_profiles.nim), ''),
+                    NULLIF(TRIM(user_profiles.nik), ''),
+                    NULLIF(TRIM(applicant_users.identity_number), '')
+                ) AS applicant_identifier,
+                COALESCE(
+                    NULLIF(TRIM(user_profiles.phone), ''),
+                    NULLIF(TRIM(applicant_users.phone_number), '')
+                ) AS phone,
+                COALESCE(
+                    NULLIF(TRIM(user_profiles.phone), ''),
+                    NULLIF(TRIM(applicant_users.phone_number), '')
+                ) AS applicant_phone,
+                applicant_users.phone_number AS phone_number,
                 master_applicant_types.name AS applicant_type,
                 master_services.name AS service_name,
                 master_services.code AS service_code,
                 master_service_units.name AS service_unit_name,
                 users.full_name AS assigned_name
-            ')
+            ")
             ->join('user_profiles', 'user_profiles.id = tickets.user_profile_id')
+            ->join(
+                'users applicant_users',
+                'applicant_users.id = user_profiles.user_id',
+                'left'
+            )
             ->join('master_applicant_types', 'master_applicant_types.id = user_profiles.applicant_type_id', 'left')
             ->join('master_services', 'master_services.id = tickets.service_id')
             ->join('master_service_units', 'master_service_units.id = master_services.service_unit_id', 'left')
@@ -156,20 +181,45 @@ class TicketModel extends BaseModel
      */
     protected function completeQuery()
     {
-        return $this->select('
+        return $this->select("
                 tickets.*,
-                user_profiles.name AS applicant_name,
+                COALESCE(
+                    NULLIF(TRIM(user_profiles.name), ''),
+                    applicant_users.full_name
+                ) AS applicant_name,
                 user_profiles.nim AS applicant_nim,
                 user_profiles.nik AS applicant_nik,
+                user_profiles.nim AS nim,
+                user_profiles.nik AS nik,
+                applicant_users.identity_number AS identity_number,
+                COALESCE(
+                    NULLIF(TRIM(user_profiles.nim), ''),
+                    NULLIF(TRIM(user_profiles.nik), ''),
+                    NULLIF(TRIM(applicant_users.identity_number), '')
+                ) AS applicant_identifier,
                 user_profiles.email AS applicant_email,
+                COALESCE(
+                    NULLIF(TRIM(user_profiles.phone), ''),
+                    NULLIF(TRIM(applicant_users.phone_number), '')
+                ) AS phone,
+                COALESCE(
+                    NULLIF(TRIM(user_profiles.phone), ''),
+                    NULLIF(TRIM(applicant_users.phone_number), '')
+                ) AS applicant_phone,
+                applicant_users.phone_number AS phone_number,
                 master_applicant_types.name AS applicant_type,
                 master_services.name AS service_name,
                 master_services.code AS service_code,
                 master_services.service_unit_id,
                 master_service_units.name AS service_unit_name,
                 users.full_name AS assigned_name
-            ')
+            ")
             ->join('user_profiles', 'user_profiles.id = tickets.user_profile_id', 'left')
+            ->join(
+                'users applicant_users',
+                'applicant_users.id = user_profiles.user_id',
+                'left'
+            )
             ->join(
                 'master_applicant_types',
                 'master_applicant_types.id = user_profiles.applicant_type_id',

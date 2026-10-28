@@ -509,7 +509,7 @@
                         <div class="col-6">
                             <div class="info-item">
                                 <span class="info-label"><i class="fas fa-address-card"></i> NIK</span>
-                                <span class="info-value mt-1"><?= esc($tiket['nik'] ?? '-') ?></span>
+                                <span class="info-value mt-1"><?= esc(!empty($tiket['nik']) ? $tiket['nik'] : ($tiket['identity_number'] ?? '-')) ?></span>
                             </div>
                         </div>
                     </div>

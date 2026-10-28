@@ -536,17 +536,17 @@
 
 
                     <!-- NIK -->
-                    <?php if (!empty($profile['nik'])): ?>
+                    <?php if (!empty($profile['nik']) || !empty($profile['identity_number'])): ?>
 
                         <div class="info-item">
 
                             <div class="info-label">
                                 <i class="fas fa-id-card"></i>
-                                NIK
+                                NIK / NIP / Identitas
                             </div>
 
                             <div class="info-value">
-                                <?= esc($profile['nik']) ?>
+                                <?= esc(!empty($profile['nik']) ? $profile['nik'] : $profile['identity_number']) ?>
                             </div>
 
                         </div>

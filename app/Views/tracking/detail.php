@@ -12,6 +12,26 @@
 helper('role');
 
 $isLoggedIn = (bool) session()->get('isLoggedIn');
+$statusCode = strtolower(trim((string) ($ticket['status'] ?? '')));
+$status = match ($statusCode) {
+    'assigned' => 'Assigned',
+    'processing', 'in_progress', 'in progress' => 'In Progress',
+    'completed' => 'Completed',
+    'rejected' => 'Rejected',
+    default => ucfirst(str_replace('_', ' ', $statusCode)),
+};
+$ticketNumber = $ticket['ticket_number'] ?? '-';
+$name = $ticket['applicant_name'] ?? $ticket['full_name'] ?? '-';
+$nim = $ticket['applicant_identifier'] ?? '-';
+$phone = $ticket['applicant_phone'] ?? $ticket['phone'] ?? '-';
+$progressStep = (int) ($ticket['progress_step'] ?? 1);
+$title = $ticket['title'] ?? '-';
+$priority = $ticket['priority'] ?? '-';
+$email = $ticket['applicant_email'] ?? $ticket['email'] ?? '-';
+$service = $ticket['service_name'] ?? '-';
+$source = $ticket['applicant_type'] ?? '-';
+$unit = $ticket['service_unit_name'] ?? $ticket['unit_name'] ?? '-';
+$lamaProses = $ticket['lama_proses'] ?? '-';
 ?>
 
 <?= $this->extend('layouts/template_public') ?>
@@ -320,7 +340,7 @@ $isLoggedIn = (bool) session()->get('isLoggedIn');
                     <div class="info-item">
 
                         <div class="info-label">
-                            NIM
+                            Identitas
                         </div>
 
                         <div class="info-value">

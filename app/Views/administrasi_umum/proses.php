@@ -389,7 +389,8 @@ textarea.process-control{
                         type="text"
                         class="form-control process-control readonly-box"
                         value="<?= esc(
-                            $tiket['identity_number']
+                            $tiket['applicant_identifier']
+                            ?? $tiket['identity_number']
                             ?? $tiket['nik']
                             ?? '-'
                         ) ?>"

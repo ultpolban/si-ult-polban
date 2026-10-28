@@ -875,7 +875,7 @@ function ticketPageUrl($page, $queryParams = []) {
                                     <div class="ticket-name"><?= esc($ticket['nama_pemohon']) ?></div>
                                 </td>
                                 <td>
-                                    <div class="ticket-nik"><?= esc(!empty($ticket['nim']) ? $ticket['nim'] : (!empty($ticket['nik']) ? $ticket['nik'] : '-')) ?></div>
+                                    <div class="ticket-nik"><?= esc(!empty($ticket['nim']) ? $ticket['nim'] : (!empty($ticket['nik']) ? $ticket['nik'] : ($ticket['identity_number'] ?? '-'))) ?></div>
                                 </td>
                                 <td><?= esc($ticket['layanan']) ?></td>
                                 <td>

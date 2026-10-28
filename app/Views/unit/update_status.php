@@ -29,6 +29,12 @@ $current = strtolower(trim($ticket['status'] ?? ''));
 
     </a>
 
+    <a href="<?= base_url('unit/detail/' . $ticket['id']) ?>" class="btn btn-info btn-sm">
+
+        <i class="fas fa-eye me-1"></i> Detail Permohonan
+
+    </a>
+
 </div>
 
 <?php if (session()->getFlashdata('error')): ?>

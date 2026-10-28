@@ -404,7 +404,9 @@
                     ================================================= */
 
                     $nik =
-                        $ticket['nik']
+                        $ticket['applicant_identifier']
+                        ?? $ticket['identity_number']
+                        ?? $ticket['nik']
                         ?? $ticket['NIK']
                         ?? '-';
 

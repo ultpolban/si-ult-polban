@@ -191,6 +191,14 @@
                             <td class="text-center">
 
                                 <a
+                                    href="<?= base_url('unit/detail/' . $ticket['id']) ?>"
+                                    class="btn btn-sm btn-info">
+
+                                    <i class="fas fa-eye me-1"></i> Detail
+
+                                </a>
+
+                                <a
                                     href="<?= base_url('unit/update-status/' . $ticket['id']) ?>"
                                     class="btn btn-sm btn-primary">
 

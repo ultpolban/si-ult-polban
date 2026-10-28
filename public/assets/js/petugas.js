@@ -61,6 +61,75 @@
     }
 
     /* ----------------------------------------------------------
+       Konfirmasi mulai proses tiket unit
+    ---------------------------------------------------------- */
+    function initUnitProcessConfirmation() {
+        var processingLinks = new WeakSet();
+
+        document.addEventListener('click', function (event) {
+            var target = event.target;
+            var link = target && target.closest ? target.closest('a[href]') : null;
+
+            if (!link || ! /\/unit\/process\/\d+\/?$/.test(link.pathname)) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (processingLinks.has(link)) {
+                return;
+            }
+
+            if (!window.Swal || typeof window.Swal.fire !== 'function') {
+                console.error('SweetAlert2 tidak tersedia; proses tiket dibatalkan.');
+                return;
+            }
+
+            processingLinks.add(link);
+
+            window.Swal.fire({
+                title: 'Mulai Proses Tiket?',
+                text: 'Tiket ini akan mulai diproses oleh unit layanan. Lanjutkan?',
+                icon: 'question',
+                iconColor: '#2b3990',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Mulai Proses',
+                cancelButtonText: 'Batal',
+                customClass: {
+                    popup: 'unit-process-popup',
+                    confirmButton: 'unit-process-confirm',
+                    cancelButton: 'unit-process-cancel'
+                },
+                reverseButtons: true,
+                focusCancel: true
+            }).then(function (result) {
+                if (!result.isConfirmed) {
+                    processingLinks.delete(link);
+                    return;
+                }
+
+                link.classList.add('disabled');
+                link.setAttribute('aria-disabled', 'true');
+                link.setAttribute('aria-busy', 'true');
+
+                window.Swal.fire({
+                    title: 'Memulai proses tiket...',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: function () {
+                        window.Swal.showLoading();
+                        window.setTimeout(function () {
+                            window.location.assign(link.href);
+                        }, 100);
+                    }
+                });
+            });
+        }, true);
+    }
+
+    /* ----------------------------------------------------------
        Kunci tombol submit agar tidak terkirim dua kali
     ---------------------------------------------------------- */
     function initSubmitLock() {
@@ -101,6 +170,8 @@
             });
         });
     }
+
+    initUnitProcessConfirmation();
 
     document.addEventListener('DOMContentLoaded', function () {
         initFlashAutoHide();

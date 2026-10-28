@@ -866,7 +866,9 @@ function ticketPageUrl($page, $queryParams = []) {
 
                 $identitas = !empty($ticket['nim'])
                     ? $ticket['nim']
-                    : (!empty($ticket['nik']) ? $ticket['nik'] : '-');
+                    : (!empty($ticket['nik'])
+                        ? $ticket['nik']
+                        : ($ticket['applicant_identifier'] ?? '-'));
 
                 $layanan = !empty($ticket['layanan'])
                     ? $ticket['layanan']

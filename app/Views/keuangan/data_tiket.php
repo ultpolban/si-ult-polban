@@ -421,7 +421,9 @@
                     ================================================= */
 
                     $nik =
-                        $row['nik']
+                        $row['applicant_identifier']
+                        ?? $row['identity_number']
+                        ?? $row['nik']
                         ?? $row['NIK']
                         ?? $row['nim']
                         ?? '-';

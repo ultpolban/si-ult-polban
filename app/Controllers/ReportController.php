@@ -36,8 +36,21 @@ class ReportController extends BaseController
                 up.name AS profile_name,
                 up.nim,
                 up.nik,
-                up.email,
-                up.phone,
+                applicant_users.identity_number AS identity_number,
+                COALESCE(
+                    NULLIF(TRIM(up.nim), ''),
+                    NULLIF(TRIM(up.nik), ''),
+                    NULLIF(TRIM(applicant_users.identity_number), '')
+                ) AS applicant_identifier,
+                COALESCE(
+                    NULLIF(TRIM(up.email), ''),
+                    NULLIF(TRIM(applicant_users.email), '')
+                ) AS email,
+                COALESCE(
+                    NULLIF(TRIM(up.phone), ''),
+                    NULLIF(TRIM(applicant_users.phone_number), '')
+                ) AS phone,
+                applicant_users.phone_number AS phone_number,
 
                 mat.name AS applicant_type,
 
@@ -49,6 +62,11 @@ class ReportController extends BaseController
             ->join(
                 'user_profiles up',
                 'up.id = t.user_profile_id',
+                'left'
+            )
+            ->join(
+                'users applicant_users',
+                'applicant_users.id = up.user_id',
                 'left'
             )
             ->join(

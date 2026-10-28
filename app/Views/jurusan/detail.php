@@ -383,7 +383,9 @@ $statusBisaKirim = in_array(
             <?php
 
             $identitas =
-                $ticket['nik']
+                $ticket['applicant_identifier']
+                ?? $ticket['identity_number']
+                ?? $ticket['nik']
                 ?? $ticket['nim']
                 ?? $ticket['identity_number']
                 ?? null;

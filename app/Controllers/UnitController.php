@@ -56,15 +56,16 @@ class UnitController extends BaseController
      *
      * ============================================================
      */
-    protected function unitTickets(): array
+    protected function unitTicketQuery()
     {
-        $tickets = $this->db
+        return $this->db
             ->table('tickets t')
             ->select('
                 t.*,
                 ms.name AS service_display_name,
+                ms.name AS service_name,
                 ms.code AS service_code,
-                ms.service_unit_id,
+                COALESCE(t.unit_id, ms.service_unit_id) AS target_unit_id,
                 msu.name AS unit_name
             ')
             ->join(
@@ -74,10 +75,24 @@ class UnitController extends BaseController
             )
             ->join(
                 'master_service_units msu',
-                'msu.id = t.assigned_to',
+                'msu.id = COALESCE(t.unit_id, ms.service_unit_id)',
                 'left'
             )
             ->whereIn('LOWER(t.status)', ['assigned', 'processing'])
+            ->where('t.deleted_at', null)
+            ->where('COALESCE(t.unit_id, ms.service_unit_id) IS NOT NULL', null, false);
+    }
+
+    /**
+     * Ambil tiket yang memang ditujukan ke salah satu unit layanan dan
+     * masih berada dalam antrean kerja unit.
+     *
+     * `unit_id` merupakan tujuan disposisi. `service_unit_id` menjadi
+     * fallback untuk tiket lama yang belum memiliki unit_id.
+     */
+    protected function unitTickets(): array
+    {
+        $tickets = $this->unitTicketQuery()
             ->orderBy('t.updated_at', 'DESC')
             ->get()
             ->getResultArray();
@@ -485,7 +500,7 @@ class UnitController extends BaseController
      */
     public function detail(int $id)
     {
-        $ticket = $this->ticketModel->find($id);
+        $ticket = $this->findUnitTicket($id);
 
         if (! $ticket) {
             return redirect()
@@ -493,10 +508,38 @@ class UnitController extends BaseController
                 ->with('error', 'Tiket tidak ditemukan.');
         }
 
+        $attachments = $this->db
+            ->table('service_request_files')
+            ->select('service_request_files.*, master_service_requirements.name AS requirement_name')
+            ->join(
+                'master_service_requirements',
+                'master_service_requirements.id = service_request_files.requirement_id',
+                'left'
+            )
+            ->where('service_request_files.service_request_id', $id)
+            ->where('service_request_files.deleted_at', null)
+            ->orderBy('service_request_files.created_at', 'ASC')
+            ->get()
+            ->getResultArray();
+
         return view('unit/detail', [
-            'ticket' => $ticket,
-            'logs'   => $this->readLogs($id),
+            'ticket'      => $ticket,
+            'attachments' => $attachments,
+            'logs'        => $this->readLogs($id),
         ]);
+    }
+
+    /**
+     * Temukan tiket aktif yang ditujukan kepada unit layanan.
+     */
+    protected function findUnitTicket(int $id): ?array
+    {
+        $ticket = $this->unitTicketQuery()
+            ->where('t.id', $id)
+            ->get()
+            ->getRowArray();
+
+        return $ticket ?: null;
     }
 
     /**
@@ -506,7 +549,7 @@ class UnitController extends BaseController
      */
     public function updateStatusForm(int $id)
     {
-        $ticket = $this->ticketModel->find($id);
+        $ticket = $this->findUnitTicket($id);
 
         if (! $ticket) {
             return redirect()
@@ -527,7 +570,7 @@ class UnitController extends BaseController
      */
     public function updateStatus(int $id)
     {
-        $ticket = $this->ticketModel->find($id);
+        $ticket = $this->findUnitTicket($id);
 
         if (! $ticket) {
             return redirect()
@@ -616,7 +659,7 @@ class UnitController extends BaseController
                 ->with('error', 'ID tiket tidak ditemukan.');
         }
 
-        $ticket = $this->ticketModel->find($id);
+        $ticket = $this->findUnitTicket((int) $id);
 
         if (!$ticket) {
             return redirect()
@@ -684,7 +727,7 @@ class UnitController extends BaseController
                 ->with('error', 'ID tiket tidak ditemukan.');
         }
 
-        $ticket = $this->ticketModel->find($id);
+        $ticket = $this->findUnitTicket((int) $id);
 
         if (!$ticket) {
             return redirect()

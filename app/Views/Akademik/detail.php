@@ -394,7 +394,8 @@ $tiket = $tiket ?? $ticket ?? [];
             </label>
 
             <?php
-            $nik = $tiket['nik']
+            $nik = $tiket['applicant_identifier']
+                ?? $tiket['nik']
                 ?? $tiket['nim']
                 ?? null;
             ?>

@@ -24,7 +24,7 @@ class VerificationController extends BaseController
     {
         $tickets = $this->db
             ->table('tickets t')
-            ->select('
+            ->select("
                 t.id,
                 t.ticket_number,
                 t.status,
@@ -41,9 +41,21 @@ class VerificationController extends BaseController
                 up.student_name,
                 up.nim,
                 up.nik,
-                up.email,
-                up.phone
-            ', false)
+                applicant_users.identity_number AS identity_number,
+                COALESCE(
+                    NULLIF(TRIM(up.nim), ''),
+                    NULLIF(TRIM(up.nik), ''),
+                    NULLIF(TRIM(applicant_users.identity_number), '')
+                ) AS applicant_identifier,
+                COALESCE(
+                    NULLIF(TRIM(up.phone), ''),
+                    NULLIF(TRIM(applicant_users.phone_number), '')
+                ) AS phone,
+                COALESCE(
+                    NULLIF(TRIM(up.email), ''),
+                    NULLIF(TRIM(applicant_users.email), '')
+                ) AS email
+            ", false)
             ->join(
                 'master_services ms',
                 'ms.id = t.service_id',
@@ -62,6 +74,11 @@ class VerificationController extends BaseController
             ->join(
                 'user_profiles up',
                 'up.id = t.user_profile_id',
+                'left'
+            )
+            ->join(
+                'users applicant_users',
+                'applicant_users.id = up.user_id',
                 'left'
             )
             ->join(
@@ -818,7 +835,7 @@ $updated = $this->ticketModel->update(
     {
         $ticket = $this->db
             ->table('tickets t')
-            ->select('
+            ->select("
                 t.id,
                 t.ticket_number,
                 t.user_profile_id,
@@ -847,10 +864,22 @@ $updated = $this->ticketModel->update(
                 up.name AS applicant_name,
                 up.nim,
                 up.nik,
-                up.email,
-                up.phone,
+                applicant_users.identity_number AS identity_number,
+                COALESCE(
+                    NULLIF(TRIM(up.phone), ''),
+                    NULLIF(TRIM(applicant_users.phone_number), '')
+                ) AS phone,
+                COALESCE(
+                    NULLIF(TRIM(up.email), ''),
+                    NULLIF(TRIM(applicant_users.email), '')
+                ) AS email,
+                COALESCE(
+                    NULLIF(TRIM(up.nim), ''),
+                    NULLIF(TRIM(up.nik), ''),
+                    NULLIF(TRIM(applicant_users.identity_number), '')
+                ) AS applicant_identifier,
                 up.address
-            ')
+            ")
             ->join(
                 'master_services ms',
                 'ms.id = t.service_id',
@@ -864,6 +893,11 @@ $updated = $this->ticketModel->update(
             ->join(
                 'user_profiles up',
                 'up.id = t.user_profile_id',
+                'left'
+            )
+            ->join(
+                'users applicant_users',
+                'applicant_users.id = up.user_id',
                 'left'
             )
             ->where(

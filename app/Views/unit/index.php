@@ -1,5 +1,63 @@
 <?= $this->extend('layouts/template') ?>
 
+<?= $this->section('styles') ?>
+<link rel="stylesheet" href="<?= base_url('assets/adminlte/plugins/sweetalert2/sweetalert2.min.css') ?>">
+<style>
+    .unit-process-popup {
+        border-radius: 1rem;
+        box-shadow: 0 1rem 3rem rgba(30, 39, 104, .2);
+        padding: 1.75rem;
+    }
+
+    .unit-process-popup .swal2-title {
+        color: #1e2768;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .unit-process-popup .swal2-html-container {
+        color: #596579;
+        font-size: 1rem;
+    }
+
+    .unit-process-confirm,
+    .unit-process-cancel {
+        border-radius: .6rem !important;
+        font-weight: 600 !important;
+        padding: .7rem 1.1rem !important;
+    }
+
+    .unit-process-confirm {
+        background: #2b3990 !important;
+    }
+
+    .unit-process-confirm:hover {
+        background: #1e2768 !important;
+    }
+
+    @media (max-width: 480px) {
+        .unit-process-popup {
+            padding: 1.25rem;
+            width: calc(100% - 2rem) !important;
+        }
+
+        .unit-process-popup .swal2-title {
+            font-size: 1.25rem;
+        }
+
+        .unit-process-popup .swal2-actions {
+            flex-direction: column-reverse;
+            width: 100%;
+        }
+
+        .unit-process-popup .swal2-actions button {
+            margin: .25rem 0;
+            width: 100%;
+        }
+    }
+</style>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
 
 <div class="card">
@@ -136,7 +194,9 @@
 
                             <td>
                                 <strong>
-                                    <?= esc($t['ticket_number'] ?? '-') ?>
+                                    <a href="<?= base_url('unit/detail/' . $t['id']) ?>">
+                                        <?= esc($t['ticket_number'] ?? '-') ?>
+                                    </a>
                                 </strong>
                             </td>
 
@@ -183,12 +243,19 @@
 
                             <td>
 
+                                <a
+                                    href="<?= base_url('unit/detail/' . $t['id']) ?>"
+                                    class="btn btn-info btn-sm"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                    Detail
+                                </a>
+
                                 <?php if ($status === 'assigned'): ?>
 
                                     <a
                                         href="<?= base_url('unit/process/' . $t['id']) ?>"
                                         class="btn btn-warning btn-sm"
-                                        onclick="return confirm('Mulai proses tiket ini?')"
                                     >
                                         <i class="fas fa-play"></i>
                                         Proses
@@ -238,4 +305,8 @@
 
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script src="<?= base_url('assets/adminlte/plugins/sweetalert2/sweetalert2.min.js') ?>"></script>
 <?= $this->endSection() ?>

@@ -27,7 +27,7 @@ class DispositionController extends BaseController
     {
         $tickets = $this->db
             ->table('tickets t')
-            ->select('
+            ->select("
                 t.id,
                 t.ticket_number,
                 t.status,
@@ -45,9 +45,18 @@ class DispositionController extends BaseController
                 up.student_name,
                 up.nim,
                 up.nik,
+                applicant_users.identity_number AS identity_number,
+                COALESCE(
+                    NULLIF(TRIM(up.nim), ''),
+                    NULLIF(TRIM(up.nik), ''),
+                    NULLIF(TRIM(applicant_users.identity_number), '')
+                ) AS applicant_identifier,
                 up.email,
-                up.phone
-            ', false)
+                COALESCE(
+                    NULLIF(TRIM(up.phone), ''),
+                    NULLIF(TRIM(applicant_users.phone_number), '')
+                ) AS phone
+            ", false)
             ->join(
                 'master_services ms',
                 'ms.id = t.service_id',
@@ -66,6 +75,11 @@ class DispositionController extends BaseController
             ->join(
                 'user_profiles up',
                 'up.id = t.user_profile_id',
+                'left'
+            )
+            ->join(
+                'users applicant_users',
+                'applicant_users.id = up.user_id',
                 'left'
             )
             ->join(

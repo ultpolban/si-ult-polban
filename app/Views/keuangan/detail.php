@@ -423,7 +423,8 @@
             <?php
 
             $nik =
-                $tiket['nik']
+                $tiket['applicant_identifier']
+                ?? $tiket['nik']
                 ?? $tiket['nim']
                 ?? $tiket['identity_number']
                 ?? null;

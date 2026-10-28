@@ -273,6 +273,13 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         ['filter' => $unitFilter]
     );
 
+    // Detail tiket unit
+    $routes->get(
+        'unit/detail/(:num)',
+        'UnitController::detail/$1',
+        ['filter' => $unitFilter]
+    );
+
     // Laporan dan log aktivitas
     $routes->get(
         'unit/laporan',

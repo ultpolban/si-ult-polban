@@ -274,14 +274,10 @@ private function canViewAllTickets(): bool
 private function findAccessibleTicket(string $ticketNumber): ?array
 {
     $builder = $this->ticketModel
-        ->where('ticket_number', $ticketNumber);
+        ->getComplete()
+        ->where('tickets.ticket_number', $ticketNumber);
 
     if (! $this->canViewAllTickets()) {
-        log_message(
-    'debug',
-    'Tracking filter: user_id=' . $userId
-    . ', profile_id=' . $profile['id']
-);
         if (! session()->get('isLoggedIn')) {
             return null;
         }
@@ -306,7 +302,7 @@ private function findAccessibleTicket(string $ticketNumber): ?array
     . ', profile_id=' . $profile['id']
 );
         $builder->where(
-            'user_profile_id',
+            'tickets.user_profile_id',
             (int) $profile['id']
         );
     }

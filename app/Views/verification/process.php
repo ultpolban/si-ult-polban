@@ -385,8 +385,11 @@
                     <div class="info-value">
 
                         <?= esc(
-                            $ticket['nim']
-                            ?? '-'
+                            !empty($ticket['nim'])
+                                ? $ticket['nim']
+                                : (!empty($ticket['nik'])
+                                    ? $ticket['nik']
+                                    : ($ticket['identity_number'] ?? '-'))
                         ) ?>
 
                     </div>

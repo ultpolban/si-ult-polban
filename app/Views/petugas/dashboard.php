@@ -49,7 +49,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Total Tiket</span>
-                        <h2 class="stat-number text-white mt-1 mb-0 counter-value" data-target="<?= $jumlahTiket ?? 21 ?>">0</h2>
+                        <h2 class="stat-number text-white mt-1 mb-0 counter-value" data-target="<?= $jumlahTiket ?>">0</h2>
                     </div>
                     <div class="icon-tamu-circle text-white"><i class="fas fa-ticket-alt"></i></div>
                 </div>
@@ -61,7 +61,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Menunggu Verifikasi</span>
-                        <h2 class="stat-number text-white mt-1 mb-0 counter-value" data-target="<?= $jumlahSubmitted ?? 6 ?>">0</h2>
+                        <h2 class="stat-number text-white mt-1 mb-0 counter-value" data-target="<?= $jumlahSubmitted ?>">0</h2>
                     </div>
                     <div class="icon-tamu-circle text-white"><i class="fas fa-clock"></i></div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Terverifikasi</span>
-                        <h2 class="stat-number text-white mt-1 mb-0 counter-value" data-target="<?= $jumlahVerified ?? 7 ?>">0</h2>
+                        <h2 class="stat-number text-white mt-1 mb-0 counter-value" data-target="<?= $jumlahVerified ?>">0</h2>
                     </div>
                     <div class="icon-tamu-circle text-white"><i class="fas fa-user-check"></i></div>
                 </div>
@@ -85,7 +85,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-white-50 text-uppercase fw-bold" style="font-size: 0.72rem;">Diproses / Disposisi</span>
-                        <h2 class="stat-number text-white mt-1 mb-0 counter-value" data-target="<?= $jumlahDisposisi ?? 5 ?>">0</h2>
+                        <h2 class="stat-number text-white mt-1 mb-0 counter-value" data-target="<?= $jumlahDisposisi ?>">0</h2>
                     </div>
                     <div class="icon-tamu-circle text-white"><i class="fas fa-cogs"></i></div>
                 </div>
@@ -174,7 +174,10 @@
                 </div>
                 <div class="p-4">
                     <div class="chart-box">
-                        <canvas id="mainBarChart"></canvas>
+                        <canvas id="mainBarChart" aria-label="Grafik distribusi status tiket"></canvas>
+                        <div id="mainBarChartEmpty" class="chart-empty-state d-none" role="status">
+                            Belum ada data statistik untuk periode ini.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -190,7 +193,10 @@
                 </div>
                 <div class="p-4">
                     <div class="chart-box">
-                        <canvas id="mainDoughnutChart"></canvas>
+                        <canvas id="mainDoughnutChart" aria-label="Grafik proporsi status tiket"></canvas>
+                        <div id="mainDoughnutChartEmpty" class="chart-empty-state d-none" role="status">
+                            Belum ada data statistik untuk periode ini.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -235,84 +241,159 @@ document.addEventListener("DOMContentLoaded", function () {
     runCounters();
 
     // 3. INISIALISASI CHART.JS PRO LEVEL
-    let barChart, doughnutChart;
-    const labels = ['Submitted', 'Verified', 'Disposisi', 'In Progress', 'Completed', 'Rejected'];
-    const colors = ['#ff8c00', '#10b981', '#f4c400', '#1a237e', '#059669', '#dc2626'];
+    let barChart = null;
+    let doughnutChart = null;
+    const initialLabels = <?= json_encode(
+        $chartLabels,
+        JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+    ) ?>;
+    const initialValues = <?= json_encode($chartValues) ?>;
+    const colors = [
+        '#ff8c00', '#10b981', '#f4c400', '#1a237e', '#059669',
+        '#dc2626', '#0284c7', '#7c3aed', '#64748b', '#db2777'
+    ];
 
-    if (typeof Chart !== 'undefined') {
-        Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
-        Chart.defaults.color = '#59636e';
+    if (typeof Chart !== 'undefined' && Chart.defaults.global) {
+        Chart.defaults.global.defaultFontFamily = "'Plus Jakarta Sans', sans-serif";
+        Chart.defaults.global.defaultFontColor = '#59636e';
     }
 
-    function initCharts(dataValues) {
-        // Bar Chart
-        const ctxBar = document.getElementById('mainBarChart');
-        if (ctxBar) {
-            barChart = new Chart(ctxBar.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Jumlah Tiket',
-                        data: dataValues,
-                        backgroundColor: colors,
-                        borderRadius: 8,
-                        barPercentage: 0.55
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: { duration: 1000, easing: 'easeOutQuart' },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { backgroundColor: '#1a237e', padding: 10, borderRadius: 8 }
+    function showChartMessage(canvasId, emptyId, message) {
+        const canvas = document.getElementById(canvasId);
+        const emptyState = document.getElementById(emptyId);
+
+        if (canvas) {
+            canvas.classList.add('d-none');
+        }
+
+        if (emptyState) {
+            emptyState.textContent = message;
+            emptyState.classList.remove('d-none');
+        }
+    }
+
+    function showChart(canvasId, emptyId) {
+        const canvas = document.getElementById(canvasId);
+        const emptyState = document.getElementById(emptyId);
+
+        if (canvas) {
+            canvas.classList.remove('d-none');
+        }
+
+        if (emptyState) {
+            emptyState.classList.add('d-none');
+        }
+    }
+
+    function renderCharts(labels, values) {
+        const total = values.reduce((sum, value) => sum + Number(value || 0), 0);
+
+        if (total === 0) {
+            if (barChart) {
+                barChart.destroy();
+                barChart = null;
+            }
+            if (doughnutChart) {
+                doughnutChart.destroy();
+                doughnutChart = null;
+            }
+            showChartMessage('mainBarChart', 'mainBarChartEmpty', 'Belum ada data statistik untuk periode ini.');
+            showChartMessage('mainDoughnutChart', 'mainDoughnutChartEmpty', 'Belum ada data statistik untuk periode ini.');
+            return;
+        }
+
+        if (typeof Chart === 'undefined') {
+            showChartMessage('mainBarChart', 'mainBarChartEmpty', 'Library grafik tidak berhasil dimuat.');
+            showChartMessage('mainDoughnutChart', 'mainDoughnutChartEmpty', 'Library grafik tidak berhasil dimuat.');
+            return;
+        }
+
+        showChart('mainBarChart', 'mainBarChartEmpty');
+        showChart('mainDoughnutChart', 'mainDoughnutChartEmpty');
+
+        const datasetColors = labels.map((_, index) => colors[index % colors.length]);
+        const barCanvas = document.getElementById('mainBarChart');
+        const doughnutCanvas = document.getElementById('mainDoughnutChart');
+
+        try {
+            if (barCanvas) {
+                if (barChart) {
+                    barChart.destroy();
+                }
+                barChart = new Chart(barCanvas.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Jumlah Tiket',
+                            data: values,
+                            backgroundColor: datasetColors,
+                            barPercentage: 0.55
+                        }]
                     },
-                    scales: {
-                        y: { beginAtZero: true, grid: { color: '#edf0f4' } },
-                        x: { grid: { display: false } }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: { duration: 800 },
+                        legend: { display: false },
+                        tooltips: { backgroundColor: '#1a237e', padding: 10 },
+                        scales: {
+                            yAxes: [{
+                                ticks: { beginAtZero: true, precision: 0 },
+                                gridLines: { color: '#edf0f4' }
+                            }],
+                            xAxes: [{ gridLines: { display: false } }]
+                        }
                     }
-                }
-            });
+                });
+            }
+        } catch (error) {
+            console.error('Gagal membuat grafik distribusi status tiket:', error);
+            showChartMessage('mainBarChart', 'mainBarChartEmpty', 'Grafik tidak dapat dimuat. Silakan refresh statistik.');
         }
 
-        // Doughnut Chart
-        const ctxDoughnut = document.getElementById('mainDoughnutChart');
-        if (ctxDoughnut) {
-            doughnutChart = new Chart(ctxDoughnut.getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: dataValues,
-                        backgroundColor: colors,
-                        borderWidth: 2,
-                        borderColor: '#ffffff',
-                        hoverOffset: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15 } },
-                        tooltip: { backgroundColor: '#1a237e', padding: 10, borderRadius: 8 }
-                    }
+        try {
+            if (doughnutCanvas) {
+                if (doughnutChart) {
+                    doughnutChart.destroy();
                 }
-            });
-        }
-    }
-
-    // 4. MENGUPDATE DATA STATISTIK SECARA DINAMIS (INTERAKTIF LEVEL DEWA)
-    function updateCharts(newData) {
-        if (barChart) {
-            barChart.data.datasets[0].data = newData;
-            barChart.update();
-        }
-        if (doughnutChart) {
-            doughnutChart.data.datasets[0].data = newData;
-            doughnutChart.update();
+                doughnutChart = new Chart(doughnutCanvas.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: values,
+                            backgroundColor: datasetColors,
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutoutPercentage: 70,
+                        legend: {
+                            position: 'bottom',
+                            labels: { boxWidth: 12, padding: 15 }
+                        },
+                        tooltips: {
+                            backgroundColor: '#1a237e',
+                            padding: 10,
+                            callbacks: {
+                                label: function (tooltipItem, chartData) {
+                                    const index = tooltipItem.index;
+                                    const value = Number(chartData.datasets[0].data[index] || 0);
+                                    const percentage = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+                                    return chartData.labels[index] + ': ' + value + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Gagal membuat grafik proporsi tiket:', error);
+            showChartMessage('mainDoughnutChart', 'mainDoughnutChartEmpty', 'Grafik tidak dapat dimuat. Silakan refresh statistik.');
         }
     }
 
@@ -324,24 +405,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (refreshIcon) refreshIcon.classList.add('fa-spin');
 
-        const url = `<?= base_url('dashboard/api/statistik-data') ?>?periode=${periode}&start_date=${startDate}&end_date=${endDate}`;
+        const parameters = new URLSearchParams({
+            periode: periode,
+            start_date: startDate,
+            end_date: endDate
+        });
+        const url = `<?= base_url('petugas/api/statistik-data') ?>?${parameters.toString()}`;
 
         fetch(url)
-            .then(res => res.json())
             .then(res => {
-                if (res.status === 'success') {
-                    const d = res.data;
-                    updateCharts([
-                        d.submitted ?? 0,
-                        d.verified ?? 0,
-                        d.disposisi ?? 0,
-                        d.in_progress ?? 0,
-                        d.completed ?? 0,
-                        d.rejected ?? 0
-                    ]);
+                if (!res.ok) {
+                    throw new Error('Permintaan statistik gagal (' + res.status + ').');
                 }
+                return res.json();
             })
-            .catch(err => console.error("Error fetching stats:", err))
+            .then(res => {
+                const data = res.data;
+                if (
+                    res.status !== 'success'
+                    || !data
+                    || !Array.isArray(data.status_labels)
+                    || !Array.isArray(data.status_values)
+                    || data.status_labels.length !== data.status_values.length
+                ) {
+                    throw new Error('Format data statistik tidak sesuai.');
+                }
+                renderCharts(data.status_labels, data.status_values);
+            })
+            .catch(err => {
+                console.error('Error mengambil statistik tiket:', err);
+                showChartMessage('mainBarChart', 'mainBarChartEmpty', 'Statistik gagal dimuat. Silakan coba refresh kembali.');
+                showChartMessage('mainDoughnutChart', 'mainDoughnutChartEmpty', 'Statistik gagal dimuat. Silakan coba refresh kembali.');
+            })
             .finally(() => {
                 if (refreshIcon) refreshIcon.classList.remove('fa-spin');
             });
@@ -385,12 +480,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Initial Load Chart dengan Data Default PHP
-    initCharts([
-        <?= $jumlahSubmitted ?? 6 ?>,
-        <?= $jumlahVerified ?? 7 ?>,
-        <?= $jumlahDisposisi ?? 5 ?>,
-        2, 1, 0
-    ]);
+    renderCharts(initialLabels, initialValues);
 });
 </script>
 

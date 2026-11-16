@@ -479,23 +479,6 @@
     background: #fff;
 }
 
-.ticket-pagination .page-link {
-    color: var(--polban-navy);
-    border-radius: 7px !important;
-    margin: 0 3px;
-    font-weight: 600;
-}
-
-.ticket-pagination .page-item.active .page-link {
-    background: var(--polban-navy);
-    border-color: var(--polban-navy);
-    color: #fff;
-}
-
-.ticket-pagination .page-item.disabled .page-link {
-    color: #adb5bd;
-}
-
 @keyframes pageFadeIn {
     from {
         opacity: 0;
@@ -958,17 +941,29 @@ function ticketPageUrl($page, $queryParams = []) {
 
             <ul class="pagination pagination-sm m-0">
                 <li class="page-item <?= $currentPage <= 1 ? 'disabled' : '' ?>">
-                    <a class="page-link" href="<?= ticketPageUrl($currentPage - 1, $queryParams) ?>">Prev</a>
+                    <?php if ($currentPage <= 1): ?>
+                        <span class="page-link" aria-disabled="true">&laquo; Previous</span>
+                    <?php else: ?>
+                        <a class="page-link" href="<?= ticketPageUrl($currentPage - 1, $queryParams) ?>">&laquo; Previous</a>
+                    <?php endif; ?>
                 </li>
 
                 <?php for ($p = 1; $p <= $totalPages; $p++): ?>
                     <li class="page-item <?= $p === $currentPage ? 'active' : '' ?>">
-                        <a class="page-link" href="<?= ticketPageUrl($p, $queryParams) ?>"><?= $p ?></a>
+                        <?php if ($p === $currentPage): ?>
+                            <span class="page-link" aria-current="page"><?= $p ?></span>
+                        <?php else: ?>
+                            <a class="page-link" href="<?= ticketPageUrl($p, $queryParams) ?>"><?= $p ?></a>
+                        <?php endif; ?>
                     </li>
                 <?php endfor; ?>
 
                 <li class="page-item <?= $currentPage >= $totalPages ? 'disabled' : '' ?>">
-                    <a class="page-link" href="<?= ticketPageUrl($currentPage + 1, $queryParams) ?>">Next</a>
+                    <?php if ($currentPage >= $totalPages): ?>
+                        <span class="page-link" aria-disabled="true">Next &raquo;</span>
+                    <?php else: ?>
+                        <a class="page-link" href="<?= ticketPageUrl($currentPage + 1, $queryParams) ?>">Next &raquo;</a>
+                    <?php endif; ?>
                 </li>
             </ul>
         </div>

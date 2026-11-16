@@ -232,17 +232,29 @@
                 <nav>
                     <ul class="pagination pagination-sm mb-0">
                         <li class="page-item <?= $currentPage <= 1 ? 'disabled' : '' ?>">
-                            <a class="page-link" href="<?= base_url('log-aktivitas?page=' . ($currentPage - 1) . '&search=' . urlencode($search) . '&status=' . urlencode($status) . '&limit=' . $limit) ?>">&laquo; Prev</a>
+                            <?php if ($currentPage <= 1): ?>
+                                <span class="page-link" aria-disabled="true">&laquo; Previous</span>
+                            <?php else: ?>
+                                <a class="page-link" href="<?= base_url('log-aktivitas?page=' . ($currentPage - 1) . '&search=' . urlencode($search) . '&status=' . urlencode($status) . '&limit=' . $limit) ?>">&laquo; Previous</a>
+                            <?php endif; ?>
                         </li>
 
                         <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                             <li class="page-item <?= $currentPage == $i ? 'active' : '' ?>">
-                                <a class="page-link" href="<?= base_url('log-aktivitas?page=' . $i . '&search=' . urlencode($search) . '&status=' . urlencode($status) . '&limit=' . $limit) ?>"><?= $i ?></a>
+                                <?php if ($currentPage == $i): ?>
+                                    <span class="page-link" aria-current="page"><?= $i ?></span>
+                                <?php else: ?>
+                                    <a class="page-link" href="<?= base_url('log-aktivitas?page=' . $i . '&search=' . urlencode($search) . '&status=' . urlencode($status) . '&limit=' . $limit) ?>"><?= $i ?></a>
+                                <?php endif; ?>
                             </li>
                         <?php endfor; ?>
 
                         <li class="page-item <?= $currentPage >= $totalPages ? 'disabled' : '' ?>">
-                            <a class="page-link" href="<?= base_url('log-aktivitas?page=' . ($currentPage + 1) . '&search=' . urlencode($search) . '&status=' . urlencode($status) . '&limit=' . $limit) ?>">Next &raquo;</a>
+                            <?php if ($currentPage >= $totalPages): ?>
+                                <span class="page-link" aria-disabled="true">Next &raquo;</span>
+                            <?php else: ?>
+                                <a class="page-link" href="<?= base_url('log-aktivitas?page=' . ($currentPage + 1) . '&search=' . urlencode($search) . '&status=' . urlencode($status) . '&limit=' . $limit) ?>">Next &raquo;</a>
+                            <?php endif; ?>
                         </li>
                     </ul>
                 </nav>

@@ -348,43 +348,6 @@ body,
     color: #64748b;
 }
 
-.pagination-custom {
-    display: flex;
-    gap: 5px;
-}
-
-.pagination-custom a,
-.pagination-custom span {
-    min-width: 34px;
-    height: 34px;
-    padding: 0 10px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 7px;
-    text-decoration: none;
-    border: 1px solid #e2e8f0;
-    color: #475569;
-    background: #fff;
-    font-size: .85rem;
-    font-weight: 600;
-}
-
-.pagination-custom a:hover {
-    background: #f1f5f9;
-}
-
-.pagination-custom .active {
-    background: var(--polban-navy);
-    color: #fff;
-    border-color: var(--polban-navy);
-}
-
-.pagination-custom .disabled {
-    color: #cbd5e1;
-    pointer-events: none;
-}
-
 /* =========================
    ANIMATION
 ========================= */
@@ -853,7 +816,7 @@ body,
 
                 <?php if (($totalPages ?? 1) > 1): ?>
 
-                    <div class="pagination-custom">
+                    <nav class="pagination-custom" aria-label="Pagination">
 
                         <?php if (($currentPage ?? 1) > 1): ?>
 
@@ -864,13 +827,13 @@ body,
                                 'limit'   => $limit ?? 10,
                                 'page'    => ($currentPage ?? 1) - 1
                             ])) ?>">
-                                <i class="fas fa-chevron-left"></i>
+                                &laquo; Previous
                             </a>
 
                         <?php else: ?>
 
-                            <span class="disabled">
-                                <i class="fas fa-chevron-left"></i>
+                            <span class="disabled" aria-disabled="true">
+                                &laquo; Previous
                             </span>
 
                         <?php endif; ?>
@@ -884,7 +847,7 @@ body,
 
                             <?php if ($p == ($currentPage ?? 1)): ?>
 
-                                <span class="active">
+                                <span class="active" aria-current="page">
                                     <?= $p ?>
                                 </span>
 
@@ -913,18 +876,18 @@ body,
                                 'limit'   => $limit ?? 10,
                                 'page'    => ($currentPage ?? 1) + 1
                             ])) ?>">
-                                <i class="fas fa-chevron-right"></i>
+                                Next &raquo;
                             </a>
 
                         <?php else: ?>
 
-                            <span class="disabled">
-                                <i class="fas fa-chevron-right"></i>
+                            <span class="disabled" aria-disabled="true">
+                                Next &raquo;
                             </span>
 
                         <?php endif; ?>
 
-                    </div>
+                    </nav>
 
                 <?php endif; ?>
 

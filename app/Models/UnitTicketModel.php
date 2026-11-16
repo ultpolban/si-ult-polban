@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use RuntimeException;
 
 abstract class UnitTicketModel extends Model
 {
@@ -14,7 +15,7 @@ abstract class UnitTicketModel extends Model
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';
-    protected string $unitName;
+    protected string $unitCode;
 
     protected $allowedFields = [
         'ticket_number', 'user_profile_id', 'service_id', 'title',
@@ -29,6 +30,19 @@ abstract class UnitTicketModel extends Model
 
     protected function prepareUnitQuery(array $data): array
     {
+        $unit = $this->db
+            ->table('master_service_units')
+            ->select('id')
+            ->where('code', $this->unitCode)
+            ->get()
+            ->getRowArray();
+
+        if ($unit === null) {
+            throw new RuntimeException(
+                'Unit layanan dengan kode "' . $this->unitCode . '" tidak ditemukan.'
+            );
+        }
+
         $this->select(
             "tickets.*,
              tickets.ticket_number AS no_tiket,
@@ -64,10 +78,14 @@ abstract class UnitTicketModel extends Model
             ->join('users', 'users.id = user_profiles.user_id', 'left')
             ->join('master_services', 'master_services.id = tickets.service_id', 'left')
             ->join('master_service_categories', 'master_service_categories.id = master_services.service_category_id', 'left')
-            ->join('master_service_units', 'master_service_units.id = master_services.service_unit_id', 'left')
-            ->where('master_service_units.name', $this->unitName);
+            ->join(
+                'master_service_units',
+                'master_service_units.id = COALESCE(tickets.unit_id, master_services.service_unit_id)',
+                'left'
+            )
+            ->where('master_service_units.id', (int) $unit['id']);
 
-        $this->builder()->resetQuery('QBOrderBy')->orderBy('tickets.id', 'DESC');
+        $this->orderBy('tickets.id', 'DESC');
 
         return $data;
     }

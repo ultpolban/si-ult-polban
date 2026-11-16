@@ -21,12 +21,16 @@
 <script src="<?= base_url('assets/js/petugas.js') ?>"></script>
 <script src="<?= base_url('assets/js/ult-select.js') ?>"></script>
 
-<!-- Pustaka grafik & ekspor dimuat dari ASET LOKAL (tanpa CDN) supaya:
-     1. semua dashboard memakai versi Chart.js yang sama,
-     2. halaman tetap jalan tanpa koneksi internet.
-     Chart.js sudah disertakan AdminLTE; SheetJS diunduh sekali
-     lewat tools/fetch_vendor.php. -->
-<script src="<?= base_url('assets/adminlte/plugins/chart.js/Chart.bundle.min.js') ?>"></script>
+<!-- Chart.js lokal menjadi fallback hanya untuk halaman yang belum memuat
+     versinya sendiri, agar tidak menimpa API versi yang dipakai oleh view.
+     SheetJS dimuat dari aset lokal hasil tools/fetch_vendor.php. -->
+<script>
+    if (typeof window.Chart === 'undefined') {
+        document.write(
+            '<script src="<?= base_url('assets/adminlte/plugins/chart.js/Chart.bundle.min.js') ?>"><\/script>'
+        );
+    }
+</script>
 <script src="<?= base_url('assets/vendor/xlsx.full.min.js') ?>"></script>
 
 <script>

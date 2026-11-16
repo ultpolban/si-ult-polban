@@ -4,5 +4,5 @@ namespace App\Models;
 
 class AdministrasiUmumTicketModel extends UnitTicketModel
 {
-    protected string $unitName = 'Administrasi Umum';
+    protected string $unitCode = 'ADM';
 }

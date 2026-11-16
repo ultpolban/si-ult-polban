@@ -482,23 +482,6 @@
     background: #fff;
 }
 
-.ticket-pagination .page-link {
-    color: var(--polban-navy);
-    border-radius: 7px !important;
-    margin: 0 3px;
-    font-weight: 600;
-}
-
-.ticket-pagination .page-item.active .page-link {
-    background: var(--polban-navy);
-    border-color: var(--polban-navy);
-    color: #fff;
-}
-
-.ticket-pagination .page-item.disabled .page-link {
-    color: #adb5bd;
-}
-
 @keyframes pageFadeIn {
     from {
         opacity: 0;
@@ -1674,9 +1657,9 @@ $exportQuery =
                     ): ?>
 
 
-                        <span class="page-link">
+                        <span class="page-link" aria-disabled="true">
 
-                            Prev
+                            &laquo; Previous
 
                         </span>
 
@@ -1692,7 +1675,7 @@ $exportQuery =
                             ) ?>"
                         >
 
-                            Prev
+                            &laquo; Previous
 
                         </a>
 
@@ -1716,17 +1699,21 @@ $exportQuery =
                         class="page-item <?= $p === $currentPage ? 'active' : '' ?>"
                     >
 
-                        <a
-                            class="page-link"
-                            href="<?= ticketPageUrl(
-                                $p,
-                                $queryParams
-                            ) ?>"
-                        >
+                        <?php if ($p === $currentPage): ?>
+                            <span class="page-link" aria-current="page"><?= $p ?></span>
+                        <?php else: ?>
+                            <a
+                                class="page-link"
+                                href="<?= ticketPageUrl(
+                                    $p,
+                                    $queryParams
+                                ) ?>"
+                            >
 
-                            <?= $p ?>
+                                <?= $p ?>
 
-                        </a>
+                            </a>
+                        <?php endif; ?>
 
                     </li>
 
@@ -1746,9 +1733,9 @@ $exportQuery =
                     ): ?>
 
 
-                        <span class="page-link">
+                        <span class="page-link" aria-disabled="true">
 
-                            Next
+                            Next &raquo;
 
                         </span>
 
@@ -1764,7 +1751,7 @@ $exportQuery =
                             ) ?>"
                         >
 
-                            Next
+                            Next &raquo;
 
                         </a>
 

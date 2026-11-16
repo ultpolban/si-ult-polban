@@ -322,6 +322,7 @@
 $totalTiket   = (int) ($total_tiket ?? 0);
 $submitted    = (int) ($submitted ?? 0);
 $assigned     = (int) ($assigned ?? 0);
+$disposisi    = (int) ($disposisi ?? 0);
 $inProgress   = (int) ($in_progress ?? 0);
 $completed    = (int) ($completed ?? 0);
 $needRevision = (int) ($need_revision ?? 0);
@@ -899,7 +900,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const labelsArray = [
         'Submitted',
-        'Assigned',
+        'Verified',
+        'Disposisi',
         'In Progress',
         'Completed',
         'Need Revision',
@@ -908,9 +910,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const colorPalette = [
         '#ff8c00',
+        '#10b981',
         '#f4c400',
         '#0284c7',
-        '#10b981',
+        '#059669',
         '#d97706',
         '#ef4444'
     ];
@@ -1132,7 +1135,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         animateCounter(
             'cnt-assigned',
-            data.assigned ?? 0
+            data.verified ?? 0
         );
 
         animateCounter(
@@ -1191,6 +1194,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const updatedArray = [
 
             Number(data.submitted ?? 0),
+
+            Number(data.verified ?? 0),
 
             Number(data.assigned ?? 0),
 
@@ -1365,7 +1370,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const url =
-            `<?= base_url('statistics/api/statistik-data') ?>?${params.toString()}`;
+            `<?= base_url('petugas/api/statistik-data') ?>?${params.toString()}`;
 
 
         fetch(url, {
@@ -1510,6 +1515,8 @@ document.addEventListener("DOMContentLoaded", function () {
         <?= $submitted ?>,
 
         <?= $assigned ?>,
+
+        <?= $disposisi ?>,
 
         <?= $inProgress ?>,
 

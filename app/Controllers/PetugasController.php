@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Libraries\PetugasTicketStatistics;
 
 class PetugasController extends BaseController
 {
@@ -121,39 +122,19 @@ COUNT(DISTINCT srf.id) AS jumlah_lampiran
     public function dashboard()
     {
         $dataTiket = $this->getAllTiket();
+        $statistics = new PetugasTicketStatistics();
+        $allStatistics = $statistics->calculate($dataTiket);
+        $monthlyTickets = $statistics->filterByPeriod($dataTiket, 'bulan');
+        $monthlyStatistics = $statistics->calculate($monthlyTickets);
 
         $data = [
-            'total_tiket' => count($dataTiket),
-
-            'submitted' => count(array_filter(
-                $dataTiket,
-                fn($t) => $t['status'] === 'Submitted'
-            )),
-
-            'assigned' => count(array_filter(
-                $dataTiket,
-                fn($t) => $t['status'] === 'Verified'
-            )),
-
-            'in_progress' => count(array_filter(
-                $dataTiket,
-                fn($t) => $t['status'] === 'Disposisi'
-            )),
-
-            'completed' => count(array_filter(
-                $dataTiket,
-                fn($t) => $t['status'] === 'Completed'
-            )),
-
-            'need_revision' => count(array_filter(
-                $dataTiket,
-                fn($t) => $t['status'] === 'Need Revision'
-            )),
-
-            'rejected' => count(array_filter(
-                $dataTiket,
-                fn($t) => $t['status'] === 'Rejected'
-            )),
+            'jumlahTiket' => $allStatistics['total_tiket'],
+            'jumlahSubmitted' => $allStatistics['submitted'],
+            'jumlahVerified' => $allStatistics['verified'],
+            'jumlahDisposisi' => $allStatistics['disposisi']
+                + $allStatistics['in_progress'],
+            'chartLabels' => $monthlyStatistics['status_labels'],
+            'chartValues' => $monthlyStatistics['status_values'],
         ];
 
         return view('petugas/dashboard', $data);
@@ -417,45 +398,33 @@ public function detail($id = null)
     public function statistikTiket()
     {
         $dataTiket = $this->getAllTiket();
-
-        $submitted = count(array_filter(
+        $statistics = new PetugasTicketStatistics();
+        $period = $this->request->getGet('periode') ?? 'bulan';
+        $filteredTickets = $statistics->filterByPeriod(
             $dataTiket,
-            fn($t) => $t['status'] === 'Submitted'
-        ));
-
-        $verified = count(array_filter(
-            $dataTiket,
-            fn($t) => $t['status'] === 'Verified'
-        ));
-
-        $disposisi = count(array_filter(
-            $dataTiket,
-            fn($t) => $t['status'] === 'Disposisi'
-        ));
-
-        $completed = count(array_filter(
-            $dataTiket,
-            fn($t) => $t['status'] === 'Completed'
-        ));
-
-        $need_revision = count(array_filter(
-            $dataTiket,
-            fn($t) => $t['status'] === 'Need Revision'
-        ));
-
-        $rejected = count(array_filter(
-            $dataTiket,
-            fn($t) => $t['status'] === 'Rejected'
-        ));
+            $period,
+            $this->request->getGet('start_date'),
+            $this->request->getGet('end_date')
+        );
+        $summary = $statistics->calculate($filteredTickets);
 
         $data = [
-            'total_tiket'   => count($dataTiket),
-            'submitted'     => $submitted,
-            'assigned'      => $verified,
-            'in_progress'   => $disposisi,
-            'completed'     => $completed,
-            'need_revision' => $need_revision,
-            'rejected'      => $rejected,
+            'total_tiket'   => $summary['total_tiket'],
+            'submitted'     => $summary['submitted'],
+            'assigned'      => $summary['verified'],
+            'disposisi'     => $summary['disposisi'],
+            'in_progress'   => $summary['in_progress'],
+            'completed'     => $summary['completed'],
+            'need_revision' => $summary['need_revision'],
+            'rejected'      => $summary['rejected'],
+            'efisiensi'     => $summary['total_tiket'] > 0
+                ? (int) round(
+                    (
+                        ($summary['completed'] + $summary['in_progress'])
+                        / $summary['total_tiket']
+                    ) * 100
+                )
+                : 0,
         ];
 
         return view('petugas/statistik_tiket', $data);
@@ -468,93 +437,19 @@ public function detail($id = null)
         $periode = $this->request->getGet('periode') ?? 'semua';
         $startDate = $this->request->getGet('start_date');
         $endDate = $this->request->getGet('end_date');
-
-        $filteredTiket = array_filter(
+        $statistics = new PetugasTicketStatistics();
+        $filteredTiket = $statistics->filterByPeriod(
             $dataTiket,
-            function ($t) use ($periode, $startDate, $endDate) {
-                $tanggal = $t['submitted_at']
-                    ?? $t['created_at']
-                    ?? null;
-
-                $tglTiket = $tanggal
-                    ? date('Y-m-d', strtotime($tanggal))
-                    : '';
-
-                switch ($periode) {
-                    case 'hari':
-                        return $tglTiket === date('Y-m-d');
-
-                    case 'minggu':
-                        $startWeek = date(
-                            'Y-m-d',
-                            strtotime('monday this week')
-                        );
-
-                        $endWeek = date(
-                            'Y-m-d',
-                            strtotime('sunday this week')
-                        );
-
-                        return $tglTiket >= $startWeek
-                            && $tglTiket <= $endWeek;
-
-                    case 'bulan':
-                        return $tglTiket !== ''
-                            && date('Y-m', strtotime($tglTiket)) === date('Y-m');
-
-                    case 'tahun':
-                        return $tglTiket !== ''
-                            && date('Y', strtotime($tglTiket)) === date('Y');
-
-                    case 'custom':
-                        if (!empty($startDate) && !empty($endDate)) {
-                            return $tglTiket >= $startDate
-                                && $tglTiket <= $endDate;
-                        }
-
-                        return true;
-
-                    case 'semua':
-                    default:
-                        return true;
-                }
-            }
+            $periode,
+            $startDate,
+            $endDate
         );
-
-        $total_tiket = count($filteredTiket);
-
-        $submitted = count(array_filter(
-            $filteredTiket,
-            fn($t) => $t['status'] === 'Submitted'
-        ));
-
-        $assigned = count(array_filter(
-            $filteredTiket,
-            fn($t) => $t['status'] === 'Verified'
-        ));
-
-        $in_progress = count(array_filter(
-            $filteredTiket,
-            fn($t) => $t['status'] === 'Disposisi'
-        ));
-
-        $completed = count(array_filter(
-            $filteredTiket,
-            fn($t) => $t['status'] === 'Completed'
-        ));
-
-        $need_revision = count(array_filter(
-            $filteredTiket,
-            fn($t) => $t['status'] === 'Need Revision'
-        ));
-
-        $rejected = count(array_filter(
-            $filteredTiket,
-            fn($t) => $t['status'] === 'Rejected'
-        ));
-
-        $efisiensi = $total_tiket > 0
-            ? round((($completed + $in_progress) / $total_tiket) * 100)
+        $summary = $statistics->calculate($filteredTiket);
+        $efisiensi = $summary['total_tiket'] > 0
+            ? round((
+                ($summary['completed'] + $summary['in_progress'])
+                / $summary['total_tiket']
+            ) * 100)
             : 0;
 
         $timeline = [];
@@ -580,13 +475,8 @@ public function detail($id = null)
         return $this->response->setJSON([
             'status' => 'success',
             'data' => [
-                'total_tiket'   => $total_tiket,
-                'submitted'     => $submitted,
-                'assigned'      => $assigned,
-                'in_progress'   => $in_progress,
-                'completed'     => $completed,
-                'need_revision' => $need_revision,
-                'rejected'      => $rejected,
+                ...$summary,
+                'assigned' => $summary['disposisi'],
                 'efisiensi'     => $efisiensi,
                 'timeline'      => $timeline,
             ],
@@ -657,4 +547,3 @@ public function detail($id = null)
         return view('petugas/log_aktivitas', $data);
     }
 }
-

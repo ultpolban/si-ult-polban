@@ -153,7 +153,7 @@
 
     <div class="card-footer">
 
-        <?= $pager->links('default', 'service_requirement') ?>
+        <?= $pager->links() ?>
 
     </div>
 

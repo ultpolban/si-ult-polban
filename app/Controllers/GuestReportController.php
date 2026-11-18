@@ -46,7 +46,7 @@ class GuestReportController extends BaseController
                 user_profiles.phone AS applicant_phone,
                 user_profiles.applicant_type_id,
                 user_profiles.institution_name,
-                master_services.name AS service_name,
+                COALESCE(master_services.name, unit_direct.name) AS service_name,
                 master_services.service_unit_id,
                 master_service_units.name AS unit_name
             ')
@@ -63,6 +63,11 @@ class GuestReportController extends BaseController
             ->join(
                 'master_service_units',
                 'master_service_units.id = master_services.service_unit_id',
+                'left'
+            )
+            ->join(
+                'master_service_units unit_direct',
+                'unit_direct.id = tickets.unit_id',
                 'left'
             );
 
@@ -2437,11 +2442,23 @@ class GuestReportController extends BaseController
             // =====================================================
 
             $serviceRequestId = null;
+            $serviceRequestObject = $this->db
+                ->query(
+                    'SELECT TABLE_TYPE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?',
+                    ['service_requests']
+                )
+                ->getRowArray();
+            $serviceRequestsIsView =
+                strtoupper((string) ($serviceRequestObject['TABLE_TYPE'] ?? '')) === 'VIEW';
+            $ticketTitle = $serviceName !== ''
+                ? $serviceName
+                : 'Laporan Tamu';
 
             if (
                 $this->db->tableExists(
                     'service_requests'
                 )
+                && !$serviceRequestsIsView
             ) {
 
                 $serviceRequestColumns =
@@ -2498,7 +2515,7 @@ class GuestReportController extends BaseController
                 )) {
                     $serviceRequestData[
                         'title'
-                    ] = $serviceName;
+                    ] = $ticketTitle;
                 }
 
                 if (in_array(
@@ -2598,22 +2615,6 @@ class GuestReportController extends BaseController
                 }
             }
 
-            /*
-             * Kalau ada lampiran tetapi tabel
-             * service_requests tidak tersedia,
-             * jangan lanjut karena file tidak akan
-             * mempunyai parent.
-             */
-            if (
-                !empty($requirementFiles) &&
-                $serviceRequestId <= 0
-            ) {
-
-                throw new \RuntimeException(
-                    'Lampiran tidak dapat disimpan karena service_requests tidak tersedia.'
-                );
-            }
-
             // =====================================================
             // TICKET
             // =====================================================
@@ -2633,7 +2634,7 @@ class GuestReportController extends BaseController
                     $unitId,
 
                 'title' =>
-                    $serviceName,
+                    $ticketTitle,
 
                 'description' =>
                     $ticketDescription,
@@ -2685,6 +2686,36 @@ class GuestReportController extends BaseController
 
                 throw new \RuntimeException(
                     'ID tiket gagal diperoleh setelah penyimpanan.'
+                );
+            }
+
+            if ($serviceRequestsIsView) {
+                $serviceRequest = $this->db
+                    ->table('service_requests')
+                    ->select('id')
+                    ->where('ticket_number', $ticketNumber)
+                    ->get()
+                    ->getRowArray();
+
+                if (empty($serviceRequest['id'])) {
+                    throw new \RuntimeException(
+                        'Tiket tersimpan tetapi tidak terbaca melalui service_requests.'
+                    );
+                }
+
+                $serviceRequestId = (int) $serviceRequest['id'];
+            }
+
+            /*
+             * Kalau ada lampiran tetapi tidak ada parent request,
+             * jangan lanjut karena file tidak akan terhubung ke tiket.
+             */
+            if (
+                !empty($requirementFiles) &&
+                $serviceRequestId <= 0
+            ) {
+                throw new \RuntimeException(
+                    'Lampiran tidak dapat disimpan karena service_requests tidak tersedia.'
                 );
             }
 
@@ -2908,8 +2939,7 @@ class GuestReportController extends BaseController
                     'errors',
                     [
                         'database' =>
-                            'Data gagal disimpan: ' .
-                            $e->getMessage()
+                            'Data gagal disimpan. Silakan coba kembali atau hubungi administrator.'
                     ]
                 );
         }

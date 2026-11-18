@@ -47,7 +47,7 @@ class TicketModel extends BaseModel
     protected $validationRules = [
         'ticket_number'   => 'required|max_length[30]',
         'user_profile_id' => 'required|integer',
-        'service_id'      => 'required|integer',
+        'service_id'      => 'permit_empty|integer',
         'title'           => 'permit_empty|max_length[200]',
         'description'     => 'permit_empty',
         'status'          => 'required',

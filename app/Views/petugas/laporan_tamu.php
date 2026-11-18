@@ -541,6 +541,8 @@ body, .container-fluid {
 
 <div class="container-fluid px-4 py-4 ticket-page">
 
+    <?= $this->include('components/alert') ?>
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="fw-bold mb-1" style="color: var(--polban-navy); letter-spacing: -0.4px; font-size:1.75rem;">Laporan Tamu & Tiket</h1>

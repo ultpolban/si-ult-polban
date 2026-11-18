@@ -919,7 +919,7 @@ $routes->post('petugas/disposisi/([0-9]+)', 'PetugasController::kirimDisposisi/$
 $routes->post('petugas/disposisi/kirim', 'PetugasController::kirimDisposisi', ['filter' => $petugasFilter]);
 $routes->post('petugas/disposisi/kirim/([0-9]+)', 'PetugasController::kirimDisposisi/$1', ['filter' => $petugasFilter]);
 
-$routes->get('petugas/laporan-tamu', 'PetugasController::laporanTamu', ['filter' => $petugasFilter]);
+$routes->get('petugas/laporan-tamu', 'GuestReportController::index', ['filter' => $petugasFilter]);
 $routes->get('petugas/laporan-tiket', 'PetugasController::laporanTiket', ['filter' => $petugasFilter]);
 $routes->get('petugas/log_aktivitas', 'PetugasController::log_aktivitas', ['filter' => $petugasFilter]);
 $routes->get('petugas/log-aktivitas', 'PetugasController::log_aktivitas', ['filter' => $petugasFilter]);

@@ -34,6 +34,11 @@ class TicketAttachmentModel extends Model
 
         'file_extension',
         'file_size',
+        'mime_type',
+        'is_verified',
+        'verified_by',
+        'verified_at',
+        'notes',
 
         'created_at',
         'updated_at',
